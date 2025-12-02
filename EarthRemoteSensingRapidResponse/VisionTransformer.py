@@ -56,6 +56,7 @@ data_augmentation = keras.Sequential(
 # computer mean and variance of training data (for normalization)
 data_augmentation.layers[0].adapt(x_train)
 
+print(x_train)
 
 ####################################################
 # class Patches                                    #
@@ -272,13 +273,13 @@ def plot_history(history, item):
 # main #
 ########
 def main():
-    vit_classifier = create_vit_classifier()
-    history = run_experiment(vit_classifier)
+    # vit_classifier = create_vit_classifier()
+    # history = run_experiment(vit_classifier)
     
-    # display_patch()
+    display_patch()
     
-    plot_history(history, "loss")
-    plot_history(history, "top-5-accuracy")
+    # plot_history(history, "loss")
+    # plot_history(history, "top-5-accuracy")
     
     return
 
