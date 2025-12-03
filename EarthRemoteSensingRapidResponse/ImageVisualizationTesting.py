@@ -17,7 +17,7 @@ from rasterio.plot import show
 s2_path = "EarthRemoteSensingRapidResponse/UnprocessedImages/20230203T171519_20230203T172113_T14RMU.tif"
 emit_path = "EarthRemoteSensingRapidResponse/UnprocessedImages/EMIT_L2B_CH4PLM_001_20230206T162514_000635.tiff"
 
-ugh_path = "EarthRemoteSensingRapidResponse/UnprocessedImages/1-20230203T171519_20230203T172113_T14RMU.tif"
+ugh_path = "EarthRemoteSensingRapidResponse/UnprocessedImages/2-20230203T171519_20230203T172113_T14RMU.tif"
 test_path = "EarthRemoteSensingRapidResponse/UnprocessedImages/test.tif"
 
 # open images and copy relevant data
@@ -57,13 +57,17 @@ with rasterio.open(emit_path) as emit_image:
 # print(np.array(array).shape)
 
 # combine s2 and emit data into one array
-# combined_data = np.concatenate((s2_data, array), axis=0)
-# print(combined_data.shape)
+combined_data = np.concatenate((s2_data, array), axis=0)
+print(combined_data.shape)
 
 with rasterio.open(ugh_path) as ugh:
     ugh_data = ugh.read()
     
 print(ugh_data)
+print(s2_nodata)
+# print(emit_data[emit_data != -9999])
+# print(array[array != -9999])
+# print(combined_data[5][combined_data[5] != -9999])
 
 with rasterio.open(test_path) as test_image:
     test_data = test_image.read()

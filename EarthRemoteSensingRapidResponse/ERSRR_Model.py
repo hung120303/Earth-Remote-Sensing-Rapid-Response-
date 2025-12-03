@@ -11,61 +11,87 @@ import os
 
 # data preparation
 num_classes = 100
-input_shape = (3, 256, 256)
-
-# TODO: split images into train test based on folders, need to figure out x and y
-# (x_train, y_train), (x_test, y_test) = 
-
-# print(f"x_train: {x_train.shape}, y_train: {y_train.shape}")
-# print(f"x_test: {x_test.shape}, y_test: {y_test.shape}")
-
-# NOTES:
-# feed in 3d input (~, ~, ~)
-# Transformer is treating input as 3 dimensional, filters should be 3d
+input_shape = (256, 256, 5)
+target_output_shape = (256, 256, 1)
 
 # hyperparameters
 learning_rate = 0.001
 weight_decay = 0.0001
 batch_size = 1
-num_epochs = 10 # use 100 for real training
-image_size = 256 # input images are reszed to this
-patch_size = 16  # size of patches to extract from input images
+num_epochs = 5
+image_size = 256 # input is resized to (image_size x image_size)
+patch_size = 16  # size of patches to extract from input
 num_patches = (image_size // patch_size) ** 2
-projection_dim = 64
+projection_dim = 1280
 num_heads = 4
+upscale_factor = 4
 transformer_units = [
     projection_dim * 2,
     projection_dim,
 ] # size of transformer layers
 transformer_layers = 8
+conv_layers = 2
 mlp_head_units = [
     2048,
     1024,
 ] # size of dense layers for final classifier (temp: need to adjust)
 
-# data augmentation
+# data augmentation layers
+# used for normalization of data
 data_augmentation = keras.Sequential(
     [
         layers.Normalization(),
         layers.Resizing(image_size, image_size),
-        layers.RandomFlip("horizontal"),
-        layers.RandomRotation(factor=0.02),
-        layers.RandomZoom(height_factor=0.2, width_factor=0.2),
+        # layers.RandomFlip("horizontal"),
+        # layers.RandomRotation(factor=0.02),
+        # layers.RandomZoom(height_factor=0.2, width_factor=0.2),
     ],
     name="data_augmentation",
 )
 
-# computer mean and variance of training data (for normalization)
-# data_augmentation.layers[0].adapt(x_train)
-
+####################################################
+# class Patches                                    #
+#    - implementation of patch creation as a layer #
+# Methods:                                         #
+#    - call(self, images)                          #
+#    - get_config(self)                            #
+####################################################
 class Patches(layers.Layer):
     def __init__(self, patch_size):
         super().__init__()
         self.patch_size = patch_size
         
     def call(self, images):
-        return 
+        input_shape = ops.shape(images)
+        batch_size = input_shape[0]
+        height = input_shape[1]
+        width = input_shape[2]
+        bands = input_shape[3]
+        num_patches_h = height // self.patch_size
+        num_patches_w = width // self.patch_size
+        patches = keras.ops.image.extract_patches(images, size=self.patch_size)
+        patches = ops.reshape(
+            patches,
+            (
+                batch_size,
+                num_patches_h * num_patches_w,
+                self.patch_size * self.patch_size * bands,
+            ),
+        )
+        return patches
+    
+    def get_config(self):
+        config = super().get_config()
+        config.update({"patch_size": self.patch_size})
+        return config
         
+####################################################
+# class PatcheEncoder                              #
+#    - implementation of patch encoding as a layer #
+# Methods:                                         #
+#    - call(self, images)                          #
+#    - get_config(self)                            #
+####################################################
 class PatchEncoder(layers.Layer):
     def __init__(self, num_patches, projection_dim):
         super().__init__()
@@ -76,28 +102,143 @@ class PatchEncoder(layers.Layer):
         )
 
     def call(self, patch):
-       return
-   
-##########################################
-# create_vit_predictor                   #
-#   - creates a vision transformer model #
-##########################################
-def create_vit_predictor():
-    return
+        positions = ops.expand_dims(
+            ops.arange(start=0, stop=self.num_patches, step=1), axis=0
+        )
+        projected_patches = self.projection(patch)
+        encoded = projected_patches + self.position_embedding(positions)
+        return encoded
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({"num_patches": self.num_patches})
+        return config
+
+############################################
+# mlp                                      #
+#   - multilayer perceptron implementation #
+############################################
+def mlp(x, hidden_units, dropout_rate):
+    for units in hidden_units:
+        x = layers.Dense(units, activation=keras.activations.gelu)(x)
+        x = layers.Dropout(dropout_rate)(x)
+    return x
+
+################################################
+# create_vit_encoder_decoder                   #
+#   - creates a vision transformer model       #
+################################################
+def create_vit_encoder_decoder():
+    inputs = keras.Input(shape=input_shape)
+    augmented = data_augmentation(inputs) # augment data
+    patches = Patches(patch_size)(augmented) # create patches
+    encoded_patches = PatchEncoder(num_patches, projection_dim)(patches) # encode patches
+
+    # create multiple layers of the Transformer block
+    for _ in range(transformer_layers):
+        # layer normalization 1
+        x1 = layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
+        # multi-head attention layer
+        attention_output = layers.MultiHeadAttention(
+            num_heads=num_heads, key_dim=projection_dim, dropout=0.1
+        )(x1, x1)
+        # skip connection 1
+        x2 = layers.Add()([attention_output, encoded_patches])
+        # layer normalization 2
+        x3 = layers.LayerNormalization(epsilon=1e-6)(x2)
+        x3 = mlp(x3, hidden_units=transformer_units, dropout_rate=0.1)
+        # skip connection 2
+        encoded_patches = layers.Add()([x3, x2])
+    
+    # convolutional upscaling
+    x = layers.Dense(projection_dim)(encoded_patches)
+    x = layers.Reshape((patch_size, patch_size, projection_dim))(encoded_patches)
+
+    for _ in range(conv_layers):
+        x = layers.Conv2DTranspose(
+            filters = projection_dim // 2,
+            kernel_size = 3,
+            strides = upscale_factor,
+            padding = "same",
+            activation = "relu"
+        )(x)
+    
+    outputs = layers.Conv2DTranspose(
+        filters = input_shape[-1],
+        kernel_size = 3,
+        strides = 1,
+        padding = "same",
+        activation = "sigmoid"
+    )(x)
+
+    # create a [batch_size, projection_dim] tensor
+    # representation = layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
+    # representation = layers.Flatten()(representation)
+    # representation = layers.Dropout(0.5)(representation)
+
+    # mlp
+    # features = mlp(representation, hidden_units=mlp_head_units, dropout_rate=0.5)
+
+    # classify outputs
+    # logits = layers.Dense(num_classes)(features)
+    # create the Keras model
+    # model = keras.Model(inputs=inputs, outputs=logits)
+    
+    model = keras.Model(inputs=inputs, outputs=outputs)
+    return model
+
+###################################################
+# run_experiment                                  #
+#   - compiles, trains, and evaluates given model #
+###################################################
+def run_experiment(model, x_train, y_train, x_test, y_test):
+    optimizer = keras.optimizers.AdamW(
+        learning_rate=learning_rate, weight_decay=weight_decay
+    )
+
+    model.compile(
+        optimizer=optimizer,
+        loss = "mean_squared_error",
+        metrics=["mean_absolute_error", "mean_squared_error"]
+    )
+
+    checkpoint_filepath = "/tmp/checkpoint.weights.h5"
+    checkpoint_callback = keras.callbacks.ModelCheckpoint(
+        checkpoint_filepath,
+        monitor="val_accuracy",
+        save_best_only=True,
+        save_weights_only=True,
+    )
+
+    history = model.fit(
+        x=x_train,
+        y=y_train,
+        batch_size=batch_size,
+        epochs=num_epochs,
+        validation_split=0.0,
+        callbacks=[checkpoint_callback],
+    )
+
+    # model.load_weights(checkpoint_filepath)
+    _, accuracy, top_5_accuracy = model.evaluate(x_test, y_test)
+    print(f"Test accuracy: {round(accuracy * 100, 2)}%")
+    print(f"Test top 5 accuracy: {round(top_5_accuracy * 100, 2)}%")
+
+    return history
 
 ####################################################
 # plot_history                                     #
 #    - create a plot of model accuracy over epochs #
 ####################################################
 def plot_history(history, item):
-    return
-
-###########################################################
-# display_patch                                           #
-#   - selects a random patch to display as a sample image #
-###########################################################
-def display_patch():
-    return
+    plt.plot(history.history[item], label=item)
+    plt.plot(history.history["val_" + item], label="val_" + item)
+    plt.xlabel("Epochs")
+    plt.ylabel(item)
+    plt.title("Train and Validation {} Over Epochs".format(item), fontsize=14)
+    plt.legend()
+    plt.grid()
+    plt.show()
 
 def process_dataset():
     # Get path to dataset
@@ -107,45 +248,46 @@ def process_dataset():
     # then concatenate each image to a list
     data = []
     
+    # iterate over dataset and append each image to list
     for image_file in os.listdir(dataset):
         image_path = os.path.join(dataset, image_file)
         
+        # open image
         if os.path.isfile(image_path):
             with rasterio.open(image_path) as image:
                 image_data = image.read()
-                image_nodata = image.nodata
                 image_profile = image.profile
                 
-                image_data[image_data == image_nodata] = 0.0
+                # set 0.0 as the nodata value 
+                image_profile.update(nodata=0.0)
+                image_data[image_data == -9999] = 0.0
                 
+                # format input data
                 image_data_t = np.array(image_data).transpose((1,2,0))
-                print(image_data_t.shape)
                 data.append(image_data_t)
-                
-    print(data[0])
     
     # TODO: Split list into train and test (80/20 split)
     # temp: i duplicated the same image for train and test,
     # just trying to get functionality right for now
+    x_train = np.array([data[0][:, :, :5]])
+    y_train = np.array([data[0][:, :, 5:]])
+    x_test = np.array([data[1][:, :, :5]])
+    y_test = np.array([data[1][:, :, 5:]])
     
+    print(f"x_train: {x_train.shape}, y_train: {y_train.shape}")
+    print(f"x_test: {x_test.shape}, y_test: {y_test.shape}")
     
+    data_augmentation.layers[0].adapt(x_train)
     
-    # (x_train, y_train), (x_test, y_test) = 
-    
-    # X is first 5 bands, Y is last band
-
-    
-    return
+    return (x_train, y_train), (x_test, y_test)
 ########
 # main #
 ########
 def main():
-    process_dataset()
+    (x_train, y_train), (x_test, y_test) = process_dataset()
     
-    # vit_classifier = create_vit_classifier()
-    # history = run_experiment(vit_classifier)
-    
-    # display_patch()
+    vit_classifier = create_vit_encoder_decoder()
+    history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
     
     # plot_history(history, "loss")
     # plot_history(history, "top-5-accuracy")

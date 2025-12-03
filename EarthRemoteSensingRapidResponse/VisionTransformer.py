@@ -56,7 +56,7 @@ data_augmentation = keras.Sequential(
 # computer mean and variance of training data (for normalization)
 data_augmentation.layers[0].adapt(x_train)
 
-print(x_train)
+# print(x_train)
 
 ####################################################
 # class Patches                                    #
@@ -75,7 +75,7 @@ class Patches(layers.Layer):
         batch_size = input_shape[0]
         height = input_shape[1]
         width = input_shape[2]
-        channels = input_shape[3]
+        bands = input_shape[3]
         num_patches_h = height // self.patch_size
         num_patches_w = width // self.patch_size
         patches = keras.ops.image.extract_patches(images, size=self.patch_size)
@@ -84,7 +84,7 @@ class Patches(layers.Layer):
             (
                 batch_size,
                 num_patches_h * num_patches_w,
-                self.patch_size * self.patch_size * channels,
+                self.patch_size * self.patch_size * bands,
             ),
         )
         return patches
@@ -273,13 +273,13 @@ def plot_history(history, item):
 # main #
 ########
 def main():
-    # vit_classifier = create_vit_classifier()
-    # history = run_experiment(vit_classifier)
+    vit_classifier = create_vit_classifier()
+    history = run_experiment(vit_classifier)
     
-    display_patch()
+    # display_patch()
     
-    # plot_history(history, "loss")
-    # plot_history(history, "top-5-accuracy")
+    plot_history(history, "loss")
+    plot_history(history, "top-5-accuracy")
     
     return
 
