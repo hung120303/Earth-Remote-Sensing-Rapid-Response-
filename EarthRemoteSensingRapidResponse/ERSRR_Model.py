@@ -2,6 +2,7 @@
 import keras
 from keras import layers
 from keras import ops
+from sklearn.model_selection import train_test_split 
 import simplekml
 import rasterio
 import numpy as np
@@ -12,17 +13,16 @@ import os
 # data preparation
 num_classes = 100
 input_shape = (256, 256, 5)
-target_output_shape = (256, 256, 1)
 
 # hyperparameters
-learning_rate = 0.001
-weight_decay = 0.0001
-batch_size = 1
-num_epochs = 5
+learning_rate = 0.01
+weight_decay = 0.001
+batch_size = 2
+num_epochs = 2
 image_size = 256 # input is resized to (image_size x image_size)
 patch_size = 16  # size of patches to extract from input
 num_patches = (image_size // patch_size) ** 2
-projection_dim = 1280
+projection_dim = 64 # set to 64 for small datasets, otherwise 768 or 1024
 num_heads = 4
 upscale_factor = 4
 transformer_units = [
@@ -127,6 +127,8 @@ def mlp(x, hidden_units, dropout_rate):
 ################################################
 # create_vit_encoder_decoder                   #
 #   - creates a vision transformer model       #
+#   - vision transformer for encoding,         #
+#     CNNs for decoding/upsampling             #
 ################################################
 def create_vit_encoder_decoder():
     inputs = keras.Input(shape=input_shape)
@@ -154,6 +156,7 @@ def create_vit_encoder_decoder():
     x = layers.Dense(projection_dim)(encoded_patches)
     x = layers.Reshape((patch_size, patch_size, projection_dim))(encoded_patches)
 
+    # create multiple layers of conv
     for _ in range(conv_layers):
         x = layers.Conv2DTranspose(
             filters = projection_dim // 2,
@@ -163,6 +166,7 @@ def create_vit_encoder_decoder():
             activation = "relu"
         )(x)
     
+    # final output activation
     outputs = layers.Conv2DTranspose(
         filters = input_shape[-1],
         kernel_size = 3,
@@ -170,19 +174,6 @@ def create_vit_encoder_decoder():
         padding = "same",
         activation = "sigmoid"
     )(x)
-
-    # create a [batch_size, projection_dim] tensor
-    # representation = layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
-    # representation = layers.Flatten()(representation)
-    # representation = layers.Dropout(0.5)(representation)
-
-    # mlp
-    # features = mlp(representation, hidden_units=mlp_head_units, dropout_rate=0.5)
-
-    # classify outputs
-    # logits = layers.Dense(num_classes)(features)
-    # create the Keras model
-    # model = keras.Model(inputs=inputs, outputs=logits)
     
     model = keras.Model(inputs=inputs, outputs=outputs)
     return model
@@ -196,30 +187,36 @@ def run_experiment(model, x_train, y_train, x_test, y_test):
         learning_rate=learning_rate, weight_decay=weight_decay
     )
 
+    # compile model
     model.compile(
         optimizer=optimizer,
         loss = "mean_squared_error",
         metrics=["mean_absolute_error", "mean_squared_error"]
     )
 
-    checkpoint_filepath = "/tmp/checkpoint.weights.h5"
+    # save model checkpoint
+    checkpoint_filepath = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
     checkpoint_callback = keras.callbacks.ModelCheckpoint(
         checkpoint_filepath,
-        monitor="val_accuracy",
+        monitor="val_mean_squared_error",
         save_best_only=True,
         save_weights_only=True,
     )
 
+    # fit model
     history = model.fit(
         x=x_train,
         y=y_train,
         batch_size=batch_size,
         epochs=num_epochs,
-        validation_split=0.0,
+        validation_split=0.1,
         callbacks=[checkpoint_callback],
     )
 
-    # model.load_weights(checkpoint_filepath)
+    # accuracy calculation is bugged currently: need to fix
+
+    # evaluate accuracy
+    model.load_weights(checkpoint_filepath)
     _, accuracy, top_5_accuracy = model.evaluate(x_test, y_test)
     print(f"Test accuracy: {round(accuracy * 100, 2)}%")
     print(f"Test top 5 accuracy: {round(top_5_accuracy * 100, 2)}%")
@@ -244,9 +241,10 @@ def process_dataset():
     # Get path to dataset
     dataset = "EarthRemoteSensingRapidResponse/Dataset/train_test"
     
-    # TODO: Iterate over dataset and open each image with rasterio,
-    # then concatenate each image to a list
-    data = []
+    # Iterate over dataset and open each image with rasterio,
+    # then split each image into X and Y and concat to a list
+    X = []
+    Y = []
     
     # iterate over dataset and append each image to list
     for image_file in os.listdir(dataset):
@@ -264,19 +262,21 @@ def process_dataset():
                 
                 # format input data
                 image_data_t = np.array(image_data).transpose((1,2,0))
-                data.append(image_data_t)
+                X.append(image_data_t[:, :, :5])
+                Y.append(image_data_t[:, :, 5:])
     
-    # TODO: Split list into train and test (80/20 split)
-    # temp: i duplicated the same image for train and test,
-    # just trying to get functionality right for now
-    x_train = np.array([data[0][:, :, :5]])
-    y_train = np.array([data[0][:, :, 5:]])
-    x_test = np.array([data[1][:, :, :5]])
-    y_test = np.array([data[1][:, :, 5:]])
+    X = np.array(X)
+    Y = np.array(Y) 
+    # print(X.shape)
+    # print(Y.shape)
+    
+    # split into 80/20 train test
+    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
     
     print(f"x_train: {x_train.shape}, y_train: {y_train.shape}")
     print(f"x_test: {x_test.shape}, y_test: {y_test.shape}")
     
+    # get normalization data for later
     data_augmentation.layers[0].adapt(x_train)
     
     return (x_train, y_train), (x_test, y_test)
@@ -289,6 +289,7 @@ def main():
     vit_classifier = create_vit_encoder_decoder()
     history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
     
+    # TODO: need to implement plotting properly after fixing error calcs 
     # plot_history(history, "loss")
     # plot_history(history, "top-5-accuracy")
     
