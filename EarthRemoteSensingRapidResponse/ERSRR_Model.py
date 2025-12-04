@@ -168,7 +168,7 @@ def create_vit_encoder_decoder():
     
     # final output activation
     outputs = layers.Conv2DTranspose(
-        filters = input_shape[-1],
+        filters = 1,
         kernel_size = 3,
         strides = 1,
         padding = "same",
@@ -280,15 +280,62 @@ def process_dataset():
     data_augmentation.layers[0].adapt(x_train)
     
     return (x_train, y_train), (x_test, y_test)
+
+####################################################
+# preprocess_image                                 #
+#    - preprocess a single image                   #
+####################################################
+def preprocess_image(image_path):
+    with rasterio.open(image_path) as image:
+        image_data = image.read()
+
+        image_profile = image.profile
+                
+        # set 0.0 as the nodata value 
+        image_profile.update(nodata=0.0)
+        image_data[image_data == -9999] = 0.0
+
+        # format input data
+        image_data_t = np.array(image_data).transpose((1,2,0))
+        image_data_t = image_data_t[:, :, :5]
+        
+        # The model expects (# samples, 256, 256, 1), expand for batch dimension
+        processed_image = np.expand_dims(image_data_t, axis=0)
+
+    return processed_image
+
+#################################################################
+# errsr_model_prediction                                        #
+#    - returns/displays methane prediction based on an s2 image #
+#################################################################
+def errsr_model_prediction(image_path):
+    checkpoint_filepath = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
+
+    model = create_vit_encoder_decoder()
+    model.load_weights(checkpoint_filepath)
+    processed_image = preprocess_image(image_path)
+
+    methane_prediction = model.predict(processed_image)
+    methane_prediction = methane_prediction[0].squeeze()
+
+    plt.imshow(methane_prediction)
+    plt.title("Predicted Methane Plume Map")
+    plt.show()
+
 ########
 # main #
 ########
 def main():
     (x_train, y_train), (x_test, y_test) = process_dataset()
     
-    vit_classifier = create_vit_encoder_decoder()
-    history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
-    
+    #vit_classifier = create_vit_encoder_decoder()
+    #history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+
+    # Input image into model and give prediction
+    test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20230203T171519_20230203T172113_T14RMU.tif"
+    errsr_model_prediction(test_image_path)
+
+
     # TODO: need to implement plotting properly after fixing error calcs 
     # plot_history(history, "loss")
     # plot_history(history, "top-5-accuracy")
