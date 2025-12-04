@@ -5,6 +5,7 @@ from keras import ops
 from sklearn.model_selection import train_test_split 
 import simplekml
 import rasterio
+from rasterio.plot import show
 import numpy as np
 import math
 import matplotlib.pyplot as plt
@@ -13,12 +14,13 @@ import os
 # data preparation
 num_classes = 100
 input_shape = (256, 256, 5)
+output_shape = (256, 256, 1)
 
 # hyperparameters
 learning_rate = 0.01
 weight_decay = 0.001
 batch_size = 2
-num_epochs = 2
+num_epochs = 5
 image_size = 256 # input is resized to (image_size x image_size)
 patch_size = 16  # size of patches to extract from input
 num_patches = (image_size // patch_size) ** 2
@@ -41,7 +43,7 @@ mlp_head_units = [
 data_augmentation = keras.Sequential(
     [
         layers.Normalization(),
-        layers.Resizing(image_size, image_size),
+        # layers.Resizing(image_size, image_size),
         # layers.RandomFlip("horizontal"),
         # layers.RandomRotation(factor=0.02),
         # layers.RandomZoom(height_factor=0.2, width_factor=0.2),
@@ -136,6 +138,8 @@ def create_vit_encoder_decoder():
     patches = Patches(patch_size)(augmented) # create patches
     encoded_patches = PatchEncoder(num_patches, projection_dim)(patches) # encode patches
 
+    # scalars should be global instead of local
+
     # create multiple layers of the Transformer block
     for _ in range(transformer_layers):
         # layer normalization 1
@@ -168,11 +172,11 @@ def create_vit_encoder_decoder():
     
     # final output activation
     outputs = layers.Conv2DTranspose(
-        filters = 1,
+        filters = output_shape[-1],
         kernel_size = 3,
         strides = 1,
         padding = "same",
-        activation = "sigmoid"
+        activation = "tanh"
     )(x)
     
     model = keras.Model(inputs=inputs, outputs=outputs)
@@ -257,13 +261,16 @@ def process_dataset():
                 image_profile = image.profile
                 
                 # set 0.0 as the nodata value 
-                image_profile.update(nodata=0.0)
-                image_data[image_data == -9999] = 0.0
+                # image_profile.update(nodata=0.0)
+                # image_data[image_data == -9999] = 0.0
                 
                 # format input data
                 image_data_t = np.array(image_data).transpose((1,2,0))
                 X.append(image_data_t[:, :, :5])
                 Y.append(image_data_t[:, :, 5:])
+                
+                # print(image_data_t[:,:,:5][image_data_t[:,:,:5] != 0.0])
+                # print(image_data_t[:,:,5:][image_data_t[:,:,5:] != 0.0])
     
     X = np.array(X)
     Y = np.array(Y) 
@@ -292,8 +299,8 @@ def preprocess_image(image_path):
         image_profile = image.profile
                 
         # set 0.0 as the nodata value 
-        image_profile.update(nodata=0.0)
-        image_data[image_data == -9999] = 0.0
+        # image_profile.update(nodata=0.0)
+        # image_data[image_data == -9999] = 0.0
 
         # format input data
         image_data_t = np.array(image_data).transpose((1,2,0))
@@ -314,9 +321,15 @@ def errsr_model_prediction(image_path):
     model = create_vit_encoder_decoder()
     model.load_weights(checkpoint_filepath)
     processed_image = preprocess_image(image_path)
-
+    
     methane_prediction = model.predict(processed_image)
     methane_prediction = methane_prediction[0].squeeze()
+    
+    print(np.array([methane_prediction]).shape)
+    # np.array(methane_prediction).transpose((1,2,0))
+    
+    print(methane_prediction)
+    print(np.array([methane_prediction]).shape)
 
     plt.imshow(methane_prediction)
     plt.title("Predicted Methane Plume Map")
@@ -328,17 +341,16 @@ def errsr_model_prediction(image_path):
 def main():
     (x_train, y_train), (x_test, y_test) = process_dataset()
     
-    #vit_classifier = create_vit_encoder_decoder()
-    #history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+    vit_classifier = create_vit_encoder_decoder()
+    history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
 
     # Input image into model and give prediction
-    test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20230203T171519_20230203T172113_T14RMU.tif"
+    test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20230120T164611_20230120T164959_T15SYT.tif"
     errsr_model_prediction(test_image_path)
 
-
     # TODO: need to implement plotting properly after fixing error calcs 
-    # plot_history(history, "loss")
-    # plot_history(history, "top-5-accuracy")
+    plot_history(history, "loss")
+    plot_history(history, "top-5-accuracy")
     
     return
 

@@ -12,7 +12,7 @@ import cv2
 import rasterio
 from rasterio.plot import show
 
-# np.set_printoptions(threshold=sys.maxsize)
+np.set_printoptions(threshold=sys.maxsize)
 
 # define file paths
 imageset = []
@@ -76,6 +76,8 @@ print(np.array(array).shape)
 combined_data = np.concatenate((s2_data, array), axis=0)
 print(combined_data.shape)
 
+print(array[array != -9999])
+
 show(emit_data)
 show(array)
 show(s2_data[1])
@@ -97,13 +99,13 @@ show(s2_data[1])
 # print(np.array(test_data).shape)
 
 # save combined array as a new file (uncomment)
-with rasterio.open(
-    f"EarthRemoteSensingRapidResponse/Dataset/train_test/{names[0]}", 
-    **{**s2_profile, "count": 6},
-    mode="w"
-) as file:
-    for band, data in enumerate(combined_data, start=1):
-        file.write(data, band)
+# with rasterio.open(
+#     f"EarthRemoteSensingRapidResponse/Dataset/train_test/{names[0]}", 
+#     **{**s2_profile, "count": 6},
+#     mode="w"
+# ) as file:
+#     for band, data in enumerate(combined_data, start=1):
+#         file.write(data, band)
 
 # Had issues displaying the 5 band s2 image, so I'm temporarily using the composite image for displaying the plume location
 # with rasterio.open(test_path) as test_image:
