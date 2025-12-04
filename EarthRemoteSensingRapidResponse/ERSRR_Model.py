@@ -40,16 +40,16 @@ mlp_head_units = [
 
 # data augmentation layers
 # used for normalization of data
-data_augmentation = keras.Sequential(
-    [
-        layers.Normalization(),
-        # layers.Resizing(image_size, image_size),
-        # layers.RandomFlip("horizontal"),
-        # layers.RandomRotation(factor=0.02),
-        # layers.RandomZoom(height_factor=0.2, width_factor=0.2),
-    ],
-    name="data_augmentation",
-)
+# data_augmentation = keras.Sequential(
+#     [
+#         layers.Normalization(),
+#         # layers.Resizing(image_size, image_size),
+#         # layers.RandomFlip("horizontal"),
+#         # layers.RandomRotation(factor=0.02),
+#         # layers.RandomZoom(height_factor=0.2, width_factor=0.2),
+#     ],
+#     name="data_augmentation",
+# )
 
 ####################################################
 # class Patches                                    #
@@ -134,7 +134,8 @@ def mlp(x, hidden_units, dropout_rate):
 ################################################
 def create_vit_encoder_decoder():
     inputs = keras.Input(shape=input_shape)
-    augmented = data_augmentation(inputs) # augment data
+    augmented = inputs
+    # augmented = data_augmentation(inputs) # augment data
     patches = Patches(patch_size)(augmented) # create patches
     encoded_patches = PatchEncoder(num_patches, projection_dim)(patches) # encode patches
 
@@ -143,7 +144,8 @@ def create_vit_encoder_decoder():
     # create multiple layers of the Transformer block
     for _ in range(transformer_layers):
         # layer normalization 1
-        x1 = layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
+        # x1 = layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
+        x1 = encoded_patches
         # multi-head attention layer
         attention_output = layers.MultiHeadAttention(
             num_heads=num_heads, key_dim=projection_dim, dropout=0.1
@@ -151,8 +153,8 @@ def create_vit_encoder_decoder():
         # skip connection 1
         x2 = layers.Add()([attention_output, encoded_patches])
         # layer normalization 2
-        x3 = layers.LayerNormalization(epsilon=1e-6)(x2)
-        x3 = mlp(x3, hidden_units=transformer_units, dropout_rate=0.1)
+        # x3 = layers.LayerNormalization(epsilon=1e-6)(x2)
+        x3 = mlp(x2, hidden_units=transformer_units, dropout_rate=0.1)
         # skip connection 2
         encoded_patches = layers.Add()([x3, x2])
     
@@ -176,7 +178,7 @@ def create_vit_encoder_decoder():
         kernel_size = 3,
         strides = 1,
         padding = "same",
-        activation = "tanh"
+        activation = "sigmoid"
     )(x)
     
     model = keras.Model(inputs=inputs, outputs=outputs)
@@ -241,6 +243,9 @@ def plot_history(history, item):
     plt.grid()
     plt.show()
 
+###
+# #
+###
 def process_dataset():
     # Get path to dataset
     dataset = "EarthRemoteSensingRapidResponse/Dataset/train_test"
@@ -266,8 +271,15 @@ def process_dataset():
                 
                 # format input data
                 image_data_t = np.array(image_data).transpose((1,2,0))
-                X.append(image_data_t[:, :, :5])
-                Y.append(image_data_t[:, :, 5:])
+                X_split = np.array(image_data_t[:, :, :5])
+                Y_split = np.array(image_data_t[:, :, 5:])
+                
+                # normalize X_split and Y_split - add 9999 (to Y_split only) then divide by max
+                X_split_r = X_split / np.max(X_split)
+                Y_split_r = (Y_split + 9999) / (np.max(Y_split + 9999))
+                
+                X.append(X_split_r)
+                Y.append(Y_split_r)
                 
                 # print(image_data_t[:,:,:5][image_data_t[:,:,:5] != 0.0])
                 # print(image_data_t[:,:,5:][image_data_t[:,:,5:] != 0.0])
@@ -284,7 +296,7 @@ def process_dataset():
     print(f"x_test: {x_test.shape}, y_test: {y_test.shape}")
     
     # get normalization data for later
-    data_augmentation.layers[0].adapt(x_train)
+    # data_augmentation.layers[0].adapt(x_train)
     
     return (x_train, y_train), (x_test, y_test)
 
@@ -349,8 +361,8 @@ def main():
     errsr_model_prediction(test_image_path)
 
     # TODO: need to implement plotting properly after fixing error calcs 
-    plot_history(history, "loss")
-    plot_history(history, "top-5-accuracy")
+    # plot_history(history, "loss")
+    # plot_history(history, "top-5-accuracy")
     
     return
 
