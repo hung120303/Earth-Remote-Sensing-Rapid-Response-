@@ -4,8 +4,9 @@ import pandas as pd
 import io
 import os
 from datetime import datetime, timedelta
-import re
 import requests
+import json
+import shutil
 
 ee.Authenticate() 
 
@@ -107,7 +108,7 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
         print(f"Exception caught: {e}")
 
 # EMIT Plume list
-emit_folder_path = '.\EMIT_Plumes\EMITL2BCH4PLM_001-20260122_054222'
+emit_folder_path = './EMIT_Plumes/EMITL2BCH4PLM_001-20260122_054222'
 
 # TODO : Run the function across the entire EMIT dataset,
 
@@ -118,4 +119,53 @@ start = '2023-06-18'
 end = '2023-6-20'
 output_local_dir = "./s2"
 
-get_s2_image_and_export(longitude, latitude, start, end, output_local_dir)
+#get_s2_image_and_export(longitude, latitude, start, end, output_local_dir)
+
+test_output_folder = "./test/"
+
+folderIndex = 0
+for filename in os.listdir(emit_folder_path):
+    if filename.endswith('.json'):
+        outputFolder = os.path.join(test_output_folder, str(folderIndex))
+        os.makedirs(outputFolder, exist_ok=True)
+
+        # Get the related .tif file
+        parts = filename.split("META")
+        tif_file = parts[0] + parts[1].replace('json', 'tif')
+        
+        tif_path_orig = os.path.join(emit_folder_path, tif_file)
+        tif_path_new = os.path.join(outputFolder, tif_file)
+
+        # Copy .tif file to output folder
+        shutil.copy(tif_path_orig, tif_path_new)
+
+        # Get JSON metadata
+        json_path = os.path.join(emit_folder_path, filename)
+        with open(json_path, 'r') as file:
+            data = json.load(file)
+
+        # Just testing the first coordinate. Can experiment and try different points within the geometry
+        coordinates = data["features"][0]['geometry']['coordinates'][0]
+        firstCoord = coordinates[0]
+        firstCoordLong = firstCoord[0]
+        firstCoordLat = firstCoord[1]
+
+        # Dates
+        observedTime = data["features"][0]['properties']['UTC Time Observed']
+        dt_obj = datetime.strptime(observedTime, "%Y-%m-%dT%H:%M:%SZ").date()
+        startDate = dt_obj.isoformat()
+        startDate_two_days_after = (dt_obj + timedelta(days=2)).isoformat()
+
+        print(startDate)
+        print(startDate_two_days_after)
+
+        get_s2_image_and_export(firstCoordLong, 
+                                firstCoordLat, 
+                                startDate, 
+                                startDate_two_days_after,
+                                outputFolder)
+        
+        
+
+    folderIndex += 1
+        
