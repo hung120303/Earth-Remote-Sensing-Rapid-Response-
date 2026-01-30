@@ -32,6 +32,9 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
         latitude (float): Latitude of the target point.
         start_date_str (str): Start date in 'YYYY-MM-DD' format.
         end_date_str (str): End date in 'YYYY-MM-DD' format.
+
+    Returns true if URL was successfully downloaded,
+            false otherwise
     """
     print(f"\nProcessing point: Lon={longitude}, Lat={latitude}, Date Range={start_date_str} to {end_date_str}")
 
@@ -58,7 +61,7 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
 
     if image_info is None:
         print(f"No Sentinel-2 image found for the given criteria (Lon: {longitude}, Lat: {latitude}, Start: {start_date_str}, End: {end_date_str}, ROI bounds, and cloud coverage < 5%).")
-        return # Exit the function if no image is found
+        return False    # Exit the function if no image is found
 
     # resample bands B2, B3, B4 (10m per pixel) to match B11, B12 (20m per pixel)
     S2ImageProjection = S2Image.select('B12').projection()
@@ -85,7 +88,7 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
         print(f"Generated download URL: {download_url}")
     except ee.EEException as e:
         print(f"Failed to generate download URL: {e}")
-        return
+        return False
 
     os.makedirs(output_local_dir, exist_ok=True)
 
@@ -102,10 +105,13 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
         print(f"Image downloaded successfully to {output_filepath}")
+        return True
     except requests.exceptions.RequestException as e:
         print(f"Failed to download image from URL: {e}")
+        return False
     except Exception as e:
         print(f"Exception caught: {e}")
+        return False
 
 # EMIT Plume list
 emit_folder_path = './EMIT_Plumes/EMITL2BCH4PLM_001-20260122_054222'
@@ -124,6 +130,7 @@ output_local_dir = "./s2"
 test_output_folder = "./test/"
 
 folderIndex = 0
+foundImageFolderList = []
 for filename in os.listdir(emit_folder_path):
     if filename.endswith('.json'):
         outputFolder = os.path.join(test_output_folder, str(folderIndex))
@@ -154,18 +161,16 @@ for filename in os.listdir(emit_folder_path):
         observedTime = data["features"][0]['properties']['UTC Time Observed']
         dt_obj = datetime.strptime(observedTime, "%Y-%m-%dT%H:%M:%SZ").date()
         startDate = dt_obj.isoformat()
-        startDate_two_days_after = (dt_obj + timedelta(days=2)).isoformat()
+        startDate_two_days_after = (dt_obj + timedelta(days=14)).isoformat()
 
-        print(startDate)
-        print(startDate_two_days_after)
-
-        get_s2_image_and_export(firstCoordLong, 
+        found = get_s2_image_and_export(firstCoordLong, 
                                 firstCoordLat, 
                                 startDate, 
                                 startDate_two_days_after,
                                 outputFolder)
         
+        if found:
+            foundImageFolderList.append(folderIndex)
         
-
     folderIndex += 1
-        
+print(foundImageFolderList)
