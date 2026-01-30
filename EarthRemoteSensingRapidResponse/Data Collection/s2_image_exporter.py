@@ -8,6 +8,9 @@ import requests
 import json
 import shutil
 
+CLOUD_COVER_MAX = 5
+DATETIME_RANGE = 28
+
 ee.Authenticate() 
 
 ee.Initialize(project='ersrr-475700') # Ensure this project ID is correct and you have access
@@ -49,7 +52,7 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
     # Import Sentinel-2 Imagery (harmonized)
     S2_Harmonized = ee.ImageCollection('COPERNICUS/S2_HARMONIZED') \
         .filterBounds(roi) \
-        .filterMetadata('CLOUD_COVERAGE_ASSESSMENT', 'LESS_THAN', 5) \
+        .filterMetadata('CLOUD_COVERAGE_ASSESSMENT', 'LESS_THAN', CLOUD_COVER_MAX) \
         .filterDate(start_date_str, end_date_str) \
         .select(['B2', 'B3', 'B4', 'B11', 'B12'])
 
@@ -60,7 +63,7 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
     image_info = S2Image.getInfo()
 
     if image_info is None:
-        print(f"No Sentinel-2 image found for the given criteria (Lon: {longitude}, Lat: {latitude}, Start: {start_date_str}, End: {end_date_str}, ROI bounds, and cloud coverage < 5%).")
+        print(f"No Sentinel-2 image found for the given criteria (Lon: {longitude}, Lat: {latitude}, Start: {start_date_str}, End: {end_date_str}, ROI bounds, and cloud coverage < {CLOUD_COVER_MAX}%).")
         return False    # Exit the function if no image is found
 
     # resample bands B2, B3, B4 (10m per pixel) to match B11, B12 (20m per pixel)
@@ -161,7 +164,7 @@ for filename in os.listdir(emit_folder_path):
         observedTime = data["features"][0]['properties']['UTC Time Observed']
         dt_obj = datetime.strptime(observedTime, "%Y-%m-%dT%H:%M:%SZ").date()
         startDate = dt_obj.isoformat()
-        startDate_two_days_after = (dt_obj + timedelta(days=14)).isoformat()
+        startDate_two_days_after = (dt_obj + timedelta(days=DATETIME_RANGE)).isoformat()
 
         found = get_s2_image_and_export(firstCoordLong, 
                                 firstCoordLat, 
