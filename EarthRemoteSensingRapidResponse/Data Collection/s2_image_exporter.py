@@ -131,6 +131,7 @@ output_local_dir = "./s2"
 #get_s2_image_and_export(longitude, latitude, start, end, output_local_dir)
 
 test_output_folder = "./test/"
+test_emit_no_s2_folder = "./unpaired_EMIT/"
 
 folderIndex = 0
 foundImageFolderList = []
@@ -174,6 +175,16 @@ for filename in os.listdir(emit_folder_path):
       
         if found:
             foundImageFolderList.append(folderIndex)
+        else:
+            os.remove(tif_path_new)
+            os.rmdir(outputFolder)
+
+            # Folder for unpaired emit plumes
+            os.makedirs(test_emit_no_s2_folder, exist_ok=True)
+
+            tif_path_new = os.path.join(test_emit_no_s2_folder, tif_file)
+            # Copy .tif file to output folder
+            shutil.copy(tif_path_orig, tif_path_new)
         
     folderIndex += 1
 print("Folders with images: ", foundImageFolderList)
