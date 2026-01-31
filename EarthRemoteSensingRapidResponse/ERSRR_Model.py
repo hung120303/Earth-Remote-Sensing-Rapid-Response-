@@ -28,22 +28,22 @@ input_shape = (256, 256, 5)
 output_shape = (256, 256, 1)
 
 # hyperparameters
-learning_rate = 0.01
-weight_decay = 0.001
+learning_rate = 1e-4
+weight_decay = 1e-4
 batch_size = 2
-num_epochs = 5
+num_epochs = 100
 image_size = 256 # input is resized to (image_size x image_size) 
 patch_size = 16  # size of patches to extract from input
 num_patches = (image_size // patch_size) ** 2
 projection_dim = 64 # set to 64 for small datasets, otherwise 768 or 1024
 num_heads = 4
-upscale_factor = 4
+upscale_factor = 2
 transformer_units = [
     projection_dim * 2,
     projection_dim,
 ] # size of transformer layers
 transformer_layers = 4
-conv_layers = 2
+conv_layers = 4
 mlp_head_units = [
     2048,
     1024,
@@ -123,6 +123,14 @@ def mlp(x, hidden_units, dropout_rate):
         x = layers.Dense(units, activation=keras.activations.gelu)(x)
         x = layers.Dropout(dropout_rate)(x)
     return x
+#############################################
+# upsampling_block                          #
+#   - convolutional upsampling block        #
+#############################################
+def upsampling_block(x,filters):
+    x = layers.UpSampling2D(size=(2,2), interpolation="bilinear")(x)
+    x = layers.Conv2D(filters, 3, padding="same",activation="relu")(x)
+    return x
 
 ################################################
 # create_vit_encoder_decoder                   #
@@ -137,40 +145,51 @@ def create_vit_encoder_decoder():
 
     # create multiple layers of the Transformer block
     for _ in range(transformer_layers):
-        x1 = encoded_patches
-        # multi-head attention layer
-        attention_output = layers.MultiHeadAttention(
-            num_heads=num_heads, key_dim=projection_dim, dropout=0.1
-        )(x1, x1)
-        # skip connection 1
-        x2 = layers.Add()([attention_output, encoded_patches])
-        # mlp
-        x3 = mlp(x2, hidden_units=transformer_units, dropout_rate=0.1)
-        # skip connection 2
-        encoded_patches = layers.Add()([x3, x2])
+        # x1 = encoded_patches
+        # # multi-head attention layer
+        # attention_output = layers.MultiHeadAttention(
+        #     num_heads=num_heads, key_dim=projection_dim, dropout=0.1
+        # )(x1, x1)
+        # # skip connection 1
+        # x2 = layers.Add()([attention_output, encoded_patches])
+        # # mlp
+        # x3 = mlp(x2, hidden_units=transformer_units, dropout_rate=0.1)
+        # # skip connection 2
+        # encoded_patches = layers.Add()([x3, x2])
+        attn = layers.MultiHeadAttention(num_heads=num_heads, key_dim=projection_dim, dropout=0.1
+                                         )(encoded_patches, encoded_patches)
+        encoded_patches = layers.LayerNormalization()(encoded_patches+attn)
+        mlp_output = mlp(encoded_patches, hidden_units=transformer_units, dropout_rate=0.1)
+        encoded_patches = layers.LayerNormalization()(encoded_patches + mlp_output)
 
     # convolutional upscaling
     x = layers.Dense(projection_dim)(encoded_patches)
-    x = layers.Reshape((image_size // patch_size, image_size // patch_size, projection_dim))(encoded_patches)
+    x = layers.Reshape((image_size // patch_size, image_size // patch_size, projection_dim))(x)
 
-    # create multiple layers of conv
-    for i in range(conv_layers):
-        x = layers.Conv2DTranspose(
-            filters = projection_dim // 2*(i+1),
-            kernel_size = 3,
-            strides = upscale_factor,
-            padding = "same",
-            activation = "relu"
-        )(x)
+
+    # # create multiple layers of conv
+    # for i in range(conv_layers):
+    #     x = layers.Conv2DTranspose(
+    #         filters = projection_dim // (2 ** (i + 1)),
+    #         kernel_size = 4,
+    #         strides = upscale_factor,
+    #         padding = "same",
+    #         activation = "relu"
+    #     )(x)
     
-    # final output activation
-    outputs = layers.Conv2DTranspose(
-        filters = 1,
-        kernel_size = 3,
-        strides = 1,
-        padding = "same",
-        activation = "sigmoid"
-    )(x)
+    # # final output activation
+    # outputs = layers.Conv2DTranspose(
+    #     filters = 1,
+    #     kernel_size = 4,
+    #     strides = 2,
+    #     padding = "same",
+    #     activation = "sigmoid"
+    # )(x)
+    x = upsampling_block(x, 64)
+    x = upsampling_block(x, 32) 
+    x = upsampling_block(x, 16)
+    x = upsampling_block(x, 8)
+    outputs = layers.Conv2D(1, 1, activation="sigmoid")(x)
     
     model = keras.Model(inputs=inputs, outputs=outputs)
     # print(model.summary)
@@ -189,7 +208,7 @@ def run_experiment(model, x_train, y_train, x_test, y_test):
     # compile model
     model.compile(
         optimizer=optimizer,
-        loss = "mean_squared_error",
+        loss = keras.losses.BinaryCrossentropy(),
         metrics=["mean_absolute_error", "mean_squared_error"]
     )
 
@@ -257,25 +276,21 @@ def process_dataset():
         # open image
         if os.path.isfile(image_path):
             with rasterio.open(image_path) as image:
-                image_data = image.read()
-                image_profile = image.profile
+                image_data = image.read().transpose((1,2,0))
                 
                 # format input data
-                image_data_t = np.array(image_data).transpose((1,2,0))
-                X_split = np.array(image_data_t[:, :, :5])
-                Y_split = np.array(image_data_t[:, :, 5:])
+                X_split = image_data[:, :, :5]
+                Y_split = image_data[:, :, 5:6]
                 
-                # normalize X_split and Y_split - add 9999 (to Y_split only) then divide by max
-                X_split_r = X_split / np.max(X_split)
-                Y_split_r = (Y_split + 9999) / (np.max(Y_split + 9999))
+                # normalize X_split and Y_split then divide by max
+                X_split_r = X_split / (np.max(X_split) + 1e-6)  # avoid division by zero
+                Y_split_r = (Y_split - Y_split.min()) / (Y_split.max() - Y_split.min() + 1e-6)
                 
                 X.append(X_split_r)
                 Y.append(Y_split_r)
     
     X = np.array(X)
     Y = np.array(Y) 
-    # print(X.shape)
-    # print(Y.shape)
     
     # split into 80/20 train test
     x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
@@ -294,18 +309,13 @@ def process_dataset():
 ####################################################
 def preprocess_image(image_path):
     with rasterio.open(image_path) as image:
-        image_data = image.read()
-
-        image_profile = image.profile
-
-        # format input data
-        image_data_t = np.array(image_data).transpose((1,2,0))
-        image_data_t = image_data_t[:, :, :5]
+        image_data = image.read().transpose(1,2,0)[0:, :, :5]
+        image_data = image_data / (np.max(image_data) + 1e-6)  # normalize input
         
         # The model expects (# samples, 256, 256, 1), expand for batch dimension
-        processed_image = np.expand_dims(image_data_t, axis=0)
+        # processed_image = np.expand_dims(image_data_t, axis=0)
 
-    return processed_image
+    return image_data
 
 #################################################################
 # errsr_model_prediction                                        #
@@ -317,9 +327,9 @@ def errsr_model_prediction(image_path):
 
     model = create_vit_encoder_decoder()
     model.load_weights(checkpoint_filepath)
-    processed_image = preprocess_image(image_path)
+    #processed_image = preprocess_image(image_path)
     
-    methane_prediction = model.predict(processed_image)
+    #methane_prediction = model.predict(processed_image[None])
     
     # print(methane_prediction[0])
     # print(np.array([methane_prediction[0]]).shape)
@@ -328,8 +338,20 @@ def errsr_model_prediction(image_path):
     #       to errors with the model implementation (likely conv2dTranspose?).
     #       Could also be partly due to the small dataset size
 
-    plt.imshow(methane_prediction[0])
-    plt.title("Predicted Methane Plume Map")
+    pred = model.predict(preprocess_image(image_path)[None])[0,:,:,0]
+
+    print("Pred min:", pred.min())
+    print("Pred max:", pred.max())
+    print("Pred mean:", pred.mean())
+    print("Pred std:", pred.std())
+
+    plt.figure(figsize=(6, 6))
+    plt.imshow(
+        np.log1p(pred),
+        cmap="cividis"
+    )
+    plt.colorbar()
+    plt.title("Predicted Methane Plume (log scale)")
     plt.show()
     
     # get profile of base input image
@@ -345,7 +367,7 @@ def errsr_model_prediction(image_path):
         **{**base_profile, "count": 1},
         mode="w"
     ) as file:
-        file.write(np.array(methane_prediction[0]).transpose(2,0,1))
+        file.write(np.expand_dims(pred, axis=0))
         
     # get bounds of temp file
     with rasterio.open(temp_path) as t:
