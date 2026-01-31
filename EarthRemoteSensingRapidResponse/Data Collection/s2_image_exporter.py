@@ -8,8 +8,8 @@ import requests
 import json
 import shutil
 
-CLOUD_COVER_MAX = 5
-DATETIME_RANGE = 28
+CLOUD_COVER_MAX = 5 # Max percentage of clouds 
+DATETIME_RANGE = 90 # Start date of plume, to DATETIME_RANGE days after
 
 ee.Authenticate() 
 
@@ -164,16 +164,17 @@ for filename in os.listdir(emit_folder_path):
         observedTime = data["features"][0]['properties']['UTC Time Observed']
         dt_obj = datetime.strptime(observedTime, "%Y-%m-%dT%H:%M:%SZ").date()
         startDate = dt_obj.isoformat()
-        startDate_two_days_after = (dt_obj + timedelta(days=DATETIME_RANGE)).isoformat()
+        endDate = (dt_obj + timedelta(days=DATETIME_RANGE)).isoformat()
 
         found = get_s2_image_and_export(firstCoordLong, 
                                 firstCoordLat, 
                                 startDate, 
-                                startDate_two_days_after,
+                                endDate,
                                 outputFolder)
-        
+      
         if found:
             foundImageFolderList.append(folderIndex)
         
     folderIndex += 1
-print(foundImageFolderList)
+print("Folders with images: ", foundImageFolderList)
+print("Count: ", len(foundImageFolderList))
