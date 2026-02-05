@@ -324,17 +324,42 @@ def errsr_model_prediction(image_path):
     # print(methane_prediction[0])
     # print(np.array([methane_prediction[0]]).shape)
     
-    # NOTE: the prediction seems to not be correct, likely due
-    #       to errors with the model implementation (likely conv2dTranspose?).
-    #       Could also be partly due to the small dataset size
-
-    plt.imshow(methane_prediction[0])
-    plt.title("Predicted Methane Plume Map")
-    plt.show()
-    
     # get profile of base input image
     with rasterio.open(image_path) as base_img:
         base_profile = base_img.profile
+        
+        # rasterio is 1-indexed
+        b = base_img.read(1)
+        g = base_img.read(2)
+        r = base_img.read(3)
+        b11 = base_img.read(4)
+        b12 = base_img.read(5)
+    
+    rgb = np.dstack((
+        (((r - r.min()) / (r.max() - r.min())) * 255),
+        (((g - g.min()) / (g.max() - g.min())) * 255),
+        (((b - b.min()) / (b.max() - b.min())) * 255))
+    ).astype('uint8')
+    
+    # NOTE: the prediction seems to not be correct, likely due
+    #       to errors with the model implementation (likely conv2dTranspose?).
+    #       Could also be partly due to the small dataset size
+    
+    _, axes = plt.subplots(nrows=2, ncols=2, figsize=(8,8))
+
+    axes[0,0].imshow(methane_prediction[0])
+    axes[0,0].set_title("Predicted Methane Plume Map")
+    axes[0,1].imshow(rgb)
+    axes[0,1].set_title('RGB S2 Input (Bands 2, 3, 4)')
+    axes[1,0].imshow(b11)
+    axes[1,0].set_title('SWIR-1 S2 Input (Band 11)')
+    axes[1,1].imshow(b12)
+    axes[1,1].set_title('SWIR-2 S2 Input (Band 12)')
+    plt.show()
+    
+    # NOTE: validation images do not have EMIT plume attached to them.
+    #       should consider adding them (append as a sixth band) to
+    #       allow for some comparison
     
     # file path to save .tif to temporarily
     temp_path = "EarthRemoteSensingRapidResponse/Predictions/testprediction.tf"
@@ -382,20 +407,20 @@ def errsr_model_prediction(image_path):
 ########
 def main():
     # process dataset
-    (x_train, y_train), (x_test, y_test) = process_dataset()
+    # (x_train, y_train), (x_test, y_test) = process_dataset()
     
     # create model and evaluate
-    vit_classifier = create_vit_encoder_decoder()
-    history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+    # vit_classifier = create_vit_encoder_decoder()
+    # history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
 
     # Input image into model and give prediction
     test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20230120T164611_20230120T164959_T15SYT.tif"
     errsr_model_prediction(test_image_path)
 
     # plot metrics
-    plot_history(history, "loss")
-    plot_history(history, "mean_squared_error")
-    plot_history(history, "mean_absolute_error")
+    # plot_history(history, "loss")
+    # plot_history(history, "mean_squared_error")
+    # plot_history(history, "mean_absolute_error")
     
     return
 
