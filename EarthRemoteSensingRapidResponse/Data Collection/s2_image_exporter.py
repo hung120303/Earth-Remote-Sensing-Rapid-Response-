@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import requests
 import json
 import shutil
+import math
 
 CLOUD_COVER_MAX = 5 # Max percentage of clouds 
 DATETIME_RANGE = 90 # Start date of plume, to DATETIME_RANGE days after
@@ -47,7 +48,7 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
     boundingBoxes = pointSourceCollection.map(getBoundingBox)
 
     # Convert feature geometry to region of interest
-    roi = boundingBoxes.filterBounds(point).geometry()
+    roi = boundingBoxes.filterBounds(point).geometry() # Bottom-left corner is the given coordinate, and the coordinate that closes off the roi
 
     # Import Sentinel-2 Imagery (harmonized)
     S2_Harmonized = ee.ImageCollection('COPERNICUS/S2_HARMONIZED') \
@@ -116,6 +117,89 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
         print(f"Exception caught: {e}")
         return False
 
+def get_utm_crs_for_point(longitude, latitude):
+    """
+    Determines the EPSG code for the appropriate UTM projection for a given point.
+    WGS is recorded in degrees, while UTM (Universal Transverse Mercator) uses meters. 
+    """
+    utm_zone = int((longitude + 180) / 6) + 1
+    if latitude >= 0:
+        # Northern hemisphere (e.g., EPSG:326XX)
+        return f'EPSG:326{utm_zone}'
+    else:
+        # Southern hemisphere (e.g., EPSG:327XX)
+        return f'EPSG:327{utm_zone}'
+
+def generate_overlapping_grid_meters(geometry_to_cover):
+    """
+    Generates an array of lon, lat coordinates correspodning to 
+    overlapping square grid cells that cover the given geometry, 
+    performing calculations in meters using an appropriate UTM projection.
+
+    Args:
+        geometry_to_cover (ee.Geometry): The geometry to cover with grid cells.
+
+    Returns:
+        [][] - array of [[lon, lat], ... ] 
+    """
+    # Check if geometry is empty
+    if geometry_to_cover.getInfo()['coordinates'] == []:
+        print("Warning: Geometry to cover is empty. Cannot generate grid.")
+        return ee.FeatureCollection([])
+
+    # Determine UTM CRS
+    centroid = geometry_to_cover.centroid(1)
+    lon = centroid.coordinates().get(0).getInfo()
+    lat = centroid.coordinates().get(1).getInfo()
+    utm_crs = get_utm_crs_for_point(lon, lat)
+
+    # Project the plume geometry to UTM
+    projected_geometry = geometry_to_cover.transform(utm_crs, 1)
+    projected_bounds = projected_geometry.bounds(1, utm_crs)
+
+    coords_proj = projected_bounds.coordinates().getInfo()
+
+    coords_proj = coords_proj[0]
+    min_x_proj, min_y_proj = coords_proj[0]
+    max_x_proj, max_y_proj = coords_proj[2]
+
+    tile_width_meters = 2560 # 2.56km
+    tile_height_meters = 2560 # 2.56km
+
+    # Add a small buffer to bounds to ensure full coverage
+    buffer_x = tile_width_meters * 0.1
+    buffer_y = tile_height_meters * 0.1
+    min_x_proj -= buffer_x
+    min_y_proj -= buffer_y
+    max_x_proj += buffer_x
+    max_y_proj += buffer_y
+
+
+
+    lon_lat_arr = []
+    current_x = min_x_proj
+    while current_x < max_x_proj:
+        current_y = min_y_proj
+        while current_y < max_y_proj:
+            tile_rect_proj = ee.Geometry.Rectangle(
+                [current_x, current_y,
+                 current_x + tile_width_meters,
+                 current_y + tile_height_meters],
+                crs=utm_crs,
+                geodesic=False
+            )
+            
+            if tile_rect_proj.transform('EPSG:4326', 1).intersects(geometry_to_cover, 1):
+                
+                utm_point = ee.Geometry.Point([current_x, current_y], utm_crs)
+                wgs84_point = utm_point.transform('EPSG:4326', 1)
+
+                lon_lat_arr.append(wgs84_point.coordinates().getInfo())
+            current_y += tile_height_meters
+        current_x += tile_width_meters
+    
+    return lon_lat_arr
+
 # EMIT Plume list
 emit_folder_path = './EMIT_Plumes/EMITL2BCH4PLM_001-20260122_054222'
 
@@ -136,19 +220,11 @@ test_emit_no_s2_folder = "./unpaired_EMIT/"
 folderIndex = 0
 foundImageFolderList = []
 for filename in os.listdir(emit_folder_path):
+    grid_exists = False
     if filename.endswith('.json'):
+        # Initialize folder for current EMIT plume
         outputFolder = os.path.join(test_output_folder, str(folderIndex))
         os.makedirs(outputFolder, exist_ok=True)
-
-        # Get the related .tif file
-        parts = filename.split("META")
-        tif_file = parts[0] + parts[1].replace('json', 'tif')
-        
-        tif_path_orig = os.path.join(emit_folder_path, tif_file)
-        tif_path_new = os.path.join(outputFolder, tif_file)
-
-        # Copy .tif file to output folder
-        shutil.copy(tif_path_orig, tif_path_new)
 
         # Get JSON metadata
         json_path = os.path.join(emit_folder_path, filename)
@@ -161,22 +237,58 @@ for filename in os.listdir(emit_folder_path):
         firstCoordLong = firstCoord[0]
         firstCoordLat = firstCoord[1]
 
+
         # Dates
         observedTime = data["features"][0]['properties']['UTC Time Observed']
         dt_obj = datetime.strptime(observedTime, "%Y-%m-%dT%H:%M:%SZ").date()
         startDate = dt_obj.isoformat()
         endDate = (dt_obj + timedelta(days=DATETIME_RANGE)).isoformat()
 
-        found = get_s2_image_and_export(firstCoordLong, 
-                                firstCoordLat, 
-                                startDate, 
-                                endDate,
-                                outputFolder)
-      
-        if found:
-            foundImageFolderList.append(folderIndex)
-        else:
-            os.remove(tif_path_new)
+        # Get meter-based tiles
+        plume_json_geometry = data["features"][0]['geometry']
+        plume_ee_geometry = ee.Geometry(plume_json_geometry)
+
+        lon_lat_grid_array = generate_overlapping_grid_meters(plume_ee_geometry)
+
+        if not lon_lat_grid_array:
+            print("No grids genereated for this EMIT plume")
+            continue
+
+        print("Current Plume: ", firstCoordLong, " : ", firstCoordLat)
+
+        for i, coord in enumerate(lon_lat_grid_array):
+            lon = coord[0]
+            lat = coord[1]
+
+
+            outputFolder = os.path.join(test_output_folder, str(folderIndex), f"grid_{i+1}")
+            os.makedirs(outputFolder, exist_ok=True)
+            
+            # Get the related .tif file
+            parts = filename.split("META")
+            tif_file = parts[0] + parts[1].replace('json', 'tif')
+            
+            tif_path_orig = os.path.join(emit_folder_path, tif_file)
+            tif_path_new = os.path.join(outputFolder, tif_file)
+
+            # Copy .tif file to output folder
+            shutil.copy(tif_path_orig, tif_path_new)
+
+            found = get_s2_image_and_export(lon, 
+                                    lat, 
+                                    startDate, 
+                                    endDate,
+                                    outputFolder)
+        
+            if found:
+                foundImageFolderList.append(outputFolder)
+                grid_exists = True
+            else:
+                os.remove(tif_path_new)
+                os.rmdir(outputFolder)
+    
+        if not grid_exists:
+            outputFolder = os.path.join(test_output_folder, str(folderIndex))
             os.rmdir(outputFolder)
 
             # Folder for unpaired emit plumes
@@ -186,6 +298,7 @@ for filename in os.listdir(emit_folder_path):
             # Copy .tif file to output folder
             shutil.copy(tif_path_orig, tif_path_new)
         
-    folderIndex += 1
+        folderIndex += 1
+
 print("Folders with images: ", foundImageFolderList)
 print("Count: ", len(foundImageFolderList))
