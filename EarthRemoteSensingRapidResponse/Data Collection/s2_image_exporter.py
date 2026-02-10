@@ -27,7 +27,9 @@ def getBoundingBox(feature):
     box = buffer.bounds()
     return box
 
-def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, output_local_dir):
+found_s2_tifs = []
+
+def get_s2_image_and_export(roi_to_use, start_date_str, end_date_str, output_local_dir):
     """
     Fetches and exports a Sentinel-2 image for a given point and date range.
 
@@ -40,6 +42,8 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
     Returns true if URL was successfully downloaded,
             false otherwise
     """
+
+    '''
     print(f"\nProcessing point: Lon={longitude}, Lat={latitude}, Date Range={start_date_str} to {end_date_str}")
 
     point = ee.Geometry.Point(longitude, latitude)
@@ -49,6 +53,23 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
 
     # Convert feature geometry to region of interest
     roi = boundingBoxes.filterBounds(point).geometry() # Bottom-left corner is the given coordinate, and the coordinate that closes off the roi
+    '''
+    log_lon, log_lat = 'N/A', 'N/A'
+    try:
+        roi_info = roi_to_use.getInfo()
+        if not roi_info or 'coordinates' not in roi_info or not roi_info['coordinates']:
+            print(f"Provided ROI is empty or invalid.")
+            return False
+        
+        centroid_coords = roi_to_use.centroid(1).coordinates().getInfo()
+        log_lon, log_lat = centroid_coords[0], centroid_coords[1]
+    except Exception as e:
+        print(f"Error getting centroid for ROI: {e}")
+        log_lon, log_lat = 'Error (Centroid)', 'Error (Centroid)'
+
+    print(f"\nProcessing ROI around Lon={log_lon}, Lat={log_lat}, Date Range={start_date_str} to {end_date_str}")
+
+    roi = roi_to_use
 
     # Import Sentinel-2 Imagery (harmonized)
     S2_Harmonized = ee.ImageCollection('COPERNICUS/S2_HARMONIZED') \
@@ -84,7 +105,8 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
     download_params = {
         'format': 'GEO_TIFF',       
         'region': roi.getInfo(),         
-        'dimensions': '256x256',    
+        'dimensions': '256x256',  
+        'crs': 'EPSG:4326'
     }
 
     try:
@@ -99,6 +121,9 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
     output_filename = S2ImageResample.id().getInfo()
     output_filepath = os.path.join(output_local_dir, f"{output_filename}.tif")
 
+    if output_filename in found_s2_tifs:
+        return False
+
     print(f"Downloading image to: {output_filepath}")
     try:
         # Use requests to download the file
@@ -109,6 +134,7 @@ def get_s2_image_and_export(longitude, latitude, start_date_str, end_date_str, o
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
         print(f"Image downloaded successfully to {output_filepath}")
+        found_s2_tifs.append(output_filename)
         return True
     except requests.exceptions.RequestException as e:
         print(f"Failed to download image from URL: {e}")
@@ -176,29 +202,58 @@ def generate_overlapping_grid_meters(geometry_to_cover):
 
 
 
-    lon_lat_arr = []
+    rois_list = []
     current_x = min_x_proj
     while current_x < max_x_proj:
         current_y = min_y_proj
         while current_y < max_y_proj:
-            tile_rect_proj = ee.Geometry.Rectangle(
-                [current_x, current_y,
-                 current_x + tile_width_meters,
-                 current_y + tile_height_meters],
-                crs=utm_crs,
+
+            x1 = current_x
+            y1 = current_y
+            x2 = current_x + tile_width_meters
+            y2 = current_y + tile_height_meters
+
+            utm_corners = [
+                [x1, y1], # Bottom-left
+                [x1, y2], # Top-left
+                [x2, y2], # Top-right
+                [x2, y1], # Bottom-right
+                [x1, y1]  # Close the polygon
+            ]
+
+            tile_rect_proj = ee.Geometry.Polygon(
+                [utm_corners],
+                proj=utm_crs,
                 geodesic=False
             )
             
-            if tile_rect_proj.transform('EPSG:4326', 1).intersects(geometry_to_cover, 1):
-                
-                utm_point = ee.Geometry.Point([current_x, current_y], utm_crs)
-                wgs84_point = utm_point.transform('EPSG:4326', 1)
+            if not tile_rect_proj.transform('EPSG:4326', 1).intersects(geometry_to_cover, 1):
+                current_y += tile_height_meters
+                continue
+            
+            # print(tile_rect_proj.bounds(1, utm_crs).coordinates().getInfo())
+            # print(tile_rect_proj.transform('EPSG:4326', 1).bounds().coordinates().getInfo())
 
-                lon_lat_arr.append(wgs84_point.coordinates().getInfo())
+            # utm_point = ee.Geometry.Point([current_x, current_y], utm_crs)
+            # wgs84_point = utm_point.transform('EPSG:4326', 1)
+
+            # print(utm_point.getInfo())
+            # print(wgs84_point.getInfo())
+            
+            # utm_point = ee.Geometry.Point([current_x+ tile_width_meters, current_y+ tile_height_meters], utm_crs)
+            # wgs84_point = utm_point.transform('EPSG:4326', 1)
+
+            # print(utm_point.getInfo())
+            # print(wgs84_point.getInfo())
+            #lon_lat_coords = wgs84_point.coordinates().getInfo() 
+
+            tile_rect_wgs84 = tile_rect_proj.transform('EPSG:4326', 1)
+            
+            rois_list.append(tile_rect_wgs84)
             current_y += tile_height_meters
         current_x += tile_width_meters
     
-    return lon_lat_arr
+    return rois_list
 
 # EMIT Plume list
 emit_folder_path = './EMIT_Plumes/EMITL2BCH4PLM_001-20260122_054222'
@@ -248,17 +303,16 @@ for filename in os.listdir(emit_folder_path):
         plume_json_geometry = data["features"][0]['geometry']
         plume_ee_geometry = ee.Geometry(plume_json_geometry)
 
-        lon_lat_grid_array = generate_overlapping_grid_meters(plume_ee_geometry)
+        roi_array = generate_overlapping_grid_meters(plume_ee_geometry)
 
-        if not lon_lat_grid_array:
+        if not roi_array:
             print("No grids genereated for this EMIT plume")
             continue
 
         print("Current Plume: ", firstCoordLong, " : ", firstCoordLat)
 
-        for i, coord in enumerate(lon_lat_grid_array):
-            lon = coord[0]
-            lat = coord[1]
+        for i, roi in enumerate(roi_array):
+
 
 
             outputFolder = os.path.join(test_output_folder, str(folderIndex), f"grid_{i+1}")
@@ -274,8 +328,7 @@ for filename in os.listdir(emit_folder_path):
             # Copy .tif file to output folder
             shutil.copy(tif_path_orig, tif_path_new)
 
-            found = get_s2_image_and_export(lon, 
-                                    lat, 
+            found = get_s2_image_and_export(roi, 
                                     startDate, 
                                     endDate,
                                     outputFolder)
