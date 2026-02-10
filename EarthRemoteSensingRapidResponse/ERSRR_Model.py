@@ -231,8 +231,6 @@ def run_experiment(model, x_train, y_train, x_test, y_test):
         callbacks=[checkpoint_callback],
     )
 
-    # accuracy calculation is bugged currently: need to fix
-
     # evaluate accuracy
     model.load_weights(checkpoint_filepath)
     _, accuracy, top_5_accuracy = model.evaluate(x_test, y_test)
@@ -333,10 +331,6 @@ def errsr_model_prediction(image_path):
     
     # print(methane_prediction[0])
     # print(np.array([methane_prediction[0]]).shape)
-    
-    # NOTE: the prediction seems to not be correct, likely due
-    #       to errors with the model implementation (likely conv2dTranspose?).
-    #       Could also be partly due to the small dataset size
 
     pred = model.predict(preprocess_image(image_path)[None])[0,:,:,0]
 
@@ -344,15 +338,6 @@ def errsr_model_prediction(image_path):
     print("Pred max:", pred.max())
     print("Pred mean:", pred.mean())
     print("Pred std:", pred.std())
-
-    plt.figure(figsize=(6, 6))
-    plt.imshow(
-        np.log1p(pred),
-        cmap="cividis"
-    )
-    plt.colorbar()
-    plt.title("Predicted Methane Plume (log scale)")
-    plt.show()
     
     # get profile of base input image
     with rasterio.open(image_path) as base_img:
@@ -365,26 +350,33 @@ def errsr_model_prediction(image_path):
         b11 = base_img.read(4)
         b12 = base_img.read(5)
     
+    # normalize rgb values to 0-255
     rgb = np.dstack((
         (((r - r.min()) / (r.max() - r.min())) * 255),
         (((g - g.min()) / (g.max() - g.min())) * 255),
         (((b - b.min()) / (b.max() - b.min())) * 255))
     ).astype('uint8')
     
-    # NOTE: the prediction seems to not be correct, likely due
-    #       to errors with the model implementation (likely conv2dTranspose?).
-    #       Could also be partly due to the small dataset size
-    
-    _, axes = plt.subplots(nrows=2, ncols=2, figsize=(8,8))
+    # create and save subplot figure
+    fig, axes = plt.subplots(nrows=1, ncols=4, figsize=(14,3), layout="constrained")
+        
+    axes[0].imshow(
+        np.log1p(pred),
+        cmap="cividis"
+    )
+    axes[0].set_title("Predicted Methane Plume (log scale)")
+    sm = plt.cm.ScalarMappable(cmap="cividis")
+    fig.colorbar(sm, ax=axes[0], shrink=1)
 
-    # axes[0,0].imshow(methane_prediction[0])
-    axes[0,0].set_title("Predicted Methane Plume Map")
-    axes[0,1].imshow(rgb)
-    axes[0,1].set_title('RGB S2 Input (Bands 2, 3, 4)')
-    axes[1,0].imshow(b11)
-    axes[1,0].set_title('SWIR-1 S2 Input (Band 11)')
-    axes[1,1].imshow(b12)
-    axes[1,1].set_title('SWIR-2 S2 Input (Band 12)')
+    axes[0].set_title("Predicted Methane Plume Map")
+    axes[1].imshow(rgb)
+    axes[1].set_title('RGB S2 Input (Bands 2, 3, 4)')
+    axes[2].imshow(b11)
+    axes[2].set_title('SWIR-1 S2 Input (Band 11)')
+    axes[3].imshow(b12)
+    axes[3].set_title('SWIR-2 S2 Input (Band 12)')
+    
+    fig.savefig("EarthRemoteSensingRapidResponse/Predictions/testprediction.png")
     plt.show()
     
     # NOTE: validation images do not have EMIT plume attached to them.
@@ -424,13 +416,7 @@ def errsr_model_prediction(image_path):
     ground_overlay.latlonbox.east = east
     ground_overlay.latlonbox.west = west
     
-    # NOTE: this saves the data as a .kml, but its not visualized properly. 
-    #       ideally we'd overlay the methane with the s2 image and save that,
-    #       but we should probably just focus on visualizing the actual plume
-    #       first for the sake of time
-    
     kml.save("EarthRemoteSensingRapidResponse/Predictions/testprediction.kml")
-        
 
 ########
 # main #
