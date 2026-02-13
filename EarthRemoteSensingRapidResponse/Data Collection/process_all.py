@@ -108,12 +108,9 @@ for i in range(len(names)):
         show(array)
         for i in range(s2_data.shape[0]):
             show(s2_data[i])
-        
-        
-
 
     # Bad data checking
-    VALID_PIXELS_S2 = 256**2 - (256**2/5)
+    VALID_PIXELS_S2 = 256*256 * 0.95
     MIN_EMIT_PPM_VAL = 300
     emit_max_plume_val = np.max(np.array(array)) # Check if the max value of resampled plume is 0 (rest of the image should be 0)
     nonzero_s2_value_count = np.count_nonzero(np.array(s2_data[3])) # Count number of nonzero (valid) s2 pixels
@@ -133,6 +130,7 @@ for i in range(len(names)):
         print("Problem with s2 image: ", s2_path)
         bad_s2 = True
         bad_s2_count += 1
+        #show(s2_data[3])
 
     if bad_emit or bad_s2:
         bad_pair_count += 1
