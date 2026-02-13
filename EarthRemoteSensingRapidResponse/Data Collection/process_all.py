@@ -46,6 +46,12 @@ for path, subfolders, file in os.walk(dataset):
 n = len(names)
 print(f"Processing {n} datapoints: ")
 
+bad_emit_count = 0
+bad_s2_count = 0
+bad_pair_count = 0 
+
+bad_emit_max_vals = []
+
 for i in range(len(names)):
     print((i+1), names[i])
     s2_path = s2_filepaths[i]
@@ -100,19 +106,36 @@ for i in range(len(names)):
         # visualize data
         show(emit_data)
         show(array)
-        show(s2_data[1])
+        for i in range(s2_data.shape[0]):
+            show(s2_data[i])
+        
+        
+
 
     # Bad data checking
-    MAX_ZERO_PIXELS_S2 = 128
-    emit_max_plume_val = np.max(np.array(emit_data)) # Check if the max value of resampled plume is 0 (rest of the image should be 0)
-    nonzero_s2_value_count = np.count_nonzero(np.array(s2_data)) # Count number of nonzero (valid) s2 pixels
+    VALID_PIXELS_S2 = 256**2 - (256**2/5)
+    MIN_EMIT_PPM_VAL = 300
+    emit_max_plume_val = np.max(np.array(array)) # Check if the max value of resampled plume is 0 (rest of the image should be 0)
+    nonzero_s2_value_count = np.count_nonzero(np.array(s2_data[3])) # Count number of nonzero (valid) s2 pixels
+    bad_emit = False
+    bad_s2 = False
 
-    # if(emit_max_plume_val == 0):
-    #     print("Problem with EMIT re-sampling: ", emit_path)
-    # if(nonzero_s2_value_count > MAX_ZERO_PIXELS_S2):
-    #     print("Problem with s2 image: ", s2_path)
+    if(emit_max_plume_val < 0): # Plumes with -9999 as the max have purple across the baord
+        print("Problem with EMIT re-sampling: ", emit_path)
+        #bad_emit_max_vals.append(emit_max_plume_val)
+        bad_emit = True
+        bad_emit_count += 1
+    elif emit_max_plume_val < MIN_EMIT_PPM_VAL: # These plumes did have some ppm visible 
+        print("") # 
+        #show(array)
     
+    if(nonzero_s2_value_count < VALID_PIXELS_S2):
+        print("Problem with s2 image: ", s2_path)
+        bad_s2 = True
+        bad_s2_count += 1
 
+    if bad_emit or bad_s2:
+        bad_pair_count += 1
 
 
     final_tif_output_filepaths.append(f"EarthRemoteSensingRapidResponse/Data Collection/{output_folder_path}{names[i]}")
@@ -125,7 +148,9 @@ for i in range(len(names)):
         for band, data in enumerate(combined_data, start=1):
             file.write(data, band)
 
-
+print("Bad emits: ",bad_emit_count)
+print("Bad s2s: ", bad_s2_count)
+print("Bad pairs: ",bad_pair_count)
 
 
 
