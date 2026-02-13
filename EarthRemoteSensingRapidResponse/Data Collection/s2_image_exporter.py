@@ -95,12 +95,12 @@ def get_s2_image_and_export(roi_to_use, start_date_str, end_date_str, output_loc
 
     # Normalize image (Sentinel 2 imagery has values of 0-10000,
     #so divide by 10000 to get values between 0-1)
-    S2ImageRescale = S2ImageResample.divide(10000)
+    S2ImageRescale = S2ImageResample.divide(1) # Want pure values
     clipS2Image = S2ImageRescale.clip(roi)
 
     # Visualization parameters (for export.visualize)
-    visParam = {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 0.3}
-    clipS2Image = clipS2Image.visualize(**visParam)
+    # visParam = {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 0.3}
+    # clipS2Image = clipS2Image.visualize(**visParam)
 
     download_params = {
         'format': 'GEO_TIFF',       

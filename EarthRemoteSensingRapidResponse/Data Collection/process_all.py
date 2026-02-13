@@ -17,12 +17,16 @@ import time
 
 # Set to true to scan through each of the datapoints
 INSPECT_IMAGES = False
-folder_path = "/2_10_2026_data"
+folder_path = "/2_12_2026_data_current"
+
+output_folder_path = "/train_test_2_12"
 
 # define file paths
 names = []
 s2_filepaths = []
 emit_filepaths = []
+final_tif_output_filepaths = []
+badFiles = []
 
 dataset = f"EarthRemoteSensingRapidResponse/Data Collection/{folder_path}"
 for path, subfolders, file in os.walk(dataset):
@@ -64,8 +68,8 @@ for i in range(len(names)):
     # define a window based on the s2 image: this will be used to resample the EMIT plume
     window = rasterio.windows.from_bounds(*s2_bounds, transform=emit_transform)
 
-    print("S2: ",*s2_bounds)
-    print("EMIT: ",emit_bounds)
+    #print("S2: ",*s2_bounds)
+    #print("EMIT: ",emit_bounds)
 
     # resampling of EMIT plume
     with rasterio.open(emit_path) as emit_image:
@@ -98,12 +102,30 @@ for i in range(len(names)):
         show(array)
         show(s2_data[1])
 
+    # Bad data checking
+    MAX_ZERO_PIXELS_S2 = 128
+    emit_max_plume_val = np.max(np.array(emit_data)) # Check if the max value of resampled plume is 0 (rest of the image should be 0)
+    nonzero_s2_value_count = np.count_nonzero(np.array(s2_data)) # Count number of nonzero (valid) s2 pixels
 
+    # if(emit_max_plume_val == 0):
+    #     print("Problem with EMIT re-sampling: ", emit_path)
+    # if(nonzero_s2_value_count > MAX_ZERO_PIXELS_S2):
+    #     print("Problem with s2 image: ", s2_path)
+    
+
+
+
+    final_tif_output_filepaths.append(f"EarthRemoteSensingRapidResponse/Data Collection/{output_folder_path}{names[i]}")
     # save combined array as a new file
     with rasterio.open(
-        f"EarthRemoteSensingRapidResponse/Data Collection/train_test_/{names[i]}", 
+        f"EarthRemoteSensingRapidResponse/Data Collection/{output_folder_path}/{names[i]}", 
         **{**s2_profile, "count": 6},
         mode="w"
     ) as file:
         for band, data in enumerate(combined_data, start=1):
             file.write(data, band)
+
+
+
+
+
