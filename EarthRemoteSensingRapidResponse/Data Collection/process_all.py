@@ -17,9 +17,11 @@ import time
 
 # Set to true to scan through each of the datapoints
 INSPECT_IMAGES = False
+RETRIEVE_GOOD = True # condition to only download good images to the folder
+
 folder_path = "/2_12_2026_data_current"
 
-output_folder_path = "/train_test_2_12"
+output_folder_path = "/train_test_2_13_good_data"
 
 # define file paths
 names = []
@@ -110,7 +112,7 @@ for i in range(len(names)):
             show(s2_data[i])
 
     # Bad data checking
-    VALID_PIXELS_S2 = 256*256 * 0.95
+    VALID_PIXELS_S2 = 256*256
     MIN_EMIT_PPM_VAL = 300
     emit_max_plume_val = np.max(np.array(array)) # Check if the max value of resampled plume is 0 (rest of the image should be 0)
     nonzero_s2_value_count = np.count_nonzero(np.array(s2_data[3])) # Count number of nonzero (valid) s2 pixels
@@ -132,7 +134,8 @@ for i in range(len(names)):
         bad_s2_count += 1
         #show(s2_data[3])
 
-    if bad_emit or bad_s2:
+    if (bad_emit or bad_s2) and RETRIEVE_GOOD:
+        continue # skip if we want only the good ones
         bad_pair_count += 1
 
 
