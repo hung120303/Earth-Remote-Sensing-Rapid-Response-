@@ -10,6 +10,14 @@
 #################################################################################################################################
 
 # imports
+import os
+os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
+import sys
+
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+
 import keras
 from keras import layers
 from keras import ops
@@ -17,17 +25,12 @@ from sklearn.model_selection import train_test_split
 import simplekml
 import rasterio
 from rasterio.plot import show
-import numpy as np
-import math
-import matplotlib.pyplot as plt
-import os
 
 # data preparation
-num_classes = 100
 input_shape = (256, 256, 5)
 output_shape = (256, 256, 1)
 
-# hyperparameters
+# default hyperparameters
 learning_rate = 1e-4
 weight_decay = 1e-4
 batch_size = 2
@@ -37,17 +40,27 @@ patch_size = 16  # size of patches to extract from input
 num_patches = (image_size // patch_size) ** 2
 projection_dim = 64 # set to 64 for small datasets, otherwise 768 or 1024
 num_heads = 4
-upscale_factor = 2
+# upscale_factor = 2
 transformer_units = [
     projection_dim * 2,
     projection_dim,
 ] # size of transformer layers
 transformer_layers = 4
-conv_layers = 4
+# conv_layers = 4
 mlp_head_units = [
     2048,
     1024,
 ] # size of dense layers for final classifier (temp: need to adjust)
+
+# argument hyperparameters for tuning
+if (len(sys.argv) > 7):
+    learning_rate = sys.argv[1]
+    weight_decay = sys.argv[2]
+    batch_size = sys.argv[3]
+    num_epochs = sys.argv[4]
+    patch_size = sys.argv[5]
+    num_heads = sys.argv[6]
+    transformer_layers = sys.argv[7]
 
 ####################################################
 # class Patches                                    #
@@ -123,6 +136,7 @@ def mlp(x, hidden_units, dropout_rate):
         x = layers.Dense(units, activation=keras.activations.gelu)(x)
         x = layers.Dropout(dropout_rate)(x)
     return x
+
 #############################################
 # upsampling_block                          #
 #   - convolutional upsampling block        #
@@ -156,8 +170,8 @@ def create_vit_encoder_decoder():
         # x3 = mlp(x2, hidden_units=transformer_units, dropout_rate=0.1)
         # # skip connection 2
         # encoded_patches = layers.Add()([x3, x2])
-        attn = layers.MultiHeadAttention(num_heads=num_heads, key_dim=projection_dim, dropout=0.1
-                                         )(encoded_patches, encoded_patches)
+        
+        attn = layers.MultiHeadAttention(num_heads=num_heads, key_dim=projection_dim, dropout=0.1)(encoded_patches, encoded_patches)
         encoded_patches = layers.LayerNormalization()(encoded_patches+attn)
         mlp_output = mlp(encoded_patches, hidden_units=transformer_units, dropout_rate=0.1)
         encoded_patches = layers.LayerNormalization()(encoded_patches + mlp_output)
@@ -165,7 +179,6 @@ def create_vit_encoder_decoder():
     # convolutional upscaling
     x = layers.Dense(projection_dim)(encoded_patches)
     x = layers.Reshape((image_size // patch_size, image_size // patch_size, projection_dim))(x)
-
 
     # # create multiple layers of conv
     # for i in range(conv_layers):
@@ -185,14 +198,22 @@ def create_vit_encoder_decoder():
     #     padding = "same",
     #     activation = "sigmoid"
     # )(x)
-    x = upsampling_block(x, 64)
-    x = upsampling_block(x, 32) 
-    x = upsampling_block(x, 16)
-    x = upsampling_block(x, 8)
+
+    num_upsample_blocks = round(math.log(patch_size, 2))
+    
+    print(num_upsample_blocks)
+    
+    for i in range(num_upsample_blocks):
+        x = upsampling_block(x, (projection_dim // (2**i)))
+    
+    # x = upsampling_block(x, 64)
+    # x = upsampling_block(x, 32) 
+    # x = upsampling_block(x, 16)
+    # x = upsampling_block(x, 8)
     outputs = layers.Conv2D(1, 1, activation="sigmoid")(x)
     
     model = keras.Model(inputs=inputs, outputs=outputs)
-    # print(model.summary)
+    model.summary()
     
     return model
 
@@ -423,20 +444,20 @@ def errsr_model_prediction(image_path):
 ########
 def main():
     # process dataset
-    # (x_train, y_train), (x_test, y_test) = process_dataset()
+    (x_train, y_train), (x_test, y_test) = process_dataset()
     
     # create model and evaluate
-    # vit_classifier = create_vit_encoder_decoder()
-    # history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+    vit_classifier = create_vit_encoder_decoder()
+    history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
 
     # Input image into model and give prediction
     test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20230120T164611_20230120T164959_T15SYT.tif"
     errsr_model_prediction(test_image_path)
 
     # plot metrics
-    # plot_history(history, "loss")
-    # plot_history(history, "mean_squared_error")
-    # plot_history(history, "mean_absolute_error")
+    plot_history(history, "loss")
+    plot_history(history, "mean_squared_error")
+    plot_history(history, "mean_absolute_error")
     
     return
 
