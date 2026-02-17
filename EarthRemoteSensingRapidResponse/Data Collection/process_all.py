@@ -101,7 +101,10 @@ for i in range(len(names)):
 
     # combine s2 and emit data into one array
     combined_data = np.concatenate((s2_data, array), axis=0)
-        
+    print(np.array(s2_data).shape)
+    print(np.array(array).shape)
+    print(combined_data.shape)
+    continue
     if INSPECT_IMAGES:
         print(combined_data.shape)
 
