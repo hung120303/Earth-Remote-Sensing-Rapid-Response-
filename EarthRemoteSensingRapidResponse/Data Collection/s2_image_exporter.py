@@ -8,6 +8,7 @@ import requests
 import json
 import shutil
 import math
+import rasterio
 
 CLOUD_COVER_MAX = 5 # Max percentage of clouds 
 DATETIME_RANGE = 90 # Start date of plume, to DATETIME_RANGE days after
@@ -34,10 +35,10 @@ def get_s2_image_and_export(roi_to_use, start_date_str, end_date_str, output_loc
     Fetches and exports a Sentinel-2 image for a given point and date range.
 
     Args:
-        longitude (float): Longitude of the target point.
-        latitude (float): Latitude of the target point.
+        roi_to_use:
         start_date_str (str): Start date in 'YYYY-MM-DD' format.
         end_date_str (str): End date in 'YYYY-MM-DD' format.
+        output_local_dir:
 
     Returns true if URL was successfully downloaded,
             false otherwise
@@ -104,8 +105,9 @@ def get_s2_image_and_export(roi_to_use, start_date_str, end_date_str, output_loc
 
     download_params = {
         'format': 'GEO_TIFF',       
-        'region': roi.getInfo(),         
-        'dimensions': '256x256',  
+        'region': roi.getInfo(),     
+        'scale': 20,    
+        #'dimensions': '256x256',  
         'crs': 'EPSG:4326'
     }
 
@@ -269,7 +271,7 @@ output_local_dir = "./s2"
 
 #get_s2_image_and_export(longitude, latitude, start, end, output_local_dir)
 
-test_output_folder = "./test/"
+test_output_folder = "./test_s2_emit_bound/"
 test_emit_no_s2_folder = "./unpaired_EMIT/"
 
 folderIndex = 0
@@ -278,7 +280,7 @@ for filename in os.listdir(emit_folder_path):
     grid_exists = False
     if filename.endswith('.json'):
         # Initialize folder for current EMIT plume
-        outputFolder = os.path.join(test_output_folder, str(folderIndex))
+        outputFolder = os.path.join(test_output_folder, str(folderIndex + 1))
         os.makedirs(outputFolder, exist_ok=True)
 
         # Get JSON metadata
@@ -303,8 +305,50 @@ for filename in os.listdir(emit_folder_path):
         plume_json_geometry = data["features"][0]['geometry']
         plume_ee_geometry = ee.Geometry(plume_json_geometry)
 
-        roi_array = generate_overlapping_grid_meters(plume_ee_geometry)
+        # Get the related .tif file
+        parts = filename.split("META")
+        tif_file = parts[0] + parts[1].replace('json', 'tif')
+        
+        tif_path_orig = os.path.join(emit_folder_path, tif_file)
+        tif_path_new = os.path.join(outputFolder, tif_file)
 
+        with rasterio.open(tif_path_orig) as emit_image:
+            emit_bounds = emit_image.bounds
+
+        x1, y1, x2, y2 = emit_bounds[0], emit_bounds[1], emit_bounds[2], emit_bounds[3]
+
+        corners = [
+                [x1, y1], # Bottom-left
+                [x1, y2], # Top-left
+                [x2, y2], # Top-right
+                [x2, y1], # Bottom-right
+                [x1, y1]  # Close the polygon
+            ]
+
+        bounds = ee.Geometry.Polygon(
+            [corners],
+        )
+
+        # Copy .tif file to output folder
+        shutil.copy(tif_path_orig, tif_path_new)
+
+        found = get_s2_image_and_export(bounds, 
+                                startDate, 
+                                endDate,
+                                outputFolder)
+    
+        if found:
+            foundImageFolderList.append(outputFolder)
+        else:
+            os.remove(tif_path_new)
+            os.rmdir(outputFolder)
+
+        folderIndex += 1
+        continue
+
+
+        ### Code for Grid based s2 images ### Below is skipped
+        roi_array = generate_overlapping_grid_meters(plume_ee_geometry)
         if not roi_array:
             print("No grids genereated for this EMIT plume")
             continue
