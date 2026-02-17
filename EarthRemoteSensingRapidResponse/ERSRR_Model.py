@@ -447,10 +447,8 @@ def errsr_model_prediction(image_path):
 def main():    
     if (args.tune == True):
         # Only run this section during hyperparameter testing.
-        # process dataset
         (x_train, y_train), (x_test, y_test) = process_dataset()
         
-        # create model and evaluate
         vit_classifier = create_vit_encoder_decoder()
         history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
         

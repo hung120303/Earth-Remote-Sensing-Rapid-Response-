@@ -27,3 +27,5 @@ for lr in "${LEARNING_RATES[@]}"; do
         done
     done
 done
+
+#awk '{ if ($9 < min) min = $9 } END { print min }' EarthRemoteSensingRapidResponse/ParamTest/tuningOutput.txt
