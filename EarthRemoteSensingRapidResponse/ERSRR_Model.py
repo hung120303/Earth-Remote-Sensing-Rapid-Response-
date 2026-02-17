@@ -17,6 +17,7 @@ import sys
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import argparse
 
 import keras
 from keras import layers
@@ -26,41 +27,43 @@ import simplekml
 import rasterio
 from rasterio.plot import show
 
+# accept arguments for hyperparameter testing
+parser = argparse.ArgumentParser()
+parser.add_argument('--tune', type=bool, default=False)
+parser.add_argument('--lr', type=float, default=1e-4)
+parser.add_argument('--wd', type=float, default=1e-4)
+parser.add_argument('--bs', type=int, default=4)
+parser.add_argument('--ep', type=int, default=10)
+parser.add_argument('--ps', type=int, default=16)
+parser.add_argument('--nh', type=int, default=4)
+parser.add_argument('--tl', type=int, default=4)
+args = parser.parse_args()
+
 # data preparation
 input_shape = (256, 256, 5)
 output_shape = (256, 256, 1)
 
-# default hyperparameters
-learning_rate = 1e-4
-weight_decay = 1e-4
-batch_size = 4
-num_epochs = 20
+# hyperparameters
+learning_rate = args.lr
+weight_decay = args.wd
+batch_size = args.bs
+num_epochs = args.ep
 image_size = 256 # input is resized to (image_size x image_size) 
-patch_size = 16  # size of patches to extract from input
+patch_size = args.ps  # size of patches to extract from input
 num_patches = (image_size // patch_size) ** 2
 projection_dim = 64 # set to 64 for small datasets, otherwise 768 or 1024
-num_heads = 4
+num_heads = args.nh
 # upscale_factor = 2
 transformer_units = [
     projection_dim * 2,
     projection_dim,
 ] # size of transformer layers
-transformer_layers = 4
+transformer_layers = args.tl
 # conv_layers = 4
 mlp_head_units = [
     2048,
     1024,
 ] # size of dense layers for final classifier (temp: need to adjust)
-
-# argument hyperparameters for tuning
-# if (len(sys.argv) > 7):
-#     learning_rate = sys.argv[1]
-#     weight_decay = sys.argv[2]
-#     batch_size = sys.argv[3]
-#     num_epochs = sys.argv[4]
-#     patch_size = sys.argv[5]
-#     num_heads = sys.argv[6]
-#     transformer_layers = sys.argv[7]
 
 ####################################################
 # class Patches                                    #
@@ -442,13 +445,20 @@ def errsr_model_prediction(image_path):
 # main #
 ########
 def main():    
-    if len(sys.argv) > 1:
+    if (args.tune == True):
+        # Only run this section during hyperparameter testing.
         # process dataset
         (x_train, y_train), (x_test, y_test) = process_dataset()
         
         # create model and evaluate
         vit_classifier = create_vit_encoder_decoder()
         history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+        
+        final_mse = history.history["mean_squared_error"][-1]
+        final_val_mse = history.history["val_mean_squared_error"][-1]
+        
+        with open("EarthRemoteSensingRapidResponse/ParamTest/tuningOutput.txt", "a") as file:
+            file.write(f"lr={args.lr}, wd={args.wd}, bs={args.bs}, ep={args.ep}, ps={args.ps}, nh={args.nh}, tl={args.tl}: MSE={final_mse}, val_MSE={final_val_mse}\n")
         
     else:
         # process dataset
