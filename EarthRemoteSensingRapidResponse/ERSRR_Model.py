@@ -33,8 +33,8 @@ output_shape = (256, 256, 1)
 # default hyperparameters
 learning_rate = 1e-4
 weight_decay = 1e-4
-batch_size = 2
-num_epochs = 100
+batch_size = 4
+num_epochs = 20
 image_size = 256 # input is resized to (image_size x image_size) 
 patch_size = 16  # size of patches to extract from input
 num_patches = (image_size // patch_size) ** 2
@@ -53,14 +53,14 @@ mlp_head_units = [
 ] # size of dense layers for final classifier (temp: need to adjust)
 
 # argument hyperparameters for tuning
-if (len(sys.argv) > 7):
-    learning_rate = sys.argv[1]
-    weight_decay = sys.argv[2]
-    batch_size = sys.argv[3]
-    num_epochs = sys.argv[4]
-    patch_size = sys.argv[5]
-    num_heads = sys.argv[6]
-    transformer_layers = sys.argv[7]
+# if (len(sys.argv) > 7):
+#     learning_rate = sys.argv[1]
+#     weight_decay = sys.argv[2]
+#     batch_size = sys.argv[3]
+#     num_epochs = sys.argv[4]
+#     patch_size = sys.argv[5]
+#     num_heads = sys.argv[6]
+#     transformer_layers = sys.argv[7]
 
 ####################################################
 # class Patches                                    #
@@ -370,6 +370,7 @@ def errsr_model_prediction(image_path):
         r = base_img.read(3)
         b11 = base_img.read(4)
         b12 = base_img.read(5)
+        emit = base_img.read(6)
     
     # normalize rgb values to 0-255
     rgb = np.dstack((
@@ -379,7 +380,7 @@ def errsr_model_prediction(image_path):
     ).astype('uint8')
     
     # create and save subplot figure
-    fig, axes = plt.subplots(nrows=1, ncols=4, figsize=(14,3), layout="constrained")
+    fig, axes = plt.subplots(nrows=1, ncols=5, figsize=(14,3), layout="constrained")
         
     axes[0].imshow(
         np.log1p(pred),
@@ -390,19 +391,17 @@ def errsr_model_prediction(image_path):
     fig.colorbar(sm, ax=axes[0], shrink=1)
 
     axes[0].set_title("Predicted Methane Plume Map")
-    axes[1].imshow(rgb)
-    axes[1].set_title('RGB S2 Input (Bands 2, 3, 4)')
-    axes[2].imshow(b11)
-    axes[2].set_title('SWIR-1 S2 Input (Band 11)')
-    axes[3].imshow(b12)
-    axes[3].set_title('SWIR-2 S2 Input (Band 12)')
+    axes[1].imshow(emit, cmap="cividis")
+    axes[1].set_title('EMIT Ground Truth')
+    axes[2].imshow(rgb)
+    axes[2].set_title('RGB S2 Input (Bands 2, 3, 4)')
+    axes[3].imshow(b11)
+    axes[3].set_title('SWIR-1 S2 Input (Band 11)')
+    axes[4].imshow(b12)
+    axes[4].set_title('SWIR-2 S2 Input (Band 12)')
     
     fig.savefig("EarthRemoteSensingRapidResponse/Predictions/testprediction.png")
     plt.show()
-    
-    # NOTE: validation images do not have EMIT plume attached to them.
-    #       should consider adding them (append as a sixth band) to
-    #       allow for some comparison
     
     # file path to save .tif to temporarily
     temp_path = "EarthRemoteSensingRapidResponse/Predictions/testprediction.tf"
@@ -442,23 +441,33 @@ def errsr_model_prediction(image_path):
 ########
 # main #
 ########
-def main():
-    # process dataset
-    (x_train, y_train), (x_test, y_test) = process_dataset()
-    
-    # create model and evaluate
-    vit_classifier = create_vit_encoder_decoder()
-    history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+def main():    
+    if len(sys.argv) > 1:
+        # process dataset
+        (x_train, y_train), (x_test, y_test) = process_dataset()
+        
+        # create model and evaluate
+        vit_classifier = create_vit_encoder_decoder()
+        history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+        
+    else:
+        # process dataset
+        (x_train, y_train), (x_test, y_test) = process_dataset()
+        
+        # create model and evaluate
+        vit_classifier = create_vit_encoder_decoder()
+        history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+        
+        # plot metrics
+        plot_history(history, "loss")
+        plot_history(history, "mean_squared_error")
+        plot_history(history, "mean_absolute_error")
+        
+        # Input image into model and give prediction
+        test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20241010T102941_20241010T103402_T31SES_EMIT_L2B_CH4PLM_001_20241006T090738_003685grid_1.tif"
+        errsr_model_prediction(test_image_path)
 
-    # Input image into model and give prediction
-    test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20230120T164611_20230120T164959_T15SYT.tif"
-    errsr_model_prediction(test_image_path)
-
-    # plot metrics
-    plot_history(history, "loss")
-    plot_history(history, "mean_squared_error")
-    plot_history(history, "mean_absolute_error")
-    
+  
     return
 
 if __name__ == "__main__":
