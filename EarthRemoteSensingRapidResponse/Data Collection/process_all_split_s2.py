@@ -239,8 +239,9 @@ for i in range(len(names)):
 
                 transform = combined_image.window_transform(window)
 
+                show(s2_data[3])
                 data = combined_image.read(window=window)
-
+                show(data[3])
                 # Bad data checking
                 VALID_PIXELS_S2 = 256*256
                 MIN_EMIT_PPM_VAL = 300
