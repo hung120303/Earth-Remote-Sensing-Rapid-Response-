@@ -25,7 +25,7 @@ from keras import ops
 # from sklearn.model_selection import train_test_split 
 import simplekml
 import rasterio
-# from rasterio.plot import show
+from rasterio.plot import show
 
 # accept arguments for hyperparameter testing
 parser = argparse.ArgumentParser()
@@ -354,6 +354,7 @@ def errsr_model_prediction(image_path):
     # get profile of base input image
     with rasterio.open(image_path) as base_img:
         base_profile = base_img.profile
+        base_transform = base_img.transform
         
         # rasterio is 1-indexed
         b = base_img.read(1)
@@ -369,32 +370,36 @@ def errsr_model_prediction(image_path):
         (((g - g.min()) / (g.max() - g.min())) * 255),
         (((b - b.min()) / (b.max() - b.min())) * 255))
     ).astype('uint8')
+    rgb = np.transpose(rgb, (2, 0, 1))
+    print(rgb.shape)
     
     # create and save subplot figure
-    fig, axes = plt.subplots(nrows=1, ncols=5, figsize=(14,3), layout="constrained")
-        
-    axes[0].imshow(
-        np.log1p(pred),
-        cmap="cividis"
-    )
-    axes[0].set_title("Predicted Methane Plume (log scale)")
+    fig, axes = plt.subplots(nrows=1, ncols=5, figsize=(15,3), layout="constrained")
+    
+    # remove axes ticks
+    for i in range(5):
+        axes[i].set_xticks([])
+        axes[i].set_yticks([])
+    
+    # plot subplots
+    show(np.log1p(pred), ax=axes[0], cmap="cividis")
     sm = plt.cm.ScalarMappable(cmap="cividis")
     fig.colorbar(sm, ax=axes[0], shrink=1)
-
-    axes[1].imshow(emit, cmap="cividis")
+    axes[0].set_title("Predicted Methane Plume (log scale)")
+    show(emit, ax=axes[1], cmap="cividis")
     axes[1].set_title('EMIT Ground Truth')
-    axes[2].imshow(rgb)
+    show(rgb, ax=axes[2])
     axes[2].set_title('RGB S2 Input (Bands 2, 3, 4)')
-    axes[3].imshow(b11)
+    show(b11, ax=axes[3])
     axes[3].set_title('SWIR-1 S2 Input (Band 11)')
-    axes[4].imshow(b12)
+    show(b12, ax=axes[4])
     axes[4].set_title('SWIR-2 S2 Input (Band 12)')
     
     fig.savefig("./Predictions/testprediction.png")
     plt.show()
     
     # file path to save .tif to temporarily
-    temp_path = "./Predictions/testprediction.tf"
+    temp_path = "./Predictions/testprediction.tif"
         
     # save new .tif of prediction
     with rasterio.open(
@@ -460,7 +465,15 @@ def main():
     
     elif (args.mode == "pred"):
         # Input image into model and give prediction
-        test_image_path = "./Dataset/validation/20230410T172859_20230410T174507_T13RFQ.tif"
+        
+        # example images used for validation:
+        # 20230410T172859_20230410T174507_T13RFQ.tif
+        # 20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif
+        # 20240422T105621_20240422T110339_T30SVJ_EMIT_L2B_CH4PLM_001_20240416T131651_003132grid_1.tif
+        # 20231029T072021_20231029T072130_T39SVV_EMIT_L2B_CH4PLM_001_20231027T061434_001888grid_1.tif
+        # 20240403T170851_20240403T171803_T14RMS_EMIT_L2B_CH4PLM_001_20240322T214509_002926grid_1.tif
+        
+        test_image_path = "./Dataset/validation/20240403T170851_20240403T171803_T14RMS_EMIT_L2B_CH4PLM_001_20240322T214509_002926grid_1.tif"
         errsr_model_prediction(test_image_path)
         
     else:

@@ -19,7 +19,7 @@ imageset = []
 names = []
 selected_set = 1
 
-dataset = f"EarthRemoteSensingRapidResponse/UnprocessedImages/{selected_set}"
+dataset = f"./UnprocessedImages/{selected_set}"
 for file in os.listdir(dataset):
     path = os.path.join(dataset, file)
         
@@ -72,13 +72,13 @@ combined_data = np.concatenate((s2_data, array), axis=0)
 print(combined_data.shape)
 
 # visualize data
-show(emit_data)
-show(array)
-show(s2_data[1])
+show(emit_data, transform=emit_transform, cmap="inferno")
+show(array, transform=emit_transform, cmap="inferno")
+show(s2_data[1], transform=s2_transform)
 
 # save combined array as a new file
 with rasterio.open(
-    f"EarthRemoteSensingRapidResponse/Dataset/train_test/{names[0]}", 
+    f"./Dataset/validation/{names[0]}", 
     **{**s2_profile, "count": 6},
     mode="w"
 ) as file:
