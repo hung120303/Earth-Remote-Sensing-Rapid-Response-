@@ -22,21 +22,21 @@ import argparse
 import keras
 from keras import layers
 from keras import ops
-from sklearn.model_selection import train_test_split 
+# from sklearn.model_selection import train_test_split 
 import simplekml
 import rasterio
-from rasterio.plot import show
+# from rasterio.plot import show
 
 # accept arguments for hyperparameter testing
 parser = argparse.ArgumentParser()
-parser.add_argument('--tune', type=bool, default=False)
-parser.add_argument('--lr', type=float, default=1e-4)
-parser.add_argument('--wd', type=float, default=1e-4)
+parser.add_argument('--mode', type=str, default="pred")
+parser.add_argument('--lr', type=float, default=0.0001)
+parser.add_argument('--wd', type=float, default=0.1)
 parser.add_argument('--bs', type=int, default=4)
-parser.add_argument('--ep', type=int, default=10)
-parser.add_argument('--ps', type=int, default=16)
+parser.add_argument('--ep', type=int, default=100)
+parser.add_argument('--ps', type=int, default=8)
 parser.add_argument('--nh', type=int, default=4)
-parser.add_argument('--tl', type=int, default=4)
+parser.add_argument('--tl', type=int, default=8)
 args = parser.parse_args()
 
 # data preparation
@@ -183,38 +183,12 @@ def create_vit_encoder_decoder():
     x = layers.Dense(projection_dim)(encoded_patches)
     x = layers.Reshape((image_size // patch_size, image_size // patch_size, projection_dim))(x)
 
-    # # create multiple layers of conv
-    # for i in range(conv_layers):
-    #     x = layers.Conv2DTranspose(
-    #         filters = projection_dim // (2 ** (i + 1)),
-    #         kernel_size = 4,
-    #         strides = upscale_factor,
-    #         padding = "same",
-    #         activation = "relu"
-    #     )(x)
-    
-    # # final output activation
-    # outputs = layers.Conv2DTranspose(
-    #     filters = 1,
-    #     kernel_size = 4,
-    #     strides = 2,
-    #     padding = "same",
-    #     activation = "sigmoid"
-    # )(x)
-
+    # upsampling blocks
     num_upsample_blocks = round(math.log(patch_size, 2))
-    
-    print(num_upsample_blocks)
-    
     for i in range(num_upsample_blocks):
         x = upsampling_block(x, (projection_dim // (2**i)))
-    
-    # x = upsampling_block(x, 64)
-    # x = upsampling_block(x, 32) 
-    # x = upsampling_block(x, 16)
-    # x = upsampling_block(x, 8)
+
     outputs = layers.Conv2D(1, 1, activation="sigmoid")(x)
-    
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.summary()
     
@@ -237,7 +211,7 @@ def run_experiment(model, x_train, y_train, x_test, y_test):
     )
 
     # save model checkpoint
-    checkpoint_filepath = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
+    checkpoint_filepath = "./tmp/checkpoint.weights.h5"
     checkpoint_callback = keras.callbacks.ModelCheckpoint(
         checkpoint_filepath,
         monitor="val_mean_squared_error",
@@ -284,7 +258,7 @@ def plot_history(history, item):
 ##################################################################
 def process_dataset():
     # Get path to dataset
-    dataset = "EarthRemoteSensingRapidResponse/Dataset/train_test"
+    dataset = "./Dataset/train_test"
     
     # Iterate over dataset and open each image with rasterio,
     # then split each image into X and Y and concat to a list
@@ -315,7 +289,21 @@ def process_dataset():
     Y = np.array(Y) 
     
     # split into 80/20 train test
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+    # x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+    
+    ratio_split = 0.2 
+    indices = np.arange(X.shape[0])
+    np.random.seed(42)
+    np.random.shuffle(indices)
+    
+    split_point = int(len(indices) * (1 - ratio_split))
+    train_indices = indices[:split_point]
+    test_indices = indices[split_point:]
+    
+    x_train = X[train_indices]
+    y_train = Y[train_indices]
+    x_test = X[test_indices]
+    y_test = Y[test_indices]
     
     print(f"x_train: {x_train.shape}, y_train: {y_train.shape}")
     print(f"x_test: {x_test.shape}, y_test: {y_test.shape}")
@@ -345,7 +333,7 @@ def preprocess_image(image_path):
 #      and saves it as a kml                                    #
 #################################################################
 def errsr_model_prediction(image_path):
-    checkpoint_filepath = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
+    checkpoint_filepath = "./tmp/tuning.checkpoint.weights.h5"
 
     model = create_vit_encoder_decoder()
     model.load_weights(checkpoint_filepath)
@@ -393,7 +381,6 @@ def errsr_model_prediction(image_path):
     sm = plt.cm.ScalarMappable(cmap="cividis")
     fig.colorbar(sm, ax=axes[0], shrink=1)
 
-    axes[0].set_title("Predicted Methane Plume Map")
     axes[1].imshow(emit, cmap="cividis")
     axes[1].set_title('EMIT Ground Truth')
     axes[2].imshow(rgb)
@@ -403,11 +390,11 @@ def errsr_model_prediction(image_path):
     axes[4].imshow(b12)
     axes[4].set_title('SWIR-2 S2 Input (Band 12)')
     
-    fig.savefig("EarthRemoteSensingRapidResponse/Predictions/testprediction.png")
+    fig.savefig("./Predictions/testprediction.png")
     plt.show()
     
     # file path to save .tif to temporarily
-    temp_path = "EarthRemoteSensingRapidResponse/Predictions/testprediction.tf"
+    temp_path = "./Predictions/testprediction.tf"
         
     # save new .tif of prediction
     with rasterio.open(
@@ -439,13 +426,13 @@ def errsr_model_prediction(image_path):
     ground_overlay.latlonbox.east = east
     ground_overlay.latlonbox.west = west
     
-    kml.save("EarthRemoteSensingRapidResponse/Predictions/testprediction.kml")
+    kml.save("./Predictions/testprediction.kml")
 
 ########
 # main #
 ########
 def main():    
-    if (args.tune == True):
+    if (args.mode == "tune"):
         # Only run this section during hyperparameter testing.
         (x_train, y_train), (x_test, y_test) = process_dataset()
         
@@ -455,10 +442,10 @@ def main():
         final_mse = history.history["mean_squared_error"][-1]
         final_val_mse = history.history["val_mean_squared_error"][-1]
         
-        with open("EarthRemoteSensingRapidResponse/ParamTest/tuningOutput.txt", "a") as file:
-            file.write(f"lr={args.lr}, wd={args.wd}, bs={args.bs}, ep={args.ep}, ps={args.ps}, nh={args.nh}, tl={args.tl}: MSE={final_mse}, val_MSE={final_val_mse}\n")
+        with open("./ParamTest/tuningOutput.txt", "a") as file:
+            file.write(f"lr= {args.lr} wd= {args.wd} bs= {args.bs} ep= {args.ep} ps= {args.ps} nh= {args.nh} tl= {args.tl} : MSE= {final_mse} val_MSE= {final_val_mse}\n")
         
-    else:
+    elif (args.mode == "train"):
         # process dataset
         (x_train, y_train), (x_test, y_test) = process_dataset()
         
@@ -470,11 +457,14 @@ def main():
         plot_history(history, "loss")
         plot_history(history, "mean_squared_error")
         plot_history(history, "mean_absolute_error")
-        
+    
+    elif (args.mode == "pred"):
         # Input image into model and give prediction
-        test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20241010T102941_20241010T103402_T31SES_EMIT_L2B_CH4PLM_001_20241006T090738_003685grid_1.tif"
+        test_image_path = "./Dataset/validation/20230410T172859_20230410T174507_T13RFQ.tif"
         errsr_model_prediction(test_image_path)
-
+        
+    else:
+        print("")
   
     return
 
