@@ -10,39 +10,56 @@
 #################################################################################################################################
 
 # imports
-import keras
-from keras import layers
-from keras import ops
-from sklearn.model_selection import train_test_split 
-import simplekml
-import rasterio
-from rasterio.plot import show
+import os
+os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
+import sys
+
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import os
+import argparse
+
+import keras
+from keras import layers
+from keras import ops
+# from sklearn.model_selection import train_test_split 
+import simplekml
+import rasterio
+from rasterio.plot import show
+
+# accept arguments for hyperparameter testing
+parser = argparse.ArgumentParser()
+parser.add_argument('--mode', type=str, default="pred")
+parser.add_argument('--lr', type=float, default=0.0001)
+parser.add_argument('--wd', type=float, default=0.1)
+parser.add_argument('--bs', type=int, default=4)
+parser.add_argument('--ep', type=int, default=100)
+parser.add_argument('--ps', type=int, default=8)
+parser.add_argument('--nh', type=int, default=4)
+parser.add_argument('--tl', type=int, default=8)
+args = parser.parse_args()
 
 # data preparation
 input_shape = (256, 256, 5)
 output_shape = (256, 256, 1)
 
 # hyperparameters
-learning_rate = 0.0001
-weight_decay = 0.1
-batch_size = 4
-num_epochs = 20
+learning_rate = args.lr
+weight_decay = args.wd
+batch_size = args.bs
+num_epochs = args.ep
 image_size = 256 # input is resized to (image_size x image_size) 
-patch_size = 8  # size of patches to extract from input
+patch_size = args.ps  # size of patches to extract from input
 num_patches = (image_size // patch_size) ** 2
 projection_dim = 64 # set to 64 for small datasets, otherwise 768 or 1024
-num_heads = 4
-upscale_factor = 2
+num_heads = args.nh
+# upscale_factor = 2
 transformer_units = [
     projection_dim * 2,
     projection_dim,
 ] # size of transformer layers
-transformer_layers = 8
-conv_layers = 4
+transformer_layers = args.tl
+# conv_layers = 4
 mlp_head_units = [
     2048,
     1024,
@@ -127,6 +144,7 @@ def mlp(x, hidden_units, dropout_rate):
         x = layers.Dense(units, activation=keras.activations.gelu)(x)
         x = layers.Dropout(dropout_rate)(x)
     return x
+
 #############################################
 # upsampling_block                          #
 #   - convolutional upsampling block        #
@@ -160,19 +178,14 @@ def create_vit_encoder_decoder():
     x = layers.Dense(projection_dim)(encoded_patches)
     x = layers.Reshape((image_size // patch_size, image_size // patch_size, projection_dim))(x)
 
+    # upsampling blocks
     num_upsample_blocks = round(math.log(patch_size, 2))
-    
     for i in range(num_upsample_blocks):
         x = upsampling_block(x, (projection_dim // (2**i)))
 
-    # x = upsampling_block(x, 64)
-    # x = upsampling_block(x, 32) 
-    # x = upsampling_block(x, 16)
-    # x = upsampling_block(x, 8)
     outputs = layers.Conv2D(1, 1, activation="sigmoid")(x)
-    
     model = keras.Model(inputs=inputs, outputs=outputs)
-    # print(model.summary)
+    model.summary()
     
     return model
 
@@ -226,8 +239,6 @@ def run_experiment(model, x_train, y_train, x_test, y_test):
         validation_split=0.1,
         callbacks=[checkpoint_callback],
     )
-
-    # accuracy calculation is bugged currently: need to fix
 
     # evaluate accuracy
     model.load_weights(checkpoint_filepath)
@@ -293,7 +304,21 @@ def process_dataset():
     
     
     # split into 80/20 train test
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+    # x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+    
+    ratio_split = 0.2 
+    indices = np.arange(X.shape[0])
+    np.random.seed(42)
+    np.random.shuffle(indices)
+    
+    split_point = int(len(indices) * (1 - ratio_split))
+    train_indices = indices[:split_point]
+    test_indices = indices[split_point:]
+    
+    x_train = X[train_indices]
+    y_train = Y[train_indices]
+    x_test = X[test_indices]
+    y_test = Y[test_indices]
     
     print(f"x_train: {x_train.shape}, y_train: {y_train.shape}")
     print(f"x_test: {x_test.shape}, y_test: {y_test.shape}")
@@ -344,7 +369,8 @@ def errsr_model_prediction(image_path):
     # get profile of base input image
     with rasterio.open(image_path) as base_img:
         base_profile = base_img.profile
-
+        base_transform = base_img.transform
+        
         # rasterio is 1-indexed
         b = base_img.read(1)
         g = base_img.read(2)
@@ -352,44 +378,37 @@ def errsr_model_prediction(image_path):
         b11 = base_img.read(4)
         b12 = base_img.read(5)
         emit = base_img.read(6)
-
+    
     # normalize rgb values to 0-255
     rgb = np.dstack((
         (((r - r.min()) / (r.max() - r.min())) * 255),
         (((g - g.min()) / (g.max() - g.min())) * 255),
         (((b - b.min()) / (b.max() - b.min())) * 255))
     ).astype('uint8')
-
+    rgb = np.transpose(rgb, (2, 0, 1))
+    print(rgb.shape)
+    
     # create and save subplot figure
-    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(14,3), layout="constrained")
-        
-    axes[0].imshow(
-        np.log1p(pred),
-        cmap="cividis"
-    )
-    axes[0].set_title("Predicted Methane Plume (log scale)")
+    fig, axes = plt.subplots(nrows=1, ncols=5, figsize=(15,3), layout="constrained")
+    
+    # remove axes ticks
+    for i in range(5):
+        axes[i].set_xticks([])
+        axes[i].set_yticks([])
+    
+    # plot subplots
+    show(np.log1p(pred), ax=axes[0], cmap="cividis")
     sm = plt.cm.ScalarMappable(cmap="cividis")
     fig.colorbar(sm, ax=axes[0], shrink=1)
-
-    emit[emit < -1000] = np.nan # set no data values to nan for better visualization
-    emit = np.maximum(emit, 0) # set negative values to 0
-
-    emit_log = np.log1p(np.maximum(emit, 0))
-
-    emit_min = np.nanpercentile(emit_log, 5)
-    emit_max = np.nanpercentile(emit_log, 95)
-    emit_scaled = (emit_log - emit_min) / (emit_max - emit_min) # normalize for better visualization
-    emit_scaled = np.clip(emit_scaled, 0, 1) # clip to [0, 1] range for visualization
-
-    axes[0].set_title("Predicted Methane Plume Map")
-    axes[1].imshow(emit_scaled, cmap="cividis")
-    axes[1].set_title('EMIT Ground Truth (log scale)')
-    axes[2].imshow(rgb)
+    axes[0].set_title("Predicted Methane Plume (log scale)")
+    show(emit, ax=axes[1], cmap="cividis")
+    axes[1].set_title('EMIT Ground Truth')
+    show(rgb, ax=axes[2])
     axes[2].set_title('RGB S2 Input (Bands 2, 3, 4)')
-    # axes[3].imshow(b11)
-    # axes[3].set_title('SWIR-1 S2 Input (Band 11)')
-    # axes[4].imshow(b12)
-    # axes[4].set_title('SWIR-2 S2 Input (Band 12)')
+    show(b11, ax=axes[3])
+    axes[3].set_title('SWIR-1 S2 Input (Band 11)')
+    show(b12, ax=axes[4])
+    axes[4].set_title('SWIR-2 S2 Input (Band 12)')
     
     fig.savefig("EarthRemoteSensingRapidResponse/Predictions/testprediction.png")
     plt.show()
@@ -428,27 +447,53 @@ def errsr_model_prediction(image_path):
     ground_overlay.latlonbox.west = west
     
     kml.save("EarthRemoteSensingRapidResponse/Predictions/testprediction.kml")
-        
 
 ########
 # main #
 ########
-def main():
-    # process dataset
-    (x_train, y_train), (x_test, y_test) = process_dataset()
+def main():    
+    if (args.mode == "tune"):
+        # Only run this section during hyperparameter testing.
+        (x_train, y_train), (x_test, y_test) = process_dataset()
+        
+        vit_classifier = create_vit_encoder_decoder()
+        history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+        
+        final_mse = history.history["mean_squared_error"][-1]
+        final_val_mse = history.history["val_mean_squared_error"][-1]
+        
+        with open("EarthRemoteSensingRapidResponse/ParamTest/tuningOutput.txt", "a") as file:
+            file.write(f"lr= {args.lr} wd= {args.wd} bs= {args.bs} ep= {args.ep} ps= {args.ps} nh= {args.nh} tl= {args.tl} : MSE= {final_mse} val_MSE= {final_val_mse}\n")
+        
+    elif (args.mode == "train"):
+        # process dataset
+        (x_train, y_train), (x_test, y_test) = process_dataset()
+        
+        # create model and evaluate
+        vit_classifier = create_vit_encoder_decoder()
+        history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+        
+        # plot metrics
+        plot_history(history, "loss")
+        plot_history(history, "mean_squared_error")
+        plot_history(history, "mean_absolute_error")
     
-    # create model and evaluate
-    vit_classifier = create_vit_encoder_decoder()
-    history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
-
-    # Input image into model and give prediction
-    test_image_path = test_image
-    errsr_model_prediction(test_image_path)
-
-    # plot metrics
-    plot_history(history, "loss")
-    plot_history(history, "mean_absolute_error")
-    
+    elif (args.mode == "pred"):
+        # Input image into model and give prediction
+        
+        # example images used for validation:
+        # 20230410T172859_20230410T174507_T13RFQ.tif
+        # 20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif
+        # 20240422T105621_20240422T110339_T30SVJ_EMIT_L2B_CH4PLM_001_20240416T131651_003132grid_1.tif
+        # 20231029T072021_20231029T072130_T39SVV_EMIT_L2B_CH4PLM_001_20231027T061434_001888grid_1.tif
+        # 20240403T170851_20240403T171803_T14RMS_EMIT_L2B_CH4PLM_001_20240322T214509_002926grid_1.tif
+        
+        test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif"
+        errsr_model_prediction(test_image_path)
+        
+    else:
+        print("")
+  
     return
 
 if __name__ == "__main__":
