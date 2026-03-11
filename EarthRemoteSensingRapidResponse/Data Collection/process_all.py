@@ -19,9 +19,9 @@ import time
 INSPECT_IMAGES = False
 RETRIEVE_GOOD = True # condition to only download good images to the folder
 
-folder_path = "/2_12_2026_data_current"
+folder_path = "/s2_emit_pairs_2_20_26"
 
-output_folder_path = "/train_test_2_13_good_data"
+output_folder_path = "/train_test_s2_0"
 
 # define file paths
 names = []
@@ -101,10 +101,7 @@ for i in range(len(names)):
 
     # combine s2 and emit data into one array
     combined_data = np.concatenate((s2_data, array), axis=0)
-    print(np.array(s2_data).shape)
-    print(np.array(array).shape)
-    print(combined_data.shape)
-    continue
+    
     if INSPECT_IMAGES:
         print(combined_data.shape)
 
@@ -115,10 +112,14 @@ for i in range(len(names)):
             show(s2_data[i])
 
     # Bad data checking
-    VALID_PIXELS_S2 = 256*256
+    S2_MIN_PERCENTAGE = 0.0
+    S2_MAX_NODATA_RATIO = 1 - S2_MIN_PERCENTAGE
     MIN_EMIT_PPM_VAL = 300
     emit_max_plume_val = np.max(np.array(array)) # Check if the max value of resampled plume is 0 (rest of the image should be 0)
-    nonzero_s2_value_count = np.count_nonzero(np.array(s2_data[3])) # Count number of nonzero (valid) s2 pixels
+    
+    s2_mask = np.any(s2_data == s2_nodata, axis=0)
+    nodata_ratio = np.mean(s2_mask)
+
     bad_emit = False
     bad_s2 = False
 
@@ -131,15 +132,16 @@ for i in range(len(names)):
         print("") # 
         #show(array)
     
-    if(nonzero_s2_value_count < VALID_PIXELS_S2):
+    if(nodata_ratio > S2_MAX_NODATA_RATIO):
         print("Problem with s2 image: ", s2_path)
+        print("No data ratio: ", nodata_ratio)
         bad_s2 = True
         bad_s2_count += 1
         #show(s2_data[3])
 
     if (bad_emit or bad_s2) and RETRIEVE_GOOD:
-        continue # skip if we want only the good ones
         bad_pair_count += 1
+        continue # skip if we want only the good ones
 
 
     final_tif_output_filepaths.append(f"EarthRemoteSensingRapidResponse/Data Collection/{output_folder_path}{names[i]}")

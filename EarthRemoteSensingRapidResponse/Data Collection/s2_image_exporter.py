@@ -24,11 +24,12 @@ pointSourceCollection = ee.FeatureCollection("EDF/MethaneSAT/MethaneAIR/L4point"
 
 # Define a function for obtaining a bounding box around each feature
 def getBoundingBox(feature):
-    buffer = feature.buffer(2530) # radius of roughly 5120 meters (5.12km)
+    buffer = feature.buffer(2560) # radius of roughly 5120 meters (5.12km)
     box = buffer.bounds()
     return box
 
-found_s2_tifs = []
+found_s2_tiffile_names = []
+found_s2_download_links = []
 
 def get_s2_image_and_export(roi_to_use, start_date_str, end_date_str, output_local_dir):
     """
@@ -106,8 +107,8 @@ def get_s2_image_and_export(roi_to_use, start_date_str, end_date_str, output_loc
     download_params = {
         'format': 'GEO_TIFF',       
         'region': roi.getInfo(),     
-        'scale': 20,    
-        #'dimensions': '256x256',  
+        #'scale': 20,    # scale of 20m is alread done by s2image resample
+        'dimensions': '256x256',  
         'crs': 'EPSG:4326'
     }
 
@@ -123,8 +124,16 @@ def get_s2_image_and_export(roi_to_use, start_date_str, end_date_str, output_loc
     output_filename = S2ImageResample.id().getInfo()
     output_filepath = os.path.join(output_local_dir, f"{output_filename}.tif")
 
-    if output_filename in found_s2_tifs:
+    if output_filename in found_s2_tiffile_names:
+        n = 2
+        curr_name = output_filename + str(n)
+        while(curr_name in found_s2_tiffile_names):
+            n += 1
+            curr_name = output_filename + str(n)
+        output_filename = curr_name
+    if download_url in found_s2_download_links:
         return False
+
 
     print(f"Downloading image to: {output_filepath}")
     try:
@@ -136,7 +145,8 @@ def get_s2_image_and_export(roi_to_use, start_date_str, end_date_str, output_loc
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
         print(f"Image downloaded successfully to {output_filepath}")
-        found_s2_tifs.append(output_filename)
+        found_s2_tiffile_names.append(output_filename)
+        found_s2_download_links.append(download_url)
         return True
     except requests.exceptions.RequestException as e:
         print(f"Failed to download image from URL: {e}")
@@ -191,8 +201,8 @@ def generate_overlapping_grid_meters(geometry_to_cover):
     min_x_proj, min_y_proj = coords_proj[0]
     max_x_proj, max_y_proj = coords_proj[2]
 
-    tile_width_meters = 2560 # 2.56km
-    tile_height_meters = 2560 # 2.56km
+    tile_width_meters = 5120 # 2.56km
+    tile_height_meters = 5120 # 2.56km
 
     # Add a small buffer to bounds to ensure full coverage
     buffer_x = tile_width_meters * 0.1
@@ -271,7 +281,7 @@ output_local_dir = "./s2"
 
 #get_s2_image_and_export(longitude, latitude, start, end, output_local_dir)
 
-test_output_folder = "./test_s2_emit_bound/"
+test_output_folder = "./test_pairings/"
 test_emit_no_s2_folder = "./unpaired_EMIT/"
 
 folderIndex = 0
@@ -294,7 +304,6 @@ for filename in os.listdir(emit_folder_path):
         firstCoordLong = firstCoord[0]
         firstCoordLat = firstCoord[1]
 
-
         # Dates
         observedTime = data["features"][0]['properties']['UTC Time Observed']
         dt_obj = datetime.strptime(observedTime, "%Y-%m-%dT%H:%M:%SZ").date()
@@ -304,50 +313,7 @@ for filename in os.listdir(emit_folder_path):
         # Get meter-based tiles
         plume_json_geometry = data["features"][0]['geometry']
         plume_ee_geometry = ee.Geometry(plume_json_geometry)
-
-        # Get the related .tif file
-        parts = filename.split("META")
-        tif_file = parts[0] + parts[1].replace('json', 'tif')
         
-        tif_path_orig = os.path.join(emit_folder_path, tif_file)
-        tif_path_new = os.path.join(outputFolder, tif_file)
-
-        with rasterio.open(tif_path_orig) as emit_image:
-            emit_bounds = emit_image.bounds
-
-        x1, y1, x2, y2 = emit_bounds[0], emit_bounds[1], emit_bounds[2], emit_bounds[3]
-
-        corners = [
-                [x1, y1], # Bottom-left
-                [x1, y2], # Top-left
-                [x2, y2], # Top-right
-                [x2, y1], # Bottom-right
-                [x1, y1]  # Close the polygon
-            ]
-
-        bounds = ee.Geometry.Polygon(
-            [corners],
-        )
-
-        # Copy .tif file to output folder
-        shutil.copy(tif_path_orig, tif_path_new)
-
-        found = get_s2_image_and_export(bounds, 
-                                startDate, 
-                                endDate,
-                                outputFolder)
-    
-        if found:
-            foundImageFolderList.append(outputFolder)
-        else:
-            os.remove(tif_path_new)
-            os.rmdir(outputFolder)
-
-        folderIndex += 1
-        continue
-
-
-        ### Code for Grid based s2 images ### Below is skipped
         roi_array = generate_overlapping_grid_meters(plume_ee_geometry)
         if not roi_array:
             print("No grids genereated for this EMIT plume")
