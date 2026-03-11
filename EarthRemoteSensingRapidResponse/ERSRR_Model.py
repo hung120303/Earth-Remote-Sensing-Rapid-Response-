@@ -211,7 +211,7 @@ def run_experiment(model, x_train, y_train, x_test, y_test):
     )
 
     # save model checkpoint
-    checkpoint_filepath = "./tmp/checkpoint.weights.h5"
+    checkpoint_filepath = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
     checkpoint_callback = keras.callbacks.ModelCheckpoint(
         checkpoint_filepath,
         monitor="val_mean_squared_error",
@@ -258,7 +258,7 @@ def plot_history(history, item):
 ##################################################################
 def process_dataset():
     # Get path to dataset
-    dataset = "./Dataset/train_test"
+    dataset = "EarthRemoteSensingRapidResponse/Dataset/train_test"
     
     # Iterate over dataset and open each image with rasterio,
     # then split each image into X and Y and concat to a list
@@ -333,7 +333,7 @@ def preprocess_image(image_path):
 #      and saves it as a kml                                    #
 #################################################################
 def errsr_model_prediction(image_path):
-    checkpoint_filepath = "./tmp/tuning.checkpoint.weights.h5"
+    checkpoint_filepath = "EarthRemoteSensingRapidResponse/tmp/tuning.checkpoint.weights.h5"
 
     model = create_vit_encoder_decoder()
     model.load_weights(checkpoint_filepath)
@@ -395,11 +395,11 @@ def errsr_model_prediction(image_path):
     show(b12, ax=axes[4])
     axes[4].set_title('SWIR-2 S2 Input (Band 12)')
     
-    fig.savefig("./Predictions/testprediction.png")
+    fig.savefig("EarthRemoteSensingRapidResponse/Predictions/testprediction.png")
     plt.show()
     
     # file path to save .tif to temporarily
-    temp_path = "./Predictions/testprediction.tif"
+    temp_path = "EarthRemoteSensingRapidResponse/Predictions/testprediction.tif"
         
     # save new .tif of prediction
     with rasterio.open(
@@ -431,7 +431,7 @@ def errsr_model_prediction(image_path):
     ground_overlay.latlonbox.east = east
     ground_overlay.latlonbox.west = west
     
-    kml.save("./Predictions/testprediction.kml")
+    kml.save("EarthRemoteSensingRapidResponse/Predictions/testprediction.kml")
 
 ########
 # main #
@@ -447,7 +447,7 @@ def main():
         final_mse = history.history["mean_squared_error"][-1]
         final_val_mse = history.history["val_mean_squared_error"][-1]
         
-        with open("./ParamTest/tuningOutput.txt", "a") as file:
+        with open("EarthRemoteSensingRapidResponse/ParamTest/tuningOutput.txt", "a") as file:
             file.write(f"lr= {args.lr} wd= {args.wd} bs= {args.bs} ep= {args.ep} ps= {args.ps} nh= {args.nh} tl= {args.tl} : MSE= {final_mse} val_MSE= {final_val_mse}\n")
         
     elif (args.mode == "train"):
@@ -473,7 +473,7 @@ def main():
         # 20231029T072021_20231029T072130_T39SVV_EMIT_L2B_CH4PLM_001_20231027T061434_001888grid_1.tif
         # 20240403T170851_20240403T171803_T14RMS_EMIT_L2B_CH4PLM_001_20240322T214509_002926grid_1.tif
         
-        test_image_path = "./Dataset/validation/20240403T170851_20240403T171803_T14RMS_EMIT_L2B_CH4PLM_001_20240322T214509_002926grid_1.tif"
+        test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif"
         errsr_model_prediction(test_image_path)
         
     else:

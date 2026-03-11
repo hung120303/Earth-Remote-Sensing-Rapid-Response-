@@ -1,4 +1,5 @@
 @echo off
+cd ..
 
 set LEARNING_RATES=0.1 0.01 0.001 0.0001
 set WEIGHT_DECAYS=0.1 0.01 0.001 0.0001
