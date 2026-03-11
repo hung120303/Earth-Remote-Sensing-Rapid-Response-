@@ -24,7 +24,7 @@ pointSourceCollection = ee.FeatureCollection("EDF/MethaneSAT/MethaneAIR/L4point"
 
 # Define a function for obtaining a bounding box around each feature
 def getBoundingBox(feature):
-    buffer = feature.buffer(2530) # radius of roughly 5120 meters (5.12km)
+    buffer = feature.buffer(2560) # radius of roughly 5120 meters (5.12km)
     box = buffer.bounds()
     return box
 
@@ -201,8 +201,8 @@ def generate_overlapping_grid_meters(geometry_to_cover):
     min_x_proj, min_y_proj = coords_proj[0]
     max_x_proj, max_y_proj = coords_proj[2]
 
-    tile_width_meters = 2560 # 2.56km
-    tile_height_meters = 2560 # 2.56km
+    tile_width_meters = 5120 # 2.56km
+    tile_height_meters = 5120 # 2.56km
 
     # Add a small buffer to bounds to ensure full coverage
     buffer_x = tile_width_meters * 0.1
