@@ -327,6 +327,9 @@ def errsr_model_prediction(image_path):
 
     model = create_vit_encoder_decoder()
     model.load_weights(checkpoint_filepath)
+    #processed_image = preprocess_image(image_path)
+    
+    #methane_prediction = model.predict(processed_image[None])
     
     # print(methane_prediction[0])
     # print(np.array([methane_prediction[0]]).shape)
