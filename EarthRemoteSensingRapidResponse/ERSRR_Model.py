@@ -65,6 +65,11 @@ mlp_head_units = [
     1024,
 ] # size of dense layers for final classifier (temp: need to adjust)
 
+# File Directory paths
+dataset_dir = "EarthRemoteSensingRapidResponse/Data Collection/train_test_2_13_good_data"
+checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/checkpoint_new_data.weights.h5"
+test_image = "EarthRemoteSensingRapidResponse/Dataset/validation/20241010T102941_20241010T103402_T31SES_EMIT_L2B_CH4PLM_001_20241006T090738_003685grid_1.tif"
+
 ####################################################
 # class Patches                                    #
 #    - implementation of patch creation as a layer #
@@ -162,19 +167,9 @@ def create_vit_encoder_decoder():
 
     # create multiple layers of the Transformer block
     for _ in range(transformer_layers):
-        # x1 = encoded_patches
-        # # multi-head attention layer
-        # attention_output = layers.MultiHeadAttention(
-        #     num_heads=num_heads, key_dim=projection_dim, dropout=0.1
-        # )(x1, x1)
-        # # skip connection 1
-        # x2 = layers.Add()([attention_output, encoded_patches])
-        # # mlp
-        # x3 = mlp(x2, hidden_units=transformer_units, dropout_rate=0.1)
-        # # skip connection 2
-        # encoded_patches = layers.Add()([x3, x2])
-        
-        attn = layers.MultiHeadAttention(num_heads=num_heads, key_dim=projection_dim, dropout=0.1)(encoded_patches, encoded_patches)
+
+        attn = layers.MultiHeadAttention(num_heads=num_heads, key_dim=projection_dim, dropout=0.1
+                                         )(encoded_patches, encoded_patches)
         encoded_patches = layers.LayerNormalization()(encoded_patches+attn)
         mlp_output = mlp(encoded_patches, hidden_units=transformer_units, dropout_rate=0.1)
         encoded_patches = layers.LayerNormalization()(encoded_patches + mlp_output)
@@ -194,6 +189,21 @@ def create_vit_encoder_decoder():
     
     return model
 
+def dice_coefficient(y_true, y_pred, smooth=1e-6):
+    intersection = keras.ops.sum(y_true * y_pred, axis=[1, 2, 3])
+    union = keras.ops.sum(y_true, axis=[1, 2, 3]) + keras.ops.sum(y_pred, axis=[1, 2, 3])
+    dice = (2. * intersection + smooth) / (union + smooth)
+    return ops.mean(dice)
+
+bce = keras.losses.BinaryCrossentropy()
+
+def dice_loss(y_true, y_pred):
+    return 1 - dice_coefficient(y_true, y_pred)
+
+def hybrid_loss(y_true, y_pred):
+
+    return bce(y_true, y_pred) + dice_loss(y_true, y_pred)
+
 ###################################################
 # run_experiment                                  #
 #   - compiles, trains, and evaluates given model #
@@ -206,15 +216,16 @@ def run_experiment(model, x_train, y_train, x_test, y_test):
     # compile model
     model.compile(
         optimizer=optimizer,
-        loss = keras.losses.BinaryCrossentropy(),
-        metrics=["mean_absolute_error", "mean_squared_error"]
+        loss = hybrid_loss,
+        metrics=["mean_absolute_error", dice_coefficient]
     )
 
     # save model checkpoint
-    checkpoint_filepath = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
+    checkpoint_filepath = checkpoint_dir
     checkpoint_callback = keras.callbacks.ModelCheckpoint(
         checkpoint_filepath,
         monitor="val_mean_squared_error",
+        mode="min",
         save_best_only=True,
         save_weights_only=True,
     )
@@ -258,7 +269,7 @@ def plot_history(history, item):
 ##################################################################
 def process_dataset():
     # Get path to dataset
-    dataset = "EarthRemoteSensingRapidResponse/Dataset/train_test"
+    dataset = dataset_dir
     
     # Iterate over dataset and open each image with rasterio,
     # then split each image into X and Y and concat to a list
@@ -278,15 +289,19 @@ def process_dataset():
                 X_split = image_data[:, :, :5]
                 Y_split = image_data[:, :, 5:6]
                 
-                # normalize X_split and Y_split then divide by max
-                X_split_r = X_split / (np.max(X_split) + 1e-6)  # avoid division by zero
-                Y_split_r = (Y_split - Y_split.min()) / (Y_split.max() - Y_split.min() + 1e-6)
-                
-                X.append(X_split_r)
-                Y.append(Y_split_r)
+                X.append(X_split)
+                Y.append(Y_split)
     
-    X = np.array(X)
-    Y = np.array(Y) 
+    X = np.array(X).astype(np.float32)
+    Y = np.array(Y).astype(np.float32)
+
+    x_Max = X.max()
+    X = X / (x_Max + 1e-6) # normalize input data
+
+    y_Min = Y.min()
+    y_Max = Y.max()
+    Y = (Y - y_Min) / (y_Max - y_Min + 1e-6) # normalize output data
+    
     
     # split into 80/20 train test
     # x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
@@ -333,7 +348,7 @@ def preprocess_image(image_path):
 #      and saves it as a kml                                    #
 #################################################################
 def errsr_model_prediction(image_path):
-    checkpoint_filepath = "EarthRemoteSensingRapidResponse/tmp/tuning.checkpoint.weights.h5"
+    checkpoint_filepath = checkpoint_dir
 
     model = create_vit_encoder_decoder()
     model.load_weights(checkpoint_filepath)
