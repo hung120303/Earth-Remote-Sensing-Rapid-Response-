@@ -27,9 +27,11 @@ import simplekml
 import rasterio
 from rasterio.plot import show
 
+from Plume_Classifier import evaluate_model
+
 # accept arguments for hyperparameter testing
 parser = argparse.ArgumentParser()
-parser.add_argument('--mode', type=str, default="pred")
+parser.add_argument('--mode', type=str, default="train")
 parser.add_argument('--lr', type=float, default=0.0001)
 parser.add_argument('--wd', type=float, default=0.1)
 parser.add_argument('--bs', type=int, default=4)
@@ -44,21 +46,21 @@ input_shape = (256, 256, 5)
 output_shape = (256, 256, 1)
 
 # hyperparameters
-learning_rate = args.lr
-weight_decay = args.wd
-batch_size = args.bs
-num_epochs = args.ep
+learning_rate = 0.0001
+weight_decay = 0.1
+batch_size = 4
+num_epochs = 20
 image_size = 256 # input is resized to (image_size x image_size) 
-patch_size = args.ps  # size of patches to extract from input
+patch_size = 8  # size of patches to extract from input
 num_patches = (image_size // patch_size) ** 2
 projection_dim = 64 # set to 64 for small datasets, otherwise 768 or 1024
-num_heads = args.nh
+num_heads = 4
 # upscale_factor = 2
 transformer_units = [
     projection_dim * 2,
     projection_dim,
 ] # size of transformer layers
-transformer_layers = args.tl
+transformer_layers = 8
 # conv_layers = 4
 mlp_head_units = [
     2048,
@@ -67,8 +69,9 @@ mlp_head_units = [
 
 # File Directory paths
 dataset_dir = "EarthRemoteSensingRapidResponse/Data Collection/train_test_2_13_good_data"
-checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/checkpoint_new_data.weights.h5"
-test_image = "EarthRemoteSensingRapidResponse/Dataset/validation/20241010T102941_20241010T103402_T31SES_EMIT_L2B_CH4PLM_001_20241006T090738_003685grid_1.tif"
+checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
+test_image = "EarthRemoteSensingRapidResponse/Dataset/validation/20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif"
+cafo_csv = "EarthRemoteSensingRapidResponse/Polygon_CSV_Files/iowa_cafos_2024_arcgis_api.csv"
 
 ####################################################
 # class Patches                                    #
@@ -217,7 +220,7 @@ def run_experiment(model, x_train, y_train, x_test, y_test):
     model.compile(
         optimizer=optimizer,
         loss = hybrid_loss,
-        metrics=["mean_absolute_error", dice_coefficient]
+        metrics=["mean_absolute_error","mean_squared_error", dice_coefficient]
     )
 
     # save model checkpoint
@@ -242,9 +245,10 @@ def run_experiment(model, x_train, y_train, x_test, y_test):
 
     # evaluate accuracy
     model.load_weights(checkpoint_filepath)
-    _, accuracy, top_5_accuracy = model.evaluate(x_test, y_test)
+    _, accuracy, top_5_accuracy, dice = model.evaluate(x_test, y_test)
     print(f"Test accuracy: {round(accuracy * 100, 2)}%")
     print(f"Test top 5 accuracy: {round(top_5_accuracy * 100, 2)}%")
+    print(f"Test Dice coefficient: {round(dice * 100, 2)}%")
 
     return history
 
@@ -268,29 +272,27 @@ def plot_history(history, item):
 #     and splits it into a train test set.                       #
 ##################################################################
 def process_dataset():
-    # Get path to dataset
-    dataset = dataset_dir
-    
     # Iterate over dataset and open each image with rasterio,
     # then split each image into X and Y and concat to a list
     X = []
     Y = []
     
     # iterate over dataset and append each image to list
-    for image_file in os.listdir(dataset):
-        image_path = os.path.join(dataset, image_file)
-        
-        # open image
-        if os.path.isfile(image_path):
-            with rasterio.open(image_path) as image:
-                image_data = image.read().transpose((1,2,0))
-                
-                # format input data
-                X_split = image_data[:, :, :5]
-                Y_split = image_data[:, :, 5:6]
-                
-                X.append(X_split)
-                Y.append(Y_split)
+    for root, subfolders, filenames in os.walk(dataset_dir):
+        for image_file in filenames:
+            image_path = os.path.join(dataset_dir, image_file)
+            
+            # open image
+            if os.path.isfile(image_path):
+                with rasterio.open(image_path) as image:
+                    image_data = image.read().transpose((1,2,0))
+                    
+                    # format input data
+                    X_split = image_data[:, :, :5]
+                    Y_split = image_data[:, :, 5:6]
+                    
+                    X.append(X_split)
+                    Y.append(Y_split)
     
     X = np.array(X).astype(np.float32)
     Y = np.array(Y).astype(np.float32)
@@ -360,6 +362,8 @@ def errsr_model_prediction(image_path):
     # print(np.array([methane_prediction[0]]).shape)
 
     pred = model.predict(preprocess_image(image_path)[None])[0,:,:,0]
+
+    print("plume accuracy stats:", evaluate_model(pred, cafo_csv, image_path))
 
     print("Pred min:", pred.min())
     print("Pred max:", pred.max())
@@ -452,49 +456,29 @@ def errsr_model_prediction(image_path):
 # main #
 ########
 def main():    
-    if (args.mode == "tune"):
-        # Only run this section during hyperparameter testing.
-        (x_train, y_train), (x_test, y_test) = process_dataset()
+    # process dataset
+    (x_train, y_train), (x_test, y_test) = process_dataset()
         
-        vit_classifier = create_vit_encoder_decoder()
-        history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
-        
-        final_mse = history.history["mean_squared_error"][-1]
-        final_val_mse = history.history["val_mean_squared_error"][-1]
-        
-        with open("EarthRemoteSensingRapidResponse/ParamTest/tuningOutput.txt", "a") as file:
-            file.write(f"lr= {args.lr} wd= {args.wd} bs= {args.bs} ep= {args.ep} ps= {args.ps} nh= {args.nh} tl= {args.tl} : MSE= {final_mse} val_MSE= {final_val_mse}\n")
-        
-    elif (args.mode == "train"):
-        # process dataset
-        (x_train, y_train), (x_test, y_test) = process_dataset()
-        
-        # create model and evaluate
-        vit_classifier = create_vit_encoder_decoder()
-        history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
-        
-        # plot metrics
-        plot_history(history, "loss")
-        plot_history(history, "mean_squared_error")
-        plot_history(history, "mean_absolute_error")
+    # create model and evaluate
+    vit_classifier = create_vit_encoder_decoder()
+    history = run_experiment(vit_classifier, x_train, y_train, x_test, y_test)
+
+    # Input image into model and give prediction
     
-    elif (args.mode == "pred"):
-        # Input image into model and give prediction
-        
-        # example images used for validation:
-        # 20230410T172859_20230410T174507_T13RFQ.tif
-        # 20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif
-        # 20240422T105621_20240422T110339_T30SVJ_EMIT_L2B_CH4PLM_001_20240416T131651_003132grid_1.tif
-        # 20231029T072021_20231029T072130_T39SVV_EMIT_L2B_CH4PLM_001_20231027T061434_001888grid_1.tif
-        # 20240403T170851_20240403T171803_T14RMS_EMIT_L2B_CH4PLM_001_20240322T214509_002926grid_1.tif
-        
-        test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif"
-        errsr_model_prediction(test_image_path)
-        
-    else:
-        print("")
-  
-    return
+    # example images used for validation:
+    # 20230410T172859_20230410T174507_T13RFQ.tif
+    # 20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif
+    # 20240422T105621_20240422T110339_T30SVJ_EMIT_L2B_CH4PLM_001_20240416T131651_003132grid_1.tif
+    # 20231029T072021_20231029T072130_T39SVV_EMIT_L2B_CH4PLM_001_20231027T061434_001888grid_1.tif
+    # 20240403T170851_20240403T171803_T14RMS_EMIT_L2B_CH4PLM_001_20240322T214509_002926grid_1.tif
+    
+    
+    errsr_model_prediction(test_image)
+
+    # plot metrics
+    plot_history(history, "loss")
+    plot_history(history, "mean_squared_error")
+    plot_history(history, "mean_absolute_error")
 
 if __name__ == "__main__":
     main()
