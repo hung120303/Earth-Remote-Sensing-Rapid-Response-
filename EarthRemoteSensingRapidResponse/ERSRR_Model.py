@@ -41,6 +41,8 @@ parser.add_argument('--nh', type=int, default=4)
 parser.add_argument('--tl', type=int, default=8)
 args = parser.parse_args()
 
+MODEL_SETTING = "train"
+
 # data preparation
 input_shape = (256, 256, 5)
 output_shape = (256, 256, 1)
@@ -68,7 +70,7 @@ mlp_head_units = [
 ] # size of dense layers for final classifier (temp: need to adjust)
 
 # File Directory paths
-dataset_dir = "EarthRemoteSensingRapidResponse/Data Collection/train_test_2_13_good_data"
+dataset_dir = "EarthRemoteSensingRapidResponse/Data Collection/train_test_s2_100"
 checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
 test_image = "EarthRemoteSensingRapidResponse/Dataset/validation/20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif"
 cafo_csv = "EarthRemoteSensingRapidResponse/Polygon_CSV_Files/iowa_cafos_2024_arcgis_api.csv"
@@ -198,14 +200,9 @@ def dice_coefficient(y_true, y_pred, smooth=1e-6):
     dice = (2. * intersection + smooth) / (union + smooth)
     return ops.mean(dice)
 
-bce = keras.losses.BinaryCrossentropy()
-
-def dice_loss(y_true, y_pred):
-    return 1 - dice_coefficient(y_true, y_pred)
-
 def hybrid_loss(y_true, y_pred):
-
-    return bce(y_true, y_pred) + dice_loss(y_true, y_pred)
+    bce = keras.losses.BinaryCrossentropy()
+    return bce(y_true, y_pred) + (1 - dice_coefficient(y_true, y_pred))
 
 ###################################################
 # run_experiment                                  #
@@ -280,19 +277,23 @@ def process_dataset():
     # iterate over dataset and append each image to list
     for root, subfolders, filenames in os.walk(dataset_dir):
         for image_file in filenames:
-            image_path = os.path.join(dataset_dir, image_file)
+            image_path = os.path.join(root, image_file)
             
             # open image
             if os.path.isfile(image_path):
                 with rasterio.open(image_path) as image:
                     image_data = image.read().transpose((1,2,0))
                     
+                    if image_data.shape[2] < 6:
+                        print(f"Skipping {image_path}: not enough bands({image_data.shape[2]})")
+                        continue
                     # format input data
                     X_split = image_data[:, :, :5]
                     Y_split = image_data[:, :, 5:6]
                     
                     X.append(X_split)
                     Y.append(Y_split)
+
     
     X = np.array(X).astype(np.float32)
     Y = np.array(Y).astype(np.float32)
@@ -324,6 +325,8 @@ def process_dataset():
     
     print(f"x_train: {x_train.shape}, y_train: {y_train.shape}")
     print(f"x_test: {x_test.shape}, y_test: {y_test.shape}")
+
+    print(y_train.min(), y_train.max(), y_train.mean())
     
     # get normalization data for later
     # data_augmentation.layers[0].adapt(x_train)
@@ -455,7 +458,7 @@ def errsr_model_prediction(image_path):
 ########
 # main #
 ########
-def main():    
+def train_model():    
     # process dataset
     (x_train, y_train), (x_test, y_test) = process_dataset()
         
@@ -481,4 +484,7 @@ def main():
     plot_history(history, "mean_absolute_error")
 
 if __name__ == "__main__":
-    main()
+    if(MODEL_SETTING == "train"):
+        train_model()
+    elif(MODEL_SETTING == "predict"):
+        errsr_model_prediction(test_image)
