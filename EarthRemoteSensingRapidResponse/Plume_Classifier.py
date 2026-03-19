@@ -10,11 +10,13 @@ import pandas as pd
 from scipy import ndimage
 import rasterio
 from geopy.distance import geodesic
-
+import matplotlib.pyplot as plt
 
 THRESHOLD_VALUE = 0.15 # Threshold value for binary mask. May adust based on model confience
 DISTANCE_THRESHOLD = 1.0 # Distance threshold in kilometers for matching predicted plume source to CAFO locations
 FILTER_SIZE = 50 # Minimum size of plume region in pixels to be considered valid
+
+test_image = "EarthRemoteSensingRapidResponse/Dataset/validation/20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif"
 
 def binary_mask(pred):
     mask = pred > THRESHOLD_VALUE
@@ -34,17 +36,41 @@ def region_filtering(mask, labels, num_features):
 
     return valid_regions
 
-def compute_centroid(mask, labels, region):
-    return ndimage.center_of_mass(mask, labels, region)
+def filter_by_distance(points, center, maxkm=5):
+    filtered = []
+
+    for p in points:
+        if(geodesic(center,p).km <= maxkm):
+            filtered.append(p)
+
+    return filtered
+
+def compute_image_center(image):
+    with rasterio.open(image) as src:
+        lon, lat = src.xy(src.height//2, src.width//2)
+    return (lon, lat)
+
+
+
+def compute_peaks(pred, labels, region):
+    peaks = []
+    for id in region:
+        region_mask = (labels == id)
+        val = pred * region_mask
+
+        index = np.argmax(val)
+        row, col = np.unravel_index(index,pred.shape)
+        peaks.append((row,col))
+    return peaks
 
 def px_to_coords(row, col, transform):
     x, y = rasterio.transform.xy(transform, row, col)
     return (y, x)
 
-def centroid_to_coords(centroid, transform):
+def plume_to_coords(plume, transform):
     coords = []
 
-    for r,c in centroid:
+    for r,c in plume:
         coord = px_to_coords(int(r), int(c), transform)
         coords.append(coord)
 
@@ -91,14 +117,17 @@ def evaluate_model(pred, cafo_csv, raster_path):
     labels, num_features = detect_plume_region(mask)
 
     filtered_regions = region_filtering(mask, labels, num_features)
-    plume_centroids = compute_centroid(mask, labels, filtered_regions)
+    peaks = compute_peaks(pred, labels, filtered_regions)
 
     with rasterio.open(raster_path) as src:
         transform = src.transform
     
-    predicted_sources = centroid_to_coords(plume_centroids, transform)
+    predicted_sources = plume_to_coords(peaks, transform)
 
-    cafo_sources = load_CAFO(cafo_csv)
+    image_center = compute_image_center(raster_path)
+    cafo_sources = filter_by_distance(load_CAFO(cafo_csv), image_center)
+
+    plot_sources(pred, peaks, cafo_sources, transform)
 
     tp, fp, fn = match_plume_to_CAFO(predicted_sources, cafo_sources)
 
@@ -113,17 +142,31 @@ def evaluate_model(pred, cafo_csv, raster_path):
         "F1_Score" : f1_score
     }
 
-if __name__ == "__main__":
-    pred = np.load("path_to_prediction.npy") # Load the model prediction as a numpy array
-    raster_path = "path_to_raster.tif" # Path to the raster image used for prediction
-    cafo_csv = "path_to_cafo.csv" # Path to the CAFO database CSV file
-    results = evaluate_model(pred, cafo_csv, raster_path)
+def plot_sources(pred, pred_pixel, cafo_coords, transform, title="Plume Source Detection"):
+    plt.figure(figsize=(8,8))
 
-    print("Evaluation Results")
-    print("TP:", results["True Positives"])
-    print("FP:", results["False Positives"])
-    print("FN:", results["False Negatives"])
-    print("Precision:", results["Precision"])
-    print("Recall:", results["Recall"])
-    print("F1 Score:", results["F1_Score"])
+    plt.imshow(pred, cmap="cividis")
+    plt.colorbar(label="prediction")
+
+    for (r,c) in pred_pixel:
+        plt.scatter(c, r, color="red", label="predicted sources")
+    
+    cafo_pixel = []
+    for lat, lon in cafo_coords:
+        row, col = rasterio.transform.rowcol(transform, lon, lat)
+        cafo_pixel.append((row,col))
+
+    for (r,c) in cafo_pixel:
+        plt.scatter(c, r, color="green", label="cafo sources")
+    
+    handles, labels = plt.gca().get_legend_handles_labels()
+    unique = dict(zip(labels, handles))
+    plt.legend(unique.values(), unique.keys())
+
+    plt.title(title)
+    plt.show()
+
+if __name__ == "__main__":
+    # TODO: Get the predicted model from ERSRR_Model without causing circular imports
+    pass
     
