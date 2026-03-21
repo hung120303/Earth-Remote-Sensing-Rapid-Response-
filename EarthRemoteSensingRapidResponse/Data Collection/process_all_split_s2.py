@@ -21,7 +21,7 @@ import time
 import ee
 
 ee.Authenticate() 
-ee.Initialize(project='ersrr-475700') # Ensure this project ID is correct and you have access
+ee.Initialize(project='molten-turbine-477100-n1') # Ensure this project ID is correct and you have access
 
 def get_utm_crs_for_point(longitude, latitude):
     """
@@ -40,11 +40,11 @@ def get_utm_crs_for_point(longitude, latitude):
 
 # Set to true to scan through each of the datapoints
 INSPECT_IMAGES = False
-RETRIEVE_GOOD = True # condition to only download good images to the folder
+RETRIEVE_GOOD = False # condition to only download good images to the folder
 
-folder_path = "/2_16_2026_s2_emit_pairs_bounded_by_full_plume"
+folder_path = "/3_19_2026_test"
 
-output_folder_path = "/train_test_2_17_"
+output_folder_path = "/train_test_"
 
 # define file paths
 names = []

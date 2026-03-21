@@ -15,7 +15,7 @@ DATETIME_RANGE = 90 # Start date of plume, to DATETIME_RANGE days after
 
 ee.Authenticate() 
 
-ee.Initialize(project='ersrr-475700') # Ensure this project ID is correct and you have access
+ee.Initialize(project='molten-turbine-477100-n1') # Ensure this project ID is correct and you have access
 
 print("Earth Engine initialized successfully.")
 

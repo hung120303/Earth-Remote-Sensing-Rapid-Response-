@@ -17,7 +17,7 @@ from rasterio.plot import show
 # define file paths
 imageset = []
 names = []
-selected_set = 2
+selected_set = 12
 
 dataset = f"./UnprocessedImages/{selected_set}"
 for file in os.listdir(dataset):
@@ -38,6 +38,10 @@ with rasterio.open(s2_path) as s2_image:
     s2_bounds = s2_image.bounds
     s2_transform = s2_image.transform
     s2_nodata = s2_image.nodata
+    
+    b = s2_image.read(1)
+    g = s2_image.read(2)
+    r = s2_image.read(3)
 
 with rasterio.open(emit_path) as emit_image:
     emit_data = emit_image.read()
@@ -90,10 +94,18 @@ print(combined_data.shape)
 
 # visualize data
 show(emit_data, cmap="inferno")
-show(array, cmap="inferno")
-show(array2, cmap="inferno")
+# show(array, cmap="inferno")
+# show(array2, cmap="inferno")
 show(combined_data[5], cmap="inferno")
-show(s2_data[1])
+
+rgb = np.dstack((
+    (((r - r.min()) / (r.max() - r.min())) * 255),
+    (((g - g.min()) / (g.max() - g.min())) * 255),
+    (((b - b.min()) / (b.max() - b.min())) * 255))
+).astype('uint8')
+rgb = np.transpose(rgb, (2, 0, 1))
+
+show(rgb)
 
 # save combined array as a new file
 # with rasterio.open(
