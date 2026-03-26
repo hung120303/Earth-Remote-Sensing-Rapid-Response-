@@ -12,6 +12,8 @@ import Feature from 'ol/Feature.js';
 import { getBottomLeft, getTopRight } from 'ol/extent';
 import XYZ from 'ol/source/XYZ.js';
 import { transformExtent } from 'ol/proj';
+import GeoTIFF from 'ol/source/GeoTIFF.js';
+
 
 const US_Center = [-98.583333, 39.833333];
 const US_WebMercator = fromLonLat(US_Center, 'EPSG:4326');
@@ -39,6 +41,14 @@ const boxLayer = new VectorLayer({
   zIndex: 5 
 });
 
+const predictionLayer = new TileLayer({
+  source: new GeoTIFF({
+    sources: [{ url: "http://localhost:5000/prediction" }]
+  }),
+  opacity: 0.6,
+  zIndex: 2
+});
+
 let s2Layer = new TileLayer({
   source: new XYZ({ url: '' }),
   zIndex: 0
@@ -50,6 +60,8 @@ const raster = new TileLayer({
   }),
   zIndex: -1
 });
+
+
 
 const map = new Map({
   layers: [raster, s2Layer, boxLayer, vectorEarthquake],
