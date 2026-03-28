@@ -42,10 +42,10 @@ const boxLayer = new VectorLayer({
 });
 
 const predictionLayer = new TileLayer({
-  source: new GeoTIFF({
-    sources: [{ url: "http://localhost:5000/prediction" }]
+  source: new XYZ({
+    url: "http://localhost:5000/tiles/{z}/{x}/{y}.png"
   }),
-  opacity: 0.6,
+  opacity: 1.0,
   zIndex: 2
 });
 
@@ -64,9 +64,10 @@ const raster = new TileLayer({
 
 
 const map = new Map({
-  layers: [raster, s2Layer, boxLayer, vectorEarthquake],
+  layers: [raster, s2Layer, predictionLayer, boxLayer, vectorEarthquake],
   target: 'map',
   view: new View({
+    projection: 'EPSG:3857',
     center: fromLonLat(US_Center),
     zoom: 4,
   }),
@@ -83,6 +84,8 @@ map.on('moveend', async function(){
     );
     const data = await response.json();
     s2Layer.getSource().setUrl(data.tile_url);
+    predictionLayer.getSource().refresh();
+    
   }
   catch (e)
   {
@@ -94,4 +97,3 @@ map.on('moveend', async function(){
   boxSource.addFeature(boxFeature);
   
 })
-

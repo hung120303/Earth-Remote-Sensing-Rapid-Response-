@@ -16,7 +16,15 @@ import requests
 import rasterio
 import simplekml
 
+from rasterio.warp import calculate_default_transform, reproject, Resampling
+
 import os
+
+import mercantile
+from PIL import Image
+from io import BytesIO
+
+global prediction_data, prediction_profile
 
 print("Server starting...")
 
@@ -88,9 +96,135 @@ def stitch_predictions(preds, coords, shape, tile_size=256):
         output[i:i+tile_size, j:j+tile_size] = pred
 
     return output
+
+def save_prediction_rgba(output, profile):
+
+    # Normalize to 0–1
+    output = np.clip(output, 0, 1)
+
+    # Create RGBA channels
+    red   = (output * 255 * 2).clip(0,255).astype(np.uint8)
+    green = np.zeros_like(red, dtype=np.uint8)
+    blue  = np.zeros_like(red, dtype=np.uint8)
+
+    # Alpha = transparency 
+    threshold = 0.3
+    alpha = np.where(output > threshold, output * 255, 0).astype(np.uint8)
+
+    rgba = np.stack([red, green, blue, alpha], axis=0)
+
+    rgba_3857, profile_3857 = reproject_to_3857(rgba, profile)
+
+    global prediction_data, prediction_profile
+    
+    prediction_data = rgba_3857
+    prediction_profile = profile_3857
+
+    with rasterio.open(
+        PRED_PATH,
+        'w',
+        driver='GTiff',
+        height=profile_3857['height'],
+        width=profile_3857['width'],
+        count=4,
+        dtype='uint8',
+        crs=profile_3857['crs'],
+        transform=profile_3857['transform']
+    ) as dst:
+        dst.write(rgba_3857)
+
+def reproject_to_3857(data, profile):
+
+    src_crs = profile['crs']
+    dst_crs = 'EPSG:3857'
+
+    bounds = rasterio.transform.array_bounds(
+        profile['height'],
+        profile['width'],
+        profile['transform']
+    )
+
+    transform, width, height = calculate_default_transform(
+        src_crs,
+        dst_crs,
+        profile['width'],
+        profile['height'],
+        *bounds   
+    )
+
+    # prepare output array
+    dst = np.zeros((data.shape[0], height, width), dtype=data.dtype)
+
+    # reproject each band
+    for i in range(data.shape[0]):
+        reproject(
+            source=data[i],
+            destination=dst[i],
+            src_transform=profile['transform'],
+            src_crs=src_crs,
+            dst_transform=transform,
+            dst_crs=dst_crs,
+            resampling=Resampling.nearest
+        )
+
+    # update profile
+    new_profile = profile.copy()
+    new_profile.update({
+        'crs': dst_crs,
+        'transform': transform,
+        'width': width,
+        'height': height
+    })
+
+    return dst, new_profile
+
 @app.route("/prediction")
 def get_prediction():
     return send_file(PRED_PATH)
+
+@app.route("/tiles/<int:z>/<int:x>/<int:y>.png")
+def get_tile(z, x, y):
+    global prediction_data, prediction_profile
+
+    if prediction_data is None:
+        return "No prediction", 404
+
+    bounds = mercantile.xy_bounds(x, y, z)
+
+    transform = prediction_profile['transform']
+
+    # convert bounds to pixel coordinates
+    def world_to_pixel(x, y):
+        col = int((x - transform.c) / transform.a)
+        row = int((y - transform.f) / transform.e)
+        return col, row
+
+    minx, miny, maxx, maxy = bounds
+
+    col_min, row_max = world_to_pixel(minx, miny)
+    col_max, row_min = world_to_pixel(maxx, maxy)
+
+    # clamp to image bounds
+    col_min = max(col_min, 0)
+    row_min = max(row_min, 0)
+    col_max = min(col_max, prediction_data.shape[2])
+    row_max = min(row_max, prediction_data.shape[1])
+
+    tile = prediction_data[:, row_min:row_max, col_min:col_max]
+
+    if tile.size == 0:
+        return "", 204
+
+    # resize to 256x256
+    tile = np.transpose(tile, (1,2,0))  # HWC
+    tile_img = Image.fromarray(tile, mode='RGBA')
+    tile_img = tile_img.resize((256,256), Image.BILINEAR)
+
+    buf = BytesIO()
+    tile_img.save(buf, format='PNG')
+    buf.seek(0)
+
+    return send_file(buf, mimetype='image/png')
 
 @app.route("/sentinel")
 def sentinel():
@@ -477,48 +611,46 @@ def errsr_model_prediction(image_path):
     # Remove padding
     output = output[:orig_H, :orig_W]
 
-
-    # file path to save .tif to temporarily
-    # temp_path = "EarthRemoteSensingRapidResponse/ERSRR_Website/Predictions/testprediction.kml"
-        
-        
-    # save new .tif of prediction
-    with rasterio.open(
-        temp_path, 
-        mode="w",
-        driver='GTiff',
-        height=output.shape[0],
-        width=output.shape[1],
-        count=1,
-        dtype='float32',
-        crs=profile['crs'],
-        transform=profile['transform']
-    ) as file:
-        file.write(np.expand_dims(output, axis=0))
-        
-    # get bounds of temp file
-    with rasterio.open(temp_path) as t:
-        # crs = t.crs
-        bounds = t.bounds
-        # print(crs)
-        # print(bounds)
-        
-        west, south, east, north = bounds.left, bounds.bottom, bounds.right, bounds.top
-        # print(west)
-        # print(south)
-        # print(east)
-        # print(north)
+    save_prediction_rgba(output, profile)
     
-    # write to kml and save
-    kml = simplekml.Kml()
-    ground_overlay = kml.newgroundoverlay(name=os.path.basename(temp_path))
-    # ground_overlay.icon.href = temp_path
-    ground_overlay.latlonbox.north = north
-    ground_overlay.latlonbox.south = south
-    ground_overlay.latlonbox.east = east
-    ground_overlay.latlonbox.west = west
+        
+    # # save new .tif of prediction
+    # with rasterio.open(
+    #     temp_path, 
+    #     mode="w",
+    #     driver='GTiff',
+    #     height=output.shape[0],
+    #     width=output.shape[1],
+    #     count=1,
+    #     dtype='float32',
+    #     crs=profile['crs'],
+    #     transform=profile['transform']
+    # ) as file:
+    #     file.write(np.expand_dims(output, axis=0))
+        
+    # # get bounds of temp file
+    # with rasterio.open(temp_path) as t:
+    #     # crs = t.crs
+    #     bounds = t.bounds
+    #     # print(crs)
+    #     # print(bounds)
+        
+    #     west, south, east, north = bounds.left, bounds.bottom, bounds.right, bounds.top
+    #     # print(west)
+    #     # print(south)
+    #     # print(east)
+    #     # print(north)
     
-    kml.save(temp_path)
+    # # write to kml and save
+    # kml = simplekml.Kml()
+    # ground_overlay = kml.newgroundoverlay(name=os.path.basename(temp_path))
+    # # ground_overlay.icon.href = temp_path
+    # ground_overlay.latlonbox.north = north
+    # ground_overlay.latlonbox.south = south
+    # ground_overlay.latlonbox.east = east
+    # ground_overlay.latlonbox.west = west
+    
+    # kml.save(temp_path)
 
 '''
 ##############################
