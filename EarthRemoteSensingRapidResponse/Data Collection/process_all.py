@@ -19,9 +19,9 @@ import time
 INSPECT_IMAGES = False
 RETRIEVE_GOOD = True # condition to only download good images to the folder
 
-folder_path = "/s2_emit_pairs_2_20_26"
+folder_path = "/3_19_2026_test"
 
-output_folder_path = "/train_test_s2_0"
+output_folder_path = "/train_test_"
 
 # define file paths
 names = []

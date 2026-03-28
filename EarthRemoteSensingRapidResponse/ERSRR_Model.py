@@ -19,9 +19,11 @@ import math
 import matplotlib.pyplot as plt
 import argparse
 
+import pip
 import keras
 from keras import layers
 from keras import ops
+from keras import utils
 # from sklearn.model_selection import train_test_split 
 import simplekml
 import rasterio
@@ -66,7 +68,7 @@ mlp_head_units = [
 ] # size of dense layers for final classifier (temp: need to adjust)
 
 # File Directory paths
-dataset_dir = "EarthRemoteSensingRapidResponse/Data Collection/train_test_2_13_good_data"
+dataset_dir = "EarthRemoteSensingRapidResponse/Dataset/train_test"
 checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/checkpoint_new_data.weights.h5"
 test_image = "EarthRemoteSensingRapidResponse/Dataset/validation/20241010T102941_20241010T103402_T31SES_EMIT_L2B_CH4PLM_001_20241006T090738_003685grid_1.tif"
 
@@ -186,6 +188,13 @@ def create_vit_encoder_decoder():
     outputs = layers.Conv2D(1, 1, activation="sigmoid")(x)
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.summary()
+    # utils.plot_model(
+    #     model,
+    #     to_file="vit_model.png",
+    #     expand_nested=False,
+    #     show_layer_activations=True,
+    #     rankdir="TB"
+    # )
     
     return model
 
