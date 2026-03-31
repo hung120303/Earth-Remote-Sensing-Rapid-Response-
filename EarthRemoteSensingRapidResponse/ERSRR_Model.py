@@ -33,7 +33,7 @@ parser.add_argument('--mode', type=str, default="pred")
 parser.add_argument('--lr', type=float, default=0.0001)
 parser.add_argument('--wd', type=float, default=0.1)
 parser.add_argument('--bs', type=int, default=4)
-parser.add_argument('--ep', type=int, default=100)
+parser.add_argument('--ep', type=int, default=5)
 parser.add_argument('--ps', type=int, default=8)
 parser.add_argument('--nh', type=int, default=4)
 parser.add_argument('--tl', type=int, default=8)
@@ -66,8 +66,8 @@ mlp_head_units = [
 ] # size of dense layers for final classifier (temp: need to adjust)
 
 # File Directory paths
-dataset_dir = "EarthRemoteSensingRapidResponse/Data Collection/train_test_2_13_good_data"
-checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/checkpoint_new_data.weights.h5"
+dataset_dir = "EarthRemoteSensingRapidResponse/Dataset/train_test"
+checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
 test_image = "EarthRemoteSensingRapidResponse/Dataset/validation/20241010T102941_20241010T103402_T31SES_EMIT_L2B_CH4PLM_001_20241006T090738_003685grid_1.tif"
 
 ####################################################
@@ -475,8 +475,9 @@ def main():
         
         # plot metrics
         plot_history(history, "loss")
-        plot_history(history, "mean_squared_error")
-        plot_history(history, "mean_absolute_error")
+        plot_history(history, "dice_coefficient")
+        # plot_history(history, "mean_squared_error")
+        # plot_history(history, "mean_absolute_error")
     
     elif (args.mode == "pred"):
         # Input image into model and give prediction
