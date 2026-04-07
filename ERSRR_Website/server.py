@@ -23,6 +23,7 @@ import os
 import mercantile
 from PIL import Image
 from io import BytesIO
+import cv2
 
 global prediction_data, prediction_profile
 
@@ -651,6 +652,65 @@ def errsr_model_prediction(image_path):
     # ground_overlay.latlonbox.west = west
     
     # kml.save(temp_path)
+
+def errsr_model_prediction_wide(image_path):
+
+    # load image
+    with rasterio.open(image_path) as src:
+        img = src.read().transpose(1,2,0)   
+        profile = src.profile
+
+    H, W, C = img.shape
+
+    # resize to model input
+    img_resized = cv2.resize(img, (256,256), interpolation=cv2.INTER_LINEAR)
+
+    # normalize
+    img_resized = img_resized.astype(np.float32) / 10000.0
+
+    # run model
+    pred = model.predict(img_resized[None], verbose=0)[0,:,:,0]
+
+    # resize
+    pred_full = cv2.resize(pred, (W, H), interpolation=cv2.INTER_LINEAR)
+
+    # rgb display
+    pred_full = np.clip(pred_full, 0, 1)
+
+    threshold = 0.3
+
+    red = (pred_full * 255).astype(np.uint8)
+    green = np.zeros_like(red)
+    blue = np.zeros_like(red)
+
+    alpha = np.where(pred_full > threshold, pred_full * 255, 0).astype(np.uint8)
+
+    rgba = np.stack([red, green, blue, alpha], axis=0)
+
+    rgba_3857, profile_3857 = reproject_to_3857(rgba, profile)
+
+    global prediction_data, prediction_profile
+    
+    prediction_data = rgba_3857
+    prediction_profile = profile_3857
+
+    # save tif file
+    os.makedirs("Predictions", exist_ok=True)
+
+    with rasterio.open(
+        PRED_PATH,
+        'w',
+        driver='GTiff',
+        height=H,
+        width=W,
+        count=4,
+        dtype='uint8',
+        crs=profile['crs'],
+        transform=profile['transform']
+    ) as dst:
+        dst.write(rgba)
+
+    
 
 '''
 ##############################

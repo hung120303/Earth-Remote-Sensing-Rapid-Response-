@@ -73,27 +73,54 @@ const map = new Map({
   }),
 });
 
+let timeout;
+
 map.on('moveend', async function(){
-  const extent = map.getView().calculateExtent(map.getSize());  
-  const extent4326 = transformExtent(extent,'EPSG:3857','EPSG:4326');
-  const [minx,miny,maxx,maxy] = extent4326;
-  
-  try {
-    const response = await fetch(
-      `http://localhost:5000/sentinel?minx=${minx}&miny=${miny}&maxx=${maxx}&maxy=${maxy}`
-    );
-    const data = await response.json();
-    s2Layer.getSource().setUrl(data.tile_url);
-    predictionLayer.getSource().refresh();
+  clearTimeout(timeout);
+
+  timeout = setTimeout(async () => {
+    const extent = map.getView().calculateExtent(map.getSize());  
+    const extent4326 = transformExtent(extent,'EPSG:3857','EPSG:4326');
+    const [minx,miny,maxx,maxy] = extent4326;
     
-  }
-  catch (e)
-  {
-    console.error('Failed to fetch S2 tile:', e);
-  }
-  
-  boxSource.clear();
-  const boxFeature = new Feature(fromExtent(extent));
-  boxSource.addFeature(boxFeature);
-  
+    try {
+      const response = await fetch(
+        `http://localhost:5000/sentinel?minx=${minx}&miny=${miny}&maxx=${maxx}&maxy=${maxy}`
+      );
+      const data = await response.json();
+      s2Layer.getSource().setUrl(data.tile_url);
+      predictionLayer.getSource().refresh();
+      
+    }
+    catch (e)
+    {
+      console.error('Failed to fetch S2 tile:', e);
+    }
+    
+    boxSource.clear();
+    const boxFeature = new Feature(fromExtent(extent));
+    boxSource.addFeature(boxFeature);
+  }, 500);
 })
+
+const lonInput = document.getElementById('lon');
+const latInput = document.getElementById('lat');
+const goToLocationButton = document.getElementById('goToLocationButton');
+
+goToLocationButton.addEventListener('click', () => {
+  const lon = parseFloat(lonInput.value);
+  const lat = parseFloat(latInput.value);
+  console.log("hi")
+  if (isNaN(lon) || isNaN(lat)) {
+    alert("Invalid coordinates");
+    return;
+  }
+
+  const newCenter = fromLonLat([lon, lat]);
+
+  map.getView().animate({
+    center: newCenter,
+    zoom: 15,        // adjust zoom level
+    duration: 1000   // smooth animation
+  });
+});

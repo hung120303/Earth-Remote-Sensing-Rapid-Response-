@@ -14,6 +14,19 @@
   </head>
   <body>
     <div id="map" class="map"></div>
+    <div id="controls" style="
+    position:absolute;
+    top:10px;
+    left:40px;
+    background:white;
+    padding:10px;
+    border-radius:8px;
+    z-index:1000;
+    ">
+    <input id="lon" type="text" placeholder="Longitude" />
+    <input id="lat" type="text" placeholder="Latitude" />
+    <button id="goToLocationButton">Go</button>
+    </div>
     <script type="module" src="./main.js"></script>
   </body>
 </html>
