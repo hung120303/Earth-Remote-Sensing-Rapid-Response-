@@ -36,7 +36,7 @@ parser.add_argument('--bs', type=int, default=4)
 parser.add_argument('--ep', type=int, default=5)
 parser.add_argument('--ps', type=int, default=8)
 parser.add_argument('--nh', type=int, default=4)
-parser.add_argument('--tl', type=int, default=8)
+parser.add_argument('--tl', type=int, default=6)
 args = parser.parse_args()
 
 # data preparation
@@ -59,15 +59,10 @@ transformer_units = [
     projection_dim,
 ] # size of transformer layers
 transformer_layers = args.tl
-# conv_layers = 4
-mlp_head_units = [
-    2048,
-    1024,
-] # size of dense layers for final classifier (temp: need to adjust)
 
 # File Directory paths
 dataset_dir = "EarthRemoteSensingRapidResponse/Dataset/train_test"
-checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
+checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/dice.weights.h5"
 test_image = "EarthRemoteSensingRapidResponse/Dataset/validation/20241010T102941_20241010T103402_T31SES_EMIT_L2B_CH4PLM_001_20241006T090738_003685grid_1.tif"
 
 ####################################################
@@ -145,13 +140,34 @@ def mlp(x, hidden_units, dropout_rate):
         x = layers.Dropout(dropout_rate)(x)
     return x
 
+####################################################
+# transformer_block                                #
+#   - implementation of a single transformer block #
+####################################################
+def transformer_block(x, n_heads, t_units):
+    # multi-head attention layer
+    attn = layers.MultiHeadAttention(num_heads=n_heads, key_dim=x.shape[-1], dropout=0.1)(x, x)
+    # layer normalization and skip connection
+    x = layers.LayerNormalization()(x + attn)
+    # MLP
+    mlp_output = mlp(x, hidden_units=t_units, dropout_rate=0.1)
+    # layer normalization and skip connection
+    x = layers.LayerNormalization()(x + mlp_output)
+    return x
+
 #############################################
 # upsampling_block                          #
 #   - convolutional upsampling block        #
 #############################################
-def upsampling_block(x,filters):
-    x = layers.UpSampling2D(size=(2,2), interpolation="bilinear")(x)
-    x = layers.Conv2D(filters, 3, padding="same",activation="relu")(x)
+def decoder_block(x, skip, filters):
+    # upsample with transpose convolution
+    x = layers.Conv2DTranspose(filters, (2,2), strides=2, padding="same")(x)
+    # add and concatenate skip connection
+    skip = layers.Resizing(x.shape[1], x.shape[2])(skip)
+    x = layers.Concatenate()([x, skip])
+    # convolutional layers
+    x = layers.Conv2D(filters, 3, padding="same", activation="relu")(x)
+    x = layers.Conv2D(filters, 3, padding="same", activation="relu")(x)
     return x
 
 ################################################
@@ -161,27 +177,29 @@ def upsampling_block(x,filters):
 #     CNNs for decoding/upsampling             #
 ################################################
 def create_vit_encoder_decoder():
+    # ViT patches and encoding
     inputs = keras.Input(shape=input_shape)
     patches = Patches(patch_size)(inputs) # create patches
-    encoded_patches = PatchEncoder(num_patches, projection_dim)(patches) # encode patches
+    x = PatchEncoder(num_patches, projection_dim)(patches) # encode patches
 
-    # create multiple layers of the Transformer block
-    for _ in range(transformer_layers):
+    # transformer layers
+    skips = []
+    for depth in range(transformer_layers):
+        x = transformer_block(x, num_heads, transformer_units)
+        if depth in [1, 3, 5]:
+            skips.append(x)
 
-        attn = layers.MultiHeadAttention(num_heads=num_heads, key_dim=projection_dim, dropout=0.1
-                                         )(encoded_patches, encoded_patches)
-        encoded_patches = layers.LayerNormalization()(encoded_patches+attn)
-        mlp_output = mlp(encoded_patches, hidden_units=transformer_units, dropout_rate=0.1)
-        encoded_patches = layers.LayerNormalization()(encoded_patches + mlp_output)
+    # bridge
+    h = image_size // patch_size
+    x = layers.Reshape((h, h, x.shape[-1]))(x)
+    for i, s in enumerate(skips):
+        s = layers.Reshape((h, h, s.shape[-1]))(s)
+        skips[i] = s
 
-    # convolutional upscaling
-    x = layers.Dense(projection_dim)(encoded_patches)
-    x = layers.Reshape((image_size // patch_size, image_size // patch_size, projection_dim))(x)
-
-    # upsampling blocks
-    num_upsample_blocks = round(math.log(patch_size, 2))
-    for i in range(num_upsample_blocks):
-        x = upsampling_block(x, (projection_dim // (2**i)))
+    # decoder layers
+    x = decoder_block(x, skips[-1], projection_dim)
+    x = decoder_block(x, skips[-2], projection_dim // 2)
+    x = decoder_block(x, skips[-3], projection_dim // 4)
 
     outputs = layers.Conv2D(1, 1, activation="sigmoid")(x)
     model = keras.Model(inputs=inputs, outputs=outputs)
@@ -195,14 +213,14 @@ def dice_coefficient(y_true, y_pred, smooth=1e-6):
     dice = (2. * intersection + smooth) / (union + smooth)
     return ops.mean(dice)
 
-bce = keras.losses.BinaryCrossentropy()
-
 def dice_loss(y_true, y_pred):
     return 1 - dice_coefficient(y_true, y_pred)
 
 def hybrid_loss(y_true, y_pred):
-
-    return bce(y_true, y_pred) + dice_loss(y_true, y_pred)
+    mask = keras.ops.cast(y_true > 0, dtype=keras.backend.floatx())
+    
+    bce = keras.losses.BinaryCrossentropy()
+    return (bce(y_true, y_pred) + dice_loss(y_true, y_pred)) * mask
 
 ###################################################
 # run_experiment                                  #
@@ -224,8 +242,8 @@ def run_experiment(model, x_train, y_train, x_test, y_test):
     checkpoint_filepath = checkpoint_dir
     checkpoint_callback = keras.callbacks.ModelCheckpoint(
         checkpoint_filepath,
-        monitor="val_mean_squared_error",
-        mode="min",
+        monitor="val_dice_coefficient",
+        mode="max",
         save_best_only=True,
         save_weights_only=True,
     )
@@ -489,7 +507,7 @@ def main():
         # 20231029T072021_20231029T072130_T39SVV_EMIT_L2B_CH4PLM_001_20231027T061434_001888grid_1.tif
         # 20240403T170851_20240403T171803_T14RMS_EMIT_L2B_CH4PLM_001_20240322T214509_002926grid_1.tif
         
-        test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif"
+        test_image_path = "EarthRemoteSensingRapidResponse/Dataset/validation/20230410T172859_20230410T174507_T13RFQ.tif"
         errsr_model_prediction(test_image_path)
         
     else:
