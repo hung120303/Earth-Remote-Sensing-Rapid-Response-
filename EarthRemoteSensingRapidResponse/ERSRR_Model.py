@@ -59,13 +59,9 @@ transformer_units = [
     projection_dim,
 ]
 transformer_layers = args.tl
-mlp_head_units = [
-    2048,
-    1024,
-]
 
 # File Directory paths
-dataset_dir = "EarthRemoteSensingRapidResponse/Dataset/train_test_s2_100"
+dataset_dir = "EarthRemoteSensingRapidResponse/Dataset/train_test"
 checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
 test_image = "EarthRemoteSensingRapidResponse/Dataset/validation/20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif"
 cafo_csv = "EarthRemoteSensingRapidResponse/Polygon_CSV_Files/iowa_cafos_2024_arcgis_api.csv"
@@ -146,12 +142,38 @@ def mlp(x, hidden_units, dropout_rate):
         x = layers.Dropout(dropout_rate)(x)
     return x
 
+####################################################
+# transformer_block                                #
+#   - implementation of a single transformer block #
+####################################################
+def transformer_block(x, n_heads, t_units):
+    # multi-head attention layer
+    attn = layers.MultiHeadAttention(num_heads=n_heads, key_dim=x.shape[-1], dropout=0.1)(x, x)
+    # layer normalization and skip connection
+    x = layers.LayerNormalization()(x + attn)
+    # MLP
+    mlp_output = mlp(x, hidden_units=t_units, dropout_rate=0.1)
+    # layer normalization and skip connection
+    x = layers.LayerNormalization()(x + mlp_output)
+    return x
 
 #############################################
 # upsampling_block                          #
 #############################################
 def upsampling_block(x, filters):
     x = layers.UpSampling2D(size=(2,2), interpolation="bilinear")(x)
+    x = layers.Conv2D(filters, 3, padding="same", activation="relu")(x)
+    return x
+    
+    
+def decoder_block(x, skip, filters):
+    # upsample with transpose convolution
+    x = layers.Conv2DTranspose(filters, (2,2), strides=2, padding="same")(x)
+    # add and concatenate skip connection
+    skip = layers.Resizing(x.shape[1], x.shape[2])(skip)
+    x = layers.Concatenate()([x, skip])
+    # convolutional layers
+    x = layers.Conv2D(filters, 3, padding="same", activation="relu")(x)
     x = layers.Conv2D(filters, 3, padding="same", activation="relu")(x)
     return x
 
@@ -161,39 +183,58 @@ def upsampling_block(x, filters):
 #   - plume-aware multi-task model             #
 ################################################
 def create_vit_encoder_decoder():
+    # ViT patches and encoding
     inputs = keras.Input(shape=input_shape)
-
-    # Skip connection to retain resolution
-    skip_conn = layers.Conv2D(32, 3, padding="same", activation="relu")(inputs)
-
-    patches = Patches(patch_size)(inputs)
-    encoded_patches = PatchEncoder(num_patches, projection_dim)(patches)
-
+    
+    # # Skip connection to retain resolution
+    # skip_conn = layers.Conv2D(32, 3, padding="same", activation="relu")(inputs)
+    
+    patches = Patches(patch_size)(inputs) # create patches
+    x = PatchEncoder(num_patches, projection_dim)(patches) # encode patches
+    
     # Transformer encoder
-    for _ in range(transformer_layers):
-        attn = layers.MultiHeadAttention(
-            num_heads=num_heads,
-            key_dim=projection_dim,
-            dropout=0.1
-        )(encoded_patches, encoded_patches)
+    skips = []
+    for depth in range(transformer_layers):
+        x = transformer_block(x, num_heads, transformer_units)
+        if depth in [1, 4, 7]:
+            skips.append(x)
+    
+    # for _ in range(transformer_layers):
+    #     attn = layers.MultiHeadAttention(
+    #         num_heads=num_heads,
+    #         key_dim=projection_dim,
+    #         dropout=0.1
+    #     )(encoded_patches, encoded_patches)
 
-        encoded_patches = layers.LayerNormalization()(encoded_patches + attn)
-        mlp_output = mlp(encoded_patches, hidden_units=transformer_units, dropout_rate=0.1)
-        encoded_patches = layers.LayerNormalization()(encoded_patches + mlp_output)
+    #     encoded_patches = layers.LayerNormalization()(encoded_patches + attn)
+    #     mlp_output = mlp(encoded_patches, hidden_units=transformer_units, dropout_rate=0.1)
+    #     encoded_patches = layers.LayerNormalization()(encoded_patches + mlp_output)
 
-    # Decoder
-    x = layers.Dense(projection_dim)(encoded_patches)
-    x = layers.Reshape((image_size // patch_size, image_size // patch_size, projection_dim))(x)
+    # bridge
+    h = image_size // patch_size
+    x = layers.Reshape((h, h, x.shape[-1]))(x)
+    for i, s in enumerate(skips):
+        s = layers.Reshape((h, h, s.shape[-1]))(s)
+        skips[i] = s
+        
+    # decoder layers
+    x = decoder_block(x, skips[-1], projection_dim)
+    x = decoder_block(x, skips[-2], projection_dim // 2)
+    x = decoder_block(x, skips[-3], projection_dim // 4)
 
-    num_upsample_blocks = round(math.log(patch_size, 2))
-    for i in range(num_upsample_blocks):
-        x = upsampling_block(x, (projection_dim // (2**i)))
+    # # Decoder
+    # x = layers.Dense(projection_dim)(encoded_patches)
+    # x = layers.Reshape((image_size // patch_size, image_size // patch_size, projection_dim))(x)
 
-    skip_resized = layers.Conv2D(32, 3, padding="same", activation="relu")(skip_conn)
-    x = layers.Concatenate()([x, skip_resized])
+    # num_upsample_blocks = round(math.log(patch_size, 2))
+    # for i in range(num_upsample_blocks):
+    #     x = upsampling_block(x, (projection_dim // (2**i)))
 
-    x = layers.Conv2D(64, 3, padding="same", activation="relu")(x)
-    x = layers.Conv2D(32, 3, padding="same", activation="relu")(x)
+    # skip_resized = layers.Conv2D(32, 3, padding="same", activation="relu")(skip_conn)
+    # x = layers.Concatenate()([x, skip_resized])
+
+    # x = layers.Conv2D(64, 3, padding="same", activation="relu")(x)
+    # x = layers.Conv2D(32, 3, padding="same", activation="relu")(x)
 
     shared_features = x
 
