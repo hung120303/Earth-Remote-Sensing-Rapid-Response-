@@ -32,7 +32,7 @@ parser.add_argument('--mode', type=str, default="train")
 parser.add_argument('--lr', type=float, default=0.0001)
 parser.add_argument('--wd', type=float, default=0.1)
 parser.add_argument('--bs', type=int, default=4)
-parser.add_argument('--ep', type=int, default=100)
+parser.add_argument('--ep', type=int, default=1)
 parser.add_argument('--ps', type=int, default=8)
 parser.add_argument('--nh', type=int, default=4)
 parser.add_argument('--tl', type=int, default=8)
@@ -62,7 +62,7 @@ transformer_layers = args.tl
 
 # File Directory paths
 dataset_dir = "EarthRemoteSensingRapidResponse/Dataset/train_test"
-checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5"
+checkpoint_dir = "EarthRemoteSensingRapidResponse/tmp/new.weights.h5"
 test_image = "EarthRemoteSensingRapidResponse/Dataset/validation/20240613T090559_20240613T091055_T34RET_EMIT_L2B_CH4PLM_001_20240612T135823_003244grid_1.tif"
 cafo_csv = "EarthRemoteSensingRapidResponse/Polygon_CSV_Files/iowa_cafos_2024_arcgis_api.csv"
 
