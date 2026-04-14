@@ -28,7 +28,7 @@ import cv2
 global prediction_data, prediction_profile
 
 print("Server starting...")
-checkpoint_dir = "../EarthRemoteSensingRapidResponse/tmp/checkpoint.weights.h5" # Weights
+checkpoint_dir = "../EarthRemoteSensingRapidResponse/tmp/checkpoint_new.weights.h5" # Weights
 temp_path = "Predictions/testprediction.kml"
 PRED_PATH = "Predictions/testprediction.tif"
 
@@ -83,8 +83,15 @@ def predict_tiles(model, tiles):
     for tile in tiles:
         tile = tile / (np.max(tile) + 1e-6)  # normalize
 
-        pred = model.predict(tile[None])[0, :, :, 0]
-        preds.append(pred)
+        pred_raw = model.predict(tile[None])
+
+        # errsr_model_prediction code
+        pred_norm = pred_raw["regression_output"][0, :, :, 0]
+        pred_mask = pred_raw["mask_output"][0, :, :, 0]
+        pred_norm_refined = pred_norm * pred_mask
+
+        preds.append(pred_norm_refined)
+
 
     return preds
 
