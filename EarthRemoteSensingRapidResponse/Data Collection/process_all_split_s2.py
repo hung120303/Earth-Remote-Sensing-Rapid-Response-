@@ -1,7 +1,7 @@
 ####################################################################################################
-# ImagePreprocessing.py                                                                            #
-#   - This program file reprojects the given EMIT data to match the geospatial coordinates         #
-#     of the S2_Harmonized input data, and combines the files together into one .tif with 6 bands. #
+# process_all_split_s2.py                                                                          #
+#   OBSELETE: this python file was used for extracting the s2 image as size of the plume bounding
+#   box, but the number of samples was lower than original method
 ####################################################################################################
 
 import numpy as np

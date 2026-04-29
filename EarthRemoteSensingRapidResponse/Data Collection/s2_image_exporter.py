@@ -10,6 +10,22 @@ import shutil
 import math
 import rasterio
 
+'''
+s2_image_exporter.py
+
+Run the file to return s2 imagery. Takes the plume geometry from the folder, and outputs
+images and the corresponding geometry in a pair folder (named 'grid_#') and puts into the 
+numbered plume folder. 
+
+Need to initialize a google earth engine project on your Google account and rename the project name 
+
+'''
+
+# EMIT Plume list
+emit_folder_path = './EMIT_Plumes/EMITL2BCH4PLM_001-20260122_054222'
+test_output_folder = "./test_pairings/"
+test_emit_no_s2_folder = "./unpaired_EMIT/"
+
 CLOUD_COVER_MAX = 5 # Max percentage of clouds 
 DATETIME_RANGE = 90 # Start date of plume, to DATETIME_RANGE days after
 
@@ -44,18 +60,7 @@ def get_s2_image_and_export(roi_to_use, start_date_str, end_date_str, output_loc
     Returns true if URL was successfully downloaded,
             false otherwise
     """
-
-    '''
-    print(f"\nProcessing point: Lon={longitude}, Lat={latitude}, Date Range={start_date_str} to {end_date_str}")
-
-    point = ee.Geometry.Point(longitude, latitude)
-
-    # Apply getBoundingBox function to MethaneAir feature collection
-    boundingBoxes = pointSourceCollection.map(getBoundingBox)
-
-    # Convert feature geometry to region of interest
-    roi = boundingBoxes.filterBounds(point).geometry() # Bottom-left corner is the given coordinate, and the coordinate that closes off the roi
-    '''
+    
     log_lon, log_lat = 'N/A', 'N/A'
     try:
         roi_info = roi_to_use.getInfo()
@@ -242,23 +247,7 @@ def generate_overlapping_grid_meters(geometry_to_cover):
             if not tile_rect_proj.transform('EPSG:4326', 1).intersects(geometry_to_cover, 1):
                 current_y += tile_height_meters
                 continue
-            
-            # print(tile_rect_proj.bounds(1, utm_crs).coordinates().getInfo())
-            # print(tile_rect_proj.transform('EPSG:4326', 1).bounds().coordinates().getInfo())
-
-            # utm_point = ee.Geometry.Point([current_x, current_y], utm_crs)
-            # wgs84_point = utm_point.transform('EPSG:4326', 1)
-
-            # print(utm_point.getInfo())
-            # print(wgs84_point.getInfo())
-            
-            # utm_point = ee.Geometry.Point([current_x+ tile_width_meters, current_y+ tile_height_meters], utm_crs)
-            # wgs84_point = utm_point.transform('EPSG:4326', 1)
-
-            # print(utm_point.getInfo())
-            # print(wgs84_point.getInfo())
-            #lon_lat_coords = wgs84_point.coordinates().getInfo() 
-
+                
             tile_rect_wgs84 = tile_rect_proj.transform('EPSG:4326', 1)
             
             rois_list.append(tile_rect_wgs84)
@@ -267,22 +256,7 @@ def generate_overlapping_grid_meters(geometry_to_cover):
     
     return rois_list
 
-# EMIT Plume list
-emit_folder_path = './EMIT_Plumes/EMITL2BCH4PLM_001-20260122_054222'
-
-# TODO : Run the function across the entire EMIT dataset,
-
-# Example
-longitude = -97.92534000000002
-latitude = 35.64508
-start = '2023-06-18' 
-end = '2023-6-20'
-output_local_dir = "./s2"
-
-#get_s2_image_and_export(longitude, latitude, start, end, output_local_dir)
-
-test_output_folder = "./test_pairings/"
-test_emit_no_s2_folder = "./unpaired_EMIT/"
+# Folder logic
 
 folderIndex = 0
 foundImageFolderList = []

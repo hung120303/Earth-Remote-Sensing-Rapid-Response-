@@ -1,7 +1,18 @@
 ####################################################################################################
-# ImagePreprocessing.py                                                                            #
+# process_all.py                                                                                   #
 #   - This program file reprojects the given EMIT data to match the geospatial coordinates         #
 #     of the S2_Harmonized input data, and combines the files together into one .tif with 6 bands. #
+#   
+#   Takes the folder produced by s2_image_exporter.
+#   exportedFolder:
+#       1
+#           grid_1
+#           grid_2
+#           ...
+#       2
+#       ...
+#
+#   Outputs a new folder of a combined data image of the EMIT and s2
 ####################################################################################################
 
 import numpy as np
@@ -17,10 +28,14 @@ import time
 
 # Set to true to scan through each of the datapoints
 INSPECT_IMAGES = False
-RETRIEVE_GOOD = True # condition to only download good images to the folder
+RETRIEVE_GOOD = True # condition to only download good images to the folder - see Bad data checking flags
 
+# Bad data checking (in-case images with weirdly cut off imagery due to reprojection is undesired)
+S2_MIN_PERCENTAGE = 0.0 # What percentage of the s2 image can have nodata values 
+S2_MAX_NODATA_RATIO = 1 - S2_MIN_PERCENTAGE
+MIN_EMIT_PPM_VAL = 300 # The min ppm value for the EMIT plume should be 
+    
 folder_path = "/s2_emit_pairs_2_20_26"
-
 output_folder_path = "/train_test_s2_0"
 
 # define file paths
@@ -111,10 +126,6 @@ for i in range(len(names)):
         for i in range(s2_data.shape[0]):
             show(s2_data[i])
 
-    # Bad data checking
-    S2_MIN_PERCENTAGE = 0.0
-    S2_MAX_NODATA_RATIO = 1 - S2_MIN_PERCENTAGE
-    MIN_EMIT_PPM_VAL = 300
     emit_max_plume_val = np.max(np.array(array)) # Check if the max value of resampled plume is 0 (rest of the image should be 0)
     
     s2_mask = np.any(s2_data == s2_nodata, axis=0)

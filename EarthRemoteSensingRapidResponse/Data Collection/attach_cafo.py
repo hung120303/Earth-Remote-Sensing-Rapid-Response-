@@ -1,9 +1,18 @@
 import rasterio
 import os
 import csv
+import shutil
+
+'''
+attach_cafo.py
+
+Outputs folder of images that contain a CAFO lon, lat point, with folder output from process_all.py 
+
+'''
 
 s2_emit_combined_image_input_folder = "/train_test_s2_0"
-output_folder = ""
+output_folder = "/images_with_cafo"
+output_folder_non_cafo = "/images_non_cafo"
 cafos_folder = "/cafo_csv"
 
 def containsCAFO(bounds, cafo_points):
@@ -73,7 +82,9 @@ for path, subfolders, files in os.walk(f"EarthRemoteSensingRapidResponse/Data Co
             cafo_path = os.path.join(path, file)
             points = load_cafo_points(cafo_path)
             cafo_list.extend(points)
-n = 0
+
+cafo_path = os.path.join((f"EarthRemoteSensingRapidResponse/Data Collection/{output_folder}")
+non_cafo_path = os.path.join((f"EarthRemoteSensingRapidResponse/Data Collection/{output_folder_non_cafo}")
 # Check if the cafo points lay within the image
 for path, subfolders, files in os.walk(f"EarthRemoteSensingRapidResponse/Data Collection/{s2_emit_combined_image_input_folder}"):
     for file in files:
@@ -85,8 +96,10 @@ for path, subfolders, files in os.walk(f"EarthRemoteSensingRapidResponse/Data Co
 
                 if containsCAFO(bounds, cafo_list):
                     print(f"{file} contains a CAFO")
-                    n += 1
+                    output_path = os.join(cafo_path, file)
                 else:
                     print(f"{file} does NOT contain a CAFO")
+                    output_path = os.join(non_cafo_path, file)
+                
+                shutil.copy(image_path, output_path)
 
-print(n)
