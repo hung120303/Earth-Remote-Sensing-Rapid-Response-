@@ -1,0 +1,63 @@
+# Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Node / frontend dependencies and build output
+node_modules/
+**/node_modules/
+dist/
+build/
+.vite/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.jsonl
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Generated reports and local run outputs
+reports/dataset_audit/
+outputs/
+logs/
+*.log
+
+# Model checkpoints / training artifacts
+*.weights.h5
+*.keras
+*.ckpt
+checkpoints/
+EarthRemoteSensingRapidResponse/tmp/
+
+# Generated map/prediction artifacts
+ERSRR_Website/temp_s2.tif
+ERSRR_Website/Predictions/
+EarthRemoteSensingRapidResponse/Predictions/
+
+# Local/raw data acquisition batches; keep curated dataset files intentional
+EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/
+EarthRemoteSensingRapidResponse/Data Collection/test_pairings/
+EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/
+EarthRemoteSensingRapidResponse/Data Collection/unpaired_EMIT/
+EarthRemoteSensingRapidResponse/Data Collection/train_test_s2_*/
+EarthRemoteSensingRapidResponse/Data Collection/validation_s2_*/

@@ -38,7 +38,7 @@ parser.add_argument('--nh', type=int, default=4)
 parser.add_argument('--tl', type=int, default=8)
 args = parser.parse_args()
 
-MODEL_SETTING = "predict"
+MODEL_SETTING = "train"
 
 # data preparation
 input_shape = (256, 256, 5)
@@ -659,7 +659,16 @@ def errsr_model_prediction(image_path):
     checkpoint_filepath = checkpoint_dir
 
     model = create_vit_encoder_decoder()
-    model.load_weights(checkpoint_filepath)
+
+    if not os.path.exists(checkpoint_filepath):
+        print(f"No checkpoint found at {checkpoint_filepath}. Train first with MODEL_SETTING='train'.")
+        return
+    try:
+        model.load_weights(checkpoint_filepath)
+    except Exception as e:
+        print(f"Could not load checkpoint: {e}")
+        print("The checkpoint format is incompatible. Retrain the model first.")
+        return
 
     preds = model.predict(preprocess_image(image_path)[None], verbose=0)
 
