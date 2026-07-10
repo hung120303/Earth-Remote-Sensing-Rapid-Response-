@@ -60,7 +60,16 @@ def tracked_dirty(root: Path) -> bool:
     output = subprocess.check_output(
         ["git", "status", "--porcelain", "--untracked-files=no"], cwd=root, text=True
     )
-    return bool(output.strip())
+    generated = {
+        DEFAULT_JSON.as_posix(),
+        DEFAULT_MARKDOWN.as_posix(),
+    }
+    changed = {
+        line[3:].strip().replace("\\", "/")
+        for line in output.splitlines()
+        if len(line) >= 4
+    }
+    return bool(changed - generated)
 
 
 def safe_output(root: Path, value: str) -> Path:
