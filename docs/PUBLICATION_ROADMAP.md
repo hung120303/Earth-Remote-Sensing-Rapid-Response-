@@ -1,6 +1,6 @@
 # ERSRR publication roadmap: reliable plume detection and no-plume rejection
 
-- Status: execution active; pinned MARS-S2L metadata and raster contract audited
+- Status: execution active; frozen MARS-S2L protocol, baselines, and joint MIL v2 recorded
 - Date: 2026-07-10
 - Starting revision: `3cab591405cf59287a76249c12e08ca4e82f6855`
 - Current artifact: `research_only`; it is an engineering baseline, not the paper model
@@ -86,8 +86,16 @@ availability section and recommends DOI-backed FAIR repositories for the code an
   decisions. It raises strict-spatial pixel AP to 0.0355 and IoU to 0.0517, but its
   validation-selected presence rule transfers at only 1.5% recall / 91.4% specificity. The best
   checkpoint occurs at epoch 1 because global-average scene pooling quickly overfits. The next
-  frozen change is therefore top-k multiple-instance plume evidence plus stronger presence loss
-  and validation hard-negative emphasis—not a wider/deeper encoder.
+  frozen change was therefore top-k multiple-instance plume evidence plus stronger presence loss,
+  not a wider/deeper encoder.
+- Joint MIL v2 validates that architecture call. It reaches 39.8% validation recall at 4.7% FPR,
+  versus 4.7% recall for v1 at a comparable validation constraint. With its checkpoint and
+  thresholds frozen before test evaluation, it reaches 14.9% strict-spatial recall, 98.8%
+  specificity, 0.752 AUROC, and 0.0611 pixel AP. This is a 10x recall improvement over v1 while
+  reducing v1's strict FPR from 8.6% to 1.2%. However, the group-bootstrap recall 95% interval is
+  only 4.4%-35.0%, so the promotion gate still fails. The next decision must come from the released
+  MARS-S2L baseline and validation-only error analysis, not from further inspection of this frozen
+  benchmark.
 
 The current shared core and artifact contract remain useful engineering infrastructure. They do
 not establish a useful detector.
@@ -481,9 +489,10 @@ Exit: every sample resolves to a state, group, split, checksum, and product cont
 Exit: credible baseline table and documented discrepancies from published values.
 
 Current development status: native MBMP plus raw/physics scene and pixel-logistic baselines are
-complete and fail the promotion gate. Released CH4Net/MARS-S2L reproduction remains before Phase
-2 exits; the joint spatial candidate can now be implemented without further classical threshold
-search.
+complete and fail the promotion gate. Joint model v1 and top-k MIL v2 are also frozen; v2 is the
+strongest ERSRR candidate so far but still fails the gate. Released CH4Net/MARS-S2L reproduction
+remains before Phase 2 exits. Any subsequent ERSRR change must be selected on internal validation
+or new external data, not on the already reported strict-spatial development benchmark.
 
 ### Phase 3 - hard-negative and architecture experiments (2-4 weeks)
 
