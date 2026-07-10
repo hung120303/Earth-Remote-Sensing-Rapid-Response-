@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evaluate the pinned released MARS-S2L checkpoint on the frozen strict cohort.
+"""Evaluate pinned released MARS-S2L/CH4Net checkpoints on the frozen strict cohort.
 
 The input construction, U-Net topology, 0.5 pixel threshold, and 100-pixel
 8-connected scene rule reproduce UNEP-IMEO-MARS/marss2l at the pinned source
@@ -43,21 +43,50 @@ from run_mars_dev_pixel_baselines import bootstrap_scene  # noqa: E402
 from run_mars_dev_scene_baselines import role_weights  # noqa: E402
 
 RELEASE_SOURCE_REVISION = "f7d264c2c845dfba1cb27f76ef6026275f8d8758"
-DEFAULT_MODEL_DIR = Path(
-    "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/"
-    "external/MARS-S2L/trained_models/MARSS2L_20250326"
-)
-DEFAULT_CHECKPOINT = DEFAULT_MODEL_DIR / "best_epoch"
-DEFAULT_CONFIG = DEFAULT_MODEL_DIR / "config_experiment.json"
 DEFAULT_METADATA_CSV = DEFAULT_OUTPUT / "validated_images_all.csv"
 DEFAULT_MANIFEST = DEFAULT_OUTPUT / DEV_SAMPLES
-DEFAULT_JSON = Path("reports/experiments/mars_released_model_baseline.json")
-DEFAULT_MARKDOWN = Path("reports/experiments/MARS_RELEASED_MODEL_BASELINE.md")
-EXPECTED_CHECKPOINT_SHA256 = (
-    "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"
+MODEL_BASE = Path(
+    "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/"
+    "external/MARS-S2L/trained_models"
 )
-EXPECTED_CHECKPOINT_BYTES = 163_291_870
-EXPECTED_CONFIG_SHA256 = "abeb92d01313fbb2939e6c5fc1c6281846b8102ea5edd7081668fe0db05bf79f"
+RELEASE_SPECS: dict[str, dict[str, Any]] = {
+    "mars-s2l": {
+        "display_name": "MARS-S2L released MARSS2L_20250326",
+        "directory": MODEL_BASE / "MARSS2L_20250326",
+        "checkpoint_bytes": 163_291_870,
+        "checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+        "config_sha256": "abeb92d01313fbb2939e6c5fc1c6281846b8102ea5edd7081668fe0db05bf79f",
+        "input_channels": 16,
+        "expected_config": {
+            "model": "UnetOriginal",
+            "multipass": True,
+            "wind": True,
+            "cloud_mask": True,
+            "cat_mbmp": True,
+            "norm_wind": True,
+        },
+        "output_json": Path("reports/experiments/mars_released_model_baseline.json"),
+        "output_markdown": Path("reports/experiments/MARS_RELEASED_MODEL_BASELINE.md"),
+    },
+    "ch4net": {
+        "display_name": "CH4Net released CH4Net_20250329",
+        "directory": MODEL_BASE / "CH4Net_20250329",
+        "checkpoint_bytes": 163_123_804,
+        "checkpoint_sha256": "fbcdcad062fa199d7c66631f3607eb79d92f81650fbac21ce64332f2ad2b7a34",
+        "config_sha256": "aa0d24567d650b6fbf2bb23c95ceebe4533bde2ac66416bb059294cd314cb1b5",
+        "input_channels": 6,
+        "expected_config": {
+            "model": "UnetOriginal",
+            "multipass": False,
+            "wind": False,
+            "cloud_mask": False,
+            "cat_mbmp": False,
+            "norm_wind": True,
+        },
+        "output_json": Path("reports/experiments/ch4net_released_model_baseline.json"),
+        "output_markdown": Path("reports/experiments/CH4NET_RELEASED_MODEL_BASELINE.md"),
+    },
+}
 PIXEL_THRESHOLD = 0.5
 MINIMUM_CONNECTED_PIXELS = 100
 BOOTSTRAP_SEED = 202
@@ -123,12 +152,12 @@ class Up(nn.Module):
         return self.conv(torch.cat([x2, x1], dim=1))
 
 
-class ReleasedMarsS2LUNet(nn.Module):
+class ReleasedUNet(nn.Module):
     """Inference-equivalent form of upstream ``UnetOriginal``."""
 
-    def __init__(self) -> None:
+    def __init__(self, input_channels: int) -> None:
         super().__init__()
-        self.inc = double_conv(16, 64)
+        self.inc = double_conv(input_channels, 64)
         self.down1 = down(64, 128)
         self.down2 = down(128, 256)
         self.down3 = down(256, 512)
@@ -152,20 +181,22 @@ class ReleasedMarsS2LUNet(nn.Module):
         return self.out(output)[:, 0]
 
 
-def load_released_model(path: Path, device: torch.device) -> ReleasedMarsS2LUNet:
+def load_released_model(
+    path: Path, device: torch.device, input_channels: int
+) -> ReleasedUNet:
     payload = torch.load(path, map_location="cpu", weights_only=True)
     original = payload["model_state_dict"]
     state = {
         key.removeprefix("_orig_mod.module.").removeprefix("module."): value
         for key, value in original.items()
     }
-    model = ReleasedMarsS2LUNet()
+    model = ReleasedUNet(input_channels)
     incompatible = model.load_state_dict(state, strict=False)
     # The pinned checkpoint contains an unused legacy ``out_mlp`` branch. The
     # released loader also uses strict=False, while current UnetOriginal.forward
     # uses only ``out``. Permit exactly that documented surplus and no missing
     # parameters so architecture drift still fails loudly.
-    if incompatible.missing_keys or not incompatible.unexpected_keys:
+    if incompatible.missing_keys:
         raise ValueError(f"Unexpected checkpoint compatibility result: {incompatible}")
     if any(not key.startswith("out_mlp.") for key in incompatible.unexpected_keys):
         raise ValueError(f"Unknown surplus checkpoint parameters: {incompatible.unexpected_keys}")
@@ -193,9 +224,13 @@ def wind_lookup(path: Path, required: set[str]) -> dict[str, tuple[float, float]
     return result
 
 
-def released_input(sample: Any, wind: tuple[float, float]) -> np.ndarray:
+def released_input(
+    sample: Any, wind: tuple[float, float], model_kind: str
+) -> np.ndarray:
     spectral = np.clip(sample.raw_pair.astype(np.float32) / 5000.0, 0.0, 2.0)
     spectral[~np.isfinite(spectral)] = 0.0
+    if model_kind == "ch4net":
+        return spectral[:6]
     release_mbmp = compute_mbmp(spectral[:6], spectral[6:])
     height, width = release_mbmp.shape
     wind_channels = np.broadcast_to(
@@ -283,7 +318,8 @@ def evaluate(
     metadata_dir: Path,
     records: list[dict[str, Any]],
     winds: dict[str, tuple[float, float]],
-    model: ReleasedMarsS2LUNet,
+    model: ReleasedUNet,
+    model_kind: str,
     device: torch.device,
     batch_size: int,
 ) -> dict[str, Any]:
@@ -299,7 +335,10 @@ def evaluate(
         batch_records = records[start : start + batch_size]
         samples = [load_sample(metadata_dir, record) for record in batch_records]
         batch = np.stack(
-            [released_input(sample, winds[sample.sample_id]) for sample in samples]
+            [
+                released_input(sample, winds[sample.sample_id], model_kind)
+                for sample in samples
+            ]
         )
         with torch.inference_mode(), torch.amp.autocast(
             "cuda", dtype=torch.float16, enabled=device.type == "cuda"
@@ -324,7 +363,7 @@ def evaluate(
             pixel_scores.append(score[observable])
 
         completed = min(start + batch_size, len(records))
-        print(f"Released MARS-S2L: {completed:,}/{len(records):,}", flush=True)
+        print(f"Released {model_kind}: {completed:,}/{len(records):,}", flush=True)
 
     y = np.asarray(scene_truth, dtype=np.uint8)
     predicted = np.asarray(scene_prediction, dtype=bool)
@@ -374,7 +413,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
     pixel = result["pixel_validity_aware"]
     ci = result["group_bootstrap"]
     lines = [
-        "# Released MARS-S2L checkpoint on the frozen ERSRR strict cohort",
+        f"# Released {report['model']['name']} on the frozen ERSRR strict cohort",
         "",
         "Inference-only reproduction using the authors' fixed 0.5 / 100-pixel rule; no ERSRR threshold tuning.",
         "",
@@ -396,41 +435,43 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--model", choices=tuple(RELEASE_SPECS), default="mars-s2l")
     parser.add_argument("--metadata-dir", default=DEFAULT_OUTPUT.as_posix())
     parser.add_argument("--manifest", default=DEFAULT_MANIFEST.as_posix())
     parser.add_argument("--metadata-csv", default=DEFAULT_METADATA_CSV.as_posix())
-    parser.add_argument("--checkpoint", default=DEFAULT_CHECKPOINT.as_posix())
-    parser.add_argument("--config", default=DEFAULT_CONFIG.as_posix())
-    parser.add_argument("--output-json", default=DEFAULT_JSON.as_posix())
-    parser.add_argument("--output-markdown", default=DEFAULT_MARKDOWN.as_posix())
+    parser.add_argument("--checkpoint")
+    parser.add_argument("--config")
+    parser.add_argument("--output-json")
+    parser.add_argument("--output-markdown")
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     args = parser.parse_args()
 
     root = repo_root()
+    spec = RELEASE_SPECS[args.model]
     metadata_dir = (root / args.metadata_dir).resolve()
     manifest = (root / args.manifest).resolve()
     metadata_csv = (root / args.metadata_csv).resolve()
-    checkpoint = (root / args.checkpoint).resolve()
-    config_path = (root / args.config).resolve()
-    output_json = safe_output(root, args.output_json)
-    output_markdown = safe_output(root, args.output_markdown)
+    model_directory = Path(spec["directory"])
+    checkpoint = (root / (args.checkpoint or (model_directory / "best_epoch"))).resolve()
+    config_path = (
+        root / (args.config or (model_directory / "config_experiment.json"))
+    ).resolve()
+    output_json = safe_output(
+        root, args.output_json or Path(spec["output_json"]).as_posix()
+    )
+    output_markdown = safe_output(
+        root, args.output_markdown or Path(spec["output_markdown"]).as_posix()
+    )
 
-    if checkpoint.stat().st_size != EXPECTED_CHECKPOINT_BYTES:
+    if checkpoint.stat().st_size != int(spec["checkpoint_bytes"]):
         raise ValueError("Released checkpoint size does not match the pinned catalog")
-    if sha256(checkpoint) != EXPECTED_CHECKPOINT_SHA256:
+    if sha256(checkpoint) != spec["checkpoint_sha256"]:
         raise ValueError("Released checkpoint SHA-256 does not match the pinned LFS OID")
-    if sha256(config_path) != EXPECTED_CONFIG_SHA256:
+    if sha256(config_path) != spec["config_sha256"]:
         raise ValueError("Released config SHA-256 does not match the acquisition receipt")
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    expected_config = {
-        "model": "UnetOriginal",
-        "multipass": True,
-        "wind": True,
-        "cloud_mask": True,
-        "cat_mbmp": True,
-        "norm_wind": True,
-    }
+    expected_config = dict(spec["expected_config"])
     if any(config.get(key) != value for key, value in expected_config.items()):
         raise ValueError("Released model config does not match the implemented input contract")
 
@@ -447,13 +488,15 @@ def main() -> int:
         device = torch.device(args.device)
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA was requested but is unavailable")
-    model = load_released_model(checkpoint, device)
+    model = load_released_model(checkpoint, device, int(spec["input_channels"]))
     parameter_count = sum(parameter.numel() for parameter in model.parameters())
-    result = evaluate(root, metadata_dir, records, winds, model, device, args.batch_size)
+    result = evaluate(
+        root, metadata_dir, records, winds, model, args.model, device, args.batch_size
+    )
 
     report = {
         "schema_version": 1,
-        "scope": "released_marss2l_on_frozen_strict_spatial_development_cohort",
+        "scope": f"released_{args.model}_on_frozen_strict_spatial_development_cohort",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source": {
             "dataset": "UNEP-IMEO/MARS-S2L",
@@ -470,9 +513,10 @@ def main() -> int:
             "checkpoint_tracked": False,
         },
         "model": {
-            "name": "MARS-S2L released MARSS2L_20250326",
+            "name": spec["display_name"],
+            "kind": args.model,
             "architecture": "UnetOriginal",
-            "input_channels": 16,
+            "input_channels": int(spec["input_channels"]),
             "parameter_count": parameter_count,
             "checkpoint_loaded_with_weights_only": True,
         },
