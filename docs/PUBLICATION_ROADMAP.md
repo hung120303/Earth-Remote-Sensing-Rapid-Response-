@@ -116,6 +116,14 @@ availability section and recommends DOI-backed FAIR repositories for the code an
   negatives but is nearly identical between true and missed plumes. The next head must classify
   connected proposals using morphology, multiscale context, wind alignment, and geography-balanced
   hard negatives rather than treating top-k mask confidence or MBMP magnitude as presence.
+- V3 is implemented as a 14,381,987-parameter full-resolution GroupNorm U-Net trained from scratch,
+  with proposal descriptors combining deep global context, decoder features at high-evidence
+  pixels, soft area/centroid/covariance/compactness, and along-/cross-wind variance. Positive
+  presence loss upweights small plumes by valid mask area. A 64-train/32-validation, group-disjoint
+  one-epoch smoke run completed the enhancement-free adapter, augmentation-aware wind rotation,
+  GPU training, checkpoint, and validation-rule pipeline; it explicitly did not load the strict
+  benchmark and its metrics are not accuracy evidence. Full v3 training now depends on the frozen
+  27.193 GiB remaining fit/validation transfer.
 
 The current shared core and artifact contract remain useful engineering infrastructure. They do
 not establish a useful detector.
@@ -546,6 +554,10 @@ or new external data, not on the already reported strict-spatial development ben
 - Freeze architecture, seeds, and operating thresholds.
 
 Exit: one selected model with a fixed artifact contract and no test-set tuning.
+
+Current status: v3 code and unit/integration smoke tests are complete. The full from-scratch run is
+waiting only for the minimum v3 asset catalog documented above; released weights will not be used
+because they would leak official-train samples into ERSRR internal validation.
 
 ### Phase 4 - independent EMIT V002 validation (2-3 weeks)
 
