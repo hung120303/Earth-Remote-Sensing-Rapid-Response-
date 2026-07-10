@@ -1,12 +1,12 @@
 # Earth Remote Sensing Rapid Response (ERSRR)
 
-ERSRR is a research system for locating methane-plume pixels from Sentinel-2 imagery and displaying predictions on a web map. The current architecture is a **research-only compact residual U-Net** with an explicit preprocessing/artifact contract. It is not yet accurate enough for operational methane detection or physical concentration estimation.
+ERSRR is a research system for locating methane-plume pixels from Sentinel-2 imagery and displaying predictions on a web map. The selected architecture is a **research-only, 144,433-parameter raw-band residual U-Net** with an explicit preprocessing/artifact contract. It is not yet accurate enough for operational methane detection or physical concentration estimation.
 
 The original capstone was created by Eduardo Gonon, Kincaid Larson, Kevin Nguyen, and Hung-Nghi Vu for Dr. Cenek, advised by Dr. Nuxoll.
 
 ## Current architecture
 
-- `EarthRemoteSensingRapidResponse/ersrr_core.py` is the single source of truth for canonical band order, physics-inspired features, normalization, model topology, masked loss/metrics, and artifact validation.
+- `EarthRemoteSensingRapidResponse/ersrr_core.py` is the single source of truth for canonical band order, optional physics features, normalization, model topology, masked loss/metrics, and artifact validation.
 - `tools/run_research_baselines.py` evaluates grouped classical baselines on the legacy concentration cohort and the new EMIT V002 physical-mask cohort.
 - `tools/run_unet_experiment.py` runs group-disjoint nested validation for raw and physics-feature compact residual U-Nets.
 - `tools/train_compact_model.py` packages the selected research model as an ignored local artifact.
@@ -33,9 +33,13 @@ On Windows PowerShell, activate with `.\.venv\Scripts\Activate.ps1` if the envir
 ```bash
 python tools/ersrr.py status
 python tools/ersrr.py audit
-python tools/run_research_baselines.py
-CUDA_VISIBLE_DEVICES=-1 python tools/run_unet_experiment.py
-CUDA_VISIBLE_DEVICES=-1 python tools/train_compact_model.py
+python tools/run_research_baselines.py --image-size 128 --pixels-per-scene 2048
+CUDA_VISIBLE_DEVICES=-1 python tools/run_unet_experiment.py \
+  --architectures raw_resunet physics_resunet --image-size 128 \
+  --base-filters 8 --sampled-pixels 2048 --positive-weight 1
+CUDA_VISIBLE_DEVICES=-1 python tools/train_compact_model.py \
+  --architecture raw_resunet --image-size 128 --base-filters 8 \
+  --threshold 300 --positive-weight 1
 ```
 
 Experiment summaries are stored under `reports/experiments/`. The packaged `.keras` model and its `config.json` are generated under `EarthRemoteSensingRapidResponse/artifacts/` and intentionally ignored by Git.
@@ -52,6 +56,12 @@ python tools/acquire_v002_pilot.py \
 
 The protected EMIT concentration COG still requires an Earthdata login. The public polygon is a segmentation label, not a concentration raster, so the collector never manufactures a legacy six-band regression tile. See `docs/DATA_ACQUISITION.md` for the full contract.
 
+Create the tracked, token-free batch integrity record with:
+
+```bash
+python tools/summarize_v002_batch.py
+```
+
 ## Run the web API
 
 Create the local research artifact first, then configure Earth Engine credentials outside the repository and run:
@@ -60,7 +70,7 @@ Create the local research artifact first, then configure Earth Engine credential
 python ERSRR_Website/server.py
 ```
 
-`GET /health` reports artifact and Earth Engine readiness. Prediction routes return an explicit `503` when either dependency is unavailable.
+`GET /health` reports artifact and Earth Engine readiness. Inference uses JSON `POST /sentinel`; prediction routes return an explicit `503` when either dependency is unavailable.
 
 ## Data and Git policy
 

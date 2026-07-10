@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="ERSRR architecture, data-acquisition, and experiment report — 9 July 2026">
+  <title>ERSRR · Research Architecture Decision & Evidence</title>
+  <style>
+    :root {
+      --ink: #f1f6f3;
+      --muted: #aebbb6;
+      --dim: #7d8c87;
+      --paper: #08100f;
+      --surface: #0d1816;
+      --surface-2: #12221e;
+      --line: #243a34;
+      --mint: #7de2b8;
+      --mint-deep: #36aa7d;
+      --sky: #82c7f4;
+      --amber: #efc36d;
+      --coral: #f08f78;
+      --violet: #b3a0f6;
+      --good: #8be0a7;
+      --warning: #f0c97a;
+      --bad: #f19583;
+      --max: 1180px;
+      --radius: 20px;
+      --shadow: 0 22px 60px rgba(0, 0, 0, .28);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 75% -10%, rgba(54,170,125,.16), transparent 35rem),
+        radial-gradient(circle at 8% 18%, rgba(130,199,244,.09), transparent 28rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--mint); text-underline-offset: .2em; }
+    a:hover { color: #b6f5da; }
+    h1, h2, h3, h4 { margin: 0; line-height: 1.12; letter-spacing: -.025em; }
+    h1 { max-width: 900px; font-size: clamp(2.7rem, 7vw, 6.3rem); font-weight: 720; }
+    h2 { font-size: clamp(2rem, 4vw, 3.3rem); }
+    h3 { font-size: 1.18rem; letter-spacing: -.01em; }
+    p { margin: 0; }
+    code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+    code { color: #d8f6e9; overflow-wrap: anywhere; }
+    strong { color: #fff; }
+
+    .skip-link {
+      position: fixed; left: 1rem; top: -5rem; z-index: 100;
+      padding: .7rem 1rem; border-radius: 10px; background: var(--mint); color: #052018;
+      font-weight: 700;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    .shell { width: min(var(--max), calc(100% - 40px)); margin-inline: auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      border-bottom: 1px solid rgba(125,226,184,.13);
+      background: rgba(8,16,15,.84); backdrop-filter: blur(18px);
+    }
+    .topbar-inner { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .brand { font-size: .82rem; font-weight: 800; letter-spacing: .18em; color: var(--mint); text-transform: uppercase; }
+    .topnav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .35rem 1.1rem; }
+    .topnav a { color: var(--muted); font-size: .78rem; font-weight: 650; text-decoration: none; }
+    .topnav a:hover { color: var(--ink); }
+
+    .hero { padding: clamp(5rem, 11vw, 9rem) 0 4rem; }
+    .eyebrow { display: flex; align-items: center; flex-wrap: wrap; gap: .7rem; margin-bottom: 1.4rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: .45rem;
+      min-height: 30px; padding: .25rem .72rem; border: 1px solid var(--line); border-radius: 999px;
+      color: var(--muted); background: rgba(13,24,22,.75); font-size: .73rem; font-weight: 720; letter-spacing: .055em; text-transform: uppercase;
+    }
+    .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(125,226,184,.09); }
+    .pill.research { color: var(--amber); border-color: rgba(239,195,109,.35); }
+    .pill.verified { color: var(--mint); border-color: rgba(125,226,184,.35); }
+    .hero .lede { max-width: 770px; margin-top: 1.6rem; color: var(--muted); font-size: clamp(1.05rem, 2vw, 1.32rem); }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: .6rem 1.8rem; margin-top: 2rem; color: var(--dim); font-size: .82rem; }
+
+    .metric-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+      overflow: hidden; margin-top: 3.6rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--line); box-shadow: var(--shadow);
+    }
+    .metric { min-height: 155px; padding: 1.4rem; background: linear-gradient(155deg, rgba(18,34,30,.98), rgba(10,20,18,.98)); }
+    .metric .value { color: var(--mint); font-size: clamp(2rem, 4vw, 3.3rem); line-height: 1; font-weight: 760; letter-spacing: -.045em; }
+    .metric .label { margin-top: .7rem; color: var(--ink); font-size: .86rem; font-weight: 700; }
+    .metric .context { margin-top: .25rem; color: var(--dim); font-size: .76rem; line-height: 1.45; }
+
+    main { padding-bottom: 8rem; }
+    section { padding: clamp(4rem, 8vw, 7rem) 0; border-top: 1px solid rgba(36,58,52,.78); }
+    .section-head { display: grid; grid-template-columns: minmax(0, .7fr) minmax(280px, 1fr); gap: 2rem 5rem; align-items: end; margin-bottom: 2.8rem; }
+    .section-index { color: var(--mint); font: 700 .72rem/1.2 "SFMono-Regular", Consolas, monospace; letter-spacing: .14em; text-transform: uppercase; }
+    .section-title { margin-top: .6rem; }
+    .section-intro { color: var(--muted); max-width: 660px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+    .grid-2 > *, .grid-3 > *, .section-head > *, .roadmap > * { min-width: 0; }
+    .card { border: 1px solid var(--line); border-radius: var(--radius); background: rgba(13,24,22,.78); padding: clamp(1.25rem, 3vw, 2rem); }
+    .card.soft { background: linear-gradient(150deg, rgba(18,34,30,.82), rgba(10,18,17,.82)); }
+    .card h3 + p, .card h3 + ul { margin-top: .8rem; }
+    .card p, .card li { color: var(--muted); }
+    .card .kicker { margin-bottom: .6rem; color: var(--mint); font: 700 .69rem/1.2 "SFMono-Regular", Consolas, monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .verdict { position: relative; overflow: hidden; border-color: rgba(125,226,184,.28); }
+    .verdict::after { content: ""; position: absolute; inset: auto -6rem -8rem auto; width: 15rem; height: 15rem; border-radius: 50%; background: rgba(54,170,125,.11); filter: blur(2px); }
+    .verdict .large { position: relative; z-index: 1; max-width: 900px; font-size: clamp(1.35rem, 3vw, 2.15rem); line-height: 1.35; letter-spacing: -.022em; }
+    .verdict .large em { color: var(--mint); font-style: normal; }
+
+    ul.clean { margin: .8rem 0 0; padding: 0; list-style: none; }
+    ul.clean li { position: relative; padding-left: 1.15rem; margin-top: .55rem; }
+    ul.clean li::before { content: ""; position: absolute; left: 0; top: .68em; width: 5px; height: 5px; border-radius: 50%; background: var(--mint-deep); }
+    .callout { padding: 1.15rem 1.3rem; border-left: 3px solid var(--amber); border-radius: 0 14px 14px 0; background: rgba(239,195,109,.07); color: var(--muted); }
+    .callout strong { color: var(--amber); }
+    .callout.good { border-color: var(--mint); background: rgba(125,226,184,.065); }
+    .callout.good strong { color: var(--mint); }
+
+    .architecture {
+      overflow-x: auto; padding: 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); background: #0a1513;
+    }
+    .architecture svg { display: block; width: 100%; min-width: 820px; height: auto; }
+
+    .decision-table { width: 100%; border-collapse: collapse; }
+    .decision-table th, .decision-table td { padding: .95rem 1rem; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+    .decision-table th { color: var(--dim); font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; }
+    .decision-table td { color: var(--muted); }
+    .decision-table tr:last-child td { border-bottom: 0; }
+    .decision-table .chosen td { background: rgba(125,226,184,.045); }
+    .status { display: inline-block; padding: .18rem .55rem; border-radius: 999px; font-size: .68rem; font-weight: 750; white-space: nowrap; }
+    .status.selected { color: var(--mint); background: rgba(125,226,184,.1); }
+    .status.baseline { color: var(--sky); background: rgba(130,199,244,.1); }
+    .status.blocked { color: var(--coral); background: rgba(240,143,120,.1); }
+    .status.next { color: var(--violet); background: rgba(179,160,246,.1); }
+
+    .timeline { display: grid; gap: 0; counter-reset: step; }
+    .step { display: grid; grid-template-columns: 48px 1fr; gap: 1rem; }
+    .step-marker { display: grid; grid-template-rows: 42px 1fr; justify-items: center; }
+    .step-marker::before { counter-increment: step; content: counter(step, decimal-leading-zero); display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid rgba(125,226,184,.35); border-radius: 50%; color: var(--mint); background: var(--surface); font: 700 .7rem/1 "SFMono-Regular", Consolas, monospace; }
+    .step-marker::after { content: ""; width: 1px; background: var(--line); }
+    .step:last-child .step-marker::after { display: none; }
+    .step-body { min-width: 0; padding: .35rem 0 2rem; }
+    .step-body p { margin-top: .4rem; color: var(--muted); }
+
+    .integrity { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-top: 1rem; }
+    .check { display: flex; gap: .75rem; align-items: flex-start; padding: .9rem; border: 1px solid var(--line); border-radius: 13px; background: rgba(8,16,15,.55); }
+    .check-icon { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(125,226,184,.12); color: var(--mint); font-size: .75rem; font-weight: 900; }
+    .check b { display: block; color: var(--ink); font-size: .82rem; }
+    .check span { display: block; color: var(--dim); font-size: .73rem; line-height: 1.4; }
+
+    .audit-bars { display: grid; gap: 1rem; margin-top: 1rem; }
+    .bar-row { display: grid; grid-template-columns: 150px 1fr 76px; gap: 1rem; align-items: center; }
+    .bar-label { color: var(--muted); font-size: .8rem; }
+    .bar-track { height: 10px; overflow: hidden; border-radius: 999px; background: #1a2a26; }
+    .bar-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--mint-deep), var(--mint)); }
+    .bar-fill.warn { background: linear-gradient(90deg, #ae6d56, var(--coral)); }
+    .bar-value { color: var(--ink); font: 700 .75rem/1 "SFMono-Regular", Consolas, monospace; text-align: right; }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(13,24,22,.7); }
+    table.metrics { width: 100%; min-width: 720px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    .metrics caption { padding: 1.15rem 1.2rem; color: var(--ink); font-weight: 720; text-align: left; }
+    .metrics caption span { display: block; margin-top: .2rem; color: var(--dim); font-size: .73rem; font-weight: 500; }
+    .metrics th, .metrics td { padding: .78rem 1rem; border-top: 1px solid var(--line); text-align: right; }
+    .metrics th { color: var(--dim); font-size: .67rem; letter-spacing: .07em; text-transform: uppercase; }
+    .metrics td { color: var(--muted); font-size: .84rem; }
+    .metrics th:first-child, .metrics td:first-child { text-align: left; }
+    .metrics tr.highlight td { color: var(--ink); background: rgba(125,226,184,.045); }
+    .metrics .best { color: var(--mint); font-weight: 760; }
+    .metrics .caution { color: var(--amber); }
+    .table-note { margin-top: .7rem; color: var(--dim); font-size: .78rem; }
+
+    .compare-chart { display: grid; gap: 1rem; }
+    .compare-row { display: grid; grid-template-columns: 160px 1fr 62px; gap: 1rem; align-items: center; }
+    .compare-label { color: var(--muted); font-size: .78rem; }
+    .compare-track { height: 24px; border-radius: 6px; background: #162621; overflow: hidden; }
+    .compare-fill { display: flex; align-items: center; height: 100%; padding-left: .5rem; border-radius: inherit; background: linear-gradient(90deg, rgba(54,170,125,.65), rgba(125,226,184,.85)); color: #06100d; font-size: .64rem; font-weight: 800; }
+    .compare-fill.sky { background: linear-gradient(90deg, rgba(68,128,167,.85), var(--sky)); }
+    .compare-fill.amber { background: linear-gradient(90deg, rgba(170,119,42,.85), var(--amber)); }
+    .compare-value { color: var(--ink); font: 700 .76rem/1 "SFMono-Regular", Consolas, monospace; text-align: right; }
+
+    .finding { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; }
+    .finding + .finding { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+    .finding-num { color: var(--mint); font: 700 .74rem/1.2 "SFMono-Regular", Consolas, monospace; }
+    .finding p { margin-top: .35rem; color: var(--muted); }
+
+    pre {
+      position: relative; overflow-x: auto; margin: 0; padding: 1.25rem;
+      border: 1px solid var(--line); border-radius: 15px; background: #050b0a; color: #cfe8de;
+      font-size: .78rem; line-height: 1.7; tab-size: 2;
+    }
+    .code-label { display: inline-block; margin: 0 0 .5rem .2rem; color: var(--dim); font: 700 .66rem/1 "SFMono-Regular", Consolas, monospace; letter-spacing: .1em; text-transform: uppercase; }
+
+    .roadmap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; }
+    .roadmap-item { min-height: 220px; padding: 1.2rem; border: 1px solid var(--line); border-radius: 16px; background: rgba(13,24,22,.72); }
+    .roadmap-item .order { color: var(--mint); font: 700 .7rem/1.2 "SFMono-Regular", Consolas, monospace; }
+    .roadmap-item h3 { margin-top: .7rem; }
+    .roadmap-item p { margin-top: .65rem; color: var(--muted); font-size: .83rem; }
+    .roadmap-item .gate { display: inline-block; margin-top: 1rem; color: var(--amber); font-size: .7rem; font-weight: 750; }
+
+    .sources { columns: 2 340px; column-gap: 3rem; }
+    .source { break-inside: avoid; margin-bottom: 1.35rem; }
+    .source h3 { font-size: .92rem; }
+    .source p { margin-top: .35rem; color: var(--dim); font-size: .78rem; }
+
+    footer { padding: 2.5rem 0 4rem; border-top: 1px solid var(--line); color: var(--dim); font-size: .78rem; }
+    .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+
+    @media (max-width: 900px) {
+      .topnav { display: none; }
+      .metric-strip { grid-template-columns: repeat(2, 1fr); }
+      .section-head { grid-template-columns: 1fr; gap: 1rem; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .roadmap { grid-template-columns: repeat(2, 1fr); }
+      .integrity { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .shell { width: min(var(--max), calc(100% - 24px)); }
+      .hero { padding-top: 4rem; }
+      .metric-strip, .grid-2, .roadmap, .integrity { grid-template-columns: 1fr; }
+      .metric { min-height: 130px; }
+      .bar-row, .compare-row { grid-template-columns: 105px 1fr 48px; gap: .55rem; }
+      .card { border-radius: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      :root { --ink: #10201b; --muted: #334942; --dim: #5a6c66; --paper: #fff; --surface: #fff; --surface-2: #f6faf8; --line: #cad8d2; }
+      body { background: #fff; color: var(--ink); font-size: 10pt; }
+      .topbar { position: static; background: #fff; }
+      .topnav { display: none; }
+      .hero { padding: 2.2rem 0; }
+      section { padding: 2.4rem 0; break-inside: avoid; }
+      .card, .table-wrap, .architecture, pre, .roadmap-item { background: #fff; box-shadow: none; }
+      .metric { background: #f6faf8; }
+      a { color: #166d50; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to report</a>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">ERSRR / Research brief</div>
+      <nav class="topnav" aria-label="Report sections">
+        <a href="#decision">Decision</a>
+        <a href="#acquisition">Acquisition</a>
+        <a href="#audit">Audit</a>
+        <a href="#experiments">Experiments</a>
+        <a href="#reproducibility">Reproduce</a>
+        <a href="#roadmap">Roadmap</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shell">
+    <header class="hero">
+      <div class="eyebrow">
+        <span class="pill verified">Evidence checked</span>
+        <span class="pill research">Research only</span>
+      </div>
+      <h1>Better data before a bigger model.</h1>
+      <p class="lede">A leakage-aware architecture decision for methane-plume detection from Sentinel-2, grounded in a full dataset audit, a new NASA EMIT V002 acquisition pilot, and grouped classical and neural experiments.</p>
+      <div class="hero-meta">
+        <span>Research date · 09 July 2026</span>
+        <span>Clean evidence revision · <code>6bf20592</code></span>
+        <span>Canonical input · B2 / B3 / B4 / B11 / B12</span>
+      </div>
+
+      <div class="metric-strip" aria-label="Key research measurements">
+        <div class="metric">
+          <div class="value">12</div>
+          <div class="label">new EMIT V002 granules</div>
+          <div class="context">public CMR plume geometry + browse provenance</div>
+        </div>
+        <div class="metric">
+          <div class="value">24</div>
+          <div class="label">Sentinel-2 L2A stacks</div>
+          <div class="context">bracketing five-band, 20 m, 256 × 256 scenes</div>
+        </div>
+        <div class="metric">
+          <div class="value">65 / 32</div>
+          <div class="label">quality scenes / safe components</div>
+          <div class="context">connected by MGRS, S2 acquisition, or EMIT granule</div>
+        </div>
+        <div class="metric">
+          <div class="value">0.4168</div>
+          <div class="label">raw ResU-Net AUPRC</div>
+          <div class="context">group-held-out, &gt;300 ppm·m; not deployment-ready</div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section id="decision">
+        <div class="section-head">
+          <div>
+            <div class="section-index">01 · Executive decision</div>
+            <h2 class="section-title">Architecture follows label quality.</h2>
+          </div>
+          <p class="section-intro">The research does not support scaling the legacy Vision Transformer. It supports a compact, segmentation-first core with a strict artifact contract—while the project invests primarily in physically meaningful labels, temporal pairs, negatives, and leakage-proof evaluation.</p>
+        </div>
+
+        <div class="card verdict">
+          <p class="large"><em>Adopt the 144,433-parameter, five-channel raw residual U-Net as the shared research core</em>, label it <code>research_only</code>, and keep regression disabled until physical-unit calibration no longer depends on the target. Physics features and bitemporal L2A remain experiments, not selected architecture.</p>
+        </div>
+
+        <div class="grid-3" style="margin-top:1rem">
+          <article class="card soft">
+            <div class="kicker">Why this core</div>
+            <h3>Small enough to diagnose</h3>
+            <p>It trains quickly on CPU, preserves spatial structure, handles explicit nodata masks, and uses only the five declared bands. The clean ablation does not justify expanding the serving contract with physics-derived channels.</p>
+          </article>
+          <article class="card soft">
+            <div class="kicker">What changes</div>
+            <h3>One train/serve contract</h3>
+            <p>Canonical band order, feature transforms, train-only normalization, masked losses, model construction, artifact metadata, and SHA-256 validation belong in one shared core.</p>
+          </article>
+          <article class="card soft">
+            <div class="kicker">What stays blocked</div>
+            <h3>No physical regression claim</h3>
+            <p>The legacy predictor uses the held-out EMIT target percentiles to denormalize outputs. Until a target-independent calibration exists, only segmentation is scientifically defensible.</p>
+          </article>
+        </div>
+
+        <div class="architecture" style="margin-top:1rem">
+          <svg viewBox="0 0 980 250" role="img" aria-labelledby="arch-title arch-desc">
+            <title id="arch-title">Selected ERSRR research architecture</title>
+            <desc id="arch-desc">A declared Sentinel-2 product is transformed into five raw logarithmic features, passed through the shared compact residual U-Net, and packaged as a versioned research-only artifact.</desc>
+            <defs>
+              <linearGradient id="node" x1="0" x2="1"><stop offset="0" stop-color="#132720"/><stop offset="1" stop-color="#0d1b18"/></linearGradient>
+              <linearGradient id="selected" x1="0" x2="1"><stop offset="0" stop-color="#174a38"/><stop offset="1" stop-color="#13352b"/></linearGradient>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#4f7366"/></marker>
+            </defs>
+            <g fill="none" stroke="#4f7366" stroke-width="2" marker-end="url(#arrow)">
+              <path d="M210 125H257"/><path d="M467 125H514"/><path d="M724 125H771"/>
+            </g>
+            <g font-family="Inter,system-ui,sans-serif">
+              <g transform="translate(0 75)"><rect width="210" height="100" rx="16" fill="url(#node)" stroke="#2f4c42"/><text x="18" y="31" fill="#7de2b8" font-size="11" font-weight="700">INPUT</text><text x="18" y="55" fill="#f1f6f3" font-size="15" font-weight="700">Declared S2 product</text><text x="18" y="77" fill="#aebbb6" font-size="11">B2 · B3 · B4 · B11 · B12</text></g>
+              <g transform="translate(257 75)"><rect width="210" height="100" rx="16" fill="url(#node)" stroke="#2f4c42"/><text x="18" y="31" fill="#82c7f4" font-size="11" font-weight="700">FEATURE CONTRACT</text><text x="18" y="55" fill="#f1f6f3" font-size="15" font-weight="700">Raw log features</text><text x="18" y="77" fill="#aebbb6" font-size="11">5 channels · train-only norm</text></g>
+              <g transform="translate(514 75)"><rect width="210" height="100" rx="16" fill="url(#selected)" stroke="#7de2b8"/><text x="18" y="31" fill="#7de2b8" font-size="11" font-weight="700">SHARED CORE</text><text x="18" y="55" fill="#ffffff" font-size="15" font-weight="700">Compact ResU-Net</text><text x="18" y="77" fill="#c6e8da" font-size="11">144,433 params · masked loss</text></g>
+              <g transform="translate(771 75)"><rect width="209" height="100" rx="16" fill="url(#node)" stroke="#2f4c42"/><text x="18" y="31" fill="#b3a0f6" font-size="11" font-weight="700">ARTIFACT</text><text x="18" y="55" fill="#f1f6f3" font-size="15" font-weight="700">Versioned contract</text><text x="18" y="77" fill="#aebbb6" font-size="11">config · norm · SHA-256</text></g>
+            </g>
+          </svg>
+        </div>
+
+        <div class="table-wrap" style="margin-top:1rem">
+          <table class="decision-table">
+            <thead><tr><th>Candidate</th><th>Evidence</th><th>Decision</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Legacy ViT + two heads</strong></td><td>Random tile split, relative top-decile mask, inconsistent preprocessing, target-dependent denormalization, duplicated server architecture.</td><td><span class="status blocked">Historical only</span></td></tr>
+              <tr><td><strong>Logistic / HistGB</strong></td><td>Fast grouped sanity checks; often matches or beats the neural model on current labels. Essential controls, not spatial production models.</td><td><span class="status baseline">Retain baseline</span></td></tr>
+              <tr class="chosen"><td><strong>Raw residual U-Net</strong></td><td>Stronger neural results than the physics variant at both thresholds; compact, spatially appropriate, and limited to the declared five-band contract.</td><td><span class="status selected">Selected research core</span></td></tr>
+              <tr><td><strong>Physics features</strong></td><td>Raw and physics single-time baselines are effectively tied on V002, while the raw neural input is stronger on the legacy cohort.</td><td><span class="status baseline">Ablation only</span></td></tr>
+              <tr><td><strong>Bitemporal L2A model</strong></td><td>Unproven with six complete groups and one EMIT-time polygon reused for non-contemporaneous pre/post observations.</td><td><span class="status next">Research question</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="acquisition">
+        <div class="section-head">
+          <div>
+            <div class="section-index">02 · Computer-use acquisition</div>
+            <h2 class="section-title">A real V002 pilot, with provenance.</h2>
+          </div>
+          <p class="section-intro">NASA Earthdata Search was inspected interactively, a genuinely new EMIT V002 plume granule was selected, and the public metadata path was turned into a repeatable acquisition pipeline. Eleven more granules were then collected in parallel.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="kicker">Workflow executed</div>
+            <div class="timeline">
+              <div class="step"><div class="step-marker"></div><div class="step-body"><h3>Select an unseen V002 plume</h3><p><code>EMIT_L2B_CH4PLM_002_20250922T204933_003374</code>, near −102.047°, 32.241° in the Permian region.</p></div></div>
+              <div class="step"><div class="step-marker"></div><div class="step-body"><h3>Capture authoritative metadata</h3><p>Query NASA CMR for the exact granule; store UMM JSON, physical plume polygon GeoJSON, browse image, source URLs, timestamps, and hashes.</p></div></div>
+              <div class="step"><div class="step-marker"></div><div class="step-body"><h3>Pair public Sentinel-2 L2A</h3><p>Search Element84 Earth Search within ±14 days and &lt;20% cloud; choose bracketing acquisitions and crop B2/B3/B4/B11/B12 COGs.</p></div></div>
+              <div class="step"><div class="step-marker"></div><div class="step-body"><h3>Force one geospatial contract</h3><p>Reproject both timestamps and the physical polygon to a shared 20 m, 256 × 256 grid. This caught and fixed a cross-UTM-zone mismatch in the initial pair.</p></div></div>
+              <div class="step"><div class="step-marker"></div><div class="step-body"><h3>Scale and validate</h3><p>Run the collector across 12 granules, then verify every declared file, SHA-256, grid, and before/after mask footprint.</p></div></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card soft">
+              <div class="kicker">Pilot pair</div>
+              <h3>Bracketing overpasses within 48 hours</h3>
+              <div class="table-wrap" style="margin-top:1rem;border-radius:13px">
+                <table class="metrics" style="min-width:520px">
+                  <thead><tr><th>Scene</th><th>Offset</th><th>ROI clear</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>S2C_13SGR_20250921</code></td><td>−27.071 h</td><td class="best">100%</td></tr>
+                    <tr><td><code>S2B_14SKA_20250923</code></td><td>+20.759 h</td><td class="best">100%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <ul class="clean">
+                <li>Shared grid: EPSG:32613, 20 m, 256 × 256</li>
+                <li>Physical plume footprint: 2,651 pixels (4.05% of tile)</li>
+                <li>Before/after mask hashes match by design</li>
+              </ul>
+            </div>
+
+            <div class="card" style="margin-top:1rem">
+              <div class="kicker">Batch integrity · 11.31 MB local</div>
+              <h3>All declared outputs verified</h3>
+              <div class="integrity">
+                <div class="check"><span class="check-icon">✓</span><div><b>12 / 12</b><span>manifests & granules</span></div></div>
+                <div class="check"><span class="check-icon">✓</span><div><b>24</b><span>S2 L2A scenes</span></div></div>
+                <div class="check"><span class="check-icon">✓</span><div><b>0</b><span>missing files</span></div></div>
+                <div class="check"><span class="check-icon">✓</span><div><b>0</b><span>SHA-256 mismatches</span></div></div>
+                <div class="check"><span class="check-icon">✓</span><div><b>0</b><span>grid mismatches</span></div></div>
+                <div class="check"><span class="check-icon">✓</span><div><b>0</b><span>mask-hash mismatches</span></div></div>
+              </div>
+              <p class="table-note">The batch contains 24 five-band stacks and 24 matching physical-mask rasters. Six plume polygons are clipped by their fixed tiles; four of those also cover more than 50% of a tile. Requiring complete polygons leaves only six feasibility groups.</p>
+            </div>
+
+            <aside class="callout" style="margin-top:1rem"><strong>Credential boundary respected.</strong> The original EMIT concentration COG and companion protected JSON require an authenticated Earthdata session. No credentials were available or handled. The pilot therefore uses the public CMR UMM plume geometry as a physical segmentation target; the public browse PNG is provenance only and is never treated as training concentration data.</aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="audit">
+        <div class="section-head">
+          <div>
+            <div class="section-index">03 · Dataset and leakage audit</div>
+            <h2 class="section-title">The bottleneck is measurable.</h2>
+          </div>
+          <p class="section-intro">The existing 102-tile dataset is internally consistent in shape but not in label validity, temporal alignment, or evaluation design. These defects are large enough to dominate architectural differences.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="kicker">Current corpus · 102 GeoTIFFs</div>
+            <h3>Target coverage</h3>
+            <div class="audit-bars" aria-label="Existing target validity summary">
+              <div class="bar-row"><div class="bar-label">Valid target pixels</div><div class="bar-track"><div class="bar-fill" style="width:41.64%"></div></div><div class="bar-value">41.64%</div></div>
+              <div class="bar-row"><div class="bar-label">Nodata pixels</div><div class="bar-track"><div class="bar-fill warn" style="width:58.36%"></div></div><div class="bar-value">58.36%</div></div>
+              <div class="bar-row"><div class="bar-label">Positive of valid</div><div class="bar-track"><div class="bar-fill warn" style="width:75.95%"></div></div><div class="bar-value">75.95%</div></div>
+            </div>
+            <p class="table-note">All files are 256 × 256 × 6 float32 in EPSG:4326. Every one of the 102 files has a target nodata metadata mismatch: −9999 appears in the target while the GeoTIFF profile usually declares 0.</p>
+          </div>
+          <div class="card">
+            <div class="kicker">Temporal and split risk</div>
+            <h3>Not an independent test set</h3>
+            <div class="grid-2" style="margin-top:1rem">
+              <div><div class="metric" style="min-height:120px;border-radius:13px"><div class="value" style="font-size:2rem">5.95 d</div><div class="label">mean S2↔EMIT gap</div><div class="context">worst absolute gap 53.08 d</div></div></div>
+              <div><div class="metric" style="min-height:120px;border-radius:13px"><div class="value" style="font-size:2rem">3</div><div class="label">validation tiles</div><div class="context">only one filename exposes an EMIT ID</div></div></div>
+            </div>
+            <ul class="clean">
+              <li>No true negative/background tiles are present.</li>
+              <li>Four MGRS groups cross train/validation; eight cross train/test under the legacy random split.</li>
+              <li>Validation tile <code>T34RET</code> also occurs in training.</li>
+              <li>A quality gate of ≥10% valid target and |gap| ≤7 days leaves 65 scenes in 32 leakage-safe connected components.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-top:1rem">
+          <article class="card">
+            <div class="kicker">Label semantics</div>
+            <h3>Every tile is forced positive</h3>
+            <p>The legacy segmentation code labels each tile’s top 10% of methane values. That is a relative rank, not a physical plume boundary, and it cannot represent a true negative.</p>
+          </article>
+          <article class="card">
+            <div class="kicker">Evaluation leakage</div>
+            <h3>Target used at inference</h3>
+            <p>Standalone inference denormalizes predictions using percentile statistics from the held-out EMIT target. Physical-unit performance derived this way is circular.</p>
+          </article>
+          <article class="card">
+            <div class="kicker">Serving mismatch</div>
+            <h3>Legacy training ≠ production</h3>
+            <p>The pre-refactor server reversed the canonical visible-band order, normalized each tile differently, and loaded a different checkpoint. The shared artifact contract now prevents those mismatches; its output remains a research probability mask, not a calibrated methane quantity.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="experiments">
+        <div class="section-head">
+          <div>
+            <div class="section-index">04 · Grouped experiments</div>
+            <h2 class="section-title">Useful signals, modest absolute accuracy.</h2>
+          </div>
+          <p class="section-intro">All clean legacy comparisons use the same 128 × 128 (~20 m) grid, 2,048 sampled valid pixels per scene, and five outer folds over 32 leakage-safe connected components. Normalization, early stopping, and threshold calibration use training groups only, with a disjoint inner split. AUPRC is emphasized because calibrated F1 can be inflated by broad positive predictions.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="metrics">
+            <caption>Legacy quality cohort · moderate enhancement (&gt;300 ppm·m)<span>65 scenes / 32 leakage-safe components · 128 × 128 grid · disjoint inner calibration</span></caption>
+            <thead><tr><th>Model</th><th>Features</th><th>Pixel AUPRC</th><th>Pixel AUROC</th><th>Scene F1</th><th>Scene IoU</th></tr></thead>
+            <tbody>
+              <tr><td>Prior dummy</td><td>5</td><td>0.3548</td><td>0.5000</td><td class="caution">0.4988</td><td class="caution">0.3548</td></tr>
+              <tr><td>Raw logistic</td><td>5</td><td class="best">0.4481</td><td class="best">0.5995</td><td>0.4781</td><td>0.3398</td></tr>
+              <tr><td>Physics logistic</td><td>11</td><td>0.4350</td><td>0.5805</td><td>0.4606</td><td>0.3268</td></tr>
+              <tr class="highlight"><td><strong>Raw residual U-Net</strong></td><td>5</td><td>0.4168</td><td>0.5659</td><td>0.4988</td><td>0.3546</td></tr>
+              <tr><td>Physics residual U-Net</td><td>11</td><td>0.4079</td><td>0.5556</td><td>0.4939</td><td>0.3502</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">The dummy’s high calibrated F1 is not evidence of skill: its chance AUROC and prevalence-level AUPRC expose a broad-positive operating point. Raw logistic has the strongest ranking performance. The selected raw U-Net nearly matches the prior on scene F1/IoU but does not beat the classical ranker.</p>
+
+        <div class="grid-2" style="margin-top:1rem">
+          <div class="card">
+            <div class="kicker">Controlled architecture delta</div>
+            <h3>Raw bands are the stronger neural input</h3>
+            <div class="compare-chart" style="margin-top:1.2rem" aria-label="Raw versus physics U-Net metrics">
+              <div class="compare-row"><div class="compare-label">Raw · AUPRC</div><div class="compare-track"><div class="compare-fill" style="width:83.36%">raw</div></div><div class="compare-value">.4168</div></div>
+              <div class="compare-row"><div class="compare-label">Physics · AUPRC</div><div class="compare-track"><div class="compare-fill sky" style="width:81.58%">physics</div></div><div class="compare-value">.4079</div></div>
+              <div class="compare-row"><div class="compare-label">Raw · AUROC</div><div class="compare-track"><div class="compare-fill" style="width:56.59%">raw</div></div><div class="compare-value">.5659</div></div>
+              <div class="compare-row"><div class="compare-label">Physics · AUROC</div><div class="compare-track"><div class="compare-fill sky" style="width:55.56%">physics</div></div><div class="compare-value">.5556</div></div>
+              <div class="compare-row"><div class="compare-label">Raw · IoU</div><div class="compare-track"><div class="compare-fill" style="width:70.92%">raw</div></div><div class="compare-value">.3546</div></div>
+              <div class="compare-row"><div class="compare-label">Physics · IoU</div><div class="compare-track"><div class="compare-fill sky" style="width:70.04%">physics</div></div><div class="compare-value">.3502</div></div>
+            </div>
+            <p class="table-note">At &gt;300 ppm·m, the raw input is stronger on every reported neural metric. It also remains stronger at &gt;1000 ppm·m.</p>
+          </div>
+
+          <div class="card">
+            <div class="kicker">High enhancement · &gt;1000 ppm·m</div>
+            <h3>No neural model establishes high-label skill</h3>
+            <div class="table-wrap" style="margin-top:1rem;border-radius:13px">
+              <table class="metrics" style="min-width:600px">
+                <thead><tr><th>Model</th><th>Features</th><th>AUPRC</th><th>AUROC</th><th>F1</th><th>IoU</th></tr></thead>
+                <tbody>
+                  <tr><td>Prior dummy</td><td>5</td><td>0.0601</td><td>0.5000</td><td class="caution">0.2234</td><td class="caution">0.2133</td></tr>
+                  <tr><td>Raw logistic</td><td>5</td><td class="best">0.1243</td><td class="best">0.6384</td><td>0.1614</td><td>0.1266</td></tr>
+                  <tr class="highlight"><td>Raw ResU-Net</td><td>5</td><td>0.0953</td><td>0.5793</td><td>0.1203</td><td>0.1016</td></tr>
+                  <tr><td>Physics ResU-Net</td><td>11</td><td>0.0767</td><td>0.5504</td><td>0.0868</td><td>0.0622</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="table-note">Raw ResU-Net remains the better neural variant, but raw logistic ranks substantially better and the prior has the highest calibrated scene F1/IoU. None is evidence of operational accuracy.</p>
+          </div>
+        </div>
+
+        <div class="card soft" style="margin-top:1rem">
+          <div class="kicker">Packaged artifact diagnostic · not an outer-fold result</div>
+          <h3>The contract works; the calibrated operating point does not.</h3>
+          <div class="grid-3" style="margin-top:1rem">
+            <div class="metric" style="min-height:120px;border-radius:13px"><div class="value" style="font-size:2rem">50 / 26</div><div class="label">fit scenes / split groups</div><div class="context">train-only normalization and optimization</div></div>
+            <div class="metric" style="min-height:120px;border-radius:13px"><div class="value" style="font-size:2rem">15 / 6</div><div class="label">calibration scenes / groups</div><div class="context">threshold selection, not an independent test</div></div>
+            <div class="metric" style="min-height:120px;border-radius:13px"><div class="value" style="font-size:2rem">5 / 12</div><div class="label">epochs run / requested</div><div class="context">early stopping selected the artifact</div></div>
+          </div>
+          <div class="table-wrap" style="margin-top:1rem;border-radius:13px">
+            <table class="metrics" style="min-width:760px">
+              <caption>Sampled calibration diagnostic<span>2,048 pixels per scene · decision threshold 0.01</span></caption>
+              <thead><tr><th>AUPRC</th><th>AUROC</th><th>F1</th><th>IoU</th><th>Recall</th><th>Specificity</th></tr></thead>
+              <tbody><tr><td>0.4754</td><td>0.6162</td><td>0.5275</td><td>0.3582</td><td class="caution">0.9984</td><td class="caution">0.00127</td></tr></tbody>
+            </table>
+          </div>
+          <p class="table-note">The near-perfect recall and near-zero specificity mean the artifact predicts almost everywhere positive. The ignored model and tracked <code>reports/artifacts/compact_resunet_v1_config.json</code> snapshot verify a reproducible five-band train/serve package—not a deployable detector.</p>
+        </div>
+
+        <div class="table-wrap" style="margin-top:1rem">
+          <table class="metrics">
+            <caption>New V002 physical-mask benchmark · calibrated feasibility metrics<span>Six complete groups after excluding clipped polygons · nested folds leave only 3–4 fit groups</span></caption>
+            <thead><tr><th>Model</th><th>Features</th><th>Pixel AUPRC</th><th>Pixel AUROC</th><th>Scene F1</th><th>Scene IoU</th></tr></thead>
+            <tbody>
+              <tr><td>Prior dummy</td><td>5</td><td>0.1708</td><td>0.5000</td><td>0.2819</td><td>0.1708</td></tr>
+              <tr><td>Raw single-time logistic</td><td>5</td><td>0.2410</td><td>0.6367</td><td>0.2294</td><td>0.1406</td></tr>
+              <tr><td>Physics single-time logistic</td><td>11</td><td class="best">0.2415</td><td class="best">0.6397</td><td>0.2292</td><td>0.1404</td></tr>
+              <tr><td>Physics single-time HistGB</td><td>11</td><td>0.1941</td><td>0.5861</td><td class="best">0.2939</td><td class="best">0.1777</td></tr>
+              <tr><td>Bitemporal logistic</td><td>33</td><td>0.2271</td><td>0.6212</td><td>0.1917</td><td>0.1152</td></tr>
+              <tr><td>Bitemporal HistGB</td><td>33</td><td>0.2070</td><td>0.5995</td><td>0.2673</td><td>0.1635</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Raw and physics single-time logistic are effectively tied. Bitemporal input is unproven: the same EMIT-time polygon is applied to non-contemporaneous pre/post Sentinel-2 scenes, so the model may measure persistent source or land-cover context rather than plume change. Six groups cannot support a generalization claim.</p>
+
+        <div class="grid-2" style="margin-top:1rem">
+          <div class="card">
+            <div class="kicker">What did not work</div>
+            <div class="finding"><div class="finding-num">01</div><div><h3>Physics expansion was not selected</h3><p>Raw ResU-Net beats physics ResU-Net at both thresholds; single-time raw and physics logistic are effectively tied on V002.</p></div></div>
+            <div class="finding"><div class="finding-num">02</div><div><h3>The U-Net did not beat simple ranking</h3><p>Raw logistic AUPRC exceeds raw ResU-Net at &gt;300 (0.4481 vs 0.4168) and &gt;1000 ppm·m (0.1243 vs 0.0953).</p></div></div>
+            <div class="finding"><div class="finding-num">03</div><div><h3>V002 cannot adjudicate temporal input</h3><p>Six polygons are clipped, only six complete groups remain, and nested folds train on just three or four groups.</p></div></div>
+          </div>
+          <div class="card">
+            <div class="kicker">Interpretation boundary</div>
+            <h3>These numbers answer a narrower question</h3>
+            <ul class="clean">
+              <li>They test leakage-aware ranking and segmentation on the data currently available.</li>
+              <li>They do not establish calibrated methane concentration or flux.</li>
+              <li>They do not validate geographic transfer or detection on true negative scenes.</li>
+              <li>The V002 masks are plume-complex polygons, not per-pixel enhancement rasters.</li>
+              <li>The same EMIT-time polygon on pre/post S2 cannot distinguish transient methane from persistent context.</li>
+              <li>Legacy L1C and new L2A observations must remain separate domains unless harmonization is explicit.</li>
+            </ul>
+            <aside class="callout good" style="margin-top:1rem"><strong>Useful result:</strong> the clean experiments narrow the supported architecture to a five-band raw research baseline. Complete labels, contemporaneous controls, negatives, and independent groups—not extra channels—are the next investment.</aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="reproducibility">
+        <div class="section-head">
+          <div>
+            <div class="section-index">05 · Reproducibility & Git hygiene</div>
+            <h2 class="section-title">Evidence in Git; bulk pixels out.</h2>
+          </div>
+          <p class="section-intro">The reproducible unit is a small script, manifest, configuration, hash, and metrics file—not a directory of downloaded rasters or an opaque checkpoint.</p>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <span class="code-label">Dataset audit</span>
+            <pre><code>python tools/ersrr.py status
+python tools/ersrr.py audit --dry-run
+python tools/ersrr.py audit</code></pre>
+
+            <span class="code-label" style="margin-top:1rem">Acquire one exact V002 granule</span>
+            <pre><code>python tools/acquire_v002_pilot.py \
+  EMIT_L2B_CH4PLM_002_20250922T204933_003374 \
+  --batch emit-v002-2026-07 \
+  --window-days 14 --max-cloud 20 \
+  --temporal-mode bracketing \
+  --tile-size 256 --resolution 20</code></pre>
+          </div>
+          <div>
+            <span class="code-label">Grouped classical baselines</span>
+            <pre><code>python tools/run_research_baselines.py \
+  --folds 5 --thresholds 300 1000 \
+  --image-size 128 --pixels-per-scene 2048 \
+  --output reports/experiments/baseline_results.json \
+  --markdown reports/experiments/BASELINE_RESULTS.md</code></pre>
+
+            <span class="code-label" style="margin-top:1rem">Compact residual U-Net</span>
+            <pre><code>CUDA_VISIBLE_DEVICES=-1 python tools/run_unet_experiment.py \
+  --architectures raw_resunet physics_resunet \
+  --folds 5 --epochs 12 --threshold 300 \
+  --image-size 128 --base-filters 8 \
+  --sampled-pixels 2048 --positive-weight 1 \
+  --seed 42 \
+  --output reports/experiments/unet_unweighted_300_results.json \
+  --markdown reports/experiments/UNET_UNWEIGHTED_300_RESULTS.md
+
+# Repeat with --threshold 1000 and the high-enhancement output paths.</code></pre>
+          </div>
+        </div>
+
+        <div class="grid-3" style="margin-top:1rem">
+          <article class="card">
+            <div class="kicker">Kept local</div>
+            <h3>11.31 MB acquisition batch</h3>
+            <p>V002 metadata, browse PNGs, 24 S2 stacks, and 24 masks live under ignored <code>Data Collection</code> batch paths. Integrity checks found zero missing files or hash/grid mismatches.</p>
+          </article>
+          <article class="card">
+            <div class="kicker">Committed evidence</div>
+            <h3>Small, inspectable outputs</h3>
+            <p>Collector and experiment code, aggregate JSON/Markdown metrics, architecture documentation, and this HTML report are the reviewable scientific record.</p>
+          </article>
+          <article class="card">
+            <div class="kicker">Repository hygiene completed</div>
+            <h3>Dependencies are not source</h3>
+            <p>Commit <code>4e9d8787</code> removed 233 generated dependency, prediction, checkpoint, and unprocessed-data files from the index while preserving them locally. Tracked <code>node_modules</code> is now zero. Revision <code>6bf20592</code> consolidated tracked frontend assets into canonical <code>ERSRR_Website/</code> and removed the lowercase path. The 2.97 GiB historical pack remains because history was not destructively rewritten.</p>
+          </article>
+        </div>
+
+        <div class="card soft" style="margin-top:1rem">
+          <div class="kicker">Content-addressed evidence · clean tracked tree</div>
+          <h3>Runs resolve to revision <code>6bf2059213c77c521416b0e460fb0f49de8d4fd7</code></h3>
+          <div class="grid-2" style="margin-top:1rem">
+            <ul class="clean">
+              <li>V002 batch identity: <code>81410698329cdab6b0dabe5f39e1252617aaa1e4c539d51d382e30016d49f0fd</code></li>
+              <li>V002 summary script: <code>7edc5ac1ed0018719abce25473030e9afc40ec352a28f634a689f70c381ef11c</code></li>
+              <li>Legacy baseline input: <code>9b3b12e97d74c9ea65ad3b95eb3dafc2b1ec770bc7fdc9f0c8a216dcc0048c83</code></li>
+              <li>V002 baseline input: <code>f98fb4b70978bba4a14593c274a7967f3fb76d4c106db2762bead05f3df7ffc9</code></li>
+            </ul>
+            <ul class="clean">
+              <li>Baseline script: <code>ed5764d222567887d94241ab4ff55a175a81bc2a2a2d3ba526223f52ace7ae77</code></li>
+              <li>Neural cohort: <code>b93fee1bd96de7300b2f92e137e32d83640f626050357f5c4d2447a8761b1964</code></li>
+              <li>Neural script: <code>e455cc2f5e6c66f2a992af9fc20398b934044f78736973a7acb6445e2f79e5cb</code></li>
+              <li>Packaged raw model: <code>d73dd7728626a6a2e584f1ff7757087ed84f26b41fd05596db53c952a84a48e6</code></li>
+            </ul>
+          </div>
+        </div>
+
+        <aside class="callout" style="margin-top:1rem"><strong>Data lineage rule.</strong> Never silently mix the legacy <code>COPERNICUS/S2_HARMONIZED</code> L1C/TOA cohort with the new Sentinel-2 L2A/surface-reflectance cohort. Every artifact must declare product level, band order, feature names, normalization statistics, cohort/hash, threshold, model hash, and <code>research_only</code> status.</aside>
+      </section>
+
+      <section id="roadmap">
+        <div class="section-head">
+          <div>
+            <div class="section-index">06 · Best path forward</div>
+            <h2 class="section-title">A data-first research sequence.</h2>
+          </div>
+          <p class="section-intro">Each gate is designed to prevent compute from hiding a data or evaluation defect. A larger foundation backbone is deliberately deferred until the benchmark demonstrates learnable methane signal.</p>
+        </div>
+
+        <div class="roadmap">
+          <article class="roadmap-item"><div class="order">NEXT · 01</div><h3>Build the negative class</h3><p>Add at least 200 geographically and seasonally matched plume-free L2A pairs. Validate absence using known-plume catalogs and explicit valid masks.</p><span class="gate">Gate: AUPRC above prevalence</span></article>
+          <article class="roadmap-item"><div class="order">NEXT · 02</div><h3>Expand physical V002 masks</h3><p>Acquire protected EMIT V002 COGs through an authorized Earthdata session, grow to ≥50 geographically held-out validation groups, and keep temporal offsets tight.</p><span class="gate">Gate: stable 5-fold intervals</span></article>
+          <article class="roadmap-item"><div class="order">NEXT · 03</div><h3>Test bitemporal input</h3><p>Collect contemporaneous labels or explicit no-plume controls before stacking pre/post L2A observations. Compare against MBMP and single-time controls under identical grouped folds.</p><span class="gate">Gate: beat single-time baseline</span></article>
+          <article class="roadmap-item"><div class="order">NEXT · 04</div><h3>Inject physics-shaped plumes</h3><p>Add controlled synthetic methane absorption to plume-free SWIR scenes using flux/wind buckets, then fine-tune on real V002 masks and test by region.</p><span class="gate">Gate: real-only holdout gain</span></article>
+        </div>
+
+        <div class="grid-2" style="margin-top:1rem">
+          <div class="card soft">
+            <div class="kicker">Only after the gates</div>
+            <h3>Consider a pretrained Earth-observation backbone</h3>
+            <p>Prithvi-EO-2.0, SatMAE, or another multispectral encoder may help once the physical-mask benchmark has enough independent positives and negatives. Until then, a bigger model mostly increases variance and hides failure modes.</p>
+          </div>
+          <div class="card soft">
+            <div class="kicker">Publication-grade endpoint</div>
+            <h3>Detection, then calibrated quantification</h3>
+            <p>Report per-region precision/recall, IoU, AUPRC, detection-vs-flux curves, repeated-seed intervals, and a frozen external holdout. Add IME-to-flux only after target-independent concentration calibration and wind uncertainty are validated.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="sources">
+        <div class="section-head">
+          <div>
+            <div class="section-index">07 · Sources</div>
+            <h2 class="section-title">Primary data and research references.</h2>
+          </div>
+          <p class="section-intro">Official product documentation supports the acquisition contract; peer-reviewed literature motivates the temporal and synthetic-plume path. External performance claims were not copied into this report’s measured results.</p>
+        </div>
+
+        <div class="sources">
+          <article class="source"><h3><a href="https://www.earthdata.nasa.gov/data/catalog/lpcloud-emitl2bch4plm-002">NASA Earthdata · EMIT L2B CH4PLM V002</a></h3><p>Official product catalog and data-access entry point.</p></article>
+          <article class="source"><h3><a href="https://search.earthdata.nasa.gov/search/granules?p=C3242707413-LPCLOUD">Earthdata Search · V002 collection</a></h3><p>Granule discovery for concept C3242707413-LPCLOUD.</p></article>
+          <article class="source"><h3><a href="https://doi.org/10.5067/EMIT/EMITL2BCH4PLM.002">EMIT L2B CH4PLM V002 DOI</a></h3><p>Version-specific persistent identifier: 10.5067/EMIT/EMITL2BCH4PLM.002.</p></article>
+          <article class="source"><h3><a href="https://developers.google.com/earth-engine/datasets/catalog/NASA_EMIT_L2B_CH4PLM">Google Earth Engine · EMIT CH4PLM</a></h3><p>Convenient V001 catalog; not a replacement for the V002 contract used here.</p></article>
+          <article class="source"><h3><a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_HARMONIZED">Sentinel-2 harmonized L1C</a> · <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED">L2A surface reflectance</a></h3><p>Official collection descriptions; the distinction is material to model preprocessing.</p></article>
+          <article class="source"><h3><a href="https://amt.copernicus.org/articles/14/2771/2021/">Varon et al. 2021 · Sentinel-2 methane monitoring</a></h3><p>Multi-band / multi-pass retrieval baseline and methane point-source framing.</p></article>
+          <article class="source"><h3><a href="https://www.nature.com/articles/s41467-024-47754-y">Rouet-Leduc & Hulbert 2024 · Automated plume detection</a></h3><p>Motivation for two-timestep inputs and physics-shaped synthetic training.</p></article>
+          <article class="source"><h3><a href="https://amt.copernicus.org/articles/17/2583/2024/">Allen et al. 2024 · CH4Net</a></h3><p>Closest deep-learning comparison for Sentinel-2 methane plume detection.</p></article>
+          <article class="source"><h3><a href="https://www.science.org/doi/10.1126/sciadv.adh2391">Thorpe et al. 2023 · EMIT source attribution</a></h3><p>EMIT methane/carbon-dioxide point-source product context.</p></article>
+          <article class="source"><h3><a href="https://amt.copernicus.org/articles/11/5673/2018/">Varon et al. 2018 · IME-to-flux</a></h3><p>Quantification method to consider only after calibrated enhancement estimates exist.</p></article>
+          <article class="source"><h3><a href="https://nvlpubs.nist.gov/nistpubs/ir/2025/NIST.IR.8575.pdf">NIST IR 8575 · Methane plume quantification</a></h3><p>Common practices and uncertainty considerations for a later flux stage.</p></article>
+          <article class="source"><h3><a href="https://arxiv.org/abs/2412.02732">Prithvi-EO-2.0</a> · <a href="https://sustainlab-group.github.io/SatMAE/">SatMAE</a></h3><p>Candidate pretrained backbones after data and evaluation gates are passed.</p></article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="shell footer-inner">
+      <span>ERSRR · Earth Remote Sensing Rapid Response</span>
+      <span>Measured locally · 2026-07-09 · status: research_only</span>
+    </div>
+  </footer>
+</body>
+</html>
