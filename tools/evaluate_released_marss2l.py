@@ -396,7 +396,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--metadata-dir", default=DEFAULT_OUTPUT.as_posix())
-    parser.add_argument("--manifest", default=DEV_SAMPLES.as_posix())
+    parser.add_argument("--manifest", default=str(DEV_SAMPLES))
     parser.add_argument("--metadata-csv", default=DEFAULT_METADATA_CSV.as_posix())
     parser.add_argument("--checkpoint", default=DEFAULT_CHECKPOINT.as_posix())
     parser.add_argument("--config", default=DEFAULT_CONFIG.as_posix())
