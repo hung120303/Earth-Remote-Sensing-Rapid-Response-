@@ -12,6 +12,7 @@ import argparse
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -243,9 +244,10 @@ Also collect negatives:
 
 
 def command_guide(args: argparse.Namespace) -> int:
-    text = acquisition_guide()
+    root = repo_root(Path(args.repo_root) if args.repo_root else None)
+    canonical_guide = root / "docs" / "DATA_ACQUISITION.md"
+    text = canonical_guide.read_text(encoding="utf-8") if canonical_guide.is_file() else acquisition_guide()
     if args.output:
-        root = repo_root(Path(args.repo_root) if args.repo_root else None)
         out = Path(args.output)
         if not out.is_absolute():
             out = root / out
@@ -261,15 +263,18 @@ def command_guide(args: argparse.Namespace) -> int:
 def command_init_batch(args: argparse.Namespace) -> int:
     root = repo_root(Path(args.repo_root) if args.repo_root else None)
     batch = args.name.strip().replace(" ", "_")
-    if not batch:
-        print_json({"ok": False, "error": "Batch name cannot be empty"}, compact=args.compact)
+    if re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", batch) is None or ".." in batch:
+        print_json({"ok": False, "error": "Batch name must be a safe 1-64 character slug"}, compact=args.compact)
         return 2
-    base = root / DATA_COLLECTION_DIR
+    base = (root / DATA_COLLECTION_DIR).resolve()
     paths = [
-        base / "EMIT_Plumes" / batch,
-        base / "s2_emit_pairs" / batch,
-        base / "unpaired_EMIT" / batch,
+        (base / "EMIT_Plumes" / batch).resolve(),
+        (base / "s2_emit_pairs" / batch).resolve(),
+        (base / "unpaired_EMIT" / batch).resolve(),
     ]
+    if any(base not in path.parents for path in paths):
+        print_json({"ok": False, "error": "Batch path escaped the data directory"}, compact=args.compact)
+        return 2
     if not args.dry_run:
         for path in paths:
             path.mkdir(parents=True, exist_ok=True)

@@ -1,85 +1,72 @@
-# Earth-Remote-Sensing-Rapid-Response-
-The Earth Remote Sensing Rapid Response is a Capstone Project made by a team of 4 UP students (Eduardo Gonon, Kincaid Larson, Kevin Nguyen, Hung-Nghi Vu) for a client (Dr. Cenek), and is advised under Faculty Advisor Dr. Nuxoll. The purpose of the project is to predict methane production using machine learning represented by an interactive heat map
+# Earth Remote Sensing Rapid Response (ERSRR)
 
-To test the program, run ERSRR_Model.py in your IDE or through CLI.
-Requires Python 3.11 or higher.
+ERSRR is a research system for locating methane-plume pixels from Sentinel-2 imagery and displaying predictions on a web map. The current architecture is a **research-only compact residual U-Net** with an explicit preprocessing/artifact contract. It is not yet accurate enough for operational methane detection or physical concentration estimation.
 
-## Python setup
+The original capstone was created by Eduardo Gonon, Kincaid Larson, Kevin Nguyen, and Hung-Nghi Vu for Dr. Cenek, advised by Dr. Nuxoll.
 
-The project uses **Keras 3** and **TensorFlow 2.16+**.
+## Current architecture
 
-### Create and activate a virtual environment
+- `EarthRemoteSensingRapidResponse/ersrr_core.py` is the single source of truth for canonical band order, physics-inspired features, normalization, model topology, masked loss/metrics, and artifact validation.
+- `tools/run_research_baselines.py` evaluates grouped classical baselines on the legacy concentration cohort and the new EMIT V002 physical-mask cohort.
+- `tools/run_unet_experiment.py` runs group-disjoint nested validation for raw and physics-feature compact residual U-Nets.
+- `tools/train_compact_model.py` packages the selected research model as an ignored local artifact.
+- `ERSRR_Website/server.py` loads that artifact lazily and never authenticates Earth Engine at import time.
+- `EarthRemoteSensingRapidResponse/ERSRR_Model.py` is retained only as a historical baseline. Its regression workflow and old checkpoints must not be used for current claims.
 
-From the repository root:
+The canonical Sentinel-2 input order is `B2, B3, B4, B11, B12`. Legacy curated tiles are L1C/TOA; the new V002 pilot is L2A/surface reflectance. These product levels are deliberately kept separate.
+
+## Setup
+
+Python 3.11 is recommended. TensorFlow 2.16+ ships Keras 3; native Windows GPU support is unavailable, so use WSL2 for GPU work or run CPU-only.
 
 ```bash
 python3.11 -m venv .venv
-source .venv/bin/activate          # Linux / WSL
-# OR on Windows PowerShell:
-# .\.venv\Scripts\Activate.ps1
-```
-
-### Install dependencies
-
-```bash
+source .venv/bin/activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-> **Note:** TensorFlow dropped native Windows GPU support after 2.10.
-> For GPU training, run inside WSL2 where CUDA works normally.
-> CPU-only inference and prediction work on both Windows and WSL.
+On Windows PowerShell, activate with `.\.venv\Scripts\Activate.ps1` if the environment was created natively on Windows.
 
-### Run the model
-
-Train the model (default mode):
-
-```bash
-python EarthRemoteSensingRapidResponse/ERSRR_Model.py
-```
-
-To switch to prediction mode, change `MODEL_SETTING` in `ERSRR_Model.py` from `"train"` to `"predict"`, then run again.
-
-Hyperparameters can be tuned via CLI flags:
-
-```bash
-python EarthRemoteSensingRapidResponse/ERSRR_Model.py --lr 0.001 --ep 50 --bs 8
-```
-
-### Google Earth Engine (for data collection)
-
-Authenticate once inside the environment:
-
-```bash
-earthengine authenticate
-```
-
-Then run the data collection scripts in `EarthRemoteSensingRapidResponse/Data Collection/`.
-
-## Agent-friendly data CLI
-
-A small local CLI is available for repeatable dataset checks and data acquisition handoff steps:
+## Reproduce the research checks
 
 ```bash
 python tools/ersrr.py status
 python tools/ersrr.py audit
-python tools/ersrr.py guide --output docs/DATA_ACQUISITION.md
-python tools/ersrr.py init-batch emit-v002-YYYY-MM
+python tools/run_research_baselines.py
+CUDA_VISIBLE_DEVICES=-1 python tools/run_unet_experiment.py
+CUDA_VISIBLE_DEVICES=-1 python tools/train_compact_model.py
 ```
 
-Useful outputs:
+Experiment summaries are stored under `reports/experiments/`. The packaged `.keras` model and its `config.json` are generated under `EarthRemoteSensingRapidResponse/artifacts/` and intentionally ignored by Git.
 
-- `tools/ersrr.py status` reports dataset counts, Earth Engine credential presence, and repo hygiene checks.
-- `tools/ersrr.py audit` writes `reports/dataset_audit/pairings_manifest.csv`, `summary.json`, and `SUMMARY.md`.
-- `tools/ersrr.py guide` prints the exact EMIT/Sentinel-2 data source links and manual download workflow.
-- `tools/ersrr.py init-batch <name>` creates local folders for a new EMIT plume batch.
+## Acquire an EMIT V002 pilot pair
 
-The audit is read-only with respect to source imagery.
-
-## Old checkpoints
-
-Existing `.weights.h5` files in `tmp/` were saved with Keras 2 and are **not compatible** with Keras 3. You will need to retrain the model after upgrading. A conversion helper is available:
+The collector uses public NASA CMR V002 plume geometry and public Element 84 Sentinel-2 L2A COGs. It writes bracketing 256 x 256 image stacks, physical plume masks, SHA-256 hashes, and a provenance manifest into ignored acquisition directories.
 
 ```bash
-python convert_checkpoint.py
+python tools/acquire_v002_pilot.py \
+  EMIT_L2B_CH4PLM_002_20250922T204933_003374 \
+  --batch emit-v002-2026-07 --temporal-mode bracketing
 ```
+
+The protected EMIT concentration COG still requires an Earthdata login. The public polygon is a segmentation label, not a concentration raster, so the collector never manufactures a legacy six-band regression tile. See `docs/DATA_ACQUISITION.md` for the full contract.
+
+## Run the web API
+
+Create the local research artifact first, then configure Earth Engine credentials outside the repository and run:
+
+```bash
+python ERSRR_Website/server.py
+```
+
+`GET /health` reports artifact and Earth Engine readiness. Prediction routes return an explicit `503` when either dependency is unavailable.
+
+## Data and Git policy
+
+- The curated legacy dataset remains tracked for reproducibility.
+- Raw acquisition batches, generated predictions, temporary rasters, model artifacts, audit output, and frontend dependencies are ignored.
+- Do not commit credentials, Earthdata cookies, protected download URLs containing tokens, or bulk imagery.
+- Add a manifest and dataset contract before promoting any new batch into a curated split.
+
+The complete research narrative and quantitative results are in `reports/ERSRR_RESEARCH_REPORT.html`.

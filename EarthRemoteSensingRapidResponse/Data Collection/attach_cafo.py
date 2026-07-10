@@ -1,105 +1,116 @@
-import rasterio
-import os
+#!/usr/bin/env python3
+"""Partition GeoTIFFs by whether they contain a known CAFO point.
+
+CAFO CSV coordinates are interpreted as WGS84 longitude/latitude and projected
+into each raster's CRS before testing its bounds.  Outputs are derived copies;
+the input tree and CSV files are never modified.
+"""
+
+from __future__ import annotations
+
+import argparse
 import csv
+import json
 import shutil
+from pathlib import Path
 
-'''
-attach_cafo.py
+import rasterio
+from rasterio.warp import transform
 
-Outputs folder of images that contain a CAFO lon, lat point, with folder output from process_all.py 
-
-'''
-
-s2_emit_combined_image_input_folder = "/train_test_s2_0"
-output_folder = "/images_with_cafo"
-output_folder_non_cafo = "/images_non_cafo"
-cafos_folder = "/cafo_csv"
-
-def containsCAFO(bounds, cafo_points):
-    for lon, lat in cafo_points:
-        if (bounds.left <= lon <= bounds.right and
-            bounds.bottom <= lat <= bounds.top):
-            return True
-    return False
-
-def load_cafo_points(csv_path):
-    points = []
-
-    lat_names = {'lat', 'latitude', 'latdec', 'lat_facili', 'y'}
-    lon_names = {'lon', 'long', 'longitude', 'londec', 'lon_facili', 'x'}
+LATITUDE_NAMES = {"lat", "latitude", "latdec", "lat_facili", "y"}
+LONGITUDE_NAMES = {"lon", "long", "longitude", "londec", "lon_facili", "x"}
 
 
-    with open(csv_path, newline='', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
+def _coordinate_column(fieldnames: list[str], candidates: set[str]) -> str | None:
+    normalized = {column.lower().strip(): column for column in fieldnames}
+    return next((normalized[name] for name in sorted(candidates) if name in normalized), None)
 
-        # Normalize column names (lowercase + strip spaces)
-        field_map = {col.lower().strip(): col for col in reader.fieldnames}
 
-        lat_col = None
-        lon_col = None
-
-        # Detect latitude column
-        for lat_name in lat_names:
-            if lat_name in field_map:
-                lat_col = field_map[lat_name]
-                break
-
-        # Detect longitude column
-        for lon_name in lon_names:
-            if lon_name in field_map:
-                lon_col = field_map[lon_name]
-                break
-
-        if lat_col is None or lon_col is None:
-            print(f"Could not detect lat/lon columns in {csv_path}")
-            return points
-
+def load_cafo_points(csv_path: Path) -> list[tuple[float, float]]:
+    """Read valid WGS84 ``(longitude, latitude)`` points from one CSV."""
+    points: list[tuple[float, float]] = []
+    with csv_path.open(newline="", encoding="utf-8-sig") as source:
+        reader = csv.DictReader(source)
+        fieldnames = list(reader.fieldnames or [])
+        latitude_column = _coordinate_column(fieldnames, LATITUDE_NAMES)
+        longitude_column = _coordinate_column(fieldnames, LONGITUDE_NAMES)
+        if latitude_column is None or longitude_column is None:
+            raise ValueError(f"Could not detect latitude/longitude columns in {csv_path}")
         for row in reader:
             try:
-                lat = float(row[lat_col])
-                lon = float(row[lon_col])
-
-                # Validate coordinate ranges
-                if not (-90 <= lat <= 90):
-                    continue
-                if not (-180 <= lon <= 180):
-                    continue
-
-                points.append((lon, lat))  # rasterio uses (x=lon, y=lat)
-
-            except (ValueError, TypeError):
-                # Skip rows with invalid/missing values
+                latitude = float(row[latitude_column])
+                longitude = float(row[longitude_column])
+            except (KeyError, TypeError, ValueError):
                 continue
+            if -90.0 <= latitude <= 90.0 and -180.0 <= longitude <= 180.0:
+                points.append((longitude, latitude))
     return points
 
 
-# Get all the cafo points in a list
-cafo_list = []
+def contains_cafo(raster_path: Path, points: list[tuple[float, float]]) -> bool:
+    """Return whether any WGS84 point falls inside the raster bounds."""
+    if not points:
+        return False
+    with rasterio.open(raster_path) as source:
+        if source.crs is None:
+            raise ValueError(f"Raster has no CRS: {raster_path}")
+        longitudes, latitudes = zip(*points)
+        xs, ys = transform("EPSG:4326", source.crs, longitudes, latitudes)
+        bounds = source.bounds
+    return any(bounds.left <= x <= bounds.right and bounds.bottom <= y <= bounds.top for x, y in zip(xs, ys))
 
-for path, subfolders, files in os.walk(f"EarthRemoteSensingRapidResponse/Data Collection/{cafos_folder}"):
-    for file in files:
-        if file.endswith(".csv"):
-            cafo_path = os.path.join(path, file)
-            points = load_cafo_points(cafo_path)
-            cafo_list.extend(points)
 
-cafo_path = os.path.join((f"EarthRemoteSensingRapidResponse/Data Collection/{output_folder}")
-non_cafo_path = os.path.join((f"EarthRemoteSensingRapidResponse/Data Collection/{output_folder_non_cafo}")
-# Check if the cafo points lay within the image
-for path, subfolders, files in os.walk(f"EarthRemoteSensingRapidResponse/Data Collection/{s2_emit_combined_image_input_folder}"):
-    for file in files:
-        if file.endswith(".tif"):  # or whatever format
-            image_path = os.path.join(path, file)
+def partition(
+    input_dir: Path,
+    cafo_csv_dir: Path,
+    positive_dir: Path,
+    negative_dir: Path,
+) -> dict[str, int]:
+    csv_files = sorted(cafo_csv_dir.rglob("*.csv"))
+    if not csv_files:
+        raise FileNotFoundError(f"No CAFO CSV files found under {cafo_csv_dir}")
+    points = [point for csv_path in csv_files for point in load_cafo_points(csv_path)]
+    if not points:
+        raise ValueError("CAFO CSV files contain no valid coordinates")
 
-            with rasterio.open(image_path) as src:
-                bounds = src.bounds
+    rasters = sorted(input_dir.rglob("*.tif")) + sorted(input_dir.rglob("*.tiff"))
+    if not rasters:
+        raise FileNotFoundError(f"No GeoTIFFs found under {input_dir}")
 
-                if containsCAFO(bounds, cafo_list):
-                    print(f"{file} contains a CAFO")
-                    output_path = os.join(cafo_path, file)
-                else:
-                    print(f"{file} does NOT contain a CAFO")
-                    output_path = os.join(non_cafo_path, file)
-                
-                shutil.copy(image_path, output_path)
+    counts = {"rasters": len(rasters), "cafo": 0, "non_cafo": 0, "points": len(points)}
+    for raster_path in rasters:
+        is_positive = contains_cafo(raster_path, points)
+        key = "cafo" if is_positive else "non_cafo"
+        destination_root = positive_dir if is_positive else negative_dir
+        relative = raster_path.relative_to(input_dir)
+        destination = destination_root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(raster_path, destination)
+        counts[key] += 1
+    return counts
 
+
+def build_parser() -> argparse.ArgumentParser:
+    data_root = Path(__file__).resolve().parent
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--input-dir", type=Path, default=data_root / "train_test_s2_0")
+    parser.add_argument("--cafo-csv-dir", type=Path, default=data_root / "cafo_csv")
+    parser.add_argument("--positive-dir", type=Path, default=data_root / "images_with_cafo")
+    parser.add_argument("--negative-dir", type=Path, default=data_root / "images_non_cafo")
+    return parser
+
+
+def main() -> int:
+    args = build_parser().parse_args()
+    result = partition(
+        args.input_dir.resolve(),
+        args.cafo_csv_dir.resolve(),
+        args.positive_dir.resolve(),
+        args.negative_dir.resolve(),
+    )
+    print(json.dumps({"ok": True, **result}, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
