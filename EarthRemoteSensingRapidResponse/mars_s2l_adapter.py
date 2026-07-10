@@ -199,17 +199,28 @@ def _read_single_band(path: Path, image_grid: tuple[Any, ...]) -> tuple[np.ndarr
         return source.read(1), source.descriptions[0]
 
 
-def load_sample(base_dir: Path, record: dict[str, Any]) -> MarsS2Sample:
-    """Load and validate one pinned MARS-S2L sample."""
+def load_sample(
+    base_dir: Path, record: dict[str, Any], *, require_enhancement: bool = True
+) -> MarsS2Sample:
+    """Load and validate one pinned MARS-S2L sample.
+
+    ``require_enhancement=False`` supports detector-only manifests that retain
+    plume masks but intentionally omit unit-ambiguous enhancement rasters.
+    """
     identifier = record_id(record)
     state = label_state(record)
     paths = role_paths(record)
     required = {"image", "cloud_mask"}
+    allowed = set(required)
     if state == "PLUME":
-        required |= {"plume_mask", "methane_enhancement"}
-    if set(paths) != required:
+        required.add("plume_mask")
+        allowed |= {"plume_mask", "methane_enhancement"}
+        if require_enhancement:
+            required.add("methane_enhancement")
+    if not required.issubset(paths) or not set(paths).issubset(allowed):
         raise ValueError(
-            f"Asset roles for {identifier} are {sorted(paths)}; expected {sorted(required)}"
+            f"Asset roles for {identifier} are {sorted(paths)}; required {sorted(required)} "
+            f"and allowed {sorted(allowed)}"
         )
 
     image_path = safe_asset_path(base_dir, paths["image"])
@@ -255,12 +266,13 @@ def load_sample(base_dir: Path, record: dict[str, Any]) -> MarsS2Sample:
         plume_mask = plume.astype(bool)
         if not np.any(plume_mask):
             raise ValueError(f"Positive sample has an empty plume mask: {identifier}")
-        enhancement, _ = _read_single_band(
-            safe_asset_path(base_dir, paths["methane_enhancement"]), image_grid
-        )
-        enhancement = enhancement.astype(np.float32)
-        if not np.all(np.isfinite(enhancement)):
-            raise ValueError(f"Enhancement raster contains non-finite values: {identifier}")
+        if "methane_enhancement" in paths:
+            enhancement, _ = _read_single_band(
+                safe_asset_path(base_dir, paths["methane_enhancement"]), image_grid
+            )
+            enhancement = enhancement.astype(np.float32)
+            if not np.all(np.isfinite(enhancement)):
+                raise ValueError(f"Enhancement raster contains non-finite values: {identifier}")
     else:
         plume_mask = np.zeros(raw_pair.shape[1:], dtype=bool)
 
