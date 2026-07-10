@@ -143,6 +143,19 @@ The detailed ignored manifest and catalog are stored as
 Their hashes and the compact evidence are in
 `reports/acquisition/MARS_S2L_PUBLICATION_COHORT.md`.
 
+After explicitly accepting the 54.441 GiB transfer, run the pinned resumable downloader from the
+repository root:
+
+```bash
+python tools/acquire_mars_cohort.py --dry-run
+python tools/acquire_mars_cohort.py
+python tools/acquire_mars_cohort.py --verify-only
+```
+
+It verifies every LFS asset with the repository-declared SHA-256, verifies small assets with their
+Git blob SHA-1, resumes `.part` files, rejects path escape, reserves 5 GiB of free space, and never
+writes outside the ignored MARS acquisition directory. No Hugging Face account or token is needed.
+
 The deterministic 18-sample contract pilot is already available locally and can be independently
 verified and audited with:
 
@@ -468,13 +481,15 @@ shopping.
 
 ### User action required
 
-1. Create or activate a free NASA Earthdata Login:
+1. Decide whether to authorize the public MARS-S2L selective transfer: 120,756 assets / exactly
+   58,455,597,233 bytes (54.441 GiB). No account is required; the command and destination are above.
+2. Create or activate a free NASA Earthdata Login:
    <https://urs.earthdata.nasa.gov/users/new>.
-2. In Earthdata Search, download the 12 CH4ENH scene bundles and matching 12 CH4PLM bundles listed
+3. In Earthdata Search, download the 12 CH4ENH scene bundles and matching 12 CH4PLM bundles listed
    above.
-3. Put them in the exact `publication-v1/CH4ENH/...` and `publication-v1/CH4PLM/...` paths. Do not
+4. Put them in the exact `publication-v1/CH4ENH/...` and `publication-v1/CH4PLM/...` paths. Do not
    rename files and do not add them to Git.
-4. Do not send credentials. When the files are present, report only that the download is complete.
+5. Do not send credentials. When the files are present, report only that the download is complete.
 
 ### Work that does not require user credentials
 

@@ -69,6 +69,18 @@ No Hugging Face account is required. The authoritative download base is
 <https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L>; every asset URL is pinned and recorded in the
 ignored `publication_s2_cohort.jsonl`. Do not begin the 54.441 GiB transfer until storage approval.
 
+After approval, use the resumable downloader and independently verify the finished corpus:
+
+```bash
+python tools/acquire_mars_cohort.py --dry-run
+python tools/acquire_mars_cohort.py
+python tools/acquire_mars_cohort.py --verify-only
+```
+
+The downloader keeps `.part` files for interrupted transfers, checks a 5 GiB free-space reserve,
+and verifies LFS SHA-256 or Git blob SHA-1 identities from the frozen catalog. `--max-assets N` is
+only for downloader smoke tests and must never be treated as a complete research cohort.
+
 ### EMIT methane labels
 
 - **EMIT L2B CH4PLM V002** is the preferred source for new work: <https://www.earthdata.nasa.gov/data/catalog/lpcloud-emitl2bch4plm-002>
