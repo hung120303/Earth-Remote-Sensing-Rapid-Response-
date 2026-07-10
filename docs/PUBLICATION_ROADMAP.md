@@ -82,6 +82,12 @@ availability section and recommends DOI-backed FAIR repositories for the code an
   achieved 0.8% validation recall and 1.5% benchmark recall. Both have effectively zero pixel IoU.
   Connected-component filtering cannot rescue a classifier without a learned spatial receptive
   field.
+- Joint model v1 verifies that learned spatial context helps masks but not yet operational scene
+  decisions. It raises strict-spatial pixel AP to 0.0355 and IoU to 0.0517, but its
+  validation-selected presence rule transfers at only 1.5% recall / 91.4% specificity. The best
+  checkpoint occurs at epoch 1 because global-average scene pooling quickly overfits. The next
+  frozen change is therefore top-k multiple-instance plume evidence plus stronger presence loss
+  and validation hard-negative emphasis—not a wider/deeper encoder.
 
 The current shared core and artifact contract remain useful engineering infrastructure. They do
 not establish a useful detector.
