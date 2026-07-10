@@ -67,6 +67,10 @@ availability section and recommends DOI-backed FAIR repositories for the code an
 - The public V002 pilot proves the acquisition path but leaves only six complete plume groups.
 - Non-contemporaneous EMIT polygons cannot be copied onto nearby Sentinel-2 dates and treated as
   time-correct plume truth.
+- The native MARS adapter smoke test runs end to end on 18 balanced samples, but validation-tuned
+  MBMP and pixel-logistic rules each produced two false alarms among three test negatives. This
+  pilot is too small for an accuracy estimate, yet it confirms that a segmentation threshold alone
+  is not a credible no-plume decision rule.
 
 The current shared core and artifact contract remain useful engineering infrastructure. They do
 not establish a useful detector.
@@ -151,7 +155,10 @@ python tools/acquire_mars_pilot.py --verify-only
 The pilot verifies 54 files / 19,835,687 bytes across 18 balanced samples with zero contract
 violations. Its native image is a 200 x 200, 10 m, 12-band `uint16` stack: target and background
 each contain `B02,B03,B04,B08,B11,B12`. Positive samples additionally contain a binary plume mask
-and `DeltaCH4(ppm)` raster; negatives intentionally omit both. Some ancillary rasters lack band
+and an enhancement raster; negatives intentionally omit both. The enhancement unit metadata is
+internally inconsistent: populated TIFF descriptions say `DeltaCH4(ppm)`, while the pinned MARS
+README says ppb. Preserve raw values but prohibit quantitative regression/flux claims until the
+producer resolves the unit. Some ancillary rasters also lack band
 descriptions, and cloud-mask nodata metadata can overlap the clear class, so the adapter must use
 manifest roles and explicit mask values rather than GDAL validity masks. See
 `reports/acquisition/MARS_S2L_CONTRACT_PILOT.md`.
@@ -325,6 +332,12 @@ Heads and training:
 - class-balanced sampling by source and region, not by pixel;
 - deep ensemble or repeated-seed ensemble for epistemic uncertainty;
 - validation-only calibration with separate low/high thresholds for no-plume, abstain, and plume.
+
+The native adapter follows the released implementation at inspected commit
+`f7d264c2c845dfba1cb27f76ef6026275f8d8758`: divide TOA integers by 5,000, clip to `[0,2]`, and
+compute MBMP from separately median-normalized B12/B11 target and background ratios. ERSRR also
+computes a validity-aware MBMP variant whose medians exclude cloud and radiometrically invalid
+pixels. Both must remain explicit ablations.
 
 Do not add a larger backbone until the released MARS-S2L model is reproduced. A pretrained
 Prithvi, SatMAE, DOFA, or SegFormer encoder is an ablation only after the data adapter, baselines,

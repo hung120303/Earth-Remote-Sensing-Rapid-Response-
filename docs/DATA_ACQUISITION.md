@@ -44,9 +44,12 @@ The raster audit requires the repository's Linux environment because it includes
 
 The verified native S2 contract is a 200 x 200, 10 m, 12-band `uint16` stack. Target and
 background each contain `B02,B03,B04,B08,B11,B12`. Positive examples add a binary plume mask and
-a `DeltaCH4(ppm)` `float64` raster; negatives intentionally contain only the image and cloud mask.
-Ancillary descriptions are not universally populated, and cloud nodata can overlap the clear
-class, so resolve semantic roles from the pinned manifest and interpret cloud classes explicitly.
+a `float64` enhancement raster; negatives intentionally contain only the image and cloud mask.
+Enhancement units are unresolved: populated TIFF descriptions say `DeltaCH4(ppm)`, while the
+pinned MARS-S2L README says ppb. Preserve the raw values but do not train a unit-bearing regression
+or make flux claims until UNEP-IMEO reconciles the product metadata. Ancillary descriptions are
+not universally populated, and cloud nodata can overlap the clear class, so resolve semantic roles
+from the pinned manifest and interpret cloud classes explicitly.
 
 Do not download the full mixed-sensor repository by default. The proposed first cohort is limited
 to official-split Sentinel-2 L1C rows with `observability=clear`, at least 80% clear coverage, and a

@@ -273,7 +273,7 @@ def aggregate(
     clear_differences: list[float] = []
     paired_valid: list[float] = []
     plume_fractions: list[float] = []
-    plume_methane_maxima: list[float] = []
+    plume_methane_maxima_raw: list[float] = []
     for item in samples:
         cloud_values.update(item["cloud_mask"]["value_histogram"])
         cloud_nodata[str(item["cloud_mask"]["nodata"])] += 1
@@ -286,7 +286,7 @@ def aggregate(
             plume_fractions.append(item["plume_mask"]["positive_area_fraction"])
             maximum = item["methane_enhancement"]["values_on_plume_mask"]["max"]
             if maximum is not None:
-                plume_methane_maxima.append(float(maximum))
+                plume_methane_maxima_raw.append(float(maximum))
     return {
         "sample_count": len(samples),
         "positive_samples": sum(item["label"] == "positive" for item in samples),
@@ -305,7 +305,9 @@ def aggregate(
             np.asarray(clear_differences)
         ),
         "positive_plume_area_fraction": finite_summary(np.asarray(plume_fractions)),
-        "positive_plume_methane_max_ppm": finite_summary(np.asarray(plume_methane_maxima)),
+        "positive_plume_methane_max_raw": finite_summary(
+            np.asarray(plume_methane_maxima_raw)
+        ),
         "contract_violation_count": len(violations),
         "contract_violations": violations,
         "warning_count": len(warnings),
@@ -351,7 +353,13 @@ def build_audit(root: Path, metadata_dir: Path) -> dict[str, Any]:
             "target_bands": list(EXPECTED_IMAGE_DESCRIPTIONS[:6]),
             "reference_bands": list(EXPECTED_IMAGE_DESCRIPTIONS[6:]),
             "cloud_mask": "one-band uint8; observed values 0/1; explicit classes override ambiguous nodata metadata",
-            "positive_assets": "binary plume mask plus DeltaCH4(ppm) float64 raster",
+            "positive_assets": "binary plume mask plus float64 enhancement raster",
+            "enhancement_unit_evidence": {
+                "geotiff_description": "DeltaCH4(ppm) on 7/9 positive pilot rasters; absent on 2/9",
+                "pinned_dataset_readme": "Delta XCH4 enhancement image in ppb",
+                "status": "conflict",
+                "policy": "preserve raw values but prohibit quantitative-unit regression or flux claims until reconciled with the producer",
+            },
             "negative_assets": "image and cloud mask only; the adapter must create the zero target in memory",
         },
         "summary": summary,
@@ -362,6 +370,7 @@ def build_audit(root: Path, metadata_dir: Path) -> dict[str, Any]:
             "Keep negative targets implicit and create zero masks only inside the loader.",
             "Use cloud masks as observability inputs and exclude invalid pixels from losses and metrics.",
             "Do not use rasterio/GDAL validity masks for cloud semantics because nodata can overlap the clear class.",
+            "Do not assign physical enhancement units until the TIFF-tag versus dataset-documentation conflict is reconciled.",
             "Keep the existing five-band L2A compact model as a separate baseline artifact.",
         ],
         "provenance": {
@@ -402,6 +411,7 @@ def write_markdown(path: Path, audit: dict[str, Any]) -> None:
         f"- Reference bands: `{', '.join(contract['reference_bands'])}`.",
         f"- Cloud mask: {contract['cloud_mask']}.",
         f"- Positive label assets: {contract['positive_assets']}.",
+        "- Enhancement units: unresolved; GeoTIFF descriptions say `DeltaCH4(ppm)` where present, while the pinned dataset README says ppb.",
         f"- Negative label assets: {contract['negative_assets']}.",
         "",
         "| Split | Plume | No plume |",
@@ -434,6 +444,7 @@ def write_markdown(path: Path, audit: dict[str, Any]) -> None:
             "3. Negative samples intentionally omit plume and enhancement files; the loader must synthesize a zero mask in memory without inventing a raw label asset.",
             "4. Cloud and nodata support must gate both loss and evaluation. Product level remains explicitly Sentinel-2 MSI L1C.",
             "5. Some rasters omit descriptive band tags, and cloud nodata can overlap the clear class; resolve roles from the pinned manifest and interpret mask classes explicitly.",
+            "6. Preserve enhancement values as raw until UNEP-IMEO reconciles the ppm TIFF tag with the ppb dataset documentation; do not make regression or flux claims from the current unit metadata.",
         ]
     )
     path.parent.mkdir(parents=True, exist_ok=True)
