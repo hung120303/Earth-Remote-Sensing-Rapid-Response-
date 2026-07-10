@@ -17,6 +17,9 @@ import GeoTIFF from 'ol/source/GeoTIFF.js';
 
 const US_Center = [-98.583333, 39.833333];
 const US_WebMercator = fromLonLat(US_Center, 'EPSG:4326');
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000').replace(/\/$/, '');
+const MIN_INFERENCE_ZOOM = 14;
+const statusElement = document.getElementById('status');
 
 const vectorEarthquake = new HeatmapLayer({
   source: new VectorSource({
@@ -43,7 +46,7 @@ const boxLayer = new VectorLayer({
 
 const predictionLayer = new TileLayer({
   source: new XYZ({
-    url: "http://localhost:5000/tiles/{z}/{x}/{y}.png"
+    url: ''
   }),
   opacity: 1.0,
   zIndex: 2
@@ -74,27 +77,47 @@ const map = new Map({
 });
 
 let timeout;
+let activeRequest;
 
 map.on('moveend', async function(){
   clearTimeout(timeout);
+  activeRequest?.abort();
+
+  if (map.getView().getZoom() < MIN_INFERENCE_ZOOM) {
+    statusElement.textContent = `Zoom to level ${MIN_INFERENCE_ZOOM} or closer to run research inference.`;
+    return;
+  }
 
   timeout = setTimeout(async () => {
+    activeRequest = new AbortController();
     const extent = map.getView().calculateExtent(map.getSize());  
     const extent4326 = transformExtent(extent,'EPSG:3857','EPSG:4326');
     const [minx,miny,maxx,maxy] = extent4326;
-    
+    statusElement.textContent = 'Selecting imagery and running inference…';
+
     try {
       const response = await fetch(
-        `http://localhost:5000/sentinel?minx=${minx}&miny=${miny}&maxx=${maxx}&maxy=${maxy}`
+        `${API_BASE}/sentinel`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ minx, miny, maxx, maxy }),
+          signal: activeRequest.signal,
+        },
       );
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `Inference failed with HTTP ${response.status}`);
+      }
       s2Layer.getSource().setUrl(data.tile_url);
+      predictionLayer.getSource().setUrl(`${API_BASE}${data.prediction_tile_url}`);
       predictionLayer.getSource().refresh();
-      
+      statusElement.textContent = `${data.scene_id} · ${data.product} · research-only probability mask`;
     }
-    catch (e)
-    {
+    catch (e) {
+      if (e.name === 'AbortError') return;
       console.error('Failed to fetch S2 tile:', e);
+      statusElement.textContent = e.message;
     }
     
     boxSource.clear();
@@ -110,7 +133,6 @@ const goToLocationButton = document.getElementById('goToLocationButton');
 goToLocationButton.addEventListener('click', () => {
   const lon = parseFloat(lonInput.value);
   const lat = parseFloat(latInput.value);
-  console.log("hi")
   if (isNaN(lon) || isNaN(lat)) {
     alert("Invalid coordinates");
     return;

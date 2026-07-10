@@ -15,17 +15,23 @@
   <body>
     <div id="map" class="map"></div>
     <div id="controls" style="
-    position:absolute;
-    top:10px;
-    left:40px;
-    background:white;
-    padding:10px;
-    border-radius:8px;
-    z-index:1000;
+      position:absolute;
+      top:10px;
+      left:40px;
+      max-width:min(520px, calc(100vw - 80px));
+      background:rgba(255,255,255,.96);
+      padding:12px;
+      border-radius:8px;
+      box-shadow:0 4px 18px rgba(0,0,0,.18);
+      z-index:1000;
+      font:14px/1.35 system-ui, sans-serif;
     ">
-    <input id="lon" type="text" placeholder="Longitude" />
-    <input id="lat" type="text" placeholder="Latitude" />
-    <button id="goToLocationButton">Go</button>
+      <input id="lon" type="number" step="any" min="-180" max="180" placeholder="Longitude" aria-label="Longitude" />
+      <input id="lat" type="number" step="any" min="-90" max="90" placeholder="Latitude" aria-label="Latitude" />
+      <button id="goToLocationButton">Go</button>
+      <div id="status" role="status" aria-live="polite" style="margin-top:8px;color:#334155;">
+        Enter a location, then zoom in to run research inference.
+      </div>
     </div>
     <script type="module" src="./main.js"></script>
   </body>
