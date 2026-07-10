@@ -1,0 +1,219 @@
+{
+  "assignments": {
+    "bytes": 21197364,
+    "counts_by_role": {
+      "internal_training": {
+        "groups": 98,
+        "locations": 397,
+        "negative": 21756,
+        "positive": 2007,
+        "rows": 23763
+      },
+      "internal_validation": {
+        "groups": 24,
+        "locations": 163,
+        "negative": 5440,
+        "positive": 505,
+        "rows": 5945
+      },
+      "official_test_overlap_comparability_only": {
+        "groups": 107,
+        "locations": 801,
+        "negative": 15933,
+        "positive": 983,
+        "rows": 16916
+      },
+      "official_validation_comparability_only": {
+        "groups": 22,
+        "locations": 86,
+        "negative": 5263,
+        "positive": 264,
+        "rows": 5527
+      },
+      "strict_spatial_test": {
+        "groups": 150,
+        "locations": 373,
+        "negative": 4334,
+        "positive": 67,
+        "rows": 4401
+      }
+    },
+    "internal_split_search": {
+      "method": "seeded 50,000-candidate group Bernoulli search minimizing row/positive/negative fraction error",
+      "objective_score": 0.00753382,
+      "seed": 20260710,
+      "source_group_count": 122,
+      "target_fraction": 0.2,
+      "training_counts": {
+        "negative": 21756,
+        "positive": 2007,
+        "rows": 23763
+      },
+      "training_group_count": 98,
+      "trials": 50000,
+      "validation_counts": {
+        "negative": 5440,
+        "positive": 505,
+        "rows": 5945
+      },
+      "validation_fractions": {
+        "negative": 0.20002942,
+        "positive": 0.20103503,
+        "rows": 0.20011445
+      },
+      "validation_group_count": 24,
+      "validation_group_ids": [
+        "geo25_03e400cbf55ae9a0",
+        "geo25_062a3ba09db3f612",
+        "geo25_15bbde8d09b94920",
+        "geo25_167a3747baed01f6",
+        "geo25_19fcf1adf32485f5",
+        "geo25_1f30afa50089d7dd",
+        "geo25_2a866aa0fd0b22c3",
+        "geo25_34824ecea5001603",
+        "geo25_3f6f8febad0df2fc",
+        "geo25_4e2ee35968cabc2f",
+        "geo25_6125e9d4024a4454",
+        "geo25_6501c1af17516ebd",
+        "geo25_8f95bdc09a8bb972",
+        "geo25_9afdc562fdb80581",
+        "geo25_a283b54f0e5ace40",
+        "geo25_a70660f7d0535917",
+        "geo25_ad88a5cbf02a0075",
+        "geo25_bbdc19cb63251bc9",
+        "geo25_cbf2c087ebbe4595",
+        "geo25_d3ebc292e0b55eb5",
+        "geo25_ddc1a21384af417e",
+        "geo25_e391a7ea1b380c74",
+        "geo25_e95ad739891ff1f1",
+        "geo25_fd8b9ca86f307a5e"
+      ]
+    },
+    "invariants": {
+      "all_assignments_unique": true,
+      "all_rows_assigned": true,
+      "internal_train_validation_group_overlap": 0,
+      "official_train_strict_test_group_overlap": 0,
+      "strict_test_groups_expected": 150,
+      "strict_test_groups_observed": 150
+    },
+    "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_protocol_assignments.jsonl",
+    "sha256": "49d48669c765f06555f90a9fb94647e4983cbce13a983805e5fa440310c11671"
+  },
+  "data": {
+    "cohort_manifest": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_s2_cohort.jsonl",
+    "cohort_manifest_sha256": "d5d41635f79a93fd79f8678b75b788c45f41ba5f3812166d00cc5558d91dc8a3",
+    "enhancement_units": "unresolved; raw values excluded from unit-bearing primary claims",
+    "label_states": [
+      "PLUME",
+      "NO_PLUME",
+      "UNCERTAIN",
+      "UNOBSERVABLE"
+    ],
+    "product_level": "L1C",
+    "repository": "UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "sample_count": 56552,
+    "sensor": "Sentinel-2 MSI"
+  },
+  "evaluation_views": {
+    "external": "locked EMIT V002 cohort after architecture and thresholds are frozen",
+    "model_selection": "internal_validation only; group-disjoint from internal_training",
+    "official_comparability": "report untouched released validation and test splits, explicitly labeled as location-overlapping",
+    "primary_test": "strict_spatial_test: official test rows whose 25 km connected component contains no official train row",
+    "site_novelty_secondary": "official test rows at physical locations absent from train/validation; weaker than 25 km isolation"
+  },
+  "frozen_invariants": [
+    "No group can occur in both internal training and internal validation.",
+    "No strict spatial test group can occur in official training.",
+    "All thresholds and normalization statistics are fit without any test view.",
+    "All five seeds and failures are reported; no best-seed selection.",
+    "Official overlapping views are labeled comparability-only.",
+    "Raw enhancement values cannot support unit-bearing regression until the producer resolves the unit conflict."
+  ],
+  "generated_at_utc": "2026-07-10T20:10:19.834930+00:00",
+  "metrics": {
+    "object": [
+      "precision",
+      "recall",
+      "detection_by_plume_area",
+      "source_localization_error"
+    ],
+    "scene": [
+      "precision",
+      "recall",
+      "specificity",
+      "negative_predictive_value",
+      "AUPRC",
+      "AUROC",
+      "Brier",
+      "expected_calibration_error",
+      "false_positives_per_100_observable_scenes"
+    ],
+    "segmentation": [
+      "IoU",
+      "Dice",
+      "pixel_average_precision",
+      "false_positive_area",
+      "boundary_error"
+    ],
+    "selective": [
+      "coverage_risk",
+      "abstention_rate",
+      "accepted_no_plume_error_rate"
+    ],
+    "uncertainty": "95% block bootstrap over physical/group units with 2,000 replicates; paired scene comparisons"
+  },
+  "models": {
+    "baselines": [
+      "all-no-plume and all-plume priors",
+      "MBMP released operating rule",
+      "raw and physics logistic models",
+      "legacy compact ERSRR ResUNet",
+      "released CH4Net",
+      "released MARS-S2L"
+    ],
+    "candidate": "shared six-band target/reference encoders with change fusion, MBMP channel, scene-presence head, segmentation decoder, and observability/abstention head",
+    "training_seeds": [
+      101,
+      202,
+      303,
+      404,
+      505
+    ]
+  },
+  "operating_rule": {
+    "calibration_data": "internal_validation only",
+    "minimum_component_area": "selected on internal_validation only",
+    "primary_endpoint": "scene recall at false-positive rate <= 0.05 on accepted observable scenes",
+    "promotion_gate": {
+      "no_plume_specificity_min": 0.95,
+      "recall_noninferiority_required": true,
+      "relative_fpr_reduction_vs_strongest_baseline_min": 0.25,
+      "scene_false_positive_rate_max": 0.05,
+      "scene_recall_lower_95ci_min": 0.75
+    },
+    "test_tuning": "prohibited",
+    "thresholds": "fit lower no-plume and upper plume thresholds; intermediate probabilities abstain"
+  },
+  "outputs": {
+    "abstain": "required for cloud, invalid coverage, low sensitivity, missing reference, disagreement, or intermediate confidence",
+    "no_plume": "allowed only for observable accepted scenes below the lower calibrated threshold",
+    "plume": "scene probability plus binary mask",
+    "states": [
+      "PLUME",
+      "NO_PLUME",
+      "UNOBSERVABLE_OR_UNCERTAIN"
+    ]
+  },
+  "provenance": {
+    "git_commit": "3f09c0cfc50f1bff34a44e5ce7aeb67386a1d3fc",
+    "git_tracked_worktree_dirty_at_start": false,
+    "python": "3.13.12",
+    "script": "tools/build_mars_protocol.py",
+    "script_sha256": "df747a37cb60e6e320717407af9371af76533dc2d3fdb6e73dcb079c6adf01e0"
+  },
+  "research_question": "Can a dual-temporal physics-guided selective detector reduce false alarms at matched plume recall on geographically isolated Sentinel-2 sites?",
+  "schema_version": 1,
+  "status": "frozen_before_full_cohort_training"
+}
