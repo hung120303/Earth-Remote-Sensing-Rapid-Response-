@@ -20,6 +20,7 @@ import urllib.error
 import urllib.request
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -29,6 +30,7 @@ from acquire_mars_metadata import (
     USER_AGENT,
     checked_output_dir,
     repo_root,
+    sha256,
     verify_files,
 )
 from acquire_mars_pilot import safe_asset_path
@@ -243,6 +245,40 @@ def status_counts(results: Iterable[dict[str, Any]]) -> dict[str, int]:
     return dict(sorted(counts.items()))
 
 
+def write_receipt(
+    root: Path,
+    value: str,
+    payload: dict[str, Any],
+    catalog_path: Path,
+) -> Path:
+    path = (root / value).resolve()
+    if root not in path.parents:
+        raise ValueError("Receipt output must resolve beneath the repository root")
+    receipt = {
+        "schema_version": 1,
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "operation": "verify_only" if payload.get("verify_only") else "acquire_and_verify",
+        "catalog": {
+            "path": catalog_path.relative_to(root).as_posix(),
+            "sha256": sha256(catalog_path),
+            "asset_count": payload["selected_asset_count"],
+            "total_bytes": payload["selected_total_bytes"],
+        },
+        "result": payload,
+        "verification": {
+            "lfs": "SHA-256 over file bytes",
+            "regular_git_file": "Git blob SHA-1 over blob header and file bytes",
+            "size_checked": True,
+            "all_selected_assets_verified": bool(payload["ok"]),
+        },
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(temporary, path)
+    return path
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--metadata-dir", default=DEFAULT_OUTPUT.as_posix())
@@ -260,6 +296,7 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--verify-only", action="store_true")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--receipt", help="Write a compact verification receipt beneath the repository root")
     parser.add_argument("--compact", action="store_true")
     args = parser.parse_args()
     if args.workers <= 0:
@@ -301,6 +338,9 @@ def main() -> int:
                 **state,
                 "statuses": counts,
             }
+            if args.receipt:
+                receipt = write_receipt(root, args.receipt, payload, catalog_path)
+                payload["receipt"] = receipt.relative_to(root).as_posix()
             print(json.dumps(payload, indent=None if args.compact else 2, sort_keys=True))
             return 0 if ok else 3
 
@@ -330,6 +370,9 @@ def main() -> int:
             **final_state,
             "statuses": counts,
         }
+        if args.receipt:
+            receipt = write_receipt(root, args.receipt, payload, catalog_path)
+            payload["receipt"] = receipt.relative_to(root).as_posix()
         print(json.dumps(payload, indent=None if args.compact else 2, sort_keys=True))
         return 0 if payload["ok"] else 3
     except (
