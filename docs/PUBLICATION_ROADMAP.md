@@ -103,6 +103,10 @@ availability section and recommends DOI-backed FAIR repositories for the code an
   also fails the ERSRR research gate. It nevertheless outperforms MIL v2 decisively and shows that
   the next candidate must inherit full-resolution U-Net capacity and substantially broader
   training data while adding a separately calibrated high-specificity presence/abstention head.
+- The released single-date CH4Net checkpoint confirms that the gain is not generic U-Net capacity:
+  on the same strict cohort it reaches only 16.4% recall, 91.2% specificity, 0.597 AUROC, and 0.0069
+  pixel AP. Target/reference pairing, MBMP/wind/cloud context, and the MARS data program are therefore
+  essential ablations. Phase 2 baseline reproduction is complete.
 - The internal-validation-only MIL-v2 audit explains why another pooling adjustment is not the
   answer. Presence score is coupled to segmentation top-1% confidence at Spearman rho=0.909. The
   smallest plume quartile reaches only 9.4% presence recall even though the mask rule proposes a
@@ -528,12 +532,11 @@ Exit: every sample resolves to a state, group, split, checksum, and product cont
 
 Exit: credible baseline table and documented discrepancies from published values.
 
-Current development status: native MBMP plus raw/physics scene and pixel-logistic baselines are
-complete and fail the promotion gate. Joint model v1 and top-k MIL v2 are also frozen. The released
-MARS-S2L checkpoint reproduction is complete and is the strongest detector, but still fails the
-recall-confidence and FPR gates. Released CH4Net remains as a secondary ablation before Phase 2
-fully exits. Any subsequent ERSRR change must be selected on internal validation or new external
-data, not on the already reported strict-spatial development benchmark.
+Current development status: native MBMP, raw/physics scene and pixel-logistic, joint v1/MIL-v2,
+released CH4Net, and released MARS-S2L baselines are complete and frozen. Released MARS-S2L is the
+strongest detector but still fails the recall-confidence and FPR gates; CH4Net is substantially
+weaker. Phase 2 is complete. Any subsequent ERSRR change must be selected on internal validation
+or new external data, not on the already reported strict-spatial development benchmark.
 
 ### Phase 3 - hard-negative and architecture experiments (2-4 weeks)
 

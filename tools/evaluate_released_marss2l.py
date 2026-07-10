@@ -413,7 +413,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
     pixel = result["pixel_validity_aware"]
     ci = result["group_bootstrap"]
     lines = [
-        f"# Released {report['model']['name']} on the frozen ERSRR strict cohort",
+        f"# {report['model']['name']} on the frozen ERSRR strict cohort",
         "",
         "Inference-only reproduction using the authors' fixed 0.5 / 100-pixel rule; no ERSRR threshold tuning.",
         "",
