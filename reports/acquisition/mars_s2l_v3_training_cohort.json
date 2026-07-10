@@ -1,0 +1,61 @@
+{
+  "destination": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+  "generated_at_utc": "2026-07-10T22:01:28.874490+00:00",
+  "identities": {
+    "asset_catalog": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_training_remote_catalog.jsonl",
+    "asset_catalog_sha256": "3183e126512e660bf2279d25ec974efec36acdd7708c7affd1380aaf26aba9a1",
+    "sample_manifest": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_training_samples.jsonl",
+    "sample_manifest_sha256": "edd3c1da3d706b109798dcf86bc3db284f639d401d4953f3ced175c27b27d566"
+  },
+  "provenance": {
+    "git_commit": "3e4d615f64ed861883191bb51e8ce05800654268",
+    "git_tracked_worktree_dirty_at_start": false,
+    "script": "tools/build_mars_v3_training_cohort.py",
+    "script_sha256": "8fbfb60d8a5ffcb60ec8e0cd1e267c1b1a4c33b3445190b48bc2dabfebf51d0e"
+  },
+  "samples": {
+    "group_overlap": 0,
+    "internal_training": 23763,
+    "internal_validation": 5945,
+    "negatives": 27196,
+    "positives": 2512,
+    "total": 29708,
+    "training_groups": 98,
+    "validation_groups": 24
+  },
+  "schema_version": 1,
+  "scope": "minimum_mars_s2l_v3_fit_and_internal_validation_corpus",
+  "selection": {
+    "excluded_asset_roles": [
+      "methane_enhancement"
+    ],
+    "reason": "presence/segmentation/quality detector losses do not consume methane enhancement",
+    "research_roles": [
+      "internal_training",
+      "internal_validation"
+    ],
+    "retained_asset_roles": [
+      "image",
+      "cloud_mask",
+      "plume_mask"
+    ]
+  },
+  "source": {
+    "cohort_manifest_sha256": "d5d41635f79a93fd79f8678b75b788c45f41ba5f3812166d00cc5558d91dc8a3",
+    "development_verification_receipt_sha256": "7e12eca0c28d5ad6fc6854626ffb9b3416fcb722369bdd0912c6100577932c0e",
+    "protocol_assignments_sha256": "49d48669c765f06555f90a9fb94647e4983cbce13a983805e5fa440310c11671",
+    "repository": "UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32"
+  },
+  "transfer": {
+    "bytes_avoided": 494180738,
+    "full_asset_count_with_enhancement": 64440,
+    "full_bytes_with_enhancement": 30860984063,
+    "remaining_assets": 59240,
+    "remaining_bytes": 29198856248,
+    "reusable_verified_assets": 2688,
+    "reusable_verified_bytes": 1167947077,
+    "selected_asset_count": 61928,
+    "selected_total_bytes": 30366803325
+  }
+}

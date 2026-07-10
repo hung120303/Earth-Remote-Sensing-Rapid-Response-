@@ -85,6 +85,25 @@ The downloader keeps `.part` files for interrupted transfers, checks a 5 GiB fre
 and verifies LFS SHA-256 or Git blob SHA-1 identities from the frozen catalog. `--max-assets N` is
 only for downloader smoke tests and must never be treated as a complete research cohort.
 
+For ERSRR v3, prefer the smaller frozen fit+validation transfer rather than the all-split catalog.
+It retains image, cloud-mask, and positive plume-mask assets, but excludes methane-enhancement
+rasters unused by the detector loss. It contains 29,708 group-disjoint fit/validation samples and
+61,928 assets totaling exactly 30,366,803,325 bytes (28.281 GiB). The verified development tranche
+already supplies 2,688 assets / 1,167,947,077 bytes, so the remaining transfer is exactly
+29,198,856,248 bytes (27.193 GiB). No Hugging Face account is required:
+
+```bash
+python tools/build_mars_v3_training_cohort.py
+python tools/acquire_mars_cohort.py --catalog-file publication_v3_training_remote_catalog.jsonl --dry-run
+python tools/acquire_mars_cohort.py --catalog-file publication_v3_training_remote_catalog.jsonl --receipt reports/acquisition/mars_s2l_v3_training_download.json
+python tools/acquire_mars_cohort.py --catalog-file publication_v3_training_remote_catalog.jsonl --verify-only --receipt reports/acquisition/mars_s2l_v3_training_download.json
+```
+
+The exact destination remains
+`EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/`.
+The large manifests and rasters remain ignored; commit only the compact cohort report and final
+verification receipt.
+
 Freeze or verify the publication evaluation roles before training:
 
 ```bash

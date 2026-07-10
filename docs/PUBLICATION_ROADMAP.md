@@ -199,6 +199,24 @@ It verifies every LFS asset with the repository-declared SHA-256, verifies small
 Git blob SHA-1, resumes `.part` files, rejects path escape, reserves 5 GiB of free space, and never
 writes outside the ignored MARS acquisition directory. No Hugging Face account or token is needed.
 
+The full all-split inventory is no longer the recommended next transfer. The validation error audit
+shows that v3 first needs only the leakage-resistant internal fit and validation roles. A frozen
+minimum v3 corpus excludes unused methane-enhancement rasters and contains 29,708 samples / 61,928
+assets / exactly 30,366,803,325 bytes (28.281 GiB). The verified development tranche reuses 2,688
+of those assets, leaving exactly 59,240 assets / 29,198,856,248 bytes (27.193 GiB) to download.
+Build and acquire that exact catalog with:
+
+```bash
+python tools/build_mars_v3_training_cohort.py
+python tools/acquire_mars_cohort.py --catalog-file publication_v3_training_remote_catalog.jsonl --dry-run
+python tools/acquire_mars_cohort.py --catalog-file publication_v3_training_remote_catalog.jsonl --receipt reports/acquisition/mars_s2l_v3_training_download.json
+python tools/acquire_mars_cohort.py --catalog-file publication_v3_training_remote_catalog.jsonl --verify-only --receipt reports/acquisition/mars_s2l_v3_training_download.json
+```
+
+The manifest/catalog SHA-256 values and zero group-overlap evidence are recorded in
+`reports/acquisition/MARS_S2L_V3_TRAINING_COHORT.md`. Use the full 54.441 GiB catalog only later if
+official-split comparability or additional test-side error analysis is explicitly required.
+
 The deterministic 18-sample contract pilot is already available locally and can be independently
 verified and audited with:
 
@@ -556,8 +574,9 @@ shopping.
 
 ### User action required
 
-1. Decide whether to authorize the public MARS-S2L selective transfer: 120,756 assets / exactly
-   58,455,597,233 bytes (54.441 GiB). No account is required; the command and destination are above.
+1. Download the public minimum MARS-S2L v3 transfer: 59,240 remaining assets / exactly
+   29,198,856,248 bytes (27.193 GiB). No account is required; use the four commands above and keep
+   the generated receipt. Source: <https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L>.
 2. Create or activate a free NASA Earthdata Login:
    <https://urs.earthdata.nasa.gov/users/new>.
 3. In Earthdata Search, download the 12 CH4ENH scene bundles and matching 12 CH4PLM bundles listed
@@ -568,10 +587,11 @@ shopping.
 
 ### Work that does not require user credentials
 
-- Pinned MARS-S2L metadata and the deterministic raster-contract pilot are downloaded, verified,
-  and audited. A selective transfer is frozen at 120,756 assets / 58,455,597,233 bytes and awaits
-  explicit storage approval; do not perform a full ~100 GB mirror.
-- Build the MARS adapter, group/leakage audit, benchmark specification, and baseline runner.
+- Pinned metadata, the 1.708 GiB development tranche, and both released/MIL-v2 checkpoint baselines
+  are downloaded, verified, audited, and committed as compact evidence. The 27.193 GiB remaining
+  v3 training transfer awaits the user's download; do not perform the full ~100 GB mirror.
+- The MARS adapter, group/leakage protocol, classical baselines, released checkpoint reproduction,
+  and validation-only MIL failure audit are complete.
 - Generate the exact larger EMIT candidate list from public CMR metadata before requesting more
   authenticated downloads.
 - Keep raw data and trained models ignored; commit only manifests, hashes, code, configs, and
