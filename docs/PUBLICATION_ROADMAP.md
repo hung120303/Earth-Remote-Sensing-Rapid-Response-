@@ -71,6 +71,12 @@ availability section and recommends DOI-backed FAIR repositories for the code an
   MBMP and pixel-logistic rules each produced two false alarms among three test negatives. This
   pilot is too small for an accuracy estimate, yet it confirms that a segmentation threshold alone
   is not a credible no-plume decision rule.
+- A verified 1,731-scene development tranche now exercises 768 internal-training, 384
+  group-disjoint validation, and 579 strict-spatial benchmark scenes. At validation FPR <= 0.05,
+  MBMP, raw logistic, physics logistic, and physics gradient boosting achieved only 0.8%-14.1%
+  validation recall. The validation-selected raw logistic reached 7.5% recall / 96.3% specificity
+  on the spatial benchmark. Aggregate scene statistics are therefore inadequate; the next model
+  must learn spatial plume morphology jointly with presence and observability.
 
 The current shared core and artifact contract remain useful engineering infrastructure. They do
 not establish a useful detector.
@@ -328,6 +334,11 @@ The frozen machine-readable protocol is `configs/mars_publication_protocol.json`
 Both enforced group-overlap invariants are zero. See
 `reports/acquisition/MARS_S2L_EVALUATION_PROTOCOL.md`.
 
+The predeclared classical/physics baseline ladder may inspect the MARS strict-spatial benchmark,
+but candidate architecture and threshold selection remain internal-validation-only. The final
+independent confirmation is the untouched time-aligned EMIT V002 cohort, evaluated only after the
+candidate architecture and operating rule are frozen.
+
 ## Model architecture hypothesis
 
 The current compact raw ResUNet remains a five-band single-time baseline. The paper candidate is a
@@ -457,6 +468,10 @@ Exit: every sample resolves to a state, group, split, checksum, and product cont
 - Reproduce official split metrics before designing a new network.
 
 Exit: credible baseline table and documented discrepancies from published values.
+
+Current development status: native MBMP plus raw/physics scene baselines are complete and fail the
+promotion gate. Pixel-level MBMP/logistic evaluation and released CH4Net/MARS-S2L reproduction
+remain before Phase 2 exits.
 
 ### Phase 3 - hard-negative and architecture experiments (2-4 weeks)
 

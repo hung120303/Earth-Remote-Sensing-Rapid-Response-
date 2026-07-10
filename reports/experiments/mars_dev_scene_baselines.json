@@ -1,0 +1,444 @@
+{
+  "context": {
+    "feature_count": 128,
+    "physics_feature_count": 30,
+    "raw_feature_count": 98,
+    "representative_weight_targets": {
+      "internal_training": {
+        "negative": 21756,
+        "positive": 2007
+      },
+      "internal_validation": {
+        "negative": 5440,
+        "positive": 505
+      },
+      "strict_spatial_test": {
+        "negative": 4334,
+        "positive": 67
+      }
+    },
+    "role_counts": {
+      "internal_training": {
+        "groups": 98,
+        "negative": 512,
+        "positive": 256,
+        "rows": 768
+      },
+      "internal_validation": {
+        "groups": 24,
+        "negative": 256,
+        "positive": 128,
+        "rows": 384
+      },
+      "strict_spatial_test": {
+        "groups": 150,
+        "negative": 512,
+        "positive": 67,
+        "rows": 579
+      }
+    }
+  },
+  "decision": "Validation-selected development baseline: `raw_scene_logistic`. It does not clear the research promotion gate; proceed to a joint presence/segmentation model with hard-negative mining, not a larger backbone alone.",
+  "generated_at_utc": "2026-07-10T20:37:42.456456+00:00",
+  "limitations": [
+    "Class-enriched deterministic development subset, not deployment prevalence.",
+    "Single fit seed for learned classical models; the final protocol requires five seeds.",
+    "Scene-presence screening only; pixel segmentation is evaluated in the next experiment.",
+    "Full released MARS-S2L and CH4Net baselines still require their runtime/checkpoints.",
+    "The strict spatial development subset is used only for this predeclared baseline ladder; candidate architecture selection remains validation-only."
+  ],
+  "models": [
+    {
+      "name": "valid_aware_mbmp_p99",
+      "operating_rule": {
+        "lower_no_plume_threshold": 0.007154553895816207,
+        "lower_objective": "maximum representative-weighted coverage at NPV >= 0.95",
+        "lower_selection": {
+          "accepted_samples": 3,
+          "npv": 1.0,
+          "weighted_coverage": 0.010723296888141295
+        },
+        "selected_on": "internal_validation",
+        "upper_objective": "maximum recall at observed FPR <= 0.05",
+        "upper_plume_threshold": 0.2644966244697571
+      },
+      "test_group_bootstrap": {
+        "recall_95ci": [
+          0.0,
+          0.0
+        ],
+        "replicates": 2000,
+        "specificity_95ci": [
+          0.9900398406374502,
+          1.0
+        ],
+        "unit": "frozen 25 km group"
+      },
+      "test_representative_weighted": {
+        "accuracy": 0.9809294052488071,
+        "auroc": 0.3294951026119403,
+        "average_precision": 0.011266672875997872,
+        "brier": 0.01835595436888724,
+        "false_positive_rate": 0.00390625,
+        "fn": 67.0,
+        "fp": 16.9296875,
+        "negative_predictive_value": 0.9847173983936873,
+        "precision": 0.0,
+        "recall": 0.0,
+        "specificity": 0.99609375,
+        "tn": 4317.0703125,
+        "tp": 0.0
+      },
+      "test_selective": {
+        "abstention_rate": 0.9516407599309153,
+        "accepted_error_rate": 0.10103333836174386,
+        "accepted_no_plume": 26,
+        "accepted_no_plume_npv": 0.9789724424000986,
+        "accepted_plume": 2,
+        "accepted_precision": 0.0,
+        "accepted_recall": 0.0,
+        "accepted_samples": 28,
+        "accepted_specificity": 0.9166666666666666,
+        "sample_coverage": 0.04835924006908463,
+        "weighted_confusion": {
+          "fn": 4.0,
+          "fp": 16.9296875,
+          "tn": 186.2265625,
+          "tp": 0.0
+        },
+        "weighted_coverage": 0.047070268120881616
+      },
+      "test_unweighted": {
+        "accuracy": 0.8808290155440415,
+        "auroc": 0.3294951026119403,
+        "average_precision": 0.08735532433560132,
+        "brier": 0.11308579027314032,
+        "false_positive_rate": 0.00390625,
+        "fn": 67.0,
+        "fp": 2.0,
+        "negative_predictive_value": 0.8838821490467937,
+        "precision": 0.0,
+        "recall": 0.0,
+        "specificity": 0.99609375,
+        "tn": 510.0,
+        "tp": 0.0
+      },
+      "train_positive": 256,
+      "validation": {
+        "accuracy": 0.6484375,
+        "auroc": 0.43988037109375,
+        "average_precision": 0.2850748485029293,
+        "brier": 0.31826818404121365,
+        "false_positive_rate": 0.03125,
+        "fn": 127.0,
+        "fp": 8.0,
+        "negative_predictive_value": 0.6613333333333333,
+        "precision": 0.1111111111111111,
+        "recall": 0.0078125,
+        "specificity": 0.96875,
+        "tn": 248.0,
+        "tp": 1.0
+      }
+    },
+    {
+      "name": "raw_scene_logistic",
+      "operating_rule": {
+        "lower_no_plume_threshold": 0.016386876688397764,
+        "lower_objective": "maximum representative-weighted coverage at NPV >= 0.95",
+        "lower_selection": {
+          "accepted_samples": 59,
+          "npv": 0.9501461821771652,
+          "weighted_coverage": 0.17305114592094198
+        },
+        "selected_on": "internal_validation",
+        "upper_objective": "maximum recall at observed FPR <= 0.05",
+        "upper_plume_threshold": 0.23707600984087818
+      },
+      "test_group_bootstrap": {
+        "recall_95ci": [
+          0.0,
+          0.2777777777777778
+        ],
+        "replicates": 2000,
+        "specificity_95ci": [
+          0.9422708606913129,
+          0.9805825242718447
+        ],
+        "unit": "frozen 25 km group"
+      },
+      "test_representative_weighted": {
+        "accuracy": 0.9493678638377642,
+        "auroc": 0.6729535914179104,
+        "average_precision": 0.02617830801908809,
+        "brier": 0.0241704953802125,
+        "false_positive_rate": 0.037109375,
+        "fn": 62.0,
+        "fp": 160.83203125,
+        "negative_predictive_value": 0.9853606750765309,
+        "precision": 0.030150990507149082,
+        "recall": 0.07462686567164178,
+        "specificity": 0.962890625,
+        "tn": 4173.16796875,
+        "tp": 5.0
+      },
+      "test_selective": {
+        "abstention_rate": 0.6511226252158895,
+        "accepted_error_rate": 0.10357953915362028,
+        "accepted_no_plume": 178,
+        "accepted_no_plume_npv": 0.9951873108293563,
+        "accepted_plume": 24,
+        "accepted_precision": 0.030150990507149082,
+        "accepted_recall": 0.4166666666666667,
+        "accepted_samples": 202,
+        "accepted_specificity": 0.9,
+        "sample_coverage": 0.3488773747841105,
+        "weighted_confusion": {
+          "fn": 7.0,
+          "fp": 160.83203125,
+          "tn": 1447.48828125,
+          "tp": 5.0
+        },
+        "weighted_coverage": 0.36817094126334926
+      },
+      "test_unweighted": {
+        "accuracy": 0.8601036269430051,
+        "auroc": 0.6729535914179104,
+        "average_precision": 0.18387163985463853,
+        "brier": 0.10333831505966982,
+        "false_positive_rate": 0.037109375,
+        "fn": 62.0,
+        "fp": 19.0,
+        "negative_predictive_value": 0.8882882882882883,
+        "precision": 0.20833333333333334,
+        "recall": 0.07462686567164178,
+        "specificity": 0.962890625,
+        "tn": 493.0,
+        "tp": 5.0
+      },
+      "train_positive": 256,
+      "validation": {
+        "accuracy": 0.6822916666666666,
+        "auroc": 0.61676025390625,
+        "average_precision": 0.46919731189481073,
+        "brier": 0.2610382436571009,
+        "false_positive_rate": 0.046875,
+        "fn": 110.0,
+        "fp": 12.0,
+        "negative_predictive_value": 0.6892655367231638,
+        "precision": 0.6,
+        "recall": 0.140625,
+        "specificity": 0.953125,
+        "tn": 244.0,
+        "tp": 18.0
+      }
+    },
+    {
+      "name": "physics_scene_logistic",
+      "operating_rule": {
+        "lower_no_plume_threshold": 0.032568077659752656,
+        "lower_objective": "maximum representative-weighted coverage at NPV >= 0.95",
+        "lower_selection": {
+          "accepted_samples": 83,
+          "npv": 0.951100112970036,
+          "weighted_coverage": 0.24428353658536586
+        },
+        "selected_on": "internal_validation",
+        "upper_objective": "maximum recall at observed FPR <= 0.05",
+        "upper_plume_threshold": 0.30874936122316343
+      },
+      "test_group_bootstrap": {
+        "recall_95ci": [
+          0.0,
+          0.10909090909090909
+        ],
+        "replicates": 2000,
+        "specificity_95ci": [
+          0.9613134062045492,
+          0.9920322685401535
+        ],
+        "unit": "frozen 25 km group"
+      },
+      "test_representative_weighted": {
+        "accuracy": 0.9640733285048853,
+        "auroc": 0.6886077425373135,
+        "average_precision": 0.02714381071421365,
+        "brier": 0.02558916210585618,
+        "false_positive_rate": 0.021484375,
+        "fn": 65.0,
+        "fp": 93.11328125,
+        "negative_predictive_value": 0.9849043868904035,
+        "precision": 0.021027557599901433,
+        "recall": 0.029850746268656716,
+        "specificity": 0.978515625,
+        "tn": 4240.88671875,
+        "tp": 2.0
+      },
+      "test_selective": {
+        "abstention_rate": 0.5474956822107081,
+        "accepted_error_rate": 0.049739371534195935,
+        "accepted_no_plume": 249,
+        "accepted_no_plume_npv": 0.9940540132507244,
+        "accepted_plume": 13,
+        "accepted_precision": 0.021027557599901433,
+        "accepted_recall": 0.14285714285714285,
+        "accepted_samples": 262,
+        "accepted_specificity": 0.9556451612903226,
+        "sample_coverage": 0.4525043177892919,
+        "weighted_confusion": {
+          "fn": 12.0,
+          "fp": 93.11328125,
+          "tn": 2006.16796875,
+          "tp": 2.0
+        },
+        "weighted_coverage": 0.48018206089525106
+      },
+      "test_unweighted": {
+        "accuracy": 0.8687392055267703,
+        "auroc": 0.6886077425373135,
+        "average_precision": 0.18991816500065278,
+        "brier": 0.1044158207367365,
+        "false_positive_rate": 0.021484375,
+        "fn": 65.0,
+        "fp": 11.0,
+        "negative_predictive_value": 0.8851590106007067,
+        "precision": 0.15384615384615385,
+        "recall": 0.029850746268656716,
+        "specificity": 0.978515625,
+        "tn": 501.0,
+        "tp": 2.0
+      },
+      "train_positive": 256,
+      "validation": {
+        "accuracy": 0.6822916666666666,
+        "auroc": 0.596832275390625,
+        "average_precision": 0.43898538819940447,
+        "brier": 0.2601476149809558,
+        "false_positive_rate": 0.04296875,
+        "fn": 111.0,
+        "fp": 11.0,
+        "negative_predictive_value": 0.6882022471910112,
+        "precision": 0.6071428571428571,
+        "recall": 0.1328125,
+        "specificity": 0.95703125,
+        "tn": 245.0,
+        "tp": 17.0
+      }
+    },
+    {
+      "name": "physics_hist_gradient_boosting",
+      "operating_rule": {
+        "lower_no_plume_threshold": 0.0008225295732972002,
+        "lower_objective": "maximum representative-weighted coverage at NPV >= 0.95",
+        "lower_selection": {
+          "accepted_samples": 32,
+          "npv": 0.9505836303907178,
+          "weighted_coverage": 0.09400625525651808
+        },
+        "selected_on": "internal_validation",
+        "upper_objective": "maximum recall at observed FPR <= 0.05",
+        "upper_plume_threshold": 0.6926579396823691
+      },
+      "test_group_bootstrap": {
+        "recall_95ci": [
+          0.034482758620689655,
+          0.2444557823129251
+        ],
+        "replicates": 2000,
+        "specificity_95ci": [
+          0.920388349514563,
+          0.9694698983218468
+        ],
+        "unit": "frozen 25 km group"
+      },
+      "test_representative_weighted": {
+        "accuracy": 0.9344351780845263,
+        "auroc": 0.6475338152985075,
+        "average_precision": 0.02354230484127956,
+        "brier": 0.07666763659872225,
+        "false_positive_rate": 0.052734375,
+        "fn": 60.0,
+        "fp": 228.55078125,
+        "negative_predictive_value": 0.9855957912702618,
+        "precision": 0.029717583456327423,
+        "recall": 0.1044776119402985,
+        "specificity": 0.947265625,
+        "tn": 4105.44921875,
+        "tp": 7.0
+      },
+      "test_selective": {
+        "abstention_rate": 0.8117443868739206,
+        "accepted_error_rate": 0.2840887585162756,
+        "accepted_no_plume": 75,
+        "accepted_no_plume_npv": 0.9898317875796874,
+        "accepted_plume": 34,
+        "accepted_precision": 0.029717583456327423,
+        "accepted_recall": 0.5384615384615384,
+        "accepted_samples": 109,
+        "accepted_specificity": 0.71875,
+        "sample_coverage": 0.18825561312607944,
+        "weighted_confusion": {
+          "fn": 6.0,
+          "fp": 228.55078125,
+          "tn": 584.07421875,
+          "tp": 7.0
+        },
+        "weighted_coverage": 0.1875994092251761
+      },
+      "test_unweighted": {
+        "accuracy": 0.8497409326424871,
+        "auroc": 0.6475338152985075,
+        "average_precision": 0.16852273903507153,
+        "brier": 0.13936937792444865,
+        "false_positive_rate": 0.052734375,
+        "fn": 60.0,
+        "fp": 27.0,
+        "negative_predictive_value": 0.8899082568807339,
+        "precision": 0.20588235294117646,
+        "recall": 0.1044776119402985,
+        "specificity": 0.947265625,
+        "tn": 485.0,
+        "tp": 7.0
+      },
+      "train_positive": 256,
+      "validation": {
+        "accuracy": 0.6822916666666666,
+        "auroc": 0.551361083984375,
+        "average_precision": 0.421681632327578,
+        "brier": 0.2651979791226044,
+        "false_positive_rate": 0.046875,
+        "fn": 110.0,
+        "fp": 12.0,
+        "negative_predictive_value": 0.6892655367231638,
+        "precision": 0.6,
+        "recall": 0.140625,
+        "specificity": 0.953125,
+        "tn": 244.0,
+        "tp": 18.0
+      }
+    }
+  ],
+  "promotion_gate_passed_on_development_tranche": false,
+  "provenance": {
+    "adapter_sha256": "e3bd482ea5372e482b10700dce977485f2323a62f2fefc00907c4176d9d62147",
+    "git_commit": "0d9bcbebcd7c30f14e386b6b1194745035492d6c",
+    "git_tracked_worktree_dirty_at_start": false,
+    "numpy": "2.4.4",
+    "python": "3.11.14",
+    "rasterio": "1.4.4",
+    "script": "tools/run_mars_dev_scene_baselines.py",
+    "script_sha256": "fae79eb763e2ae82a94605ae35c35fee9e850e16c50822fddfb293109157fe68",
+    "sklearn": "1.9.0"
+  },
+  "schema_version": 1,
+  "scope": "group_disjoint_development_tranche_not_final_paper_claim",
+  "source": {
+    "development_manifest_sha256": "e59985b592a4bd1cf0561717c680116242266bf19b86069160a00debd72de3d3",
+    "feature_cache_identity": {
+      "adapter_sha256": "e3bd482ea5372e482b10700dce977485f2323a62f2fefc00907c4176d9d62147",
+      "feature_schema": "mars_scene_features_v1",
+      "manifest_sha256": "e59985b592a4bd1cf0561717c680116242266bf19b86069160a00debd72de3d3"
+    },
+    "repository": "UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32"
+  }
+}

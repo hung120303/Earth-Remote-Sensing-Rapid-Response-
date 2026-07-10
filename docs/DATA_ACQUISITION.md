@@ -98,6 +98,32 @@ train/validation split has zero 25 km group overlap. The primary strict spatial 
 4,401 official-test rows (67 plume / 4,334 no plume) across 150 groups that have zero overlap with
 official training. Released validation and overlapping official test rows are comparability-only.
 
+## Verified development tranche
+
+For architecture and baseline iteration before the full 54.441 GiB transfer, the deterministic
+development tranche contains 1,731 scenes / 4,364 assets / exactly 1,834,308,393 bytes (1.708 GiB):
+
+- internal training: 256 plume + 512 no plume;
+- group-disjoint internal validation: 128 plume + 256 no plume;
+- strict spatial benchmark: all 67 available clear-S2 plume rows + 512 group-diverse no-plume rows.
+
+The sample-manifest identity is
+`e59985b592a4bd1cf0561717c680116242266bf19b86069160a00debd72de3d3`; the asset-catalog identity
+is `03e023bcdfbabf08e985418d39ae7245d2218cfcd4d73670ed5b88319bb16ee3`. All 4,364 assets have
+been independently verified; the compact receipt is
+`reports/acquisition/mars_s2l_development_download.json`.
+
+Rebuild and verify:
+
+```bash
+python tools/build_mars_dev_cohort.py
+python tools/build_mars_dev_cohort.py --verify-only
+python tools/acquire_mars_cohort.py --catalog-file publication_dev_remote_catalog.jsonl --verify-only
+```
+
+The development tranche is deliberately class-enriched. It is suitable for pipeline and baseline
+screening, not a prevalence or final-paper estimate.
+
 ### EMIT methane labels
 
 - **EMIT L2B CH4PLM V002** is the preferred source for new work: <https://www.earthdata.nasa.gov/data/catalog/lpcloud-emitl2bch4plm-002>

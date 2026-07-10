@@ -1,0 +1,84 @@
+{
+  "assets": {
+    "binary_gib": 1.708,
+    "count": 4364,
+    "decimal_gb": 1.834,
+    "total_bytes": 1834308393
+  },
+  "cohort": {
+    "by_role_label": {
+      "internal_training:NO_PLUME": {
+        "groups": 97,
+        "locations": 164,
+        "rows": 512
+      },
+      "internal_training:PLUME": {
+        "groups": 42,
+        "locations": 86,
+        "rows": 256
+      },
+      "internal_validation:NO_PLUME": {
+        "groups": 24,
+        "locations": 57,
+        "rows": 256
+      },
+      "internal_validation:PLUME": {
+        "groups": 8,
+        "locations": 34,
+        "rows": 128
+      },
+      "strict_spatial_test:NO_PLUME": {
+        "groups": 150,
+        "locations": 218,
+        "rows": 512
+      },
+      "strict_spatial_test:PLUME": {
+        "groups": 19,
+        "locations": 20,
+        "rows": 67
+      }
+    },
+    "groups": 272,
+    "locations": 486,
+    "negative_samples": 1280,
+    "positive_samples": 451,
+    "sample_count": 1731
+  },
+  "generated_at_utc": "2026-07-10T20:13:13.895246+00:00",
+  "identities": {
+    "asset_catalog_sha256": "03e023bcdfbabf08e985418d39ae7245d2218cfcd4d73670ed5b88319bb16ee3",
+    "sample_manifest_sha256": "e59985b592a4bd1cf0561717c680116242266bf19b86069160a00debd72de3d3"
+  },
+  "local_ignored_artifacts": {
+    "asset_catalog": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_dev_remote_catalog.jsonl",
+    "sample_manifest": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_dev_samples.jsonl"
+  },
+  "provenance": {
+    "git_commit": "02875e25f060a08603711f67cbecfc589c54c6c2",
+    "git_tracked_worktree_dirty_at_start": false,
+    "python": "3.13.12",
+    "script": "tools/build_mars_dev_cohort.py",
+    "script_sha256": "69220ce49fb372e9e936d2ae13a83158b22dc7012c1a60d41521da376db42bda"
+  },
+  "schema_version": 1,
+  "selection": {
+    "class_enriched": true,
+    "method": "stable hash rank with round-robin sampling across frozen 25 km groups",
+    "paper_claim_scope": false,
+    "seed": 20260711,
+    "targets": {
+      "internal_training:NO_PLUME": 512,
+      "internal_training:PLUME": 256,
+      "internal_validation:NO_PLUME": 256,
+      "internal_validation:PLUME": 128,
+      "strict_spatial_test:NO_PLUME": 512,
+      "strict_spatial_test:PLUME": 67
+    }
+  },
+  "source": {
+    "assignment_sha256": "49d48669c765f06555f90a9fb94647e4983cbce13a983805e5fa440310c11671",
+    "protocol_sha256": "73fe3725390ff90b61d7d0f78821f580adf25cec3e7e1c2ce83a0ba3f70e05d0",
+    "repository": "UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32"
+  }
+}
