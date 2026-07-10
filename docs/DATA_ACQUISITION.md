@@ -81,6 +81,19 @@ The downloader keeps `.part` files for interrupted transfers, checks a 5 GiB fre
 and verifies LFS SHA-256 or Git blob SHA-1 identities from the frozen catalog. `--max-assets N` is
 only for downloader smoke tests and must never be treated as a complete research cohort.
 
+Freeze or verify the publication evaluation roles before training:
+
+```bash
+python tools/build_mars_protocol.py
+python tools/build_mars_protocol.py --verify-only
+```
+
+The machine-readable specification is `configs/mars_publication_protocol.json`; detailed ignored
+assignments are `publication_protocol_assignments.jsonl` under the MARS directory. The internal
+train/validation split has zero 25 km group overlap. The primary strict spatial test contains
+4,401 official-test rows (67 plume / 4,334 no plume) across 150 groups that have zero overlap with
+official training. Released validation and overlapping official test rows are comparability-only.
+
 ### EMIT methane labels
 
 - **EMIT L2B CH4PLM V002** is the preferred source for new work: <https://www.earthdata.nasa.gov/data/catalog/lpcloud-emitl2bch4plm-002>

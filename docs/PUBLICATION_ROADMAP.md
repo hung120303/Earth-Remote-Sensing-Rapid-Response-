@@ -99,8 +99,10 @@ items: 5,643 plume positives and 82,244 reviewed negatives. A first S2-only, cle
 `percentage_clear >= 80`, background-present cohort contains 56,552 items (3,826 positive and
 52,726 negative). It has 29,708 train, 5,527 validation, and 21,317 test items. The official
 splits have no exact scene overlap, but they do share physical locations: 89 train/validation,
-592 train/test, and 84 validation/test. The primary geographic-transfer result must therefore use
-the 697 test-only locations (15,655 items), while retaining the full official test for comparison.
+592 train/test, and 84 validation/test. The final protocol is stricter than physical-site novelty:
+the primary geographic-transfer result uses only official-test rows whose connected 25 km group
+contains no official-train row. The test-only-location view is secondary, while the full official
+test is retained for released-benchmark comparison.
 See `reports/acquisition/MARS_S2L_METADATA_AUDIT.md` for the reproducible evidence.
 
 Pin the initial import to repository revision:
@@ -302,15 +304,29 @@ split, group_id, source_urls, checksums
 
 Split rules:
 
-1. Preserve the official MARS-S2L test set as frozen external evidence; never tune on it.
+1. Preserve the full official MARS-S2L validation/test sets for comparability; never tune on either.
 2. Group by connected components sharing physical source, a 25 km geographic neighborhood,
    acquisition sequence, or near-duplicate imagery.
-3. Keep complete regions/sites out of training for the geographic-transfer test.
-4. Fit normalization and class weights on training groups only.
-5. Choose thresholds and calibrators on validation groups only.
-6. Keep EMIT V002 and Carbon Mapper external tests untouched until the model and operating point
+3. Split the released training rows into a deterministic internal train/validation partition by
+   complete 25 km group. Fit normalization, class weights, thresholds, component area, and
+   calibrators on those internal roles only.
+4. Use as the primary test only official-test groups with no official-train member. Report the
+   full official test and test-only-location views as explicitly weaker secondary comparisons.
+5. Keep EMIT V002 and Carbon Mapper external tests untouched until the model and operating point
    are frozen.
-7. Deduplicate against the current ERSRR corpus and all external catalogs before splitting.
+6. Deduplicate against the current ERSRR corpus and all external catalogs before splitting.
+
+The frozen machine-readable protocol is `configs/mars_publication_protocol.json`. Its ignored
+56,552-row assignment manifest has SHA-256
+`49d48669c765f06555f90a9fb94647e4983cbce13a983805e5fa440310c11671`. Exact roles are:
+
+- internal training: 23,763 rows / 98 groups / 2,007 plume;
+- internal validation: 5,945 rows / 24 groups / 505 plume;
+- strict 25 km test: 4,401 rows / 150 groups / 67 plume / 4,334 no plume;
+- official validation and the remaining 16,916 overlapping official-test rows: comparability only.
+
+Both enforced group-overlap invariants are zero. See
+`reports/acquisition/MARS_S2L_EVALUATION_PROTOCOL.md`.
 
 ## Model architecture hypothesis
 
@@ -415,9 +431,9 @@ targets, not current claims. For context, the current MARS-S2L paper reports 78%
 
 ### Phase 0 - freeze the protocol (2-3 days)
 
-- Convert this plan into a machine-readable experiment specification.
-- Define the four label states and primary metric before training.
-- Record dataset licenses and immutable source revisions.
+- [x] Convert this plan into a machine-readable experiment specification.
+- [x] Define the four label states and primary metric before training.
+- [x] Record dataset licenses and immutable source revisions.
 
 Exit: signed-off protocol and no ambiguity about what `NO_PLUME` means.
 
