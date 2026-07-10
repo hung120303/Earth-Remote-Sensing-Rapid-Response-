@@ -1,0 +1,600 @@
+{
+  "adapter_contract": {
+    "cloud_classes": "0 clear; 1 thick cloud; 2 thin cloud; 3 cloud shadow",
+    "enhancement_unit_status": "conflict: GeoTIFF tags may say DeltaCH4(ppm), while the pinned MARS-S2L README describes enhancement values as ppb; do not use quantitative units until reconciled with the data producer",
+    "negative_target": "zero mask synthesized in memory",
+    "observable": "all 12 radiometric bands nonzero and cloud class 0",
+    "reflectance": "uint16 / 5000, clipped to [0,2], matching released loader"
+  },
+  "generated_at_utc": "2026-07-10T19:57:28.621107+00:00",
+  "input": {
+    "pilot_identity_sha256": "4e23043682f4f60a8a8b811a50fd7a080580c743899de0be15cef791d7104942",
+    "pilot_manifest_sha256": "901e6efdff13360181a90addb6a58d7b7510581ecae468db3a16de5db0887d1b",
+    "repository": "UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "sample_count": 18,
+    "split_counts": {
+      "test": 6,
+      "train": 6,
+      "val": 6
+    },
+    "test_locations": "absent from train and validation by acquisition selection"
+  },
+  "limitations": [
+    "Only six scenes per split and three examples per class.",
+    "The pilot was selected to verify contracts, not represent the deployment distribution.",
+    "No confidence interval or architecture promotion is valid from this sample.",
+    "The enhancement raster unit conflict blocks quantitative regression claims."
+  ],
+  "models": [
+    {
+      "name": "MBMP release-compatible",
+      "operating_rule": {
+        "minimum_connected_pixels": 25,
+        "pixel_score_threshold": 0.075,
+        "selection_objective": "maximize recall at zero observed validation false positives; then prefer the less restrictive connected-area rule",
+        "selection_split": "val",
+        "validation_negative_resolution": "one false positive equals 0.333 FPR; pilot cannot estimate a 0.05 target"
+      },
+      "test": {
+        "accuracy": 0.3333333333333333,
+        "auroc": 0.11111111111111112,
+        "average_precision": 0.41111111111111115,
+        "balanced_accuracy": 0.3333333333333333,
+        "brier": 0.490611691428326,
+        "false_positive_rate": 0.6666666666666666,
+        "fn": 2,
+        "fp": 2,
+        "n": 6,
+        "negative": 3,
+        "pixel": {
+          "average_precision": 0.016344047261475047,
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "observable_pixels": 240000,
+          "positive_pixels": 2687,
+          "predicted_positive_pixels": 3659,
+          "truth_positive_pixels": 2687
+        },
+        "positive": 3,
+        "precision": 0.3333333333333333,
+        "recall": 0.3333333333333333,
+        "samples": [
+          {
+            "label": 1,
+            "predicted_pixels": 33,
+            "prediction": 1,
+            "sample_id": "6125e81d-8cab-4b11-bb27-341d0ef18aca",
+            "scene_score_q99": 0.005342104937881231,
+            "truth_pixels": 472
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "a61cd7db-f827-477a-b6cb-e3dadfbfb6db",
+            "scene_score_q99": 0.009269404225051403,
+            "truth_pixels": 1557
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "d8a44e19-ef53-4861-87fc-2243a9b73555",
+            "scene_score_q99": 0.025801565498113632,
+            "truth_pixels": 658
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "e96d02fa-3ae6-4bd1-8419-9ef19e9807b9",
+            "scene_score_q99": 0.012828143313527107,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 3576,
+            "prediction": 1,
+            "sample_id": "9a6cdd74-0a0d-4d6c-ac2c-015365fd9bcb",
+            "scene_score_q99": 0.13880091905593872,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 50,
+            "prediction": 1,
+            "sample_id": "bb753947-ce4c-4923-bd0a-b56aa480efbd",
+            "scene_score_q99": 0.0654664859175682,
+            "truth_pixels": 0
+          }
+        ],
+        "specificity": 0.3333333333333333,
+        "tn": 1,
+        "tp": 1
+      },
+      "validation": {
+        "accuracy": 0.8333333333333334,
+        "auroc": 0.7777777777777779,
+        "average_precision": 0.8055555555555556,
+        "balanced_accuracy": 0.8333333333333333,
+        "brier": 0.47154216029583146,
+        "false_positive_rate": 0.0,
+        "fn": 1,
+        "fp": 0,
+        "n": 6,
+        "negative": 3,
+        "pixel": {
+          "average_precision": 0.05499893578583567,
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "observable_pixels": 240000,
+          "positive_pixels": 4189,
+          "predicted_positive_pixels": 347,
+          "truth_positive_pixels": 4189
+        },
+        "positive": 3,
+        "precision": 1.0,
+        "recall": 0.6666666666666666,
+        "samples": [
+          {
+            "label": 1,
+            "predicted_pixels": 295,
+            "prediction": 1,
+            "sample_id": "b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428",
+            "scene_score_q99": 0.046635087579488754,
+            "truth_pixels": 2742
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 52,
+            "prediction": 1,
+            "sample_id": "61fff5fc-99ad-45ee-ade9-41b82db3b036",
+            "scene_score_q99": 0.020579161122441292,
+            "truth_pixels": 335
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "a525b9d1-8ac6-4549-bc0e-b1b629e42b3c",
+            "scene_score_q99": 0.020142218098044395,
+            "truth_pixels": 1112
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "510b71da-2561-42a5-945c-8f1c44df5563",
+            "scene_score_q99": 0.012942615896463394,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "f7b9fa6d-faae-4a9d-96e5-1bd3c0633e52",
+            "scene_score_q99": 0.005192762706428766,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "3d61dd00-93e1-443e-a515-bc36103f28df",
+            "scene_score_q99": 0.027701571583747864,
+            "truth_pixels": 0
+          }
+        ],
+        "specificity": 1.0,
+        "tn": 3,
+        "tp": 2
+      }
+    },
+    {
+      "name": "MBMP validity-aware",
+      "operating_rule": {
+        "minimum_connected_pixels": 25,
+        "pixel_score_threshold": 0.075,
+        "selection_objective": "maximize recall at zero observed validation false positives; then prefer the less restrictive connected-area rule",
+        "selection_split": "val",
+        "validation_negative_resolution": "one false positive equals 0.333 FPR; pilot cannot estimate a 0.05 target"
+      },
+      "test": {
+        "accuracy": 0.3333333333333333,
+        "auroc": 0.11111111111111112,
+        "average_precision": 0.41111111111111115,
+        "balanced_accuracy": 0.3333333333333333,
+        "brier": 0.490611691428326,
+        "false_positive_rate": 0.6666666666666666,
+        "fn": 2,
+        "fp": 2,
+        "n": 6,
+        "negative": 3,
+        "pixel": {
+          "average_precision": 0.016344047261475047,
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "observable_pixels": 240000,
+          "positive_pixels": 2687,
+          "predicted_positive_pixels": 3659,
+          "truth_positive_pixels": 2687
+        },
+        "positive": 3,
+        "precision": 0.3333333333333333,
+        "recall": 0.3333333333333333,
+        "samples": [
+          {
+            "label": 1,
+            "predicted_pixels": 33,
+            "prediction": 1,
+            "sample_id": "6125e81d-8cab-4b11-bb27-341d0ef18aca",
+            "scene_score_q99": 0.005342104937881231,
+            "truth_pixels": 472
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "a61cd7db-f827-477a-b6cb-e3dadfbfb6db",
+            "scene_score_q99": 0.009269404225051403,
+            "truth_pixels": 1557
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "d8a44e19-ef53-4861-87fc-2243a9b73555",
+            "scene_score_q99": 0.025801565498113632,
+            "truth_pixels": 658
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "e96d02fa-3ae6-4bd1-8419-9ef19e9807b9",
+            "scene_score_q99": 0.012828143313527107,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 3576,
+            "prediction": 1,
+            "sample_id": "9a6cdd74-0a0d-4d6c-ac2c-015365fd9bcb",
+            "scene_score_q99": 0.13880091905593872,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 50,
+            "prediction": 1,
+            "sample_id": "bb753947-ce4c-4923-bd0a-b56aa480efbd",
+            "scene_score_q99": 0.0654664859175682,
+            "truth_pixels": 0
+          }
+        ],
+        "specificity": 0.3333333333333333,
+        "tn": 1,
+        "tp": 1
+      },
+      "validation": {
+        "accuracy": 0.8333333333333334,
+        "auroc": 0.7777777777777779,
+        "average_precision": 0.8055555555555556,
+        "balanced_accuracy": 0.8333333333333333,
+        "brier": 0.47154216029583146,
+        "false_positive_rate": 0.0,
+        "fn": 1,
+        "fp": 0,
+        "n": 6,
+        "negative": 3,
+        "pixel": {
+          "average_precision": 0.05499893578583567,
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "observable_pixels": 240000,
+          "positive_pixels": 4189,
+          "predicted_positive_pixels": 347,
+          "truth_positive_pixels": 4189
+        },
+        "positive": 3,
+        "precision": 1.0,
+        "recall": 0.6666666666666666,
+        "samples": [
+          {
+            "label": 1,
+            "predicted_pixels": 295,
+            "prediction": 1,
+            "sample_id": "b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428",
+            "scene_score_q99": 0.046635087579488754,
+            "truth_pixels": 2742
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 52,
+            "prediction": 1,
+            "sample_id": "61fff5fc-99ad-45ee-ade9-41b82db3b036",
+            "scene_score_q99": 0.020579161122441292,
+            "truth_pixels": 335
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "a525b9d1-8ac6-4549-bc0e-b1b629e42b3c",
+            "scene_score_q99": 0.020142218098044395,
+            "truth_pixels": 1112
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "510b71da-2561-42a5-945c-8f1c44df5563",
+            "scene_score_q99": 0.012942615896463394,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "f7b9fa6d-faae-4a9d-96e5-1bd3c0633e52",
+            "scene_score_q99": 0.005192762706428766,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "3d61dd00-93e1-443e-a515-bc36103f28df",
+            "scene_score_q99": 0.027701571583747864,
+            "truth_pixels": 0
+          }
+        ],
+        "specificity": 1.0,
+        "tn": 3,
+        "tp": 2
+      }
+    },
+    {
+      "name": "Pixel logistic (13 features)",
+      "operating_rule": {
+        "minimum_connected_pixels": 1,
+        "pixel_score_threshold": 1.0,
+        "selection_objective": "maximize recall at zero observed validation false positives; then prefer the less restrictive connected-area rule",
+        "selection_split": "val",
+        "validation_negative_resolution": "one false positive equals 0.333 FPR; pilot cannot estimate a 0.05 target"
+      },
+      "test": {
+        "accuracy": 0.5,
+        "auroc": 0.0,
+        "average_precision": 0.38333333333333336,
+        "balanced_accuracy": 0.5,
+        "brier": 0.5841191365280305,
+        "false_positive_rate": 0.6666666666666666,
+        "fn": 1,
+        "fp": 2,
+        "n": 6,
+        "negative": 3,
+        "pixel": {
+          "average_precision": 0.013254533414048437,
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "observable_pixels": 240000,
+          "positive_pixels": 2687,
+          "predicted_positive_pixels": 12835,
+          "truth_positive_pixels": 2687
+        },
+        "positive": 3,
+        "precision": 0.5,
+        "recall": 0.6666666666666666,
+        "samples": [
+          {
+            "label": 1,
+            "predicted_pixels": 1,
+            "prediction": 1,
+            "sample_id": "6125e81d-8cab-4b11-bb27-341d0ef18aca",
+            "scene_score_q99": 0.3060061037540436,
+            "truth_pixels": 472
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 3,
+            "prediction": 1,
+            "sample_id": "a61cd7db-f827-477a-b6cb-e3dadfbfb6db",
+            "scene_score_q99": 0.9983242154121399,
+            "truth_pixels": 1557
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "d8a44e19-ef53-4861-87fc-2243a9b73555",
+            "scene_score_q99": 0.8479528427124023,
+            "truth_pixels": 658
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "e96d02fa-3ae6-4bd1-8419-9ef19e9807b9",
+            "scene_score_q99": 0.9999830722808838,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 11480,
+            "prediction": 1,
+            "sample_id": "9a6cdd74-0a0d-4d6c-ac2c-015365fd9bcb",
+            "scene_score_q99": 1.0,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 1351,
+            "prediction": 1,
+            "sample_id": "bb753947-ce4c-4923-bd0a-b56aa480efbd",
+            "scene_score_q99": 1.0,
+            "truth_pixels": 0
+          }
+        ],
+        "specificity": 0.3333333333333333,
+        "tn": 1,
+        "tp": 2
+      },
+      "validation": {
+        "accuracy": 1.0,
+        "auroc": 0.6666666666666667,
+        "average_precision": 0.7555555555555555,
+        "balanced_accuracy": 1.0,
+        "brier": 0.25832204940466336,
+        "false_positive_rate": 0.0,
+        "fn": 0,
+        "fp": 0,
+        "n": 6,
+        "negative": 3,
+        "pixel": {
+          "average_precision": 0.017522005775966347,
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "observable_pixels": 240000,
+          "positive_pixels": 4189,
+          "predicted_positive_pixels": 147,
+          "truth_positive_pixels": 4189
+        },
+        "positive": 3,
+        "precision": 1.0,
+        "recall": 1.0,
+        "samples": [
+          {
+            "label": 1,
+            "predicted_pixels": 108,
+            "prediction": 1,
+            "sample_id": "b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428",
+            "scene_score_q99": 0.9303852319717407,
+            "truth_pixels": 2742
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 37,
+            "prediction": 1,
+            "sample_id": "61fff5fc-99ad-45ee-ade9-41b82db3b036",
+            "scene_score_q99": 0.44805908203125,
+            "truth_pixels": 335
+          },
+          {
+            "label": 1,
+            "predicted_pixels": 2,
+            "prediction": 1,
+            "sample_id": "a525b9d1-8ac6-4549-bc0e-b1b629e42b3c",
+            "scene_score_q99": 0.7823881506919861,
+            "truth_pixels": 1112
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "510b71da-2561-42a5-945c-8f1c44df5563",
+            "scene_score_q99": 0.8345682621002197,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "f7b9fa6d-faae-4a9d-96e5-1bd3c0633e52",
+            "scene_score_q99": 0.21272507309913635,
+            "truth_pixels": 0
+          },
+          {
+            "label": 0,
+            "predicted_pixels": 0,
+            "prediction": 0,
+            "sample_id": "3d61dd00-93e1-443e-a515-bc36103f28df",
+            "scene_score_q99": 0.6718156337738037,
+            "truth_pixels": 0
+          }
+        ],
+        "specificity": 1.0,
+        "tn": 3,
+        "tp": 3
+      }
+    }
+  ],
+  "provenance": {
+    "adapter": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py",
+    "adapter_sha256": "15e9b2daf5fcbf487092bd82ea8d59035d6e4ef68862d03eeb260e71dba8d70f",
+    "git_commit": "e99c0925e95a11e5e3d700e3d7abc0a2c9529e19",
+    "git_tracked_worktree_dirty_at_start": false,
+    "numpy": "2.4.4",
+    "python": "3.11.14",
+    "rasterio": "1.4.4",
+    "script": "tools/run_mars_pilot_baselines.py",
+    "script_sha256": "8c8f8bfd14b7c318f4633c7c81c3d8de860fa5b2d929eb59380f0afea5e0e2e3",
+    "sklearn": "1.9.0"
+  },
+  "schema_version": 1,
+  "scope": "contract_smoke_test_not_accuracy_claim",
+  "training": {
+    "pixel_logistic_features": [
+      "1-minus-valid-aware-MBMP",
+      "normalized_change_0",
+      "normalized_change_1",
+      "normalized_change_2",
+      "normalized_change_3",
+      "normalized_change_4",
+      "normalized_change_5",
+      "log_change_0",
+      "log_change_1",
+      "log_change_2",
+      "log_change_3",
+      "log_change_4",
+      "log_change_5"
+    ],
+    "pixel_logistic_negative_cap_per_train_scene": 5000,
+    "seed": 42
+  },
+  "trivial_test_baselines": {
+    "all_no_plume": {
+      "accuracy": 0.5,
+      "auroc": 0.5,
+      "average_precision": 0.5,
+      "balanced_accuracy": 0.5,
+      "brier": 0.5,
+      "false_positive_rate": 0.0,
+      "fn": 3,
+      "fp": 0,
+      "n": 6,
+      "negative": 3,
+      "positive": 3,
+      "precision": null,
+      "recall": 0.0,
+      "specificity": 1.0,
+      "tn": 3,
+      "tp": 0
+    },
+    "all_plume": {
+      "accuracy": 0.5,
+      "auroc": 0.5,
+      "average_precision": 0.5,
+      "balanced_accuracy": 0.5,
+      "brier": 0.5,
+      "false_positive_rate": 1.0,
+      "fn": 0,
+      "fp": 3,
+      "n": 6,
+      "negative": 3,
+      "positive": 3,
+      "precision": 0.5,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "tn": 0,
+      "tp": 3
+    }
+  },
+  "upstream_reference": {
+    "inspected_commit": "f7d264c2c845dfba1cb27f76ef6026275f8d8758",
+    "loader_definition": "marss2l/loaders.py",
+    "mbmp_definition": "marss2l/mbmp_torch.py",
+    "repository": "https://github.com/UNEP-IMEO-MARS/marss2l"
+  }
+}
