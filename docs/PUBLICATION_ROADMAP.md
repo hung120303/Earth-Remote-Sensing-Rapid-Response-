@@ -126,6 +126,19 @@ official splits. Before a large transfer, generate a cohort manifest from the cr
 freeze its sample IDs and asset URLs, estimate its byte size, obtain storage approval, and fetch
 only its image/cloud-mask assets plus positive plume/enhancement assets.
 
+That inventory is now frozen at 56,552 samples and 120,756 unique assets totaling exactly
+58,455,597,233 bytes (58.456 GB / 54.441 GiB). Rebuild or verify it without downloading imagery:
+
+```bash
+python tools/build_mars_cohort.py
+python tools/build_mars_cohort.py --offline
+```
+
+The detailed ignored manifest and catalog are stored as
+`publication_s2_cohort.jsonl` and `publication_s2_remote_catalog.jsonl` under the local MARS path.
+Their hashes and the compact evidence are in
+`reports/acquisition/MARS_S2L_PUBLICATION_COHORT.md`.
+
 The deterministic 18-sample contract pilot is already available locally and can be independently
 verified and audited with:
 
@@ -453,8 +466,8 @@ shopping.
 ### Work that does not require user credentials
 
 - Pinned MARS-S2L metadata and the deterministic raster-contract pilot are downloaded, verified,
-  and audited. The next public-data action is a byte-estimated selective S2 cohort transfer after
-  explicit storage approval, not a full ~100 GB mirror.
+  and audited. A selective transfer is frozen at 120,756 assets / 58,455,597,233 bytes and awaits
+  explicit storage approval; do not perform a full ~100 GB mirror.
 - Build the MARS adapter, group/leakage audit, benchmark specification, and baseline runner.
 - Generate the exact larger EMIT candidate list from public CMR metadata before requesting more
   authenticated downloads.

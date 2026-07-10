@@ -48,10 +48,23 @@ a `DeltaCH4(ppm)` `float64` raster; negatives intentionally contain only the ima
 Ancillary descriptions are not universally populated, and cloud nodata can overlap the clear
 class, so resolve semantic roles from the pinned manifest and interpret cloud classes explicitly.
 
-Do not download the full mixed-sensor repository by default. The approved first cohort is limited
+Do not download the full mixed-sensor repository by default. The proposed first cohort is limited
 to official-split Sentinel-2 L1C rows with `observability=clear`, at least 80% clear coverage, and a
 background reference: 56,552 samples (3,826 plume / 52,726 no plume). Generate and freeze its
 asset manifest and total byte estimate before authorizing the large transfer.
+
+The frozen inventory resolves 120,756 unique assets totaling exactly 58,455,597,233 bytes
+(58.456 GB / 54.441 GiB). It can be rebuilt from the pinned API or verified entirely from the
+ignored local catalog:
+
+```bash
+python tools/build_mars_cohort.py
+python tools/build_mars_cohort.py --offline
+```
+
+No Hugging Face account is required. The authoritative download base is
+<https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L>; every asset URL is pinned and recorded in the
+ignored `publication_s2_cohort.jsonl`. Do not begin the 54.441 GiB transfer until storage approval.
 
 ### EMIT methane labels
 
