@@ -1,0 +1,157 @@
+{
+  "decision": "Validation-selected spatial baseline: `pixel_logistic_13_features`. It does not clear the promotion gate. Local per-pixel spectra are insufficient; implement the predeclared multi-scale target/reference encoder with joint scene presence, segmentation, and observability heads.",
+  "generated_at_utc": "2026-07-10T20:46:49.275345+00:00",
+  "limitations": [
+    "Class-enriched development tranche, not deployment prevalence.",
+    "Single classical fit seed; learned candidate requires five seeds.",
+    "Per-pixel logistic has no spatial receptive field beyond connected-component filtering.",
+    "Released MARS-S2L and CH4Net reproduction remains outstanding."
+  ],
+  "models": [
+    {
+      "name": "valid_aware_mbmp",
+      "operating_rule": {
+        "minimum_connected_pixels": 200,
+        "objective": "maximum scene recall at observed FPR <= 0.05, then pixel Dice",
+        "pixel_threshold": 0.19873046875,
+        "selected_on": "internal_validation"
+      },
+      "test": {
+        "false_positive_rate": 0.009765625,
+        "fn": 66,
+        "fp": 5,
+        "group_bootstrap": {
+          "recall_95ci": [
+            0.0,
+            0.07692307692307693
+          ],
+          "replicates": 2000,
+          "specificity_95ci": [
+            0.9787234042553191,
+            0.9981025566384911
+          ],
+          "unit": "frozen 25 km group"
+        },
+        "pixel": {
+          "average_precision": 0.01646979605377699,
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "predicted_positive_pixels": 4436,
+          "truth_positive_pixels": 97724
+        },
+        "precision": 0.16666666666666666,
+        "recall": 0.014925373134328358,
+        "specificity": 0.990234375,
+        "tn": 507,
+        "tp": 1
+      },
+      "validation": {
+        "false_positive_rate": 0.04296875,
+        "fn": 127,
+        "fp": 11,
+        "pixel_dice": 0.00978475494125237,
+        "precision": 0.08333333333333333,
+        "recall": 0.0078125,
+        "specificity": 0.95703125,
+        "tn": 245,
+        "tp": 1
+      }
+    },
+    {
+      "name": "pixel_logistic_13_features",
+      "operating_rule": {
+        "minimum_connected_pixels": 200,
+        "objective": "maximum scene recall at observed FPR <= 0.05, then pixel Dice",
+        "pixel_threshold": 1.0,
+        "selected_on": "internal_validation"
+      },
+      "test": {
+        "false_positive_rate": 0.01171875,
+        "fn": 67,
+        "fp": 6,
+        "group_bootstrap": {
+          "recall_95ci": [
+            0.0,
+            0.0
+          ],
+          "replicates": 2000,
+          "specificity_95ci": [
+            0.9770992366412213,
+            0.998019801980198
+          ],
+          "unit": "frozen 25 km group"
+        },
+        "pixel": {
+          "average_precision": 0.009148450836335519,
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "predicted_positive_pixels": 4949,
+          "truth_positive_pixels": 97724
+        },
+        "precision": 0.0,
+        "recall": 0.0,
+        "specificity": 0.98828125,
+        "tn": 506,
+        "tp": 0
+      },
+      "validation": {
+        "false_positive_rate": 0.03125,
+        "fn": 123,
+        "fp": 8,
+        "pixel_dice": 0.01253708437133547,
+        "precision": 0.38461538461538464,
+        "recall": 0.0390625,
+        "specificity": 0.96875,
+        "tn": 248,
+        "tp": 5
+      }
+    }
+  ],
+  "promotion_gate_passed_on_development_tranche": false,
+  "provenance": {
+    "adapter_sha256": "e3bd482ea5372e482b10700dce977485f2323a62f2fefc00907c4176d9d62147",
+    "git_commit": "9b17c95ca8de0219c5037189d0ade0a446581b45",
+    "git_tracked_worktree_dirty_at_start": false,
+    "numpy": "2.4.4",
+    "python": "3.11.14",
+    "rasterio": "1.4.4",
+    "script": "tools/run_mars_dev_pixel_baselines.py",
+    "script_sha256": "6aaca51b03077c304f2751432d5fb1e4a45ad21ae9af08843f1855d96da464e6",
+    "sklearn": "1.9.0"
+  },
+  "schema_version": 1,
+  "scope": "predeclared_spatial_development_baselines_not_final_paper_claim",
+  "source": {
+    "development_manifest_sha256": "e59985b592a4bd1cf0561717c680116242266bf19b86069160a00debd72de3d3",
+    "repository": "UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "score_cache_identity": {
+      "adapter_sha256": "e3bd482ea5372e482b10700dce977485f2323a62f2fefc00907c4176d9d62147",
+      "manifest_sha256": "e59985b592a4bd1cf0561717c680116242266bf19b86069160a00debd72de3d3",
+      "model_identity_sha256": "917afb98ac1368f8a3fc4ced57d7eb34af2d65aed7ffa78ed9c827d2953c67c9",
+      "score_schema": "mars_dev_pixel_scores_v1"
+    }
+  },
+  "training": {
+    "feature_names": [
+      "one_minus_valid_mbmp",
+      "normalized_change_B02",
+      "normalized_change_B03",
+      "normalized_change_B04",
+      "normalized_change_B08",
+      "normalized_change_B11",
+      "normalized_change_B12",
+      "log_change_B02",
+      "log_change_B03",
+      "log_change_B04",
+      "log_change_B08",
+      "log_change_B11",
+      "log_change_B12"
+    ],
+    "model_identity_sha256": "917afb98ac1368f8a3fc4ced57d7eb34af2d65aed7ffa78ed9c827d2953c67c9",
+    "sampled_negative_pixels": 393216,
+    "sampled_positive_pixels": 118744,
+    "training_scenes": 768
+  },
+  "validation_selected_model": "pixel_logistic_13_features"
+}

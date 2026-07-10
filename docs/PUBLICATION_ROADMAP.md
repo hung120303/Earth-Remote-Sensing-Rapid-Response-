@@ -77,6 +77,11 @@ availability section and recommends DOI-backed FAIR repositories for the code an
   validation recall. The validation-selected raw logistic reached 7.5% recall / 96.3% specificity
   on the spatial benchmark. Aggregate scene statistics are therefore inadequate; the next model
   must learn spatial plume morphology jointly with presence and observability.
+- The spatial baseline closes the remaining classical loophole. Validation-selected pixel
+  logistic achieved 3.9% recall at 3.1% FPR and then 0% recall on the spatial benchmark; MBMP
+  achieved 0.8% validation recall and 1.5% benchmark recall. Both have effectively zero pixel IoU.
+  Connected-component filtering cannot rescue a classifier without a learned spatial receptive
+  field.
 
 The current shared core and artifact contract remain useful engineering infrastructure. They do
 not establish a useful detector.
@@ -469,9 +474,10 @@ Exit: every sample resolves to a state, group, split, checksum, and product cont
 
 Exit: credible baseline table and documented discrepancies from published values.
 
-Current development status: native MBMP plus raw/physics scene baselines are complete and fail the
-promotion gate. Pixel-level MBMP/logistic evaluation and released CH4Net/MARS-S2L reproduction
-remain before Phase 2 exits.
+Current development status: native MBMP plus raw/physics scene and pixel-logistic baselines are
+complete and fail the promotion gate. Released CH4Net/MARS-S2L reproduction remains before Phase
+2 exits; the joint spatial candidate can now be implemented without further classical threshold
+search.
 
 ### Phase 3 - hard-negative and architecture experiments (2-4 weeks)
 
