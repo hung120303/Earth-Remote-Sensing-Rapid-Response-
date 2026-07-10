@@ -1,0 +1,396 @@
+{
+  "cohort": {
+    "groups": 24,
+    "negatives": 256,
+    "positives": 128,
+    "role": "internal_validation",
+    "samples": 384,
+    "strict_spatial_test_loaded": false
+  },
+  "correlations_on_positives": {
+    "presence_vs_segmentation_top1pct": {
+      "p_value": 1.0140360879779218e-49,
+      "spearman_r": 0.9089858655002059
+    },
+    "presence_vs_truth_area": {
+      "p_value": 5.3389319676824346e-05,
+      "spearman_r": 0.3492281038669131
+    }
+  },
+  "decision": "Use these validation-only error strata to define the expanded hard-negative/positive sampling plan. Do not modify a threshold or architecture from strict-test behavior.",
+  "decision_counts": {
+    "abstain": 97,
+    "no_plume": 224,
+    "plume": 63
+  },
+  "generated_at_utc": "2026-07-10T21:52:55.090277+00:00",
+  "operating_rule": {
+    "lower_no_plume_threshold": 0.416015625,
+    "minimum_connected_pixels": 100,
+    "pixel_threshold": 0.96923828125,
+    "upper_plume_threshold": 0.774169921875
+  },
+  "outcome_summaries": {
+    "false_negative": {
+      "count": 77,
+      "mask_detected_rate": 0.5324675324675324,
+      "mbmp_top1pct_mean": {
+        "count": 77,
+        "mean": 0.05130778620769451,
+        "median": 0.03421147167682648,
+        "q1": 0.019870031625032425,
+        "q3": 0.05991385877132416
+      },
+      "observable_fraction": {
+        "count": 77,
+        "mean": 0.9956568181818181,
+        "median": 1.0,
+        "q1": 1.0,
+        "q3": 1.0
+      },
+      "presence_score": {
+        "count": 77,
+        "mean": 0.3215912657898742,
+        "median": 0.25244140625,
+        "q1": 0.1353759765625,
+        "q3": 0.4970703125
+      },
+      "quality_score": {
+        "count": 77,
+        "mean": 0.6550261262175324,
+        "median": 0.67919921875,
+        "q1": 0.63671875,
+        "q3": 0.71142578125
+      },
+      "segmentation_top1pct_mean": {
+        "count": 77,
+        "mean": 0.891075577054705,
+        "median": 0.9503991603851318,
+        "q1": 0.82818603515625,
+        "q3": 0.9897314310073853
+      },
+      "top_countries": [
+        [
+          "United States of America",
+          33
+        ],
+        [
+          "Turkmenistan",
+          21
+        ],
+        [
+          "Algeria",
+          13
+        ],
+        [
+          "Iraq",
+          6
+        ],
+        [
+          "Egypt",
+          3
+        ],
+        [
+          "Jordan",
+          1
+        ]
+      ],
+      "truth_plume_pixels": {
+        "count": 77,
+        "mean": 1100.4025974025974,
+        "median": 643.0,
+        "q1": 425.0,
+        "q3": 994.0
+      },
+      "unique_groups": 8
+    },
+    "false_positive": {
+      "count": 12,
+      "mask_detected_rate": 1.0,
+      "mbmp_top1pct_mean": {
+        "count": 12,
+        "mean": 0.08363051060587168,
+        "median": 0.06621488183736801,
+        "q1": 0.0425616092979908,
+        "q3": 0.09918282926082611
+      },
+      "observable_fraction": {
+        "count": 12,
+        "mean": 0.99971875,
+        "median": 1.0,
+        "q1": 1.0,
+        "q3": 1.0
+      },
+      "presence_score": {
+        "count": 12,
+        "mean": 0.8399251302083334,
+        "median": 0.837890625,
+        "q1": 0.8057861328125,
+        "q3": 0.8720703125
+      },
+      "quality_score": {
+        "count": 12,
+        "mean": 0.6956380208333334,
+        "median": 0.69775390625,
+        "q1": 0.696044921875,
+        "q3": 0.702880859375
+      },
+      "segmentation_top1pct_mean": {
+        "count": 12,
+        "mean": 0.9998021423816681,
+        "median": 0.9998278915882111,
+        "q1": 0.9996988028287888,
+        "q3": 0.9999606162309647
+      },
+      "top_countries": [
+        [
+          "Kazakhstan",
+          6
+        ],
+        [
+          "Turkmenistan",
+          2
+        ],
+        [
+          "Iraq",
+          2
+        ],
+        [
+          "Jordan",
+          1
+        ],
+        [
+          "Syrian Arab Republic",
+          1
+        ]
+      ],
+      "truth_plume_pixels": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "q1": null,
+        "q3": null
+      },
+      "unique_groups": 7
+    },
+    "true_negative": {
+      "count": 244,
+      "mask_detected_rate": 0.4262295081967213,
+      "mbmp_top1pct_mean": {
+        "count": 244,
+        "mean": 0.069016942034903,
+        "median": 0.03819651156663895,
+        "q1": 0.02095770137384534,
+        "q3": 0.0845108162611723
+      },
+      "observable_fraction": {
+        "count": 244,
+        "mean": 0.991557274590164,
+        "median": 1.0,
+        "q1": 1.0,
+        "q3": 1.0
+      },
+      "presence_score": {
+        "count": 244,
+        "mean": 0.30546116340355794,
+        "median": 0.2808837890625,
+        "q1": 0.158416748046875,
+        "q3": 0.45751953125
+      },
+      "quality_score": {
+        "count": 244,
+        "mean": 0.6422319255891393,
+        "median": 0.70263671875,
+        "q1": 0.630126953125,
+        "q3": 0.71142578125
+      },
+      "segmentation_top1pct_mean": {
+        "count": 244,
+        "mean": 0.89532374535672,
+        "median": 0.9250067174434662,
+        "q1": 0.8349169790744781,
+        "q3": 0.9860412627458572
+      },
+      "top_countries": [
+        [
+          "Turkmenistan",
+          66
+        ],
+        [
+          "United States of America",
+          32
+        ],
+        [
+          "Egypt",
+          28
+        ],
+        [
+          "Kazakhstan",
+          21
+        ],
+        [
+          "Syrian Arab Republic",
+          17
+        ],
+        [
+          "Algeria",
+          15
+        ],
+        [
+          "Australia",
+          15
+        ],
+        [
+          "United Arab Emirates",
+          15
+        ],
+        [
+          "Iraq",
+          13
+        ],
+        [
+          "Jordan",
+          11
+        ]
+      ],
+      "truth_plume_pixels": {
+        "count": 0,
+        "mean": null,
+        "median": null,
+        "q1": null,
+        "q3": null
+      },
+      "unique_groups": 24
+    },
+    "true_positive": {
+      "count": 51,
+      "mask_detected_rate": 1.0,
+      "mbmp_top1pct_mean": {
+        "count": 51,
+        "mean": 0.045461301308344394,
+        "median": 0.0344456285238266,
+        "q1": 0.018785043619573116,
+        "q3": 0.05731741897761822
+      },
+      "observable_fraction": {
+        "count": 51,
+        "mean": 0.999631862745098,
+        "median": 1.0,
+        "q1": 1.0,
+        "q3": 1.0
+      },
+      "presence_score": {
+        "count": 51,
+        "mean": 0.8613376991421569,
+        "median": 0.86767578125,
+        "q1": 0.83349609375,
+        "q3": 0.8876953125
+      },
+      "quality_score": {
+        "count": 51,
+        "mean": 0.7022537530637255,
+        "median": 0.71142578125,
+        "q1": 0.702392578125,
+        "q3": 0.712646484375
+      },
+      "segmentation_top1pct_mean": {
+        "count": 51,
+        "mean": 0.9996736178211137,
+        "median": 0.9999157786369324,
+        "q1": 0.999560534954071,
+        "q3": 1.0
+      },
+      "top_countries": [
+        [
+          "Turkmenistan",
+          37
+        ],
+        [
+          "Algeria",
+          8
+        ],
+        [
+          "Iraq",
+          5
+        ],
+        [
+          "Egypt",
+          1
+        ]
+      ],
+      "truth_plume_pixels": {
+        "count": 51,
+        "mean": 1592.7058823529412,
+        "median": 1515.0,
+        "q1": 844.0,
+        "q3": 2104.5
+      },
+      "unique_groups": 5
+    }
+  },
+  "plume_size_strata": [
+    {
+      "count": 32,
+      "maximum_truth_pixels": 491,
+      "median_presence_score": 0.413330078125,
+      "minimum_truth_pixels": 74,
+      "name": "smallest",
+      "presence_recall": 0.09375,
+      "segmentation_scene_recall": 0.59375
+    },
+    {
+      "count": 32,
+      "maximum_truth_pixels": 844,
+      "median_presence_score": 0.4100341796875,
+      "minimum_truth_pixels": 491,
+      "name": "small",
+      "presence_recall": 0.3125,
+      "segmentation_scene_recall": 0.625
+    },
+    {
+      "count": 32,
+      "maximum_truth_pixels": 1768,
+      "median_presence_score": 0.828125,
+      "minimum_truth_pixels": 844,
+      "name": "large",
+      "presence_recall": 0.65625,
+      "segmentation_scene_recall": 0.78125
+    },
+    {
+      "count": 32,
+      "maximum_truth_pixels": 6492,
+      "median_presence_score": 0.79296875,
+      "minimum_truth_pixels": 1768,
+      "name": "largest",
+      "presence_recall": 0.53125,
+      "segmentation_scene_recall": 0.875
+    }
+  ],
+  "prediction_receipt": {
+    "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_mil_v2_validation_predictions.jsonl",
+    "rows": 384,
+    "sha256": "0274b4328c906284b7153e97e10bc16464efe860c77cf847ddd36bf42ebe54fb",
+    "tracked": false
+  },
+  "provenance": {
+    "git_commit": "9ffab58cb86913548b00e6857ad68b3870b3ac28",
+    "git_tracked_worktree_dirty_at_start": false,
+    "model_source_sha256": "48c3c4a46c8698366ee532108935d7ea3288ffc46a0f388fb13b2599b0fc4d0a",
+    "script": "tools/analyze_mars_joint_mil_validation.py",
+    "script_sha256": "1e929e066ee74936b6935c19e4b1384d868551d74eaf4d858a9c54f1985b9808"
+  },
+  "runtime": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "mil_v2_internal_validation_error_audit_only",
+  "source": {
+    "checkpoint_sha256": "fb8e75287f6ab07a5ab181137b6d6171dd6eae009a4c450113100ce8cf4d07b9",
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "dataset_revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "development_manifest_sha256": "e59985b592a4bd1cf0561717c680116242266bf19b86069160a00debd72de3d3"
+  }
+}

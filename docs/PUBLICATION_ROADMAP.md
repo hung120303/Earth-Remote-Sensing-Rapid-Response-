@@ -103,6 +103,15 @@ availability section and recommends DOI-backed FAIR repositories for the code an
   also fails the ERSRR research gate. It nevertheless outperforms MIL v2 decisively and shows that
   the next candidate must inherit full-resolution U-Net capacity and substantially broader
   training data while adding a separately calibrated high-specificity presence/abstention head.
+- The internal-validation-only MIL-v2 audit explains why another pooling adjustment is not the
+  answer. Presence score is coupled to segmentation top-1% confidence at Spearman rho=0.909. The
+  smallest plume quartile reaches only 9.4% presence recall even though the mask rule proposes a
+  component in 59.4% of those scenes; median true-positive plume area is 1,515 pixels versus 643
+  for false negatives. All 12 false positives have saturated mask proposals, and six occur in one
+  Kazakhstan stratum. MBMP top-1% strength is higher for false positives than for ordinary true
+  negatives but is nearly identical between true and missed plumes. The next head must classify
+  connected proposals using morphology, multiscale context, wind alignment, and geography-balanced
+  hard negatives rather than treating top-k mask confidence or MBMP magnitude as presence.
 
 The current shared core and artifact contract remain useful engineering infrastructure. They do
 not establish a useful detector.
@@ -393,9 +402,10 @@ Heads and training:
 
 - retain the released 13.6M-parameter full-resolution U-Net as the capacity baseline instead of
   widening the undertrained 2.75M-parameter shared encoder;
-- scene-presence head trained on balanced positives and real hard negatives;
-- presence evidence aggregated from decoder logits and deep features with top-k/max MIL rather
-  than global-average pooling;
+- connected-proposal presence head trained on balanced positives and real hard negatives;
+- proposal evidence combines decoder features, component shape/area, surrounding multiscale
+  context, target/reference change, and wind alignment; top-k/max mask confidence is retained only
+  as an input, not the decision statistic;
 - segmentation loss evaluated only where the target and annotation are valid;
 - observability/quality head trained to reject invalid scenes;
 - online hard-negative mining after the first baseline pass;
