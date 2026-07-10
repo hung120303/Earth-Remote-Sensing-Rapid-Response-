@@ -1,0 +1,2922 @@
+{
+  "contract": {
+    "cloud_mask": "one-band uint8; observed values 0/1; explicit classes override ambiguous nodata metadata",
+    "grid": "200 x 200 pixels at 10 m in sample-local UTM",
+    "image_layout": "12-band uint16 target/reference pair",
+    "negative_assets": "image and cloud mask only; the adapter must create the zero target in memory",
+    "positive_assets": "binary plume mask plus DeltaCH4(ppm) float64 raster",
+    "product_level": "L1C",
+    "reference_bands": [
+      "B02_bg",
+      "B03_bg",
+      "B04_bg",
+      "B08_bg",
+      "B11_bg",
+      "B12_bg"
+    ],
+    "sensor": "Sentinel-2 MSI",
+    "target_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12"
+    ]
+  },
+  "decisions": [
+    "Build a new MARS-S2L adapter around the native 12-band target/reference contract.",
+    "Include B08; do not truncate the paper model to the legacy ERSRR five-band contract.",
+    "Keep negative targets implicit and create zero masks only inside the loader.",
+    "Use cloud masks as observability inputs and exclude invalid pixels from losses and metrics.",
+    "Do not use rasterio/GDAL validity masks for cloud semantics because nodata can overlap the clear class.",
+    "Keep the existing five-band L2A compact model as a separate baseline artifact."
+  ],
+  "generated_at_utc": "2026-07-10T19:10:03.860232+00:00",
+  "provenance": {
+    "git_commit": "f6383a5c171a9cfb84b996a63076acf0ed19fd17",
+    "git_tracked_worktree_dirty_at_start": false,
+    "numpy": "2.4.4",
+    "python": "3.11.14",
+    "rasterio": "1.4.4",
+    "script": "tools/audit_mars_pilot.py",
+    "script_sha256": "5ae1b54190a4dae9032dd1c765fc784a4ae6d9177d9da55c6400c5154197e90b"
+  },
+  "samples": [
+    {
+      "assets": {
+        "cloud_mask": "data/train_2023/40/88e9ab72-664a-4dea-8d35-059352edd73b_fcf9cdf2-30cc-4f2c-a8d7-7ae1e55eef78_cloudmask.tif",
+        "image": "data/train_2023/40/88e9ab72-664a-4dea-8d35-059352edd73b_fcf9cdf2-30cc-4f2c-a8d7-7ae1e55eef78_s2.tif",
+        "methane_enhancement": "data/train_2023/40/88e9ab72-664a-4dea-8d35-059352edd73b_fcf9cdf2-30cc-4f2c-a8d7-7ae1e55eef78_ch4.tif",
+        "plume_mask": "data/train_2023/40/88e9ab72-664a-4dea-8d35-059352edd73b_fcf9cdf2-30cc-4f2c-a8d7-7ae1e55eef78_label.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.043267,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          777890.0,
+          0.0,
+          -10.0,
+          4273530.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "fcf9cdf2-30cc-4f2c-a8d7-7ae1e55eef78",
+      "id_location": "88e9ab72-664a-4dea-8d35-059352edd73b",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          777890.0,
+          0.0,
+          -10.0,
+          4273530.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 3873.0,
+          "mean": 2394.551146,
+          "min": 1205.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 3864.0,
+          "mean": 2493.517608,
+          "min": 1255.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 547.0,
+          "mean": 101.110921,
+          "min": 0.0
+        }
+      },
+      "label": "positive",
+      "metadata_percentage_clear": 99.956733,
+      "methane_enhancement": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "DeltaCH4(ppm)"
+        ],
+        "dtypes": [
+          "float64"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "nonzero_pixels": 17820,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          777890.0,
+          0.0,
+          -10.0,
+          4273530.0
+        ],
+        "valid_values": {
+          "count": 17820,
+          "max": 4196.315135,
+          "mean": 450.87422,
+          "min": 0.014823
+        },
+        "values_on_plume_mask": {
+          "count": 6575,
+          "max": 4196.315135,
+          "mean": 660.850465,
+          "min": 0.0
+        },
+        "width": 200
+      },
+      "plume_mask": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "Plumemask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "positive_area_fraction": 0.164375,
+        "positive_pixels": 6575,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          777890.0,
+          0.0,
+          -10.0,
+          4273530.0
+        ],
+        "value_histogram": {
+          "0": 33425,
+          "1": 6575
+        },
+        "width": 200
+      },
+      "split": "train",
+      "unseen_test_location": false,
+      "warnings": [
+        "fcf9cdf2-30cc-4f2c-a8d7-7ae1e55eef78: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/train_2023/7/88e9ab72-664a-4dea-8d35-059352edd73b_3136b97d-2dd7-4b4e-99f0-f488772d2a07_cloudmask.tif",
+        "image": "data/train_2023/7/88e9ab72-664a-4dea-8d35-059352edd73b_3136b97d-2dd7-4b4e-99f0-f488772d2a07_s2.tif",
+        "methane_enhancement": "data/train_2023/7/88e9ab72-664a-4dea-8d35-059352edd73b_3136b97d-2dd7-4b4e-99f0-f488772d2a07_ch4.tif",
+        "plume_mask": "data/train_2023/7/88e9ab72-664a-4dea-8d35-059352edd73b_3136b97d-2dd7-4b4e-99f0-f488772d2a07_label.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          777890.0,
+          0.0,
+          -10.0,
+          4273530.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "3136b97d-2dd7-4b4e-99f0-f488772d2a07",
+      "id_location": "88e9ab72-664a-4dea-8d35-059352edd73b",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          777890.0,
+          0.0,
+          -10.0,
+          4273530.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 4045.0,
+          "mean": 2741.120788,
+          "min": 1242.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 4109.0,
+          "mean": 2736.125125,
+          "min": 1324.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 880.0,
+          "mean": 20.876654,
+          "min": 0.0
+        }
+      },
+      "label": "positive",
+      "metadata_percentage_clear": 100.0,
+      "methane_enhancement": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "DeltaCH4(ppm)"
+        ],
+        "dtypes": [
+          "float64"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "nonzero_pixels": 20148,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          777890.0,
+          0.0,
+          -10.0,
+          4273530.0
+        ],
+        "valid_values": {
+          "count": 20148,
+          "max": 3270.782523,
+          "mean": 217.253604,
+          "min": 0.009236
+        },
+        "values_on_plume_mask": {
+          "count": 691,
+          "max": 2621.030273,
+          "mean": 524.1474,
+          "min": 0.0
+        },
+        "width": 200
+      },
+      "plume_mask": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "Plumemask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "positive_area_fraction": 0.017275,
+        "positive_pixels": 691,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          777890.0,
+          0.0,
+          -10.0,
+          4273530.0
+        ],
+        "value_histogram": {
+          "0": 39309,
+          "1": 691
+        },
+        "width": 200
+      },
+      "split": "train",
+      "unseen_test_location": false,
+      "warnings": [
+        "3136b97d-2dd7-4b4e-99f0-f488772d2a07: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/train_2023/39/f690e361-ecd9-4441-9fae-c07124aa996d_6db61825-a181-454a-992d-056ef82eb24f_cloudmask.tif",
+        "image": "data/train_2023/39/f690e361-ecd9-4441-9fae-c07124aa996d_6db61825-a181-454a-992d-056ef82eb24f_s2.tif",
+        "methane_enhancement": "data/train_2023/39/f690e361-ecd9-4441-9fae-c07124aa996d_6db61825-a181-454a-992d-056ef82eb24f_ch4.tif",
+        "plume_mask": "data/train_2023/39/f690e361-ecd9-4441-9fae-c07124aa996d_6db61825-a181-454a-992d-056ef82eb24f_label.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32631",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          782580.0,
+          0.0,
+          -10.0,
+          3520730.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "6db61825-a181-454a-992d-056ef82eb24f",
+      "id_location": "f690e361-ecd9-4441-9fae-c07124aa996d",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32631",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          782580.0,
+          0.0,
+          -10.0,
+          3520730.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 6995.0,
+          "mean": 3969.756517,
+          "min": 1456.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 7222.0,
+          "mean": 3938.508167,
+          "min": 1320.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 1645.0,
+          "mean": 77.553992,
+          "min": 0.0
+        }
+      },
+      "label": "positive",
+      "metadata_percentage_clear": 100.0,
+      "methane_enhancement": {
+        "count": 1,
+        "crs": "EPSG:32631",
+        "descriptions": [
+          "DeltaCH4(ppm)"
+        ],
+        "dtypes": [
+          "float64"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "nonzero_pixels": 21449,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          782580.0,
+          0.0,
+          -10.0,
+          3520730.0
+        ],
+        "valid_values": {
+          "count": 21449,
+          "max": 2932.331641,
+          "mean": 299.647205,
+          "min": 0.074771
+        },
+        "values_on_plume_mask": {
+          "count": 497,
+          "max": 1585.518958,
+          "mean": 313.253438,
+          "min": 0.0
+        },
+        "width": 200
+      },
+      "plume_mask": {
+        "count": 1,
+        "crs": "EPSG:32631",
+        "descriptions": [
+          "Plumemask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "positive_area_fraction": 0.012425,
+        "positive_pixels": 497,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          782580.0,
+          0.0,
+          -10.0,
+          3520730.0
+        ],
+        "value_histogram": {
+          "0": 39503,
+          "1": 497
+        },
+        "width": 200
+      },
+      "split": "train",
+      "unseen_test_location": false,
+      "warnings": [
+        "6db61825-a181-454a-992d-056ef82eb24f: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/train_2023/62/04345b48-0f10-47a3-b46e-76a60b0ebd72_6fec3dea-b017-4d3c-84fc-eff1d3cd9d02_cloudmask.tif",
+        "image": "data/train_2023/62/04345b48-0f10-47a3-b46e-76a60b0ebd72_6fec3dea-b017-4d3c-84fc-eff1d3cd9d02_s2.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32631",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.005133,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 99.9875,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          799200.0,
+          0.0,
+          -10.0,
+          3518870.0
+        ],
+        "value_histogram": {
+          "0": 39995,
+          "1": 5
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "6fec3dea-b017-4d3c-84fc-eff1d3cd9d02",
+      "id_location": "04345b48-0f10-47a3-b46e-76a60b0ebd72",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32631",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          799200.0,
+          0.0,
+          -10.0,
+          3518870.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 0.98675,
+        "reference_all_bands_valid_fraction": 0.98675,
+        "reference_nonzero": {
+          "count": 236820,
+          "max": 6776.0,
+          "mean": 4477.568423,
+          "min": 8.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 6532.0,
+          "mean": 4284.344879,
+          "min": 1853.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 236820,
+          "max": 6214.0,
+          "mean": 228.518867,
+          "min": 0.0
+        }
+      },
+      "label": "negative",
+      "metadata_percentage_clear": 99.982367,
+      "split": "train",
+      "unseen_test_location": false,
+      "warnings": [
+        "6fec3dea-b017-4d3c-84fc-eff1d3cd9d02: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/train_2023/3/fe2d901f-de89-471f-b373-1e9b75a75c3c_688ec0b1-a3ff-4b63-8033-40966dde9837_cloudmask.tif",
+        "image": "data/train_2023/3/fe2d901f-de89-471f-b373-1e9b75a75c3c_688ec0b1-a3ff-4b63-8033-40966dde9837_s2.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32632",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          228660.0,
+          0.0,
+          -10.0,
+          3527550.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "688ec0b1-a3ff-4b63-8033-40966dde9837",
+      "id_location": "fe2d901f-de89-471f-b373-1e9b75a75c3c",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32632",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          228660.0,
+          0.0,
+          -10.0,
+          3527550.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 7011.0,
+          "mean": 4119.832667,
+          "min": 1674.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 7197.0,
+          "mean": 4205.356042,
+          "min": 1649.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 475.0,
+          "mean": 88.409292,
+          "min": 0.0
+        }
+      },
+      "label": "negative",
+      "metadata_percentage_clear": 100.0,
+      "split": "train",
+      "unseen_test_location": false,
+      "warnings": [
+        "688ec0b1-a3ff-4b63-8033-40966dde9837: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/train_2023/17/58dfb17a-78f6-464b-b2bb-0d8b1f72ed76_9618635e-3d9c-4ac8-a108-a5b922615c25_cloudmask.tif",
+        "image": "data/train_2023/17/58dfb17a-78f6-464b-b2bb-0d8b1f72ed76_9618635e-3d9c-4ac8-a108-a5b922615c25_s2.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32632",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          367500.0,
+          0.0,
+          -10.0,
+          3162840.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "9618635e-3d9c-4ac8-a108-a5b922615c25",
+      "id_location": "58dfb17a-78f6-464b-b2bb-0d8b1f72ed76",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32632",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          367500.0,
+          0.0,
+          -10.0,
+          3162840.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 16553.0,
+          "mean": 3866.158467,
+          "min": 1168.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 15419.0,
+          "mean": 3763.103625,
+          "min": 1574.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 4198.0,
+          "mean": 137.670433,
+          "min": 0.0
+        }
+      },
+      "label": "negative",
+      "metadata_percentage_clear": 100.0,
+      "split": "train",
+      "unseen_test_location": false,
+      "warnings": [
+        "9618635e-3d9c-4ac8-a108-a5b922615c25: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/val_2023/24/a23b15a0-acb0-46de-b215-f9f4660bdc2d_b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428_cloudmask.tif",
+        "image": "data/val_2023/24/a23b15a0-acb0-46de-b215-f9f4660bdc2d_b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428_s2.tif",
+        "methane_enhancement": "data/val_2023/24/a23b15a0-acb0-46de-b215-f9f4660bdc2d_b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428_ch4.tif",
+        "plume_mask": "data/val_2023/24/a23b15a0-acb0-46de-b215-f9f4660bdc2d_b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428_label.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32640",
+        "descriptions": [
+          null
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 4.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          259070.0,
+          0.0,
+          -10.0,
+          4305330.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428",
+      "id_location": "a23b15a0-acb0-46de-b215-f9f4660bdc2d",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32640",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          259070.0,
+          0.0,
+          -10.0,
+          4305330.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 13038.0,
+          "mean": 2609.818042,
+          "min": 820.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 3839.0,
+          "mean": 2685.017379,
+          "min": 676.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 10924.0,
+          "mean": 90.855396,
+          "min": 0.0
+        }
+      },
+      "label": "positive",
+      "metadata_percentage_clear": 100.0,
+      "methane_enhancement": {
+        "count": 1,
+        "crs": "EPSG:32640",
+        "descriptions": [
+          null
+        ],
+        "dtypes": [
+          "float64"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "nonzero_pixels": 15486,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          259070.0,
+          0.0,
+          -10.0,
+          4305330.0
+        ],
+        "valid_values": {
+          "count": 15486,
+          "max": 129105.480393,
+          "mean": 890.380578,
+          "min": 0.009235
+        },
+        "values_on_plume_mask": {
+          "count": 2742,
+          "max": 2778.02881,
+          "mean": 285.823171,
+          "min": 0.0
+        },
+        "width": 200
+      },
+      "plume_mask": {
+        "count": 1,
+        "crs": "EPSG:32640",
+        "descriptions": [
+          null
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "positive_area_fraction": 0.06855,
+        "positive_pixels": 2742,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          259070.0,
+          0.0,
+          -10.0,
+          4305330.0
+        ],
+        "value_histogram": {
+          "0": 37258,
+          "1": 2742
+        },
+        "width": 200
+      },
+      "split": "val",
+      "unseen_test_location": false,
+      "warnings": [
+        "b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428: cloud mask has no descriptive band tag",
+        "b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428: plume mask has no descriptive band tag",
+        "b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428: methane enhancement has no units/description band tag"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/val_2023/46/82d85795-ebc9-4efa-8a82-8f8b7aa6f4a6_61fff5fc-99ad-45ee-ade9-41b82db3b036_cloudmask.tif",
+        "image": "data/val_2023/46/82d85795-ebc9-4efa-8a82-8f8b7aa6f4a6_61fff5fc-99ad-45ee-ade9-41b82db3b036_s2.tif",
+        "methane_enhancement": "data/val_2023/46/82d85795-ebc9-4efa-8a82-8f8b7aa6f4a6_61fff5fc-99ad-45ee-ade9-41b82db3b036_ch4.tif",
+        "plume_mask": "data/val_2023/46/82d85795-ebc9-4efa-8a82-8f8b7aa6f4a6_61fff5fc-99ad-45ee-ade9-41b82db3b036_label.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32638",
+        "descriptions": [
+          null
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 4.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          584630.0,
+          0.0,
+          -10.0,
+          1721830.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "61fff5fc-99ad-45ee-ade9-41b82db3b036",
+      "id_location": "82d85795-ebc9-4efa-8a82-8f8b7aa6f4a6",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32638",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          584630.0,
+          0.0,
+          -10.0,
+          1721830.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 12729.0,
+          "mean": 2647.048313,
+          "min": 584.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 12777.0,
+          "mean": 2838.908513,
+          "min": 1134.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 2421.0,
+          "mean": 200.415567,
+          "min": 0.0
+        }
+      },
+      "label": "positive",
+      "metadata_percentage_clear": 100.0,
+      "methane_enhancement": {
+        "count": 1,
+        "crs": "EPSG:32638",
+        "descriptions": [
+          null
+        ],
+        "dtypes": [
+          "float64"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "nonzero_pixels": 21647,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          584630.0,
+          0.0,
+          -10.0,
+          1721830.0
+        ],
+        "valid_values": {
+          "count": 21647,
+          "max": 50668.729808,
+          "mean": 298.790341,
+          "min": 0.003962
+        },
+        "values_on_plume_mask": {
+          "count": 335,
+          "max": 1539.043448,
+          "mean": 400.412958,
+          "min": 0.0
+        },
+        "width": 200
+      },
+      "plume_mask": {
+        "count": 1,
+        "crs": "EPSG:32638",
+        "descriptions": [
+          null
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "positive_area_fraction": 0.008375,
+        "positive_pixels": 335,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          584630.0,
+          0.0,
+          -10.0,
+          1721830.0
+        ],
+        "value_histogram": {
+          "0": 39665,
+          "1": 335
+        },
+        "width": 200
+      },
+      "split": "val",
+      "unseen_test_location": false,
+      "warnings": [
+        "61fff5fc-99ad-45ee-ade9-41b82db3b036: cloud mask has no descriptive band tag",
+        "61fff5fc-99ad-45ee-ade9-41b82db3b036: plume mask has no descriptive band tag",
+        "61fff5fc-99ad-45ee-ade9-41b82db3b036: methane enhancement has no units/description band tag"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/val_2023/52/9e1d4043-5ca9-46ae-bd0f-36583fa16a47_a525b9d1-8ac6-4549-bc0e-b1b629e42b3c_cloudmask.tif",
+        "image": "data/val_2023/52/9e1d4043-5ca9-46ae-bd0f-36583fa16a47_a525b9d1-8ac6-4549-bc0e-b1b629e42b3c_s2.tif",
+        "methane_enhancement": "data/val_2023/52/9e1d4043-5ca9-46ae-bd0f-36583fa16a47_a525b9d1-8ac6-4549-bc0e-b1b629e42b3c_ch4.tif",
+        "plume_mask": "data/val_2023/52/9e1d4043-5ca9-46ae-bd0f-36583fa16a47_a525b9d1-8ac6-4549-bc0e-b1b629e42b3c_label.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          592330.0,
+          0.0,
+          -10.0,
+          4821640.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "a525b9d1-8ac6-4549-bc0e-b1b629e42b3c",
+      "id_location": "9e1d4043-5ca9-46ae-bd0f-36583fa16a47",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          592330.0,
+          0.0,
+          -10.0,
+          4821640.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 5512.0,
+          "mean": 3628.078988,
+          "min": 1582.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 5526.0,
+          "mean": 3654.436704,
+          "min": 1923.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 960.0,
+          "mean": 64.015292,
+          "min": 0.0
+        }
+      },
+      "label": "positive",
+      "metadata_percentage_clear": 100.0,
+      "methane_enhancement": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "DeltaCH4(ppm)"
+        ],
+        "dtypes": [
+          "float64"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "nonzero_pixels": 20837,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          592330.0,
+          0.0,
+          -10.0,
+          4821640.0
+        ],
+        "valid_values": {
+          "count": 20837,
+          "max": 4632.397915,
+          "mean": 270.882854,
+          "min": 0.005565
+        },
+        "values_on_plume_mask": {
+          "count": 1112,
+          "max": 3380.055894,
+          "mean": 504.511912,
+          "min": 0.0
+        },
+        "width": 200
+      },
+      "plume_mask": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "Plumemask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "positive_area_fraction": 0.0278,
+        "positive_pixels": 1112,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          592330.0,
+          0.0,
+          -10.0,
+          4821640.0
+        ],
+        "value_histogram": {
+          "0": 38888,
+          "1": 1112
+        },
+        "width": 200
+      },
+      "split": "val",
+      "unseen_test_location": false,
+      "warnings": [
+        "a525b9d1-8ac6-4549-bc0e-b1b629e42b3c: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/val_2023/99/dd6f73bc-a483-4a32-a47d-73daaf84e0aa_510b71da-2561-42a5-945c-8f1c44df5563_cloudmask.tif",
+        "image": "data/val_2023/99/dd6f73bc-a483-4a32-a47d-73daaf84e0aa_510b71da-2561-42a5-945c-8f1c44df5563_s2.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32634",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          486470.0,
+          0.0,
+          -10.0,
+          3189420.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "510b71da-2561-42a5-945c-8f1c44df5563",
+      "id_location": "dd6f73bc-a483-4a32-a47d-73daaf84e0aa",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32634",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          486470.0,
+          0.0,
+          -10.0,
+          3189420.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 6073.0,
+          "mean": 3880.373729,
+          "min": 1150.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 6124.0,
+          "mean": 3955.750608,
+          "min": 1245.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 1596.0,
+          "mean": 78.234604,
+          "min": 0.0
+        }
+      },
+      "label": "negative",
+      "metadata_percentage_clear": 100.0,
+      "split": "val",
+      "unseen_test_location": false,
+      "warnings": [
+        "510b71da-2561-42a5-945c-8f1c44df5563: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/val_2023/18/9db9628d-d646-4794-8887-50b854e496a3_f7b9fa6d-faae-4a9d-96e5-1bd3c0633e52_cloudmask.tif",
+        "image": "data/val_2023/18/9db9628d-d646-4794-8887-50b854e496a3_f7b9fa6d-faae-4a9d-96e5-1bd3c0633e52_s2.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32632",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          209370.0,
+          0.0,
+          -10.0,
+          3518500.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "f7b9fa6d-faae-4a9d-96e5-1bd3c0633e52",
+      "id_location": "9db9628d-d646-4794-8887-50b854e496a3",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32632",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          209370.0,
+          0.0,
+          -10.0,
+          3518500.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 6550.0,
+          "mean": 4156.734975,
+          "min": 1593.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 6644.0,
+          "mean": 4288.5278,
+          "min": 1633.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 382.0,
+          "mean": 131.822233,
+          "min": 0.0
+        }
+      },
+      "label": "negative",
+      "metadata_percentage_clear": 100.0,
+      "split": "val",
+      "unseen_test_location": false,
+      "warnings": [
+        "f7b9fa6d-faae-4a9d-96e5-1bd3c0633e52: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/val_2023/11/a42ade16-4778-45f7-bd52-7d539d4a1b59_3d61dd00-93e1-443e-a515-bc36103f28df_cloudmask.tif",
+        "image": "data/val_2023/11/a42ade16-4778-45f7-bd52-7d539d4a1b59_3d61dd00-93e1-443e-a515-bc36103f28df_s2.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32632",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          353940.0,
+          0.0,
+          -10.0,
+          3161060.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "3d61dd00-93e1-443e-a515-bc36103f28df",
+      "id_location": "a42ade16-4778-45f7-bd52-7d539d4a1b59",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32632",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          353940.0,
+          0.0,
+          -10.0,
+          3161060.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 13475.0,
+          "mean": 3990.773842,
+          "min": 1661.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 13215.0,
+          "mean": 4074.187642,
+          "min": 1258.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 3931.0,
+          "mean": 102.0648,
+          "min": 0.0
+        }
+      },
+      "label": "negative",
+      "metadata_percentage_clear": 100.0,
+      "split": "val",
+      "unseen_test_location": false,
+      "warnings": [
+        "3d61dd00-93e1-443e-a515-bc36103f28df: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/test_2023/70/995c5adf-b3cd-465c-8c66-5ca1ae8e2d25_6125e81d-8cab-4b11-bb27-341d0ef18aca_cloudmask.tif",
+        "image": "data/test_2023/70/995c5adf-b3cd-465c-8c66-5ca1ae8e2d25_6125e81d-8cab-4b11-bb27-341d0ef18aca_s2.tif",
+        "methane_enhancement": "data/test_2023/70/995c5adf-b3cd-465c-8c66-5ca1ae8e2d25_6125e81d-8cab-4b11-bb27-341d0ef18aca_ch4.tif",
+        "plume_mask": "data/test_2023/70/995c5adf-b3cd-465c-8c66-5ca1ae8e2d25_6125e81d-8cab-4b11-bb27-341d0ef18aca_label.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32634",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          535250.0,
+          0.0,
+          -10.0,
+          3239760.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "6125e81d-8cab-4b11-bb27-341d0ef18aca",
+      "id_location": "995c5adf-b3cd-465c-8c66-5ca1ae8e2d25",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32634",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          535250.0,
+          0.0,
+          -10.0,
+          3239760.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 9125.0,
+          "mean": 4536.249458,
+          "min": 1646.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 6781.0,
+          "mean": 4541.103767,
+          "min": 1678.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 4256.0,
+          "mean": 22.259408,
+          "min": 0.0
+        }
+      },
+      "label": "positive",
+      "metadata_percentage_clear": 100.0,
+      "methane_enhancement": {
+        "count": 1,
+        "crs": "EPSG:32634",
+        "descriptions": [
+          "DeltaCH4(ppm)"
+        ],
+        "dtypes": [
+          "float64"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "nonzero_pixels": 16545,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          535250.0,
+          0.0,
+          -10.0,
+          3239760.0
+        ],
+        "valid_values": {
+          "count": 16545,
+          "max": 38625.78506,
+          "mean": 108.748136,
+          "min": 0.009445
+        },
+        "values_on_plume_mask": {
+          "count": 472,
+          "max": 991.588224,
+          "mean": 161.708003,
+          "min": 0.0
+        },
+        "width": 200
+      },
+      "plume_mask": {
+        "count": 1,
+        "crs": "EPSG:32634",
+        "descriptions": [
+          "Plumemask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "positive_area_fraction": 0.0118,
+        "positive_pixels": 472,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          535250.0,
+          0.0,
+          -10.0,
+          3239760.0
+        ],
+        "value_histogram": {
+          "0": 39528,
+          "1": 472
+        },
+        "width": 200
+      },
+      "split": "test",
+      "unseen_test_location": true,
+      "warnings": [
+        "6125e81d-8cab-4b11-bb27-341d0ef18aca: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/test_2023/3/f6a79fab-2d9e-458c-8af1-763d78505c2a_a61cd7db-f827-477a-b6cb-e3dadfbfb6db_cloudmask.tif",
+        "image": "data/test_2023/3/f6a79fab-2d9e-458c-8af1-763d78505c2a_a61cd7db-f827-477a-b6cb-e3dadfbfb6db_s2.tif",
+        "methane_enhancement": "data/test_2023/3/f6a79fab-2d9e-458c-8af1-763d78505c2a_a61cd7db-f827-477a-b6cb-e3dadfbfb6db_ch4.tif",
+        "plume_mask": "data/test_2023/3/f6a79fab-2d9e-458c-8af1-763d78505c2a_a61cd7db-f827-477a-b6cb-e3dadfbfb6db_label.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32637",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          653750.0,
+          0.0,
+          -10.0,
+          3880700.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "a61cd7db-f827-477a-b6cb-e3dadfbfb6db",
+      "id_location": "f6a79fab-2d9e-458c-8af1-763d78505c2a",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32637",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          653750.0,
+          0.0,
+          -10.0,
+          3880700.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 4935.0,
+          "mean": 3167.962788,
+          "min": 1338.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 4906.0,
+          "mean": 3113.983938,
+          "min": 1307.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 604.0,
+          "mean": 70.146708,
+          "min": 0.0
+        }
+      },
+      "label": "positive",
+      "metadata_percentage_clear": 100.0,
+      "methane_enhancement": {
+        "count": 1,
+        "crs": "EPSG:32637",
+        "descriptions": [
+          "DeltaCH4(ppm)"
+        ],
+        "dtypes": [
+          "float64"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "nonzero_pixels": 20281,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          653750.0,
+          0.0,
+          -10.0,
+          3880700.0
+        ],
+        "valid_values": {
+          "count": 20281,
+          "max": 1616.193928,
+          "mean": 127.971294,
+          "min": 0.014816
+        },
+        "values_on_plume_mask": {
+          "count": 1557,
+          "max": 1616.193928,
+          "mean": 215.248874,
+          "min": 0.0
+        },
+        "width": 200
+      },
+      "plume_mask": {
+        "count": 1,
+        "crs": "EPSG:32637",
+        "descriptions": [
+          "Plumemask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "positive_area_fraction": 0.038925,
+        "positive_pixels": 1557,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          653750.0,
+          0.0,
+          -10.0,
+          3880700.0
+        ],
+        "value_histogram": {
+          "0": 38443,
+          "1": 1557
+        },
+        "width": 200
+      },
+      "split": "test",
+      "unseen_test_location": true,
+      "warnings": [
+        "a61cd7db-f827-477a-b6cb-e3dadfbfb6db: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/test_2023/97/0f625839-c1f6-4d86-8ea8-e9c5550fe8d9_d8a44e19-ef53-4861-87fc-2243a9b73555_cloudmask.tif",
+        "image": "data/test_2023/97/0f625839-c1f6-4d86-8ea8-e9c5550fe8d9_d8a44e19-ef53-4861-87fc-2243a9b73555_s2.tif",
+        "methane_enhancement": "data/test_2023/97/0f625839-c1f6-4d86-8ea8-e9c5550fe8d9_d8a44e19-ef53-4861-87fc-2243a9b73555_ch4.tif",
+        "plume_mask": "data/test_2023/97/0f625839-c1f6-4d86-8ea8-e9c5550fe8d9_d8a44e19-ef53-4861-87fc-2243a9b73555_label.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32613",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          789940.0,
+          0.0,
+          -10.0,
+          3569140.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "d8a44e19-ef53-4861-87fc-2243a9b73555",
+      "id_location": "0f625839-c1f6-4d86-8ea8-e9c5550fe8d9",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32613",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          789940.0,
+          0.0,
+          -10.0,
+          3569140.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 5669.0,
+          "mean": 2527.437171,
+          "min": 770.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 5646.0,
+          "mean": 2558.214162,
+          "min": 783.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 884.0,
+          "mean": 46.051467,
+          "min": 0.0
+        }
+      },
+      "label": "positive",
+      "metadata_percentage_clear": 100.0,
+      "methane_enhancement": {
+        "count": 1,
+        "crs": "EPSG:32613",
+        "descriptions": [
+          "DeltaCH4(ppm)"
+        ],
+        "dtypes": [
+          "float64"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "nonzero_pixels": 19421,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          789940.0,
+          0.0,
+          -10.0,
+          3569140.0
+        ],
+        "valid_values": {
+          "count": 19421,
+          "max": 2701.720928,
+          "mean": 308.247403,
+          "min": 0.041614
+        },
+        "values_on_plume_mask": {
+          "count": 658,
+          "max": 2701.720928,
+          "mean": 819.013659,
+          "min": 0.0
+        },
+        "width": 200
+      },
+      "plume_mask": {
+        "count": 1,
+        "crs": "EPSG:32613",
+        "descriptions": [
+          "Plumemask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "positive_area_fraction": 0.01645,
+        "positive_pixels": 658,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          789940.0,
+          0.0,
+          -10.0,
+          3569140.0
+        ],
+        "value_histogram": {
+          "0": 39342,
+          "1": 658
+        },
+        "width": 200
+      },
+      "split": "test",
+      "unseen_test_location": true,
+      "warnings": [
+        "d8a44e19-ef53-4861-87fc-2243a9b73555: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/test_2023/49/06106e5f-3f67-4b3f-b2c2-90a45266b4b5_e96d02fa-3ae6-4bd1-8419-9ef19e9807b9_cloudmask.tif",
+        "image": "data/test_2023/49/06106e5f-3f67-4b3f-b2c2-90a45266b4b5_e96d02fa-3ae6-4bd1-8419-9ef19e9807b9_s2.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32614",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          267110.0,
+          0.0,
+          -10.0,
+          3594270.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "e96d02fa-3ae6-4bd1-8419-9ef19e9807b9",
+      "id_location": "06106e5f-3f67-4b3f-b2c2-90a45266b4b5",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32614",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          267110.0,
+          0.0,
+          -10.0,
+          3594270.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 5499.0,
+          "mean": 2136.998887,
+          "min": 605.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 5713.0,
+          "mean": 2243.437433,
+          "min": 865.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 3690.0,
+          "mean": 108.608262,
+          "min": 0.0
+        }
+      },
+      "label": "negative",
+      "metadata_percentage_clear": 100.0,
+      "split": "test",
+      "unseen_test_location": true,
+      "warnings": [
+        "e96d02fa-3ae6-4bd1-8419-9ef19e9807b9: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/test_2023/59/89d1451a-a98b-47fd-a87e-b5c73fd7985a_9a6cdd74-0a0d-4d6c-ac2c-015365fd9bcb_cloudmask.tif",
+        "image": "data/test_2023/59/89d1451a-a98b-47fd-a87e-b5c73fd7985a_9a6cdd74-0a0d-4d6c-ac2c-015365fd9bcb_s2.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          591190.0,
+          0.0,
+          -10.0,
+          4047770.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "9a6cdd74-0a0d-4d6c-ac2c-015365fd9bcb",
+      "id_location": "89d1451a-a98b-47fd-a87e-b5c73fd7985a",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          591190.0,
+          0.0,
+          -10.0,
+          4047770.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 4294.0,
+          "mean": 1240.8447,
+          "min": 115.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 4157.0,
+          "mean": 1169.328654,
+          "min": 92.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 1849.0,
+          "mean": 134.929879,
+          "min": 0.0
+        }
+      },
+      "label": "negative",
+      "metadata_percentage_clear": 100.0,
+      "split": "test",
+      "unseen_test_location": true,
+      "warnings": [
+        "9a6cdd74-0a0d-4d6c-ac2c-015365fd9bcb: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    },
+    {
+      "assets": {
+        "cloud_mask": "data/test_2023/93/d5edb98b-2081-410d-bbed-f59ab899adc7_bb753947-ce4c-4923-bd0a-b56aa480efbd_cloudmask.tif",
+        "image": "data/test_2023/93/d5edb98b-2081-410d-bbed-f59ab899adc7_bb753947-ce4c-4923-bd0a-b56aa480efbd_s2.tif"
+      },
+      "cloud_mask": {
+        "count": 1,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "Cloudmask"
+        ],
+        "dtypes": [
+          "uint8"
+        ],
+        "height": 200,
+        "metadata_clear_difference_percentage_points": 0.0,
+        "nodata": 0.0,
+        "observed_zero_value_percentage": 100.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          652720.0,
+          0.0,
+          -10.0,
+          3049690.0
+        ],
+        "value_histogram": {
+          "0": 40000
+        },
+        "width": 200
+      },
+      "contract_ok": true,
+      "id_loc_image": "bb753947-ce4c-4923-bd0a-b56aa480efbd",
+      "id_location": "d5edb98b-2081-410d-bbed-f59ab899adc7",
+      "image": {
+        "count": 12,
+        "crs": "EPSG:32639",
+        "descriptions": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11",
+          "B12",
+          "B02_bg",
+          "B03_bg",
+          "B04_bg",
+          "B08_bg",
+          "B11_bg",
+          "B12_bg"
+        ],
+        "dtypes": [
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16",
+          "uint16"
+        ],
+        "height": 200,
+        "nodata": 0.0,
+        "resolution": [
+          10.0,
+          10.0
+        ],
+        "transform": [
+          10.0,
+          0.0,
+          652720.0,
+          0.0,
+          -10.0,
+          3049690.0
+        ],
+        "width": 200
+      },
+      "image_values": {
+        "paired_all_bands_valid_fraction": 1.0,
+        "reference_all_bands_valid_fraction": 1.0,
+        "reference_nonzero": {
+          "count": 240000,
+          "max": 7144.0,
+          "mean": 2317.406329,
+          "min": 544.0
+        },
+        "target_all_bands_valid_fraction": 1.0,
+        "target_nonzero": {
+          "count": 240000,
+          "max": 6769.0,
+          "mean": 2332.755021,
+          "min": 554.0
+        },
+        "target_reference_absolute_difference": {
+          "count": 240000,
+          "max": 4385.0,
+          "mean": 78.047567,
+          "min": 0.0
+        }
+      },
+      "label": "negative",
+      "metadata_percentage_clear": 100.0,
+      "split": "test",
+      "unseen_test_location": true,
+      "warnings": [
+        "bb753947-ce4c-4923-bd0a-b56aa480efbd: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "selection": {
+    "candidate_availability": {
+      "test": {
+        "negative": 7819,
+        "positive": 134
+      },
+      "train": {
+        "negative": 27196,
+        "positive": 2512
+      },
+      "val": {
+        "negative": 5263,
+        "positive": 264
+      }
+    },
+    "minimum_clear_percentage": 80.0,
+    "observability": "clear",
+    "product_level": "L1C",
+    "requires_background_reference": true,
+    "samples_per_class_per_split": 3,
+    "seed": 42,
+    "sensor": "Sentinel-2 MSI",
+    "test_locations": "not present in train or validation"
+  },
+  "source": {
+    "license": "CC-BY-NC-SA-4.0",
+    "pilot_identity_sha256": "4e23043682f4f60a8a8b811a50fd7a080580c743899de0be15cef791d7104942",
+    "pilot_manifest_sha256": "901e6efdff13360181a90addb6a58d7b7510581ecae468db3a16de5db0887d1b",
+    "repository": "UNEP-IMEO/MARS-S2L",
+    "repository_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32"
+  },
+  "source_integrity": {
+    "all_assets_match_manifest_sha256": true,
+    "asset_count": 54,
+    "total_bytes": 19835687
+  },
+  "summary": {
+    "all_samples_pass_contract": true,
+    "band_description_variants": {
+      "cloud_mask": {
+        "[\"Cloudmask\"]": 16,
+        "[null]": 2
+      },
+      "image": {
+        "[\"B02\", \"B03\", \"B04\", \"B08\", \"B11\", \"B12\", \"B02_bg\", \"B03_bg\", \"B04_bg\", \"B08_bg\", \"B11_bg\", \"B12_bg\"]": 18
+      },
+      "methane_enhancement": {
+        "[\"DeltaCH4(ppm)\"]": 7,
+        "[null]": 2
+      },
+      "plume_mask": {
+        "[\"Plumemask\"]": 7,
+        "[null]": 2
+      }
+    },
+    "cloud_mask_nodata_counts": {
+      "0.0": 16,
+      "4.0": 2
+    },
+    "cloud_mask_value_histogram": {
+      "0": 719995,
+      "1": 5
+    },
+    "contract_violation_count": 0,
+    "contract_violations": [],
+    "crs_counts": {
+      "EPSG:32613": 1,
+      "EPSG:32614": 1,
+      "EPSG:32631": 2,
+      "EPSG:32632": 4,
+      "EPSG:32634": 2,
+      "EPSG:32637": 1,
+      "EPSG:32638": 1,
+      "EPSG:32639": 5,
+      "EPSG:32640": 1
+    },
+    "dimension_counts": {
+      "200x200": 18
+    },
+    "metadata_vs_raster_clear_difference_percentage_points": {
+      "count": 18,
+      "max": 0.043267,
+      "mean": 0.002689,
+      "min": 0.0
+    },
+    "negative_samples": 9,
+    "paired_valid_fraction": {
+      "count": 18,
+      "max": 1.0,
+      "mean": 0.999264,
+      "min": 0.98675
+    },
+    "positive_plume_area_fraction": {
+      "count": 9,
+      "max": 0.164375,
+      "mean": 0.040664,
+      "min": 0.008375
+    },
+    "positive_plume_methane_max_ppm": {
+      "count": 9,
+      "max": 4196.315135,
+      "mean": 2378.832844,
+      "min": 991.588224
+    },
+    "positive_samples": 9,
+    "sample_count": 18,
+    "split_label_counts": {
+      "test:negative": 3,
+      "test:positive": 3,
+      "train:negative": 3,
+      "train:positive": 3,
+      "val:negative": 3,
+      "val:positive": 3
+    },
+    "unseen_test_samples": 6,
+    "warning_count": 22,
+    "warnings": [
+      "fcf9cdf2-30cc-4f2c-a8d7-7ae1e55eef78: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "3136b97d-2dd7-4b4e-99f0-f488772d2a07: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "6db61825-a181-454a-992d-056ef82eb24f: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "6fec3dea-b017-4d3c-84fc-eff1d3cd9d02: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "688ec0b1-a3ff-4b63-8033-40966dde9837: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "9618635e-3d9c-4ac8-a108-a5b922615c25: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428: cloud mask has no descriptive band tag",
+      "b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428: plume mask has no descriptive band tag",
+      "b3b7d57b-6ed7-4f60-bbcd-ba3895bb2428: methane enhancement has no units/description band tag",
+      "61fff5fc-99ad-45ee-ade9-41b82db3b036: cloud mask has no descriptive band tag",
+      "61fff5fc-99ad-45ee-ade9-41b82db3b036: plume mask has no descriptive band tag",
+      "61fff5fc-99ad-45ee-ade9-41b82db3b036: methane enhancement has no units/description band tag",
+      "a525b9d1-8ac6-4549-bc0e-b1b629e42b3c: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "510b71da-2561-42a5-945c-8f1c44df5563: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "f7b9fa6d-faae-4a9d-96e5-1bd3c0633e52: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "3d61dd00-93e1-443e-a515-bc36103f28df: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "6125e81d-8cab-4b11-bb27-341d0ef18aca: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "a61cd7db-f827-477a-b6cb-e3dadfbfb6db: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "d8a44e19-ef53-4861-87fc-2243a9b73555: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "e96d02fa-3ae6-4bd1-8419-9ef19e9807b9: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "9a6cdd74-0a0d-4d6c-ac2c-015365fd9bcb: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata",
+      "bb753947-ce4c-4923-bd0a-b56aa480efbd: cloud-mask nodata metadata overlaps an encoded 0/1 class; do not derive validity from GDAL nodata"
+    ]
+  }
+}

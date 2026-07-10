@@ -4,6 +4,55 @@ ERSRR needs paired Sentinel-2 imagery and methane-plume labels. Acquisition must
 
 ## Supported sources
 
+### MARS-S2L primary training corpus
+
+- Public dataset: <https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L>
+- Companion implementation: <https://github.com/UNEP-IMEO-MARS/marss2l>
+- Pinned revision: `c26b1d7e31a0c5241fa37c9140802622c215eb32`
+- License: CC BY-NC-SA 4.0
+
+Use MARS-S2L as the primary source of real plume positives and reviewed no-plume examples. Keep
+its Sentinel-2 MSI L1C domain separate from ERSRR's Element 84 L2A pilot and legacy Earth Engine
+L1C data. All raw MARS files and local manifests belong under this ignored path:
+
+```text
+EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/
+  publication-v1/external/MARS-S2L/
+```
+
+From the repository root, acquire and audit the 188,857,049-byte metadata tranche:
+
+```bash
+python tools/acquire_mars_metadata.py
+python tools/acquire_mars_metadata.py --verify-only
+python tools/audit_mars_metadata.py
+```
+
+Acquire or verify the deterministic 18-sample contract pilot:
+
+```bash
+python tools/acquire_mars_pilot.py
+python tools/acquire_mars_pilot.py --verify-only
+```
+
+The raster audit requires the repository's Linux environment because it includes Rasterio:
+
+```bash
+# Run from the repository root inside WSL:
+.venv/bin/python tools/audit_mars_pilot.py
+```
+
+The verified native S2 contract is a 200 x 200, 10 m, 12-band `uint16` stack. Target and
+background each contain `B02,B03,B04,B08,B11,B12`. Positive examples add a binary plume mask and
+a `DeltaCH4(ppm)` `float64` raster; negatives intentionally contain only the image and cloud mask.
+Ancillary descriptions are not universally populated, and cloud nodata can overlap the clear
+class, so resolve semantic roles from the pinned manifest and interpret cloud classes explicitly.
+
+Do not download the full mixed-sensor repository by default. The approved first cohort is limited
+to official-split Sentinel-2 L1C rows with `observability=clear`, at least 80% clear coverage, and a
+background reference: 56,552 samples (3,826 plume / 52,726 no plume). Generate and freeze its
+asset manifest and total byte estimate before authorizing the large transfer.
+
 ### EMIT methane labels
 
 - **EMIT L2B CH4PLM V002** is the preferred source for new work: <https://www.earthdata.nasa.gov/data/catalog/lpcloud-emitl2bch4plm-002>
@@ -91,8 +140,9 @@ python tools/ersrr.py audit
 
 ## Immediate acquisition priorities
 
-1. Obtain authenticated V002 concentration COGs through a user-managed Earthdata session and preserve their nodata/unit metadata.
-2. Add at least 200 hard negatives matched by geography, season, surface type, and cloud regime.
-3. Grow a geographically/source-disjoint held-out validation set to at least 50 independent groups.
-4. Collect tighter-time L2A pairs and keep before/after stacks on one grid.
-5. Consider synthetic plume injection only as augmentation; retain a real-data-only test set.
+1. Freeze and byte-estimate the selective 56,552-item MARS-S2L S2 cohort before its large transfer.
+2. Obtain authenticated V002 concentration COGs through a user-managed Earthdata session and preserve their nodata/unit metadata.
+3. Use MARS reviewed negatives for training, then mine hard negatives by geography, season, surface type, and cloud regime.
+4. Grow a geographically/source-disjoint held-out validation set to at least 50 independent groups.
+5. Collect tighter-time L2A pairs and keep before/after stacks on one grid.
+6. Consider synthetic plume injection only as augmentation; retain a real-data-only test set.

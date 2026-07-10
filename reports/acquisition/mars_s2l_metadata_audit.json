@@ -1,0 +1,580 @@
+{
+  "decisions": [
+    "Use MARS-S2L as the primary real positive/negative corpus.",
+    "Start with Sentinel-2 MSI L1C only; keep Landsat and ERSRR L2A separate.",
+    "Use test-only physical locations as the primary geographic-transfer subset.",
+    "Recompute 25 km connected location groups for ERSRR cross-validation.",
+    "Treat non-clear and missing-reference rows as observability/abstention cases.",
+    "Download only assets referenced by the selected Sentinel-2 cohort."
+  ],
+  "full_metadata_table": {
+    "case_studies": {
+      "Algeria": 23789,
+      "Arabian peninsula": 4839,
+      "Egypt": 2227,
+      "Iran (Islamic Republic of)": 2800,
+      "Iraq": 2881,
+      "Libya": 11404,
+      "Offshore": 3233,
+      "Rest": 2439,
+      "Syrian Arab Republic": 602,
+      "Turkmenistan": 19347,
+      "United States of America": 13414,
+      "Uzbekistan & Kazakhstan": 6452,
+      "Venezuela": 111
+    },
+    "clear_percentage": {
+      "max": 100.0,
+      "mean": 97.856913,
+      "median": 100.0,
+      "min": 50.0,
+      "p10": 96.741155,
+      "p90": 100.0
+    },
+    "countries": {
+      "Algeria": 23789,
+      "Argentina": 379,
+      "Australia": 209,
+      "Azerbaijan": 220,
+      "Bahrain": 885,
+      "Canada": 5,
+      "China": 554,
+      "Egypt": 2227,
+      "Germany": 2,
+      "India": 77,
+      "Iran (Islamic Republic of)": 2800,
+      "Iraq": 2881,
+      "Italy": 38,
+      "Jordan": 475,
+      "Kazakhstan": 5047,
+      "Kuwait": 737,
+      "Libya": 11404,
+      "Mexico": 131,
+      "Mozambique": 39,
+      "Nigeria": 22,
+      "Offshore": 3233,
+      "Oman": 816,
+      "Pakistan": 168,
+      "Poland": 14,
+      "Qatar": 272,
+      "Romania": 40,
+      "Russian Federation": 8,
+      "Saudi Arabia": 347,
+      "Spain": 5,
+      "Syrian Arab Republic": 602,
+      "Tunisia": 14,
+      "Turkey": 39,
+      "Turkmenistan": 19347,
+      "United Arab Emirates": 1163,
+      "United States of America": 13414,
+      "Uzbekistan": 1405,
+      "Venezuela": 111,
+      "Yemen": 619
+    },
+    "counts": {
+      "background_missing": 3072,
+      "background_present": 90466,
+      "negative": 87485,
+      "positive": 6053,
+      "recommended_s2_negative": 55793,
+      "recommended_s2_positive": 4089,
+      "recommended_s2_rows": 59882,
+      "rows": 93538,
+      "sentinel2_negative": 62264,
+      "sentinel2_positive": 4217,
+      "sentinel2_rows": 66481
+    },
+    "dimensions": {
+      "200x200": 93538
+    },
+    "file": "validated_images_all.csv",
+    "observability": {
+      "bad_retrieval": 2632,
+      "clear": 86738,
+      "cloudy": 2991,
+      "shadow": 636,
+      "smoke": 137,
+      "snow": 404
+    },
+    "positive_fraction": 0.06471167,
+    "product_domains": {
+      "Landsat_Collection2_L1GT": 528,
+      "Landsat_Collection2_L1TP": 26529,
+      "Sentinel-2_MSI_L1C": 66481
+    },
+    "satellites": {
+      "LC08": 14271,
+      "LC09": 12786,
+      "S2A": 33158,
+      "S2B": 33165,
+      "S2C": 158
+    },
+    "split_names": {
+      "Not Used": 5651,
+      "test_2023": 43524,
+      "train_2023": 38345,
+      "val_2023": 6018
+    },
+    "unique_item_ids": 93538,
+    "unique_locations": 1318,
+    "unique_scenes": 32338
+  },
+  "generated_at_utc": "2026-07-10T18:52:20.258520+00:00",
+  "global_integrity": {
+    "all_rows": 93538,
+    "all_unique_item_ids": 93538,
+    "full_positive_images_missing_from_plume_table": 199,
+    "negative_asset_contract_violations": 0,
+    "official_duplicate_item_ids": 0,
+    "official_items_missing_from_all": 0,
+    "official_negative_rows": 82244,
+    "official_positive_images_missing_from_plume_table": 197,
+    "official_positive_rows": 5643,
+    "official_split_rows": 87887,
+    "official_unique_item_ids": 87887,
+    "plume_image_ids": 5855,
+    "plume_images_not_marked_positive_in_full_table": 1,
+    "plume_images_outside_official_positive_ids": 409,
+    "plume_rows": 5964,
+    "positive_asset_contract_violations": 0,
+    "positive_images_missing_plume_table_by_split": {
+      "test": 75,
+      "train": 101,
+      "val": 21
+    },
+    "unassigned_rows": 5651
+  },
+  "official_splits": {
+    "test": {
+      "case_studies": {
+        "Algeria": 4251,
+        "Arabian peninsula": 3547,
+        "Egypt": 1672,
+        "Iran (Islamic Republic of)": 2388,
+        "Iraq": 463,
+        "Libya": 6473,
+        "Offshore": 2224,
+        "Rest": 1830,
+        "Syrian Arab Republic": 550,
+        "Turkmenistan": 9438,
+        "United States of America": 8043,
+        "Uzbekistan & Kazakhstan": 2535,
+        "Venezuela": 110
+      },
+      "clear_percentage": {
+        "max": 100.0,
+        "mean": 97.450186,
+        "median": 100.0,
+        "min": 50.0,
+        "p10": 94.181586,
+        "p90": 100.0
+      },
+      "countries": {
+        "Algeria": 4251,
+        "Argentina": 248,
+        "Australia": 130,
+        "Azerbaijan": 170,
+        "Bahrain": 672,
+        "Canada": 5,
+        "China": 453,
+        "Egypt": 1672,
+        "Germany": 2,
+        "India": 69,
+        "Iran (Islamic Republic of)": 2388,
+        "Iraq": 463,
+        "Italy": 38,
+        "Jordan": 326,
+        "Kazakhstan": 1454,
+        "Kuwait": 590,
+        "Libya": 6473,
+        "Mexico": 96,
+        "Nigeria": 21,
+        "Offshore": 2224,
+        "Oman": 508,
+        "Pakistan": 168,
+        "Poland": 1,
+        "Qatar": 272,
+        "Romania": 40,
+        "Russian Federation": 8,
+        "Saudi Arabia": 213,
+        "Spain": 5,
+        "Syrian Arab Republic": 550,
+        "Tunisia": 14,
+        "Turkey": 36,
+        "Turkmenistan": 9438,
+        "United Arab Emirates": 1069,
+        "United States of America": 8043,
+        "Uzbekistan": 1081,
+        "Venezuela": 110,
+        "Yemen": 223
+      },
+      "counts": {
+        "background_missing": 2077,
+        "background_present": 41447,
+        "negative": 41692,
+        "positive": 1832,
+        "recommended_s2_negative": 20267,
+        "recommended_s2_positive": 1050,
+        "recommended_s2_rows": 21317,
+        "rows": 43524,
+        "sentinel2_negative": 24360,
+        "sentinel2_positive": 1078,
+        "sentinel2_rows": 25438
+      },
+      "dimensions": {
+        "200x200": 43524
+      },
+      "file": "test.csv",
+      "observability": {
+        "bad_retrieval": 1727,
+        "clear": 38664,
+        "cloudy": 2337,
+        "shadow": 545,
+        "smoke": 86,
+        "snow": 165
+      },
+      "positive_fraction": 0.04209172,
+      "product_domains": {
+        "Landsat_Collection2_L1GT": 304,
+        "Landsat_Collection2_L1TP": 17782,
+        "Sentinel-2_MSI_L1C": 25438
+      },
+      "satellites": {
+        "LC08": 9149,
+        "LC09": 8937,
+        "S2A": 12555,
+        "S2B": 12726,
+        "S2C": 157
+      },
+      "split_names": {
+        "test_2023": 43524
+      },
+      "unique_item_ids": 43524,
+      "unique_locations": 1289,
+      "unique_scenes": 13393
+    },
+    "train": {
+      "case_studies": {
+        "Algeria": 15958,
+        "Arabian peninsula": 1163,
+        "Egypt": 514,
+        "Iran (Islamic Republic of)": 328,
+        "Iraq": 1983,
+        "Libya": 3871,
+        "Offshore": 765,
+        "Rest": 546,
+        "Syrian Arab Republic": 48,
+        "Turkmenistan": 8094,
+        "United States of America": 1743,
+        "Uzbekistan & Kazakhstan": 3331,
+        "Venezuela": 1
+      },
+      "clear_percentage": {
+        "max": 100.0,
+        "mean": 98.183555,
+        "median": 100.0,
+        "min": 50.021626,
+        "p10": 98.290497,
+        "p90": 100.0
+      },
+      "countries": {
+        "Algeria": 15958,
+        "Argentina": 119,
+        "Australia": 69,
+        "Azerbaijan": 45,
+        "Bahrain": 200,
+        "China": 86,
+        "Egypt": 514,
+        "India": 8,
+        "Iran (Islamic Republic of)": 328,
+        "Iraq": 1983,
+        "Jordan": 136,
+        "Kazakhstan": 3018,
+        "Kuwait": 136,
+        "Libya": 3871,
+        "Mexico": 28,
+        "Mozambique": 39,
+        "Nigeria": 1,
+        "Offshore": 765,
+        "Oman": 284,
+        "Poland": 13,
+        "Saudi Arabia": 128,
+        "Syrian Arab Republic": 48,
+        "Turkey": 2,
+        "Turkmenistan": 8094,
+        "United Arab Emirates": 92,
+        "United States of America": 1743,
+        "Uzbekistan": 313,
+        "Venezuela": 1,
+        "Yemen": 323
+      },
+      "counts": {
+        "background_missing": 758,
+        "background_present": 37587,
+        "negative": 34833,
+        "positive": 3512,
+        "recommended_s2_negative": 27196,
+        "recommended_s2_positive": 2512,
+        "recommended_s2_rows": 29708,
+        "rows": 38345,
+        "sentinel2_negative": 29064,
+        "sentinel2_positive": 2598,
+        "sentinel2_rows": 31662
+      },
+      "dimensions": {
+        "200x200": 38345
+      },
+      "file": "train.csv",
+      "observability": {
+        "bad_retrieval": 698,
+        "clear": 36805,
+        "cloudy": 514,
+        "shadow": 78,
+        "smoke": 47,
+        "snow": 203
+      },
+      "positive_fraction": 0.09158952,
+      "product_domains": {
+        "Landsat_Collection2_L1GT": 162,
+        "Landsat_Collection2_L1TP": 6521,
+        "Sentinel-2_MSI_L1C": 31662
+      },
+      "satellites": {
+        "LC08": 3729,
+        "LC09": 2954,
+        "S2A": 15780,
+        "S2B": 15882
+      },
+      "split_names": {
+        "train_2023": 38345
+      },
+      "unique_item_ids": 38345,
+      "unique_locations": 618,
+      "unique_scenes": 14346
+    },
+    "val": {
+      "case_studies": {
+        "Algeria": 3279,
+        "Arabian peninsula": 65,
+        "Iran (Islamic Republic of)": 69,
+        "Iraq": 328,
+        "Libya": 832,
+        "Offshore": 113,
+        "Turkmenistan": 780,
+        "Uzbekistan & Kazakhstan": 552
+      },
+      "clear_percentage": {
+        "max": 100.0,
+        "mean": 98.593476,
+        "median": 100.0,
+        "min": 50.254877,
+        "p10": 99.387315,
+        "p90": 100.0
+      },
+      "countries": {
+        "Algeria": 3279,
+        "Iran (Islamic Republic of)": 69,
+        "Iraq": 328,
+        "Kazakhstan": 552,
+        "Libya": 832,
+        "Offshore": 113,
+        "Turkmenistan": 780,
+        "Yemen": 65
+      },
+      "counts": {
+        "background_missing": 113,
+        "background_present": 5905,
+        "negative": 5719,
+        "positive": 299,
+        "recommended_s2_negative": 5263,
+        "recommended_s2_positive": 264,
+        "recommended_s2_rows": 5527,
+        "rows": 6018,
+        "sentinel2_negative": 5489,
+        "sentinel2_positive": 267,
+        "sentinel2_rows": 5756
+      },
+      "dimensions": {
+        "200x200": 6018
+      },
+      "file": "val.csv",
+      "observability": {
+        "bad_retrieval": 18,
+        "clear": 5930,
+        "cloudy": 38,
+        "shadow": 1,
+        "snow": 31
+      },
+      "positive_fraction": 0.04968428,
+      "product_domains": {
+        "Landsat_Collection2_L1GT": 33,
+        "Landsat_Collection2_L1TP": 229,
+        "Sentinel-2_MSI_L1C": 5756
+      },
+      "satellites": {
+        "LC08": 237,
+        "LC09": 25,
+        "S2A": 2870,
+        "S2B": 2886
+      },
+      "split_names": {
+        "val_2023": 6018
+      },
+      "unique_item_ids": 6018,
+      "unique_locations": 89,
+      "unique_scenes": 2007
+    }
+  },
+  "plume_table": {
+    "counts": {
+      "rows": 5964
+    },
+    "detection_institutions": {
+      "UNEP IMEO MARS": 5932,
+      "UPV LARS": 32
+    },
+    "file": "validated_images_plumes.csv",
+    "satellites": {
+      "LC08": 1058,
+      "LC09": 776,
+      "S2A": 2206,
+      "S2B": 1923,
+      "S2C": 1
+    },
+    "unique_image_ids": 5855,
+    "unique_plume_ids": 5964,
+    "unique_source_ids": 439
+  },
+  "provenance": {
+    "git_commit": "f6383a5c171a9cfb84b996a63076acf0ed19fd17",
+    "git_tracked_worktree_dirty_at_start": false,
+    "python": "3.13.12",
+    "script": "tools/audit_mars_metadata.py",
+    "script_sha256": "27f9ce35e773ccef42d069653b08d6443e4ff5913d37a993f331b63022144bb6"
+  },
+  "recommended_initial_cohort": {
+    "counts_by_split": {
+      "test": {
+        "negative": 20267,
+        "positive": 1050,
+        "rows": 21317
+      },
+      "train": {
+        "negative": 27196,
+        "positive": 2512,
+        "rows": 29708
+      },
+      "val": {
+        "negative": 5263,
+        "positive": 264,
+        "rows": 5527
+      }
+    },
+    "minimum_clear_percentage": 80.0,
+    "observability": "clear",
+    "product_level": "L1C",
+    "requires_background_reference": true,
+    "sensor": "Sentinel-2 MSI"
+  },
+  "schema_version": 1,
+  "source": {
+    "license": "CC-BY-NC-SA-4.0",
+    "local_manifest_sha256": "1849d865338471c9b0cd339032f8d49b3c9da15fa990f76627ca30005f907d77",
+    "repository": "UNEP-IMEO/MARS-S2L",
+    "repository_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32"
+  },
+  "source_integrity": {
+    "all_declared_lfs_hashes_match": true,
+    "all_expected_sizes_match": true,
+    "file_count": 7,
+    "files": [
+      {
+        "expected_sha256": null,
+        "path": "README.md",
+        "sha256": "cbfe8f844426aa043a6e5aaaf3940012206532fa62568bb94957054ccaf905c8",
+        "size": 11414,
+        "source_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L/resolve/c26b1d7e31a0c5241fa37c9140802622c215eb32/README.md?download=true",
+        "status": "verified"
+      },
+      {
+        "expected_sha256": null,
+        "path": "location_name_mapping.json",
+        "sha256": "bc43e9e1e4641b36ae1ce6c2829272d4fbd404a5505d043787e375496ac661fa",
+        "size": 26398,
+        "source_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L/resolve/c26b1d7e31a0c5241fa37c9140802622c215eb32/location_name_mapping.json?download=true",
+        "status": "verified"
+      },
+      {
+        "expected_sha256": "add125547e0e0066216070ed61a8544e76e84f062f636390be5d2ef1808dbfaa",
+        "path": "test.csv",
+        "sha256": "add125547e0e0066216070ed61a8544e76e84f062f636390be5d2ef1808dbfaa",
+        "size": 43066514,
+        "source_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L/resolve/c26b1d7e31a0c5241fa37c9140802622c215eb32/test.csv?download=true",
+        "status": "verified"
+      },
+      {
+        "expected_sha256": "f163f3986d46875270014fb958c7a5931c5c661ec650ab26391b3e7bde7f9053",
+        "path": "train.csv",
+        "sha256": "f163f3986d46875270014fb958c7a5931c5c661ec650ab26391b3e7bde7f9053",
+        "size": 39298437,
+        "source_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L/resolve/c26b1d7e31a0c5241fa37c9140802622c215eb32/train.csv?download=true",
+        "status": "verified"
+      },
+      {
+        "expected_sha256": null,
+        "path": "val.csv",
+        "sha256": "be11301ce4d9668d7c707883598794e37bec7d5523b1061a5defd3b3e5dc96db",
+        "size": 5934748,
+        "source_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L/resolve/c26b1d7e31a0c5241fa37c9140802622c215eb32/val.csv?download=true",
+        "status": "verified"
+      },
+      {
+        "expected_sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2",
+        "path": "validated_images_all.csv",
+        "sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2",
+        "size": 94136263,
+        "source_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L/resolve/c26b1d7e31a0c5241fa37c9140802622c215eb32/validated_images_all.csv?download=true",
+        "status": "verified"
+      },
+      {
+        "expected_sha256": null,
+        "path": "validated_images_plumes.csv",
+        "sha256": "30cb278b9a7fca62e030d6efb7d362c28192f84421672203902ccd87eaaa2b5b",
+        "size": 6383275,
+        "source_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L/resolve/c26b1d7e31a0c5241fa37c9140802622c215eb32/validated_images_plumes.csv?download=true",
+        "status": "verified"
+      }
+    ],
+    "total_bytes": 188857049
+  },
+  "split_isolation": {
+    "geographic_components": {
+      "component_count": 318,
+      "component_split_patterns": {
+        "test": 171,
+        "test+train": 111,
+        "test+train+val": 24,
+        "train": 12
+      },
+      "cross_split_components": 135,
+      "largest_component_locations": 152,
+      "locations_with_coordinates": 1315,
+      "radius_km": 25.0
+    },
+    "location_overlap_counts": {
+      "train_test": 592,
+      "train_val": 89,
+      "val_test": 84
+    },
+    "scene_overlap_counts": {
+      "train_test": 0,
+      "train_val": 0,
+      "val_test": 0
+    },
+    "test_unseen_locations": 697,
+    "test_unseen_negative_rows": 15426,
+    "test_unseen_positive_rows": 229,
+    "test_unseen_rows": 15655
+  }
+}

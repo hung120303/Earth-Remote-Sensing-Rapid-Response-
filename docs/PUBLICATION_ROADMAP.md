@@ -1,6 +1,6 @@
 # ERSRR publication roadmap: reliable plume detection and no-plume rejection
 
-- Status: proposed execution plan
+- Status: execution active; pinned MARS-S2L metadata and raster contract audited
 - Date: 2026-07-10
 - Starting revision: `3cab591405cf59287a76249c12e08ca4e82f6855`
 - Current artifact: `research_only`; it is an engineering baseline, not the paper model
@@ -90,6 +90,15 @@ enhancement for positive cases, and about 100 GB total storage. It includes offi
 validation, and test splits. The license is CC BY-NC-SA 4.0. As checked on 2026-07-10, the
 repository is public and ungated.
 
+The pinned local audit now provides exact counts. The official split union contains 87,887 image
+items: 5,643 plume positives and 82,244 reviewed negatives. A first S2-only, clear,
+`percentage_clear >= 80`, background-present cohort contains 56,552 items (3,826 positive and
+52,726 negative). It has 29,708 train, 5,527 validation, and 21,317 test items. The official
+splits have no exact scene overlap, but they do share physical locations: 89 train/validation,
+592 train/test, and 84 validation/test. The primary geographic-transfer result must therefore use
+the 697 test-only locations (15,655 items), while retaining the full official test for comparison.
+See `reports/acquisition/MARS_S2L_METADATA_AUDIT.md` for the reproducible evidence.
+
 Pin the initial import to repository revision:
 
 ```text
@@ -103,32 +112,36 @@ EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/
   publication-v1/external/MARS-S2L/
 ```
 
-Install the public Hugging Face downloader in the project environment:
+Download and verify only the pinned metadata first (188,857,049 bytes):
 
 ```bash
-python -m pip install --upgrade "huggingface_hub[cli]"
+python tools/acquire_mars_metadata.py
+python tools/acquire_mars_metadata.py --verify-only
+python tools/audit_mars_metadata.py
 ```
 
-Download only metadata first (roughly 190 MB):
+The audit gate passed for selective S2 ingestion. Do not mirror the full mixed-sensor 100 GB
+repository: the first paper experiment neither needs Landsat nor the 5,651 rows outside the
+official splits. Before a large transfer, generate a cohort manifest from the criteria above,
+freeze its sample IDs and asset URLs, estimate its byte size, obtain storage approval, and fetch
+only its image/cloud-mask assets plus positive plume/enhancement assets.
+
+The deterministic 18-sample contract pilot is already available locally and can be independently
+verified and audited with:
 
 ```bash
-hf download UNEP-IMEO/MARS-S2L \
-  README.md train.csv val.csv test.csv validated_images_all.csv \
-  validated_images_plumes.csv location_name_mapping.json \
-  --repo-type dataset \
-  --revision c26b1d7e31a0c5241fa37c9140802622c215eb32 \
-  --local-dir "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L"
+python tools/acquire_mars_pilot.py --verify-only
+# Run from the repository root inside WSL:
+.venv/bin/python tools/audit_mars_pilot.py
 ```
 
-After the metadata audit confirms product level, bands, site identifiers, split integrity, and
-license obligations, download the full pinned repository:
-
-```bash
-hf download UNEP-IMEO/MARS-S2L \
-  --repo-type dataset \
-  --revision c26b1d7e31a0c5241fa37c9140802622c215eb32 \
-  --local-dir "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L"
-```
+The pilot verifies 54 files / 19,835,687 bytes across 18 balanced samples with zero contract
+violations. Its native image is a 200 x 200, 10 m, 12-band `uint16` stack: target and background
+each contain `B02,B03,B04,B08,B11,B12`. Positive samples additionally contain a binary plume mask
+and `DeltaCH4(ppm)` raster; negatives intentionally omit both. Some ancillary rasters lack band
+descriptions, and cloud-mask nodata metadata can overlap the clear class, so the adapter must use
+manifest roles and explicit mask values rather than GDAL validity masks. See
+`reports/acquisition/MARS_S2L_CONTRACT_PILOT.md`.
 
 Do not copy this corpus into the tracked `Dataset/` directory. Track only a derived manifest,
 license record, pinned revision, checksums, split/group audit, and experiment summaries.
@@ -281,9 +294,12 @@ cloud + validity masks ---------------------------/
 
 Initial input contract:
 
-- target and reference Sentinel-2 observations on one 20 m grid;
-- canonical B2/B3/B4/B11/B12 raw values, plus a separately declared MBMP/retrieval channel;
+- native MARS target and reference Sentinel-2 observations on one 200 x 200, 10 m grid;
+- six declared bands per date: B02/B03/B04/B08/B11/B12, plus separately derived MBMP/retrieval
+  channels;
 - cloud/validity masks and temporal gap as explicit metadata;
+- manifest-declared asset roles and explicit cloud classes; never infer clear/invalid solely from
+  ancillary-raster nodata metadata;
 - no silent L1C/L2A mixing;
 - S2-only experiments first; Landsat is a later cross-sensor extension.
 
@@ -368,7 +384,9 @@ Exit: signed-off protocol and no ambiguity about what `NO_PLUME` means.
 
 ### Phase 1 - ingest and audit MARS-S2L (1 week)
 
-- Download pinned metadata, then the full corpus after the metadata audit.
+- Download and verify pinned metadata, then build a frozen selective S2 cohort manifest.
+- Estimate and approve the selective transfer before downloading its assets; do not mirror the
+  full mixed-sensor corpus.
 - Build a read-only dataset adapter; do not rewrite 100 GB into another raw copy.
 - Audit class balance, sites, regions, product levels, bands, temporal pairs, clouds, duplicates,
   official splits, and missing assets.
@@ -434,8 +452,9 @@ shopping.
 
 ### Work that does not require user credentials
 
-- Download and audit the pinned MARS-S2L metadata and, after storage approval, the full ~100 GB
-  public corpus.
+- Pinned MARS-S2L metadata and the deterministic raster-contract pilot are downloaded, verified,
+  and audited. The next public-data action is a byte-estimated selective S2 cohort transfer after
+  explicit storage approval, not a full ~100 GB mirror.
 - Build the MARS adapter, group/leakage audit, benchmark specification, and baseline runner.
 - Generate the exact larger EMIT candidate list from public CMR metadata before requesting more
   authenticated downloads.
