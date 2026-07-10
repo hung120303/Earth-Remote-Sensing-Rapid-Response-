@@ -51,6 +51,10 @@ or make flux claims until UNEP-IMEO reconciles the product metadata. Ancillary d
 not universally populated, and cloud nodata can overlap the clear class, so resolve semantic roles
 from the pinned manifest and interpret cloud classes explicitly.
 
+The larger development tranche additionally proves that some cloud rasters contain encoded value
+`4`, consistent with a nodata/invalid class omitted from the README's documented 0-3 table. The
+adapter treats only `0` as clear; values `1-3` are cloud/shadow and `4` is invalid/unobservable.
+
 Do not download the full mixed-sensor repository by default. The proposed first cohort is limited
 to official-split Sentinel-2 L1C rows with `observability=clear`, at least 80% clear coverage, and a
 background reference: 56,552 samples (3,826 plume / 52,726 no plume). Generate and freeze its

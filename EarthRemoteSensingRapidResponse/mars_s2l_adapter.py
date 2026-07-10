@@ -24,7 +24,13 @@ REFLECTANCE_DIVISOR = 5000.0
 REFLECTANCE_MAX = 2.0
 MBMP_NEUTRAL = 1.0
 MBMP_MAX = 10.0
-CLOUD_CLASSES = {0: "clear", 1: "thick_cloud", 2: "thin_cloud", 3: "cloud_shadow"}
+CLOUD_CLASSES = {
+    0: "clear",
+    1: "thick_cloud",
+    2: "thin_cloud",
+    3: "cloud_shadow",
+    4: "nodata_or_invalid",
+}
 ENHANCEMENT_UNIT_STATUS = (
     "conflict: GeoTIFF tags may say DeltaCH4(ppm), while the pinned MARS-S2L "
     "README describes enhancement values as ppb; do not use quantitative units "
