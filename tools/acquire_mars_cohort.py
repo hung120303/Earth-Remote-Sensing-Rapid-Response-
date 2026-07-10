@@ -246,6 +246,11 @@ def status_counts(results: Iterable[dict[str, Any]]) -> dict[str, int]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--metadata-dir", default=DEFAULT_OUTPUT.as_posix())
+    parser.add_argument(
+        "--catalog-file",
+        default=REMOTE_CATALOG,
+        help="Catalog path relative to the ignored MARS directory",
+    )
     parser.add_argument("--workers", type=int, default=DEFAULT_WORKERS)
     parser.add_argument(
         "--max-assets",
@@ -267,7 +272,8 @@ def main() -> int:
     try:
         metadata_dir = checked_output_dir(root, args.metadata_dir)
         verify_files(metadata_dir)
-        catalog = load_catalog(metadata_dir / REMOTE_CATALOG)
+        catalog_path = safe_asset_path(metadata_dir, args.catalog_file)
+        catalog = load_catalog(catalog_path)
         catalog_total = len(catalog)
         if args.max_assets is not None:
             catalog = catalog[: args.max_assets]
@@ -275,7 +281,7 @@ def main() -> int:
         state["catalog_asset_count"] = catalog_total
         state["partial_scope"] = len(catalog) != catalog_total
         state["metadata_dir"] = metadata_dir.relative_to(root).as_posix()
-        state["remote_catalog"] = (metadata_dir / REMOTE_CATALOG).relative_to(root).as_posix()
+        state["remote_catalog"] = catalog_path.relative_to(root).as_posix()
         if args.dry_run:
             print(json.dumps({"ok": True, "dry_run": True, **state}, indent=None if args.compact else 2, sort_keys=True))
             return 0
@@ -316,7 +322,7 @@ def main() -> int:
         final_state["catalog_asset_count"] = catalog_total
         final_state["partial_scope"] = len(catalog) != catalog_total
         final_state["metadata_dir"] = metadata_dir.relative_to(root).as_posix()
-        final_state["remote_catalog"] = (metadata_dir / REMOTE_CATALOG).relative_to(root).as_posix()
+        final_state["remote_catalog"] = catalog_path.relative_to(root).as_posix()
         payload = {
             "ok": verified_count == len(catalog),
             "dry_run": False,
