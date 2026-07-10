@@ -1,10 +1,16 @@
 {
   "contract": {
     "cloud_mask": "one-band uint8; observed values 0/1; explicit classes override ambiguous nodata metadata",
+    "enhancement_unit_evidence": {
+      "geotiff_description": "DeltaCH4(ppm) on 7/9 positive pilot rasters; absent on 2/9",
+      "pinned_dataset_readme": "Delta XCH4 enhancement image in ppb",
+      "policy": "preserve raw values but prohibit quantitative-unit regression or flux claims until reconciled with the producer",
+      "status": "conflict"
+    },
     "grid": "200 x 200 pixels at 10 m in sample-local UTM",
     "image_layout": "12-band uint16 target/reference pair",
     "negative_assets": "image and cloud mask only; the adapter must create the zero target in memory",
-    "positive_assets": "binary plume mask plus DeltaCH4(ppm) float64 raster",
+    "positive_assets": "binary plume mask plus float64 enhancement raster",
     "product_level": "L1C",
     "reference_bands": [
       "B02_bg",
@@ -30,17 +36,18 @@
     "Keep negative targets implicit and create zero masks only inside the loader.",
     "Use cloud masks as observability inputs and exclude invalid pixels from losses and metrics.",
     "Do not use rasterio/GDAL validity masks for cloud semantics because nodata can overlap the clear class.",
+    "Do not assign physical enhancement units until the TIFF-tag versus dataset-documentation conflict is reconciled.",
     "Keep the existing five-band L2A compact model as a separate baseline artifact."
   ],
-  "generated_at_utc": "2026-07-10T19:10:03.860232+00:00",
+  "generated_at_utc": "2026-07-10T19:54:44.132313+00:00",
   "provenance": {
-    "git_commit": "f6383a5c171a9cfb84b996a63076acf0ed19fd17",
-    "git_tracked_worktree_dirty_at_start": false,
+    "git_commit": "8f717d52a6a35c860e4fed8084d6ccfec45e9a39",
+    "git_tracked_worktree_dirty_at_start": true,
     "numpy": "2.4.4",
     "python": "3.11.14",
     "rasterio": "1.4.4",
     "script": "tools/audit_mars_pilot.py",
-    "script_sha256": "5ae1b54190a4dae9032dd1c765fc784a4ae6d9177d9da55c6400c5154197e90b"
+    "script_sha256": "4ba31d8b9f2f7406d8432cc1db57cdaa0b62f951de10af9ed673a7a7e4c98739"
   },
   "samples": [
     {
@@ -2876,7 +2883,7 @@
       "mean": 0.040664,
       "min": 0.008375
     },
-    "positive_plume_methane_max_ppm": {
+    "positive_plume_methane_max_raw": {
       "count": 9,
       "max": 4196.315135,
       "mean": 2378.832844,

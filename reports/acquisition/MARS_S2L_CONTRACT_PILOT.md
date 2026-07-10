@@ -12,7 +12,8 @@
 - Target bands: `B02, B03, B04, B08, B11, B12`.
 - Reference bands: `B02_bg, B03_bg, B04_bg, B08_bg, B11_bg, B12_bg`.
 - Cloud mask: one-band uint8; observed values 0/1; explicit classes override ambiguous nodata metadata.
-- Positive label assets: binary plume mask plus DeltaCH4(ppm) float64 raster.
+- Positive label assets: binary plume mask plus float64 enhancement raster.
+- Enhancement units: unresolved; GeoTIFF descriptions say `DeltaCH4(ppm)` where present, while the pinned dataset README says ppb.
 - Negative label assets: image and cloud mask only; the adapter must create the zero target in memory.
 
 | Split | Plume | No plume |
@@ -38,3 +39,4 @@ The raster gate passes if the violation count remains zero. This validates the a
 3. Negative samples intentionally omit plume and enhancement files; the loader must synthesize a zero mask in memory without inventing a raw label asset.
 4. Cloud and nodata support must gate both loss and evaluation. Product level remains explicitly Sentinel-2 MSI L1C.
 5. Some rasters omit descriptive band tags, and cloud nodata can overlap the clear class; resolve roles from the pinned manifest and interpret mask classes explicitly.
+6. Preserve enhancement values as raw until UNEP-IMEO reconciles the ppm TIFF tag with the ppb dataset documentation; do not make regression or flux claims from the current unit metadata.
