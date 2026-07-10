@@ -1,0 +1,106 @@
+{
+  "cohort": {
+    "grouping": {
+      "cross_split_groups": 107,
+      "group_count": 272,
+      "largest_group_samples": 7635,
+      "physical_locations": 1208,
+      "radius_km": 25.0,
+      "split_patterns": {
+        "test": 150,
+        "test+train": 85,
+        "test+train+val": 22,
+        "train": 15
+      }
+    },
+    "negative_samples": 52726,
+    "positive_samples": 3826,
+    "sample_count": 56552,
+    "split_label_counts": {
+      "test:NO_PLUME": 20267,
+      "test:PLUME": 1050,
+      "train:NO_PLUME": 27196,
+      "train:PLUME": 2512,
+      "val:NO_PLUME": 5263,
+      "val:PLUME": 264
+    },
+    "test_only_location_negative_samples": 7819,
+    "test_only_location_positive_samples": 134,
+    "test_only_location_samples": 7953,
+    "test_only_locations": 621
+  },
+  "decisions": [
+    "Authorize only this frozen Sentinel-2 cohort, not the full mixed-sensor repository.",
+    "Use the test-only-location subset for the primary geographic-transfer result.",
+    "Create an internal group-disjoint train/validation split; the official validation sites overlap training.",
+    "Use the 25 km connected-component group IDs for ERSRR resampling and uncertainty intervals.",
+    "Verify downloaded LFS files against their declared SHA-256 and all files against size."
+  ],
+  "generated_at_utc": "2026-07-10T19:31:04.635803+00:00",
+  "local_ignored_artifacts": {
+    "cohort_manifest": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_s2_cohort.jsonl",
+    "cohort_manifest_bytes": 116728366,
+    "cohort_manifest_sha256": "d5d41635f79a93fd79f8678b75b788c45f41ba5f3812166d00cc5558d91dc8a3",
+    "remote_catalog": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_s2_remote_catalog.jsonl",
+    "remote_catalog_bytes": 62397280,
+    "remote_catalog_sha256": "14ebf04712220d658c517bcc92dd6041d6b208b315ed7843f7ebbef2f73096ac"
+  },
+  "provenance": {
+    "git_commit": "881682833e9ba10ca956718f79692512753b2b36",
+    "git_tracked_worktree_dirty_at_start": false,
+    "python": "3.13.12",
+    "script": "tools/build_mars_cohort.py",
+    "script_sha256": "9e31ad24ea0dadd940e3020b7720a0b6b3df13f14da34338ca82e712e61cf347"
+  },
+  "remote_assets": {
+    "asset_counts_by_role": {
+      "cloud_mask": 56552,
+      "image": 56552,
+      "methane_enhancement": 3826,
+      "plume_mask": 3826
+    },
+    "asset_counts_by_split": {
+      "test": 44734,
+      "train": 64440,
+      "val": 11582
+    },
+    "asset_size_bytes": {
+      "max": 1170218,
+      "mean": 484080.271,
+      "median": 23550,
+      "min": 1204
+    },
+    "binary_gib": 54.441,
+    "bytes_by_role": {
+      "cloud_mask": 69584957,
+      "image": 57625361069,
+      "methane_enhancement": 755242347,
+      "plume_mask": 5408860
+    },
+    "bytes_by_split": {
+      "test": 21874914974,
+      "train": 30860984063,
+      "val": 5719698196
+    },
+    "decimal_gb": 58.456,
+    "git_blob_sha1_asset_count": 45230,
+    "lfs_sha256_asset_count": 75526,
+    "total_bytes": 58455597233,
+    "unique_asset_count": 120756
+  },
+  "schema_version": 1,
+  "selection": {
+    "minimum_clear_percentage": 80.0,
+    "observability": "clear",
+    "official_splits_only": true,
+    "product_level": "L1C",
+    "requires_background_reference": true,
+    "sensor": "Sentinel-2 MSI"
+  },
+  "source": {
+    "license": "CC-BY-NC-SA-4.0",
+    "repository": "UNEP-IMEO/MARS-S2L",
+    "repository_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32"
+  }
+}
