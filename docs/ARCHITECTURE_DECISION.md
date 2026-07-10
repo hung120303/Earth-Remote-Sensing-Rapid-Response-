@@ -1,6 +1,6 @@
 # ADR: segmentation-first research architecture
 
-- Status: accepted for research, not approved for operational deployment
+- Status: superseded for primary research by `ARCHITECTURE_DECISION_V3.md`; retained as the legacy engineering baseline
 - Date: 2026-07-09
 - Evidence revision: `6bf2059213c77c521416b0e460fb0f49de8d4fd7`
 
