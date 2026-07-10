@@ -96,6 +96,13 @@ availability section and recommends DOI-backed FAIR repositories for the code an
   only 4.4%-35.0%, so the promotion gate still fails. The next decision must come from the released
   MARS-S2L baseline and validation-only error analysis, not from further inspection of this frozen
   benchmark.
+- The pinned released MARS-S2L checkpoint establishes the credible scale baseline. Using the
+  authors' fixed >0.5 / 100-pixel connected-component rule without ERSRR recalibration, it reaches
+  64.2% recall, 92.2% specificity, 0.822 AUROC, 0.494 pixel AP, and 0.530 pixel Dice on the same 579
+  strict-spatial scenes. The group-bootstrap recall interval is 48.0%-86.1% and FPR is 7.8%, so it
+  also fails the ERSRR research gate. It nevertheless outperforms MIL v2 decisively and shows that
+  the next candidate must inherit full-resolution U-Net capacity and substantially broader
+  training data while adding a separately calibrated high-specificity presence/abstention head.
 
 The current shared core and artifact contract remain useful engineering infrastructure. They do
 not establish a useful detector.
@@ -360,15 +367,15 @@ candidate architecture and operating rule are frozen.
 
 ## Model architecture hypothesis
 
-The current compact raw ResUNet remains a five-band single-time baseline. The paper candidate is a
-dual-temporal selective detector:
+The current compact raw ResUNet remains a five-band single-time baseline. The released-checkpoint
+result rules out another compact shared-encoder iteration as the primary path. The next paper
+candidate is a full-resolution dual-temporal selective U-Net initialized from the released model:
 
 ```text
-target S2 bands ----- shared encoder ----\
-                                      change fusion --> segmentation decoder --> plume mask
-reference S2 bands -- shared encoder ----/        |--> presence head ---------> plume/no-plume
-MBMP / retrieval channels ------------------------|--> quality head ----------> observable/abstain
-cloud + validity masks ---------------------------/
+target + reference + MBMP + wind + cloud --> full U-Net --> segmentation decoder --> plume mask
+                                                   |       multi-scale top-k --> plume/no-plume
+                                                   |       quality features --> observable/abstain
+validity mask -------------------------------------|---------------------------> masked losses
 ```
 
 Initial input contract:
@@ -384,7 +391,11 @@ Initial input contract:
 
 Heads and training:
 
+- retain the released 13.6M-parameter full-resolution U-Net as the capacity baseline instead of
+  widening the undertrained 2.75M-parameter shared encoder;
 - scene-presence head trained on balanced positives and real hard negatives;
+- presence evidence aggregated from decoder logits and deep features with top-k/max MIL rather
+  than global-average pooling;
 - segmentation loss evaluated only where the target and annotation are valid;
 - observability/quality head trained to reject invalid scenes;
 - online hard-negative mining after the first baseline pass;
@@ -398,9 +409,10 @@ compute MBMP from separately median-normalized B12/B11 target and background rat
 computes a validity-aware MBMP variant whose medians exclude cloud and radiometrically invalid
 pixels. Both must remain explicit ablations.
 
-Do not add a larger backbone until the released MARS-S2L model is reproduced. A pretrained
-Prithvi, SatMAE, DOFA, or SegFormer encoder is an ablation only after the data adapter, baselines,
-and evaluation gates pass.
+The released MARS-S2L model is now reproduced and establishes that capacity plus data scale is the
+dominant gap. The next experiment should therefore warm-start that exact U-Net and add selective
+heads; Prithvi, SatMAE, DOFA, or SegFormer remains a later ablation only if the warm-started model
+fails under the same expanded-data contract.
 
 ## Experiment ladder
 
@@ -489,10 +501,11 @@ Exit: every sample resolves to a state, group, split, checksum, and product cont
 Exit: credible baseline table and documented discrepancies from published values.
 
 Current development status: native MBMP plus raw/physics scene and pixel-logistic baselines are
-complete and fail the promotion gate. Joint model v1 and top-k MIL v2 are also frozen; v2 is the
-strongest ERSRR candidate so far but still fails the gate. Released CH4Net/MARS-S2L reproduction
-remains before Phase 2 exits. Any subsequent ERSRR change must be selected on internal validation
-or new external data, not on the already reported strict-spatial development benchmark.
+complete and fail the promotion gate. Joint model v1 and top-k MIL v2 are also frozen. The released
+MARS-S2L checkpoint reproduction is complete and is the strongest detector, but still fails the
+recall-confidence and FPR gates. Released CH4Net remains as a secondary ablation before Phase 2
+fully exits. Any subsequent ERSRR change must be selected on internal validation or new external
+data, not on the already reported strict-spatial development benchmark.
 
 ### Phase 3 - hard-negative and architecture experiments (2-4 weeks)
 
