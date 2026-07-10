@@ -136,9 +136,21 @@ def safe_asset_path(metadata_dir: Path, relative_path: str) -> Path:
     relative = Path(relative_path)
     if relative.is_absolute() or ".." in relative.parts:
         raise ValueError(f"Unsafe MARS-S2L asset path: {relative_path}")
-    destination = (metadata_dir / relative).resolve()
-    if metadata_dir not in destination.parents:
+    base = metadata_dir.resolve()
+    # Resolving a non-existent >260-character final path on Windows can
+    # intermittently introduce an extended-path prefix that compares unequal
+    # to its base. The path is already lexically constrained above, so perform
+    # a normalized common-path check and separately reject existing symlinks.
+    destination = Path(os.path.abspath(os.path.join(str(base), *relative.parts)))
+    if os.path.normcase(os.path.commonpath([str(base), str(destination)])) != os.path.normcase(
+        str(base)
+    ):
         raise ValueError(f"Asset path escapes metadata directory: {relative_path}")
+    parent = destination.parent
+    while parent != base:
+        if parent.exists() and parent.is_symlink():
+            raise ValueError(f"Asset path traverses a symlink: {relative_path}")
+        parent = parent.parent
     return destination
 
 

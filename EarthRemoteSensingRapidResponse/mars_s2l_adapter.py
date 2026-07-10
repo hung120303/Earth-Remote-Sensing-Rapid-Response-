@@ -9,6 +9,7 @@ descriptive tags and cloud-mask nodata metadata can overlap encoded classes.
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Iterator
@@ -66,10 +67,15 @@ def safe_asset_path(base_dir: Path, relative_path: str) -> Path:
     relative = PurePosixPath(relative_path)
     if relative.is_absolute() or ".." in relative.parts:
         raise ValueError(f"Unsafe MARS-S2L asset path: {relative_path}")
-    result = (base_dir / Path(*relative.parts)).resolve()
     base = base_dir.resolve()
-    if result != base and base not in result.parents:
+    result = Path(os.path.abspath(os.path.join(str(base), *relative.parts)))
+    if os.path.normcase(os.path.commonpath([str(base), str(result)])) != os.path.normcase(str(base)):
         raise ValueError(f"MARS-S2L asset escapes base directory: {relative_path}")
+    parent = result.parent
+    while parent != base:
+        if parent.exists() and parent.is_symlink():
+            raise ValueError(f"MARS-S2L asset traverses a symlink: {relative_path}")
+        parent = parent.parent
     return result
 
 
