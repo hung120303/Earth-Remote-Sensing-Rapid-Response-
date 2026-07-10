@@ -50,6 +50,7 @@ DEFAULT_MODEL_DIR = Path(
 DEFAULT_CHECKPOINT = DEFAULT_MODEL_DIR / "best_epoch"
 DEFAULT_CONFIG = DEFAULT_MODEL_DIR / "config_experiment.json"
 DEFAULT_METADATA_CSV = DEFAULT_OUTPUT / "validated_images_all.csv"
+DEFAULT_MANIFEST = DEFAULT_OUTPUT / DEV_SAMPLES
 DEFAULT_JSON = Path("reports/experiments/mars_released_model_baseline.json")
 DEFAULT_MARKDOWN = Path("reports/experiments/MARS_RELEASED_MODEL_BASELINE.md")
 EXPECTED_CHECKPOINT_SHA256 = (
@@ -396,7 +397,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--metadata-dir", default=DEFAULT_OUTPUT.as_posix())
-    parser.add_argument("--manifest", default=str(DEV_SAMPLES))
+    parser.add_argument("--manifest", default=DEFAULT_MANIFEST.as_posix())
     parser.add_argument("--metadata-csv", default=DEFAULT_METADATA_CSV.as_posix())
     parser.add_argument("--checkpoint", default=DEFAULT_CHECKPOINT.as_posix())
     parser.add_argument("--config", default=DEFAULT_CONFIG.as_posix())
@@ -406,7 +407,7 @@ def main() -> int:
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     args = parser.parse_args()
 
-    root = repo_root(ROOT)
+    root = repo_root()
     metadata_dir = (root / args.metadata_dir).resolve()
     manifest = (root / args.manifest).resolve()
     metadata_csv = (root / args.metadata_csv).resolve()
