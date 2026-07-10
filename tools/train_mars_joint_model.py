@@ -34,7 +34,14 @@ from mars_s2l_adapter import iter_manifest, load_sample  # noqa: E402
 
 from acquire_mars_metadata import DEFAULT_OUTPUT, REVISION, checked_output_dir, repo_root, sha256  # noqa: E402
 from build_mars_dev_cohort import DEV_SAMPLES, DEFAULT_JSON as DEV_REPORT_JSON  # noqa: E402
-from run_mars_dev_pixel_baselines import evaluate_rule, select_rule  # noqa: E402
+from run_mars_dev_pixel_baselines import (  # noqa: E402
+    MIN_COMPONENT_PIXELS,
+    candidate_thresholds,
+    component_labels,
+    evaluate_rule,
+    scene_confusion,
+    unpack,
+)
 from run_mars_dev_scene_baselines import (  # noqa: E402
     bootstrap_ci,
     choose_lower_threshold,
@@ -409,6 +416,65 @@ def choose_quality_threshold(labels: np.ndarray, scores: np.ndarray) -> tuple[fl
     return best[1], best[2]
 
 
+def select_segmentation_by_dice(
+    scores: np.ndarray,
+    observable_packed: np.ndarray,
+    truth_packed: np.ndarray,
+    presence: np.ndarray,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Select mask threshold/component area by validation pixel Dice only."""
+    truth_area = sum(
+        int(np.count_nonzero(unpack(truth) & unpack(observable)))
+        for truth, observable in zip(truth_packed, observable_packed)
+    )
+    best: tuple[tuple[float, ...], dict[str, Any], dict[str, Any]] | None = None
+    for threshold in candidate_thresholds(scores, observable_packed):
+        prepared: list[tuple[np.ndarray, np.ndarray, np.ndarray]] = []
+        for score, obs_bits, truth_bits in zip(scores, observable_packed, truth_packed):
+            observable = unpack(obs_bits)
+            truth = unpack(truth_bits) & observable
+            labels, sizes = component_labels((score.astype(np.float32) >= threshold) & observable)
+            prepared.append((labels, sizes, truth))
+        for minimum_pixels in MIN_COMPONENT_PIXELS:
+            scene_predictions: list[bool] = []
+            intersection = predicted_area = 0
+            for labels, sizes, truth in prepared:
+                keep = sizes >= minimum_pixels
+                keep[0] = False
+                prediction = keep[labels]
+                scene_predictions.append(bool(np.any(prediction)))
+                intersection += int(np.count_nonzero(prediction & truth))
+                predicted_area += int(np.count_nonzero(prediction))
+            dice = (
+                0.0
+                if predicted_area + truth_area == 0
+                else 2.0 * intersection / (predicted_area + truth_area)
+            )
+            scene = scene_confusion(presence, np.asarray(scene_predictions, dtype=bool))
+            rule = {
+                "pixel_threshold": float(threshold),
+                "minimum_connected_pixels": int(minimum_pixels),
+            }
+            details = {
+                **scene,
+                "pixel_dice": dice,
+                "predicted_positive_pixels": predicted_area,
+                "truth_positive_pixels": truth_area,
+            }
+            rank = (
+                dice,
+                float(scene["recall"] or 0.0),
+                -float(scene["false_positive_rate"] or 0.0),
+                -minimum_pixels,
+            )
+            candidate = (rank, rule, details)
+            if best is None or candidate[0] > best[0]:
+                best = candidate
+    if best is None:
+        raise RuntimeError("No validation segmentation rules were evaluated")
+    return best[1], best[2]
+
+
 def selective_quality_metrics(
     labels: np.ndarray,
     presence_scores: np.ndarray,
@@ -497,6 +563,7 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--learning-rate", type=float, default=3e-4)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument("--compact", action="store_true")
     args = parser.parse_args()
     root = repo_root()
@@ -546,17 +613,28 @@ def main() -> int:
         device = torch.device("cuda")
         model = MarsJointModel().to(device)
         checkpoint = safe_output(root, args.checkpoint)
-        history, best_epoch = train_model(
-            model,
-            train_loader,
-            val_loader,
-            device,
-            checkpoint,
-            epochs=args.epochs,
-            learning_rate=args.learning_rate,
-            seed=args.seed,
-            patience=args.patience,
-        )
+        if args.evaluate_only:
+            checkpoint_payload = torch.load(checkpoint, map_location=device, weights_only=False)
+            model.load_state_dict(checkpoint_payload["state_dict"])
+            best_epoch = int(checkpoint_payload["epoch"])
+            previous_output = safe_output(root, args.output_json)
+            history = (
+                json.loads(previous_output.read_text(encoding="utf-8"))["training"]["history"]
+                if previous_output.is_file()
+                else []
+            )
+        else:
+            history, best_epoch = train_model(
+                model,
+                train_loader,
+                val_loader,
+                device,
+                checkpoint,
+                epochs=args.epochs,
+                learning_rate=args.learning_rate,
+                seed=args.seed,
+                patience=args.patience,
+            )
         validation = collect_predictions(model, val_loader, device)
         upper, validation_scene = choose_upper_threshold(
             validation["labels"], validation["presence"]
@@ -568,7 +646,7 @@ def main() -> int:
         quality_threshold, quality_selection = choose_quality_threshold(
             validation["quality_labels"], validation["quality"]
         )
-        segmentation_rule, validation_segmentation = select_rule(
+        segmentation_rule, validation_segmentation = select_segmentation_by_dice(
             validation["segmentation"],
             validation["observable"],
             validation["truth"],
