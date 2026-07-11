@@ -108,6 +108,8 @@ def load_proposal_stage(
         raise ValueError("Proposal stage was selected from a different v3 validation report")
     if source["v3_checkpoint_sha256"] != experiment["artifact"]["sha256"]:
         raise ValueError("Proposal stage was fit from a different v3 checkpoint")
+    if int(report["training"]["seed"]) != int(experiment["training"]["seed"]):
+        raise ValueError("Proposal stage seed differs from the v3 training seed")
     training_manifest = metadata_dir / V3_SAMPLES
     if source["manifest_sha256"] != sha256(training_manifest):
         raise ValueError("Proposal-stage training manifest identity mismatch")
@@ -131,6 +133,8 @@ def load_proposal_stage(
     )
     if artifact.get("cache_identity") != expected_identity:
         raise ValueError("Proposal artifact identity differs from the frozen feature contract")
+    if int(artifact.get("seed", -1)) != int(experiment["training"]["seed"]):
+        raise ValueError("Proposal artifact seed differs from the v3 training seed")
     expected_names = proposal_feature_names(16)
     if artifact.get("feature_names") != expected_names:
         raise ValueError("Proposal artifact feature ordering differs from the frozen contract")

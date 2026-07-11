@@ -55,7 +55,7 @@ DEFAULT_JSON = Path("reports/experiments/mars_v3_proposal_validation.json")
 DEFAULT_MARKDOWN = Path("reports/experiments/MARS_V3_PROPOSAL_VALIDATION.md")
 MAXIMUM_PROPOSALS_PER_SCENE = 20
 CALIBRATION_GROUP_FRACTION = 0.20
-MODEL_SEED = 303
+DEFAULT_SEED = 303
 
 
 def safe_output(root: Path, value: str) -> Path:
@@ -317,6 +317,7 @@ def main() -> int:
     parser.add_argument("--output-markdown", default=DEFAULT_MARKDOWN.as_posix())
     parser.add_argument("--batch-size", type=int, default=24)
     parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--rebuild-cache", action="store_true")
     parser.add_argument("--extract-only", action="store_true")
     args = parser.parse_args()
@@ -399,7 +400,7 @@ def main() -> int:
         # Avoid sklearn's proposal-level random early-stopping split, which
         # would mix spatial groups. Complexity is frozen a priori instead.
         early_stopping=False,
-        random_state=MODEL_SEED,
+        random_state=args.seed,
     )
     classifier.fit(x[fit], y[fit], sample_weight=balanced_group_weights(y[fit], groups[fit]))
     calibration_raw = classifier.predict_proba(x[calibration])[:, 1]
@@ -407,7 +408,7 @@ def main() -> int:
         np.clip(calibration_raw, 1e-6, 1 - 1e-6)
         / np.clip(1 - calibration_raw, 1e-6, 1)
     )
-    calibrator = LogisticRegression(random_state=MODEL_SEED)
+    calibrator = LogisticRegression(random_state=args.seed)
     calibrator.fit(
         calibration_logit[:, None],
         y[calibration],
@@ -436,6 +437,7 @@ def main() -> int:
             "upper_plume_threshold": upper,
             "lower_no_plume_threshold": lower,
             "calibration_groups": sorted(calibration_groups),
+            "seed": args.seed,
         },
         temporary_artifact,
         compress=3,
@@ -464,6 +466,7 @@ def main() -> int:
             "tracked": False,
         },
         "training": {
+            "seed": args.seed,
             "fit_proposals": int(np.sum(fit)),
             "calibration_proposals": int(np.sum(calibration)),
             "validation_proposals": int(np.sum(validation)),
