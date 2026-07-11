@@ -1,8 +1,8 @@
 {
   "artifact": {
-    "bytes": 57556829,
+    "bytes": 57105401,
     "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v3_smoke_seed303.pt",
-    "sha256": "4d1de5aff29b1e2f1fbfdae11112fdbeb715fcb4533820a6c390ee49d1edc86d",
+    "sha256": "26bb3688db0403a13cd0269035c1d91f08115706f70e726564f7335fc185680b",
     "tracked": false
   },
   "cohort": {
@@ -14,7 +14,7 @@
     "validation_groups": 13
   },
   "decision": "Pipeline contract passes. Do not interpret smoke metrics; acquire the frozen full fit/validation corpus before architecture selection.",
-  "generated_at_utc": "2026-07-10T22:18:34.764351+00:00",
+  "generated_at_utc": "2026-07-11T23:03:28.694975+00:00",
   "model": {
     "heads": [
       "segmentation",
@@ -42,16 +42,16 @@
     ],
     "model_name": "ersrr_mars_full_unet_proposal_v3",
     "normalization": "GroupNorm",
-    "parameter_count": 14381987,
+    "parameter_count": 14268915,
     "schema_version": 1,
     "topk_fraction": 0.01
   },
   "operating_rule": {
-    "lower_no_plume_threshold": 0.4403076171875,
+    "lower_no_plume_threshold": null,
     "lower_selection": {
-      "accepted_samples": 12,
-      "npv": 0.9556433904259991,
-      "weighted_coverage": 0.4787636669470143
+      "accepted_samples": 0,
+      "npv": null,
+      "weighted_coverage": 0.0
     },
     "quality_selection": {
       "fn": 0,
@@ -61,19 +61,19 @@
       "tn": 0,
       "tp": 26
     },
-    "quality_threshold": 0.9189453125,
+    "quality_threshold": 0.904296875,
     "segmentation": {
       "minimum_connected_pixels": 200,
-      "pixel_threshold": 0.15966796875
+      "pixel_threshold": 0.157470703125
     },
     "selected_on": "internal_validation_only",
-    "upper_plume_threshold": 0.4461669921875
+    "upper_plume_threshold": 0.448974609375
   },
   "provenance": {
-    "git_commit": "36fa2bc8043613eb8fde221453ef55969ef7aad6",
+    "git_commit": "9891fe1f73791f0dbe2c54d22730fb5f9cf25d77",
     "git_tracked_worktree_dirty_at_start": false,
     "model_source": "EarthRemoteSensingRapidResponse/mars_v3_model.py",
-    "model_source_sha256": "5ff10c4c4034e2c238847daf799f14def6eaed6c299c05f19c78737290211e97",
+    "model_source_sha256": "16fea9c93c587abdce16357861f1475966932c92221944556f6fd5553482ca5a",
     "script": "tools/train_mars_v3.py",
     "script_sha256": "1a0bf5820f260d577367a27a06d91519d02c6db0a07008f24cb69dbba997607a"
   },
@@ -101,20 +101,20 @@
       {
         "epoch": 1,
         "learning_rate": 0.0,
-        "seconds": 4.104,
+        "seconds": 4.297,
         "training": {
-          "dice_loss": 0.9813215620815754,
-          "presence_focal": 0.4147691819816828,
-          "quality_bce": 0.35650816885754466,
-          "segmentation_bce": 0.5198611589148641,
-          "total": 1.6505011096596718
+          "dice_loss": 0.9841877929866314,
+          "presence_focal": 0.42631977796554565,
+          "quality_bce": 0.3602810939773917,
+          "segmentation_bce": 0.5463734213262796,
+          "total": 1.6959610506892204
         },
         "validation": {
           "observed_fpr": 0.0,
-          "positive_soft_dice": 0.057419322431087494,
-          "presence_auroc": 0.55078125,
-          "presence_average_precision": 0.563834691355219,
-          "presence_threshold": 0.4461669921875,
+          "positive_soft_dice": 0.05116888880729675,
+          "presence_auroc": 0.267578125,
+          "presence_average_precision": 0.45389625299367853,
+          "presence_threshold": 0.448974609375,
           "recall_at_fpr5": 0.0625
         }
       }
@@ -124,13 +124,13 @@
     "small_plume_presence_weighting": "sqrt(1000/(valid_truth_pixels+1)), clipped [0.75,3]"
   },
   "validation": {
-    "presence_auroc": 0.55078125,
-    "presence_average_precision": 0.563834691355219,
+    "presence_auroc": 0.267578125,
+    "presence_average_precision": 0.45389625299367853,
     "scene": {
       "accuracy": 0.53125,
-      "auroc": 0.55078125,
-      "average_precision": 0.563834691355219,
-      "brier": 0.25329241156578064,
+      "auroc": 0.267578125,
+      "average_precision": 0.45389625299367853,
+      "brier": 0.25719088315963745,
       "false_positive_rate": 0.0,
       "fn": 15.0,
       "fp": 0.0,
@@ -145,9 +145,9 @@
       "false_positive_rate": 1.0,
       "fn": 0,
       "fp": 16,
-      "pixel_dice": 0.08538516471574502,
+      "pixel_dice": 0.05343806805323366,
       "precision": 0.5,
-      "predicted_positive_pixels": 111446,
+      "predicted_positive_pixels": 119599,
       "recall": 1.0,
       "specificity": 0.0,
       "tn": 0,
