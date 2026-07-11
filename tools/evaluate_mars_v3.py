@@ -92,6 +92,63 @@ def fmt(value: float | None) -> str:
     return "n/a" if value is None else f"{value:.3f}"
 
 
+def calibration_summary(
+    labels: np.ndarray,
+    scores: np.ndarray,
+    *,
+    weights: np.ndarray | None = None,
+    bin_count: int = 10,
+) -> dict[str, Any]:
+    """Return fixed-bin reliability evidence and expected calibration error."""
+    y = np.asarray(labels, dtype=np.float64)
+    probability = np.asarray(scores, dtype=np.float64)
+    if y.shape != probability.shape or y.ndim != 1:
+        raise ValueError("Calibration labels and scores must be matching 1D arrays")
+    if bin_count <= 1 or not np.all((probability >= 0.0) & (probability <= 1.0)):
+        raise ValueError("Calibration requires probabilities in [0,1] and at least two bins")
+    sample_weight = (
+        np.ones(y.shape, dtype=np.float64)
+        if weights is None
+        else np.asarray(weights, dtype=np.float64)
+    )
+    if sample_weight.shape != y.shape or np.any(sample_weight < 0):
+        raise ValueError("Calibration weights must be non-negative and match labels")
+    total_weight = float(np.sum(sample_weight))
+    if total_weight <= 0:
+        raise ValueError("Calibration weights must have positive mass")
+    edges = np.linspace(0.0, 1.0, bin_count + 1)
+    assignments = np.digitize(probability, edges[1:-1], right=False)
+    bins: list[dict[str, Any]] = []
+    ece = 0.0
+    for index in range(bin_count):
+        selected = assignments == index
+        if not np.any(selected):
+            continue
+        mass = float(np.sum(sample_weight[selected]))
+        confidence = float(
+            np.average(probability[selected], weights=sample_weight[selected])
+        )
+        prevalence = float(np.average(y[selected], weights=sample_weight[selected]))
+        gap = abs(confidence - prevalence)
+        ece += (mass / total_weight) * gap
+        bins.append(
+            {
+                "lower": float(edges[index]),
+                "upper": float(edges[index + 1]),
+                "samples": int(np.sum(selected)),
+                "weight": mass,
+                "mean_probability": confidence,
+                "observed_prevalence": prevalence,
+                "absolute_gap": gap,
+            }
+        )
+    return {
+        "method": f"{bin_count} fixed-width probability bins",
+        "expected_calibration_error": float(ece),
+        "bins": bins,
+    }
+
+
 def load_proposal_stage(
     root: Path,
     metadata_dir: Path,
@@ -389,6 +446,11 @@ def main() -> int:
     neural_scene_unweighted = metrics(
         labels, neural_scores, float(rule["upper_plume_threshold"])
     )
+    for scene_metrics in (scene_unweighted, scene_weighted, neural_scene_unweighted):
+        fpr = scene_metrics["false_positive_rate"]
+        scene_metrics["false_positives_per_100_scenes"] = (
+            None if fpr is None else 100.0 * float(fpr)
+        )
     segmentation = evaluate_rule(
         predictions["segmentation"],
         predictions["observable"],
@@ -459,6 +521,12 @@ def main() -> int:
                 if proposal_report is not None
                 else None
             ),
+            "calibration": {
+                "unweighted": calibration_summary(labels, scores),
+                "representative_weighted": calibration_summary(
+                    labels, scores, weights=weights
+                ),
+            },
             "segmentation": segmentation,
             "group_bootstrap": interval,
             "selective_with_quality": selective,

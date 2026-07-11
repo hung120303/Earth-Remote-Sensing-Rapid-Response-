@@ -20,6 +20,7 @@ from mars_v3_proposals import (  # noqa: E402
     proposal_feature_names,
     proposal_features,
 )
+from evaluate_mars_v3 import calibration_summary  # noqa: E402
 from train_mars_v3 import MarsV3Dataset  # noqa: E402
 from train_mars_v3_proposals import scene_scores  # noqa: E402
 
@@ -85,6 +86,16 @@ class MarsV3ProposalTests(unittest.TestCase):
         repeated_values = second.augmentation_rng().integers(0, 1_000_000, size=8)
         np.testing.assert_array_equal(first_values, repeated_values)
         self.assertFalse(np.array_equal(first_values, advanced_values))
+
+    def test_calibration_summary_reports_fixed_bin_ece(self) -> None:
+        perfect = calibration_summary(
+            np.asarray([0, 1], dtype=np.uint8), np.asarray([0.0, 1.0])
+        )
+        self.assertAlmostEqual(perfect["expected_calibration_error"], 0.0)
+        overconfident = calibration_summary(
+            np.asarray([0, 0], dtype=np.uint8), np.asarray([0.9, 0.9])
+        )
+        self.assertAlmostEqual(overconfident["expected_calibration_error"], 0.9)
 
 
 if __name__ == "__main__":
