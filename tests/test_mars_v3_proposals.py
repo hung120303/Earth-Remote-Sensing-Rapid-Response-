@@ -20,6 +20,7 @@ from mars_v3_proposals import (  # noqa: E402
     proposal_feature_names,
     proposal_features,
 )
+from train_mars_v3 import MarsV3Dataset  # noqa: E402
 from train_mars_v3_proposals import scene_scores  # noqa: E402
 
 
@@ -75,6 +76,15 @@ class MarsV3ProposalTests(unittest.TestCase):
         np.testing.assert_array_equal(labels, [1, 0])
         np.testing.assert_allclose(scores, [0.97, 0.12])
         np.testing.assert_array_equal(groups, ["group-a", "group-b"])
+
+    def test_augmentation_stream_advances_and_repeats_from_seed(self) -> None:
+        first = MarsV3Dataset(Path("."), [], {}, augment=True, seed=303)
+        second = MarsV3Dataset(Path("."), [], {}, augment=True, seed=303)
+        first_values = first.augmentation_rng().integers(0, 1_000_000, size=8)
+        advanced_values = first.augmentation_rng().integers(0, 1_000_000, size=8)
+        repeated_values = second.augmentation_rng().integers(0, 1_000_000, size=8)
+        np.testing.assert_array_equal(first_values, repeated_values)
+        self.assertFalse(np.array_equal(first_values, advanced_values))
 
 
 if __name__ == "__main__":

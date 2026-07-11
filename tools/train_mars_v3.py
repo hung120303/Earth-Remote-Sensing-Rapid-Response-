@@ -24,7 +24,7 @@ import sklearn
 import torch
 from sklearn.metrics import average_precision_score, roc_auc_score
 from torch.nn import functional as F
-from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
+from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler, get_worker_info
 
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_ROOT = ROOT / "EarthRemoteSensingRapidResponse"
@@ -134,6 +134,15 @@ class MarsV3Dataset(Dataset[dict[str, Any]]):
         self.winds = winds
         self.augment = augment
         self.seed = seed
+        self._augmentation_rng: np.random.Generator | None = None
+
+    def augmentation_rng(self) -> np.random.Generator:
+        """Return one deterministic stream per persistent data-loader worker."""
+        if self._augmentation_rng is None:
+            worker = get_worker_info()
+            worker_seed = self.seed if worker is None else int(worker.seed)
+            self._augmentation_rng = np.random.default_rng(worker_seed)
+        return self._augmentation_rng
 
     def __len__(self) -> int:
         return len(self.records)
@@ -148,9 +157,10 @@ class MarsV3Dataset(Dataset[dict[str, Any]]):
         mask = sample.plume_mask.astype(np.float32)
         wind = self.winds[sample.sample_id]
         if self.augment:
-            rng = np.random.default_rng(
-                self.seed + index + int(torch.initial_seed() % 1_000_003)
-            )
+            # The stream advances across repeated samples and epochs. The old
+            # index-derived seed made each sample/worker transform effectively
+            # static despite weighted resampling.
+            rng = self.augmentation_rng()
             turns = int(rng.integers(0, 4))
             if turns:
                 spectral = np.rot90(spectral, turns, axes=(1, 2)).copy()

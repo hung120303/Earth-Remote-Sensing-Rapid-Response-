@@ -42,7 +42,8 @@ Only cloud class `0` and nonzero radiometry are observable. Positive masks are e
 observable pixels. Methane-enhancement rasters are deliberately absent from detector training: their
 units are inconsistent upstream and none of the v3 losses consume them.
 
-Geometric augmentation rotates/flips the wind vector with the imagery. Input channel order,
+Geometric augmentation uses deterministic advancing per-worker streams and rotates/flips the wind
+vector with the imagery. Input channel order,
 normalization, model metadata, thresholds, checkpoint identity, source manifest identity, and Git
 revision are part of the artifact contract.
 
