@@ -396,7 +396,9 @@ def main() -> int:
         max_leaf_nodes=31,
         min_samples_leaf=20,
         l2_regularization=1.0,
-        early_stopping=True,
+        # Avoid sklearn's proposal-level random early-stopping split, which
+        # would mix spatial groups. Complexity is frozen a priori instead.
+        early_stopping=False,
         random_state=MODEL_SEED,
     )
     classifier.fit(x[fit], y[fit], sample_weight=balanced_group_weights(y[fit], groups[fit]))
@@ -405,8 +407,12 @@ def main() -> int:
         np.clip(calibration_raw, 1e-6, 1 - 1e-6)
         / np.clip(1 - calibration_raw, 1e-6, 1)
     )
-    calibrator = LogisticRegression(class_weight="balanced", random_state=MODEL_SEED)
-    calibrator.fit(calibration_logit[:, None], y[calibration])
+    calibrator = LogisticRegression(random_state=MODEL_SEED)
+    calibrator.fit(
+        calibration_logit[:, None],
+        y[calibration],
+        sample_weight=balanced_group_weights(y[calibration], groups[calibration]),
+    )
     proposal_probability = calibrated_probabilities(classifier, calibrator, x)
     validation_y, validation_scores, validation_groups = scene_scores(
         cache, proposal_probability, "internal_validation"
@@ -466,7 +472,7 @@ def main() -> int:
             "validation_groups": int(np.unique(validation_groups).size),
             "group_overlap": 0,
             "classifier": "HistGradientBoostingClassifier",
-            "calibration": "group-held-out Platt logistic",
+            "calibration": "group-held-out, class/group-balanced Platt logistic",
         },
         "operating_rule": {
             "selected_on": "internal_validation_only",

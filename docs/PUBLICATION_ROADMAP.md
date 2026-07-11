@@ -571,7 +571,9 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/train_mars_v3.py
 
 Then fit the connected-component false-alarm classifier. Its gradient-boosted proposal model is fit
 on internal-training groups, Platt-calibrated on a deterministic held-out subset of those groups,
-and thresholded only on the disjoint internal validation role. Ambiguous-overlap proposals are
+with class/group-balanced weights, and thresholded only on the disjoint internal validation role.
+The boosted classifier uses a fixed iteration budget rather than a proposal-random early-stopping
+split. Ambiguous-overlap proposals are
 excluded from classifier fitting but retained in scene scoring, because deployment cannot use truth
 to remove them:
 
