@@ -10,6 +10,7 @@ places raw imagery in a Git-visible dataset directory.
 from __future__ import annotations
 
 import argparse
+import gc
 import hashlib
 import json
 import os
@@ -144,7 +145,9 @@ def verify_one(metadata_dir: Path, item: dict[str, Any]) -> dict[str, Any]:
 
 
 def download_response(url: str, resume_at: int) -> Any:
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    request = urllib.request.Request(
+        url, headers={"User-Agent": USER_AGENT, "Connection": "close"}
+    )
     if resume_at:
         request.add_header("Range", f"bytes={resume_at}-")
     for attempt in range(5):
@@ -188,17 +191,23 @@ def acquire_one(metadata_dir: Path, item: dict[str, Any], *, force: bool) -> dic
         resume_at = 0
 
     response = download_response(item["source_url"], resume_at)
-    status = getattr(response, "status", response.getcode())
-    append = bool(resume_at and status == 206)
-    if resume_at and not append:
-        resume_at = 0
-    mode = "ab" if append else "wb"
-    with response, partial.open(mode) as target:
-        while True:
-            chunk = response.read(CHUNK_SIZE)
-            if not chunk:
-                break
-            target.write(chunk)
+    try:
+        status = getattr(response, "status", response.getcode())
+        append = bool(resume_at and status == 206)
+        if resume_at and not append:
+            resume_at = 0
+        mode = "ab" if append else "wb"
+        with partial.open(mode) as target:
+            while True:
+                chunk = response.read(CHUNK_SIZE)
+                if not chunk:
+                    break
+                target.write(chunk)
+    finally:
+        # CPython normally closes HTTPResponse objects immediately, but the
+        # Windows SSL stack can otherwise accumulate completed CLOSE_WAIT
+        # sockets during tens of thousands of small-file requests.
+        response.close()
 
     observed_size = partial.stat().st_size if partial.is_file() else 0
     if observed_size != expected_size:
@@ -230,6 +239,8 @@ def parallel_map(
         for future in as_completed(futures):
             results.append(future.result())
             completed += 1
+            if completed % 100 == 0:
+                gc.collect()
             if completed % 1000 == 0 or completed == len(items):
                 print(
                     f"{progress_label}: {completed:,}/{len(items):,}",
@@ -293,6 +304,12 @@ def main() -> int:
         type=int,
         help="Operate on only the first N catalog paths for a smoke test; never use for a full claim",
     )
+    parser.add_argument(
+        "--start-asset",
+        type=int,
+        default=0,
+        help="Zero-based catalog offset for a bounded transfer smoke test; never use for a full claim",
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--verify-only", action="store_true")
     parser.add_argument("--force", action="store_true")
@@ -303,6 +320,8 @@ def main() -> int:
         parser.error("--workers must be positive")
     if args.max_assets is not None and args.max_assets <= 0:
         parser.error("--max-assets must be positive")
+    if args.start_asset < 0:
+        parser.error("--start-asset must be non-negative")
     if args.dry_run and args.verify_only:
         parser.error("--dry-run and --verify-only are mutually exclusive")
     root = repo_root()
@@ -312,10 +331,16 @@ def main() -> int:
         catalog_path = safe_asset_path(metadata_dir, args.catalog_file)
         catalog = load_catalog(catalog_path)
         catalog_total = len(catalog)
+        if args.start_asset >= catalog_total:
+            raise ValueError(
+                f"--start-asset {args.start_asset:,} is outside the {catalog_total:,}-asset catalog"
+            )
+        catalog = catalog[args.start_asset :]
         if args.max_assets is not None:
             catalog = catalog[: args.max_assets]
         state = inventory(metadata_dir, catalog)
         state["catalog_asset_count"] = catalog_total
+        state["catalog_start_asset"] = args.start_asset
         state["partial_scope"] = len(catalog) != catalog_total
         state["metadata_dir"] = metadata_dir.relative_to(root).as_posix()
         state["remote_catalog"] = catalog_path.relative_to(root).as_posix()
@@ -360,6 +385,7 @@ def main() -> int:
         verified_count = counts.get("reused_verified", 0) + counts.get("downloaded_verified", 0)
         final_state = inventory(metadata_dir, catalog)
         final_state["catalog_asset_count"] = catalog_total
+        final_state["catalog_start_asset"] = args.start_asset
         final_state["partial_scope"] = len(catalog) != catalog_total
         final_state["metadata_dir"] = metadata_dir.relative_to(root).as_posix()
         final_state["remote_catalog"] = catalog_path.relative_to(root).as_posix()
