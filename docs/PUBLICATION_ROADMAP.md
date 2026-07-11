@@ -409,13 +409,16 @@ candidate architecture and operating rule are frozen.
 
 The current compact raw ResUNet remains a five-band single-time baseline. The released-checkpoint
 result rules out another compact shared-encoder iteration as the primary path. The next paper
-candidate is a full-resolution dual-temporal selective U-Net initialized from the released model:
+candidate is a full-resolution dual-temporal selective U-Net trained from scratch on the frozen
+fit groups. The released checkpoint remains a baseline only because its training corpus overlaps
+ERSRR internal-validation scenes:
 
 ```text
 target + reference + MBMP + wind + cloud --> full U-Net --> segmentation decoder --> plume mask
-                                                   |       multi-scale top-k --> plume/no-plume
-                                                   |       quality features --> observable/abstain
+                                                   |       component embedding --> fixed proposals
+                                                   |       top-k + geometry ----> neural ablation head
 validity mask -------------------------------------|---------------------------> masked losses
+fixed proposals + shape/spectral/wind context --> calibrated classifier ------> scene decision
 ```
 
 Initial input contract:
@@ -423,7 +426,8 @@ Initial input contract:
 - native MARS target and reference Sentinel-2 observations on one 200 x 200, 10 m grid;
 - six declared bands per date: B02/B03/B04/B08/B11/B12, plus separately derived MBMP/retrieval
   channels;
-- cloud/validity masks and temporal gap as explicit metadata;
+- cloud/validity masks as explicit channels; temporal gap retained for stratified analysis rather
+  than silently introduced as an untested neural feature;
 - manifest-declared asset roles and explicit cloud classes; never infer clear/invalid solely from
   ancillary-raster nodata metadata;
 - no silent L1C/L2A mixing;
@@ -439,7 +443,7 @@ Heads and training:
   as an input, not the decision statistic;
 - segmentation loss evaluated only where the target and annotation are valid;
 - observability/quality head trained to reject invalid scenes;
-- online hard-negative mining after the first baseline pass;
+- connected hard-negative extraction after the frozen neural pass;
 - class-balanced sampling by source and region, not by pixel;
 - deep ensemble or repeated-seed ensemble for epistemic uncertainty;
 - validation-only calibration with separate low/high thresholds for no-plume, abstain, and plume.
@@ -451,9 +455,9 @@ computes a validity-aware MBMP variant whose medians exclude cloud and radiometr
 pixels. Both must remain explicit ablations.
 
 The released MARS-S2L model is now reproduced and establishes that capacity plus data scale is the
-dominant gap. The next experiment should therefore warm-start that exact U-Net and add selective
-heads; Prithvi, SatMAE, DOFA, or SegFormer remains a later ablation only if the warm-started model
-fails under the same expanded-data contract.
+dominant gap. V3 therefore matches that capacity class while training a new ERSRR model from
+scratch under the leakage-safe group protocol. Prithvi, SatMAE, DOFA, or SegFormer remains a later
+ablation only if this full-data candidate fails under the same contract.
 
 ## Experiment ladder
 
