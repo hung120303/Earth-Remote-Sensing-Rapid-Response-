@@ -24,9 +24,9 @@ class MarsV3ModelTests(unittest.TestCase):
         self.assertEqual(output["segmentation_logits"].shape, (2, 1, 32, 32))
         self.assertEqual(output["presence_logit"].shape, (2,))
         self.assertEqual(output["quality_logit"].shape, (2,))
-        self.assertEqual(output["proposal_descriptor"].shape, (2, 1294))
+        self.assertEqual(output["proposal_descriptor"].shape, (2, 1070))
         self.assertEqual(output["soft_geometry"].shape, (2, 12))
-        self.assertEqual(output["decoder_features"].shape, (2, 128, 32, 32))
+        self.assertEqual(output["component_features"].shape, (2, 16, 32, 32))
         self.assertEqual(output["deepest_features"].shape, (2, 512, 2, 2))
         loss = (
             output["segmentation_logits"].mean()

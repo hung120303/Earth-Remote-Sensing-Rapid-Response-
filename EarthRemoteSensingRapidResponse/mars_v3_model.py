@@ -171,10 +171,11 @@ class MarsV3Model(nn.Module):
         self.up3 = Up(256, 64)
         self.up4 = Up(128, 128)
         self.segmentation = nn.Conv2d(128, 1, kernel_size=1)
+        self.component_embedding = nn.Sequential(nn.Conv2d(128, 16, 1), nn.GELU())
 
-        # Deep global context (1024), high-evidence decoder context (256),
+        # Deep global context (1024), high-evidence component context (32),
         # segmentation top-k evidence (2), and soft geometry/wind (12).
-        descriptor_channels = 1024 + 256 + 2 + 12
+        descriptor_channels = 1024 + 32 + 2 + 12
         self.presence = nn.Sequential(
             nn.LayerNorm(descriptor_channels),
             nn.Linear(descriptor_channels, 512),
@@ -215,15 +216,16 @@ class MarsV3Model(nn.Module):
         decoded = self.up3(decoded, x2)
         decoded = self.up4(decoded, x1)
         segmentation_logits = self.segmentation(decoded)
+        component_features = self.component_embedding(decoded)
 
         flat_logits = segmentation_logits.flatten(1)
         flat_observable = observable.flatten(1) > 0.5
         masked_logits = flat_logits.masked_fill(~flat_observable, -1e4)
         topk_count = max(1, int(masked_logits.shape[1] * self.topk_fraction))
         topk = torch.topk(masked_logits, k=topk_count, dim=1)
-        flat_decoder = decoded.flatten(2)
-        gather_index = topk.indices[:, None, :].expand(-1, flat_decoder.shape[1], -1)
-        proposal_values = torch.gather(flat_decoder, 2, gather_index)
+        flat_components = component_features.flatten(2)
+        gather_index = topk.indices[:, None, :].expand(-1, flat_components.shape[1], -1)
+        proposal_values = torch.gather(flat_components, 2, gather_index)
         proposal_context = torch.cat(
             [proposal_values.mean(dim=2), proposal_values.max(dim=2).values], dim=1
         )
@@ -259,7 +261,7 @@ class MarsV3Model(nn.Module):
             "soft_geometry": geometry,
         }
         if return_dense_features:
-            result["decoder_features"] = decoded
+            result["component_features"] = component_features
             result["deepest_features"] = deepest
         return result
 

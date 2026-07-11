@@ -116,9 +116,10 @@ availability section and recommends DOI-backed FAIR repositories for the code an
   negatives but is nearly identical between true and missed plumes. The next head must classify
   connected proposals using morphology, multiscale context, wind alignment, and geography-balanced
   hard negatives rather than treating top-k mask confidence or MBMP magnitude as presence.
-- V3 is implemented as a 14,381,987-parameter full-resolution GroupNorm U-Net trained from scratch,
+- V3 is implemented as a 14,268,915-parameter full-resolution GroupNorm U-Net trained from scratch,
   with proposal descriptors combining deep global context, decoder features at high-evidence
-  pixels, soft area/centroid/covariance/compactness, and along-/cross-wind variance. Positive
+  pixels through a learned 16-channel component embedding, soft area/centroid/covariance/compactness,
+  and along-/cross-wind variance. Positive
   presence loss upweights small plumes by valid mask area. A 64-train/32-validation, group-disjoint
   one-epoch smoke run completed the enhancement-free adapter, augmentation-aware wind rotation,
   GPU training, checkpoint, and validation-rule pipeline; it explicitly did not load the strict

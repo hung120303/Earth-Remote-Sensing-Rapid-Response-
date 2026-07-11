@@ -8,15 +8,17 @@
 ## Decision
 
 Train `ersrr_mars_full_unet_proposal_v3` from scratch on the frozen MARS-S2L internal fit groups.
-Use a 14,381,987-parameter full-resolution GroupNorm U-Net with three outputs:
+Use a 14,268,915-parameter full-resolution GroupNorm U-Net with three outputs:
 
 1. a dense plume segmentation map;
 2. a proposal-aware scene-presence score for plume / abstain / no-plume calibration;
 3. an observability score that is not promoted until cloudy and invalid scenes are represented.
 
-The presence descriptor combines deep average/max context, decoder features gathered at high-evidence
-pixels, and differentiable area, centroid, covariance, compactness, total variation, and along-/cross-wind
-shape features. Mask top-k confidence is only an input to this descriptor, not the decision rule.
+The presence descriptor combines deep average/max context, a learned 16-channel component embedding
+gathered at high-evidence pixels, and differentiable area, centroid, covariance, compactness, total
+variation, and along-/cross-wind shape features. Mask top-k confidence is only an input to this
+descriptor, not the decision rule. The same compact dense embedding supports a separately calibrated
+connected-component classifier without exporting the full 128-channel decoder tensor.
 
 Do not initialize the primary v3 experiment from the released MARS-S2L checkpoint. That checkpoint
 trained on the official training rows from which ERSRR's internal validation groups are drawn, so
