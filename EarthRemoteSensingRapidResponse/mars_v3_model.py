@@ -193,7 +193,11 @@ class MarsV3Model(nn.Module):
         )
 
     def forward(
-        self, inputs: torch.Tensor, observable: torch.Tensor
+        self,
+        inputs: torch.Tensor,
+        observable: torch.Tensor,
+        *,
+        return_dense_features: bool = False,
     ) -> dict[str, torch.Tensor]:
         if inputs.ndim != 4 or inputs.shape[1] != len(INPUT_CHANNELS):
             raise ValueError(
@@ -247,13 +251,17 @@ class MarsV3Model(nn.Module):
             [F.adaptive_avg_pool2d(deepest, 1).flatten(1), observed_fraction, cloud_fraction],
             dim=1,
         )
-        return {
+        result = {
             "segmentation_logits": segmentation_logits,
             "presence_logit": self.presence(proposal_descriptor).squeeze(1),
             "quality_logit": self.quality(quality_descriptor).squeeze(1),
             "proposal_descriptor": proposal_descriptor,
             "soft_geometry": geometry,
         }
+        if return_dense_features:
+            result["decoder_features"] = decoded
+            result["deepest_features"] = deepest
+        return result
 
     def artifact_metadata(self) -> dict[str, Any]:
         return {
