@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MODEL_ROOT = ROOT / "EarthRemoteSensingRapidResponse"
 if str(MODEL_ROOT) not in sys.path:
     sys.path.insert(0, str(MODEL_ROOT))
+if str(ROOT / "tools") not in sys.path:
+    sys.path.insert(0, str(ROOT / "tools"))
 
 from mars_v3_model import INPUT_CHANNELS  # noqa: E402
 from mars_v3_proposals import (  # noqa: E402
@@ -18,6 +20,7 @@ from mars_v3_proposals import (  # noqa: E402
     proposal_feature_names,
     proposal_features,
 )
+from train_mars_v3_proposals import scene_scores  # noqa: E402
 
 
 class MarsV3ProposalTests(unittest.TestCase):
@@ -53,6 +56,25 @@ class MarsV3ProposalTests(unittest.TestCase):
         )
         self.assertEqual(features.size, len(proposal_feature_names(4)))
         self.assertTrue(np.all(np.isfinite(features)))
+
+    def test_ambiguous_proposals_remain_in_deployable_scene_score(self) -> None:
+        cache = {
+            "proposal_roles": np.asarray(["internal_validation", "internal_validation"]),
+            "proposal_sample_ids": np.asarray(["scene-a", "scene-b"]),
+            "scene_roles": np.asarray(["internal_validation", "internal_validation"]),
+            "scene_ids": np.asarray(["scene-a", "scene-b"]),
+            "scene_labels": np.asarray([1, 0], dtype=np.uint8),
+            "scene_groups": np.asarray(["group-a", "group-b"]),
+            # The first proposal's -1 training target is deliberately not
+            # consulted: deployment scoring cannot use overlap truth.
+            "y": np.asarray([-1, 0], dtype=np.int8),
+        }
+        labels, scores, groups = scene_scores(
+            cache, np.asarray([0.97, 0.12]), "internal_validation"
+        )
+        np.testing.assert_array_equal(labels, [1, 0])
+        np.testing.assert_allclose(scores, [0.97, 0.12])
+        np.testing.assert_array_equal(groups, ["group-a", "group-b"])
 
 
 if __name__ == "__main__":

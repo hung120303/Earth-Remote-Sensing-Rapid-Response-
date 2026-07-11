@@ -85,7 +85,7 @@ def cache_identity(
     manifest: Path, checkpoint: Path, experiment: Path, decoder_channels: int
 ) -> dict[str, Any]:
     return {
-        "schema": "mars_v3_connected_proposals_v1",
+        "schema": "mars_v3_connected_proposals_v2",
         "manifest_sha256": sha256(manifest),
         "checkpoint_sha256": sha256(checkpoint),
         "validation_experiment_sha256": sha256(experiment),
@@ -186,9 +186,6 @@ def extract_cache(
                 retained_for_scene = 0
                 for proposal in proposals:
                     target = label_proposal(proposal, truth)
-                    if target["label"] is None:
-                        ignored_ambiguous += 1
-                        continue
                     features.append(
                         proposal_features(
                             proposal,
@@ -198,7 +195,13 @@ def extract_cache(
                             component_features[index],
                         )
                     )
-                    labels.append(int(target["label"]))
+                    # Ambiguous overlaps are not classifier targets, but they
+                    # must remain in scene scoring. Dropping them here would
+                    # use validation truth to remove false alarms at inference.
+                    label = target["label"]
+                    labels.append(-1 if label is None else int(label))
+                    if label is None:
+                        ignored_ambiguous += 1
                     sample_ids.append(sample_id)
                     proposal_groups.append(group)
                     proposal_roles.append(role)
@@ -211,7 +214,7 @@ def extract_cache(
         raise RuntimeError("No labeled v3 proposals were extracted")
     return {
         "x": np.stack(features).astype(np.float16),
-        "y": np.asarray(labels, dtype=np.uint8),
+        "y": np.asarray(labels, dtype=np.int8),
         "proposal_sample_ids": np.asarray(sample_ids),
         "proposal_groups": np.asarray(proposal_groups),
         "proposal_roles": np.asarray(proposal_roles),
@@ -290,7 +293,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         "",
         "Stage-two classifier fit/calibration uses only internal-training groups; operating thresholds use disjoint internal validation.",
         "",
-        f"- Proposals: {report['cache']['proposal_count']:,} labeled / {report['cache']['ignored_ambiguous_proposals']:,} ambiguous ignored",
+        f"- Proposals: {report['cache']['proposal_count']:,} total / {report['cache']['labeled_proposals']:,} labeled / {report['cache']['ignored_ambiguous_proposals']:,} ambiguous excluded from fitting",
         f"- Validation recall / specificity / FPR: {scene['recall']:.3f} / {scene['specificity']:.3f} / {scene['false_positive_rate']:.3f}",
         f"- Validation AUROC / AP: {scene['auroc']:.3f} / {scene['average_precision']:.3f}",
         f"- Artifact SHA-256: `{report['artifact']['sha256']}`",
@@ -375,11 +378,12 @@ def main() -> int:
         return 0
 
     x = cache["x"].astype(np.float32)
-    y = cache["y"].astype(np.uint8)
+    y = cache["y"].astype(np.int8)
     roles = cache["proposal_roles"].astype(str)
     groups = cache["proposal_groups"].astype(str)
-    training = roles == "internal_training"
-    validation = roles == "internal_validation"
+    labeled = y >= 0
+    training = (roles == "internal_training") & labeled
+    validation = (roles == "internal_validation") & labeled
     calibration_groups = deterministic_calibration_groups(groups[training])
     calibration = training & np.isin(groups, list(calibration_groups))
     fit = training & ~calibration
@@ -446,9 +450,10 @@ def main() -> int:
             "path": cache_path.relative_to(root).as_posix(),
             "sha256": sha256(cache_path),
             "proposal_count": int(y.size),
-            "positive_proposals": int(np.sum(y)),
+            "labeled_proposals": int(np.sum(labeled)),
+            "positive_proposals": int(np.sum(y == 1)),
             "negative_proposals": int(np.sum(y == 0)),
-            "ignored_ambiguous_proposals": int(cache["ignored_ambiguous_proposals"][0]),
+            "ignored_ambiguous_proposals": int(np.sum(y < 0)),
             "feature_count": int(x.shape[1]),
             "tracked": False,
         },

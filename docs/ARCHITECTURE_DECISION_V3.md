@@ -110,8 +110,12 @@ must not silently replace the packaged legacy artifact with v3.
 ## Reproducibility record
 
 - Model: `EarthRemoteSensingRapidResponse/mars_v3_model.py`
+- Connected proposal contract: `EarthRemoteSensingRapidResponse/mars_v3_proposals.py`
 - Trainer: `tools/train_mars_v3.py`
+- Proposal extractor/classifier: `tools/train_mars_v3_proposals.py`
+- Frozen-checkpoint evaluator: `tools/evaluate_mars_v3.py`
 - Unit tests: `tests/test_mars_v3_model.py`
+- Proposal tests: `tests/test_mars_v3_proposals.py`
 - Minimum-corpus builder: `tools/build_mars_v3_training_cohort.py`
 - Frozen cohort evidence: `reports/acquisition/MARS_S2L_V3_TRAINING_COHORT.md`
 - Pipeline smoke evidence: `reports/experiments/MARS_V3_SMOKE.md`

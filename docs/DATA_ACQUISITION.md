@@ -84,6 +84,9 @@ python tools/acquire_mars_cohort.py --verify-only
 The downloader keeps `.part` files for interrupted transfers, checks a 5 GiB free-space reserve,
 and verifies LFS SHA-256 or Git blob SHA-1 identities from the frozen catalog. `--max-assets N` is
 only for downloader smoke tests and must never be treated as a complete research cohort.
+On Windows it explicitly closes redirected HTTPS responses and runs bounded garbage collection.
+For the full small-file transfer, operate in bounded `--start-asset` / `--max-assets` subprocesses
+so the OS releases sockets between batches; back off and reduce `--workers` after HTTP 429 responses.
 
 For ERSRR v3, prefer the smaller frozen fit+validation transfer rather than the all-split catalog.
 It retains image, cloud-mask, and positive plume-mask assets, but excludes methane-enhancement

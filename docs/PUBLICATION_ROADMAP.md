@@ -560,6 +560,36 @@ Current status: v3 code and unit/integration smoke tests are complete. The full 
 waiting only for the minimum v3 asset catalog documented above; released weights will not be used
 because they would leak official-train samples into ERSRR internal validation.
 
+Once the verification receipt reports every selected asset valid, run the primary seed in WSL at
+the measured RTX 5070 throughput point. The trainer writes only an ignored checkpoint and compact
+tracked validation evidence; it cannot load the strict cohort:
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/train_mars_v3.py \
+  --batch-size 24 --workers 8 --epochs 40 --patience 7 --seed 303
+```
+
+Then fit the connected-component false-alarm classifier. Its gradient-boosted proposal model is fit
+on internal-training groups, Platt-calibrated on a deterministic held-out subset of those groups,
+and thresholded only on the disjoint internal validation role. Ambiguous-overlap proposals are
+excluded from classifier fitting but retained in scene scoring, because deployment cannot use truth
+to remove them:
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/train_mars_v3_proposals.py \
+  --batch-size 24 --workers 8
+```
+
+Only after both validation artifacts are committed and frozen may the separate strict evaluator be
+run. It rejects smoke checkpoints and verifies the checkpoint, source, manifest, and validation
+report hashes before scoring. Its primary decision score is the maximum calibrated connected-
+proposal probability; `--neural-only` is an explicitly labeled ablation:
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/evaluate_mars_v3.py \
+  --batch-size 24 --workers 8
+```
+
 ### Phase 4 - independent EMIT V002 validation (2-3 weeks)
 
 - Validate the 12 authenticated pilot bundles and build the enhancement/sensitivity/uncertainty

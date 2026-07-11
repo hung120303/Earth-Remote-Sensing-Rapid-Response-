@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import joblib
 import numpy as np
 import rasterio
 import sklearn
@@ -25,20 +26,31 @@ if str(MODEL_ROOT) not in sys.path:
 
 from mars_s2l_adapter import iter_manifest  # noqa: E402
 from mars_v3_model import MarsV3Model  # noqa: E402
+from mars_v3_proposals import (  # noqa: E402
+    extract_proposals,
+    proposal_feature_names,
+    proposal_features,
+)
 
 from acquire_mars_metadata import DEFAULT_OUTPUT, REVISION, checked_output_dir, repo_root, sha256  # noqa: E402
 from build_mars_dev_cohort import DEV_SAMPLES, DEFAULT_JSON as DEV_REPORT_JSON  # noqa: E402
+from build_mars_v3_training_cohort import V3_SAMPLES  # noqa: E402
 from run_mars_dev_pixel_baselines import evaluate_rule  # noqa: E402
 from run_mars_dev_scene_baselines import bootstrap_ci, metrics, role_weights  # noqa: E402
 from train_mars_joint_model import selective_quality_metrics  # noqa: E402
 from train_mars_v3 import (  # noqa: E402
     DEFAULT_METADATA_CSV,
     MarsV3Dataset,
-    collect_predictions,
     wind_lookup,
+)
+from train_mars_v3_proposals import (  # noqa: E402
+    MAXIMUM_PROPOSALS_PER_SCENE,
+    cache_identity,
+    calibrated_probabilities,
 )
 
 DEFAULT_EXPERIMENT = Path("reports/experiments/mars_v3_validation.json")
+DEFAULT_PROPOSAL_EXPERIMENT = Path("reports/experiments/mars_v3_proposal_validation.json")
 DEFAULT_JSON = Path("reports/experiments/mars_v3_strict_evaluation.json")
 DEFAULT_MARKDOWN = Path("reports/experiments/MARS_V3_STRICT_EVALUATION.md")
 
@@ -77,6 +89,164 @@ def fmt(value: float | None) -> str:
     return "n/a" if value is None else f"{value:.3f}"
 
 
+def load_proposal_stage(
+    root: Path,
+    metadata_dir: Path,
+    experiment_path: Path,
+    experiment: dict[str, Any],
+    checkpoint: Path,
+    proposal_experiment_path: Path,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    report = json.loads(proposal_experiment_path.read_text(encoding="utf-8"))
+    if report.get("scope") != "v3_connected_proposal_internal_validation":
+        raise ValueError("Proposal experiment is not a frozen internal-validation artifact")
+    source = report["source"]
+    if source["v3_validation_experiment_sha256"] != sha256(experiment_path):
+        raise ValueError("Proposal stage was selected from a different v3 validation report")
+    if source["v3_checkpoint_sha256"] != experiment["artifact"]["sha256"]:
+        raise ValueError("Proposal stage was fit from a different v3 checkpoint")
+    training_manifest = metadata_dir / V3_SAMPLES
+    if source["manifest_sha256"] != sha256(training_manifest):
+        raise ValueError("Proposal-stage training manifest identity mismatch")
+    proposal_source = MODEL_ROOT / "mars_v3_proposals.py"
+    if report["provenance"]["proposal_source_sha256"] != sha256(proposal_source):
+        raise ValueError("Proposal descriptor source changed after validation selection")
+    proposal_trainer = root / "tools" / "train_mars_v3_proposals.py"
+    if (
+        report["provenance"].get("script") != "tools/train_mars_v3_proposals.py"
+        or report["provenance"].get("script_sha256") != sha256(proposal_trainer)
+    ):
+        raise ValueError("Proposal trainer source changed after validation selection")
+    artifact_path = (root / report["artifact"]["path"]).resolve()
+    if root not in artifact_path.parents:
+        raise ValueError("Proposal artifact must resolve beneath the repository root")
+    if sha256(artifact_path) != report["artifact"]["sha256"]:
+        raise ValueError("Proposal artifact identity does not match its validation report")
+    artifact = joblib.load(artifact_path)
+    expected_identity = cache_identity(
+        training_manifest, checkpoint, experiment_path, decoder_channels=16
+    )
+    if artifact.get("cache_identity") != expected_identity:
+        raise ValueError("Proposal artifact identity differs from the frozen feature contract")
+    expected_names = proposal_feature_names(16)
+    if artifact.get("feature_names") != expected_names:
+        raise ValueError("Proposal artifact feature ordering differs from the frozen contract")
+    operating = report["operating_rule"]
+    if float(artifact["upper_plume_threshold"]) != float(
+        operating["upper_plume_threshold"]
+    ):
+        raise ValueError("Proposal upper threshold differs between artifact and report")
+    artifact_lower = artifact["lower_no_plume_threshold"]
+    report_lower = operating["lower_no_plume_threshold"]
+    if artifact_lower is None or report_lower is None:
+        if artifact_lower is not report_lower:
+            raise ValueError("Proposal lower threshold differs between artifact and report")
+    elif float(artifact_lower) != float(report_lower):
+        raise ValueError("Proposal lower threshold differs between artifact and report")
+    return report, artifact
+
+
+@torch.no_grad()
+def collect_predictions(
+    model: MarsV3Model,
+    loader: DataLoader,
+    device: torch.device,
+    proposal_artifact: dict[str, Any] | None,
+) -> dict[str, np.ndarray]:
+    """Collect neural outputs and deployable proposal scores in one frozen pass."""
+    model.eval()
+    values: dict[str, list[Any]] = {
+        "presence": [],
+        "quality": [],
+        "labels": [],
+        "quality_labels": [],
+        "segmentation": [],
+        "observable": [],
+        "truth": [],
+        "groups": [],
+        "sample_ids": [],
+        "proposal_scores": [],
+        "proposal_counts": [],
+    }
+    for batch in loader:
+        cpu_inputs = batch["inputs"].numpy()
+        cpu_observable = batch["observable"].numpy()[:, 0].astype(bool)
+        gpu_inputs = batch["inputs"].to(device, non_blocking=True)
+        gpu_observable = batch["observable"].to(device, non_blocking=True)
+        with torch.amp.autocast("cuda", dtype=torch.float16):
+            output = model(
+                gpu_inputs,
+                gpu_observable,
+                return_dense_features=proposal_artifact is not None,
+            )
+        probabilities = (
+            torch.sigmoid(output["segmentation_logits"])
+            .float()
+            .cpu()
+            .numpy()[:, 0]
+        )
+        values["presence"].append(
+            torch.sigmoid(output["presence_logit"]).float().cpu().numpy()
+        )
+        values["quality"].append(
+            torch.sigmoid(output["quality_logit"]).float().cpu().numpy()
+        )
+        values["labels"].append(batch["presence"].numpy())
+        values["quality_labels"].append(batch["quality"].numpy())
+        values["segmentation"].append(probabilities.astype(np.float16))
+        values["observable"].extend(
+            np.packbits(item.ravel()) for item in cpu_observable
+        )
+        values["truth"].extend(
+            np.packbits(item[0].numpy().astype(bool).ravel()) for item in batch["mask"]
+        )
+        values["groups"].extend(batch["group_id"])
+        values["sample_ids"].extend(batch["sample_id"])
+        if proposal_artifact is not None:
+            dense = output["component_features"].float().cpu().numpy()
+            for index in range(probabilities.shape[0]):
+                proposals = extract_proposals(
+                    probabilities[index], cpu_observable[index]
+                )[:MAXIMUM_PROPOSALS_PER_SCENE]
+                values["proposal_counts"].append(len(proposals))
+                if not proposals:
+                    values["proposal_scores"].append(0.0)
+                    continue
+                descriptors = np.stack(
+                    [
+                        proposal_features(
+                            proposal,
+                            probabilities[index],
+                            cpu_inputs[index],
+                            cpu_observable[index],
+                            dense[index],
+                        )
+                        for proposal in proposals
+                    ]
+                )
+                scores = calibrated_probabilities(
+                    proposal_artifact["classifier"],
+                    proposal_artifact["calibrator"],
+                    descriptors,
+                )
+                values["proposal_scores"].append(float(np.max(scores)))
+    result = {
+        "presence": np.concatenate(values["presence"]),
+        "quality": np.concatenate(values["quality"]),
+        "labels": np.concatenate(values["labels"]).astype(np.uint8),
+        "quality_labels": np.concatenate(values["quality_labels"]).astype(np.uint8),
+        "segmentation": np.concatenate(values["segmentation"]),
+        "observable": np.stack(values["observable"]),
+        "truth": np.stack(values["truth"]),
+        "groups": np.asarray(values["groups"]),
+        "sample_ids": np.asarray(values["sample_ids"]),
+    }
+    if proposal_artifact is not None:
+        result["proposal_scores"] = np.asarray(values["proposal_scores"], dtype=np.float64)
+        result["proposal_counts"] = np.asarray(values["proposal_counts"], dtype=np.uint16)
+    return result
+
+
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
     scene = report["strict_spatial_test"]["scene_unweighted"]
     pixel = report["strict_spatial_test"]["segmentation"]["pixel"]
@@ -86,6 +256,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         "",
         "Checkpoint and all operating rules were selected on internal validation before this run.",
         "",
+        f"- Primary scene score: {report['primary_scene_score']}",
         f"- Cohort: {report['cohort']['samples']} scenes / {report['cohort']['groups']} frozen 25 km groups",
         f"- Scene recall / specificity / FPR: {fmt(scene['recall'])} / {fmt(scene['specificity'])} / {fmt(scene['false_positive_rate'])}",
         f"- Scene AUROC / AP: {scene['auroc']:.3f} / {scene['average_precision']:.3f}",
@@ -107,6 +278,14 @@ def main() -> int:
     parser.add_argument("--metadata-dir", default=DEFAULT_OUTPUT.as_posix())
     parser.add_argument("--metadata-csv", default=DEFAULT_METADATA_CSV.as_posix())
     parser.add_argument("--experiment", default=DEFAULT_EXPERIMENT.as_posix())
+    parser.add_argument(
+        "--proposal-experiment", default=DEFAULT_PROPOSAL_EXPERIMENT.as_posix()
+    )
+    parser.add_argument(
+        "--neural-only",
+        action="store_true",
+        help="Evaluate the neural scene head without the frozen proposal stage",
+    )
     parser.add_argument("--output-json", default=DEFAULT_JSON.as_posix())
     parser.add_argument("--output-markdown", default=DEFAULT_MARKDOWN.as_posix())
     parser.add_argument("--batch-size", type=int, default=24)
@@ -119,6 +298,7 @@ def main() -> int:
     metadata_dir = checked_output_dir(root, args.metadata_dir)
     metadata_csv = (root / args.metadata_csv).resolve()
     experiment_path = (root / args.experiment).resolve()
+    proposal_experiment_path = (root / args.proposal_experiment).resolve()
     output_json = safe_output(root, args.output_json)
     output_markdown = safe_output(root, args.output_markdown)
     experiment = json.loads(experiment_path.read_text(encoding="utf-8"))
@@ -131,6 +311,23 @@ def main() -> int:
         raise ValueError("V3 checkpoint identity does not match the validation report")
     if sha256(MODEL_ROOT / "mars_v3_model.py") != experiment["provenance"]["model_source_sha256"]:
         raise ValueError("V3 model source changed after checkpoint selection")
+    trainer = root / "tools" / "train_mars_v3.py"
+    if (
+        experiment["provenance"].get("script") != "tools/train_mars_v3.py"
+        or experiment["provenance"].get("script_sha256") != sha256(trainer)
+    ):
+        raise ValueError("V3 trainer source changed after checkpoint selection")
+    proposal_report: dict[str, Any] | None = None
+    proposal_artifact: dict[str, Any] | None = None
+    if not args.neural_only:
+        proposal_report, proposal_artifact = load_proposal_stage(
+            root,
+            metadata_dir,
+            experiment_path,
+            experiment,
+            checkpoint,
+            proposal_experiment_path,
+        )
 
     manifest = metadata_dir / DEV_SAMPLES
     development = json.loads((root / DEV_REPORT_JSON).read_text(encoding="utf-8"))
@@ -157,7 +354,7 @@ def main() -> int:
     if payload["model_metadata"] != experiment["model"]:
         raise ValueError("Checkpoint model metadata differs from the validation report")
     model.load_state_dict(payload["state_dict"], strict=True)
-    predictions = collect_predictions(model, loader, device)
+    predictions = collect_predictions(model, loader, device, proposal_artifact)
 
     rule = experiment["operating_rule"]
     upper = float(rule["upper_plume_threshold"])
@@ -166,11 +363,23 @@ def main() -> int:
     quality_threshold = float(rule["quality_threshold"])
     segmentation_rule = dict(rule["segmentation"])
     labels = predictions["labels"]
-    scores = predictions["presence"]
+    neural_scores = predictions["presence"]
+    scores = (
+        predictions["proposal_scores"]
+        if proposal_report is not None
+        else neural_scores
+    )
+    primary_rule = proposal_report["operating_rule"] if proposal_report else rule
+    upper = float(primary_rule["upper_plume_threshold"])
+    primary_lower = primary_rule["lower_no_plume_threshold"]
+    primary_lower = None if primary_lower is None else float(primary_lower)
     groups = predictions["groups"].astype(str)
     weights = role_weights(labels, "strict_spatial_test")
     scene_unweighted = metrics(labels, scores, upper)
     scene_weighted = metrics(labels, scores, upper, weights=weights)
+    neural_scene_unweighted = metrics(
+        labels, neural_scores, float(rule["upper_plume_threshold"])
+    )
     segmentation = evaluate_rule(
         predictions["segmentation"],
         predictions["observable"],
@@ -184,7 +393,7 @@ def main() -> int:
         labels,
         scores,
         predictions["quality"],
-        lower,
+        primary_lower,
         upper,
         quality_threshold,
         weights,
@@ -195,7 +404,7 @@ def main() -> int:
         and float(scene_unweighted["specificity"] or 0.0) >= 0.95
     )
     report = {
-        "schema_version": 1,
+        "schema_version": 2,
         "scope": "frozen_v3_strict_spatial_development_evaluation",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source": {
@@ -203,6 +412,9 @@ def main() -> int:
             "revision": REVISION,
             "strict_manifest_sha256": sha256(manifest),
             "validation_experiment_sha256": sha256(experiment_path),
+            "proposal_experiment_sha256": (
+                sha256(proposal_experiment_path) if proposal_report is not None else None
+            ),
         },
         "cohort": {
             "samples": len(records),
@@ -212,10 +424,32 @@ def main() -> int:
         },
         "model": experiment["model"],
         "artifact": experiment["artifact"],
-        "operating_rule": rule,
+        "primary_scene_score": (
+            "maximum calibrated connected-proposal probability"
+            if proposal_report is not None
+            else "neural presence head probability"
+        ),
+        "operating_rule": {
+            "primary_scene": primary_rule,
+            "neural_scene": rule,
+        },
+        "proposal_artifact": (
+            proposal_report["artifact"] if proposal_report is not None else None
+        ),
         "strict_spatial_test": {
             "scene_unweighted": scene_unweighted,
             "scene_representative_weighted": scene_weighted,
+            "neural_scene_unweighted": neural_scene_unweighted,
+            "proposal_stage": (
+                {
+                    "proposal_count": int(np.sum(predictions["proposal_counts"])),
+                    "scenes_without_proposals": int(
+                        np.sum(predictions["proposal_counts"] == 0)
+                    ),
+                }
+                if proposal_report is not None
+                else None
+            ),
             "segmentation": segmentation,
             "group_bootstrap": interval,
             "selective_with_quality": selective,
