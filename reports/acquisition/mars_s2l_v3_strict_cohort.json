@@ -1,0 +1,53 @@
+{
+  "destination": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+  "generated_at_utc": "2026-07-11T23:45:21.161523+00:00",
+  "identities": {
+    "asset_catalog": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_remote_catalog.jsonl",
+    "asset_catalog_sha256": "ad8be1441d5a7a0585bc4c8b66305cc53524f48d3837137e92e27881abd3ef28",
+    "sample_manifest": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_samples.jsonl",
+    "sample_manifest_sha256": "6e959ae0af50c5a309247cbe674fe01b31a36f8b149f9be3292acebed3e5f906"
+  },
+  "provenance": {
+    "git_commit": "9c514bd9c4456090fdd1b9d8f58cd9fcb1381ef7",
+    "git_tracked_worktree_dirty_at_start": false,
+    "script": "tools/build_mars_v3_strict_cohort.py",
+    "script_sha256": "cc8bfb82419554b954346d611ad49f53f0b657946c8528c8b75e4c95c6710534"
+  },
+  "samples": {
+    "groups": 150,
+    "negatives": 4334,
+    "positives": 67,
+    "total": 4401
+  },
+  "schema_version": 1,
+  "scope": "minimum_full_mars_s2l_v3_strict_spatial_evaluation_corpus",
+  "selection": {
+    "class_enriched": false,
+    "excluded_asset_roles": [
+      "methane_enhancement"
+    ],
+    "paper_claim_scope": true,
+    "research_role": "strict_spatial_test",
+    "retained_asset_roles": [
+      "image",
+      "cloud_mask",
+      "plume_mask"
+    ]
+  },
+  "source": {
+    "cohort_manifest_sha256": "d5d41635f79a93fd79f8678b75b788c45f41ba5f3812166d00cc5558d91dc8a3",
+    "development_verification_receipt_sha256": "7e12eca0c28d5ad6fc6854626ffb9b3416fcb722369bdd0912c6100577932c0e",
+    "protocol_assignments_sha256": "49d48669c765f06555f90a9fb94647e4983cbce13a983805e5fa440310c11671",
+    "protocol_sha256": "8a8938a6842c98eb9bea333d36e06d01c9efc036e044833d37b738a76c6b0eff",
+    "repository": "UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32"
+  },
+  "transfer": {
+    "remaining_assets": 7644,
+    "remaining_bytes": 3911945490,
+    "reusable_verified_assets": 1225,
+    "reusable_verified_bytes": 577629770,
+    "selected_asset_count": 8869,
+    "selected_total_bytes": 4489575260
+  }
+}

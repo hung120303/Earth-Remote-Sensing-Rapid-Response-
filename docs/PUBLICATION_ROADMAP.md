@@ -591,6 +591,17 @@ run. It rejects smoke checkpoints and verifies the checkpoint, source, manifest,
 report hashes before scoring. Its primary decision score is the maximum calibrated connected-
 proposal probability; `--neural-only` is an explicitly labeled ablation:
 
+The final MARS estimate uses the complete 4,401-scene / 150-group strict-spatial role, not the
+class-enriched 579-scene development tranche. Its minimum detector-only transfer contains 8,869
+assets / 4,489,575,260 bytes; 1,225 assets are already verified, leaving 7,644 assets /
+3,911,945,490 bytes (3.643 GiB):
+
+```powershell
+python tools/build_mars_v3_strict_cohort.py
+python tools/acquire_mars_cohort.py --catalog-file publication_v3_strict_remote_catalog.jsonl --receipt reports/acquisition/mars_s2l_v3_strict_download.json
+python tools/acquire_mars_cohort.py --catalog-file publication_v3_strict_remote_catalog.jsonl --verify-only --receipt reports/acquisition/mars_s2l_v3_strict_download.json
+```
+
 ```bash
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/evaluate_mars_v3.py \
   --batch-size 24 --workers 8

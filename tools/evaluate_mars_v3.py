@@ -33,7 +33,10 @@ from mars_v3_proposals import (  # noqa: E402
 )
 
 from acquire_mars_metadata import DEFAULT_OUTPUT, REVISION, checked_output_dir, repo_root, sha256  # noqa: E402
-from build_mars_dev_cohort import DEV_SAMPLES, DEFAULT_JSON as DEV_REPORT_JSON  # noqa: E402
+from build_mars_v3_strict_cohort import (  # noqa: E402
+    DEFAULT_JSON as STRICT_COHORT_JSON,
+    V3_STRICT_SAMPLES,
+)
 from build_mars_v3_training_cohort import V3_SAMPLES  # noqa: E402
 from run_mars_dev_pixel_baselines import evaluate_rule  # noqa: E402
 from run_mars_dev_scene_baselines import bootstrap_ci, metrics, role_weights  # noqa: E402
@@ -329,14 +332,16 @@ def main() -> int:
             proposal_experiment_path,
         )
 
-    manifest = metadata_dir / DEV_SAMPLES
-    development = json.loads((root / DEV_REPORT_JSON).read_text(encoding="utf-8"))
-    if sha256(manifest) != development["identities"]["sample_manifest_sha256"]:
-        raise ValueError("Strict development manifest identity mismatch")
+    manifest = metadata_dir / V3_STRICT_SAMPLES
+    strict_cohort = json.loads((root / STRICT_COHORT_JSON).read_text(encoding="utf-8"))
+    if sha256(manifest) != strict_cohort["identities"]["sample_manifest_sha256"]:
+        raise ValueError("Full strict-spatial manifest identity mismatch")
     all_records = list(iter_manifest(manifest))
     records = [
         record for record in all_records if record["research_role"] == "strict_spatial_test"
     ]
+    if len(records) != int(strict_cohort["samples"]["total"]):
+        raise ValueError("Full strict-spatial manifest row count mismatch")
     required_ids = {str(record["sample_id"]) for record in records}
     winds = wind_lookup(metadata_csv, required_ids)
     dataset = MarsV3Dataset(metadata_dir, records, winds, augment=False, seed=0)
@@ -405,7 +410,7 @@ def main() -> int:
     )
     report = {
         "schema_version": 2,
-        "scope": "frozen_v3_strict_spatial_development_evaluation",
+        "scope": "frozen_v3_full_strict_spatial_evaluation",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source": {
             "dataset": "UNEP-IMEO/MARS-S2L",
@@ -459,9 +464,9 @@ def main() -> int:
         },
         "promotion_gate_passed": gate,
         "decision": (
-            "V3 clears the provisional development gate. Run the remaining fixed seeds and untouched EMIT confirmation before promotion."
+            "V3 clears the frozen full-MARS gate. All five fixed seeds and untouched EMIT confirmation remain required before promotion."
             if gate
-            else "V3 does not clear the frozen development gate. Preserve this result; do not retune from strict-test behavior."
+            else "V3 does not clear the frozen full-MARS gate. Preserve this result; do not retune from strict-test behavior."
         ),
         "runtime": {
             "device": torch.cuda.get_device_name(0),
