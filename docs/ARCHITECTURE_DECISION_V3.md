@@ -164,6 +164,8 @@ joint 2,000-replicate seed-and-group bootstrap against the author-fixed released
 - Minimum-corpus builder: `tools/build_mars_v3_training_cohort.py`
 - Frozen cohort evidence: `reports/acquisition/MARS_S2L_V3_TRAINING_COHORT.md`
 - Full image-header audit: `reports/acquisition/MARS_S2L_BAND_DESCRIPTION_AUDIT.md`
+- Authenticated EMIT CH4PLM audit: `reports/acquisition/EMIT_V002_AUTHENTICATED_PLUME_AUDIT.md`
+- Authenticated EMIT CH4ENH/uncertainty/sensitivity audit: `reports/acquisition/EMIT_V002_AUTHENTICATED_SCIENCE_AUDIT.md`
 - Pipeline smoke evidence: `reports/experiments/MARS_V3_SMOKE.md`
 - Publication protocol: `configs/mars_publication_protocol.json`
 - Full plan and authenticated data handoff: `docs/PUBLICATION_ROADMAP.md`

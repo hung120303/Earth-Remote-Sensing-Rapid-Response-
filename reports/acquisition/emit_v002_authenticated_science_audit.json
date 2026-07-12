@@ -1,0 +1,2752 @@
+{
+  "contract": {
+    "enhancement": "adaptive matched-filter methane total-column enhancement in ppm m",
+    "grid": "three aligned single-band float32 COGs at nominal 60 m in EPSG:4326",
+    "label_policy": "CH4PLM exact crops provide vetted positive support; scene background is not automatically NO_PLUME",
+    "sensitivity": "per-pixel methane retrieval sensitivity; positive observability layer",
+    "uncertainty": "per-pixel methane enhancement uncertainty; positive ancillary layer",
+    "validity_policy": "use the intersection of all three explicit nodata masks"
+  },
+  "decisions": [
+    "Promote sensitivity and uncertainty to external observability/quality gates, not detector inputs.",
+    "Compute external metrics only on the common valid support of enhancement, uncertainty, and sensitivity.",
+    "Use the exact CH4PLM crop identity as a provenance invariant for positive target construction.",
+    "Do not infer NO_PLUME from non-plume pixels or from an absent CH4PLM catalog record without review.",
+    "Keep this 12-scene pilot for contract validation; expand to at least 50 independent groups before publication claims."
+  ],
+  "generated_at_utc": "2026-07-12T16:24:47.044857+00:00",
+  "provenance": {
+    "git_commit": "d602375529ad547517c0c95e74b4238865401fff",
+    "numpy": "2.4.4",
+    "python": "3.11.14",
+    "rasterio": "1.4.4",
+    "script": "tools/audit_emit_v002_science_bundles.py",
+    "script_sha256": "afebcf5c39274236f19284b811f864a85c36ac55d8cf00f9135d63e156a23fe2"
+  },
+  "scenes": [
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.49093936,
+        "common_valid_pixels": 2017097,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 1731,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241017T083946_003674/EMIT_L2B_CH4PLM_002_20241017T083946_003674.tif",
+        "plume_sha256": "1d7303469523a6031ae6827872d657c1d9fadd181dd75f1a49bcd120502a4060",
+        "row_offset": 757,
+        "valid_pixels_compared": 3793
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            68.80523499037,
+            27.357475822897,
+            69.909220401612,
+            28.451701048774
+          ],
+          "bytes": 12586407,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241017T083946_2429106_009.tif",
+          "height": 2018,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241017T083946_2429106_009/EMIT_L2B_CH4ENH_002_20241017T083946_2429106_009.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "b2d73c1e5affaf6a7180426f54dbdd4e3debb7ee9be37cdb5e5f6b9a85cc914d",
+          "transform": [
+            0.00054223252,
+            0.0,
+            68.80523499037,
+            0.0,
+            -0.00054223252,
+            28.451701048774
+          ],
+          "valid_fraction": 0.49093936,
+          "valid_pixels": 2017097,
+          "values": {
+            "count": 2017097,
+            "max": 11371.450195,
+            "mean": -0.02672,
+            "median": -0.470718,
+            "min": -2877.306396
+          },
+          "width": 2036
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            68.80523499037,
+            27.357475822897,
+            69.909220401612,
+            28.451701048774
+          ],
+          "bytes": 11356369,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241017T083946_2429106_009.tif",
+          "height": 2018,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241017T083946_2429106_009/EMIT_L2B_CH4SENS_002_20241017T083946_2429106_009.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "1ec5fcb5b5f05cb9275af1f23168d233cda7268b4cd14dac33d7129433d1d626",
+          "transform": [
+            0.00054223252,
+            0.0,
+            68.80523499037,
+            0.0,
+            -0.00054223252,
+            28.451701048774
+          ],
+          "valid_fraction": 0.49093936,
+          "valid_pixels": 2017097,
+          "values": {
+            "count": 2017097,
+            "max": 8.066844,
+            "mean": 0.999667,
+            "median": 0.917599,
+            "min": 0.082719
+          },
+          "width": 2036
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            68.80523499037,
+            27.357475822897,
+            69.909220401612,
+            28.451701048774
+          ],
+          "bytes": 11321445,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241017T083946_2429106_009.tif",
+          "height": 2018,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241017T083946_2429106_009/EMIT_L2B_CH4UNCERT_002_20241017T083946_2429106_009.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "a0bd757ea8b298992ede5102d15ffd7d19102822b0042fe5127cae774d003b1f",
+          "transform": [
+            0.00054223252,
+            0.0,
+            68.80523499037,
+            0.0,
+            -0.00054223252,
+            28.451701048774
+          ],
+          "valid_fraction": 0.49093936,
+          "valid_pixels": 2017097,
+          "values": {
+            "count": 2017097,
+            "max": 6891.782227,
+            "mean": 760.557792,
+            "median": 662.043579,
+            "min": 150.824799
+          },
+          "width": 2036
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241017T083946_2429106_009"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.50050095,
+        "common_valid_pixels": 1935281,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 537,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241019T101302_003676/EMIT_L2B_CH4PLM_002_20241019T101302_003676.tif",
+        "plume_sha256": "3c7e3da63f3689850b126bc6d791f7567f6cf6178df6bef1374d77a0407f488a",
+        "row_offset": 698,
+        "valid_pixels_compared": 1762
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            40.132521551734,
+            20.629996944076,
+            41.172523525586,
+            21.723137704913
+          ],
+          "bytes": 12152386,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241019T101302_2429307_021.tif",
+          "height": 2016,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241019T101302_2429307_021/EMIT_L2B_CH4ENH_002_20241019T101302_2429307_021.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "bdc4434c8054d066d036dff4c6357924974ac738a742deadf12858f08d7ffe8e",
+          "transform": [
+            0.00054223252,
+            0.0,
+            40.132521551734,
+            0.0,
+            -0.00054223252,
+            21.723137704913
+          ],
+          "valid_fraction": 0.50050095,
+          "valid_pixels": 1935281,
+          "values": {
+            "count": 1935281,
+            "max": 2440.015137,
+            "mean": 0.104708,
+            "median": -0.003784,
+            "min": -2720.753418
+          },
+          "width": 1918
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            40.132521551734,
+            20.629996944076,
+            41.172523525586,
+            21.723137704913
+          ],
+          "bytes": 10653606,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241019T101302_2429307_021.tif",
+          "height": 2016,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241019T101302_2429307_021/EMIT_L2B_CH4SENS_002_20241019T101302_2429307_021.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "267acb62703c91d3be0086c4fe3b9dedf0c168f2529d22f4585e77bc6d1acd53",
+          "transform": [
+            0.00054223252,
+            0.0,
+            40.132521551734,
+            0.0,
+            -0.00054223252,
+            21.723137704913
+          ],
+          "valid_fraction": 0.50050095,
+          "valid_pixels": 1935281,
+          "values": {
+            "count": 1935281,
+            "max": 3.903769,
+            "mean": 1.000321,
+            "median": 1.008442,
+            "min": 0.056732
+          },
+          "width": 1918
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            40.132521551734,
+            20.629996944076,
+            41.172523525586,
+            21.723137704913
+          ],
+          "bytes": 10634175,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241019T101302_2429307_021.tif",
+          "height": 2016,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241019T101302_2429307_021/EMIT_L2B_CH4UNCERT_002_20241019T101302_2429307_021.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "736f3784c92a677f0299200c2b45b041e04563a9a5cc06fcbd45607ffb4593b6",
+          "transform": [
+            0.00054223252,
+            0.0,
+            40.132521551734,
+            0.0,
+            -0.00054223252,
+            21.723137704913
+          ],
+          "valid_fraction": 0.50050095,
+          "valid_pixels": 1935281,
+          "values": {
+            "count": 1935281,
+            "max": 4150.726562,
+            "mean": 521.51373,
+            "median": 497.300476,
+            "min": 239.885193
+          },
+          "width": 1918
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241019T101302_2429307_021"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.27534479,
+        "common_valid_pixels": 2002171,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 749,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241020T075129_003680/EMIT_L2B_CH4PLM_002_20241020T075129_003680.tif",
+        "plume_sha256": "760ddb7ae502fbfb0483b56e72bc65ac9e4567dbe2da78929347c70652b48ef2",
+        "row_offset": 418,
+        "valid_pixels_compared": 8718
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            66.567983611793,
+            23.870378485128,
+            68.004357557952,
+            25.358806753232
+          ],
+          "bytes": 12988614,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241020T075129_2429405_003.tif",
+          "height": 2745,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241020T075129_2429405_003/EMIT_L2B_CH4ENH_002_20241020T075129_2429405_003.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "b9e7358122eabcfab4725177514edb88c8e18a91561c3c7186107a6cab8a8faf",
+          "transform": [
+            0.00054223252,
+            0.0,
+            66.567983611793,
+            0.0,
+            -0.00054223252,
+            25.358806753232
+          ],
+          "valid_fraction": 0.27534974,
+          "valid_pixels": 2002207,
+          "values": {
+            "count": 2002207,
+            "max": 8710.879883,
+            "mean": -0.325239,
+            "median": -4.624368,
+            "min": -3733.916992
+          },
+          "width": 2649
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            66.567983611793,
+            23.870378485128,
+            68.004357557952,
+            25.358806753232
+          ],
+          "bytes": 11741605,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241020T075129_2429405_003.tif",
+          "height": 2745,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241020T075129_2429405_003/EMIT_L2B_CH4SENS_002_20241020T075129_2429405_003.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "11915e39b7ea38c8424615bcc5d0fc438ca4fb9b6c012962fd2760281c387164",
+          "transform": [
+            0.00054223252,
+            0.0,
+            66.567983611793,
+            0.0,
+            -0.00054223252,
+            25.358806753232
+          ],
+          "valid_fraction": 0.27534479,
+          "valid_pixels": 2002171,
+          "values": {
+            "count": 2002171,
+            "max": 6.602316,
+            "mean": 1.000816,
+            "median": 1.056056,
+            "min": 0.044156
+          },
+          "width": 2649
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            66.567983611793,
+            23.870378485128,
+            68.004357557952,
+            25.358806753232
+          ],
+          "bytes": 11677946,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241020T075129_2429405_003.tif",
+          "height": 2745,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241020T075129_2429405_003/EMIT_L2B_CH4UNCERT_002_20241020T075129_2429405_003.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "f6cae1aefb53c0d5d0471e539e95d3c317fef7bf91b4315ab1d051b0980c08b5",
+          "transform": [
+            0.00054223252,
+            0.0,
+            66.567983611793,
+            0.0,
+            -0.00054223252,
+            25.358806753232
+          ],
+          "valid_fraction": 0.27534479,
+          "valid_pixels": 2002171,
+          "values": {
+            "count": 2002171,
+            "max": 66807.695312,
+            "mean": 1157.873591,
+            "median": 593.96521,
+            "min": 158.655197
+          },
+          "width": 2649
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241020T075129_2429405_003"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.4975201,
+        "common_valid_pixels": 2116754,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 904,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241020T092144_003679/EMIT_L2B_CH4PLM_002_20241020T092144_003679.tif",
+        "plume_sha256": "cf2b86534498001aa863168c0ded21b6b7d8cba19eb89b1eecfb0f43ea02170d",
+        "row_offset": 884,
+        "valid_pixels_compared": 9533
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            35.522460664514,
+            31.418255167097,
+            36.673078072498,
+            32.505431370211
+          ],
+          "bytes": 13286403,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241020T092144_2429406_003.tif",
+          "height": 2005,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241020T092144_2429406_003/EMIT_L2B_CH4ENH_002_20241020T092144_2429406_003.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "c18919ab1c85155694d6f0cf37747cae5312090769b27b70813ce8f2709b5383",
+          "transform": [
+            0.00054223252,
+            0.0,
+            35.522460664514,
+            0.0,
+            -0.00054223252,
+            32.505431370211
+          ],
+          "valid_fraction": 0.4975201,
+          "valid_pixels": 2116754,
+          "values": {
+            "count": 2116754,
+            "max": 2976.151123,
+            "mean": -0.138601,
+            "median": -0.437801,
+            "min": -1676.002319
+          },
+          "width": 2122
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            35.522460664514,
+            31.418255167097,
+            36.673078072498,
+            32.505431370211
+          ],
+          "bytes": 11683681,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241020T092144_2429406_003.tif",
+          "height": 2005,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241020T092144_2429406_003/EMIT_L2B_CH4SENS_002_20241020T092144_2429406_003.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "a80bc8d15a1453a2c48beabc908f138a88b8ca5bde68b8510cc97fd8d6c391d5",
+          "transform": [
+            0.00054223252,
+            0.0,
+            35.522460664514,
+            0.0,
+            -0.00054223252,
+            32.505431370211
+          ],
+          "valid_fraction": 0.4975201,
+          "valid_pixels": 2116754,
+          "values": {
+            "count": 2116754,
+            "max": 2.428937,
+            "mean": 0.999341,
+            "median": 1.0253,
+            "min": 0.050031
+          },
+          "width": 2122
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            35.522460664514,
+            31.418255167097,
+            36.673078072498,
+            32.505431370211
+          ],
+          "bytes": 11607378,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241020T092144_2429406_003.tif",
+          "height": 2005,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241020T092144_2429406_003/EMIT_L2B_CH4UNCERT_002_20241020T092144_2429406_003.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "208c248b0166a77dc5f8c8c0f59eb48414f0a74b6dd44096d9c4074f24637f2a",
+          "transform": [
+            0.00054223252,
+            0.0,
+            35.522460664514,
+            0.0,
+            -0.00054223252,
+            32.505431370211
+          ],
+          "valid_fraction": 0.4975201,
+          "valid_pixels": 2116754,
+          "values": {
+            "count": 2116754,
+            "max": 4324.103027,
+            "mean": 383.599199,
+            "median": 353.948486,
+            "min": 199.830917
+          },
+          "width": 2122
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241020T092144_2429406_003"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.49274591,
+        "common_valid_pixels": 2140403,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 994,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241020T170504_003677/EMIT_L2B_CH4PLM_002_20241020T170504_003677.tif",
+        "plume_sha256": "3422bcc8b8774a2ad439a3f6219cc57aedb124414940c39e220aea1bdccafa63",
+        "row_offset": 619,
+        "valid_pixels_compared": 72004
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -85.110177047001,
+            33.628394919662,
+            -83.931905780484,
+            34.712317727654
+          ],
+          "bytes": 13438459,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241020T170504_2429411_003.tif",
+          "height": 1999,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241020T170504_2429411_003/EMIT_L2B_CH4ENH_002_20241020T170504_2429411_003.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "0b36f5ec6b03faaed3e81124d4582517d293a1f597fbb6f97db7c03e239eb7c3",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -85.110177047001,
+            0.0,
+            -0.00054223252,
+            34.712317727654
+          ],
+          "valid_fraction": 0.49274591,
+          "valid_pixels": 2140403,
+          "values": {
+            "count": 2140403,
+            "max": 22890.035156,
+            "mean": -0.074608,
+            "median": -5.578084,
+            "min": -5554.402832
+          },
+          "width": 2173
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -85.110177047001,
+            33.628394919662,
+            -83.931905780484,
+            34.712317727654
+          ],
+          "bytes": 12116250,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241020T170504_2429411_003.tif",
+          "height": 1999,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241020T170504_2429411_003/EMIT_L2B_CH4SENS_002_20241020T170504_2429411_003.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "25187bcf123d20d854963bf30277575d9c2f0aec95f2cec96eeda18daa0bbadf",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -85.110177047001,
+            0.0,
+            -0.00054223252,
+            34.712317727654
+          ],
+          "valid_fraction": 0.49274591,
+          "valid_pixels": 2140403,
+          "values": {
+            "count": 2140403,
+            "max": 9.644242,
+            "mean": 0.999285,
+            "median": 0.856177,
+            "min": 0.096151
+          },
+          "width": 2173
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -85.110177047001,
+            33.628394919662,
+            -83.931905780484,
+            34.712317727654
+          ],
+          "bytes": 12028379,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241020T170504_2429411_003.tif",
+          "height": 1999,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241020T170504_2429411_003/EMIT_L2B_CH4UNCERT_002_20241020T170504_2429411_003.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "109672b11c7fb0943b2e33c6dcce27543af7f3cb1b483c2c335e48eff6d2ba92",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -85.110177047001,
+            0.0,
+            -0.00054223252,
+            34.712317727654
+          ],
+          "valid_fraction": 0.49274591,
+          "valid_pixels": 2140403,
+          "values": {
+            "count": 2140403,
+            "max": 7684.372559,
+            "mean": 1096.995581,
+            "median": 1082.748901,
+            "min": 190.209244
+          },
+          "width": 2173
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241020T170504_2429411_003"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.43365206,
+        "common_valid_pixels": 1730126,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 715,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241022T074913_003701/EMIT_L2B_CH4PLM_002_20241022T074913_003701.tif",
+        "plume_sha256": "216f0d61999aa4156a0a1b705ded2a26cbf34e66023205070666cc2726ff2fff",
+        "row_offset": 493,
+        "valid_pixels_compared": 1745
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            54.979932421394,
+            24.538951182604,
+            56.053010578981,
+            25.632091943441
+          ],
+          "bytes": 10856814,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241022T074913_2429605_016.tif",
+          "height": 2016,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241022T074913_2429605_016/EMIT_L2B_CH4ENH_002_20241022T074913_2429605_016.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "9ee1eb86960bb4a13d59eaeb4c495d880c67ffaf2b4716d398e738e7369b6c68",
+          "transform": [
+            0.00054223252,
+            0.0,
+            54.979932421394,
+            0.0,
+            -0.00054223252,
+            25.632091943441
+          ],
+          "valid_fraction": 0.43365206,
+          "valid_pixels": 1730126,
+          "values": {
+            "count": 1730126,
+            "max": 2025.097778,
+            "mean": 0.025012,
+            "median": -0.401373,
+            "min": -1475.163696
+          },
+          "width": 1979
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            54.979932421394,
+            24.538951182604,
+            56.053010578981,
+            25.632091943441
+          ],
+          "bytes": 9528366,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241022T074913_2429605_016.tif",
+          "height": 2016,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241022T074913_2429605_016/EMIT_L2B_CH4SENS_002_20241022T074913_2429605_016.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "c85f53a17da62e940e8a1697493b53505833c6ee6608851d9a39fdf5131f216b",
+          "transform": [
+            0.00054223252,
+            0.0,
+            54.979932421394,
+            0.0,
+            -0.00054223252,
+            25.632091943441
+          ],
+          "valid_fraction": 0.43365206,
+          "valid_pixels": 1730126,
+          "values": {
+            "count": 1730126,
+            "max": 2.804619,
+            "mean": 0.999757,
+            "median": 1.089652,
+            "min": 0.037565
+          },
+          "width": 1979
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            54.979932421394,
+            24.538951182604,
+            56.053010578981,
+            25.632091943441
+          ],
+          "bytes": 9493327,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241022T074913_2429605_016.tif",
+          "height": 2016,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241022T074913_2429605_016/EMIT_L2B_CH4UNCERT_002_20241022T074913_2429605_016.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "adac3fbcc28c560602cb2de580e83ac6808b1d834e832aeccdacc13e12188a80",
+          "transform": [
+            0.00054223252,
+            0.0,
+            54.979932421394,
+            0.0,
+            -0.00054223252,
+            25.632091943441
+          ],
+          "valid_fraction": 0.43365206,
+          "valid_pixels": 1730126,
+          "values": {
+            "count": 1730126,
+            "max": 6460.262695,
+            "mean": 424.359126,
+            "median": 364.413757,
+            "min": 201.991425
+          },
+          "width": 1979
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241022T074913_2429605_016"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.49983959,
+        "common_valid_pixels": 2039485,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 1371,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241023T070038_003703/EMIT_L2B_CH4PLM_002_20241023T070038_003703.tif",
+        "plume_sha256": "3a49212df096d39363acb9d1fcb366617e526a88b0cfa51bf8d466b3a7d859c4",
+        "row_offset": 1276,
+        "valid_pixels_compared": 1506
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            58.3341827917,
+            27.379165123707,
+            59.43545704034,
+            28.468510256902
+          ],
+          "bytes": 12676201,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241023T070038_2429705_008.tif",
+          "height": 2009,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241023T070038_2429705_008/EMIT_L2B_CH4ENH_002_20241023T070038_2429705_008.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "780d6def386e4fedda7e223245bdc28be1ed6514e6089fb57767436e5b212ed2",
+          "transform": [
+            0.00054223252,
+            0.0,
+            58.3341827917,
+            0.0,
+            -0.00054223252,
+            28.468510256902
+          ],
+          "valid_fraction": 0.49983959,
+          "valid_pixels": 2039485,
+          "values": {
+            "count": 2039485,
+            "max": 3913.753174,
+            "mean": 0.143723,
+            "median": -0.888466,
+            "min": -2587.009033
+          },
+          "width": 2031
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            58.3341827917,
+            27.379165123707,
+            59.43545704034,
+            28.468510256902
+          ],
+          "bytes": 11063650,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241023T070038_2429705_008.tif",
+          "height": 2009,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241023T070038_2429705_008/EMIT_L2B_CH4SENS_002_20241023T070038_2429705_008.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "133ce2a8d614ae0b4cab6e9ebc6993445d067094b5e9532a56a5e2f9edd56af6",
+          "transform": [
+            0.00054223252,
+            0.0,
+            58.3341827917,
+            0.0,
+            -0.00054223252,
+            28.468510256902
+          ],
+          "valid_fraction": 0.49983959,
+          "valid_pixels": 2039485,
+          "values": {
+            "count": 2039485,
+            "max": 2.44491,
+            "mean": 0.99883,
+            "median": 0.968641,
+            "min": 0.143709
+          },
+          "width": 2031
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            58.3341827917,
+            27.379165123707,
+            59.43545704034,
+            28.468510256902
+          ],
+          "bytes": 11118668,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241023T070038_2429705_008.tif",
+          "height": 2009,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241023T070038_2429705_008/EMIT_L2B_CH4UNCERT_002_20241023T070038_2429705_008.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "6b29e040a47248c8159bc36490242030080f069d497060d20be2bdb2610f987e",
+          "transform": [
+            0.00054223252,
+            0.0,
+            58.3341827917,
+            0.0,
+            -0.00054223252,
+            28.468510256902
+          ],
+          "valid_fraction": 0.49983959,
+          "valid_pixels": 2039485,
+          "values": {
+            "count": 2039485,
+            "max": 3059.31958,
+            "mean": 481.114249,
+            "median": 475.401917,
+            "min": 218.740341
+          },
+          "width": 2031
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241023T070038_2429705_008"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.50088774,
+        "common_valid_pixels": 1866175,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 249,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241023T083741_003699/EMIT_L2B_CH4PLM_002_20241023T083741_003699.tif",
+        "plume_sha256": "936565ced0663b0ce4e7706c022fb8f533aa06921384d4d037a534e899c40e93",
+        "row_offset": 1150,
+        "valid_pixels_compared": 347
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            45.591718565675,
+            15.149110629325,
+            46.594306495629,
+            16.241709157641
+          ],
+          "bytes": 11785131,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241023T083741_2429706_026.tif",
+          "height": 2015,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241023T083741_2429706_026/EMIT_L2B_CH4ENH_002_20241023T083741_2429706_026.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "c2af19187a44fa77deecd47a25cd686b8ed2a20f13cc9c2134f2f62f76331ed6",
+          "transform": [
+            0.00054223252,
+            0.0,
+            45.591718565675,
+            0.0,
+            -0.00054223252,
+            16.241709157641
+          ],
+          "valid_fraction": 0.50088774,
+          "valid_pixels": 1866175,
+          "values": {
+            "count": 1866175,
+            "max": 4502.230469,
+            "mean": -0.130268,
+            "median": -1.185294,
+            "min": -1162.414062
+          },
+          "width": 1849
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            45.591718565675,
+            15.149110629325,
+            46.594306495629,
+            16.241709157641
+          ],
+          "bytes": 9904290,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241023T083741_2429706_026.tif",
+          "height": 2015,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241023T083741_2429706_026/EMIT_L2B_CH4SENS_002_20241023T083741_2429706_026.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "0de0f267b5d842555c337172d963f17b956fcc31757cf6cce99479753fbee481",
+          "transform": [
+            0.00054223252,
+            0.0,
+            45.591718565675,
+            0.0,
+            -0.00054223252,
+            16.241709157641
+          ],
+          "valid_fraction": 0.50088774,
+          "valid_pixels": 1866175,
+          "values": {
+            "count": 1866175,
+            "max": 2.478852,
+            "mean": 1.0,
+            "median": 1.010268,
+            "min": 0.100143
+          },
+          "width": 1849
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            45.591718565675,
+            15.149110629325,
+            46.594306495629,
+            16.241709157641
+          ],
+          "bytes": 10034052,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241023T083741_2429706_026.tif",
+          "height": 2015,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241023T083741_2429706_026/EMIT_L2B_CH4UNCERT_002_20241023T083741_2429706_026.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "49dab1f98d54fbf520e644a1b680d79d5523c5c2561550b20d0b30e8d9264b64",
+          "transform": [
+            0.00054223252,
+            0.0,
+            45.591718565675,
+            0.0,
+            -0.00054223252,
+            16.241709157641
+          ],
+          "valid_fraction": 0.50088774,
+          "valid_pixels": 1866175,
+          "values": {
+            "count": 1866175,
+            "max": 1648.584839,
+            "mean": 252.045414,
+            "median": 247.871185,
+            "min": 139.717575
+          },
+          "width": 1849
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241023T083741_2429706_026"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.20213806,
+        "common_valid_pixels": 793499,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 1073,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241026T061152_003688/EMIT_L2B_CH4PLM_002_20241026T061152_003688.tif",
+        "plume_sha256": "914a3963aeecacb6840c2f466974ad4b1baa14fd0458a24ab294e08cbc571d64",
+        "row_offset": 1297,
+        "valid_pixels_compared": 1580
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            57.245379891025,
+            23.278802805529,
+            58.304360003086,
+            24.368690171244
+          ],
+          "bytes": 5087444,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241026T061152_2430004_002.tif",
+          "height": 2010,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241026T061152_2430004_002/EMIT_L2B_CH4ENH_002_20241026T061152_2430004_002.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "17f6d10c1096491e3dabd210a7de7cbcc45abeec8d0a04e7e088b14621bccdff",
+          "transform": [
+            0.00054223252,
+            0.0,
+            57.245379891025,
+            0.0,
+            -0.00054223252,
+            24.368690171244
+          ],
+          "valid_fraction": 0.20224454,
+          "valid_pixels": 793917,
+          "values": {
+            "count": 793917,
+            "max": 2810.159424,
+            "mean": 0.082024,
+            "median": -2e-06,
+            "min": -2345.174072
+          },
+          "width": 1953
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            57.245379891025,
+            23.278802805529,
+            58.304360003086,
+            24.368690171244
+          ],
+          "bytes": 4479794,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241026T061152_2430004_002.tif",
+          "height": 2010,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241026T061152_2430004_002/EMIT_L2B_CH4SENS_002_20241026T061152_2430004_002.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "62c6dcd26be4c19c783e208449a963a6f968a761febb5b0bfc1b8f47643dafd4",
+          "transform": [
+            0.00054223252,
+            0.0,
+            57.245379891025,
+            0.0,
+            -0.00054223252,
+            24.368690171244
+          ],
+          "valid_fraction": 0.20213806,
+          "valid_pixels": 793499,
+          "values": {
+            "count": 793499,
+            "max": 4.068061,
+            "mean": 0.999225,
+            "median": 1.014742,
+            "min": 0.103346
+          },
+          "width": 1953
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            57.245379891025,
+            23.278802805529,
+            58.304360003086,
+            24.368690171244
+          ],
+          "bytes": 4481744,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241026T061152_2430004_002.tif",
+          "height": 2010,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241026T061152_2430004_002/EMIT_L2B_CH4UNCERT_002_20241026T061152_2430004_002.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "e473bc5f6b36735ebeb9e38a2ea6dfe3200549b2c2cf7db3cb61fbba53b9d2b8",
+          "transform": [
+            0.00054223252,
+            0.0,
+            57.245379891025,
+            0.0,
+            -0.00054223252,
+            24.368690171244
+          ],
+          "valid_fraction": 0.20213806,
+          "valid_pixels": 793499,
+          "values": {
+            "count": 793499,
+            "max": 19174.822266,
+            "mean": 695.77967,
+            "median": 597.5354,
+            "min": 215.473236
+          },
+          "width": 1953
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241026T061152_2430004_002"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.50332049,
+        "common_valid_pixels": 2270593,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 1201,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241026T172133_003687/EMIT_L2B_CH4PLM_002_20241026T172133_003687.tif",
+        "plume_sha256": "5962d242df8231f2c9ee8592efb24b3efb74dfc45ee223d6c1678af7f5187011",
+        "row_offset": 220,
+        "valid_pixels_compared": 5860
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -59.339492056776,
+            -35.446605835797,
+            -58.136278094327,
+            -34.344247122115
+          ],
+          "bytes": 14128540,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241026T172133_2430011_019.tif",
+          "height": 2033,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241026T172133_2430011_019/EMIT_L2B_CH4ENH_002_20241026T172133_2430011_019.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "0e6b77481d21dcc3eea59a31d5572a12592a1b398ace08862dd34f39436c19d5",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -59.339492056776,
+            0.0,
+            -0.00054223252,
+            -34.344247122115
+          ],
+          "valid_fraction": 0.50332049,
+          "valid_pixels": 2270593,
+          "values": {
+            "count": 2270593,
+            "max": 3302.800537,
+            "mean": -0.130969,
+            "median": -1.600377,
+            "min": -2503.66333
+          },
+          "width": 2219
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -59.339492056776,
+            -35.446605835797,
+            -58.136278094327,
+            -34.344247122115
+          ],
+          "bytes": 12701692,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241026T172133_2430011_019.tif",
+          "height": 2033,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241026T172133_2430011_019/EMIT_L2B_CH4SENS_002_20241026T172133_2430011_019.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "d618a87dd9ce417788ef1ef203895d4e2824078544fd326f6f4a445c71e4e426",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -59.339492056776,
+            0.0,
+            -0.00054223252,
+            -34.344247122115
+          ],
+          "valid_fraction": 0.50332049,
+          "valid_pixels": 2270593,
+          "values": {
+            "count": 2270593,
+            "max": 5.346296,
+            "mean": 0.999947,
+            "median": 0.951193,
+            "min": 0.083655
+          },
+          "width": 2219
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -59.339492056776,
+            -35.446605835797,
+            -58.136278094327,
+            -34.344247122115
+          ],
+          "bytes": 12692031,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241026T172133_2430011_019.tif",
+          "height": 2033,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241026T172133_2430011_019/EMIT_L2B_CH4UNCERT_002_20241026T172133_2430011_019.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "01ef9aa4cb373ce1195536841d41b0e03a000c142342cb0162541e9ffeb2d43d",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -59.339492056776,
+            0.0,
+            -0.00054223252,
+            -34.344247122115
+          ],
+          "valid_fraction": 0.50332049,
+          "valid_pixels": 2270593,
+          "values": {
+            "count": 2270593,
+            "max": 4653.883789,
+            "mean": 555.433929,
+            "median": 509.469177,
+            "min": 151.429993
+          },
+          "width": 2219
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241026T172133_2430011_019"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.49191064,
+        "common_valid_pixels": 2097384,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 760,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20241130T180310_003723/EMIT_L2B_CH4PLM_002_20241130T180310_003723.tif",
+        "plume_sha256": "9cbab08b61a08401503419abae599968ca60912ff76fe03a5ae246fb3476dbe2",
+        "row_offset": 375,
+        "valid_pixels_compared": 9843
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -103.507584226779,
+            30.222632459932,
+            -102.287561056202,
+            31.250163085818
+          ],
+          "bytes": 12999184,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20241130T180310_2433512_007.tif",
+          "height": 1895,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241130T180310_2433512_007/EMIT_L2B_CH4ENH_002_20241130T180310_2433512_007.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "74948c32d866ad49c23bc6dae8a28c873204abe61a47d22095f425f829a73894",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -103.507584226779,
+            0.0,
+            -0.00054223252,
+            31.250163085818
+          ],
+          "valid_fraction": 0.49191064,
+          "valid_pixels": 2097384,
+          "values": {
+            "count": 2097384,
+            "max": 4990.024414,
+            "mean": -0.008384,
+            "median": -0.611719,
+            "min": -1619.707153
+          },
+          "width": 2250
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -103.507584226779,
+            30.222632459932,
+            -102.287561056202,
+            31.250163085818
+          ],
+          "bytes": 11426595,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20241130T180310_2433512_007.tif",
+          "height": 1895,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241130T180310_2433512_007/EMIT_L2B_CH4SENS_002_20241130T180310_2433512_007.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "97db40a6750412c357ff572ae8b233eb9bf489268fbcc8f45941cc813a2b11c6",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -103.507584226779,
+            0.0,
+            -0.00054223252,
+            31.250163085818
+          ],
+          "valid_fraction": 0.49191064,
+          "valid_pixels": 2097384,
+          "values": {
+            "count": 2097384,
+            "max": 1.950878,
+            "mean": 1.000362,
+            "median": 1.020675,
+            "min": 0.083805
+          },
+          "width": 2250
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -103.507584226779,
+            30.222632459932,
+            -102.287561056202,
+            31.250163085818
+          ],
+          "bytes": 11399643,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20241130T180310_2433512_007.tif",
+          "height": 1895,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20241130T180310_2433512_007/EMIT_L2B_CH4UNCERT_002_20241130T180310_2433512_007.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "d4ac6043c9ebb391eac5e201bb26200fe8aec091ae1c58e76b2013ef07895b20",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -103.507584226779,
+            0.0,
+            -0.00054223252,
+            31.250163085818
+          ],
+          "valid_fraction": 0.49191064,
+          "valid_pixels": 2097384,
+          "values": {
+            "count": 2097384,
+            "max": 3656.788818,
+            "mean": 416.967464,
+            "median": 396.063309,
+            "min": 241.773315
+          },
+          "width": 2250
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20241130T180310_2433512_007"
+    },
+    {
+      "alignment": {
+        "ancillary_valid_pixels_outside_enhancement": 0,
+        "common_valid_fraction": 0.46444575,
+        "common_valid_pixels": 1995402,
+        "three_product_grid_equal": true,
+        "uncertainty_sensitivity_validity_equal": true
+      },
+      "contract_ok": true,
+      "plume_crop_identity": {
+        "column_offset": 932,
+        "exact_float32_value_match": true,
+        "grid_phase_ok": true,
+        "inside_source_scene": true,
+        "plume_path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/EMIT_L2B_CH4PLM_002_20250922T204933_003374/EMIT_L2B_CH4PLM_002_20250922T204933_003374.tif",
+        "plume_sha256": "d360a6e246ef018d65c712feaaa4029319f215103e0db387254e60e20ad3c309",
+        "row_offset": 490,
+        "valid_pixels_compared": 329
+      },
+      "products": {
+        "enhancement": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -102.613442800876,
+            31.544053111796,
+            -101.378237119732,
+            32.566703645
+          ],
+          "bytes": 12481775,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4ENH"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4ENH_002_20250922T204933_2526514_006.tif",
+          "height": 1886,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20250922T204933_2526514_006/EMIT_L2B_CH4ENH_002_20250922T204933_2526514_006.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "394601c51dbfdff7ad14ce6080220f2f226c2f5b793f9e61ad40e132b0686680",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -102.613442800876,
+            0.0,
+            -0.00054223252,
+            32.566703645
+          ],
+          "valid_fraction": 0.46444575,
+          "valid_pixels": 1995402,
+          "values": {
+            "count": 1995402,
+            "max": 4699.200195,
+            "mean": 0.194973,
+            "median": -1.093372,
+            "min": -2158.266602
+          },
+          "width": 2278
+        },
+        "sensitivity": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -102.613442800876,
+            31.544053111796,
+            -101.378237119732,
+            32.566703645
+          ],
+          "bytes": 11207290,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4SENS"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4SENS_002_20250922T204933_2526514_006.tif",
+          "height": 1886,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20250922T204933_2526514_006/EMIT_L2B_CH4SENS_002_20250922T204933_2526514_006.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "64c985fde29428480a75d0a1638ad7aba0788c4cb7ba57617656723fe51398df",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -102.613442800876,
+            0.0,
+            -0.00054223252,
+            32.566703645
+          ],
+          "valid_fraction": 0.46444575,
+          "valid_pixels": 1995402,
+          "values": {
+            "count": 1995402,
+            "max": 6.160285,
+            "mean": 1.000082,
+            "median": 1.025625,
+            "min": 0.03537
+          },
+          "width": 2278
+        },
+        "uncertainty": {
+          "band_count": 1,
+          "block_shapes": [
+            [
+              512,
+              512
+            ]
+          ],
+          "bounds": [
+            -102.613442800876,
+            31.544053111796,
+            -101.378237119732,
+            32.566703645
+          ],
+          "bytes": 11195381,
+          "compression": "lzw",
+          "contract_checks": {
+            "cloud_optimized_layout": true,
+            "description_matches_role": true,
+            "epsg4326": true,
+            "float32": true,
+            "has_valid_pixels": true,
+            "nodata_minus_9999": true,
+            "nominal_60m_resolution": true,
+            "one_band": true,
+            "strictly_positive_on_valid_support": true,
+            "valid_values_finite": true
+          },
+          "contract_ok": true,
+          "crs": "EPSG:4326",
+          "descriptions": [
+            "EMIT_L2B_CH4UNCERT"
+          ],
+          "dtype": "float32",
+          "filename": "EMIT_L2B_CH4UNCERT_002_20250922T204933_2526514_006.tif",
+          "height": 1886,
+          "is_tiled": true,
+          "nodata": -9999.0,
+          "overviews": [
+            2,
+            4,
+            8
+          ],
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/emit-v002-authenticated-2026-07/CH4ENH/EMIT_L2B_CH4ENH_002_20250922T204933_2526514_006/EMIT_L2B_CH4UNCERT_002_20250922T204933_2526514_006.tif",
+          "resolution_degrees": [
+            0.000542232520256367,
+            0.000542232520256367
+          ],
+          "sha256": "692eb005daecd4f82294ff3b95cdee0721329a3b888981b0f201f42bbee341f7",
+          "transform": [
+            0.00054223252,
+            0.0,
+            -102.613442800876,
+            0.0,
+            -0.00054223252,
+            32.566703645
+          ],
+          "valid_fraction": 0.46444575,
+          "valid_pixels": 1995402,
+          "values": {
+            "count": 1995402,
+            "max": 10824.308594,
+            "mean": 562.246453,
+            "median": 456.689102,
+            "min": 139.261627
+          },
+          "width": 2278
+        }
+      },
+      "scene_id": "EMIT_L2B_CH4ENH_002_20250922T204933_2526514_006"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "authenticated_emit_v002_ch4enh_science_bundle_pilot",
+  "source": {
+    "cmr_collection_concept_id": "C3242680113-LPCLOUD",
+    "collection": "EMITL2BCH4ENH.002",
+    "credential_material_recorded": false,
+    "product_guide": "https://lpdaac.usgs.gov/documents/2250/EMIT_L2B_GHG_User_Guide_V2.pdf",
+    "raw_files_policy": "ignored; preserve NASA filenames; do not redistribute from Git"
+  },
+  "summary": {
+    "all_scenes_pass_contract": true,
+    "common_valid_fraction": {
+      "count": 12,
+      "max": 0.50332,
+      "mean": 0.446104,
+      "median": 0.492328,
+      "min": 0.202138
+    },
+    "contract_violation_count": 0,
+    "contract_violations": [],
+    "exact_plume_crop_matches": 12,
+    "expected_scenes": 12,
+    "metadata_companions_present": 1,
+    "missing_scenes": [],
+    "observed_scenes": 12,
+    "science_bytes": 400014715,
+    "science_files": 36,
+    "three_product_grid_aligned_scenes": 12,
+    "unexpected_scenes": []
+  }
+}

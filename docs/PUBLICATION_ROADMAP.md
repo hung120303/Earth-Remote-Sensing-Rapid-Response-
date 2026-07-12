@@ -276,17 +276,18 @@ EarthRemoteSensingRapidResponse/Data Collection/EMIT_Plumes/publication-v1/
   CH4PLM/<plume-complex-id>/
 ```
 
-For each CH4ENH scene, download all four protected files:
+For each CH4ENH scene, download the three protected science files listed by the official V2
+product guide:
 
 ```text
 EMIT_L2B_CH4ENH_002_<timestamp>_<orbit>_<scene>.tif
 EMIT_L2B_CH4UNCERT_002_<timestamp>_<orbit>_<scene>.tif
 EMIT_L2B_CH4SENS_002_<timestamp>_<orbit>_<scene>.tif
-EMIT_L2B_CH4ENH_002_<timestamp>_<orbit>_<scene>.cmr.json
 ```
 
-For each CH4PLM complex, download the plume COG and companion plume metadata JSON. Preserve the
-NASA filenames unchanged.
+The generic `.cmr.json` response may be retained as optional catalog evidence, but it is not a
+fourth science layer. For each CH4PLM complex, download the plume COG and use its embedded tags plus
+the tracked public CMR batch for the label contract. Preserve the NASA filenames unchanged.
 
 The first authenticated pilot should cover the 12 public plume complexes already collected and
 their exact source enhancement scenes:
@@ -305,6 +306,13 @@ their exact source enhancement scenes:
 | `EMIT_L2B_CH4PLM_002_20241026T172133_003687` | `EMIT_L2B_CH4ENH_002_20241026T172133_2430011_019` |
 | `EMIT_L2B_CH4PLM_002_20241130T180310_003723` | `EMIT_L2B_CH4ENH_002_20241130T180310_2433512_007` |
 | `EMIT_L2B_CH4PLM_002_20250922T204933_003374` | `EMIT_L2B_CH4ENH_002_20250922T204933_2526514_006` |
+
+Authenticated acquisition is now complete for this pilot: 12 CH4PLM rasters and all 36 CH4ENH,
+uncertainty, and sensitivity COGs are present beneath the ignored acquisition root. The protected
+science files total 401,019,760 bytes. All 12 three-product source grids align, and every CH4PLM
+valid pixel exactly matches an integer-offset crop of its declared CH4ENH source scene. See
+`reports/acquisition/EMIT_V002_AUTHENTICATED_PLUME_AUDIT.md` and
+`reports/acquisition/EMIT_V002_AUTHENTICATED_SCIENCE_AUDIT.md`.
 
 Example protected links for the final pilot scene:
 
@@ -609,8 +617,10 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/evaluate_mars_v3
 
 ### Phase 4 - independent EMIT V002 validation (2-3 weeks)
 
-- Validate the 12 authenticated pilot bundles and build the enhancement/sensitivity/uncertainty
-  reader.
+- [x] Validate the 12 authenticated pilot bundles and freeze the enhancement/sensitivity/uncertainty
+  raster contract.
+- Build the external reader and time-aligned candidate manifest without inspecting frozen-model
+  predictions.
 - Use public CMR metadata to select a larger, geography-balanced candidate set before downloading.
 - Retain only time-aligned, observable examples; label ambiguous cases as uncertain.
 - Have two annotators review the locked external cohort.
@@ -640,13 +650,8 @@ shopping.
 1. Download the public minimum MARS-S2L v3 transfer: 59,240 remaining assets / exactly
    29,198,856,248 bytes (27.193 GiB). No account is required; use the four commands above and keep
    the generated receipt. Source: <https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L>.
-2. Create or activate a free NASA Earthdata Login:
-   <https://urs.earthdata.nasa.gov/users/new>.
-3. In Earthdata Search, download the 12 CH4ENH scene bundles and matching 12 CH4PLM bundles listed
-   above.
-4. Put them in the exact `publication-v1/CH4ENH/...` and `publication-v1/CH4PLM/...` paths. Do not
-   rename files and do not add them to Git.
-5. Do not send credentials. When the files are present, report only that the download is complete.
+2. No Earthdata action is currently required: the authenticated 12-scene CH4PLM/CH4ENH pilot is
+   downloaded, ignored, checksum-bound, and audited. Do not send credentials or temporary URLs.
 
 ### Work that does not require user credentials
 
@@ -655,7 +660,7 @@ shopping.
   v3 training transfer awaits the user's download; do not perform the full ~100 GB mirror.
 - The MARS adapter, group/leakage protocol, classical baselines, released checkpoint reproduction,
   and validation-only MIL failure audit are complete.
-- Generate the exact larger EMIT candidate list from public CMR metadata before requesting more
-  authenticated downloads.
+- Generate the exact larger EMIT candidate list from public CMR metadata before requesting or
+  performing more authenticated downloads. The 12-scene protected contract pilot is complete.
 - Keep raw data and trained models ignored; commit only manifests, hashes, code, configs, and
   results.
