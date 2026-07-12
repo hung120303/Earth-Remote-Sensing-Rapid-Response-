@@ -1,0 +1,85 @@
+{
+  "artifact": {
+    "bytes": 51590,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v3_proposals_seed303.joblib",
+    "sha256": "478d9c5b0f654fe00681a02e79a401cfc6d421f446b18a8b347a7f28476d06ff",
+    "tracked": false
+  },
+  "cache": {
+    "feature_count": 74,
+    "ignored_ambiguous_proposals": 162,
+    "labeled_proposals": 13598,
+    "negative_proposals": 8895,
+    "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_proposal_features_seed303.npz",
+    "positive_proposals": 4703,
+    "proposal_count": 13760,
+    "sha256": "5b6c058b9c1d7478e51aa159e40e283e4c2a71e4fc12a0f5a58376a910f1507f",
+    "tracked": false
+  },
+  "decision": "Freeze the calibrated component classifier with the v3 checkpoint before strict evaluation.",
+  "generated_at_utc": "2026-07-12T04:53:31.765199+00:00",
+  "operating_rule": {
+    "lower_no_plume_threshold": 0.26942033582040753,
+    "lower_selection": {
+      "accepted_samples": 5058,
+      "npv": 0.9849742981415579,
+      "weighted_coverage": 0.8507989907485282
+    },
+    "scene_score": "maximum calibrated connected-proposal probability; zero with no proposal",
+    "selected_on": "internal_validation_only",
+    "upper_plume_threshold": 0.5388420689395463
+  },
+  "provenance": {
+    "git_commit": "f265123ec4c1946dc76c07b0b4e5023cf1c62643",
+    "git_tracked_worktree_dirty_at_start": false,
+    "proposal_source_sha256": "fafd3f82d060e5245a52038a2ea2047df50b5480e155b4632086e84ab347fd7c",
+    "script": "tools/train_mars_v3_proposals.py",
+    "script_sha256": "69f1090a7cdc90af9f431e0d1a6fda4416f50e60eeebfe48c602c8580e0d675c"
+  },
+  "runtime": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "numpy": "2.4.4",
+    "rasterio": "1.4.4",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "v3_connected_proposal_internal_validation",
+  "source": {
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "manifest_sha256": "edd3c1da3d706b109798dcf86bc3db284f639d401d4953f3ced175c27b27d566",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "v3_checkpoint_sha256": "86c1bc2e55b73de21fa4e8831b009f50a1d75ea3da16f03cfc152c64fff53426",
+    "v3_validation_experiment_sha256": "f3e9c182c0c239801d96d4f4ac520d846b3031a0bb4153c25116d369a294d2e2"
+  },
+  "training": {
+    "calibration": "group-held-out, class/group-balanced Platt logistic",
+    "calibration_groups": 10,
+    "calibration_proposals": 2830,
+    "classifier": "HistGradientBoostingClassifier",
+    "fit_groups": 40,
+    "fit_proposals": 8292,
+    "group_overlap": 0,
+    "seed": 303,
+    "validation_groups": 24,
+    "validation_proposals": 2476
+  },
+  "validation": {
+    "samples": 5945,
+    "scene": {
+      "accuracy": 0.9411269974768713,
+      "auroc": 0.901769437973209,
+      "average_precision": 0.5872944929117726,
+      "brier": 0.050497604389088534,
+      "false_positive_rate": 0.04650735294117647,
+      "fn": 97.0,
+      "fp": 253.0,
+      "negative_predictive_value": 0.9816426949280848,
+      "precision": 0.6172465960665658,
+      "recall": 0.807920792079208,
+      "specificity": 0.9534926470588235,
+      "tn": 5187.0,
+      "tp": 408.0
+    }
+  }
+}
