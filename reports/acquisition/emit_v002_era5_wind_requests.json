@@ -1,0 +1,2274 @@
+{
+  "contract": {
+    "costing_validation": {
+      "accepted": 70,
+      "checked": 70,
+      "endpoint": "https://cds.climate.copernicus.eu/api/retrieve/v1/processes/reanalysis-era5-land-timeseries/costing"
+    },
+    "credentials": "CDS personal access token in $HOME/.cdsapirc outside the repository; dataset CC-BY terms must be accepted manually",
+    "dataset": "reanalysis-era5-land-timeseries",
+    "dataset_url": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=download",
+    "input_manifest": "reports/acquisition/emit_v002_l1c_pairs.json",
+    "input_manifest_sha256": "6947f62b6c21023f926e82b5e1f9342932a105bb78a943f83095a6ad3c4761c5",
+    "license": "CC-BY-4.0",
+    "raw_storage": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land",
+    "selection_inputs": "frozen public metadata only; no detector predictions",
+    "sensitivity_policy": "also retain previous and following hourly values",
+    "spatial_policy": "CDS nearest native 0.1-degree ERA5-Land grid point",
+    "temporal_policy": "nearest UTC hourly validity time to Sentinel-2 target acquisition; ties choose the later hour",
+    "units": "m s-1",
+    "variables": [
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "requests": [
+    {
+      "candidate_center": [
+        36.189135,
+        31.923615
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-02-20",
+          "2023-02-22"
+        ],
+        "location": {
+          "latitude": 31.923615,
+          "longitude": 36.189135
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "5415e4924fa23f0c6d8cc98eda2b4af4663a3a601b3910632b34fe3dac4b0beb",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230221T093954_000697",
+      "group_id": "emit25km-0001",
+      "hourly_validity_times": {
+        "following": "2023-02-21T09:00:00Z",
+        "nearest": "2023-02-21T08:00:00Z",
+        "previous": "2023-02-21T08:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0001.csv",
+      "sentinel2_target_datetime": "2023-02-21T08:21:17.899000+00:00",
+      "sentinel2_target_scene_id": "S2B_36SYA_20230221_0_L1C"
+    },
+    {
+      "candidate_center": [
+        58.43531,
+        40.243905
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2022-08-15",
+          "2022-08-17"
+        ],
+        "location": {
+          "latitude": 40.243905,
+          "longitude": 58.43531
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "f19cd0ca81cf55eb87e00c0b1426c7f40871c5184ae7f7251f682271b3a50bd6",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220816T101035_000502",
+      "group_id": "emit25km-0002",
+      "hourly_validity_times": {
+        "following": "2022-08-16T07:00:00Z",
+        "nearest": "2022-08-16T07:00:00Z",
+        "previous": "2022-08-16T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0002.csv",
+      "sentinel2_target_datetime": "2022-08-16T06:58:36.696000+00:00",
+      "sentinel2_target_scene_id": "S2A_40TFK_20220816_0_L1C"
+    },
+    {
+      "candidate_center": [
+        87.875555,
+        44.03546
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2022-08-17",
+          "2022-08-19"
+        ],
+        "location": {
+          "latitude": 44.03546,
+          "longitude": 87.875555
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "bdd1a414d99fe19ce62e525636cf76ec7f2e1b40e43c9184f11902a962583ffe",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220818T070105_000508",
+      "group_id": "emit25km-0003",
+      "hourly_validity_times": {
+        "following": "2022-08-18T06:00:00Z",
+        "nearest": "2022-08-18T05:00:00Z",
+        "previous": "2022-08-18T05:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0003.csv",
+      "sentinel2_target_datetime": "2022-08-18T05:06:38.392000+00:00",
+      "sentinel2_target_scene_id": "S2B_45TWJ_20220818_0_L1C"
+    },
+    {
+      "candidate_center": [
+        61.919425,
+        35.97328
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2022-08-22",
+          "2022-08-24"
+        ],
+        "location": {
+          "latitude": 35.97328,
+          "longitude": 61.919425
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "b0e8d3e4b645c5236933ff5e3790716a0182ba2a42ecea08af49e9d085a14bc0",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220823T074504_000522",
+      "group_id": "emit25km-0004",
+      "hourly_validity_times": {
+        "following": "2022-08-23T07:00:00Z",
+        "nearest": "2022-08-23T07:00:00Z",
+        "previous": "2022-08-23T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0004.csv",
+      "sentinel2_target_datetime": "2022-08-23T06:49:44.991000+00:00",
+      "sentinel2_target_scene_id": "S2A_41SLV_20220823_0_L1C"
+    },
+    {
+      "candidate_center": [
+        0.317475,
+        28.11877
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2022-08-26",
+          "2022-08-28"
+        ],
+        "location": {
+          "latitude": 28.11877,
+          "longitude": 0.317475
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "1976eb966a78916078d797c6553bb7997fada38716b1af4578dbaa0493f4b4ef",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220827T104927_000526",
+      "group_id": "emit25km-0005",
+      "hourly_validity_times": {
+        "following": "2022-08-27T11:00:00Z",
+        "nearest": "2022-08-27T11:00:00Z",
+        "previous": "2022-08-27T10:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0005.csv",
+      "sentinel2_target_datetime": "2022-08-27T10:43:14.835000+00:00",
+      "sentinel2_target_scene_id": "S2B_31RBM_20220827_0_L1C"
+    },
+    {
+      "candidate_center": [
+        64.071275,
+        39.014935
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2022-08-27",
+          "2022-08-29"
+        ],
+        "location": {
+          "latitude": 39.014935,
+          "longitude": 64.071275
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "89f7f6d28160111bdbc0eafdb73fe7237578cc63e1c99b5ac5658ca4cc8a4799",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220828T051929_000919",
+      "group_id": "emit25km-0006",
+      "hourly_validity_times": {
+        "following": "2022-08-28T07:00:00Z",
+        "nearest": "2022-08-28T07:00:00Z",
+        "previous": "2022-08-28T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0006.csv",
+      "sentinel2_target_datetime": "2022-08-28T06:48:27.057000+00:00",
+      "sentinel2_target_scene_id": "S2B_41SND_20220828_0_L1C"
+    },
+    {
+      "candidate_center": [
+        66.014095,
+        38.262045
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2022-08-31",
+          "2022-09-02"
+        ],
+        "location": {
+          "latitude": 38.262045,
+          "longitude": 66.014095
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "8a0e94815d85049156e4e994ff8654283aba662b73b16f3e93aeb8e679a19995",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220901T034318_000554",
+      "group_id": "emit25km-0007",
+      "hourly_validity_times": {
+        "following": "2022-09-01T07:00:00Z",
+        "nearest": "2022-09-01T06:00:00Z",
+        "previous": "2022-09-01T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0007.csv",
+      "sentinel2_target_datetime": "2022-09-01T06:28:42.489000+00:00",
+      "sentinel2_target_scene_id": "S2B_42STH_20220901_0_L1C"
+    },
+    {
+      "candidate_center": [
+        7.51778,
+        28.48071
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-01-27",
+          "2023-01-29"
+        ],
+        "location": {
+          "latitude": 28.48071,
+          "longitude": 7.51778
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "b578c596087c1bc5b790c71d923a477d07ace6fa139284e0f01b7d17934cdae9",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230128T124118_000593",
+      "group_id": "emit25km-0008",
+      "hourly_validity_times": {
+        "following": "2023-01-28T11:00:00Z",
+        "nearest": "2023-01-28T10:00:00Z",
+        "previous": "2023-01-28T10:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0008.csv",
+      "sentinel2_target_datetime": "2023-01-28T10:22:56.628000+00:00",
+      "sentinel2_target_scene_id": "S2B_32RLS_20230128_0_L1C"
+    },
+    {
+      "candidate_center": [
+        55.98496,
+        21.877135
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-02-01",
+          "2023-02-03"
+        ],
+        "location": {
+          "latitude": 21.877135,
+          "longitude": 55.98496
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "81c382d2208151d10e1724cf17222dfcb717688d07240113142cded9badc5c64",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230202T070803_000606",
+      "group_id": "emit25km-0009",
+      "hourly_validity_times": {
+        "following": "2023-02-02T08:00:00Z",
+        "nearest": "2023-02-02T07:00:00Z",
+        "previous": "2023-02-02T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0009.csv",
+      "sentinel2_target_datetime": "2023-02-02T07:03:23.296000+00:00",
+      "sentinel2_target_scene_id": "S2A_40QCK_20230202_0_L1C"
+    },
+    {
+      "candidate_center": [
+        80.47516,
+        38.65733
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-02-02",
+          "2023-02-04"
+        ],
+        "location": {
+          "latitude": 38.65733,
+          "longitude": 80.47516
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "de824e75b1b74ade016590c2726f55dbb58fbec89600424fa321c25bc475e2a7",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230203T062629_000615",
+      "group_id": "emit25km-0010",
+      "hourly_validity_times": {
+        "following": "2023-02-03T06:00:00Z",
+        "nearest": "2023-02-03T06:00:00Z",
+        "previous": "2023-02-03T05:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0010.csv",
+      "sentinel2_target_datetime": "2023-02-03T05:38:11.489000+00:00",
+      "sentinel2_target_scene_id": "S2B_44SMH_20230203_0_L1C"
+    },
+    {
+      "candidate_center": [
+        48.992875,
+        31.236605
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-02-18",
+          "2023-02-20"
+        ],
+        "location": {
+          "latitude": 31.236605,
+          "longitude": 48.992875
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "7b450fc0e72543afd1e7c0e3b540906128dbc7be2870e868b8089c622e48495b",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230219T094118_000669",
+      "group_id": "emit25km-0011",
+      "hourly_validity_times": {
+        "following": "2023-02-19T08:00:00Z",
+        "nearest": "2023-02-19T08:00:00Z",
+        "previous": "2023-02-19T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0011.csv",
+      "sentinel2_target_datetime": "2023-02-19T07:41:05.623000+00:00",
+      "sentinel2_target_scene_id": "S2B_39RTQ_20230219_0_L1C"
+    },
+    {
+      "candidate_center": [
+        94.161655,
+        37.363835
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-02-19",
+          "2023-02-21"
+        ],
+        "location": {
+          "latitude": 37.363835,
+          "longitude": 94.161655
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "bfd6269f42fb3f6d4a3e560e2dddcdb241dab4b575d440e315fe0cb0097a2afe",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230220T054540_000688",
+      "group_id": "emit25km-0012",
+      "hourly_validity_times": {
+        "following": "2023-02-20T05:00:00Z",
+        "nearest": "2023-02-20T05:00:00Z",
+        "previous": "2023-02-20T04:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0012.csv",
+      "sentinel2_target_datetime": "2023-02-20T04:38:07.243000+00:00",
+      "sentinel2_target_scene_id": "S2A_46SEG_20230220_0_L1C"
+    },
+    {
+      "candidate_center": [
+        42.921225,
+        36.44556
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-02-22",
+          "2023-02-24"
+        ],
+        "location": {
+          "latitude": 36.44556,
+          "longitude": 42.921225
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "8a14fcbe14e29168a21e6e86001bf933afbe41ab8330991f029cae6127c183de",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230223T080447_000700",
+      "group_id": "emit25km-0013",
+      "hourly_validity_times": {
+        "following": "2023-02-23T09:00:00Z",
+        "nearest": "2023-02-23T08:00:00Z",
+        "previous": "2023-02-23T08:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0013.csv",
+      "sentinel2_target_datetime": "2023-02-23T08:09:41.161000+00:00",
+      "sentinel2_target_scene_id": "S2A_38SLF_20230223_0_L1C"
+    },
+    {
+      "candidate_center": [
+        100.557825,
+        13.620285
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-02-24",
+          "2023-02-26"
+        ],
+        "location": {
+          "latitude": 13.620285,
+          "longitude": 100.557825
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "e28bfbeb2bec2e6cb627b80ca1ea12b87738663b94023d6b98868860fdf557eb",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230225T050619_000722",
+      "group_id": "emit25km-0014",
+      "hourly_validity_times": {
+        "following": "2023-02-25T04:00:00Z",
+        "nearest": "2023-02-25T04:00:00Z",
+        "previous": "2023-02-25T03:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0014.csv",
+      "sentinel2_target_datetime": "2023-02-25T03:54:23.382000+00:00",
+      "sentinel2_target_scene_id": "S2A_47PPR_20230225_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -73.505855,
+        9.731935
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-02-26",
+          "2023-02-28"
+        ],
+        "location": {
+          "latitude": 9.731935,
+          "longitude": -73.505855
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "896ad06cf24a127687cf8395fee0cf97966f6308d696d48fd1d99f5d91a26cc6",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230227T155714_000737",
+      "group_id": "emit25km-0015",
+      "hourly_validity_times": {
+        "following": "2023-02-27T16:00:00Z",
+        "nearest": "2023-02-27T16:00:00Z",
+        "previous": "2023-02-27T15:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0015.csv",
+      "sentinel2_target_datetime": "2023-02-27T15:30:30.063000+00:00",
+      "sentinel2_target_scene_id": "S2B_18PXR_20230227_0_L1C"
+    },
+    {
+      "candidate_center": [
+        61.0223,
+        37.479875
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-03-25",
+          "2023-03-27"
+        ],
+        "location": {
+          "latitude": 37.479875,
+          "longitude": 61.0223
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "dd51c1df62f3351cf58fab5b50e5d19b34b20153a7bbb9ca902d60110f2d0c06",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230326T112521_000769",
+      "group_id": "emit25km-0016",
+      "hourly_validity_times": {
+        "following": "2023-03-26T07:00:00Z",
+        "nearest": "2023-03-26T07:00:00Z",
+        "previous": "2023-03-26T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0016.csv",
+      "sentinel2_target_datetime": "2023-03-26T06:49:06.237000+00:00",
+      "sentinel2_target_scene_id": "S2B_41SLB_20230326_0_L1C"
+    },
+    {
+      "candidate_center": [
+        10.45939,
+        35.76506
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-03-25",
+          "2023-03-27"
+        ],
+        "location": {
+          "latitude": 35.76506,
+          "longitude": 10.45939
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "1cdf4463add787cebc1e352bd6e12fa4eafca8f723151efa65c279a7fe33c075",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230326T143019_000762",
+      "group_id": "emit25km-0017",
+      "hourly_validity_times": {
+        "following": "2023-03-26T11:00:00Z",
+        "nearest": "2023-03-26T10:00:00Z",
+        "previous": "2023-03-26T10:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0017.csv",
+      "sentinel2_target_datetime": "2023-03-26T10:11:00.062000+00:00",
+      "sentinel2_target_scene_id": "S2B_32SPE_20230326_0_L1C"
+    },
+    {
+      "candidate_center": [
+        5.927685,
+        31.591225
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-04-02",
+          "2023-04-04"
+        ],
+        "location": {
+          "latitude": 31.591225,
+          "longitude": 5.927685
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "2bc6b7b6cd41236a2fb6bf2f73842e5b41f17bebaf1a2691391dd9c81a7ef052",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230403T111837_000787",
+      "group_id": "emit25km-0018",
+      "hourly_validity_times": {
+        "following": "2023-04-03T11:00:00Z",
+        "nearest": "2023-04-03T10:00:00Z",
+        "previous": "2023-04-03T10:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0018.csv",
+      "sentinel2_target_datetime": "2023-04-03T10:22:21.335000+00:00",
+      "sentinel2_target_scene_id": "S2A_31RGQ_20230403_0_L1C"
+    },
+    {
+      "candidate_center": [
+        110.80738,
+        37.531385
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-04-17",
+          "2023-04-19"
+        ],
+        "location": {
+          "latitude": 37.531385,
+          "longitude": 110.80738
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "d0a71679a03b752a2de219a26eddf03e864d8ee53f08d8d3f8792fc415073821",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230418T060625_000823",
+      "group_id": "emit25km-0019",
+      "hourly_validity_times": {
+        "following": "2023-04-18T04:00:00Z",
+        "nearest": "2023-04-18T04:00:00Z",
+        "previous": "2023-04-18T03:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0019.csv",
+      "sentinel2_target_datetime": "2023-04-18T03:37:40.945000+00:00",
+      "sentinel2_target_scene_id": "S2B_49SDB_20230418_0_L1C"
+    },
+    {
+      "candidate_center": [
+        60.237415,
+        39.686215
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-04-17",
+          "2023-04-19"
+        ],
+        "location": {
+          "latitude": 39.686215,
+          "longitude": 60.237415
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "1d1a6ab620abb912b7f423fa3ea58ace86fba458df171d1e6b4067b7b71e0b0c",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230418T091117_002047",
+      "group_id": "emit25km-0020",
+      "hourly_validity_times": {
+        "following": "2023-04-18T07:00:00Z",
+        "nearest": "2023-04-18T07:00:00Z",
+        "previous": "2023-04-18T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0020.csv",
+      "sentinel2_target_datetime": "2023-04-18T06:58:37.377000+00:00",
+      "sentinel2_target_scene_id": "S2B_40SGJ_20230418_0_L1C"
+    },
+    {
+      "candidate_center": [
+        65.903205,
+        39.919105
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-02",
+          "2023-06-04"
+        ],
+        "location": {
+          "latitude": 39.919105,
+          "longitude": 65.903205
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "558a965e81c035d17795e434f24d35b505405c1029cbbb1bf91940edb01fd56e",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230603T080327_000264",
+      "group_id": "emit25km-0021",
+      "hourly_validity_times": {
+        "following": "2023-06-03T07:00:00Z",
+        "nearest": "2023-06-03T06:00:00Z",
+        "previous": "2023-06-03T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0021.csv",
+      "sentinel2_target_datetime": "2023-06-03T06:28:16.588000+00:00",
+      "sentinel2_target_scene_id": "S2A_41TQE_20230603_0_L1C"
+    },
+    {
+      "candidate_center": [
+        61.58812,
+        36.021535
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-04-24",
+          "2023-04-26"
+        ],
+        "location": {
+          "latitude": 36.021535,
+          "longitude": 61.58812
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "c2a28558f93cfe4ea021a820c01fcdbfe91bc5d6a89389cc7ed0606b768a90be",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230425T064628_002840",
+      "group_id": "emit25km-0022",
+      "hourly_validity_times": {
+        "following": "2023-04-25T07:00:00Z",
+        "nearest": "2023-04-25T07:00:00Z",
+        "previous": "2023-04-25T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0022.csv",
+      "sentinel2_target_datetime": "2023-04-25T06:49:34.222000+00:00",
+      "sentinel2_target_scene_id": "S2B_41SLV_20230425_0_L1C"
+    },
+    {
+      "candidate_center": [
+        86.55088,
+        42.017005
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-01",
+          "2023-06-03"
+        ],
+        "location": {
+          "latitude": 42.017005,
+          "longitude": 86.55088
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "6175540dc40945162d0324f527a5ba3587387e852002ee3da6d58919b7cb927a",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230602T071917_000321",
+      "group_id": "emit25km-0023",
+      "hourly_validity_times": {
+        "following": "2023-06-02T06:00:00Z",
+        "nearest": "2023-06-02T05:00:00Z",
+        "previous": "2023-06-02T05:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0023.csv",
+      "sentinel2_target_datetime": "2023-06-02T05:17:09.448000+00:00",
+      "sentinel2_target_scene_id": "S2A_45TVG_20230602_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -104.30304,
+        31.818155
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-03",
+          "2023-06-05"
+        ],
+        "location": {
+          "latitude": 31.818155,
+          "longitude": -104.30304
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "d8db3b52790de76af8062731f368d7144848b4cce8597ab96868002516a6bc85",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230604T180205_000219",
+      "group_id": "emit25km-0024",
+      "hourly_validity_times": {
+        "following": "2023-06-04T18:00:00Z",
+        "nearest": "2023-06-04T18:00:00Z",
+        "previous": "2023-06-04T17:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0024.csv",
+      "sentinel2_target_datetime": "2023-06-04T17:45:13.679000+00:00",
+      "sentinel2_target_scene_id": "S2A_13SER_20230604_0_L1C"
+    },
+    {
+      "candidate_center": [
+        57.334305,
+        48.240475
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-05",
+          "2023-06-07"
+        ],
+        "location": {
+          "latitude": 48.240475,
+          "longitude": 57.334305
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "68470a3a9dc377de6df42208abaf87fbbb8fbea3dbec399055da51e1b6c82a42",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230606T085011_002433",
+      "group_id": "emit25km-0025",
+      "hourly_validity_times": {
+        "following": "2023-06-06T08:00:00Z",
+        "nearest": "2023-06-06T07:00:00Z",
+        "previous": "2023-06-06T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0025.csv",
+      "sentinel2_target_datetime": "2023-06-06T07:26:11.624000+00:00",
+      "sentinel2_target_scene_id": "S2B_40UEU_20230606_0_L1C"
+    },
+    {
+      "candidate_center": [
+        6.957105,
+        29.64732
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-06",
+          "2023-06-08"
+        ],
+        "location": {
+          "latitude": 29.64732,
+          "longitude": 6.957105
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "763f78dcfb6674b59403d775d8b4ce84f39e8c62550462c3bfcfc49db96a6129",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230607T092641_000939",
+      "group_id": "emit25km-0026",
+      "hourly_validity_times": {
+        "following": "2023-06-07T11:00:00Z",
+        "nearest": "2023-06-07T10:00:00Z",
+        "previous": "2023-06-07T10:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0026.csv",
+      "sentinel2_target_datetime": "2023-06-07T10:22:49.557000+00:00",
+      "sentinel2_target_scene_id": "S2B_32RLT_20230607_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -114.86302,
+        36.379685
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-08",
+          "2023-06-10"
+        ],
+        "location": {
+          "latitude": 36.379685,
+          "longitude": -114.86302
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "9e53f12c63bbcacfc21119dba1cdc3a22cfa67953d739c727ad473a863cfebb2",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230609T171010_000953",
+      "group_id": "emit25km-0027",
+      "hourly_validity_times": {
+        "following": "2023-06-09T19:00:00Z",
+        "nearest": "2023-06-09T19:00:00Z",
+        "previous": "2023-06-09T18:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0027.csv",
+      "sentinel2_target_datetime": "2023-06-09T18:34:16.764000+00:00",
+      "sentinel2_target_scene_id": "S2A_11SPA_20230609_0_L1C"
+    },
+    {
+      "candidate_center": [
+        61.290975,
+        40.79481
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-13",
+          "2023-06-15"
+        ],
+        "location": {
+          "latitude": 40.79481,
+          "longitude": 61.290975
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "b5269ce3ad32153f57b8c175712ee6132c2e0420f186a80c45f00153607a9356",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230614T102403_000043",
+      "group_id": "emit25km-0028",
+      "hourly_validity_times": {
+        "following": "2023-06-14T07:00:00Z",
+        "nearest": "2023-06-14T07:00:00Z",
+        "previous": "2023-06-14T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0028.csv",
+      "sentinel2_target_datetime": "2023-06-14T06:48:10.242000+00:00",
+      "sentinel2_target_scene_id": "S2B_41TLF_20230614_0_L1C"
+    },
+    {
+      "candidate_center": [
+        61.68518,
+        39.968995
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-07-28",
+          "2023-07-30"
+        ],
+        "location": {
+          "latitude": 39.968995,
+          "longitude": 61.68518
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "e132e239334fe51b573069082b49259503fdc78c889ccf965d4c19f89ca35bba",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230729T100630_000234",
+      "group_id": "emit25km-0029",
+      "hourly_validity_times": {
+        "following": "2023-07-29T07:00:00Z",
+        "nearest": "2023-07-29T07:00:00Z",
+        "previous": "2023-07-29T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0029.csv",
+      "sentinel2_target_datetime": "2023-07-29T06:48:25.294000+00:00",
+      "sentinel2_target_scene_id": "S2A_41TLE_20230729_0_L1C"
+    },
+    {
+      "candidate_center": [
+        62.138215,
+        40.44887
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-13",
+          "2023-06-15"
+        ],
+        "location": {
+          "latitude": 40.44887,
+          "longitude": 62.138215
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "d08a55ed0db8cd599b01a817ab5ebfaba54addd6761b153604cd3ef842d74fc6",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230614T102415_000044",
+      "group_id": "emit25km-0030",
+      "hourly_validity_times": {
+        "following": "2023-06-14T07:00:00Z",
+        "nearest": "2023-06-14T07:00:00Z",
+        "previous": "2023-06-14T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0030.csv",
+      "sentinel2_target_datetime": "2023-06-14T06:48:21.395000+00:00",
+      "sentinel2_target_scene_id": "S2B_41TME_20230614_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -96.649155,
+        47.75762
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-13",
+          "2023-06-15"
+        ],
+        "location": {
+          "latitude": 47.75762,
+          "longitude": -96.649155
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "6291cbb2a5283b623920160db720db4ca2215a4d2474d50f431697ac7675b1e1",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230614T193706_000038",
+      "group_id": "emit25km-0031",
+      "hourly_validity_times": {
+        "following": "2023-06-14T18:00:00Z",
+        "nearest": "2023-06-14T18:00:00Z",
+        "previous": "2023-06-14T17:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0031.csv",
+      "sentinel2_target_datetime": "2023-06-14T17:40:45.057000+00:00",
+      "sentinel2_target_scene_id": "S2A_14TPT_20230614_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -101.82097,
+        31.86804
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-11-30",
+          "2023-12-02"
+        ],
+        "location": {
+          "latitude": 31.86804,
+          "longitude": -101.82097
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "cdb1ae9aaa629525aa0f3aa71fead4edfaa625f07858a047cfdb14b64843c18d",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231201T183549_001997",
+      "group_id": "emit25km-0032",
+      "hourly_validity_times": {
+        "following": "2023-12-01T18:00:00Z",
+        "nearest": "2023-12-01T18:00:00Z",
+        "previous": "2023-12-01T17:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0032.csv",
+      "sentinel2_target_datetime": "2023-12-01T17:44:54.751000+00:00",
+      "sentinel2_target_scene_id": "S2A_13SGR_20231201_0_L1C"
+    },
+    {
+      "candidate_center": [
+        65.06139,
+        46.0523
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-23",
+          "2023-06-25"
+        ],
+        "location": {
+          "latitude": 46.0523,
+          "longitude": 65.06139
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "59877025c97ebcad3d31622686e5d5961b701a07eb312bab157ac3761237c16c",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230624T053036_000180",
+      "group_id": "emit25km-0033",
+      "hourly_validity_times": {
+        "following": "2023-06-24T07:00:00Z",
+        "nearest": "2023-06-24T07:00:00Z",
+        "previous": "2023-06-24T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0033.csv",
+      "sentinel2_target_datetime": "2023-06-24T06:46:32.121000+00:00",
+      "sentinel2_target_scene_id": "S2B_41TPM_20230624_0_L1C"
+    },
+    {
+      "candidate_center": [
+        111.096115,
+        37.801685
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-06-28",
+          "2023-06-30"
+        ],
+        "location": {
+          "latitude": 37.801685,
+          "longitude": 111.096115
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "9d00dc660a0fbb4e6c383ad02ba204fe58982a1d44647869299d3bac28abb107",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230629T013516_000143",
+      "group_id": "emit25km-0034",
+      "hourly_validity_times": {
+        "following": "2023-06-29T04:00:00Z",
+        "nearest": "2023-06-29T03:00:00Z",
+        "previous": "2023-06-29T03:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0034.csv",
+      "sentinel2_target_datetime": "2023-06-29T03:27:43.690000+00:00",
+      "sentinel2_target_scene_id": "S2A_49SEB_20230629_0_L1C"
+    },
+    {
+      "candidate_center": [
+        63.046725,
+        38.607985
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-08-09",
+          "2023-08-11"
+        ],
+        "location": {
+          "latitude": 38.607985,
+          "longitude": 63.046725
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "6a55006e5891383fad30f9eec3a3b99f8554b05d6f8095bec3bbd962865de78f",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230810T051552_001411",
+      "group_id": "emit25km-0035",
+      "hourly_validity_times": {
+        "following": "2023-08-10T07:00:00Z",
+        "nearest": "2023-08-10T07:00:00Z",
+        "previous": "2023-08-10T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0035.csv",
+      "sentinel2_target_datetime": "2023-08-10T06:38:50.764000+00:00",
+      "sentinel2_target_scene_id": "S2B_41SNC_20230810_0_L1C"
+    },
+    {
+      "candidate_center": [
+        54.207795,
+        38.50334
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-07-27",
+          "2023-07-29"
+        ],
+        "location": {
+          "latitude": 38.50334,
+          "longitude": 54.207795
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "9cc7325dcc6c94ee7cc7c2f377a64acab51dfacf4e3e1cceb94d7d1d9d1fea6d",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230728T105313_001637",
+      "group_id": "emit25km-0036",
+      "hourly_validity_times": {
+        "following": "2023-07-28T08:00:00Z",
+        "nearest": "2023-07-28T07:00:00Z",
+        "previous": "2023-07-28T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0036.csv",
+      "sentinel2_target_datetime": "2023-07-28T07:19:06.722000+00:00",
+      "sentinel2_target_scene_id": "S2A_39SYC_20230728_0_L1C"
+    },
+    {
+      "candidate_center": [
+        58.708325,
+        44.042785
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-08-03",
+          "2023-08-05"
+        ],
+        "location": {
+          "latitude": 44.042785,
+          "longitude": 58.708325
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "661863071370030a5f8fed93221ac4ea70337273440d18e29247ec8b7beb8fad",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230804T082948_000973",
+      "group_id": "emit25km-0037",
+      "hourly_validity_times": {
+        "following": "2023-08-04T08:00:00Z",
+        "nearest": "2023-08-04T07:00:00Z",
+        "previous": "2023-08-04T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0037.csv",
+      "sentinel2_target_datetime": "2023-08-04T07:07:27.874000+00:00",
+      "sentinel2_target_scene_id": "S2A_40TFP_20230804_0_L1C"
+    },
+    {
+      "candidate_center": [
+        109.70177,
+        39.11552
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-08-05",
+          "2023-08-07"
+        ],
+        "location": {
+          "latitude": 39.11552,
+          "longitude": 109.70177
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "d2997b356adec2ab509f3ef6055d7258bed6e4179a4329e5c532b65efe23fa3e",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230806T034659_001088",
+      "group_id": "emit25km-0038",
+      "hourly_validity_times": {
+        "following": "2023-08-06T04:00:00Z",
+        "nearest": "2023-08-06T04:00:00Z",
+        "previous": "2023-08-06T03:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0038.csv",
+      "sentinel2_target_datetime": "2023-08-06T03:37:19.211000+00:00",
+      "sentinel2_target_scene_id": "S2B_49SCD_20230806_0_L1C"
+    },
+    {
+      "candidate_center": [
+        48.420005,
+        46.850195
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-08-13",
+          "2023-08-15"
+        ],
+        "location": {
+          "latitude": 46.850195,
+          "longitude": 48.420005
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "50a2ad8e5e7f1c35534c302946fd5ce9244de6a43a739fada4156e05fdf5185b",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230814T100720_001443",
+      "group_id": "emit25km-0039",
+      "hourly_validity_times": {
+        "following": "2023-08-14T08:00:00Z",
+        "nearest": "2023-08-14T08:00:00Z",
+        "previous": "2023-08-14T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0039.csv",
+      "sentinel2_target_datetime": "2023-08-14T07:57:00.449000+00:00",
+      "sentinel2_target_scene_id": "S2B_38TQS_20230814_0_L1C"
+    },
+    {
+      "candidate_center": [
+        40.41746,
+        35.36896
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-08-16",
+          "2023-08-18"
+        ],
+        "location": {
+          "latitude": 35.36896,
+          "longitude": 40.41746
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "31ce57a7e20ca064ffca949e0ae141c5f487548a8c9e1705105adce5de6825c8",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230817T105803_001184",
+      "group_id": "emit25km-0040",
+      "hourly_validity_times": {
+        "following": "2023-08-17T09:00:00Z",
+        "nearest": "2023-08-17T08:00:00Z",
+        "previous": "2023-08-17T08:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0040.csv",
+      "sentinel2_target_datetime": "2023-08-17T08:10:13.072000+00:00",
+      "sentinel2_target_scene_id": "S2B_37SFV_20230817_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -121.828805,
+        38.31789
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-08-21",
+          "2023-08-23"
+        ],
+        "location": {
+          "latitude": 38.31789,
+          "longitude": -121.828805
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "b682a8bc9911d5ad1b05ca0a6ebada74e0c0b073010a2c293f54631e785a44c8",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230822T192519_002906",
+      "group_id": "emit25km-0041",
+      "hourly_validity_times": {
+        "following": "2023-08-22T20:00:00Z",
+        "nearest": "2023-08-22T19:00:00Z",
+        "previous": "2023-08-22T19:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0041.csv",
+      "sentinel2_target_datetime": "2023-08-22T19:03:59.396000+00:00",
+      "sentinel2_target_scene_id": "S2B_10SEH_20230822_0_L1C"
+    },
+    {
+      "candidate_center": [
+        144.398415,
+        -21.71484
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-09-02",
+          "2023-09-04"
+        ],
+        "location": {
+          "latitude": -21.71484,
+          "longitude": 144.398415
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "2874451995460a87a15e301849eb1ca34084a11d3d65ec404f70453be8862fe1",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230903T010049_001659",
+      "group_id": "emit25km-0042",
+      "hourly_validity_times": {
+        "following": "2023-09-03T01:00:00Z",
+        "nearest": "2023-09-03T01:00:00Z",
+        "previous": "2023-09-03T00:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0042.csv",
+      "sentinel2_target_datetime": "2023-09-03T00:43:10.347000+00:00",
+      "sentinel2_target_scene_id": "S2A_54KZA_20230903_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -64.176205,
+        -39.21431
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-09-07",
+          "2023-09-09"
+        ],
+        "location": {
+          "latitude": -39.21431,
+          "longitude": -64.176205
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "20980400ecf05f01606c7527c3a0217f051f0072df35de1edf6a0670df111e1e",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230908T141043_000225",
+      "group_id": "emit25km-0043",
+      "hourly_validity_times": {
+        "following": "2023-09-08T15:00:00Z",
+        "nearest": "2023-09-08T14:00:00Z",
+        "previous": "2023-09-08T14:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0043.csv",
+      "sentinel2_target_datetime": "2023-09-08T14:13:46.662000+00:00",
+      "sentinel2_target_scene_id": "S2B_20HLB_20230908_0_L1C"
+    },
+    {
+      "candidate_center": [
+        45.139225,
+        45.001455
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-09-27",
+          "2023-09-29"
+        ],
+        "location": {
+          "latitude": 45.001455,
+          "longitude": 45.139225
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "24b5d854ecf2b786c64ca343da0b8d807cc3bab0469760186a21b53887643cda",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230928T114538_001694",
+      "group_id": "emit25km-0044",
+      "hourly_validity_times": {
+        "following": "2023-09-28T08:00:00Z",
+        "nearest": "2023-09-28T08:00:00Z",
+        "previous": "2023-09-28T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0044.csv",
+      "sentinel2_target_datetime": "2023-09-28T07:57:33.108000+00:00",
+      "sentinel2_target_scene_id": "S2A_38TNQ_20230928_0_L1C"
+    },
+    {
+      "candidate_center": [
+        53.74554,
+        39.47285
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-10-04",
+          "2024-10-06"
+        ],
+        "location": {
+          "latitude": 39.47285,
+          "longitude": 53.74554
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "1558e033b06ec52dd4d8968255852c8867f250c9644c113199bcec63ba2d2a4e",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241005T065118_003706",
+      "group_id": "emit25km-0045",
+      "hourly_validity_times": {
+        "following": "2024-10-05T08:00:00Z",
+        "nearest": "2024-10-05T07:00:00Z",
+        "previous": "2024-10-05T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0045.csv",
+      "sentinel2_target_datetime": "2024-10-05T07:18:47.017000+00:00",
+      "sentinel2_target_scene_id": "S2B_40SBJ_20241005_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -106.871865,
+        32.100925
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-12-03",
+          "2023-12-05"
+        ],
+        "location": {
+          "latitude": 32.100925,
+          "longitude": -106.871865
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "acbd154e012386c5eb005e92477d7c631d13e194309e429cf4d91d6dde4a11fa",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231204T174618_002010",
+      "group_id": "emit25km-0046",
+      "hourly_validity_times": {
+        "following": "2023-12-04T18:00:00Z",
+        "nearest": "2023-12-04T18:00:00Z",
+        "previous": "2023-12-04T17:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0046.csv",
+      "sentinel2_target_datetime": "2023-12-04T17:55:05.893000+00:00",
+      "sentinel2_target_scene_id": "S2A_13SCR_20231204_0_L1C"
+    },
+    {
+      "candidate_center": [
+        21.113445,
+        29.666305
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-12-05",
+          "2023-12-07"
+        ],
+        "location": {
+          "latitude": 29.666305,
+          "longitude": 21.113445
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "bfed6eec521d849fd9ef56741049c935b3083a4791930d4c50aef1a5e55642eb",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231206T082610_002181",
+      "group_id": "emit25km-0047",
+      "hourly_validity_times": {
+        "following": "2023-12-06T10:00:00Z",
+        "nearest": "2023-12-06T09:00:00Z",
+        "previous": "2023-12-06T09:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0047.csv",
+      "sentinel2_target_datetime": "2023-12-06T09:22:20.014000+00:00",
+      "sentinel2_target_scene_id": "S2B_34RET_20231206_0_L1C"
+    },
+    {
+      "candidate_center": [
+        67.48381,
+        26.162665
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-12-23",
+          "2023-12-25"
+        ],
+        "location": {
+          "latitude": 26.162665,
+          "longitude": 67.48381
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "15d4e7c71088e70ce227b5e91edcbd46398619c020a70e855394cbb177e04d0f",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231224T065746_002284",
+      "group_id": "emit25km-0048",
+      "hourly_validity_times": {
+        "following": "2023-12-24T07:00:00Z",
+        "nearest": "2023-12-24T06:00:00Z",
+        "previous": "2023-12-24T06:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0048.csv",
+      "sentinel2_target_datetime": "2023-12-24T06:12:04.369000+00:00",
+      "sentinel2_target_scene_id": "S2A_42RUP_20231224_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -104.47764,
+        32.083305
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2023-12-23",
+          "2023-12-25"
+        ],
+        "location": {
+          "latitude": 32.083305,
+          "longitude": -104.47764
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "e745a02d0ec7f968df8458e4affcfaa39154b928ae220791d7785e42201e1ba9",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231224T174533_002613",
+      "group_id": "emit25km-0049",
+      "hourly_validity_times": {
+        "following": "2023-12-24T18:00:00Z",
+        "nearest": "2023-12-24T18:00:00Z",
+        "previous": "2023-12-24T17:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0049.csv",
+      "sentinel2_target_datetime": "2023-12-24T17:55:02.273000+00:00",
+      "sentinel2_target_scene_id": "S2A_13SER_20231224_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -64.146115,
+        9.000465
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-02-14",
+          "2024-02-16"
+        ],
+        "location": {
+          "latitude": 9.000465,
+          "longitude": -64.146115
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "7db4cd9273de1452a2bb8febe320a75173b5236e66f0663cae000d87f3474d39",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240215T193436_002739",
+      "group_id": "emit25km-0050",
+      "hourly_validity_times": {
+        "following": "2024-02-15T15:00:00Z",
+        "nearest": "2024-02-15T15:00:00Z",
+        "previous": "2024-02-15T14:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0050.csv",
+      "sentinel2_target_datetime": "2024-02-15T14:50:27.426000+00:00",
+      "sentinel2_target_scene_id": "S2A_20PLQ_20240215_0_L1C"
+    },
+    {
+      "candidate_center": [
+        110.60079,
+        36.511445
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-02-16",
+          "2024-02-18"
+        ],
+        "location": {
+          "latitude": 36.511445,
+          "longitude": 110.60079
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "7b8feb99bd5c54a51469eeda4e66ea12be9a458267e9ef8bbfd8a0bd565cc364",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240217T052707_002783",
+      "group_id": "emit25km-0051",
+      "hourly_validity_times": {
+        "following": "2024-02-17T04:00:00Z",
+        "nearest": "2024-02-17T04:00:00Z",
+        "previous": "2024-02-17T03:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0051.csv",
+      "sentinel2_target_datetime": "2024-02-17T03:37:51.329000+00:00",
+      "sentinel2_target_scene_id": "S2A_49SDA_20240217_0_L1C"
+    },
+    {
+      "candidate_center": [
+        105.442535,
+        26.63549
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-03-20",
+          "2024-03-22"
+        ],
+        "location": {
+          "latitude": 26.63549,
+          "longitude": 105.442535
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "99728f27db0bc3433fd573bcc2bfbb1d2a9ae358d02202555dd0eca11ef2604d",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240321T083455_002920",
+      "group_id": "emit25km-0052",
+      "hourly_validity_times": {
+        "following": "2024-03-21T04:00:00Z",
+        "nearest": "2024-03-21T04:00:00Z",
+        "previous": "2024-03-21T03:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0052.csv",
+      "sentinel2_target_datetime": "2024-03-21T03:50:44.864000+00:00",
+      "sentinel2_target_scene_id": "S2A_48RWQ_20240321_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -94.26794,
+        32.142405
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-03-25",
+          "2024-03-27"
+        ],
+        "location": {
+          "latitude": 32.142405,
+          "longitude": -94.26794
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "0950adf7fb6578297e852f28268f2cc22ab30c14cdda39cffb94ccf514d84119",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240326T201210_002996",
+      "group_id": "emit25km-0053",
+      "hourly_validity_times": {
+        "following": "2024-03-26T18:00:00Z",
+        "nearest": "2024-03-26T17:00:00Z",
+        "previous": "2024-03-26T17:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0053.csv",
+      "sentinel2_target_datetime": "2024-03-26T17:14:49.671000+00:00",
+      "sentinel2_target_scene_id": "S2B_15SUR_20240326_0_L1C"
+    },
+    {
+      "candidate_center": [
+        50.41515,
+        30.17437
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-03-26",
+          "2024-03-28"
+        ],
+        "location": {
+          "latitude": 30.17437,
+          "longitude": 50.41515
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "34a4716236fa481c963d036beb384fe33f416b2aef912c0132bb5194cae77251",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240327T100708_002935",
+      "group_id": "emit25km-0054",
+      "hourly_validity_times": {
+        "following": "2024-03-27T08:00:00Z",
+        "nearest": "2024-03-27T08:00:00Z",
+        "previous": "2024-03-27T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0054.csv",
+      "sentinel2_target_datetime": "2024-03-27T07:31:18.677000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RVP_20240327_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -95.23718,
+        29.953685
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-04-21",
+          "2024-04-23"
+        ],
+        "location": {
+          "latitude": 29.953685,
+          "longitude": -95.23718
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "c647d0c0334392bcdb7a6dc06e4dbc875ceefebdfecb1c4333b17a6294c41cc6",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240422T175102_003071",
+      "group_id": "emit25km-0055",
+      "hourly_validity_times": {
+        "following": "2024-04-22T18:00:00Z",
+        "nearest": "2024-04-22T17:00:00Z",
+        "previous": "2024-04-22T17:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0055.csv",
+      "sentinel2_target_datetime": "2024-04-22T17:05:25.773000+00:00",
+      "sentinel2_target_scene_id": "S2B_15RTP_20240422_0_L1C"
+    },
+    {
+      "candidate_center": [
+        51.54299,
+        30.0643
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-04-22",
+          "2024-04-24"
+        ],
+        "location": {
+          "latitude": 30.0643,
+          "longitude": 51.54299
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "7def5fc8452f3f86686bd1cb39954efde6e0e513e0dc6f70e261b40144958295",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240423T074559_003083",
+      "group_id": "emit25km-0056",
+      "hourly_validity_times": {
+        "following": "2024-04-23T08:00:00Z",
+        "nearest": "2024-04-23T07:00:00Z",
+        "previous": "2024-04-23T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0056.csv",
+      "sentinel2_target_datetime": "2024-04-23T07:21:21.774000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RWP_20240423_0_L1C"
+    },
+    {
+      "candidate_center": [
+        48.03556,
+        29.049515
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-04-25",
+          "2024-04-27"
+        ],
+        "location": {
+          "latitude": 29.049515,
+          "longitude": 48.03556
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "bef6c29a496b2b95e00fce4aff9009a1da344b8dbfe78dc9d266ef05701af852",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240426T065455_003154",
+      "group_id": "emit25km-0057",
+      "hourly_validity_times": {
+        "following": "2024-04-26T08:00:00Z",
+        "nearest": "2024-04-26T08:00:00Z",
+        "previous": "2024-04-26T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0057.csv",
+      "sentinel2_target_datetime": "2024-04-26T07:31:42.128000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RTN_20240426_0_L1C"
+    },
+    {
+      "candidate_center": [
+        106.748765,
+        37.17351
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-06-23",
+          "2024-06-25"
+        ],
+        "location": {
+          "latitude": 37.17351,
+          "longitude": 106.748765
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "c5c53a0daca032f5767e85fec2e8c6e10164611eef325dd97a6c8742e5e79be2",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240624T025623_003265",
+      "group_id": "emit25km-0058",
+      "hourly_validity_times": {
+        "following": "2024-06-24T04:00:00Z",
+        "nearest": "2024-06-24T04:00:00Z",
+        "previous": "2024-06-24T03:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0058.csv",
+      "sentinel2_target_datetime": "2024-06-24T03:47:54.587000+00:00",
+      "sentinel2_target_scene_id": "S2B_48SXG_20240624_1_L1C"
+    },
+    {
+      "candidate_center": [
+        114.17817,
+        36.367215
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-06-24",
+          "2024-06-26"
+        ],
+        "location": {
+          "latitude": 36.367215,
+          "longitude": 114.17817
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "42aa7b6fc3abd9b8c01f27a79438b180fbdf30e49e6db15ec05f04753e933798",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T020940_003294",
+      "group_id": "emit25km-0059",
+      "hourly_validity_times": {
+        "following": "2024-06-25T04:00:00Z",
+        "nearest": "2024-06-25T03:00:00Z",
+        "previous": "2024-06-25T03:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0059.csv",
+      "sentinel2_target_datetime": "2024-06-25T03:17:53.186000+00:00",
+      "sentinel2_target_scene_id": "S2B_50SKF_20240625_0_L1C"
+    },
+    {
+      "candidate_center": [
+        49.88024,
+        31.124365
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-06-24",
+          "2024-06-26"
+        ],
+        "location": {
+          "latitude": 31.124365,
+          "longitude": 49.88024
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "8aa0ec33976b57414652b1ab2213c9faa4bc4cbe4feece133ad9f3b1e61f60ad",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T065010_003276",
+      "group_id": "emit25km-0060",
+      "hourly_validity_times": {
+        "following": "2024-06-25T08:00:00Z",
+        "nearest": "2024-06-25T08:00:00Z",
+        "previous": "2024-06-25T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0060.csv",
+      "sentinel2_target_datetime": "2024-06-25T07:31:11.099000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RUQ_20240625_0_L1C"
+    },
+    {
+      "candidate_center": [
+        50.48401,
+        30.46203
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-06-24",
+          "2024-06-26"
+        ],
+        "location": {
+          "latitude": 30.46203,
+          "longitude": 50.48401
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "a861999c75363d8a32d8156b671ce1e0b959d6724029971733fe2444239422ef",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T065021_003279",
+      "group_id": "emit25km-0061",
+      "hourly_validity_times": {
+        "following": "2024-06-25T08:00:00Z",
+        "nearest": "2024-06-25T08:00:00Z",
+        "previous": "2024-06-25T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0061.csv",
+      "sentinel2_target_datetime": "2024-06-25T07:31:21.770000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RVP_20240625_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -99.61219,
+        28.335935
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-06-26",
+          "2024-06-28"
+        ],
+        "location": {
+          "latitude": 28.335935,
+          "longitude": -99.61219
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "9cf7179000ec15f86ec150d56aa1445af5e19697ca0729615710b9f69e90cce7",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240627T160655_003333",
+      "group_id": "emit25km-0062",
+      "hourly_validity_times": {
+        "following": "2024-06-27T18:00:00Z",
+        "nearest": "2024-06-27T17:00:00Z",
+        "previous": "2024-06-27T17:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0062.csv",
+      "sentinel2_target_datetime": "2024-06-27T17:26:03.476000+00:00",
+      "sentinel2_target_scene_id": "S2B_14RMS_20240627_0_L1C"
+    },
+    {
+      "candidate_center": [
+        52.20343,
+        27.74382
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-07-21",
+          "2024-07-23"
+        ],
+        "location": {
+          "latitude": 27.74382,
+          "longitude": 52.20343
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "3ed074138ae96e1f1be1931eb959149636e2e55654c5634253ccf2ae58e74599",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240722T112859_003354",
+      "group_id": "emit25km-0063",
+      "hourly_validity_times": {
+        "following": "2024-07-22T08:00:00Z",
+        "nearest": "2024-07-22T07:00:00Z",
+        "previous": "2024-07-22T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0063.csv",
+      "sentinel2_target_datetime": "2024-07-22T07:22:00.570000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RXL_20240722_0_L1C"
+    },
+    {
+      "candidate_center": [
+        52.429,
+        28.685675
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-07-21",
+          "2024-07-23"
+        ],
+        "location": {
+          "latitude": 28.685675,
+          "longitude": 52.429
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "03d4de1ec4a7d8d4922404a1b867f0ea094a896d70d1870fea9399622c944f04",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240722T112911_003355",
+      "group_id": "emit25km-0064",
+      "hourly_validity_times": {
+        "following": "2024-07-22T08:00:00Z",
+        "nearest": "2024-07-22T07:00:00Z",
+        "previous": "2024-07-22T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0064.csv",
+      "sentinel2_target_datetime": "2024-07-22T07:21:46.290000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RXM_20240722_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -101.698155,
+        32.405935
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-07-22",
+          "2024-07-24"
+        ],
+        "location": {
+          "latitude": 32.405935,
+          "longitude": -101.698155
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "598c6733c869a9dcf0264ccac1367817c6caa73e8aed9aa7348e0b34525e2f08",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240723T213259_003368",
+      "group_id": "emit25km-0065",
+      "hourly_validity_times": {
+        "following": "2024-07-23T18:00:00Z",
+        "nearest": "2024-07-23T18:00:00Z",
+        "previous": "2024-07-23T17:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0065.csv",
+      "sentinel2_target_datetime": "2024-07-23T17:45:03.655000+00:00",
+      "sentinel2_target_scene_id": "S2B_14SKA_20240723_0_L1C"
+    },
+    {
+      "candidate_center": [
+        52.72858,
+        43.30047
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-08-06",
+          "2024-08-08"
+        ],
+        "location": {
+          "latitude": 43.30047,
+          "longitude": 52.72858
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "45c0eca293ae4f8259f790e38677a74abccc27dd4da880c92cc7c7d9c5bfcd5d",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240807T064102_003422",
+      "group_id": "emit25km-0066",
+      "hourly_validity_times": {
+        "following": "2024-08-07T08:00:00Z",
+        "nearest": "2024-08-07T08:00:00Z",
+        "previous": "2024-08-07T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0066.csv",
+      "sentinel2_target_datetime": "2024-08-07T07:37:31.234000+00:00",
+      "sentinel2_target_scene_id": "S2A_39TXJ_20240807_0_L1C"
+    },
+    {
+      "candidate_center": [
+        55.79735,
+        25.64104
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-08-24",
+          "2024-08-26"
+        ],
+        "location": {
+          "latitude": 25.64104,
+          "longitude": 55.79735
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "65316e4adeaec349e2999455d5c7dafe76716c44d5b006f7a511ce539c767b17",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240825T064423_003500",
+      "group_id": "emit25km-0067",
+      "hourly_validity_times": {
+        "following": "2024-08-25T08:00:00Z",
+        "nearest": "2024-08-25T07:00:00Z",
+        "previous": "2024-08-25T07:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0067.csv",
+      "sentinel2_target_datetime": "2024-08-25T07:02:24.586000+00:00",
+      "sentinel2_target_scene_id": "S2A_40RCP_20240825_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -71.64329,
+        -16.27218
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-08-25",
+          "2024-08-27"
+        ],
+        "location": {
+          "latitude": -16.27218,
+          "longitude": -71.64329
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "77b1045a57525342503aca38fa591a94a3af436d74336225d330e78f5c3c43c0",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240826T170043_003568",
+      "group_id": "emit25km-0068",
+      "hourly_validity_times": {
+        "following": "2024-08-26T16:00:00Z",
+        "nearest": "2024-08-26T15:00:00Z",
+        "previous": "2024-08-26T15:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0068.csv",
+      "sentinel2_target_datetime": "2024-08-26T15:07:35.797000+00:00",
+      "sentinel2_target_scene_id": "S2A_18KZG_20240826_0_L1C"
+    },
+    {
+      "candidate_center": [
+        -104.21737,
+        32.753775
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-10-03",
+          "2024-10-05"
+        ],
+        "location": {
+          "latitude": 32.753775,
+          "longitude": -104.21737
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "6155562f1f91d89692bffd1d91d31501b0f766f0ec0b3f1a63a9a1124746475c",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241004T165227_003636",
+      "group_id": "emit25km-0069",
+      "hourly_validity_times": {
+        "following": "2024-10-04T18:00:00Z",
+        "nearest": "2024-10-04T18:00:00Z",
+        "previous": "2024-10-04T17:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0069.csv",
+      "sentinel2_target_datetime": "2024-10-04T17:54:51.862000+00:00",
+      "sentinel2_target_scene_id": "S2B_13SES_20241004_0_L1C"
+    },
+    {
+      "candidate_center": [
+        31.556305,
+        30.25164
+      ],
+      "cds_request": {
+        "data_format": "csv",
+        "date": [
+          "2024-10-18",
+          "2024-10-20"
+        ],
+        "location": {
+          "latitude": 30.25164,
+          "longitude": 31.556305
+        },
+        "variable": [
+          "10m_u_component_of_wind",
+          "10m_v_component_of_wind"
+        ]
+      },
+      "cds_request_sha256": "9f935d6ac7596c6a41d79fcc931ab2243516f4bc508cc5d85d8950c988f4fae1",
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241019T100941_003675",
+      "group_id": "emit25km-0070",
+      "hourly_validity_times": {
+        "following": "2024-10-19T09:00:00Z",
+        "nearest": "2024-10-19T09:00:00Z",
+        "previous": "2024-10-19T08:00:00Z"
+      },
+      "ignored_raw_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land/emit25km-0070.csv",
+      "sentinel2_target_datetime": "2024-10-19T08:41:53.209000+00:00",
+      "sentinel2_target_scene_id": "S2B_36RUU_20241019_0_L1C"
+    }
+  ],
+  "summary": {
+    "authentication_state": "required_before_download",
+    "official_costing_api_validation": "70/70 accepted",
+    "requests": 70,
+    "unique_groups": 70,
+    "unique_target_scenes": 70
+  }
+}
