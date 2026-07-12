@@ -98,6 +98,11 @@ def main() -> int:
         parser.error("--workers must be positive")
 
     root = repo_root()
+    tracked_status_at_start = subprocess.check_output(
+        ["git", "status", "--porcelain", "--untracked-files=no"],
+        cwd=root,
+        text=True,
+    ).strip()
     metadata_dir = checked_output_dir(root, args.metadata_dir)
     manifests = [metadata_dir / V3_SAMPLES, metadata_dir / V3_STRICT_SAMPLES]
     records: list[dict[str, Any]] = []
@@ -156,13 +161,8 @@ def main() -> int:
             "git_commit": subprocess.check_output(
                 ["git", "rev-parse", "HEAD"], cwd=root, text=True
             ).strip(),
-            "git_tracked_worktree_dirty_at_start": bool(
-                subprocess.check_output(
-                    ["git", "status", "--porcelain", "--untracked-files=no"],
-                    cwd=root,
-                    text=True,
-                ).strip()
-            ),
+            "git_tracked_worktree_dirty_at_start": bool(tracked_status_at_start),
+            "git_tracked_status_at_start": tracked_status_at_start.splitlines(),
             "script": "tools/audit_mars_band_descriptions.py",
             "script_sha256": sha256(Path(__file__)),
             "adapter_sha256": sha256(MODEL_ROOT / "mars_s2l_adapter.py"),
