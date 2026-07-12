@@ -97,6 +97,24 @@ def role_paths(record: dict[str, Any]) -> dict[str, str]:
     return result
 
 
+def validate_image_band_order(
+    record: dict[str, Any], descriptions: tuple[str | None, ...]
+) -> str:
+    """Validate embedded band labels or a narrowly scoped manifest fallback."""
+    if descriptions == MARS_IMAGE_BANDS:
+        return "embedded_descriptions"
+    declared = tuple(record.get("band_order") or ())
+    if all(value is None for value in descriptions) and declared == MARS_IMAGE_BANDS:
+        # A small producer-side tranche omits TIFF band descriptions. The
+        # frozen, hash-bound MARS manifest still declares the exact 12-band
+        # order; accept only the all-missing case, never partial/mixed labels.
+        return "frozen_manifest_declaration"
+    raise ValueError(
+        f"Unexpected image band order for {record_id(record)}: embedded={descriptions}, "
+        f"manifest={declared}"
+    )
+
+
 def record_id(record: dict[str, Any]) -> str:
     return str(record.get("sample_id") or record.get("id_loc_image") or "<unknown>")
 
@@ -228,8 +246,7 @@ def load_sample(
         if source.count != 12:
             raise ValueError(f"Expected 12 image bands for {identifier}, got {source.count}")
         descriptions = tuple(source.descriptions)
-        if descriptions != MARS_IMAGE_BANDS:
-            raise ValueError(f"Unexpected image band order for {identifier}: {descriptions}")
+        validate_image_band_order(record, descriptions)
         if set(source.dtypes) != {"uint16"}:
             raise ValueError(f"Expected uint16 image for {identifier}, got {source.dtypes}")
         raw_pair = source.read()

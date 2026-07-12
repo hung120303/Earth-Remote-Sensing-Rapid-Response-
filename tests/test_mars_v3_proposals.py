@@ -14,6 +14,7 @@ if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 
 from mars_v3_model import INPUT_CHANNELS  # noqa: E402
+from mars_s2l_adapter import MARS_IMAGE_BANDS, validate_image_band_order  # noqa: E402
 from mars_v3_proposals import (  # noqa: E402
     extract_proposals,
     label_proposal,
@@ -96,6 +97,21 @@ class MarsV3ProposalTests(unittest.TestCase):
             np.asarray([0, 0], dtype=np.uint8), np.asarray([0.9, 0.9])
         )
         self.assertAlmostEqual(overconfident["expected_calibration_error"], 0.9)
+
+    def test_band_order_fallback_requires_complete_frozen_declaration(self) -> None:
+        record = {"sample_id": "sample", "band_order": list(MARS_IMAGE_BANDS)}
+        self.assertEqual(
+            validate_image_band_order(record, tuple([None] * 12)),
+            "frozen_manifest_declaration",
+        )
+        with self.assertRaisesRegex(ValueError, "Unexpected image band order"):
+            validate_image_band_order(
+                record, (MARS_IMAGE_BANDS[0], *tuple([None] * 11))
+            )
+        with self.assertRaisesRegex(ValueError, "Unexpected image band order"):
+            validate_image_band_order(
+                {"sample_id": "sample", "band_order": []}, tuple([None] * 12)
+            )
 
 
 if __name__ == "__main__":
