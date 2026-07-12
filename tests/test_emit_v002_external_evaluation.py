@@ -11,10 +11,26 @@ TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from evaluate_emit_v002_external import connected_mask, paired_bootstrap, positive_metrics
+from evaluate_emit_v002_external import (
+    FIXED_SEEDS,
+    SEED_REPORT_PATHS,
+    connected_mask,
+    paired_bootstrap,
+    positive_metrics,
+)
 
 
 class ExternalEvaluationContractTests(unittest.TestCase):
+    def test_every_fixed_seed_has_one_explicit_report_pair(self) -> None:
+        self.assertEqual(set(SEED_REPORT_PATHS), set(FIXED_SEEDS))
+        self.assertEqual(
+            SEED_REPORT_PATHS[303],
+            (
+                "reports/experiments/mars_v3_validation.json",
+                "reports/experiments/mars_v3_proposal_validation.json",
+            ),
+        )
+
     def test_connected_mask_applies_observability_and_minimum_area(self) -> None:
         probability = np.zeros((8, 8), dtype=np.float32)
         probability[1:4, 1:4] = 0.9

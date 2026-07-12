@@ -47,6 +47,30 @@ from train_mars_v3_proposals import (  # noqa: E402
 )
 
 FIXED_SEEDS = (101, 202, 303, 404, 505)
+SEED_REPORT_PATHS = {
+    101: (
+        "reports/experiments/mars_v3_seed101_validation.json",
+        "reports/experiments/mars_v3_seed101_proposal_validation.json",
+    ),
+    202: (
+        "reports/experiments/mars_v3_seed202_validation.json",
+        "reports/experiments/mars_v3_seed202_proposal_validation.json",
+    ),
+    # Seed 303 predates the seed-suffixed report convention. Keep its original,
+    # hash-linked evidence paths rather than duplicating or rewriting them.
+    303: (
+        "reports/experiments/mars_v3_validation.json",
+        "reports/experiments/mars_v3_proposal_validation.json",
+    ),
+    404: (
+        "reports/experiments/mars_v3_seed404_validation.json",
+        "reports/experiments/mars_v3_seed404_proposal_validation.json",
+    ),
+    505: (
+        "reports/experiments/mars_v3_seed505_validation.json",
+        "reports/experiments/mars_v3_seed505_proposal_validation.json",
+    ),
+}
 DEFAULT_SEAL = Path("reports/acquisition/emit_v002_external_cohort_seal.json")
 DEFAULT_WIND = Path("reports/acquisition/emit_v002_era5_wind_acquisition.json")
 DEFAULT_RAW_ROOT = Path(
@@ -129,8 +153,9 @@ def verify_file(path: Path, record: dict[str, Any], label: str) -> None:
 def frozen_seed_artifacts(root: Path) -> list[dict[str, Any]]:
     values = []
     for seed in FIXED_SEEDS:
-        validation_path = safe_path(root, f"reports/experiments/mars_v3_seed{seed}_validation.json")
-        proposal_path = safe_path(root, f"reports/experiments/mars_v3_seed{seed}_proposal_validation.json")
+        validation_value, proposal_value = SEED_REPORT_PATHS[seed]
+        validation_path = safe_path(root, validation_value)
+        proposal_path = safe_path(root, proposal_value)
         if not validation_path.is_file() or not proposal_path.is_file():
             raise FileNotFoundError(f"Five-seed campaign is incomplete at seed {seed}")
         validation = json.loads(validation_path.read_text(encoding="utf-8"))
