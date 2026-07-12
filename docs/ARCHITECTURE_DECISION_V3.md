@@ -152,8 +152,15 @@ must not silently replace the packaged legacy artifact with v3.
 - Trainer: `tools/train_mars_v3.py`
 - Proposal extractor/classifier: `tools/train_mars_v3_proposals.py`
 - Frozen-checkpoint evaluator: `tools/evaluate_mars_v3.py`
+- Released-checkpoint evaluator: `tools/evaluate_released_marss2l.py`
+- Five-seed paired campaign aggregator: `tools/aggregate_mars_v3_strict.py`
 - Unit tests: `tests/test_mars_v3_model.py`
 - Proposal tests: `tests/test_mars_v3_proposals.py`
+
+Each strict evaluator writes an ignored, checksum-bound NPZ containing only scene IDs, frozen 25 km
+groups, binary labels, scalar scores, and fixed-threshold decisions. No raster pixels are duplicated.
+The campaign aggregator verifies report, cache, manifest, label, group, and sample identities before a
+joint 2,000-replicate seed-and-group bootstrap against the author-fixed released MARS-S2L decisions.
 - Minimum-corpus builder: `tools/build_mars_v3_training_cohort.py`
 - Frozen cohort evidence: `reports/acquisition/MARS_S2L_V3_TRAINING_COHORT.md`
 - Full image-header audit: `reports/acquisition/MARS_S2L_BAND_DESCRIPTION_AUDIT.md`

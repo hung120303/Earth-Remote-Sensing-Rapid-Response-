@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -21,9 +22,16 @@ from mars_v3_proposals import (  # noqa: E402
     proposal_feature_names,
     proposal_features,
 )
-from evaluate_mars_v3 import calibration_summary  # noqa: E402
+from evaluate_mars_v3 import (  # noqa: E402
+    calibration_summary,
+    write_scene_prediction_cache as write_v3_scene_prediction_cache,
+)
+from evaluate_released_marss2l import (  # noqa: E402
+    write_scene_prediction_cache as write_released_scene_prediction_cache,
+)
 from train_mars_v3 import MarsV3Dataset  # noqa: E402
 from train_mars_v3_proposals import scene_scores  # noqa: E402
+from aggregate_mars_v3_strict import paired_campaign_bootstrap  # noqa: E402
 
 
 class MarsV3ProposalTests(unittest.TestCase):
@@ -78,6 +86,80 @@ class MarsV3ProposalTests(unittest.TestCase):
         np.testing.assert_array_equal(labels, [1, 0])
         np.testing.assert_allclose(scores, [0.97, 0.12])
         np.testing.assert_array_equal(groups, ["group-a", "group-b"])
+
+    def test_v3_strict_scene_cache_binds_fixed_predictions(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            artifact = write_v3_scene_prediction_cache(
+                root,
+                root / "v3.npz",
+                sample_ids=np.asarray(["a", "b"]),
+                groups=np.asarray(["g1", "g2"]),
+                labels=np.asarray([1, 0]),
+                primary_scores=np.asarray([0.7, 0.2]),
+                neural_scores=np.asarray([0.6, 0.3]),
+                primary_threshold=0.5,
+                seed=101,
+                strict_manifest_sha256="strict",
+                validation_experiment_sha256="validation",
+                proposal_experiment_sha256="proposal",
+            )
+            self.assertFalse(artifact["tracked"])
+            self.assertGreater(artifact["bytes"], 0)
+            with np.load(root / "v3.npz", allow_pickle=False) as cache:
+                np.testing.assert_array_equal(cache["primary_predictions"], [1, 0])
+                np.testing.assert_array_equal(cache["sample_ids"], ["a", "b"])
+                self.assertEqual(int(cache["seed"][0]), 101)
+
+    def test_released_strict_scene_cache_preserves_author_decisions(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            artifact = write_released_scene_prediction_cache(
+                root,
+                root / "released.npz",
+                values={
+                    "sample_ids": np.asarray(["a", "b"]),
+                    "groups": np.asarray(["g1", "g2"]),
+                    "labels": np.asarray([1, 0]),
+                    "scores": np.asarray([0.51, 0.99]),
+                    # Preserve the connected-component decision instead of
+                    # reconstructing it from the scalar score later.
+                    "predictions": np.asarray([1, 0]),
+                },
+                model_kind="mars-s2l",
+                strict_manifest_sha256="strict",
+                checkpoint_sha256="checkpoint",
+            )
+            self.assertFalse(artifact["tracked"])
+            with np.load(root / "released.npz", allow_pickle=False) as cache:
+                np.testing.assert_array_equal(cache["predictions"], [1, 0])
+                self.assertEqual(str(cache["model_kind"][0]), "mars-s2l")
+
+    def test_paired_campaign_bootstrap_preserves_seed_and_group_pairing(self) -> None:
+        labels = np.tile(np.asarray([1, 0], dtype=np.uint8), 10)
+        groups = np.repeat(np.asarray([f"g{index}" for index in range(10)]), 2)
+        perfect = {
+            "predictions": labels.copy(),
+            "scores": np.where(labels == 1, 0.9, 0.1),
+        }
+        baseline = {
+            "predictions": 1 - labels,
+            "scores": np.where(labels == 1, 0.4, 0.6),
+        }
+        result = paired_campaign_bootstrap(
+            labels,
+            groups,
+            [perfect for _ in range(5)],
+            baseline,
+            replicates=100,
+            seed=7,
+        )
+        self.assertEqual(result["replicates"], 100)
+        self.assertAlmostEqual(result["recall_delta"]["mean"], 1.0)
+        self.assertAlmostEqual(
+            result["relative_false_positive_rate_reduction"]["mean"], 1.0
+        )
+        self.assertAlmostEqual(result["candidate_false_positive_rate"]["mean"], 0.0)
 
     def test_augmentation_stream_advances_and_repeats_from_seed(self) -> None:
         first = MarsV3Dataset(Path("."), [], {}, augment=True, seed=303)

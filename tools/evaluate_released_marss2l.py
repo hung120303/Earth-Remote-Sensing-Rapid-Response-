@@ -39,6 +39,9 @@ from mars_s2l_adapter import compute_mbmp, iter_manifest, load_sample  # noqa: E
 
 from acquire_mars_metadata import DEFAULT_OUTPUT, REVISION, repo_root, sha256  # noqa: E402
 from build_mars_dev_cohort import DEV_SAMPLES  # noqa: E402
+from build_mars_v3_strict_cohort import (  # noqa: E402
+    DEFAULT_JSON as STRICT_COHORT_JSON,
+)
 from run_mars_dev_pixel_baselines import bootstrap_scene  # noqa: E402
 from run_mars_dev_scene_baselines import role_weights  # noqa: E402
 
@@ -322,11 +325,12 @@ def evaluate(
     model_kind: str,
     device: torch.device,
     batch_size: int,
-) -> dict[str, Any]:
+) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
     scene_truth: list[int] = []
     scene_prediction: list[bool] = []
     scene_scores: list[float] = []
     groups: list[str] = []
+    sample_ids: list[str] = []
     pixel_truth: list[np.ndarray] = []
     pixel_scores: list[np.ndarray] = []
     intersection = predicted_area = truth_area = 0
@@ -356,6 +360,7 @@ def evaluate(
             scene_prediction.append(bool(np.any(prediction)))
             scene_scores.append(connected_scene_score(score))
             groups.append(str(record["group_id"]))
+            sample_ids.append(str(record["sample_id"]))
             intersection += int(np.count_nonzero(prediction & truth))
             predicted_area += int(np.count_nonzero(prediction & observable))
             truth_area += int(np.count_nonzero(truth))
@@ -371,7 +376,7 @@ def evaluate(
     group_array = np.asarray(groups)
     weights = role_weights(y, "strict_spatial_test")
     union = predicted_area + truth_area - intersection
-    return {
+    result = {
         "sample_count": int(y.size),
         "positive_count": int(np.sum(y)),
         "negative_count": int(np.sum(y == 0)),
@@ -398,6 +403,14 @@ def evaluate(
             "predicted_positive_pixels": predicted_area,
         },
     }
+    cache = {
+        "sample_ids": np.asarray(sample_ids).astype(str),
+        "groups": group_array.astype(str),
+        "labels": y,
+        "scores": scores,
+        "predictions": predicted.astype(np.uint8),
+    }
+    return result, cache
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -405,6 +418,49 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     os.replace(temporary, path)
+
+
+def write_scene_prediction_cache(
+    root: Path,
+    path: Path,
+    *,
+    values: dict[str, np.ndarray],
+    model_kind: str,
+    strict_manifest_sha256: str,
+    checkpoint_sha256: str,
+) -> dict[str, Any]:
+    """Write compact released-model scene evidence for paired strict comparison."""
+    resolved = path.resolve()
+    if root not in resolved.parents:
+        raise ValueError("Prediction cache must resolve beneath the repository root")
+    required = ("sample_ids", "groups", "labels", "scores", "predictions")
+    arrays = [np.asarray(values[name]) for name in required]
+    if any(array.ndim != 1 for array in arrays) or len({array.shape for array in arrays}) != 1:
+        raise ValueError("Released prediction cache arrays must be matching 1D vectors")
+    resolved.parent.mkdir(parents=True, exist_ok=True)
+    temporary = resolved.with_suffix(resolved.suffix + ".tmp")
+    with temporary.open("wb") as handle:
+        np.savez_compressed(
+            handle,
+            schema_version=np.asarray([1], dtype=np.uint16),
+            sample_ids=arrays[0].astype(str),
+            groups=arrays[1].astype(str),
+            labels=arrays[2].astype(np.uint8),
+            scores=arrays[3].astype(np.float32),
+            predictions=arrays[4].astype(np.uint8),
+            author_probability_threshold=np.asarray([PIXEL_THRESHOLD], dtype=np.float64),
+            model_kind=np.asarray([model_kind]),
+            strict_manifest_sha256=np.asarray([strict_manifest_sha256]),
+            checkpoint_sha256=np.asarray([checkpoint_sha256]),
+        )
+    os.replace(temporary, resolved)
+    return {
+        "path": resolved.relative_to(root).as_posix(),
+        "bytes": resolved.stat().st_size,
+        "sha256": sha256(resolved),
+        "tracked": False,
+        "contents": "compact per-scene labels, groups, scores, and author-fixed predictions; no raster pixels",
+    }
 
 
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
@@ -443,6 +499,10 @@ def main() -> int:
     parser.add_argument("--config")
     parser.add_argument("--output-json")
     parser.add_argument("--output-markdown")
+    parser.add_argument(
+        "--prediction-cache",
+        help="Ignored compact NPZ used for paired strict-campaign comparison",
+    )
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     args = parser.parse_args()
@@ -479,6 +539,12 @@ def main() -> int:
     records = [
         record for record in all_records if record["research_role"] == "strict_spatial_test"
     ]
+    manifest_identity = sha256(manifest)
+    strict_cohort = json.loads((root / STRICT_COHORT_JSON).read_text(encoding="utf-8"))
+    full_strict_identity = strict_cohort["identities"]["sample_manifest_sha256"]
+    full_strict = manifest_identity == full_strict_identity
+    if full_strict and len(records) != int(strict_cohort["samples"]["total"]):
+        raise ValueError("Full strict-spatial manifest row count mismatch")
     required_ids = {str(record["sample_id"]) for record in records}
     winds = wind_lookup(metadata_csv, required_ids)
 
@@ -490,25 +556,44 @@ def main() -> int:
         raise RuntimeError("CUDA was requested but is unavailable")
     model = load_released_model(checkpoint, device, int(spec["input_channels"]))
     parameter_count = sum(parameter.numel() for parameter in model.parameters())
-    result = evaluate(
+    result, scene_cache = evaluate(
         root, metadata_dir, records, winds, model, args.model, device, args.batch_size
+    )
+    cache_path = (
+        safe_output(root, args.prediction_cache)
+        if args.prediction_cache
+        else metadata_dir
+        / f"publication_released_{args.model}_{manifest.stem}_scene_predictions.npz"
+    )
+    checkpoint_identity = sha256(checkpoint)
+    scene_cache_artifact = write_scene_prediction_cache(
+        root,
+        cache_path,
+        values=scene_cache,
+        model_kind=args.model,
+        strict_manifest_sha256=manifest_identity,
+        checkpoint_sha256=checkpoint_identity,
     )
 
     report = {
-        "schema_version": 1,
-        "scope": f"released_{args.model}_on_frozen_strict_spatial_development_cohort",
+        "schema_version": 2,
+        "scope": (
+            f"released_{args.model}_on_frozen_full_strict_spatial_cohort"
+            if full_strict
+            else f"released_{args.model}_on_frozen_strict_spatial_development_cohort"
+        ),
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source": {
             "dataset": "UNEP-IMEO/MARS-S2L",
             "dataset_revision": REVISION,
             "upstream_repository": "UNEP-IMEO-MARS/marss2l",
             "upstream_revision": RELEASE_SOURCE_REVISION,
-            "development_manifest_sha256": sha256(manifest),
+            "evaluation_manifest_sha256": manifest_identity,
             "metadata_csv_sha256": sha256(metadata_csv),
         },
         "artifact": {
             "checkpoint_bytes": checkpoint.stat().st_size,
-            "checkpoint_sha256": sha256(checkpoint),
+            "checkpoint_sha256": checkpoint_identity,
             "config_sha256": sha256(config_path),
             "checkpoint_tracked": False,
         },
@@ -536,6 +621,7 @@ def main() -> int:
             "script_sha256": sha256(Path(__file__).resolve()),
         },
         "strict_spatial_test": result,
+        "scene_prediction_cache": scene_cache_artifact,
         "interpretation": (
             "Released checkpoint baseline on the ERSRR strict spatial cohort; not an official-split "
             "paper metric and not eligible for validation recalibration because the checkpoint saw "

@@ -88,6 +88,67 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
     temporary.replace(path)
 
 
+def write_scene_prediction_cache(
+    root: Path,
+    path: Path,
+    *,
+    sample_ids: np.ndarray,
+    groups: np.ndarray,
+    labels: np.ndarray,
+    primary_scores: np.ndarray,
+    neural_scores: np.ndarray,
+    primary_threshold: float,
+    seed: int,
+    strict_manifest_sha256: str,
+    validation_experiment_sha256: str,
+    proposal_experiment_sha256: str | None,
+) -> dict[str, Any]:
+    """Atomically persist compact scene evidence for paired campaign inference."""
+    resolved = path.resolve()
+    if root not in resolved.parents:
+        raise ValueError("Prediction cache must resolve beneath the repository root")
+    original_primary_scores = np.asarray(primary_scores)
+    fixed_predictions = (original_primary_scores >= float(primary_threshold)).astype(np.uint8)
+    arrays = (
+        np.asarray(sample_ids).astype(str),
+        np.asarray(groups).astype(str),
+        np.asarray(labels, dtype=np.uint8),
+        np.asarray(original_primary_scores, dtype=np.float32),
+        np.asarray(neural_scores, dtype=np.float32),
+        fixed_predictions,
+    )
+    if any(array.ndim != 1 for array in arrays) or len({array.shape for array in arrays}) != 1:
+        raise ValueError("Prediction cache arrays must be matching one-dimensional vectors")
+    resolved.parent.mkdir(parents=True, exist_ok=True)
+    temporary = resolved.with_suffix(resolved.suffix + ".tmp")
+    with temporary.open("wb") as handle:
+        np.savez_compressed(
+            handle,
+            schema_version=np.asarray([1], dtype=np.uint16),
+            sample_ids=arrays[0],
+            groups=arrays[1],
+            labels=arrays[2],
+            primary_scores=arrays[3],
+            primary_predictions=arrays[5],
+            neural_scores=arrays[4],
+            primary_threshold=np.asarray([primary_threshold], dtype=np.float64),
+            seed=np.asarray([seed], dtype=np.int64),
+            strict_manifest_sha256=np.asarray([strict_manifest_sha256]),
+            validation_experiment_sha256=np.asarray([validation_experiment_sha256]),
+            proposal_experiment_sha256=np.asarray(
+                [proposal_experiment_sha256 or ""]
+            ),
+        )
+    temporary.replace(resolved)
+    return {
+        "path": resolved.relative_to(root).as_posix(),
+        "bytes": resolved.stat().st_size,
+        "sha256": sha256(resolved),
+        "tracked": False,
+        "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+    }
+
+
 def fmt(value: float | None) -> str:
     return "n/a" if value is None else f"{value:.3f}"
 
@@ -356,6 +417,10 @@ def main() -> int:
     )
     parser.add_argument("--output-json", default=DEFAULT_JSON.as_posix())
     parser.add_argument("--output-markdown", default=DEFAULT_MARKDOWN.as_posix())
+    parser.add_argument(
+        "--prediction-cache",
+        help="Ignored compact NPZ used only for paired multi-seed strict aggregation",
+    )
     parser.add_argument("--batch-size", type=int, default=24)
     parser.add_argument("--workers", type=int, default=8)
     args = parser.parse_args()
@@ -481,6 +546,31 @@ def main() -> int:
         quality_threshold,
         weights,
     )
+    strict_manifest_identity = sha256(manifest)
+    validation_experiment_identity = sha256(experiment_path)
+    proposal_experiment_identity = (
+        sha256(proposal_experiment_path) if proposal_report is not None else None
+    )
+    prediction_cache = (
+        safe_output(root, args.prediction_cache)
+        if args.prediction_cache
+        else metadata_dir
+        / f"publication_v3_strict_scene_predictions_seed{int(experiment['training']['seed'])}.npz"
+    )
+    prediction_cache_artifact = write_scene_prediction_cache(
+        root,
+        prediction_cache,
+        sample_ids=predictions["sample_ids"],
+        groups=groups,
+        labels=labels,
+        primary_scores=scores,
+        neural_scores=neural_scores,
+        primary_threshold=upper,
+        seed=int(experiment["training"]["seed"]),
+        strict_manifest_sha256=strict_manifest_identity,
+        validation_experiment_sha256=validation_experiment_identity,
+        proposal_experiment_sha256=proposal_experiment_identity,
+    )
     gate = (
         float(interval["recall_95ci"][0]) >= 0.75
         and float(scene_unweighted["false_positive_rate"] or 1.0) <= 0.05
@@ -493,11 +583,9 @@ def main() -> int:
         "source": {
             "dataset": "UNEP-IMEO/MARS-S2L",
             "revision": REVISION,
-            "strict_manifest_sha256": sha256(manifest),
-            "validation_experiment_sha256": sha256(experiment_path),
-            "proposal_experiment_sha256": (
-                sha256(proposal_experiment_path) if proposal_report is not None else None
-            ),
+            "strict_manifest_sha256": strict_manifest_identity,
+            "validation_experiment_sha256": validation_experiment_identity,
+            "proposal_experiment_sha256": proposal_experiment_identity,
         },
         "cohort": {
             "samples": len(records),
@@ -519,6 +607,7 @@ def main() -> int:
         "proposal_artifact": (
             proposal_report["artifact"] if proposal_report is not None else None
         ),
+        "scene_prediction_cache": prediction_cache_artifact,
         "strict_spatial_test": {
             "scene_unweighted": scene_unweighted,
             "scene_representative_weighted": scene_weighted,
