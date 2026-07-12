@@ -1,8 +1,8 @@
 {
   "artifact": {
-    "bytes": 51590,
+    "bytes": 51639,
     "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v3_proposals_seed303.joblib",
-    "sha256": "478d9c5b0f654fe00681a02e79a401cfc6d421f446b18a8b347a7f28476d06ff",
+    "sha256": "aa15e4294c9d1931de510778761b61098966069ab5c5d48e1721342b1b882caa",
     "tracked": false
   },
   "cache": {
@@ -13,28 +13,29 @@
     "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_proposal_features_seed303.npz",
     "positive_proposals": 4703,
     "proposal_count": 13760,
-    "sha256": "5b6c058b9c1d7478e51aa159e40e283e4c2a71e4fc12a0f5a58376a910f1507f",
+    "sha256": "c8f9ed0e7623a5350783c39b107d73ccbe41556b9c4744dc84f379e94330271d",
     "tracked": false
   },
   "decision": "Freeze the calibrated component classifier with the v3 checkpoint before strict evaluation.",
-  "generated_at_utc": "2026-07-12T04:53:31.765199+00:00",
+  "generated_at_utc": "2026-07-12T05:02:13.092818+00:00",
   "operating_rule": {
-    "lower_no_plume_threshold": 0.26942033582040753,
+    "lower_no_plume_threshold": 0.4578857421875,
     "lower_selection": {
-      "accepted_samples": 5058,
-      "npv": 0.9849742981415579,
-      "weighted_coverage": 0.8507989907485282
+      "accepted_samples": 5260,
+      "npv": 0.9832699619771863,
+      "weighted_coverage": 0.8847771236333053
     },
-    "scene_score": "maximum calibrated connected-proposal probability; zero with no proposal",
+    "neural_presence_weight": 1.0,
+    "scene_score": "validation-selected convex blend of neural presence and maximum calibrated connected-proposal probability; proposal score is zero with no proposal",
     "selected_on": "internal_validation_only",
-    "upper_plume_threshold": 0.5388420689395463
+    "upper_plume_threshold": 0.46240234375
   },
   "provenance": {
-    "git_commit": "f265123ec4c1946dc76c07b0b4e5023cf1c62643",
+    "git_commit": "db3ea98e92b5c97be3a31634c55b3306902aa3da",
     "git_tracked_worktree_dirty_at_start": false,
     "proposal_source_sha256": "fafd3f82d060e5245a52038a2ea2047df50b5480e155b4632086e84ab347fd7c",
     "script": "tools/train_mars_v3_proposals.py",
-    "script_sha256": "69f1090a7cdc90af9f431e0d1a6fda4416f50e60eeebfe48c602c8580e0d675c"
+    "script_sha256": "3a9d2cdd36d15fea77c287115562744c5718ea029df994f730e9f26d7cf7a85e"
   },
   "runtime": {
     "device": "NVIDIA GeForce RTX 5070",
@@ -65,21 +66,152 @@
     "validation_proposals": 2476
   },
   "validation": {
+    "ablations": {
+      "neural_only": {
+        "accuracy": 0.9402859545836838,
+        "auroc": 0.9237041351193942,
+        "average_precision": 0.8117906932585001,
+        "brier": 0.04262777303128209,
+        "false_positive_rate": 0.049080882352941176,
+        "fn": 88.0,
+        "fp": 267.0,
+        "negative_predictive_value": 0.9832731419882151,
+        "precision": 0.6096491228070176,
+        "recall": 0.8257425742574257,
+        "specificity": 0.9509191176470588,
+        "tn": 5173.0,
+        "tp": 417.0,
+        "upper_plume_threshold": 0.46240234375
+      },
+      "proposal_only": {
+        "accuracy": 0.9411269974768713,
+        "auroc": 0.901769437973209,
+        "average_precision": 0.5872944929117726,
+        "brier": 0.050497604389088534,
+        "false_positive_rate": 0.04650735294117647,
+        "fn": 97.0,
+        "fp": 253.0,
+        "negative_predictive_value": 0.9816426949280848,
+        "precision": 0.6172465960665658,
+        "recall": 0.807920792079208,
+        "specificity": 0.9534926470588235,
+        "tn": 5187.0,
+        "tp": 408.0,
+        "upper_plume_threshold": 0.5388420689395463
+      }
+    },
+    "blend_candidates": [
+      {
+        "neural_presence_weight": 0.0,
+        "scene": {
+          "accuracy": 0.9411269974768713,
+          "auroc": 0.901769437973209,
+          "average_precision": 0.5872944929117726,
+          "brier": 0.050497604389088534,
+          "false_positive_rate": 0.04650735294117647,
+          "fn": 97.0,
+          "fp": 253.0,
+          "negative_predictive_value": 0.9816426949280848,
+          "precision": 0.6172465960665658,
+          "recall": 0.807920792079208,
+          "specificity": 0.9534926470588235,
+          "tn": 5187.0,
+          "tp": 408.0
+        },
+        "upper_plume_threshold": 0.5388420689395463
+      },
+      {
+        "neural_presence_weight": 0.25,
+        "scene": {
+          "accuracy": 0.9406223717409588,
+          "auroc": 0.9236449839836924,
+          "average_precision": 0.8116921469026515,
+          "brier": 0.04501145526571964,
+          "false_positive_rate": 0.04871323529411765,
+          "fn": 88.0,
+          "fp": 265.0,
+          "negative_predictive_value": 0.9832794983849515,
+          "precision": 0.6114369501466276,
+          "recall": 0.8257425742574257,
+          "specificity": 0.9512867647058824,
+          "tn": 5175.0,
+          "tp": 417.0
+        },
+        "upper_plume_threshold": 0.5197459626740281
+      },
+      {
+        "neural_presence_weight": 0.5,
+        "scene": {
+          "accuracy": 0.9406223717409588,
+          "auroc": 0.9236442559697147,
+          "average_precision": 0.8116898937266491,
+          "brier": 0.041871100331628934,
+          "false_positive_rate": 0.04871323529411765,
+          "fn": 88.0,
+          "fp": 265.0,
+          "negative_predictive_value": 0.9832794983849515,
+          "precision": 0.6114369501466276,
+          "recall": 0.8257425742574257,
+          "specificity": 0.9512867647058824,
+          "tn": 5175.0,
+          "tp": 417.0
+        },
+        "upper_plume_threshold": 0.5006314230326854
+      },
+      {
+        "neural_presence_weight": 0.75,
+        "scene": {
+          "accuracy": 0.9406223717409588,
+          "auroc": 0.92362532760629,
+          "average_precision": 0.8116224954806918,
+          "brier": 0.04107653958681641,
+          "false_positive_rate": 0.04871323529411765,
+          "fn": 88.0,
+          "fp": 265.0,
+          "negative_predictive_value": 0.9832794983849515,
+          "precision": 0.6114369501466276,
+          "recall": 0.8257425742574257,
+          "specificity": 0.9512867647058824,
+          "tn": 5175.0,
+          "tp": 417.0
+        },
+        "upper_plume_threshold": 0.4815168833913427
+      },
+      {
+        "neural_presence_weight": 1.0,
+        "scene": {
+          "accuracy": 0.9402859545836838,
+          "auroc": 0.9237041351193942,
+          "average_precision": 0.8117906932585001,
+          "brier": 0.04262777303128209,
+          "false_positive_rate": 0.049080882352941176,
+          "fn": 88.0,
+          "fp": 267.0,
+          "negative_predictive_value": 0.9832731419882151,
+          "precision": 0.6096491228070176,
+          "recall": 0.8257425742574257,
+          "specificity": 0.9509191176470588,
+          "tn": 5173.0,
+          "tp": 417.0
+        },
+        "upper_plume_threshold": 0.46240234375
+      }
+    ],
     "samples": 5945,
     "scene": {
-      "accuracy": 0.9411269974768713,
-      "auroc": 0.901769437973209,
-      "average_precision": 0.5872944929117726,
-      "brier": 0.050497604389088534,
-      "false_positive_rate": 0.04650735294117647,
-      "fn": 97.0,
-      "fp": 253.0,
-      "negative_predictive_value": 0.9816426949280848,
-      "precision": 0.6172465960665658,
-      "recall": 0.807920792079208,
-      "specificity": 0.9534926470588235,
-      "tn": 5187.0,
-      "tp": 408.0
+      "accuracy": 0.9402859545836838,
+      "auroc": 0.9237041351193942,
+      "average_precision": 0.8117906932585001,
+      "brier": 0.04262777303128209,
+      "false_positive_rate": 0.049080882352941176,
+      "fn": 88.0,
+      "fp": 267.0,
+      "negative_predictive_value": 0.9832731419882151,
+      "precision": 0.6096491228070176,
+      "recall": 0.8257425742574257,
+      "specificity": 0.9509191176470588,
+      "tn": 5173.0,
+      "tp": 417.0
     }
   }
 }
