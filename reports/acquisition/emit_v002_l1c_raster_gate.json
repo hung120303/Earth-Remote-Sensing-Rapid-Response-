@@ -1,0 +1,1453 @@
+{
+  "contract": {
+    "band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12"
+    ],
+    "ignored_output_root": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07",
+    "minimum_local_clear_fraction": 0.7,
+    "observability_product": "co-temporal Sentinel-2 L2A SCL",
+    "pairs_manifest": "reports/acquisition/emit_v002_l1c_pairs.json",
+    "pairs_manifest_sha256": "6947f62b6c21023f926e82b5e1f9342932a105bb78a943f83095a6ad3c4761c5",
+    "resolution_m": 10.0,
+    "selection_inputs": "public metadata and rasters only; no model predictions",
+    "shape": [
+      200,
+      200
+    ],
+    "spectral_product": "Sentinel-2 L1C TOA"
+  },
+  "errors": [],
+  "generated_at_utc": "2026-07-12T17:42:24.880905+00:00",
+  "provenance": {
+    "git_commit": "999894252b0693870ab7e8b4d6388c400e193a0e",
+    "numpy": "2.4.4",
+    "python": "3.11.14",
+    "rasterio": "1.4.4",
+    "script": "tools/acquire_emit_v002_l1c_crops.py",
+    "script_sha256": "926ca9c596bb7a912a3e13cdd282498b2d7fa8c2836cbc51bbf1247399fb8569"
+  },
+  "samples": [
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230221T093954_000697",
+      "group_id": "emit25km-0001",
+      "manifest_sha256": "9578666062e91e24c71ad5e2c8394b342e517656d43e5ab3446b852a752a1489",
+      "plume_min_margin_pixels": 21.6718,
+      "plume_pixels": 8138,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_36SYA_20230127_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_36SYA_20230221_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": false,
+        "target_plume_support_clear": false
+      },
+      "gate_pass": false,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220816T101035_000502",
+      "group_id": "emit25km-0002",
+      "manifest_sha256": "fadc673d7c8c9bff330df977d8eb3a290e205cf42a586016c77f73b19f438584",
+      "plume_min_margin_pixels": 0.0605,
+      "plume_pixels": 17194,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_40TFK_20220814_0_L1C",
+      "target_clear_fraction": 0.4012,
+      "target_clear_fraction_on_plume": 0.38903106,
+      "target_scene_id": "S2A_40TFK_20220816_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220818T070105_000508",
+      "group_id": "emit25km-0003",
+      "manifest_sha256": "8c16ed717442c487c40fc7eb9288a84a2f4411b898a2b06a74870fa2c8a19de5",
+      "plume_min_margin_pixels": 8.3942,
+      "plume_pixels": 21272,
+      "reference_clear_fraction": 0.99645,
+      "reference_scene_id": "S2A_45TWJ_20220813_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_45TWJ_20220818_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220823T074504_000522",
+      "group_id": "emit25km-0004",
+      "manifest_sha256": "df9285ece9a1c4a44e49656a753574ffcfa56fe9bdab55879eceb2e8a4d8dd56",
+      "plume_min_margin_pixels": 18.6367,
+      "plume_pixels": 13547,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_41SLV_20220818_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_41SLV_20220823_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": false,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": false,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220827T104927_000526",
+      "group_id": "emit25km-0005",
+      "manifest_sha256": "165c3879b942040b7bbebff6f13a3a3b7d528fde590a514e9dd2e23a43448d06",
+      "plume_min_margin_pixels": 57.6771,
+      "plume_pixels": 3859,
+      "reference_clear_fraction": 0.6436,
+      "reference_scene_id": "S2A_31RBM_20220822_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_31RBM_20220827_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220828T051929_000919",
+      "group_id": "emit25km-0006",
+      "manifest_sha256": "4dd01824c3e39bf6f073f237600a1bea61b4fc08495c6527bfd310cc81e86047",
+      "plume_min_margin_pixels": 9.2319,
+      "plume_pixels": 13894,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_41SND_20220825_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_41SND_20220828_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220901T034318_000554",
+      "group_id": "emit25km-0007",
+      "manifest_sha256": "a58b17310a9b05ac96ab7bdb4d88cf4135b086e45922f4160a4c22d7de34a4ba",
+      "plume_min_margin_pixels": 59.9603,
+      "plume_pixels": 3689,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_42STH_20220830_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_42STH_20220901_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230128T124118_000593",
+      "group_id": "emit25km-0008",
+      "manifest_sha256": "c70953a6e707ff6bc70974c54aabe77336c0978fac67be81946364fc6efd4073",
+      "plume_min_margin_pixels": 35.5637,
+      "plume_pixels": 8935,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_32RLS_20230125_0_L1C",
+      "target_clear_fraction": 0.9996,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_32RLS_20230128_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230202T070803_000606",
+      "group_id": "emit25km-0009",
+      "manifest_sha256": "00def2a1f735e93aa862db3dfa075160a4313984aa70e9fc01ed8551156d5eb4",
+      "plume_min_margin_pixels": 63.1796,
+      "plume_pixels": 3636,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_40QCK_20230123_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_40QCK_20230202_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230203T062629_000615",
+      "group_id": "emit25km-0010",
+      "manifest_sha256": "d9f520d92cecc4fa9be3f6cbea604a6b36b49e99e67960e053fe469318b2b9af",
+      "plume_min_margin_pixels": 23.8738,
+      "plume_pixels": 11268,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_44SMH_20230129_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_44SMH_20230203_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230219T094118_000669",
+      "group_id": "emit25km-0011",
+      "manifest_sha256": "5132167cd0321a50802ec508f9c3f390c27beadc3d25b9b583644df730d34b11",
+      "plume_min_margin_pixels": 38.6214,
+      "plume_pixels": 11734,
+      "reference_clear_fraction": 0.9659,
+      "reference_scene_id": "S2A_39RTQ_20230211_0_L1C",
+      "target_clear_fraction": 0.97,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_39RTQ_20230219_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230220T054540_000688",
+      "group_id": "emit25km-0012",
+      "manifest_sha256": "87a2d7291ca308a6f6ac153e83cb1bae48539d2191b8acd002ef5e2bdd08fb6b",
+      "plume_min_margin_pixels": 63.5008,
+      "plume_pixels": 3772,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_46SEG_20230205_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_46SEG_20230220_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230223T080447_000700",
+      "group_id": "emit25km-0013",
+      "manifest_sha256": "7f6475bac91ff2ee4f768f615ce1f5fc7d9457ccc86f66800fe41a67f5911dee",
+      "plume_min_margin_pixels": 16.3218,
+      "plume_pixels": 20547,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_38SLF_20230220_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_38SLF_20230223_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230225T050619_000722",
+      "group_id": "emit25km-0014",
+      "manifest_sha256": "60a1c0ce28c3e85a71d819712ae78ab5f717fa6f3123f528c6486e1ae2c4d3f6",
+      "plume_min_margin_pixels": 54.1128,
+      "plume_pixels": 6181,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_47PPR_20230126_0_L1C",
+      "target_clear_fraction": 0.9999,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_47PPR_20230225_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230227T155714_000737",
+      "group_id": "emit25km-0015",
+      "manifest_sha256": "78978c69f0572811f5d6951c5c197fea2c082ccd34b8443e90473b6e6275fd3a",
+      "plume_min_margin_pixels": 34.2949,
+      "plume_pixels": 12844,
+      "reference_clear_fraction": 0.9916,
+      "reference_scene_id": "S2B_18PXR_20230217_0_L1C",
+      "target_clear_fraction": 0.9994,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_18PXR_20230227_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230326T112521_000769",
+      "group_id": "emit25km-0016",
+      "manifest_sha256": "bc07f43622ff1901bff0d523137d13abcbc3caae927f09613e4b3f24da758b31",
+      "plume_min_margin_pixels": 44.5787,
+      "plume_pixels": 5162,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_41SLB_20230319_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_41SLB_20230326_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230326T143019_000762",
+      "group_id": "emit25km-0017",
+      "manifest_sha256": "672923b9ea8ecf67d591527783916777c5e44423154b5123aefc43bf2531d18e",
+      "plume_min_margin_pixels": 47.7069,
+      "plume_pixels": 7310,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_32SPE_20230301_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_32SPE_20230326_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230403T111837_000787",
+      "group_id": "emit25km-0018",
+      "manifest_sha256": "58e5ef4da6315d275e78c0f887dee58b2316689fde103c99adabf93ebe649351",
+      "plume_min_margin_pixels": 39.1239,
+      "plume_pixels": 6680,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_31RGQ_20230401_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_31RGQ_20230403_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": false,
+        "target_plume_support_clear": false
+      },
+      "gate_pass": false,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230418T060625_000823",
+      "group_id": "emit25km-0019",
+      "manifest_sha256": "2f5d3a2422eca6d07ad6d7b3133cc87c3df716a655c5e177176e96e95e9448be",
+      "plume_min_margin_pixels": 26.8783,
+      "plume_pixels": 12200,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_49SDB_20230408_0_L1C",
+      "target_clear_fraction": 0.59655,
+      "target_clear_fraction_on_plume": 0.6254918,
+      "target_scene_id": "S2B_49SDB_20230418_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": false,
+        "target_plume_support_clear": false
+      },
+      "gate_pass": false,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230418T091117_002047",
+      "group_id": "emit25km-0020",
+      "manifest_sha256": "eefc642a49e93a88ecde331a3fadc0555b2a533eef4fbe153fd5b49818030f78",
+      "plume_min_margin_pixels": 25.5048,
+      "plume_pixels": 6008,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_40SGJ_20230408_0_L1C",
+      "target_clear_fraction": 0.23755,
+      "target_clear_fraction_on_plume": 0.22636485,
+      "target_scene_id": "S2B_40SGJ_20230418_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230603T080327_000264",
+      "group_id": "emit25km-0021",
+      "manifest_sha256": "6cba358029f14013db5e368a4ef011932e2649899965f268802629679e2cd2ee",
+      "plume_min_margin_pixels": 24.0989,
+      "plume_pixels": 15926,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_41TQE_20230601_0_L1C",
+      "target_clear_fraction": 0.9277,
+      "target_clear_fraction_on_plume": 0.98518146,
+      "target_scene_id": "S2A_41TQE_20230603_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230425T064628_002840",
+      "group_id": "emit25km-0022",
+      "manifest_sha256": "43cb7d83e75e417aaa55e98444b8994b99e47988a42f38265ef11ea3d2bd1ab8",
+      "plume_min_margin_pixels": 6.1549,
+      "plume_pixels": 23848,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_41SLV_20230420_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_41SLV_20230425_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230602T071917_000321",
+      "group_id": "emit25km-0023",
+      "manifest_sha256": "79f9f22f279ba0bfa1d3ec793c7840991ddfe673f15c4528423bc06168d22fe4",
+      "plume_min_margin_pixels": 45.6653,
+      "plume_pixels": 7909,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_45TVG_20230518_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_45TVG_20230602_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230604T180205_000219",
+      "group_id": "emit25km-0024",
+      "manifest_sha256": "b1ccab95732a365239e2118a7f72ae55aeabe0e8934923885f65a8f980b7c7dd",
+      "plume_min_margin_pixels": 7.4929,
+      "plume_pixels": 9627,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_13SER_20230530_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_13SER_20230604_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230606T085011_002433",
+      "group_id": "emit25km-0025",
+      "manifest_sha256": "6ee0c345373ed883a46c60edae6428c7d986f8ea59e23fef91a19739e511c176",
+      "plume_min_margin_pixels": 9.0698,
+      "plume_pixels": 16345,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_40UEU_20230529_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_40UEU_20230606_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230607T092641_000939",
+      "group_id": "emit25km-0026",
+      "manifest_sha256": "f695014566503d915e800c58a1a9ca1ff6ae860096c49e0c0b3e52efcc4866d5",
+      "plume_min_margin_pixels": 41.9488,
+      "plume_pixels": 5162,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_32RLT_20230602_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_32RLT_20230607_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230609T171010_000953",
+      "group_id": "emit25km-0027",
+      "manifest_sha256": "32ec3448a64534d5df20d1384ebbe8f019618791b4cec475f6e284632a2d7595",
+      "plume_min_margin_pixels": 32.8252,
+      "plume_pixels": 11010,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_11SPA_20230604_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_11SPA_20230609_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230614T102403_000043",
+      "group_id": "emit25km-0028",
+      "manifest_sha256": "500cdb7911a1377242c4e06bf411fc74b7474d1aff8f878236b9e1a3f1fb671b",
+      "plume_min_margin_pixels": 36.0228,
+      "plume_pixels": 5524,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_41TLF_20230612_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_41TLF_20230614_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230729T100630_000234",
+      "group_id": "emit25km-0029",
+      "manifest_sha256": "ef2bbd3c09aeb33d5ae1a948bcbbdbc9568095ee289d9d9f9d0bde6a8becd33a",
+      "plume_min_margin_pixels": 5.802,
+      "plume_pixels": 11108,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_41TLE_20230724_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_41TLE_20230729_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230614T102415_000044",
+      "group_id": "emit25km-0030",
+      "manifest_sha256": "646a6527fe1c083a4126b973dfafb55feadf3df9bd1d374062f89fa11beb461f",
+      "plume_min_margin_pixels": 18.1811,
+      "plume_pixels": 8259,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_41TME_20230604_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_41TME_20230614_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230614T193706_000038",
+      "group_id": "emit25km-0031",
+      "manifest_sha256": "3e8eedae5411afb73ed0743731d162bad3ce93ef3a51085c216247541d91ce01",
+      "plume_min_margin_pixels": 10.9984,
+      "plume_pixels": 18171,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_14TPT_20230611_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_14TPT_20230614_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231201T183549_001997",
+      "group_id": "emit25km-0032",
+      "manifest_sha256": "8685107baf0a723ef0139a2bda279d3dc8fe608241a271b9210ebcd74574bf97",
+      "plume_min_margin_pixels": 41.7805,
+      "plume_pixels": 5191,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_13SGR_20231128_0_L1C",
+      "target_clear_fraction": 0.948225,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_13SGR_20231201_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230624T053036_000180",
+      "group_id": "emit25km-0033",
+      "manifest_sha256": "22b1223a983ad8958e38067d87b9ee6343fc129fc51c72b8b56d915839355f2b",
+      "plume_min_margin_pixels": 21.5206,
+      "plume_pixels": 9630,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_41TPM_20230614_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_41TPM_20230624_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230629T013516_000143",
+      "group_id": "emit25km-0034",
+      "manifest_sha256": "6f597996ffa9128090d90ef980cb2ad3660b57b2e72baa6626a68ecf6d285066",
+      "plume_min_margin_pixels": 36.414,
+      "plume_pixels": 11663,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_49SEB_20230622_0_L1C",
+      "target_clear_fraction": 0.9996,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_49SEB_20230629_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230810T051552_001411",
+      "group_id": "emit25km-0035",
+      "manifest_sha256": "c7144e9b610b9cf1b33e93b49d8a7f9f300cfb0f50c59615b7173b53941227f9",
+      "plume_min_margin_pixels": 0.4164,
+      "plume_pixels": 23287,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_41SNC_20230808_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_41SNC_20230810_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230728T105313_001637",
+      "group_id": "emit25km-0036",
+      "manifest_sha256": "2542d9aeadff4901b22ce013231e06eaffebb498c1bdb2254bf6a3f562e27d50",
+      "plume_min_margin_pixels": 4.3615,
+      "plume_pixels": 11086,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_39SYC_20230708_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_39SYC_20230728_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230804T082948_000973",
+      "group_id": "emit25km-0037",
+      "manifest_sha256": "cbb073bffc3b13226bf94d9e645ba4c480666117ebbb5092276d1197166e1b21",
+      "plume_min_margin_pixels": 55.5297,
+      "plume_pixels": 5002,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_40TFP_20230730_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_40TFP_20230804_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230806T034659_001088",
+      "group_id": "emit25km-0038",
+      "manifest_sha256": "ceda76528149d9a2714a199d3d4da58bb2fc40262e90706e198b4e74e07d570c",
+      "plume_min_margin_pixels": 48.2398,
+      "plume_pixels": 6572,
+      "reference_clear_fraction": 0.886,
+      "reference_scene_id": "S2A_49SCD_20230801_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_49SCD_20230806_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230814T100720_001443",
+      "group_id": "emit25km-0039",
+      "manifest_sha256": "09c538992b2ddee0d51b515b7e01ae45a59f0290947ffef6d16f71a64af0a80e",
+      "plume_min_margin_pixels": 57.7357,
+      "plume_pixels": 4050,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_38TQS_20230811_0_L1C",
+      "target_clear_fraction": 0.9839,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_38TQS_20230814_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": false
+      },
+      "gate_pass": false,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230817T105803_001184",
+      "group_id": "emit25km-0040",
+      "manifest_sha256": "850f2b070cdba85a83299ff21456cd1a38f1ea4f1de5f7bc03ee58893b24b10d",
+      "plume_min_margin_pixels": 77.0808,
+      "plume_pixels": 1268,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_37SFV_20230812_0_L1C",
+      "target_clear_fraction": 0.9242,
+      "target_clear_fraction_on_plume": 0.57413249,
+      "target_scene_id": "S2B_37SFV_20230817_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230822T192519_002906",
+      "group_id": "emit25km-0041",
+      "manifest_sha256": "0f656af64742ae94e29951412c6dae9d9cd6140a5e645e3ecb929fe684055a24",
+      "plume_min_margin_pixels": 17.8037,
+      "plume_pixels": 12591,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_10SEH_20230812_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_10SEH_20230822_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230903T010049_001659",
+      "group_id": "emit25km-0042",
+      "manifest_sha256": "e8e8e5f278de85f525245a83c59a9c493f1a43d3a570b009442422c2c069e6ba",
+      "plume_min_margin_pixels": 36.7337,
+      "plume_pixels": 6519,
+      "reference_clear_fraction": 0.99905,
+      "reference_scene_id": "S2A_54KZA_20230831_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_54KZA_20230903_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230908T141043_000225",
+      "group_id": "emit25km-0043",
+      "manifest_sha256": "c0ad2608149cff1d8ef2e7b5bb9984b3aa662ca243b1e19a3396acb6acb0809a",
+      "plume_min_margin_pixels": 41.5961,
+      "plume_pixels": 7936,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_20HLB_20230829_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_20HLB_20230908_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230928T114538_001694",
+      "group_id": "emit25km-0044",
+      "manifest_sha256": "92613f6281475ad174d8dd2e0be70bac63b21071e249dbe20825c9e527e47439",
+      "plume_min_margin_pixels": 24.8623,
+      "plume_pixels": 13538,
+      "reference_clear_fraction": 0.9903,
+      "reference_scene_id": "S2B_38TNQ_20230926_0_L1C",
+      "target_clear_fraction": 0.9953,
+      "target_clear_fraction_on_plume": 0.99172699,
+      "target_scene_id": "S2A_38TNQ_20230928_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": false,
+        "target_plume_support_clear": false
+      },
+      "gate_pass": false,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241005T065118_003706",
+      "group_id": "emit25km-0045",
+      "manifest_sha256": "a96ad0b4ac9177d588d029247c84905a537659d071baaacdf1baba8e74e9c821",
+      "plume_min_margin_pixels": 17.7823,
+      "plume_pixels": 11634,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_40SBJ_20240930_0_L1C",
+      "target_clear_fraction": 0.60195,
+      "target_clear_fraction_on_plume": 0.55105725,
+      "target_scene_id": "S2B_40SBJ_20241005_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231204T174618_002010",
+      "group_id": "emit25km-0046",
+      "manifest_sha256": "49aebbab0d13ceeecb8473b6797913de2f2d559a6d32bfba0df771d410d7ae8f",
+      "plume_min_margin_pixels": 3.6562,
+      "plume_pixels": 21869,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_13SCR_20231202_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_13SCR_20231204_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231206T082610_002181",
+      "group_id": "emit25km-0047",
+      "manifest_sha256": "07b3c0a851574c95236ce75bbd860d36f303826310c5072cf03a063882ee81fb",
+      "plume_min_margin_pixels": 57.4733,
+      "plume_pixels": 4284,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_34RET_20231201_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_34RET_20231206_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": false,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": false,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231224T065746_002284",
+      "group_id": "emit25km-0048",
+      "manifest_sha256": "175c9bdf3571f379c4f7f8ddf626b0c96bad95984c7656a36cfc219e7ecd63df",
+      "plume_min_margin_pixels": 2.0012,
+      "plume_pixels": 21654,
+      "reference_clear_fraction": 0.34755,
+      "reference_scene_id": "S2B_42RUP_20231222_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_42RUP_20231224_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231224T174533_002613",
+      "group_id": "emit25km-0049",
+      "manifest_sha256": "94b32b6e12ce705c3bb8e6d5575bc84f24d4bb4f649eb01b779b02b97fb003e6",
+      "plume_min_margin_pixels": 12.5303,
+      "plume_pixels": 8197,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_13SER_20231221_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_13SER_20231224_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": false,
+        "target_plume_support_clear": false
+      },
+      "gate_pass": false,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240215T193436_002739",
+      "group_id": "emit25km-0050",
+      "manifest_sha256": "d08dbcfe7bbf23cef6526232f0ed02bf856ee7bb35f6554c7d80b8138d3ea18f",
+      "plume_min_margin_pixels": 0.9237,
+      "plume_pixels": 13929,
+      "reference_clear_fraction": 0.91675,
+      "reference_scene_id": "S2A_20PLQ_20240205_0_L1C",
+      "target_clear_fraction": 0.62725,
+      "target_clear_fraction_on_plume": 0.534281,
+      "target_scene_id": "S2A_20PLQ_20240215_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": false,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": false,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240217T052707_002783",
+      "group_id": "emit25km-0051",
+      "manifest_sha256": "e273f38b52dc36bb053ae61b82eae900e8186f00d51a0a5b33db4c83e160a56c",
+      "plume_min_margin_pixels": 4.8015,
+      "plume_pixels": 21216,
+      "reference_clear_fraction": 0.6789,
+      "reference_scene_id": "S2B_49SDA_20240212_0_L1C",
+      "target_clear_fraction": 0.9806,
+      "target_clear_fraction_on_plume": 0.99698341,
+      "target_scene_id": "S2A_49SDA_20240217_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240321T083455_002920",
+      "group_id": "emit25km-0052",
+      "manifest_sha256": "2370e61b0d078e2628c5099bec91ce3306789fffe527a251066df6659826cdc0",
+      "plume_min_margin_pixels": 15.6379,
+      "plume_pixels": 13776,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_48RWQ_20240311_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_48RWQ_20240321_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240326T201210_002996",
+      "group_id": "emit25km-0053",
+      "manifest_sha256": "a32735cf5e205c47d7b821fb9d58a8cb347fa773f85d4979f5c30fef4603ced3",
+      "plume_min_margin_pixels": 52.9047,
+      "plume_pixels": 4912,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_15SUR_20240323_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_15SUR_20240326_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240327T100708_002935",
+      "group_id": "emit25km-0054",
+      "manifest_sha256": "16e00c2aadce2904c054d312ce92792fe2866a9c08fa6e6ec59191840b1ab278",
+      "plume_min_margin_pixels": 3.2754,
+      "plume_pixels": 20261,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_39RVP_20240317_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_39RVP_20240327_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240422T175102_003071",
+      "group_id": "emit25km-0055",
+      "manifest_sha256": "4be4fb4ff3a21a0adcb842b293794b132ac0be449f92c9bd92f111c7ce102114",
+      "plume_min_margin_pixels": 2.4898,
+      "plume_pixels": 16911,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_15RTP_20240405_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_15RTP_20240422_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240423T074559_003083",
+      "group_id": "emit25km-0056",
+      "manifest_sha256": "9a08267632a8b6ac15e684b7a141804f0298dd669d1fabed5adb5ea6d2f84bc0",
+      "plume_min_margin_pixels": 45.42,
+      "plume_pixels": 6509,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_39RWP_20240418_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_39RWP_20240423_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240426T065455_003154",
+      "group_id": "emit25km-0057",
+      "manifest_sha256": "f6d6f72071fa261143fced09ebf033118fc91a7a0715ac936acb4c6797f98e7c",
+      "plume_min_margin_pixels": 54.3598,
+      "plume_pixels": 6067,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_39RTN_20240419_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_39RTN_20240426_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240624T025623_003265",
+      "group_id": "emit25km-0058",
+      "manifest_sha256": "6a3747c1451ed5a1bf505a334fc112691f4892262c71c7a7d28e821fe2344c18",
+      "plume_min_margin_pixels": 24.6552,
+      "plume_pixels": 17078,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_48SXG_20240614_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_48SXG_20240624_1_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T020940_003294",
+      "group_id": "emit25km-0059",
+      "manifest_sha256": "f1edab4c45953bdc8bc083ad07d46457cd62a47d5498a87a4538c1270f645d02",
+      "plume_min_margin_pixels": 2.8346,
+      "plume_pixels": 16959,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_50SKF_20240610_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_50SKF_20240625_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T065010_003276",
+      "group_id": "emit25km-0060",
+      "manifest_sha256": "a3ce380e89b9449c028e060b4a4fa4e2b1884c3f7e05a7b3027ccf1e7ec95428",
+      "plume_min_margin_pixels": 9.2476,
+      "plume_pixels": 12146,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_39RUQ_20240620_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_39RUQ_20240625_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T065021_003279",
+      "group_id": "emit25km-0061",
+      "manifest_sha256": "dd5cd48d0eb38563b929ff8e51417d31c37fee58297ee6dceb62c67081af9b96",
+      "plume_min_margin_pixels": 12.3627,
+      "plume_pixels": 12679,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_39RVP_20240620_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_39RVP_20240625_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240627T160655_003333",
+      "group_id": "emit25km-0062",
+      "manifest_sha256": "6790c3c693b0a52097af9a9574e194ed49b0cc97bd06f65bedc44669a6a0b62c",
+      "plume_min_margin_pixels": 51.7419,
+      "plume_pixels": 4073,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_14RMS_20240612_0_L1C",
+      "target_clear_fraction": 0.927575,
+      "target_clear_fraction_on_plume": 0.98232261,
+      "target_scene_id": "S2B_14RMS_20240627_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240722T112859_003354",
+      "group_id": "emit25km-0063",
+      "manifest_sha256": "38e54015ccb464befe0a4acc70e0df9b9a7d79c411d58f0694a95f5e4d2bff70",
+      "plume_min_margin_pixels": 18.0105,
+      "plume_pixels": 11275,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_39RXL_20240717_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_39RXL_20240722_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240722T112911_003355",
+      "group_id": "emit25km-0064",
+      "manifest_sha256": "068206bd4bbedfc88ca3b5f768fe19b810882ba1a044ac5a2226d3daba76cd59",
+      "plume_min_margin_pixels": 28.0153,
+      "plume_pixels": 9756,
+      "reference_clear_fraction": 0.9982,
+      "reference_scene_id": "S2B_39RXM_20240717_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_39RXM_20240722_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240723T213259_003368",
+      "group_id": "emit25km-0065",
+      "manifest_sha256": "29874eeee4027373c59e530d450c20f1af758e586b10e6464be652ce90a01f9f",
+      "plume_min_margin_pixels": 43.2679,
+      "plume_pixels": 5588,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_14SKA_20240720_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_14SKA_20240723_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240807T064102_003422",
+      "group_id": "emit25km-0066",
+      "manifest_sha256": "b4b1ebc0acc174e17e75bd1c7b346066203c4b6e56fd58edd5e8c98f3e38d06a",
+      "plume_min_margin_pixels": 36.9685,
+      "plume_pixels": 10764,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_39TXJ_20240804_0_L1C",
+      "target_clear_fraction": 0.9377,
+      "target_clear_fraction_on_plume": 0.95568562,
+      "target_scene_id": "S2A_39TXJ_20240807_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240825T064423_003500",
+      "group_id": "emit25km-0067",
+      "manifest_sha256": "dcb18f04663ff91b63efea9a4b2d6ca74a718bfb6eedb972139446f3bdb51745",
+      "plume_min_margin_pixels": 31.4844,
+      "plume_pixels": 12894,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_40RCP_20240820_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_40RCP_20240825_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240826T170043_003568",
+      "group_id": "emit25km-0068",
+      "manifest_sha256": "20f57eede34cef5e171ade3fd33c4267785551a793cd43ea44b2ae4e323ac0d6",
+      "plume_min_margin_pixels": 6.2122,
+      "plume_pixels": 18176,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_18KZG_20240816_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2A_18KZG_20240826_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": true,
+        "target_plume_support_clear": true
+      },
+      "gate_pass": true,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241004T165227_003636",
+      "group_id": "emit25km-0069",
+      "manifest_sha256": "095b5a782779849468eea83ddb33ed202fac207428d2c3cec406410c9605cf9c",
+      "plume_min_margin_pixels": 28.3355,
+      "plume_pixels": 8446,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2B_13SES_20241001_0_L1C",
+      "target_clear_fraction": 1.0,
+      "target_clear_fraction_on_plume": 1.0,
+      "target_scene_id": "S2B_13SES_20241004_0_L1C"
+    },
+    {
+      "gate_checks": {
+        "plume_fully_contained": true,
+        "plume_mask_nonempty": true,
+        "reference_local_clear": true,
+        "target_local_clear": false,
+        "target_plume_support_clear": false
+      },
+      "gate_pass": false,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241019T100941_003675",
+      "group_id": "emit25km-0070",
+      "manifest_sha256": "427dd9f837ea08831d73fe8da36c9337bde622b7c46741aa13cd6db07c680c29",
+      "plume_min_margin_pixels": 12.1883,
+      "plume_pixels": 17126,
+      "reference_clear_fraction": 1.0,
+      "reference_scene_id": "S2A_36RUU_20241014_0_L1C",
+      "target_clear_fraction": 0.5529,
+      "target_clear_fraction_on_plume": 0.3825762,
+      "target_scene_id": "S2B_36RUU_20241019_0_L1C"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "public_emit_external_l1c_l2a_scl_raster_gate",
+  "summary": {
+    "acquisition_errors": 0,
+    "gate_fail_pairs": 10,
+    "gate_failure_counts": {
+      "reference_local_clear": 3,
+      "target_local_clear": 6,
+      "target_plume_support_clear": 7
+    },
+    "gate_pass_pairs": 60,
+    "minimum_50_group_goal_met": true,
+    "raw_cropped_assets": 350,
+    "raw_cropped_bytes": 45931204,
+    "requested_pairs": 70,
+    "verified_pairs": 70
+  }
+}
