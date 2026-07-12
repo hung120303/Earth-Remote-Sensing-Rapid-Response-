@@ -6,9 +6,9 @@ Pipeline smoke test only; not an accuracy result.
 - Samples: 64 train / 32 validation
 - Best epoch: 1 / 1
 - Validation recall at FPR <= 0.05: 0.000 (FPR 0.000)
-- Validation AUROC / AP: 0.465 / 0.490
-- Validation mask Dice: 0.082
-- Checkpoint SHA-256: `83a2464265cb1c07f1d1552c53d400928960243b4e4ebbbfbab54692e75f251c`
+- Validation AUROC / AP: 0.477 / 0.494
+- Validation mask Dice: 0.091
+- Checkpoint SHA-256: `3002dea0d445928a154b1b398811992e60e67fb9b2c2db6a4243fb64376187d8`
 
 ## Decision
 

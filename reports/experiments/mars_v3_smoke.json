@@ -2,7 +2,7 @@
   "artifact": {
     "bytes": 57105401,
     "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v3_smoke_seed303.pt",
-    "sha256": "83a2464265cb1c07f1d1552c53d400928960243b4e4ebbbfbab54692e75f251c",
+    "sha256": "3002dea0d445928a154b1b398811992e60e67fb9b2c2db6a4243fb64376187d8",
     "tracked": false
   },
   "cohort": {
@@ -14,7 +14,7 @@
     "validation_groups": 13
   },
   "decision": "Pipeline contract passes. Do not interpret smoke metrics; acquire the frozen full fit/validation corpus before architecture selection.",
-  "generated_at_utc": "2026-07-11T23:28:03.393279+00:00",
+  "generated_at_utc": "2026-07-12T02:17:54.737044+00:00",
   "model": {
     "heads": [
       "segmentation",
@@ -54,28 +54,30 @@
       "weighted_coverage": 0.0
     },
     "quality_selection": {
-      "fn": 0,
+      "fn": 1,
       "fp": 5,
-      "recall_high_quality": 1.0,
+      "recall_high_quality": 0.9615384615384616,
       "specificity_low_quality": 0.16666666666666666,
       "tn": 1,
-      "tp": 26
+      "tp": 25
     },
-    "quality_threshold": 0.87841796875,
+    "quality_threshold": 0.87255859375,
     "segmentation": {
       "minimum_connected_pixels": 200,
-      "pixel_threshold": 0.2939453125
+      "pixel_threshold": 0.26318359375
     },
     "selected_on": "internal_validation_only",
-    "upper_plume_threshold": 0.4260254204273224
+    "upper_plume_threshold": 0.4235840141773224
   },
   "provenance": {
-    "git_commit": "9ad5394a20eb108ad3893c1b564b36f6a9f6338a",
+    "adapter_source": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py",
+    "adapter_source_sha256": "fdbed22c231311a7eba6ef0289bf64f28591c8ca7dcd9643c3d5c210a8df73b7",
+    "git_commit": "df20795a1b877ab452dff956e11ba0d2da5d6dad",
     "git_tracked_worktree_dirty_at_start": false,
     "model_source": "EarthRemoteSensingRapidResponse/mars_v3_model.py",
     "model_source_sha256": "16fea9c93c587abdce16357861f1475966932c92221944556f6fd5553482ca5a",
     "script": "tools/train_mars_v3.py",
-    "script_sha256": "25a7474df14902abf323e216baf720b2c76b2d6d158c85a7c4f77ca5f4e2a8b8"
+    "script_sha256": "e1f5abbf2daf996c897c390b06edf5d435a42f8c78abb1027bf38360f3402abb"
   },
   "runtime": {
     "cuda_runtime": "12.8",
@@ -101,20 +103,20 @@
       {
         "epoch": 1,
         "learning_rate": 0.0,
-        "seconds": 5.832,
+        "seconds": 6.366,
         "training": {
-          "dice_loss": 0.9812396690249443,
-          "presence_focal": 0.4314240198582411,
-          "quality_bce": 0.3760889582335949,
-          "segmentation_bce": 0.5157678686082363,
-          "total": 1.672328181564808
+          "dice_loss": 0.981611080467701,
+          "presence_focal": 0.4314134046435356,
+          "quality_bce": 0.3766700318083167,
+          "segmentation_bce": 0.5177520317956805,
+          "total": 1.6745111644268036
         },
         "validation": {
           "observed_fpr": 0.0,
-          "positive_soft_dice": 0.07079212367534637,
-          "presence_auroc": 0.46484375,
-          "presence_average_precision": 0.4899379780604716,
-          "presence_threshold": 0.4260254204273224,
+          "positive_soft_dice": 0.06679945439100266,
+          "presence_auroc": 0.4765625,
+          "presence_average_precision": 0.494364323512509,
+          "presence_threshold": 0.4235840141773224,
           "recall_at_fpr5": 0.0
         }
       }
@@ -124,13 +126,13 @@
     "small_plume_presence_weighting": "sqrt(1000/(valid_truth_pixels+1)), clipped [0.75,3]"
   },
   "validation": {
-    "presence_auroc": 0.46484375,
-    "presence_average_precision": 0.4899379780604716,
+    "presence_auroc": 0.4765625,
+    "presence_average_precision": 0.494364323512509,
     "scene": {
       "accuracy": 0.5,
-      "auroc": 0.46484375,
-      "average_precision": 0.4899379780604716,
-      "brier": 0.2563522458076477,
+      "auroc": 0.4765625,
+      "average_precision": 0.494364323512509,
+      "brier": 0.2567901015281677,
       "false_positive_rate": 0.0,
       "fn": 16.0,
       "fp": 0.0,
@@ -142,15 +144,15 @@
       "tp": 0.0
     },
     "segmentation": {
-      "false_positive_rate": 0.5625,
+      "false_positive_rate": 0.4375,
       "fn": 9,
-      "fp": 9,
-      "pixel_dice": 0.08188623909855676,
-      "precision": 0.4375,
-      "predicted_positive_pixels": 34446,
+      "fp": 7,
+      "pixel_dice": 0.0911324547688184,
+      "precision": 0.5,
+      "predicted_positive_pixels": 31865,
       "recall": 0.4375,
-      "specificity": 0.4375,
-      "tn": 7,
+      "specificity": 0.5625,
+      "tn": 9,
       "tp": 7,
       "truth_positive_pixels": 17382
     }
