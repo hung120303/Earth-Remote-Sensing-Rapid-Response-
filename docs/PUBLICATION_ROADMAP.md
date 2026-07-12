@@ -621,7 +621,10 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/evaluate_mars_v3
   raster contract.
 - Build the external reader and time-aligned candidate manifest without inspecting frozen-model
   predictions.
-- Use public CMR metadata to select a larger, geography-balanced candidate set before downloading.
+- [x] Use public CMR/STAC metadata to select a larger, prediction-blind candidate set before
+  protected downloading. The frozen discovery pass found 107 strict-time matches and retained 80
+  unique-source, unique-Sentinel-2, 25 km-independent candidates with zero query errors; see
+  `reports/acquisition/EMIT_V002_TIME_ALIGNED_CANDIDATES.md`.
 - Retain only time-aligned, observable examples; label ambiguous cases as uncertain.
 - Have two annotators review the locked external cohort.
 - Run the frozen model exactly once for primary reporting.
@@ -660,7 +663,9 @@ shopping.
   v3 training transfer awaits the user's download; do not perform the full ~100 GB mirror.
 - The MARS adapter, group/leakage protocol, classical baselines, released checkpoint reproduction,
   and validation-only MIL failure audit are complete.
-- Generate the exact larger EMIT candidate list from public CMR metadata before requesting or
-  performing more authenticated downloads. The 12-scene protected contract pilot is complete.
+- The exact larger EMIT candidate list is now frozen from public CMR/STAC metadata: 80 independent
+  candidates from 704 queried records, all within six hours and at most 20% catalog scene cloud.
+  Next acquire public Sentinel-2 crops and run local ROI-clear/containment gates before expanding
+  protected EMIT downloads. The 12-scene protected contract pilot is complete.
 - Keep raw data and trained models ignored; commit only manifests, hashes, code, configs, and
   results.
