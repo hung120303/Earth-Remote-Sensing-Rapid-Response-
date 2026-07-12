@@ -65,6 +65,42 @@ on internal validation before their one-time strict evaluation.
 The released MARS-S2L result proves that full-resolution capacity, bitemporal context, and training
 scale matter. CH4Net's failure at nearly the same parameter count proves that capacity alone does not.
 
+### Frozen MARS-S2L publication targets
+
+The current MARS-S2L paper is arXiv `2511.21777v3` (revised 2026-04-24). Its official test set
+contains 43,529 images, 1,813 plume images, and 1,289 sites from 2024. At the authors' default scene
+threshold of `0.5` and 100 connected pixels, the paper reports:
+
+| Cohort | Images | Plume images | Sites | AP | Recall | FPR | Pixel IoU |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Full official test | 43,529 | 1,813 | 1,289 | 0.6408 | 0.7915 | 0.0713 | 0.3224 |
+| Test-only sites | 15,655 | 227 | 697 | 0.4496 | 0.7753 | 0.0763 | not stratified |
+| Sites seen during training | 27,874 | 1,586 | 592 | 0.6882 | 0.7938 | 0.0684 | not stratified |
+
+The paper also reports `0.5836` recall at `0.0116` FPR on the full test when the probability
+threshold is raised to `0.98`. On the external CloudSEN12+ negative audit (10,434 clear images), its
+reported FPR is `0.0943`, `0.0181`, and `0.0052` at thresholds `0.50`, `0.90`, and `0.98`,
+respectively. These are separate operating points and must not be mixed in one comparison row.
+
+Sources: [paper](https://arxiv.org/abs/2511.21777) (Tables S1 and S3-S7, S11) and
+[released dataset/model card](https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L).
+
+The direct ERSRR claim will use a paired, same-cohort comparison after all five seeds are frozen:
+
+1. evaluate released MARS-S2L with its author-fixed `>0.5` / 100-pixel rule on the full 4,401-scene
+   strict manifest;
+2. evaluate each ERSRR seed once with its validation-frozen threshold and proposal blend;
+3. report per-seed results plus a seed-aggregated, 2,000-replicate paired 25 km group bootstrap for
+   recall, FPR, AP, calibration, and pixel metrics;
+4. report the absolute recall delta and relative FPR reduction against released MARS-S2L;
+5. keep the official-paper table above separate because its cohort, prevalence, and threshold policy
+   differ from the ERSRR strict test.
+
+The two completed ERSRR seeds currently average `0.8297` validation recall at `0.0490` FPR after
+their independently selected proposal blends. This is directionally better than the paper's unseen-site
+headline by `+0.0544` recall and `35.8%` relative FPR, but it is internal-validation evidence only and
+is not an outperformance claim.
+
 The MIL-v2 internal-validation audit shows why v3 must change the presence mechanism:
 
 - presence versus segmentation top-1% confidence has Spearman rho `0.909`;
