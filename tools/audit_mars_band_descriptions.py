@@ -99,7 +99,14 @@ def main() -> int:
 
     root = repo_root()
     tracked_status_at_start = subprocess.check_output(
-        ["git", "status", "--porcelain", "--untracked-files=no"],
+        [
+            "git",
+            "-c",
+            "core.autocrlf=true",
+            "status",
+            "--porcelain",
+            "--untracked-files=no",
+        ],
         cwd=root,
         text=True,
     ).strip()
