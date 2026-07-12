@@ -192,6 +192,10 @@ def load_proposal_stage(
         raise ValueError("Proposal artifact identity differs from the frozen feature contract")
     if int(artifact.get("seed", -1)) != int(experiment["training"]["seed"]):
         raise ValueError("Proposal artifact seed differs from the v3 training seed")
+    if float(artifact.get("neural_presence_weight", -1.0)) != float(
+        report["operating_rule"].get("neural_presence_weight", -2.0)
+    ):
+        raise ValueError("Proposal blend weight differs between artifact and report")
     expected_names = proposal_feature_names(16)
     if artifact.get("feature_names") != expected_names:
         raise ValueError("Proposal artifact feature ordering differs from the frozen contract")
@@ -434,11 +438,15 @@ def main() -> int:
     segmentation_rule = dict(rule["segmentation"])
     labels = predictions["labels"]
     neural_scores = predictions["presence"]
-    scores = (
-        predictions["proposal_scores"]
-        if proposal_report is not None
-        else neural_scores
-    )
+    scores = neural_scores
+    if proposal_report is not None:
+        neural_weight = float(
+            proposal_report["operating_rule"]["neural_presence_weight"]
+        )
+        scores = (
+            neural_weight * neural_scores
+            + (1.0 - neural_weight) * predictions["proposal_scores"]
+        )
     primary_rule = proposal_report["operating_rule"] if proposal_report else rule
     upper = float(primary_rule["upper_plume_threshold"])
     primary_lower = primary_rule["lower_no_plume_threshold"]
@@ -500,7 +508,7 @@ def main() -> int:
         "model": experiment["model"],
         "artifact": experiment["artifact"],
         "primary_scene_score": (
-            "maximum calibrated connected-proposal probability"
+            "validation-selected neural/proposal blended probability"
             if proposal_report is not None
             else "neural presence head probability"
         ),

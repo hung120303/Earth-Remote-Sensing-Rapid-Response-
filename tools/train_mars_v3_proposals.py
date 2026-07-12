@@ -56,6 +56,7 @@ DEFAULT_MARKDOWN = Path("reports/experiments/MARS_V3_PROPOSAL_VALIDATION.md")
 MAXIMUM_PROPOSALS_PER_SCENE = 20
 CALIBRATION_GROUP_FRACTION = 0.20
 DEFAULT_SEED = 303
+NEURAL_PRESENCE_BLEND_WEIGHTS = (0.0, 0.25, 0.50, 0.75, 1.0)
 
 
 def safe_output(root: Path, value: str) -> Path:
@@ -85,7 +86,7 @@ def cache_identity(
     manifest: Path, checkpoint: Path, experiment: Path, decoder_channels: int
 ) -> dict[str, Any]:
     return {
-        "schema": "mars_v3_connected_proposals_v3",
+        "schema": "mars_v3_connected_proposals_v4",
         "manifest_sha256": sha256(manifest),
         "checkpoint_sha256": sha256(checkpoint),
         "validation_experiment_sha256": sha256(experiment),
@@ -94,6 +95,7 @@ def cache_identity(
         "proposal_source_sha256": sha256(MODEL_ROOT / "mars_v3_proposals.py"),
         "proposal_thresholds": list(PROPOSAL_THRESHOLDS),
         "maximum_proposals_per_scene": MAXIMUM_PROPOSALS_PER_SCENE,
+        "neural_presence_blend_weights": list(NEURAL_PRESENCE_BLEND_WEIGHTS),
         "decoder_channels": decoder_channels,
     }
 
@@ -148,6 +150,7 @@ def extract_cache(
     scene_roles: list[str] = []
     scene_labels: list[int] = []
     scene_proposal_counts: list[int] = []
+    scene_neural_presence: list[float] = []
     ignored_ambiguous = 0
     model.eval()
     completed = 0
@@ -171,6 +174,9 @@ def extract_cache(
             component_features = (
                 output["component_features"].float().cpu().numpy()
             )
+            neural_presence = (
+                torch.sigmoid(output["presence_logit"]).float().cpu().numpy()
+            )
             for index, sample_id in enumerate(batch["sample_id"]):
                 sample_id = str(sample_id)
                 record = records_by_id[sample_id]
@@ -184,6 +190,7 @@ def extract_cache(
                 scene_groups.append(group)
                 scene_roles.append(role)
                 scene_labels.append(1 if record["label_state"] == "PLUME" else 0)
+                scene_neural_presence.append(float(neural_presence[index]))
                 retained_for_scene = 0
                 for proposal in proposals:
                     target = label_proposal(proposal, truth)
@@ -224,6 +231,7 @@ def extract_cache(
         "scene_roles": np.asarray(scene_roles),
         "scene_labels": np.asarray(scene_labels, dtype=np.uint8),
         "scene_proposal_counts": np.asarray(scene_proposal_counts, dtype=np.uint16),
+        "scene_neural_presence": np.asarray(scene_neural_presence, dtype=np.float32),
         "feature_names": np.asarray(proposal_feature_names(component_features.shape[1])),
         "ignored_ambiguous_proposals": np.asarray([ignored_ambiguous], dtype=np.int64),
     }, {"ignored_ambiguous_proposals": ignored_ambiguous}
@@ -280,6 +288,18 @@ def scene_scores(
     )
 
 
+def neural_scene_scores(
+    cache: dict[str, np.ndarray], role: str
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    scene_role = cache["scene_roles"].astype(str)
+    selected = scene_role == role
+    return (
+        cache["scene_labels"][selected].astype(np.uint8),
+        cache["scene_neural_presence"][selected].astype(np.float64),
+        cache["scene_groups"].astype(str)[selected],
+    )
+
+
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -289,6 +309,8 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
     scene = report["validation"]["scene"]
+    proposal_only = report["validation"]["ablations"]["proposal_only"]
+    neural_only = report["validation"]["ablations"]["neural_only"]
     lines = [
         "# MARS v3 connected-proposal validation",
         "",
@@ -297,6 +319,9 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- Proposals: {report['cache']['proposal_count']:,} total / {report['cache']['labeled_proposals']:,} labeled / {report['cache']['ignored_ambiguous_proposals']:,} ambiguous excluded from fitting",
         f"- Validation recall / specificity / FPR: {scene['recall']:.3f} / {scene['specificity']:.3f} / {scene['false_positive_rate']:.3f}",
         f"- Validation AUROC / AP: {scene['auroc']:.3f} / {scene['average_precision']:.3f}",
+        f"- Selected neural-presence blend weight: {report['operating_rule']['neural_presence_weight']:.2f}",
+        f"- Proposal-only recall / FPR: {proposal_only['recall']:.3f} / {proposal_only['false_positive_rate']:.3f}",
+        f"- Neural-only recall / FPR: {neural_only['recall']:.3f} / {neural_only['false_positive_rate']:.3f}",
         f"- Artifact SHA-256: `{report['artifact']['sha256']}`",
         "",
         "## Decision",
@@ -416,10 +441,45 @@ def main() -> int:
         sample_weight=balanced_group_weights(y[calibration], groups[calibration]),
     )
     proposal_probability = calibrated_probabilities(classifier, calibrator, x)
-    validation_y, validation_scores, validation_groups = scene_scores(
+    validation_y, proposal_scores, validation_groups = scene_scores(
         cache, proposal_probability, "internal_validation"
     )
-    upper, validation_scene = choose_upper_threshold(validation_y, validation_scores)
+    neural_y, neural_scores, neural_groups = neural_scene_scores(
+        cache, "internal_validation"
+    )
+    if not (
+        np.array_equal(validation_y, neural_y)
+        and np.array_equal(validation_groups, neural_groups)
+    ):
+        raise ValueError("Neural and proposal validation scene ordering differs")
+    blend_candidates: list[dict[str, Any]] = []
+    selected_blend: tuple[tuple[float, ...], float, np.ndarray, float, dict[str, Any]] | None = None
+    for neural_weight in NEURAL_PRESENCE_BLEND_WEIGHTS:
+        scores = neural_weight * neural_scores + (1.0 - neural_weight) * proposal_scores
+        candidate_upper, candidate_scene = choose_upper_threshold(validation_y, scores)
+        rank = (
+            float(candidate_scene["recall"] or 0.0),
+            float(candidate_scene["average_precision"]),
+            -float(candidate_scene["false_positive_rate"] or 0.0),
+            neural_weight,
+        )
+        blend_candidates.append(
+            {
+                "neural_presence_weight": neural_weight,
+                "upper_plume_threshold": candidate_upper,
+                "scene": candidate_scene,
+            }
+        )
+        candidate = (rank, neural_weight, scores, candidate_upper, candidate_scene)
+        if selected_blend is None or candidate[0] > selected_blend[0]:
+            selected_blend = candidate
+    if selected_blend is None:
+        raise RuntimeError("No neural/proposal blend candidate was evaluated")
+    _, neural_weight, validation_scores, upper, validation_scene = selected_blend
+    proposal_upper, proposal_only_scene = choose_upper_threshold(
+        validation_y, proposal_scores
+    )
+    neural_upper, neural_only_scene = choose_upper_threshold(validation_y, neural_scores)
     validation_weights = role_weights(validation_y, "internal_validation")
     lower, lower_selection = choose_lower_threshold(
         validation_y, validation_scores, upper, validation_weights
@@ -437,6 +497,7 @@ def main() -> int:
             "cache_identity": identity,
             "upper_plume_threshold": upper,
             "lower_no_plume_threshold": lower,
+            "neural_presence_weight": neural_weight,
             "calibration_groups": sorted(calibration_groups),
             "seed": args.seed,
         },
@@ -480,7 +541,8 @@ def main() -> int:
         },
         "operating_rule": {
             "selected_on": "internal_validation_only",
-            "scene_score": "maximum calibrated connected-proposal probability; zero with no proposal",
+            "scene_score": "validation-selected convex blend of neural presence and maximum calibrated connected-proposal probability; proposal score is zero with no proposal",
+            "neural_presence_weight": neural_weight,
             "upper_plume_threshold": upper,
             "lower_no_plume_threshold": lower,
             "lower_selection": lower_selection,
@@ -488,6 +550,17 @@ def main() -> int:
         "validation": {
             "samples": int(validation_y.size),
             "scene": validation_scene,
+            "blend_candidates": blend_candidates,
+            "ablations": {
+                "proposal_only": {
+                    **proposal_only_scene,
+                    "upper_plume_threshold": proposal_upper,
+                },
+                "neural_only": {
+                    **neural_only_scene,
+                    "upper_plume_threshold": neural_upper,
+                },
+            },
         },
         "artifact": {
             "path": artifact_path.relative_to(root).as_posix(),
