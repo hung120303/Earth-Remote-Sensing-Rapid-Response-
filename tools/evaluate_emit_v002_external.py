@@ -328,9 +328,13 @@ def evaluate_released(
                 probability = torch.sigmoid(model(inputs)).float().cpu().numpy()
             for scene, value in zip(batch, probability):
                 value = value.astype(np.float32)
-                value[~scene.observable] = 0.0
+                # Reproduce the released scene rule: suppress CloudSEN12
+                # non-clear pixels. Radiometric validity is applied separately
+                # when computing descriptive pixel overlap.
+                cloud_clear = scene.inputs[15] < 0.5
+                value[~cloud_clear] = 0.0
                 score = connected_scene_score(value)
-                mask = component_mask(value) & scene.observable
+                mask = component_mask(value)
                 decision = bool(np.any(mask))
                 scores.append(score)
                 decisions.append(decision)
