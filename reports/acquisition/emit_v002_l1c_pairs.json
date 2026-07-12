@@ -1,0 +1,5006 @@
+{
+  "contract": {
+    "input_manifest": "reports/acquisition/emit_v002_time_aligned_candidates.json",
+    "input_manifest_sha256": "f2dffe51f1d948a03aeafbca636fcad9a685e7ff02ee842bd6ff3f945184d074",
+    "max_catalog_scene_cloud_pct": 20.0,
+    "max_reference_days": 31,
+    "observability_product": "co-temporal same-tile Sentinel-2 L2A SCL",
+    "reference_policy": "nearest prior same-tile scene; no future reference",
+    "selection_inputs": "public CMR/STAC metadata only; no detector predictions",
+    "spectral_band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12"
+    ],
+    "spectral_product": "Sentinel-2 L1C top-of-atmosphere"
+  },
+  "errors": [],
+  "pairs": [
+    {
+      "bbox": [
+        72.89204,
+        50.21908,
+        72.91536,
+        50.24131
+      ],
+      "center": [
+        72.9037,
+        50.230195
+      ],
+      "emit_datetime": "2022-08-17T04:32:35+00:00",
+      "emit_to_target_offset_hours": 1.880663,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220817T043235_000743",
+      "group_id": "emit25km-0001",
+      "plume_id": "743",
+      "reference": {
+        "datetime": "2022-07-25T06:15:26.714000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_43UCR_20220725_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_43UCR_20220725_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_43UCR_20220725_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_43UCR_20220725_0_L2A",
+        "mgrs_tile": "43UCR",
+        "scene_cloud_cover_pct": 0.140583,
+        "sentinel2_datatake_id": "GS2A_20220725T060641_037025_N04.00"
+      },
+      "reference_to_target_gap_hours": 552.166298,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20220817T043235_2222903_018']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2022-08-17T06:25:25.388000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_43UCR_20220817_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_43UCR_20220817_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_43UCR_20220817_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_43UCR_20220817_0_L2A",
+        "mgrs_tile": "43UCR",
+        "scene_cloud_cover_pct": 6.440651,
+        "sentinel2_datatake_id": "GS2A_20220817T061641_037354_N04.00"
+      }
+    },
+    {
+      "bbox": [
+        87.86037,
+        44.02516,
+        87.90212,
+        44.04902
+      ],
+      "center": [
+        87.881245,
+        44.03709
+      ],
+      "emit_datetime": "2023-06-09T04:51:06+00:00",
+      "emit_to_target_offset_hours": 0.259449,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230609T045106_000937",
+      "group_id": "emit25km-0002",
+      "plume_id": "937",
+      "reference": {
+        "datetime": "2023-06-07T05:16:37.482000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_45TWJ_20230607_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_45TWJ_20230607_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_45TWJ_20230607_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_45TWJ_20230607_0_L2A",
+        "mgrs_tile": "45TWJ",
+        "scene_cloud_cover_pct": 1.651355,
+        "sentinel2_datatake_id": "GS2B_20230607T050659_032649_N05.09"
+      },
+      "reference_to_target_gap_hours": 47.834037,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230609T045106_2316003_039']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-06-09T05:06:40.015000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_45TWJ_20230609_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_45TWJ_20230609_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_45TWJ_20230609_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_45TWJ_20230609_0_L2A",
+        "mgrs_tile": "45TWJ",
+        "scene_cloud_cover_pct": 1.674101,
+        "sentinel2_datatake_id": "GS2A_20230609T045701_041586_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        69.53183,
+        41.61385,
+        69.54918,
+        41.63988
+      ],
+      "center": [
+        69.540505,
+        41.626865
+      ],
+      "emit_datetime": "2022-08-22T06:57:13+00:00",
+      "emit_to_target_offset_hours": -0.494488,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220822T065713_000517",
+      "group_id": "emit25km-0003",
+      "plume_id": "517",
+      "reference": {
+        "datetime": "2022-08-19T06:17:37.757000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_42TWM_20220819_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_42TWM_20220819_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_42TWM_20220819_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_42TWM_20220819_0_L2A",
+        "mgrs_tile": "42TWM",
+        "scene_cloud_cover_pct": 0.036785,
+        "sentinel2_datatake_id": "GS2B_20220819T060639_028474_N04.00"
+      },
+      "reference_to_target_gap_hours": 72.165302,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20220822T065713_2223405_010']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2022-08-22T06:27:32.844000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_42TWM_20220822_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_42TWM_20220822_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_42TWM_20220822_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_42TWM_20220822_0_L2A",
+        "mgrs_tile": "42TWM",
+        "scene_cloud_cover_pct": 0.509319,
+        "sentinel2_datatake_id": "GS2B_20220822T061629_028517_N04.00"
+      }
+    },
+    {
+      "bbox": [
+        0.31422,
+        28.11497,
+        0.32073,
+        28.12257
+      ],
+      "center": [
+        0.317475,
+        28.11877
+      ],
+      "emit_datetime": "2022-08-27T10:49:27+00:00",
+      "emit_to_target_offset_hours": -0.103379,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220827T104927_000526",
+      "group_id": "emit25km-0004",
+      "plume_id": "526",
+      "reference": {
+        "datetime": "2022-08-22T10:43:27.279000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_31RBM_20220822_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_31RBM_20220822_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_31RBM_20220822_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_31RBM_20220822_0_L2A",
+        "mgrs_tile": "31RBM",
+        "scene_cloud_cover_pct": 9.827481,
+        "sentinel2_datatake_id": "GS2A_20220822T102611_037428_N04.00"
+      },
+      "reference_to_target_gap_hours": 119.996543,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20220827T104927_2223907_012']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2022-08-27T10:43:14.835000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_31RBM_20220827_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_31RBM_20220827_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_31RBM_20220827_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_31RBM_20220827_0_L2A",
+        "mgrs_tile": "31RBM",
+        "scene_cloud_cover_pct": 0.026041,
+        "sentinel2_datatake_id": "GS2B_20220827T102559_028591_N04.00"
+      }
+    },
+    {
+      "bbox": [
+        62.56793,
+        40.02294,
+        62.60372,
+        40.05331
+      ],
+      "center": [
+        62.585825,
+        40.038125
+      ],
+      "emit_datetime": "2022-08-28T05:19:05+00:00",
+      "emit_to_target_offset_hours": 1.486602,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220828T051905_000917",
+      "group_id": "emit25km-0005",
+      "plume_id": "917",
+      "reference": {
+        "datetime": "2022-08-23T06:48:29.035000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_41TME_20220823_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_41TME_20220823_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_41TME_20220823_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_41TME_20220823_0_L2A",
+        "mgrs_tile": "41TME",
+        "scene_cloud_cover_pct": 0.002687,
+        "sentinel2_datatake_id": "GS2A_20220823T063641_037440_N04.00"
+      },
+      "reference_to_target_gap_hours": 119.996592,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20220828T051905_2224004_003']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2022-08-28T06:48:16.766000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_41TME_20220828_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_41TME_20220828_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_41TME_20220828_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_41TME_20220828_0_L2A",
+        "mgrs_tile": "41TME",
+        "scene_cloud_cover_pct": 0.002425,
+        "sentinel2_datatake_id": "GS2B_20220828T063629_028603_N04.00"
+      }
+    },
+    {
+      "bbox": [
+        100.55403,
+        13.61622,
+        100.56162,
+        13.62435
+      ],
+      "center": [
+        100.557825,
+        13.620285
+      ],
+      "emit_datetime": "2023-02-25T05:06:19+00:00",
+      "emit_to_target_offset_hours": -1.198783,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230225T050619_000722",
+      "group_id": "emit25km-0006",
+      "plume_id": "722",
+      "reference": {
+        "datetime": "2023-01-26T03:54:22.963000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_47PPR_20230126_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_47PPR_20230126_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_47PPR_20230126_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_47PPR_20230126_0_L2A",
+        "mgrs_tile": "47PPR",
+        "scene_cloud_cover_pct": 8.653209,
+        "sentinel2_datatake_id": "GS2A_20230126T034021_039669_N05.09"
+      },
+      "reference_to_target_gap_hours": 720.000116,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230225T050619_2305603_020']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-02-25T03:54:23.382000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_47PPR_20230225_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_47PPR_20230225_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_47PPR_20230225_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_47PPR_20230225_0_L2A",
+        "mgrs_tile": "47PPR",
+        "scene_cloud_cover_pct": 0.769815,
+        "sentinel2_datatake_id": "GS2A_20230225T033721_040098_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        55.98198,
+        21.87388,
+        55.98794,
+        21.88039
+      ],
+      "center": [
+        55.98496,
+        21.877135
+      ],
+      "emit_datetime": "2023-02-02T07:08:03+00:00",
+      "emit_to_target_offset_hours": -0.077696,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230202T070803_000606",
+      "group_id": "emit25km-0007",
+      "plume_id": "606",
+      "reference": {
+        "datetime": "2023-01-23T07:03:20.869000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_40QCK_20230123_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_40QCK_20230123_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_40QCK_20230123_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_40QCK_20230123_0_L2A",
+        "mgrs_tile": "40QCK",
+        "scene_cloud_cover_pct": 1.547613,
+        "sentinel2_datatake_id": "GS2A_20230123T065151_039628_N05.09"
+      },
+      "reference_to_target_gap_hours": 240.000674,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230202T070803_2303305_018']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-02-02T07:03:23.296000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_40QCK_20230202_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_40QCK_20230202_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_40QCK_20230202_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_40QCK_20230202_0_L2A",
+        "mgrs_tile": "40QCK",
+        "scene_cloud_cover_pct": 1.070222,
+        "sentinel2_datatake_id": "GS2A_20230202T065111_039771_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        46.65287,
+        24.55576,
+        46.89958,
+        24.6371
+      ],
+      "center": [
+        46.776225,
+        24.59643
+      ],
+      "emit_datetime": "2023-02-04T07:07:01+00:00",
+      "emit_to_target_offset_hours": 0.597838,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230204T070701_000621",
+      "group_id": "emit25km-0008",
+      "plume_id": "621",
+      "reference": {
+        "datetime": "2023-02-01T07:32:57.408000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_38RPN_20230201_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_38RPN_20230201_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_38RPN_20230201_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_38RPN_20230201_0_L2A",
+        "mgrs_tile": "38RPN",
+        "scene_cloud_cover_pct": 0.351836,
+        "sentinel2_datatake_id": "GS2A_20230201T072131_039757_N05.09"
+      },
+      "reference_to_target_gap_hours": 72.165503,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230204T070701_2303505_014']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-02-04T07:42:53.217000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_38RPN_20230204_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_38RPN_20230204_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_38RPN_20230204_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_38RPN_20230204_0_L2A",
+        "mgrs_tile": "38RPN",
+        "scene_cloud_cover_pct": 5.839685,
+        "sentinel2_datatake_id": "GS2A_20230204T073111_039800_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        71.56791,
+        25.77253,
+        71.61834,
+        25.90755
+      ],
+      "center": [
+        71.593125,
+        25.84004
+      ],
+      "emit_datetime": "2024-02-24T06:10:16+00:00",
+      "emit_to_target_offset_hours": -0.138134,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240224T061016_002823",
+      "group_id": "emit25km-0009",
+      "plume_id": "2823",
+      "reference": {
+        "datetime": "2024-02-19T06:01:59.337000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_42RYP_20240219_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_42RYP_20240219_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_42RYP_20240219_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_42RYP_20240219_0_L2A",
+        "mgrs_tile": "42RYP",
+        "scene_cloud_cover_pct": 13.986365,
+        "sentinel2_datatake_id": "GS2A_20240219T054901_045233_N05.10"
+      },
+      "reference_to_target_gap_hours": 119.999828,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240224T061016_2405504_011']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-02-24T06:01:58.719000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_42RYP_20240224_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_42RYP_20240224_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_42RYP_20240224_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_42RYP_20240224_0_L2A",
+        "mgrs_tile": "42RYP",
+        "scene_cloud_cover_pct": 0.256834,
+        "sentinel2_datatake_id": "GS2B_20240224T054829_036396_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        94.15786,
+        37.36058,
+        94.16545,
+        37.36709
+      ],
+      "center": [
+        94.161655,
+        37.363835
+      ],
+      "emit_datetime": "2023-02-20T05:45:40+00:00",
+      "emit_to_target_offset_hours": -1.125766,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230220T054540_000688",
+      "group_id": "emit25km-0010",
+      "plume_id": "688",
+      "reference": {
+        "datetime": "2023-02-05T04:38:11.391000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_46SEG_20230205_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_46SEG_20230205_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_46SEG_20230205_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_46SEG_20230205_0_L2A",
+        "mgrs_tile": "46SEG",
+        "scene_cloud_cover_pct": 0.157472,
+        "sentinel2_datatake_id": "GS2B_20230205T042949_030904_N05.09"
+      },
+      "reference_to_target_gap_hours": 359.998848,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230220T054540_2305104_025']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-02-20T04:38:07.243000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_46SEG_20230220_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_46SEG_20230220_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_46SEG_20230220_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_46SEG_20230220_0_L2A",
+        "mgrs_tile": "46SEG",
+        "scene_cloud_cover_pct": 7.20244,
+        "sentinel2_datatake_id": "GS2A_20230220T042821_040027_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        81.29122,
+        41.79604,
+        81.31237,
+        41.81556
+      ],
+      "center": [
+        81.301795,
+        41.8058
+      ],
+      "emit_datetime": "2023-02-23T04:56:45+00:00",
+      "emit_to_target_offset_hours": 0.674535,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230223T045645_000714",
+      "group_id": "emit25km-0011",
+      "plume_id": "714",
+      "reference": {
+        "datetime": "2023-02-08T05:37:12.135000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_44TNM_20230208_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_44TNM_20230208_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_44TNM_20230208_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_44TNM_20230208_0_L2A",
+        "mgrs_tile": "44TNM",
+        "scene_cloud_cover_pct": 9.024637,
+        "sentinel2_datatake_id": "GS2A_20230208T053001_039856_N05.09"
+      },
+      "reference_to_target_gap_hours": 360.000331,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230223T045645_2305403_006']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-02-23T05:37:13.326000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_44TNM_20230223_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_44TNM_20230223_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_44TNM_20230223_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_44TNM_20230223_0_L2A",
+        "mgrs_tile": "44TNM",
+        "scene_cloud_cover_pct": 1.905153,
+        "sentinel2_datatake_id": "GS2B_20230223T052829_031162_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        99.95216,
+        14.03862,
+        99.97656,
+        14.06031
+      ],
+      "center": [
+        99.96436,
+        14.049465
+      ],
+      "emit_datetime": "2023-02-25T05:06:08+00:00",
+      "emit_to_target_offset_hours": -1.194894,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230225T050608_000721",
+      "group_id": "emit25km-0012",
+      "plume_id": "721",
+      "reference": {
+        "datetime": "2023-02-10T03:54:27.322000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_47PNR_20230210_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_47PNR_20230210_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_47PNR_20230210_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_47PNR_20230210_0_L2A",
+        "mgrs_tile": "47PNR",
+        "scene_cloud_cover_pct": 13.75148,
+        "sentinel2_datatake_id": "GS2B_20230210T033859_030975_N05.09"
+      },
+      "reference_to_target_gap_hours": 359.999739,
+      "source_scenes": [
+        " 'EMIT_L2B_CH4ENH_V002_20230225T050619_2305603_020']",
+        "['EMIT_L2B_CH4ENH_V002_20230225T050608_2305603_019'"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-02-25T03:54:26.383000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_47PNR_20230225_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_47PNR_20230225_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_47PNR_20230225_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_47PNR_20230225_0_L2A",
+        "mgrs_tile": "47PNR",
+        "scene_cloud_cover_pct": 1.787071,
+        "sentinel2_datatake_id": "GS2A_20230225T033721_040098_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -73.51128,
+        9.53592,
+        -73.48417,
+        9.5614
+      ],
+      "center": [
+        -73.497725,
+        9.54866
+      ],
+      "emit_datetime": "2023-02-27T15:57:14+00:00",
+      "emit_to_target_offset_hours": -0.445538,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230227T155714_000736",
+      "group_id": "emit25km-0013",
+      "plume_id": "736",
+      "reference": {
+        "datetime": "2023-02-17T15:30:27.540000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_18PXR_20230217_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_18PXR_20230217_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_18PXR_20230217_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_18PXR_20230217_0_L2A",
+        "mgrs_tile": "18PXR",
+        "scene_cloud_cover_pct": 12.119196,
+        "sentinel2_datatake_id": "GS2B_20230217T152639_031082_N05.09"
+      },
+      "reference_to_target_gap_hours": 240.000701,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230227T155714_2305810_003']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-02-27T15:30:30.063000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_18PXR_20230227_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_18PXR_20230227_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_18PXR_20230227_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_18PXR_20230227_0_L2A",
+        "mgrs_tile": "18PXR",
+        "scene_cloud_cover_pct": 11.698402,
+        "sentinel2_datatake_id": "GS2B_20230227T152639_031225_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        10.45451,
+        35.76045,
+        10.46427,
+        35.76967
+      ],
+      "center": [
+        10.45939,
+        35.76506
+      ],
+      "emit_datetime": "2023-03-26T14:30:19+00:00",
+      "emit_to_target_offset_hours": -4.321927,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230326T143019_000762",
+      "group_id": "emit25km-0014",
+      "plume_id": "762",
+      "reference": {
+        "datetime": "2023-03-01T10:10:54.540000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_32SPE_20230301_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_32SPE_20230301_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_32SPE_20230301_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_32SPE_20230301_0_L2A",
+        "mgrs_tile": "32SPE",
+        "scene_cloud_cover_pct": 1.349713,
+        "sentinel2_datatake_id": "GS2A_20230301T100021_040159_N05.09"
+      },
+      "reference_to_target_gap_hours": 600.001534,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230326T143019_2308510_047']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-03-26T10:11:00.062000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_32SPE_20230326_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_32SPE_20230326_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_32SPE_20230326_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_32SPE_20230326_0_L2A",
+        "mgrs_tile": "32SPE",
+        "scene_cloud_cover_pct": 0.42531,
+        "sentinel2_datatake_id": "GS2B_20230326T100029_031608_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        43.82838,
+        36.13676,
+        43.89778,
+        36.19044
+      ],
+      "center": [
+        43.86308,
+        36.1636
+      ],
+      "emit_datetime": "2023-04-26T07:31:30+00:00",
+      "emit_to_target_offset_hours": 0.472252,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230426T073130_000870",
+      "group_id": "emit25km-0015",
+      "plume_id": "870",
+      "reference": {
+        "datetime": "2023-04-06T07:59:51.260000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_38SLF_20230406_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_38SLF_20230406_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_38SLF_20230406_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_38SLF_20230406_0_L2A",
+        "mgrs_tile": "38SLF",
+        "scene_cloud_cover_pct": 3.802443,
+        "sentinel2_datatake_id": "GS2B_20230406T074619_031764_N05.09"
+      },
+      "reference_to_target_gap_hours": 479.99968,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230426T073130_2311605_006']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-04-26T07:59:50.108000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_38SLF_20230426_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_38SLF_20230426_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_38SLF_20230426_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_38SLF_20230426_0_L2A",
+        "mgrs_tile": "38SLF",
+        "scene_cloud_cover_pct": 0.325646,
+        "sentinel2_datatake_id": "GS2B_20230426T074619_032050_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -47.245,
+        -22.82831,
+        -47.20107,
+        -22.77897
+      ],
+      "center": [
+        -47.223035,
+        -22.80364
+      ],
+      "emit_datetime": "2023-05-04T13:54:42+00:00",
+      "emit_to_target_offset_hours": -0.433562,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230504T135442_000911",
+      "group_id": "emit25km-0016",
+      "plume_id": "911",
+      "reference": {
+        "datetime": "2023-05-01T13:18:46.061000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_22KHV_20230501_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_22KHV_20230501_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_22KHV_20230501_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_22KHV_20230501_0_L2A",
+        "mgrs_tile": "22KHV",
+        "scene_cloud_cover_pct": 2.490993,
+        "sentinel2_datatake_id": "GS2A_20230501T131241_041033_N05.09"
+      },
+      "reference_to_target_gap_hours": 72.16531,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230504T135442_2312409_001']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-05-04T13:28:41.177000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_22KHV_20230504_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_22KHV_20230504_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_22KHV_20230504_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_22KHV_20230504_0_L2A",
+        "mgrs_tile": "22KHV",
+        "scene_cloud_cover_pct": 0.905578,
+        "sentinel2_datatake_id": "GS2A_20230504T132231_041076_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        80.0506,
+        38.74165,
+        80.07662,
+        38.75195
+      ],
+      "center": [
+        80.06361,
+        38.7468
+      ],
+      "emit_datetime": "2023-05-29T08:55:41+00:00",
+      "emit_to_target_offset_hours": -3.289609,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230529T085541_002038",
+      "group_id": "emit25km-0017",
+      "plume_id": "2038",
+      "reference": {
+        "datetime": "2023-05-04T05:38:17.193000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_44SMH_20230504_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_44SMH_20230504_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_44SMH_20230504_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_44SMH_20230504_0_L2A",
+        "mgrs_tile": "44SMH",
+        "scene_cloud_cover_pct": 19.817168,
+        "sentinel2_datatake_id": "GS2B_20230504T052649_032163_N05.09"
+      },
+      "reference_to_target_gap_hours": 600.000338,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230529T085541_2314906_029']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-05-29T05:38:18.408000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_44SMH_20230529_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_44SMH_20230529_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_44SMH_20230529_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_44SMH_20230529_0_L2A",
+        "mgrs_tile": "44SMH",
+        "scene_cloud_cover_pct": 0.263961,
+        "sentinel2_datatake_id": "GS2A_20230529T052651_041429_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        86.54437,
+        42.01294,
+        86.55739,
+        42.02107
+      ],
+      "center": [
+        86.55088,
+        42.017005
+      ],
+      "emit_datetime": "2023-06-02T07:19:17+00:00",
+      "emit_to_target_offset_hours": -2.035431,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230602T071917_000321",
+      "group_id": "emit25km-0018",
+      "plume_id": "321",
+      "reference": {
+        "datetime": "2023-05-18T05:17:10.265000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_45TVG_20230518_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_45TVG_20230518_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_45TVG_20230518_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_45TVG_20230518_0_L2A",
+        "mgrs_tile": "45TVG",
+        "scene_cloud_cover_pct": 0.563545,
+        "sentinel2_datatake_id": "GS2B_20230518T050659_032363_N05.09"
+      },
+      "reference_to_target_gap_hours": 359.999773,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230602T071917_2315305_035']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-06-02T05:17:09.448000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_45TVG_20230602_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_45TVG_20230602_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_45TVG_20230602_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_45TVG_20230602_0_L2A",
+        "mgrs_tile": "45TVG",
+        "scene_cloud_cover_pct": 6.480977,
+        "sentinel2_datatake_id": "GS2A_20230602T050701_041486_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        6.92783,
+        29.63051,
+        6.9647,
+        29.64787
+      ],
+      "center": [
+        6.946265,
+        29.63919
+      ],
+      "emit_datetime": "2023-08-26T10:08:34+00:00",
+      "emit_to_target_offset_hours": 0.237517,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230826T100834_001169",
+      "group_id": "emit25km-0019",
+      "plume_id": "1169",
+      "reference": {
+        "datetime": "2023-08-16T10:22:50.296000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_32RLT_20230816_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_32RLT_20230816_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_32RLT_20230816_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_32RLT_20230816_0_L2A",
+        "mgrs_tile": "32RLT",
+        "scene_cloud_cover_pct": 0.000153,
+        "sentinel2_datatake_id": "GS2B_20230816T100559_033653_N05.09"
+      },
+      "reference_to_target_gap_hours": 239.999657,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230826T100834_2323807_013']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-08-26T10:22:49.060000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_32RLT_20230826_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_32RLT_20230826_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_32RLT_20230826_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_32RLT_20230826_0_L2A",
+        "mgrs_tile": "32RLT",
+        "scene_cloud_cover_pct": 0.356064,
+        "sentinel2_datatake_id": "GS2B_20230826T100559_033796_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -96.6581,
+        47.74976,
+        -96.64021,
+        47.76548
+      ],
+      "center": [
+        -96.649155,
+        47.75762
+      ],
+      "emit_datetime": "2023-06-14T19:37:06+00:00",
+      "emit_to_target_offset_hours": -1.939151,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230614T193706_000038",
+      "group_id": "emit25km-0020",
+      "plume_id": "38",
+      "reference": {
+        "datetime": "2023-06-11T17:30:48.570000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_14TPT_20230611_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_14TPT_20230611_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_14TPT_20230611_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_14TPT_20230611_0_L2A",
+        "mgrs_tile": "14TPT",
+        "scene_cloud_cover_pct": 0.001906,
+        "sentinel2_datatake_id": "GS2A_20230611T171901_041622_N05.09"
+      },
+      "reference_to_target_gap_hours": 72.165691,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230614T193706_2316513_002']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-06-14T17:40:45.057000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_14TPT_20230614_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_14TPT_20230614_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_14TPT_20230614_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_14TPT_20230614_0_L2A",
+        "mgrs_tile": "14TPT",
+        "scene_cloud_cover_pct": 7.964853,
+        "sentinel2_datatake_id": "GS2A_20230614T172901_041665_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        65.05136,
+        46.04769,
+        65.07142,
+        46.05691
+      ],
+      "center": [
+        65.06139,
+        46.0523
+      ],
+      "emit_datetime": "2023-06-24T05:30:36+00:00",
+      "emit_to_target_offset_hours": 1.265589,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230624T053036_000180",
+      "group_id": "emit25km-0021",
+      "plume_id": "180",
+      "reference": {
+        "datetime": "2023-06-14T06:46:32.978000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_41TPM_20230614_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_41TPM_20230614_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_41TPM_20230614_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_41TPM_20230614_0_L2A",
+        "mgrs_tile": "41TPM",
+        "scene_cloud_cover_pct": 0.020179,
+        "sentinel2_datatake_id": "GS2B_20230614T063629_032750_N05.09"
+      },
+      "reference_to_target_gap_hours": 239.999762,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230624T053036_2317504_013']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-06-24T06:46:32.121000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_41TPM_20230624_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_41TPM_20230624_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_41TPM_20230624_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_41TPM_20230624_0_L2A",
+        "mgrs_tile": "41TPM",
+        "scene_cloud_cover_pct": 4.33275,
+        "sentinel2_datatake_id": "GS2B_20230624T063629_032893_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        60.75362,
+        40.04734,
+        61.04806,
+        40.11458
+      ],
+      "center": [
+        60.90084,
+        40.08096
+      ],
+      "emit_datetime": "2023-06-29T04:40:14+00:00",
+      "emit_to_target_offset_hours": 2.136175,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230629T044014_000112",
+      "group_id": "emit25km-0022",
+      "plume_id": "112",
+      "reference": {
+        "datetime": "2023-06-27T06:58:20.978000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_41TLE_20230627_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_41TLE_20230627_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_41TLE_20230627_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_41TLE_20230627_0_L2A",
+        "mgrs_tile": "41TLE",
+        "scene_cloud_cover_pct": 0.0,
+        "sentinel2_datatake_id": "GS2B_20230627T064629_032936_N05.09"
+      },
+      "reference_to_target_gap_hours": 47.834237,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230629T044014_2318003_003']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-06-29T06:48:24.230000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_41TLE_20230629_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_41TLE_20230629_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_41TLE_20230629_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_41TLE_20230629_0_L2A",
+        "mgrs_tile": "41TLE",
+        "scene_cloud_cover_pct": 3.706807,
+        "sentinel2_datatake_id": "GS2A_20230629T063631_041873_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -71.65197,
+        -16.28031,
+        -71.63461,
+        -16.26405
+      ],
+      "center": [
+        -71.64329,
+        -16.27218
+      ],
+      "emit_datetime": "2024-08-26T17:00:43+00:00",
+      "emit_to_target_offset_hours": -1.885334,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240826T170043_003568",
+      "group_id": "emit25km-0023",
+      "plume_id": "3568",
+      "reference": {
+        "datetime": "2024-08-16T15:07:38.390000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_18KZG_20240816_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_18KZG_20240816_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_18KZG_20240816_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_18KZG_20240816_0_L2A",
+        "mgrs_tile": "18KZG",
+        "scene_cloud_cover_pct": 14.571926,
+        "sentinel2_datatake_id": "GS2A_20240816T145731_047798_N05.11"
+      },
+      "reference_to_target_gap_hours": 239.99928,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240826T170043_2423911_033']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-08-26T15:07:35.797000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_18KZG_20240826_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_18KZG_20240826_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_18KZG_20240826_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_18KZG_20240826_0_L2A",
+        "mgrs_tile": "18KZG",
+        "scene_cloud_cover_pct": 11.723544,
+        "sentinel2_datatake_id": "GS2A_20240826T145721_047941_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        58.7029,
+        44.0398,
+        58.71375,
+        44.04577
+      ],
+      "center": [
+        58.708325,
+        44.042785
+      ],
+      "emit_datetime": "2023-08-04T08:29:48+00:00",
+      "emit_to_target_offset_hours": -1.372257,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230804T082948_000973",
+      "group_id": "emit25km-0024",
+      "plume_id": "973",
+      "reference": {
+        "datetime": "2023-07-30T07:07:28.225000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_40TFP_20230730_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_40TFP_20230730_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_40TFP_20230730_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_40TFP_20230730_0_L2A",
+        "mgrs_tile": "40TFP",
+        "scene_cloud_cover_pct": 0.1748,
+        "sentinel2_datatake_id": "GS2B_20230730T065629_033408_N05.09"
+      },
+      "reference_to_target_gap_hours": 119.999902,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230804T082948_2321606_047']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-08-04T07:07:27.874000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_40TFP_20230804_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_40TFP_20230804_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_40TFP_20230804_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_40TFP_20230804_0_L2A",
+        "mgrs_tile": "40TFP",
+        "scene_cloud_cover_pct": 2.689036,
+        "sentinel2_datatake_id": "GS2A_20230804T065631_042388_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        58.43938,
+        40.22682,
+        58.49143,
+        40.25393
+      ],
+      "center": [
+        58.465405,
+        40.240375
+      ],
+      "emit_datetime": "2023-08-09T06:03:49+00:00",
+      "emit_to_target_offset_hours": 1.07686,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230809T060349_001372",
+      "group_id": "emit25km-0025",
+      "plume_id": "1372",
+      "reference": {
+        "datetime": "2023-08-06T06:58:29.188000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_40TFK_20230806_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_40TFK_20230806_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_40TFK_20230806_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_40TFK_20230806_0_L2A",
+        "mgrs_tile": "40TFK",
+        "scene_cloud_cover_pct": 8e-06,
+        "sentinel2_datatake_id": "GS2B_20230806T064629_033508_N05.09"
+      },
+      "reference_to_target_gap_hours": 72.165696,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230809T060349_2322104_028']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-08-09T07:08:25.695000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_40TFK_20230809_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_40TFK_20230809_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_40TFK_20230809_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_40TFK_20230809_0_L2A",
+        "mgrs_tile": "40TFK",
+        "scene_cloud_cover_pct": 0.0,
+        "sentinel2_datatake_id": "GS2B_20230809T065629_033551_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        48.41458,
+        46.84694,
+        48.42543,
+        46.85345
+      ],
+      "center": [
+        48.420005,
+        46.850195
+      ],
+      "emit_datetime": "2023-08-14T10:07:20+00:00",
+      "emit_to_target_offset_hours": -2.1761,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230814T100720_001443",
+      "group_id": "emit25km-0026",
+      "plume_id": "1443",
+      "reference": {
+        "datetime": "2023-08-11T07:46:48.927000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_38TQT_20230811_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_38TQT_20230811_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_38TQT_20230811_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_38TQT_20230811_0_L2A",
+        "mgrs_tile": "38TQT",
+        "scene_cloud_cover_pct": 0.006614,
+        "sentinel2_datatake_id": "GS2B_20230811T073619_033580_N05.09"
+      },
+      "reference_to_target_gap_hours": 72.165864,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230814T100720_2322607_017']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-08-14T07:56:46.039000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_38TQT_20230814_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_38TQT_20230814_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_38TQT_20230814_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_38TQT_20230814_0_L2A",
+        "mgrs_tile": "38TQT",
+        "scene_cloud_cover_pct": 16.909792,
+        "sentinel2_datatake_id": "GS2B_20230814T074619_033623_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        10.02994,
+        36.71912,
+        10.08091,
+        36.74027
+      ],
+      "center": [
+        10.055425,
+        36.729695
+      ],
+      "emit_datetime": "2023-08-16T13:17:16+00:00",
+      "emit_to_target_offset_hours": -2.941118,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230816T131716_001541",
+      "group_id": "emit25km-0027",
+      "plume_id": "1541",
+      "reference": {
+        "datetime": "2023-08-13T10:10:51.177000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_32SNF_20230813_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_32SNF_20230813_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_32SNF_20230813_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_32SNF_20230813_0_L2A",
+        "mgrs_tile": "32SNF",
+        "scene_cloud_cover_pct": 0.004511,
+        "sentinel2_datatake_id": "GS2B_20230813T095559_033610_N05.09"
+      },
+      "reference_to_target_gap_hours": 72.163914,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230816T131716_2322809_006']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-08-16T10:20:41.268000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 6.706,
+        "l1c_scene_id": "S2B_32SNF_20230816_1_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_32SNF_20230816_1_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_32SNF_20230816_1_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_32SNF_20230816_1_L2A",
+        "mgrs_tile": "32SNF",
+        "scene_cloud_cover_pct": 0.028719,
+        "sentinel2_datatake_id": "GS2B_20230816T100559_033653_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -97.76588,
+        37.96137,
+        -97.6287,
+        38.06765
+      ],
+      "center": [
+        -97.69729,
+        38.01451
+      ],
+      "emit_datetime": "2023-08-22T17:52:29+00:00",
+      "emit_to_target_offset_hours": -0.486482,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230822T175229_002905",
+      "group_id": "emit25km-0028",
+      "plume_id": "2905",
+      "reference": {
+        "datetime": "2023-08-20T17:33:15.426000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_14SPH_20230820_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_14SPH_20230820_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_14SPH_20230820_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_14SPH_20230820_0_L2A",
+        "mgrs_tile": "14SPH",
+        "scene_cloud_cover_pct": 0.000429,
+        "sentinel2_datatake_id": "GS2A_20230820T171901_042623_N05.09"
+      },
+      "reference_to_target_gap_hours": 47.833955,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230822T175229_2323412_013']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-08-22T17:23:17.665000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_14SPH_20230822_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_14SPH_20230822_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_14SPH_20230822_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_14SPH_20230822_0_L2A",
+        "mgrs_tile": "14SPH",
+        "scene_cloud_cover_pct": 16.280577,
+        "sentinel2_datatake_id": "GS2B_20230822T170859_033743_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -121.83504,
+        38.31057,
+        -121.82257,
+        38.32521
+      ],
+      "center": [
+        -121.828805,
+        38.31789
+      ],
+      "emit_datetime": "2023-08-22T19:25:19+00:00",
+      "emit_to_target_offset_hours": -0.355446,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230822T192519_002906",
+      "group_id": "emit25km-0029",
+      "plume_id": "2906",
+      "reference": {
+        "datetime": "2023-08-12T19:04:00.526000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_10SEH_20230812_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_10SEH_20230812_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_10SEH_20230812_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_10SEH_20230812_0_L2A",
+        "mgrs_tile": "10SEH",
+        "scene_cloud_cover_pct": 4.78727,
+        "sentinel2_datatake_id": "GS2B_20230812T184919_033601_N05.09"
+      },
+      "reference_to_target_gap_hours": 239.999686,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230822T192519_2323413_002']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-08-22T19:03:59.396000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_10SEH_20230822_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_10SEH_20230822_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_10SEH_20230822_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_10SEH_20230822_0_L2A",
+        "mgrs_tile": "10SEH",
+        "scene_cloud_cover_pct": 6.688514,
+        "sentinel2_datatake_id": "GS2B_20230822T184919_033744_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -89.16228,
+        36.39595,
+        -89.13842,
+        36.40896
+      ],
+      "center": [
+        -89.15035,
+        36.402455
+      ],
+      "emit_datetime": "2023-08-23T17:06:09+00:00",
+      "emit_to_target_offset_hours": -0.210736,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230823T170609_001002",
+      "group_id": "emit25km-0030",
+      "plume_id": "1002",
+      "reference": {
+        "datetime": "2023-07-24T16:53:32.099000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_16SCF_20230724_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_16SCF_20230724_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_16SCF_20230724_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_16SCF_20230724_0_L2A",
+        "mgrs_tile": "16SCF",
+        "scene_cloud_cover_pct": 6.65027,
+        "sentinel2_datatake_id": "GS2B_20230724T163839_033328_N05.09"
+      },
+      "reference_to_target_gap_hours": 719.999514,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230823T170609_2323511_010']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-08-23T16:53:30.349000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_16SCF_20230823_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_16SCF_20230823_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_16SCF_20230823_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_16SCF_20230823_0_L2A",
+        "mgrs_tile": "16SCF",
+        "scene_cloud_cover_pct": 16.215335,
+        "sentinel2_datatake_id": "GS2B_20230823T163839_033757_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        31.12712,
+        29.8268,
+        31.18243,
+        29.89567
+      ],
+      "center": [
+        31.154775,
+        29.861235
+      ],
+      "emit_datetime": "2023-08-26T08:35:46+00:00",
+      "emit_to_target_offset_hours": 0.102968,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230826T083546_001173",
+      "group_id": "emit25km-0031",
+      "plume_id": "1173",
+      "reference": {
+        "datetime": "2023-08-21T08:41:58.627000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_36RUU_20230821_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_36RUU_20230821_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_36RUU_20230821_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_36RUU_20230821_0_L2A",
+        "mgrs_tile": "36RUU",
+        "scene_cloud_cover_pct": 5.170052,
+        "sentinel2_datatake_id": "GS2A_20230821T082611_042632_N05.09"
+      },
+      "reference_to_target_gap_hours": 119.99946,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230826T083546_2323806_004']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-08-26T08:41:56.684000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_36RUU_20230826_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_36RUU_20230826_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_36RUU_20230826_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_36RUU_20230826_0_L2A",
+        "mgrs_tile": "36RUU",
+        "scene_cloud_cover_pct": 0.002064,
+        "sentinel2_datatake_id": "GS2B_20230826T082609_033795_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        144.39245,
+        -21.71945,
+        144.40438,
+        -21.71023
+      ],
+      "center": [
+        144.398415,
+        -21.71484
+      ],
+      "emit_datetime": "2023-09-03T01:00:49+00:00",
+      "emit_to_target_offset_hours": -0.29407,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230903T010049_001659",
+      "group_id": "emit25km-0032",
+      "plume_id": "1659",
+      "reference": {
+        "datetime": "2023-08-31T00:33:15.002000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_54KZA_20230831_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_54KZA_20230831_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_54KZA_20230831_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_54KZA_20230831_0_L2A",
+        "mgrs_tile": "54KZA",
+        "scene_cloud_cover_pct": 0.000377,
+        "sentinel2_datatake_id": "GS2A_20230831T002711_042770_N05.09"
+      },
+      "reference_to_target_gap_hours": 72.165374,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20230903T010049_2324601_010']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-09-03T00:43:10.347000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_54KZA_20230903_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_54KZA_20230903_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_54KZA_20230903_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_54KZA_20230903_0_L2A",
+        "mgrs_tile": "54KZA",
+        "scene_cloud_cover_pct": 0.0,
+        "sentinel2_datatake_id": "GS2A_20230903T003711_042813_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        45.12431,
+        44.85532,
+        45.20077,
+        44.92256
+      ],
+      "center": [
+        45.16254,
+        44.88894
+      ],
+      "emit_datetime": "2023-10-13T11:00:35+00:00",
+      "emit_to_target_offset_hours": -3.050567,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231013T110035_001654",
+      "group_id": "emit25km-0033",
+      "plume_id": "1654",
+      "reference": {
+        "datetime": "2023-10-08T07:57:30.825000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_38TNQ_20231008_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_38TNQ_20231008_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_38TNQ_20231008_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_38TNQ_20231008_0_L2A",
+        "mgrs_tile": "38TNQ",
+        "scene_cloud_cover_pct": 9.857216,
+        "sentinel2_datatake_id": "GS2A_20231008T074811_043318_N05.09"
+      },
+      "reference_to_target_gap_hours": 120.000592,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231013T110035_2328607_006']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-10-13T07:57:32.958000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_38TNQ_20231013_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_38TNQ_20231013_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_38TNQ_20231013_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_38TNQ_20231013_0_L2A",
+        "mgrs_tile": "38TNQ",
+        "scene_cloud_cover_pct": 2.744181,
+        "sentinel2_datatake_id": "GS2B_20231013T074849_034481_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        3.2824,
+        33.47928,
+        3.31439,
+        33.49989
+      ],
+      "center": [
+        3.298395,
+        33.489585
+      ],
+      "emit_datetime": "2023-10-06T10:02:06+00:00",
+      "emit_to_target_offset_hours": 0.658891,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231006T100206_001584",
+      "group_id": "emit25km-0034",
+      "plume_id": "1584",
+      "reference": {
+        "datetime": "2023-10-01T10:41:38.957000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_31SET_20231001_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_31SET_20231001_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_31SET_20231001_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_31SET_20231001_0_L2A",
+        "mgrs_tile": "31SET",
+        "scene_cloud_cover_pct": 0.0,
+        "sentinel2_datatake_id": "GS2B_20231001T102739_034311_N05.09"
+      },
+      "reference_to_target_gap_hours": 119.999736,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231006T100206_2327907_040']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-10-06T10:41:38.007000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_31SET_20231006_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_31SET_20231006_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_31SET_20231006_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_31SET_20231006_0_L2A",
+        "mgrs_tile": "31SET",
+        "scene_cloud_cover_pct": 0.0,
+        "sentinel2_datatake_id": "GS2A_20231006T102911_043291_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -121.02169,
+        37.30961,
+        -120.90023,
+        37.51295
+      ],
+      "center": [
+        -120.96096,
+        37.41128
+      ],
+      "emit_datetime": "2023-10-08T17:46:13+00:00",
+      "emit_to_target_offset_hours": 1.132596,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231008T174613_001620",
+      "group_id": "emit25km-0035",
+      "plume_id": "1620",
+      "reference": {
+        "datetime": "2023-10-06T19:04:09.354000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_10SFG_20231006_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_10SFG_20231006_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_10SFG_20231006_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_10SFG_20231006_0_L2A",
+        "mgrs_tile": "10SFG",
+        "scene_cloud_cover_pct": 0.00207,
+        "sentinel2_datatake_id": "GS2A_20231006T185241_043296_N05.09"
+      },
+      "reference_to_target_gap_hours": 47.833609,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231008T174613_2328112_003']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-10-08T18:54:10.347000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_10SFG_20231008_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_10SFG_20231008_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_10SFG_20231008_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_10SFG_20231008_0_L2A",
+        "mgrs_tile": "10SFG",
+        "scene_cloud_cover_pct": 0.003696,
+        "sentinel2_datatake_id": "GS2B_20231008T184249_034416_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        2.79547,
+        36.64917,
+        2.84699,
+        36.6752
+      ],
+      "center": [
+        2.82123,
+        36.662185
+      ],
+      "emit_datetime": "2023-10-09T09:14:23+00:00",
+      "emit_to_target_offset_hours": 1.608174,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231009T091423_001643",
+      "group_id": "emit25km-0036",
+      "plume_id": "1643",
+      "reference": {
+        "datetime": "2023-10-06T10:40:58.075000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_31SDA_20231006_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_31SDA_20231006_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_31SDA_20231006_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_31SDA_20231006_0_L2A",
+        "mgrs_tile": "31SDA",
+        "scene_cloud_cover_pct": 0.00093,
+        "sentinel2_datatake_id": "GS2A_20231006T102911_043291_N05.09"
+      },
+      "reference_to_target_gap_hours": 72.165098,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231009T091423_2328206_033']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-10-09T10:50:52.426000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_31SDA_20231009_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_31SDA_20231009_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_31SDA_20231009_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_31SDA_20231009_0_L2A",
+        "mgrs_tile": "31SDA",
+        "scene_cloud_cover_pct": 5.930915,
+        "sentinel2_datatake_id": "GS2A_20231009T103931_043334_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        69.46188,
+        41.06945,
+        69.4955,
+        41.10415
+      ],
+      "center": [
+        69.47869,
+        41.0868
+      ],
+      "emit_datetime": "2023-10-11T04:35:57+00:00",
+      "emit_to_target_offset_hours": 1.863284,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231011T043557_001756",
+      "group_id": "emit25km-0037",
+      "plume_id": "1756",
+      "reference": {
+        "datetime": "2023-10-08T06:17:50.374000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_42TWL_20231008_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_42TWL_20231008_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_42TWL_20231008_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_42TWL_20231008_0_L2A",
+        "mgrs_tile": "42TWL",
+        "scene_cloud_cover_pct": 14.659454,
+        "sentinel2_datatake_id": "GS2A_20231008T060731_043317_N05.09"
+      },
+      "reference_to_target_gap_hours": 72.165124,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231011T043557_2328403_005']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-10-11T06:27:44.821000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_42TWL_20231011_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_42TWL_20231011_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_42TWL_20231011_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_42TWL_20231011_0_L2A",
+        "mgrs_tile": "42TWL",
+        "scene_cloud_cover_pct": 11.439301,
+        "sentinel2_datatake_id": "GS2A_20231011T061801_043360_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        45.98701,
+        15.56338,
+        46.04069,
+        15.58886
+      ],
+      "center": [
+        46.01385,
+        15.57612
+      ],
+      "emit_datetime": "2024-10-23T08:37:41+00:00",
+      "emit_to_target_offset_hours": -1.037184,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241023T083741_003700",
+      "group_id": "emit25km-0038",
+      "plume_id": "3700",
+      "reference": {
+        "datetime": "2024-10-18T07:35:28.035000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_38PNC_20241018_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_38PNC_20241018_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_38PNC_20241018_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_38PNC_20241018_0_L2A",
+        "mgrs_tile": "38PNC",
+        "scene_cloud_cover_pct": 0.014429,
+        "sentinel2_datatake_id": "GS2B_20241018T071819_039786_N05.11"
+      },
+      "reference_to_target_gap_hours": 119.999751,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20241023T083741_2429706_026']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-10-23T07:35:27.137000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_38PNC_20241023_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_38PNC_20241023_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_38PNC_20241023_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_38PNC_20241023_0_L2A",
+        "mgrs_tile": "38PNC",
+        "scene_cloud_cover_pct": 0.240577,
+        "sentinel2_datatake_id": "GS2A_20241023T071951_048766_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        86.4934,
+        44.91225,
+        86.53298,
+        44.96539
+      ],
+      "center": [
+        86.51319,
+        44.93882
+      ],
+      "emit_datetime": "2023-10-20T05:27:52+00:00",
+      "emit_to_target_offset_hours": -0.191605,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231020T052752_001672",
+      "group_id": "emit25km-0039",
+      "plume_id": "1672",
+      "reference": {
+        "datetime": "2023-10-15T05:16:24.737000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_45TVK_20231015_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_45TVK_20231015_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_45TVK_20231015_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_45TVK_20231015_0_L2A",
+        "mgrs_tile": "45TVK",
+        "scene_cloud_cover_pct": 1.845807,
+        "sentinel2_datatake_id": "GS2B_20231015T050759_034508_N05.09"
+      },
+      "reference_to_target_gap_hours": 119.999301,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231020T052752_2329304_012']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-10-20T05:16:22.222000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_45TVK_20231020_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_45TVK_20231020_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_45TVK_20231020_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_45TVK_20231020_0_L2A",
+        "mgrs_tile": "45TVK",
+        "scene_cloud_cover_pct": 11.72228,
+        "sentinel2_datatake_id": "GS2A_20231020T050831_043488_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        13.34027,
+        32.58839,
+        13.38094,
+        32.61225
+      ],
+      "center": [
+        13.360605,
+        32.60032
+      ],
+      "emit_datetime": "2023-10-24T10:09:47+00:00",
+      "emit_to_target_offset_hours": -0.136473,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231024T100947_001857",
+      "group_id": "emit25km-0040",
+      "plume_id": "1857",
+      "reference": {
+        "datetime": "2023-10-14T10:01:33.977000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_33SUS_20231014_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_33SUS_20231014_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_33SUS_20231014_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_33SUS_20231014_0_L2A",
+        "mgrs_tile": "33SUS",
+        "scene_cloud_cover_pct": 6.372331,
+        "sentinel2_datatake_id": "GS2A_20231014T095031_043405_N05.09"
+      },
+      "reference_to_target_gap_hours": 240.000478,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231024T100947_2329707_013']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-10-24T10:01:35.698000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_33SUS_20231024_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_33SUS_20231024_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_33SUS_20231024_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_33SUS_20231024_0_L2A",
+        "mgrs_tile": "33SUS",
+        "scene_cloud_cover_pct": 0.00348,
+        "sentinel2_datatake_id": "GS2A_20231024T095051_043548_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -59.38016,
+        -34.55734,
+        -58.61615,
+        -34.38871
+      ],
+      "center": [
+        -58.998155,
+        -34.473025
+      ],
+      "emit_datetime": "2023-11-24T14:26:42+00:00",
+      "emit_to_target_offset_hours": -0.408923,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231124T142642_001959",
+      "group_id": "emit25km-0041",
+      "plume_id": "1959",
+      "reference": {
+        "datetime": "2023-11-14T14:02:14.687000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_21HUB_20231114_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_21HUB_20231114_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_21HUB_20231114_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_21HUB_20231114_0_L2A",
+        "mgrs_tile": "21HUB",
+        "scene_cloud_cover_pct": 0.008623,
+        "sentinel2_datatake_id": "GS2B_20231114T134709_034942_N05.09"
+      },
+      "reference_to_target_gap_hours": 239.998664,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231124T142642_2332809_049']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-11-24T14:02:09.878000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_21HUB_20231124_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_21HUB_20231124_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_21HUB_20231124_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_21HUB_20231124_0_L2A",
+        "mgrs_tile": "21HUB",
+        "scene_cloud_cover_pct": 0.542984,
+        "sentinel2_datatake_id": "GS2B_20231124T134659_035085_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -8.08496,
+        31.8965,
+        -8.06436,
+        31.91548
+      ],
+      "center": [
+        -8.07466,
+        31.90599
+      ],
+      "emit_datetime": "2023-11-27T14:00:54+00:00",
+      "emit_to_target_offset_hours": -2.642173,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231127T140054_001975",
+      "group_id": "emit25km-0042",
+      "plume_id": "1975",
+      "reference": {
+        "datetime": "2023-11-22T11:22:24.696000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_29SNR_20231122_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_29SNR_20231122_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_29SNR_20231122_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_29SNR_20231122_0_L2A",
+        "mgrs_tile": "29SNR",
+        "scene_cloud_cover_pct": 2.083888,
+        "sentinel2_datatake_id": "GS2B_20231122T111259_035055_N05.09"
+      },
+      "reference_to_target_gap_hours": 119.999301,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231127T140054_2333109_012']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-11-27T11:22:22.178000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_29SNR_20231127_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_29SNR_20231127_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_29SNR_20231127_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_29SNR_20231127_0_L2A",
+        "mgrs_tile": "29SNR",
+        "scene_cloud_cover_pct": 4.758896,
+        "sentinel2_datatake_id": "GS2A_20231127T111411_044035_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        -106.87973,
+        32.09225,
+        -106.864,
+        32.1096
+      ],
+      "center": [
+        -106.871865,
+        32.100925
+      ],
+      "emit_datetime": "2023-12-04T17:46:18+00:00",
+      "emit_to_target_offset_hours": 0.146637,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231204T174618_002010",
+      "group_id": "emit25km-0043",
+      "plume_id": "2010",
+      "reference": {
+        "datetime": "2023-12-02T18:05:04.941000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_13SCR_20231202_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_13SCR_20231202_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_13SCR_20231202_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_13SCR_20231202_0_L2A",
+        "mgrs_tile": "13SCR",
+        "scene_cloud_cover_pct": 0.000327,
+        "sentinel2_datatake_id": "GS2B_20231202T175719_035202_N05.09"
+      },
+      "reference_to_target_gap_hours": 47.833598,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231204T174618_2333812_011']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-12-04T17:55:05.893000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_13SCR_20231204_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_13SCR_20231204_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_13SCR_20231204_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_13SCR_20231204_0_L2A",
+        "mgrs_tile": "13SCR",
+        "scene_cloud_cover_pct": 0.561329,
+        "sentinel2_datatake_id": "GS2A_20231204T174711_044139_N05.09"
+      }
+    },
+    {
+      "bbox": [
+        46.13558,
+        15.72442,
+        46.20769,
+        15.80792
+      ],
+      "center": [
+        46.171635,
+        15.76617
+      ],
+      "emit_datetime": "2023-12-23T09:21:03+00:00",
+      "emit_to_target_offset_hours": -1.760412,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231223T092103_002205",
+      "group_id": "emit25km-0044",
+      "plume_id": "2205",
+      "reference": {
+        "datetime": "2023-12-18T07:35:20.481000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_38PPC_20231218_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_38PPC_20231218_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_38PPC_20231218_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_38PPC_20231218_0_L2A",
+        "mgrs_tile": "38PPC",
+        "scene_cloud_cover_pct": 3.3e-05,
+        "sentinel2_datatake_id": "GS2A_20231218T072321_044333_N05.10"
+      },
+      "reference_to_target_gap_hours": 120.001399,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231223T092103_2335706_007']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-12-23T07:35:25.517000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_38PPC_20231223_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_38PPC_20231223_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_38PPC_20231223_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_38PPC_20231223_0_L2A",
+        "mgrs_tile": "38PPC",
+        "scene_cloud_cover_pct": 0.0,
+        "sentinel2_datatake_id": "GS2B_20231223T072319_035496_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        67.47405,
+        26.15589,
+        67.49357,
+        26.16944
+      ],
+      "center": [
+        67.48381,
+        26.162665
+      ],
+      "emit_datetime": "2023-12-24T06:57:46+00:00",
+      "emit_to_target_offset_hours": -0.761564,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231224T065746_002284",
+      "group_id": "emit25km-0045",
+      "plume_id": "2284",
+      "reference": {
+        "datetime": "2023-12-22T06:22:04.176000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_42RUP_20231222_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_42RUP_20231222_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_42RUP_20231222_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_42RUP_20231222_0_L2A",
+        "mgrs_tile": "42RUP",
+        "scene_cloud_cover_pct": 18.31193,
+        "sentinel2_datatake_id": "GS2B_20231222T061259_035481_N05.10"
+      },
+      "reference_to_target_gap_hours": 47.833387,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231224T065746_2335805_002']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-12-24T06:12:04.369000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_42RUP_20231224_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_42RUP_20231224_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_42RUP_20231224_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_42RUP_20231224_0_L2A",
+        "mgrs_tile": "42RUP",
+        "scene_cloud_cover_pct": 0.023956,
+        "sentinel2_datatake_id": "GS2A_20231224T060251_044418_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        -104.48686,
+        32.07978,
+        -104.46842,
+        32.08683
+      ],
+      "center": [
+        -104.47764,
+        32.083305
+      ],
+      "emit_datetime": "2023-12-24T17:45:33+00:00",
+      "emit_to_target_offset_hours": 0.158131,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231224T174533_002613",
+      "group_id": "emit25km-0046",
+      "plume_id": "2613",
+      "reference": {
+        "datetime": "2023-12-21T17:45:05.948000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_13SER_20231221_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_13SER_20231221_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_13SER_20231221_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_13SER_20231221_0_L2A",
+        "mgrs_tile": "13SER",
+        "scene_cloud_cover_pct": 0.013628,
+        "sentinel2_datatake_id": "GS2A_20231221T173731_044382_N05.10"
+      },
+      "reference_to_target_gap_hours": 72.165646,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20231224T174533_2335812_006']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2023-12-24T17:55:02.273000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_13SER_20231224_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_13SER_20231224_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_13SER_20231224_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_13SER_20231224_0_L2A",
+        "mgrs_tile": "13SER",
+        "scene_cloud_cover_pct": 0.086741,
+        "sentinel2_datatake_id": "GS2A_20231224T174741_044425_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        20.74662,
+        29.04165,
+        20.78675,
+        29.09045
+      ],
+      "center": [
+        20.766685,
+        29.06605
+      ],
+      "emit_datetime": "2024-02-24T09:14:58+00:00",
+      "emit_to_target_offset_hours": 0.125356,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240224T091458_002815",
+      "group_id": "emit25km-0047",
+      "plume_id": "2815",
+      "reference": {
+        "datetime": "2024-02-19T09:22:24.478000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_34RDT_20240219_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_34RDT_20240219_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_34RDT_20240219_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_34RDT_20240219_0_L2A",
+        "mgrs_tile": "34RDT",
+        "scene_cloud_cover_pct": 0.006882,
+        "sentinel2_datatake_id": "GS2A_20240219T091021_045235_N05.10"
+      },
+      "reference_to_target_gap_hours": 120.001335,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240224T091458_2405506_006']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-02-24T09:22:29.283000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_34RDT_20240224_1_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_34RDT_20240224_1_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_34RDT_20240224_1_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_34RDT_20240224_1_L2A",
+        "mgrs_tile": "34RDT",
+        "scene_cloud_cover_pct": 0.001721,
+        "sentinel2_datatake_id": "GS2B_20240224T090859_036398_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        -102.21761,
+        21.96497,
+        -102.19213,
+        21.99046
+      ],
+      "center": [
+        -102.20487,
+        21.977715
+      ],
+      "emit_datetime": "2024-02-26T17:01:04+00:00",
+      "emit_to_target_offset_hours": 0.611795,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240226T170104_002754",
+      "group_id": "emit25km-0048",
+      "plume_id": "2754",
+      "reference": {
+        "datetime": "2024-02-21T17:37:47.816000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_13QGE_20240221_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_13QGE_20240221_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_13QGE_20240221_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_13QGE_20240221_0_L2A",
+        "mgrs_tile": "13QGE",
+        "scene_cloud_cover_pct": 0.000127,
+        "sentinel2_datatake_id": "GS2B_20240221T172339_036360_N05.10"
+      },
+      "reference_to_target_gap_hours": 119.999624,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240226T170104_2405711_013']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-02-26T17:37:46.463000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_13QGE_20240226_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_13QGE_20240226_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_13QGE_20240226_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_13QGE_20240226_0_L2A",
+        "mgrs_tile": "13QGE",
+        "scene_cloud_cover_pct": 2.7e-05,
+        "sentinel2_datatake_id": "GS2A_20240226T172301_045340_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        -71.6601,
+        -35.33057,
+        -71.6319,
+        -35.31105
+      ],
+      "center": [
+        -71.646,
+        -35.32081
+      ],
+      "emit_datetime": "2024-02-27T18:06:46+00:00",
+      "emit_to_target_offset_hours": -3.231698,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240227T180646_002768",
+      "group_id": "emit25km-0049",
+      "plume_id": "2768",
+      "reference": {
+        "datetime": "2024-02-17T14:52:54.188000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_18HYF_20240217_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_18HYF_20240217_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_18HYF_20240217_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_18HYF_20240217_0_L2A",
+        "mgrs_tile": "18HYF",
+        "scene_cloud_cover_pct": 0.027419,
+        "sentinel2_datatake_id": "GS2B_20240217T143749_036301_N05.10"
+      },
+      "reference_to_target_gap_hours": 239.999361,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240227T180646_2405812_003']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-02-27T14:52:51.888000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_18HYF_20240227_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_18HYF_20240227_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_18HYF_20240227_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_18HYF_20240227_0_L2A",
+        "mgrs_tile": "18HYF",
+        "scene_cloud_cover_pct": 0.011941,
+        "sentinel2_datatake_id": "GS2B_20240227T143739_036444_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        -68.11498,
+        -38.19681,
+        -68.08408,
+        -38.17024
+      ],
+      "center": [
+        -68.09953,
+        -38.183525
+      ],
+      "emit_datetime": "2024-03-02T16:32:57+00:00",
+      "emit_to_target_offset_hours": -1.99097,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240302T163257_002900",
+      "group_id": "emit25km-0050",
+      "plume_id": "2900",
+      "reference": {
+        "datetime": "2024-02-21T14:33:33.056000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_19HET_20240221_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_19HET_20240221_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_19HET_20240221_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_19HET_20240221_0_L2A",
+        "mgrs_tile": "19HET",
+        "scene_cloud_cover_pct": 0.003829,
+        "sentinel2_datatake_id": "GS2B_20240221T141709_036358_N05.10"
+      },
+      "reference_to_target_gap_hours": 239.999015,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240302T163257_2406211_009']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-03-02T14:33:29.509000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_19HET_20240302_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_19HET_20240302_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_19HET_20240302_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_19HET_20240302_0_L2A",
+        "mgrs_tile": "19HET",
+        "scene_cloud_cover_pct": 0.020172,
+        "sentinel2_datatake_id": "GS2B_20240302T141709_036501_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        105.43413,
+        26.63034,
+        105.45094,
+        26.64064
+      ],
+      "center": [
+        105.442535,
+        26.63549
+      ],
+      "emit_datetime": "2024-03-21T08:34:55+00:00",
+      "emit_to_target_offset_hours": -4.736149,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240321T083455_002920",
+      "group_id": "emit25km-0051",
+      "plume_id": "2920",
+      "reference": {
+        "datetime": "2024-03-11T03:50:45.112000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_48RWQ_20240311_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_48RWQ_20240311_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_48RWQ_20240311_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_48RWQ_20240311_0_L2A",
+        "mgrs_tile": "48RWQ",
+        "scene_cloud_cover_pct": 8.2e-05,
+        "sentinel2_datatake_id": "GS2A_20240311T033541_045532_N05.10"
+      },
+      "reference_to_target_gap_hours": 239.999931,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240321T083455_2408106_004']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-03-21T03:50:44.864000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_48RWQ_20240321_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_48RWQ_20240321_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_48RWQ_20240321_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_48RWQ_20240321_0_L2A",
+        "mgrs_tile": "48RWQ",
+        "scene_cloud_cover_pct": 0.816482,
+        "sentinel2_datatake_id": "GS2A_20240321T033541_045675_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        -94.27282,
+        32.13942,
+        -94.26306,
+        32.14539
+      ],
+      "center": [
+        -94.26794,
+        32.142405
+      ],
+      "emit_datetime": "2024-03-26T20:12:10+00:00",
+      "emit_to_target_offset_hours": -2.955647,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240326T201210_002996",
+      "group_id": "emit25km-0052",
+      "plume_id": "2996",
+      "reference": {
+        "datetime": "2024-03-23T17:04:54.167000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_15SUR_20240323_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_15SUR_20240323_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_15SUR_20240323_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_15SUR_20240323_0_L2A",
+        "mgrs_tile": "15SUR",
+        "scene_cloud_cover_pct": 18.45739,
+        "sentinel2_datatake_id": "GS2B_20240323T164849_036803_N05.10"
+      },
+      "reference_to_target_gap_hours": 72.165418,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240326T201210_2408613_012']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-03-26T17:14:49.671000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_15SUR_20240326_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_15SUR_20240326_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_15SUR_20240326_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_15SUR_20240326_0_L2A",
+        "mgrs_tile": "15SUR",
+        "scene_cloud_cover_pct": 0.000705,
+        "sentinel2_datatake_id": "GS2B_20240326T165849_036846_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        -100.33444,
+        25.8376,
+        -100.29215,
+        25.8761
+      ],
+      "center": [
+        -100.313295,
+        25.85685
+      ],
+      "emit_datetime": "2024-04-03T16:58:15+00:00",
+      "emit_to_target_offset_hours": 0.474778,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240403T165815_002985",
+      "group_id": "emit25km-0053",
+      "plume_id": "2985",
+      "reference": {
+        "datetime": "2024-03-24T17:26:47.844000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_14RLP_20240324_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_14RLP_20240324_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_14RLP_20240324_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_14RLP_20240324_0_L2A",
+        "mgrs_tile": "14RLP",
+        "scene_cloud_cover_pct": 4.879015,
+        "sentinel2_datatake_id": "GS2A_20240324T170941_045726_N05.10"
+      },
+      "reference_to_target_gap_hours": 239.998988,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240403T165815_2409411_007']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-04-03T17:26:44.202000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_14RLP_20240403_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_14RLP_20240403_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_14RLP_20240403_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_14RLP_20240403_0_L2A",
+        "mgrs_tile": "14RLP",
+        "scene_cloud_cover_pct": 1.144226,
+        "sentinel2_datatake_id": "GS2A_20240403T170851_045869_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        39.24922,
+        46.73144,
+        39.75296,
+        46.86429
+      ],
+      "center": [
+        39.50109,
+        46.797865
+      ],
+      "emit_datetime": "2024-04-09T07:44:35+00:00",
+      "emit_to_target_offset_hours": 0.709601,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240409T074435_003022",
+      "group_id": "emit25km-0054",
+      "plume_id": "3022",
+      "reference": {
+        "datetime": "2024-04-04T08:27:07.137000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_37TEM_20240404_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_37TEM_20240404_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_37TEM_20240404_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_37TEM_20240404_0_L2A",
+        "mgrs_tile": "37TEM",
+        "scene_cloud_cover_pct": 1.041032,
+        "sentinel2_datatake_id": "GS2A_20240404T081601_045878_N05.10"
+      },
+      "reference_to_target_gap_hours": 120.000674,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240409T074435_2410005_007']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-04-09T08:27:09.563000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_37TEM_20240409_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_37TEM_20240409_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_37TEM_20240409_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_37TEM_20240409_0_L2A",
+        "mgrs_tile": "37TEM",
+        "scene_cloud_cover_pct": 0.101533,
+        "sentinel2_datatake_id": "GS2B_20240409T081609_037041_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        -92.66673,
+        19.55692,
+        -92.22969,
+        19.74724
+      ],
+      "center": [
+        -92.44821,
+        19.65208
+      ],
+      "emit_datetime": "2024-04-21T18:42:22+00:00",
+      "emit_to_target_offset_hours": -1.900059,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240421T184222_003061",
+      "group_id": "emit25km-0055",
+      "plume_id": "3061",
+      "reference": {
+        "datetime": "2024-04-16T16:48:19.641000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_15QWB_20240416_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_15QWB_20240416_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_15QWB_20240416_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_15QWB_20240416_0_L2A",
+        "mgrs_tile": "15QWB",
+        "scene_cloud_cover_pct": 13.910338,
+        "sentinel2_datatake_id": "GS2B_20240416T162829_037146_N05.10"
+      },
+      "reference_to_target_gap_hours": 120.000596,
+      "source_scenes": [
+        " 'EMIT_L2B_CH4ENH_V002_20240421T184234_2411212_044']",
+        "['EMIT_L2B_CH4ENH_V002_20240421T184222_2411212_043'"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-04-21T16:48:21.786000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_15QWB_20240421_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_15QWB_20240421_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_15QWB_20240421_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_15QWB_20240421_0_L2A",
+        "mgrs_tile": "15QWB",
+        "scene_cloud_cover_pct": 0.002876,
+        "sentinel2_datatake_id": "GS2A_20240421T162841_046126_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        -95.24721,
+        29.94772,
+        -95.22715,
+        29.95965
+      ],
+      "center": [
+        -95.23718,
+        29.953685
+      ],
+      "emit_datetime": "2024-04-22T17:51:02+00:00",
+      "emit_to_target_offset_hours": -0.760063,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240422T175102_003071",
+      "group_id": "emit25km-0056",
+      "plume_id": "3071",
+      "reference": {
+        "datetime": "2024-04-05T17:15:20.416000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_15RTP_20240405_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_15RTP_20240405_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_15RTP_20240405_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_15RTP_20240405_0_L2A",
+        "mgrs_tile": "15RTP",
+        "scene_cloud_cover_pct": 9.19717,
+        "sentinel2_datatake_id": "GS2B_20240405T165849_036989_N05.10"
+      },
+      "reference_to_target_gap_hours": 407.834821,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240422T175102_2411312_037']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-04-22T17:05:25.773000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_15RTP_20240422_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_15RTP_20240422_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_15RTP_20240422_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_15RTP_20240422_0_L2A",
+        "mgrs_tile": "15RTP",
+        "scene_cloud_cover_pct": 15.514322,
+        "sentinel2_datatake_id": "GS2B_20240422T164839_037232_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        48.03122,
+        29.04545,
+        48.0399,
+        29.05358
+      ],
+      "center": [
+        48.03556,
+        29.049515
+      ],
+      "emit_datetime": "2024-04-26T06:54:55+00:00",
+      "emit_to_target_offset_hours": 0.613091,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240426T065455_003154",
+      "group_id": "emit25km-0057",
+      "plume_id": "3154",
+      "reference": {
+        "datetime": "2024-04-19T07:41:38.925000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_39RTN_20240419_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_39RTN_20240419_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_39RTN_20240419_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_39RTN_20240419_0_L2A",
+        "mgrs_tile": "39RTN",
+        "scene_cloud_cover_pct": 9.175698,
+        "sentinel2_datatake_id": "GS2A_20240419T072621_046092_N05.10"
+      },
+      "reference_to_target_gap_hours": 167.834223,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240426T065455_2411705_008']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-04-26T07:31:42.128000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_39RTN_20240426_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_39RTN_20240426_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_39RTN_20240426_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_39RTN_20240426_0_L2A",
+        "mgrs_tile": "39RTN",
+        "scene_cloud_cover_pct": 0.540592,
+        "sentinel2_datatake_id": "GS2A_20240426T071621_046192_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        36.84551,
+        51.75252,
+        36.9263,
+        51.82355
+      ],
+      "center": [
+        36.885905,
+        51.788035
+      ],
+      "emit_datetime": "2024-05-30T13:18:29+00:00",
+      "emit_to_target_offset_hours": -4.544533,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240530T131829_003208",
+      "group_id": "emit25km-0058",
+      "plume_id": "3208",
+      "reference": {
+        "datetime": "2024-05-25T08:45:45.877000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_37UCT_20240525_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_37UCT_20240525_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_37UCT_20240525_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_37UCT_20240525_0_L2A",
+        "mgrs_tile": "37UCT",
+        "scene_cloud_cover_pct": 0.000355,
+        "sentinel2_datatake_id": "GS2B_20240525T083559_037699_N05.10"
+      },
+      "reference_to_target_gap_hours": 120.000779,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240530T131829_2415109_012']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-05-30T08:45:48.682000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_37UCT_20240530_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_37UCT_20240530_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_37UCT_20240530_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_37UCT_20240530_0_L2A",
+        "mgrs_tile": "37UCT",
+        "scene_cloud_cover_pct": 11.41116,
+        "sentinel2_datatake_id": "GS2A_20240530T083601_046679_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        39.36092,
+        21.53932,
+        39.41244,
+        21.65699
+      ],
+      "center": [
+        39.38668,
+        21.598155
+      ],
+      "emit_datetime": "2024-06-09T05:02:26+00:00",
+      "emit_to_target_offset_hours": 3.029101,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240609T050226_003220",
+      "group_id": "emit25km-0059",
+      "plume_id": "3220",
+      "reference": {
+        "datetime": "2024-06-04T08:04:12.436000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_37QED_20240604_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_37QED_20240604_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_37QED_20240604_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_37QED_20240604_0_L2A",
+        "mgrs_tile": "37QED",
+        "scene_cloud_cover_pct": 8.749078,
+        "sentinel2_datatake_id": "GS2A_20240604T074621_046750_N05.10"
+      },
+      "reference_to_target_gap_hours": 119.999536,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240609T050226_2416104_002']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-06-09T08:04:10.764000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_37QED_20240609_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_37QED_20240609_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_37QED_20240609_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_37QED_20240609_0_L2A",
+        "mgrs_tile": "37QED",
+        "scene_cloud_cover_pct": 0.476538,
+        "sentinel2_datatake_id": "GS2B_20240609T074619_037913_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        44.31205,
+        51.95152,
+        44.36465,
+        51.99652
+      ],
+      "center": [
+        44.33835,
+        51.97402
+      ],
+      "emit_datetime": "2024-06-18T05:55:16+00:00",
+      "emit_to_target_offset_hours": 2.504562,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240618T055516_003246",
+      "group_id": "emit25km-0060",
+      "plume_id": "3246",
+      "reference": {
+        "datetime": "2024-05-29T08:25:29.652000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_38UMC_20240529_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_38UMC_20240529_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_38UMC_20240529_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_38UMC_20240529_0_L2A",
+        "mgrs_tile": "38UMC",
+        "scene_cloud_cover_pct": 0.000933,
+        "sentinel2_datatake_id": "GS2B_20240529T081609_037756_N05.10"
+      },
+      "reference_to_target_gap_hours": 480.00077,
+      "source_scenes": [
+        " 'EMIT_L2B_CH4ENH_V002_20240618T055528_2417004_023']",
+        "['EMIT_L2B_CH4ENH_V002_20240618T055516_2417004_022'"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-06-18T08:25:32.423000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_38UMC_20240618_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_38UMC_20240618_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_38UMC_20240618_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_38UMC_20240618_0_L2A",
+        "mgrs_tile": "38UMC",
+        "scene_cloud_cover_pct": 18.351629,
+        "sentinel2_datatake_id": "GS2B_20240618T081609_038042_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        38.75471,
+        45.14053,
+        38.81707,
+        45.18174
+      ],
+      "center": [
+        38.78589,
+        45.161135
+      ],
+      "emit_datetime": "2024-06-23T06:45:30+00:00",
+      "emit_to_target_offset_hours": 1.700691,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240623T064530_003252",
+      "group_id": "emit25km-0061",
+      "plume_id": "3252",
+      "reference": {
+        "datetime": "2024-06-18T08:27:30.635000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_37TDL_20240618_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_37TDL_20240618_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_37TDL_20240618_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_37TDL_20240618_0_L2A",
+        "mgrs_tile": "37TDL",
+        "scene_cloud_cover_pct": 15.434782,
+        "sentinel2_datatake_id": "GS2B_20240618T081609_038042_N05.10"
+      },
+      "reference_to_target_gap_hours": 120.000514,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240623T064530_2417505_006']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-06-23T08:27:32.486000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_37TDL_20240623_1_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_37TDL_20240623_1_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_37TDL_20240623_1_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_37TDL_20240623_1_L2A",
+        "mgrs_tile": "37TDL",
+        "scene_cloud_cover_pct": 2.997894,
+        "sentinel2_datatake_id": "GS2A_20240623T081611_047022_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        36.12705,
+        32.49296,
+        36.17585,
+        32.5179
+      ],
+      "center": [
+        36.15145,
+        32.50543
+      ],
+      "emit_datetime": "2024-06-23T08:23:51+00:00",
+      "emit_to_target_offset_hours": 0.11951,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240623T082351_003251",
+      "group_id": "emit25km-0062",
+      "plume_id": "3251",
+      "reference": {
+        "datetime": "2024-06-20T08:21:06.133000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 7.673,
+        "l1c_scene_id": "S2A_37SBS_20240620_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_37SBS_20240620_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_37SBS_20240620_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_37SBS_20240620_0_L2A",
+        "mgrs_tile": "37SBS",
+        "scene_cloud_cover_pct": 0.001495,
+        "sentinel2_datatake_id": "GS2A_20240620T080611_046979_N05.10"
+      },
+      "reference_to_target_gap_hours": 72.165306,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240623T082351_2417506_027']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-06-23T08:31:01.236000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_37SBS_20240623_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_37SBS_20240623_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_37SBS_20240623_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_37SBS_20240623_0_L2A",
+        "mgrs_tile": "37SBS",
+        "scene_cloud_cover_pct": 16.117786,
+        "sentinel2_datatake_id": "GS2A_20240623T081611_047022_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        106.74036,
+        37.167,
+        106.75717,
+        37.18002
+      ],
+      "center": [
+        106.748765,
+        37.17351
+      ],
+      "emit_datetime": "2024-06-24T02:56:23+00:00",
+      "emit_to_target_offset_hours": 0.858774,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240624T025623_003265",
+      "group_id": "emit25km-0063",
+      "plume_id": "3265",
+      "reference": {
+        "datetime": "2024-06-14T03:47:50.844000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_48SXG_20240614_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_48SXG_20240614_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_48SXG_20240614_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_48SXG_20240614_0_L2A",
+        "mgrs_tile": "48SXG",
+        "scene_cloud_cover_pct": 0.493485,
+        "sentinel2_datatake_id": "GS2B_20240614T033539_037982_N05.10"
+      },
+      "reference_to_target_gap_hours": 240.00104,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240624T025623_2417602_012']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-06-24T03:47:54.587000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_48SXG_20240624_1_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_48SXG_20240624_1_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_48SXG_20240624_1_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_48SXG_20240624_1_L2A",
+        "mgrs_tile": "48SXG",
+        "scene_cloud_cover_pct": 2.496673,
+        "sentinel2_datatake_id": "GS2B_20240624T033539_038125_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        49.09237,
+        32.06243,
+        49.12274,
+        32.09876
+      ],
+      "center": [
+        49.107555,
+        32.080595
+      ],
+      "emit_datetime": "2024-06-25T06:49:58+00:00",
+      "emit_to_target_offset_hours": 0.68291,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T064958_003275",
+      "group_id": "emit25km-0064",
+      "plume_id": "3275",
+      "reference": {
+        "datetime": "2024-06-23T07:40:51.145000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_39SUR_20240623_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_39SUR_20240623_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_39SUR_20240623_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_39SUR_20240623_0_L2A",
+        "mgrs_tile": "39SUR",
+        "scene_cloud_cover_pct": 0.189441,
+        "sentinel2_datatake_id": "GS2B_20240623T072619_038113_N05.10"
+      },
+      "reference_to_target_gap_hours": 47.834814,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240625T064958_2417705_024']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-06-25T07:30:56.477000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_39SUR_20240625_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_39SUR_20240625_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_39SUR_20240625_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_39SUR_20240625_0_L2A",
+        "mgrs_tile": "39SUR",
+        "scene_cloud_cover_pct": 0.002488,
+        "sentinel2_datatake_id": "GS2A_20240625T071621_047050_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        49.9388,
+        30.98393,
+        49.96699,
+        30.99965
+      ],
+      "center": [
+        49.952895,
+        30.99179
+      ],
+      "emit_datetime": "2024-06-25T06:50:10+00:00",
+      "emit_to_target_offset_hours": 0.682635,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T065010_003277",
+      "group_id": "emit25km-0065",
+      "plume_id": "3277",
+      "reference": {
+        "datetime": "2024-06-20T07:31:05.939000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_39RVQ_20240620_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_39RVQ_20240620_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_39RVQ_20240620_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_39RVQ_20240620_0_L2A",
+        "mgrs_tile": "39RVQ",
+        "scene_cloud_cover_pct": 0.652443,
+        "sentinel2_datatake_id": "GS2B_20240620T071619_038070_N05.10"
+      },
+      "reference_to_target_gap_hours": 120.000429,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240625T065010_2417705_025']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-06-25T07:31:07.485000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_39RVQ_20240625_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_39RVQ_20240625_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_39RVQ_20240625_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_39RVQ_20240625_0_L2A",
+        "mgrs_tile": "39RVQ",
+        "scene_cloud_cover_pct": 1.564577,
+        "sentinel2_datatake_id": "GS2A_20240625T071621_047050_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        -70.95086,
+        -33.73152,
+        -70.78548,
+        -33.68001
+      ],
+      "center": [
+        -70.86817,
+        -33.705765
+      ],
+      "emit_datetime": "2024-07-01T16:25:27+00:00",
+      "emit_to_target_offset_hours": -1.551242,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240701T162527_003313",
+      "group_id": "emit25km-0066",
+      "plume_id": "3313",
+      "reference": {
+        "datetime": "2024-06-16T14:52:21.978000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_19HCC_20240616_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_19HCC_20240616_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_19HCC_20240616_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_19HCC_20240616_0_L2A",
+        "mgrs_tile": "19HCC",
+        "scene_cloud_cover_pct": 0.289276,
+        "sentinel2_datatake_id": "GS2B_20240616T143749_038017_N05.10"
+      },
+      "reference_to_target_gap_hours": 360.000153,
+      "source_scenes": [
+        " 'EMIT_L2B_CH4ENH_V002_20240701T162539_2418310_002']",
+        "['EMIT_L2B_CH4ENH_V002_20240701T162527_2418310_001'"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-07-01T14:52:22.528000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_19HCC_20240701_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_19HCC_20240701_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_19HCC_20240701_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_19HCC_20240701_0_L2A",
+        "mgrs_tile": "19HCC",
+        "scene_cloud_cover_pct": 0.0036,
+        "sentinel2_datatake_id": "GS2A_20240701T143751_047140_N05.10"
+      }
+    },
+    {
+      "bbox": [
+        28.96578,
+        40.17965,
+        29.03248,
+        40.26912
+      ],
+      "center": [
+        28.99913,
+        40.224385
+      ],
+      "emit_datetime": "2024-08-04T09:00:59+00:00",
+      "emit_to_target_offset_hours": 0.136984,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240804T090059_003399",
+      "group_id": "emit25km-0067",
+      "plume_id": "3399",
+      "reference": {
+        "datetime": "2024-08-01T08:59:16.513000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_35TPE_20240801_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_35TPE_20240801_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_35TPE_20240801_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_35TPE_20240801_0_L2A",
+        "mgrs_tile": "35TPE",
+        "scene_cloud_cover_pct": 0.308755,
+        "sentinel2_datatake_id": "GS2A_20240801T084601_047580_N05.11"
+      },
+      "reference_to_target_gap_hours": 72.165453,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240804T090059_2421706_015']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-08-04T09:09:12.142000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_35TPE_20240804_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_35TPE_20240804_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_35TPE_20240804_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_35TPE_20240804_0_L2A",
+        "mgrs_tile": "35TPE",
+        "scene_cloud_cover_pct": 6.084649,
+        "sentinel2_datatake_id": "GS2A_20240804T085601_047623_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        -0.50509,
+        35.64116,
+        -0.44599,
+        35.68346
+      ],
+      "center": [
+        -0.47554,
+        35.66231
+      ],
+      "emit_datetime": "2024-08-04T10:32:00+00:00",
+      "emit_to_target_offset_hours": 0.322003,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240804T103200_003398",
+      "group_id": "emit25km-0068",
+      "plume_id": "3398",
+      "reference": {
+        "datetime": "2024-07-30T10:51:18.196000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_30SYE_20240730_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_30SYE_20240730_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_30SYE_20240730_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_30SYE_20240730_0_L2A",
+        "mgrs_tile": "30SYE",
+        "scene_cloud_cover_pct": 0.023199,
+        "sentinel2_datatake_id": "GS2B_20240730T103629_038644_N05.11"
+      },
+      "reference_to_target_gap_hours": 120.000282,
+      "source_scenes": [
+        " 'EMIT_L2B_CH4ENH_V002_20240804T103212_2421707_005']",
+        "['EMIT_L2B_CH4ENH_V002_20240804T103200_2421707_004'"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-08-04T10:51:19.211000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_30SYE_20240804_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_30SYE_20240804_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_30SYE_20240804_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_30SYE_20240804_0_L2A",
+        "mgrs_tile": "30SYE",
+        "scene_cloud_cover_pct": 0.009315,
+        "sentinel2_datatake_id": "GS2A_20240804T104021_047624_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        -98.89644,
+        25.94388,
+        -98.85686,
+        25.96882
+      ],
+      "center": [
+        -98.87665,
+        25.95635
+      ],
+      "emit_datetime": "2024-08-23T17:36:03+00:00",
+      "emit_to_target_offset_hours": -0.321992,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240823T173603_003468",
+      "group_id": "emit25km-0069",
+      "plume_id": "3468",
+      "reference": {
+        "datetime": "2024-08-21T17:26:37.441000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_14RNP_20240821_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_14RNP_20240821_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_14RNP_20240821_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_14RNP_20240821_0_L2A",
+        "mgrs_tile": "14RNP",
+        "scene_cloud_cover_pct": 0.076018,
+        "sentinel2_datatake_id": "GS2A_20240821T170851_047871_N05.11"
+      },
+      "reference_to_target_gap_hours": 47.835107,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240823T173603_2423611_032']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-08-23T17:16:43.828000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_14RNP_20240823_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_14RNP_20240823_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_14RNP_20240823_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_14RNP_20240823_0_L2A",
+        "mgrs_tile": "14RNP",
+        "scene_cloud_cover_pct": 6.031371,
+        "sentinel2_datatake_id": "GS2B_20240823T165849_038991_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        38.61047,
+        35.34836,
+        38.68747,
+        35.37384
+      ],
+      "center": [
+        38.64897,
+        35.3611
+      ],
+      "emit_datetime": "2024-08-24T07:28:09+00:00",
+      "emit_to_target_offset_hours": 0.867131,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240824T072809_003481",
+      "group_id": "emit25km-0070",
+      "plume_id": "3481",
+      "reference": {
+        "datetime": "2024-08-19T08:20:09.994000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_37SDV_20240819_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_37SDV_20240819_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_37SDV_20240819_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_37SDV_20240819_0_L2A",
+        "mgrs_tile": "37SDV",
+        "scene_cloud_cover_pct": 0.003099,
+        "sentinel2_datatake_id": "GS2A_20240819T080611_047837_N05.11"
+      },
+      "reference_to_target_gap_hours": 120.000188,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240824T072809_2423705_014']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-08-24T08:20:10.670000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_37SDV_20240824_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_37SDV_20240824_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_37SDV_20240824_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_37SDV_20240824_0_L2A",
+        "mgrs_tile": "37SDV",
+        "scene_cloud_cover_pct": 0.001735,
+        "sentinel2_datatake_id": "GS2B_20240824T080609_039000_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        55.79057,
+        25.63535,
+        55.80413,
+        25.64673
+      ],
+      "center": [
+        55.79735,
+        25.64104
+      ],
+      "emit_datetime": "2024-08-25T06:44:23+00:00",
+      "emit_to_target_offset_hours": 0.300441,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240825T064423_003500",
+      "group_id": "emit25km-0071",
+      "plume_id": "3500",
+      "reference": {
+        "datetime": "2024-08-20T07:02:27.709000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_40RCP_20240820_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_40RCP_20240820_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_40RCP_20240820_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_40RCP_20240820_0_L2A",
+        "mgrs_tile": "40RCP",
+        "scene_cloud_cover_pct": 3.476193,
+        "sentinel2_datatake_id": "GS2B_20240820T064629_038942_N05.11"
+      },
+      "reference_to_target_gap_hours": 119.999132,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240825T064423_2423804_027']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-08-25T07:02:24.586000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_40RCP_20240825_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_40RCP_20240825_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_40RCP_20240825_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_40RCP_20240825_0_L2A",
+        "mgrs_tile": "40RCP",
+        "scene_cloud_cover_pct": 0.027011,
+        "sentinel2_datatake_id": "GS2A_20240825T064621_047922_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        -117.87132,
+        33.93584,
+        -117.8274,
+        33.96404
+      ],
+      "center": [
+        -117.84936,
+        33.94994
+      ],
+      "emit_datetime": "2024-08-25T17:31:15+00:00",
+      "emit_to_target_offset_hours": 1.228448,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240825T173115_003486",
+      "group_id": "emit25km-0072",
+      "plume_id": "3486",
+      "reference": {
+        "datetime": "2024-08-20T18:45:01.966000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_11SMT_20240820_1_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_11SMT_20240820_1_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_11SMT_20240820_1_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_11SMT_20240820_1_L2A",
+        "mgrs_tile": "11SMT",
+        "scene_cloud_cover_pct": 0.008875,
+        "sentinel2_datatake_id": "GS2B_20240820T182919_038949_N05.11"
+      },
+      "reference_to_target_gap_hours": 119.998736,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240825T173115_2423811_008']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-08-25T18:44:57.414000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_11SMT_20240825_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_11SMT_20240825_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_11SMT_20240825_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_11SMT_20240825_0_L2A",
+        "mgrs_tile": "11SMT",
+        "scene_cloud_cover_pct": 0.003162,
+        "sentinel2_datatake_id": "GS2A_20240825T182921_047929_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        -117.20004,
+        32.84541,
+        -117.13768,
+        32.87469
+      ],
+      "center": [
+        -117.16886,
+        32.86005
+      ],
+      "emit_datetime": "2024-08-25T17:31:39+00:00",
+      "emit_to_target_offset_hours": 1.225794,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240825T173139_003488",
+      "group_id": "emit25km-0073",
+      "plume_id": "3488",
+      "reference": {
+        "datetime": "2024-08-22T18:35:14.583000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_11SMS_20240822_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_11SMS_20240822_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_11SMS_20240822_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_11SMS_20240822_0_L2A",
+        "mgrs_tile": "11SMS",
+        "scene_cloud_cover_pct": 0.038714,
+        "sentinel2_datatake_id": "GS2A_20240822T181921_047886_N05.11"
+      },
+      "reference_to_target_gap_hours": 72.16591,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240825T173139_2423811_010']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-08-25T18:45:11.860000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_11SMS_20240825_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_11SMS_20240825_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_11SMS_20240825_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_11SMS_20240825_0_L2A",
+        "mgrs_tile": "11SMS",
+        "scene_cloud_cover_pct": 0.003182,
+        "sentinel2_datatake_id": "GS2A_20240825T182921_047929_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        -116.75812,
+        32.39427,
+        -116.71474,
+        32.44687
+      ],
+      "center": [
+        -116.73643,
+        32.42057
+      ],
+      "emit_datetime": "2024-08-25T17:31:51+00:00",
+      "emit_to_target_offset_hours": 1.224727,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240825T173151_003489",
+      "group_id": "emit25km-0074",
+      "plume_id": "3489",
+      "reference": {
+        "datetime": "2024-08-22T18:35:26.159000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_11SNR_20240822_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_11SNR_20240822_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_11SNR_20240822_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_11SNR_20240822_0_L2A",
+        "mgrs_tile": "11SNR",
+        "scene_cloud_cover_pct": 1.958968,
+        "sentinel2_datatake_id": "GS2A_20240822T181921_047886_N05.11"
+      },
+      "reference_to_target_gap_hours": 72.164961,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240825T173151_2423811_011']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-08-25T18:45:20.018000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_11SNR_20240825_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_11SNR_20240825_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_11SNR_20240825_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_11SNR_20240825_0_L2A",
+        "mgrs_tile": "11SNR",
+        "scene_cloud_cover_pct": 0.018432,
+        "sentinel2_datatake_id": "GS2A_20240825T182921_047929_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        -43.76657,
+        -22.82994,
+        -43.73675,
+        -22.78548
+      ],
+      "center": [
+        -43.75166,
+        -22.80771
+      ],
+      "emit_datetime": "2024-09-24T13:36:17+00:00",
+      "emit_to_target_offset_hours": -0.461684,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240924T133617_003564",
+      "group_id": "emit25km-0075",
+      "plume_id": "3564",
+      "reference": {
+        "datetime": "2024-09-19T13:08:37.354000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_23KPQ_20240919_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_23KPQ_20240919_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_23KPQ_20240919_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_23KPQ_20240919_0_L2A",
+        "mgrs_tile": "23KPQ",
+        "scene_cloud_cover_pct": 1.17553,
+        "sentinel2_datatake_id": "GS2A_20240919T130251_048283_N05.11"
+      },
+      "reference_to_target_gap_hours": 119.999329,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240924T133617_2426808_018']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-09-24T13:08:34.938000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_23KPQ_20240924_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_23KPQ_20240924_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_23KPQ_20240924_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_23KPQ_20240924_0_L2A",
+        "mgrs_tile": "23KPQ",
+        "scene_cloud_cover_pct": 4.999469,
+        "sentinel2_datatake_id": "GS2B_20240924T130249_039446_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        -121.1925,
+        37.8654,
+        -121.15996,
+        37.88112
+      ],
+      "center": [
+        -121.17623,
+        37.87326
+      ],
+      "emit_datetime": "2024-09-30T20:03:54+00:00",
+      "emit_to_target_offset_hours": -0.996734,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240930T200354_003528",
+      "group_id": "emit25km-0076",
+      "plume_id": "3528",
+      "reference": {
+        "datetime": "2024-09-25T19:04:05.304000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_10SFG_20240925_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_10SFG_20240925_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_10SFG_20240925_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_10SFG_20240925_0_L2A",
+        "mgrs_tile": "10SFG",
+        "scene_cloud_cover_pct": 1.684726,
+        "sentinel2_datatake_id": "GS2B_20240925T185039_039464_N05.11"
+      },
+      "reference_to_target_gap_hours": 120.000126,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20240930T200354_2427413_001']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-09-30T19:04:05.758000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_10SFG_20240930_1_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_10SFG_20240930_1_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_10SFG_20240930_1_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_10SFG_20240930_1_L2A",
+        "mgrs_tile": "10SFG",
+        "scene_cloud_cover_pct": 0.000725,
+        "sentinel2_datatake_id": "GS2A_20240930T185211_048444_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        53.34944,
+        39.43137,
+        53.37926,
+        39.45251
+      ],
+      "center": [
+        53.36435,
+        39.44194
+      ],
+      "emit_datetime": "2024-10-05T06:51:06+00:00",
+      "emit_to_target_offset_hours": 0.462513,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241005T065106_003705",
+      "group_id": "emit25km-0077",
+      "plume_id": "3705",
+      "reference": {
+        "datetime": "2024-09-30T07:18:52.381000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_39SXD_20240930_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_39SXD_20240930_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_39SXD_20240930_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_39SXD_20240930_0_L2A",
+        "mgrs_tile": "39SXD",
+        "scene_cloud_cover_pct": 0.403643,
+        "sentinel2_datatake_id": "GS2A_20240930T070711_048437_N05.11"
+      },
+      "reference_to_target_gap_hours": 119.99963,
+      "source_scenes": [
+        " 'EMIT_L2B_CH4ENH_V002_20241005T065118_2427905_013']",
+        "['EMIT_L2B_CH4ENH_V002_20241005T065106_2427905_012'"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-10-05T07:18:51.048000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_39SXD_20241005_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_39SXD_20241005_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_39SXD_20241005_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_39SXD_20241005_0_L2A",
+        "mgrs_tile": "39SXD",
+        "scene_cloud_cover_pct": 17.908031,
+        "sentinel2_datatake_id": "GS2B_20241005T070649_039600_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        -96.74757,
+        33.29275,
+        -96.52038,
+        33.38059
+      ],
+      "center": [
+        -96.633975,
+        33.33667
+      ],
+      "emit_datetime": "2024-10-05T16:06:04+00:00",
+      "emit_to_target_offset_hours": 1.305314,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241005T160604_003663",
+      "group_id": "emit25km-0078",
+      "plume_id": "3663",
+      "reference": {
+        "datetime": "2024-10-02T17:14:27.815000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_14SQC_20241002_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_14SQC_20241002_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_14SQC_20241002_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_14SQC_20241002_0_L2A",
+        "mgrs_tile": "14SQC",
+        "scene_cloud_cover_pct": 0.00147,
+        "sentinel2_datatake_id": "GS2B_20241002T170039_039563_N05.11"
+      },
+      "reference_to_target_gap_hours": 72.165366,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20241005T160604_2427911_012']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-10-05T17:24:23.131000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_14SQC_20241005_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_14SQC_20241005_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_14SQC_20241005_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_14SQC_20241005_0_L2A",
+        "mgrs_tile": "14SQC",
+        "scene_cloud_cover_pct": 4.743779,
+        "sentinel2_datatake_id": "GS2B_20241005T171109_039606_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        -92.87928,
+        30.42705,
+        -92.84946,
+        30.45579
+      ],
+      "center": [
+        -92.86437,
+        30.44142
+      ],
+      "emit_datetime": "2024-10-14T20:17:56+00:00",
+      "emit_to_target_offset_hours": -3.21155,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241014T201756_003690",
+      "group_id": "emit25km-0079",
+      "plume_id": "3690",
+      "reference": {
+        "datetime": "2024-10-09T17:05:13.533000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_15RWP_20241009_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_15RWP_20241009_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_15RWP_20241009_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_15RWP_20241009_0_L2A",
+        "mgrs_tile": "15RWP",
+        "scene_cloud_cover_pct": 0.000693,
+        "sentinel2_datatake_id": "GS2B_20241009T165119_039663_N05.11"
+      },
+      "reference_to_target_gap_hours": 120.000246,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20241014T201756_2428813_044']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-10-14T17:05:14.420000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_15RWP_20241014_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_15RWP_20241014_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_15RWP_20241014_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_15RWP_20241014_0_L2A",
+        "mgrs_tile": "15RWP",
+        "scene_cloud_cover_pct": 0.146852,
+        "sentinel2_datatake_id": "GS2A_20241014T165251_048643_N05.11"
+      }
+    },
+    {
+      "bbox": [
+        58.41769,
+        23.32652,
+        58.46215,
+        23.3455
+      ],
+      "center": [
+        58.43992,
+        23.33601
+      ],
+      "emit_datetime": "2024-10-26T06:12:04+00:00",
+      "emit_to_target_offset_hours": 0.683744,
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241026T061204_003689",
+      "group_id": "emit25km-0080",
+      "plume_id": "3689",
+      "reference": {
+        "datetime": "2024-10-21T06:53:04.537000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2A_40QFL_20241021_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2A_40QFL_20241021_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2A_40QFL_20241021_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2A_40QFL_20241021_0_L2A",
+        "mgrs_tile": "40QFL",
+        "scene_cloud_cover_pct": 0.000614,
+        "sentinel2_datatake_id": "GS2A_20241021T063921_048737_N05.11"
+      },
+      "reference_to_target_gap_hours": 120.000262,
+      "source_scenes": [
+        "['EMIT_L2B_CH4ENH_V002_20241026T061204_2430004_003']"
+      ],
+      "status": "paired",
+      "target": {
+        "datetime": "2024-10-26T06:53:05.479000+00:00",
+        "l1c_l2a_acquisition_difference_seconds": 0.0,
+        "l1c_scene_id": "S2B_40QFL_20241026_0_L1C",
+        "l1c_spectral_asset_roles": {
+          "B02": "blue",
+          "B03": "green",
+          "B04": "red",
+          "B08": "nir",
+          "B11": "swir16",
+          "B12": "swir22"
+        },
+        "l1c_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l1c/items/S2B_40QFL_20241026_0_L1C",
+        "l2a_observability_asset_role": "scl",
+        "l2a_scene_id": "S2B_40QFL_20241026_0_L2A",
+        "l2a_stac_item": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a/items/S2B_40QFL_20241026_0_L2A",
+        "mgrs_tile": "40QFL",
+        "scene_cloud_cover_pct": 1.341711,
+        "sentinel2_datatake_id": "GS2B_20241026T063859_039900_N05.11"
+      }
+    }
+  ],
+  "provenance": {
+    "git_commit": "18652cd758c020afb3206311378770d72630dbdc",
+    "python": "3.11.14",
+    "requests": "2.33.1",
+    "script": "tools/build_emit_v002_l1c_pairs.py",
+    "script_sha256": "92b83d46f4dfea4210bc521bd94675030b6e0520278bdfec543c0088f7889ec9"
+  },
+  "schema_version": 1,
+  "scope": "prediction_blind_emit_external_l1c_target_reference_pairs",
+  "summary": {
+    "all_pairs_complete": true,
+    "complete_pairs": 80,
+    "input_candidates": 80,
+    "pair_errors": 0,
+    "unique_l1c_references": 80,
+    "unique_l1c_targets": 80
+  }
+}

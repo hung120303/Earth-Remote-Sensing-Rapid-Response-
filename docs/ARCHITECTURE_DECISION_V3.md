@@ -167,6 +167,7 @@ joint 2,000-replicate seed-and-group bootstrap against the author-fixed released
 - Authenticated EMIT CH4PLM audit: `reports/acquisition/EMIT_V002_AUTHENTICATED_PLUME_AUDIT.md`
 - Authenticated EMIT CH4ENH/uncertainty/sensitivity audit: `reports/acquisition/EMIT_V002_AUTHENTICATED_SCIENCE_AUDIT.md`
 - Prediction-blind strict-time EMIT/Sentinel-2 candidate manifest: `reports/acquisition/EMIT_V002_TIME_ALIGNED_CANDIDATES.md`
+- Product-matched external L1C target/reference pairs: `reports/acquisition/EMIT_V002_L1C_PAIRS.md`
 - Pipeline smoke evidence: `reports/experiments/MARS_V3_SMOKE.md`
 - Publication protocol: `configs/mars_publication_protocol.json`
 - Full plan and authenticated data handoff: `docs/PUBLICATION_ROADMAP.md`

@@ -625,6 +625,10 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/evaluate_mars_v3
   protected downloading. The frozen discovery pass found 107 strict-time matches and retained 80
   unique-source, unique-Sentinel-2, 25 km-independent candidates with zero query errors; see
   `reports/acquisition/EMIT_V002_TIME_ALIGNED_CANDIDATES.md`.
+- [x] Freeze product-matched Sentinel-2 pairs for all 80 candidates: six-band L1C target/reference
+  radiometry with co-temporal L2A SCL used only for observability. All targets and references are
+  unique, all references are prior same-tile acquisitions, and the actual maximum lookback is 30
+  days; see `reports/acquisition/EMIT_V002_L1C_PAIRS.md`.
 - Retain only time-aligned, observable examples; label ambiguous cases as uncertain.
 - Have two annotators review the locked external cohort.
 - Run the frozen model exactly once for primary reporting.
@@ -665,7 +669,8 @@ shopping.
   and validation-only MIL failure audit are complete.
 - The exact larger EMIT candidate list is now frozen from public CMR/STAC metadata: 80 independent
   candidates from 704 queried records, all within six hours and at most 20% catalog scene cloud.
-  Next acquire public Sentinel-2 crops and run local ROI-clear/containment gates before expanding
-  protected EMIT downloads. The 12-scene protected contract pilot is complete.
+  Product-matched L1C target/prior-reference pairs also pass for all 80. Next acquire their public
+  six-band L1C crops plus co-temporal L2A SCL masks and run local ROI-clear/containment gates before
+  expanding protected EMIT downloads. The 12-scene protected contract pilot is complete.
 - Keep raw data and trained models ignored; commit only manifests, hashes, code, configs, and
   results.
