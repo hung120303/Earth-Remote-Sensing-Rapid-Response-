@@ -680,6 +680,8 @@ def main() -> int:
             "script_sha256": sha256(Path(__file__)),
             "model_source": "EarthRemoteSensingRapidResponse/mars_v3_model.py",
             "model_source_sha256": sha256(MODEL_ROOT / "mars_v3_model.py"),
+            "adapter_source": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py",
+            "adapter_source_sha256": sha256(MODEL_ROOT / "mars_s2l_adapter.py"),
         },
         "decision": (
             "Pipeline contract passes. Do not interpret smoke metrics; acquire the frozen full fit/validation corpus before architecture selection."

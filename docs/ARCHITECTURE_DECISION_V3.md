@@ -111,6 +111,7 @@ must not silently replace the packaged legacy artifact with v3.
 ## Reproducibility record
 
 - Model: `EarthRemoteSensingRapidResponse/mars_v3_model.py`
+- Frozen native adapter: `EarthRemoteSensingRapidResponse/mars_s2l_adapter.py`
 - Connected proposal contract: `EarthRemoteSensingRapidResponse/mars_v3_proposals.py`
 - Trainer: `tools/train_mars_v3.py`
 - Proposal extractor/classifier: `tools/train_mars_v3_proposals.py`
@@ -119,6 +120,7 @@ must not silently replace the packaged legacy artifact with v3.
 - Proposal tests: `tests/test_mars_v3_proposals.py`
 - Minimum-corpus builder: `tools/build_mars_v3_training_cohort.py`
 - Frozen cohort evidence: `reports/acquisition/MARS_S2L_V3_TRAINING_COHORT.md`
+- Full image-header audit: `reports/acquisition/MARS_S2L_BAND_DESCRIPTION_AUDIT.md`
 - Pipeline smoke evidence: `reports/experiments/MARS_V3_SMOKE.md`
 - Publication protocol: `configs/mars_publication_protocol.json`
 - Full plan and authenticated data handoff: `docs/PUBLICATION_ROADMAP.md`

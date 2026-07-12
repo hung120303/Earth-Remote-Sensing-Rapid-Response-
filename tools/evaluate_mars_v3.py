@@ -375,6 +375,10 @@ def main() -> int:
         raise ValueError("V3 checkpoint identity does not match the validation report")
     if sha256(MODEL_ROOT / "mars_v3_model.py") != experiment["provenance"]["model_source_sha256"]:
         raise ValueError("V3 model source changed after checkpoint selection")
+    if sha256(MODEL_ROOT / "mars_s2l_adapter.py") != experiment["provenance"].get(
+        "adapter_source_sha256"
+    ):
+        raise ValueError("MARS adapter source changed after checkpoint selection")
     trainer = root / "tools" / "train_mars_v3.py"
     if (
         experiment["provenance"].get("script") != "tools/train_mars_v3.py"

@@ -85,11 +85,12 @@ def cache_identity(
     manifest: Path, checkpoint: Path, experiment: Path, decoder_channels: int
 ) -> dict[str, Any]:
     return {
-        "schema": "mars_v3_connected_proposals_v2",
+        "schema": "mars_v3_connected_proposals_v3",
         "manifest_sha256": sha256(manifest),
         "checkpoint_sha256": sha256(checkpoint),
         "validation_experiment_sha256": sha256(experiment),
         "model_source_sha256": sha256(MODEL_ROOT / "mars_v3_model.py"),
+        "adapter_source_sha256": sha256(MODEL_ROOT / "mars_s2l_adapter.py"),
         "proposal_source_sha256": sha256(MODEL_ROOT / "mars_v3_proposals.py"),
         "proposal_thresholds": list(PROPOSAL_THRESHOLDS),
         "maximum_proposals_per_scene": MAXIMUM_PROPOSALS_PER_SCENE,
