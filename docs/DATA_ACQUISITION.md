@@ -233,9 +233,9 @@ python tools/ersrr.py audit
 
 ## Immediate acquisition priorities
 
-1. Freeze and byte-estimate the selective 56,552-item MARS-S2L S2 cohort before its large transfer.
-2. Obtain authenticated V002 concentration COGs through a user-managed Earthdata session and preserve their nodata/unit metadata.
-3. Use MARS reviewed negatives for training, then mine hard negatives by geography, season, surface type, and cloud regime.
-4. Grow a geographically/source-disjoint held-out validation set to at least 50 independent groups.
-5. Collect tighter-time L2A pairs and keep before/after stacks on one grid.
-6. Consider synthetic plume injection only as augmentation; retain a real-data-only test set.
+1. Retrieve the 70 frozen official ERA5-Land point requests after the user configures a CDS token outside the repository.
+2. Preserve the 55-scene external cohort seal; do not inspect methane predictions until all five internal seeds are frozen.
+3. Use the complete MARS reviewed-negative strict cohort for no-plume evaluation; an absent EMIT catalogue plume is never a negative label.
+4. Have two annotators review the external positive-confirmation packet and mark ambiguous time-offset cases uncertain.
+5. Run the frozen five-seed model and released MARS-S2L once on their declared cohorts, then retain immutable scene-score caches.
+6. Consider synthetic plume injection only as training augmentation; all reported test cohorts remain real-data-only.

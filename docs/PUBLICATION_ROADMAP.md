@@ -619,8 +619,8 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/evaluate_mars_v3
 
 - [x] Validate the 12 authenticated pilot bundles and freeze the enhancement/sensitivity/uncertainty
   raster contract.
-- Build the external reader and time-aligned candidate manifest without inspecting frozen-model
-  predictions.
+- [x] Build the external reader and time-aligned candidate manifest without inspecting
+  frozen-model predictions.
 - [x] Use public CMR/STAC metadata to select a larger, prediction-blind candidate set before
   protected downloading. The frozen discovery pass found 124 strict-time/FOV matches and retained
   70 unique-source, unique-Sentinel-2, 25 km-independent candidates with zero query errors. Every
@@ -631,7 +631,20 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/evaluate_mars_v3
   radiometry with co-temporal L2A SCL used only for observability. All targets and references are
   unique, all references are prior same-tile acquisitions, and the actual maximum lookback is 30
   days; see `reports/acquisition/EMIT_V002_L1C_PAIRS.md`.
-- Retain only time-aligned, observable examples; label ambiguous cases as uncertain.
+- [x] Acquire and SHA-256 verify all 70 public native-grid L1C target/reference crops and
+  co-temporal L2A SCL masks. The prediction-blind preliminary gate retained 60 scenes with zero
+  acquisition errors; see `reports/acquisition/EMIT_V002_L1C_RASTER_GATE.md`.
+- [x] Reproduce MARS Sentinel-2 cloud preprocessing with the exact 13-band CloudSEN12+
+  `UNetMobV2_V2` weights. All 60 preliminary gate-pass masks are hash-bound; see
+  `reports/acquisition/EMIT_V002_CLOUDSEN12_ACQUISITION.md`.
+- [x] Seal the exact-model-input cohort before methane inference. Requiring at least 70% valid
+  target/reference radiometry and CloudSEN12-clear support both globally and over the EMIT plume
+  retains 55 independent scenes; see `reports/acquisition/EMIT_V002_EXTERNAL_COHORT_SEAL.md`.
+- [x] Freeze 70 official ERA5-Land 10-m `u`/`v` wind requests; all 70 payloads pass the public CDS
+  costing/schema endpoint. Authenticated retrieval remains pending a user-managed CDS token; see
+  `reports/acquisition/EMIT_V002_ERA5_WIND_REQUESTS.md`.
+- Retain only time-aligned, observable examples; label ambiguous cases as uncertain. The 55-scene
+  sealed cohort is positive confirmation, not a no-plume benchmark.
 - Have two annotators review the locked external cohort.
 - Run the frozen model exactly once for primary reporting.
 
@@ -656,23 +669,24 @@ shopping.
 
 ### User action required
 
-1. Download the public minimum MARS-S2L v3 transfer: 59,240 remaining assets / exactly
-   29,198,856,248 bytes (27.193 GiB). No account is required; use the four commands above and keep
-   the generated receipt. Source: <https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L>.
-2. No Earthdata action is currently required: the authenticated 12-scene CH4PLM/CH4ENH pilot is
-   downloaded, ignored, checksum-bound, and audited. Do not send credentials or temporary URLs.
+1. Sign in at <https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=download>,
+   accept the CC-BY terms, and configure the personal token in WSL `$HOME/.cdsapirc` following
+   <https://cds.climate.copernicus.eu/how-to-api>. Never put the token in chat or this repository.
+   The committed tool will acquire the data; no manual file placement is required.
+2. No further Earthdata action is currently required. The authenticated 12-scene science-contract
+   pilot is downloaded, ignored, checksum-bound, and audited; the larger positive-confirmation
+   cohort uses public CMR plume geometry.
 
 ### Work that does not require user credentials
 
-- Pinned metadata, the 1.708 GiB development tranche, and both released/MIL-v2 checkpoint baselines
-  are downloaded, verified, audited, and committed as compact evidence. The 27.193 GiB remaining
-  v3 training transfer awaits the user's download; do not perform the full ~100 GB mirror.
+- Pinned metadata, the full selective v3 fit/validation transfer, the full 4,401-scene strict
+  transfer, and both released/MIL-v2 checkpoint baselines are downloaded and verified. Raw data
+  remain ignored and only compact receipts are committed.
 - The MARS adapter, group/leakage protocol, classical baselines, released checkpoint reproduction,
   and validation-only MIL failure audit are complete.
-- The exact larger EMIT candidate list is now frozen from public CMR/STAC metadata: 70 independent
-  candidates from 512 queried records, all within six hours and within the native 2 km field of
-  view. Product-matched L1C target/prior-reference pairs also pass for all 70. Next acquire their public
-  six-band L1C crops plus co-temporal L2A SCL masks and run local ROI-clear/containment gates before
-  expanding protected EMIT downloads. The 12-scene protected contract pilot is complete.
+- The external path is frozen through exact input observability: 70 independent candidates became
+  60 preliminary L1C/SCL gate-pass scenes and 55 final CloudSEN12/radiometry gate-pass scenes. The
+  remaining input is official ERA5-Land wind; requests and downloader are committed, but CDS
+  authentication is user-managed. No methane prediction has been run on this cohort.
 - Keep raw data and trained models ignored; commit only manifests, hashes, code, configs, and
   results.

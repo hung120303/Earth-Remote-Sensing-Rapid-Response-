@@ -168,6 +168,10 @@ joint 2,000-replicate seed-and-group bootstrap against the author-fixed released
 - Authenticated EMIT CH4ENH/uncertainty/sensitivity audit: `reports/acquisition/EMIT_V002_AUTHENTICATED_SCIENCE_AUDIT.md`
 - Prediction-blind strict-time EMIT/Sentinel-2 candidate manifest: `reports/acquisition/EMIT_V002_TIME_ALIGNED_CANDIDATES.md`
 - Product-matched external L1C target/reference pairs: `reports/acquisition/EMIT_V002_L1C_PAIRS.md`
+- Verified external native-grid crop gate: `reports/acquisition/EMIT_V002_L1C_RASTER_GATE.md`
+- Exact MARS CloudSEN12 preprocessing audit: `reports/acquisition/EMIT_V002_CLOUDSEN12_ACQUISITION.md`
+- Final prediction-blind external cohort seal: `reports/acquisition/EMIT_V002_EXTERNAL_COHORT_SEAL.md`
+- Frozen official ERA5-Land request contract: `reports/acquisition/EMIT_V002_ERA5_WIND_REQUESTS.md`
 - Pipeline smoke evidence: `reports/experiments/MARS_V3_SMOKE.md`
 - Publication protocol: `configs/mars_publication_protocol.json`
 - Full plan and authenticated data handoff: `docs/PUBLICATION_ROADMAP.md`
