@@ -36,6 +36,7 @@ L1C_BANDS = {
 REQUIRED_L1C_ASSETS = set(L1C_BANDS.values())
 REQUIRED_L2A_ASSETS = {"scl"}
 SCENE_ID = re.compile(r"^(S2[ABC])_(\d{2}[A-Z]{3})_(\d{8})_(\d+)_(L1C|L2A)$")
+L1C_HTTPS_PREFIX = "https://sentinel-s2-l1c.s3.amazonaws.com/"
 
 
 def sha256(path: Path) -> str:
@@ -133,6 +134,50 @@ def public_item(collection: str, scene_id: str) -> dict[str, Any]:
     return request_json("GET", item_url(collection, scene_id))
 
 
+def official_l1c_url(catalog_href: str) -> tuple[str, bool]:
+    prefixes = (
+        "s3://sentinel-s2-l1c/",
+        "s3://sentinel-s2-l2a/",
+        "https://sentinel-s2-l1c.s3.amazonaws.com/",
+        "https://sentinel-s2-l2a.s3.amazonaws.com/",
+        "https://roda.sentinel-hub.com/sentinel-s2-l1c/",
+    )
+    for prefix in prefixes:
+        if catalog_href.startswith(prefix):
+            path = catalog_href[len(prefix) :]
+            corrected = "l2a" in prefix
+            return L1C_HTTPS_PREFIX + path, corrected
+    raise ValueError(f"Unsupported Sentinel-2 L1C catalog href: {catalog_href}")
+
+
+def validated_l1c_assets(item: dict[str, Any]) -> dict[str, Any]:
+    assets = item.get("assets", {})
+    spectral: dict[str, str] = {}
+    corrections = 0
+    for band, role in L1C_BANDS.items():
+        url, corrected = official_l1c_url(str(assets[role]["href"]))
+        spectral[band] = url
+        corrections += int(corrected)
+    tileinfo_href = str(assets.get("tileinfo_metadata", {}).get("href", ""))
+    tileinfo_url, tileinfo_corrected = official_l1c_url(tileinfo_href)
+    tileinfo = request_json("GET", tileinfo_url)
+    expected_product = str(item.get("properties", {}).get("s2:product_uri", "")).removesuffix(
+        ".SAFE"
+    )
+    observed_product = str(tileinfo.get("productName", ""))
+    if not expected_product or observed_product != expected_product:
+        raise ValueError(
+            f"Official L1C tile metadata mismatch: {observed_product!r} vs {expected_product!r}"
+        )
+    return {
+        "spectral_assets": spectral,
+        "tileinfo_metadata": tileinfo_url,
+        "product_name": observed_product,
+        "catalog_asset_hrefs_corrected_from_l2a_bucket": corrections
+        + int(tileinfo_corrected),
+    }
+
+
 def reference_l2a(
     candidate: dict[str, Any], *, max_cloud: float, max_reference_days: int
 ) -> dict[str, Any]:
@@ -216,6 +261,7 @@ def compact_item(
         raise ValueError(f"L1C/L2A datatake mismatch: {l1c_id} vs {l2a_id}")
     if acquisition_difference > 30.0:
         raise ValueError(f"L1C/L2A time mismatch: {l1c_id} vs {l2a_id}")
+    l1c_assets = validated_l1c_assets(l1c)
     return {
         "l1c_scene_id": l1c_id,
         "l1c_stac_item": item_url(L1C_COLLECTION, l1c_id),
@@ -229,7 +275,14 @@ def compact_item(
         ),
         "l1c_l2a_acquisition_difference_seconds": round(acquisition_difference, 6),
         "l1c_spectral_asset_roles": dict(L1C_BANDS),
+        "l1c_spectral_assets": l1c_assets["spectral_assets"],
+        "l1c_tileinfo_metadata": l1c_assets["tileinfo_metadata"],
+        "l1c_product_name": l1c_assets["product_name"],
+        "l1c_catalog_asset_hrefs_corrected_from_l2a_bucket": l1c_assets[
+            "catalog_asset_hrefs_corrected_from_l2a_bucket"
+        ],
         "l2a_observability_asset_role": "scl",
+        "l2a_scl_asset": str(l2a["assets"]["scl"]["href"]),
     }
 
 
@@ -296,11 +349,14 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- Pairing errors: {summary['pair_errors']}",
         f"- Unique L1C targets: {summary['unique_l1c_targets']}",
         f"- Unique L1C references: {summary['unique_l1c_references']}",
+        f"- Catalog L1C hrefs corrected from the L2A bucket: {summary['catalog_l1c_hrefs_corrected_from_l2a_bucket']}",
         f"- Maximum reference lookback: {report['contract']['max_reference_days']} days",
         "",
         "## Architecture contract",
         "",
         "The detector inputs use six Sentinel-2 L1C/TOA bands (`B02,B03,B04,B08,B11,B12`) to match the MARS-S2L training product. Each L1C target/reference is paired with the co-temporal same-tile L2A item only to obtain the SCL observability mask. References are the nearest prior same-tile scenes passing the catalog cloud prefilter; no future reference and no model prediction is used.",
+        "",
+        "The current Earth Search L1C item identities are valid, but some of their asset hrefs resolve to the L2A bucket. The manifest therefore reconstructs every tile path against the official public `sentinel-s2-l1c` bucket and verifies each official `tileInfo.json` product name against the STAC L1C product URI before accepting the pair.",
         "",
         "| Group | EMIT plume | L1C target | L1C reference | EMIT offset h | Reference gap h |",
         "|---|---|---|---|---:|---:|",
@@ -345,6 +401,11 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     errors = [item for item in outcomes if item["status"] != "paired"]
     target_ids = {item["target"]["l1c_scene_id"] for item in pairs}
     reference_ids = {item["reference"]["l1c_scene_id"] for item in pairs}
+    corrected_hrefs = sum(
+        int(item[role]["l1c_catalog_asset_hrefs_corrected_from_l2a_bucket"])
+        for item in pairs
+        for role in ("target", "reference")
+    )
     return {
         "schema_version": 1,
         "scope": "prediction_blind_emit_external_l1c_target_reference_pairs",
@@ -354,6 +415,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "spectral_product": "Sentinel-2 L1C top-of-atmosphere",
             "spectral_band_order": list(L1C_BANDS),
             "observability_product": "co-temporal same-tile Sentinel-2 L2A SCL",
+            "l1c_asset_authority": "official public sentinel-s2-l1c AWS bucket with tileInfo product-name verification",
             "reference_policy": "nearest prior same-tile scene; no future reference",
             "max_reference_days": args.max_reference_days,
             "max_catalog_scene_cloud_pct": args.max_cloud,
@@ -365,6 +427,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "pair_errors": len(errors),
             "unique_l1c_targets": len(target_ids),
             "unique_l1c_references": len(reference_ids),
+            "catalog_l1c_hrefs_corrected_from_l2a_bucket": corrected_hrefs,
             "all_pairs_complete": len(pairs) == len(candidates) and not errors,
         },
         "pairs": pairs,

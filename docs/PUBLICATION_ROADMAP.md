@@ -622,10 +622,12 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python tools/evaluate_mars_v3
 - Build the external reader and time-aligned candidate manifest without inspecting frozen-model
   predictions.
 - [x] Use public CMR/STAC metadata to select a larger, prediction-blind candidate set before
-  protected downloading. The frozen discovery pass found 107 strict-time matches and retained 80
-  unique-source, unique-Sentinel-2, 25 km-independent candidates with zero query errors; see
+  protected downloading. The frozen discovery pass found 124 strict-time/FOV matches and retained
+  70 unique-source, unique-Sentinel-2, 25 km-independent candidates with zero query errors. Every
+  plume complex fits the native 2 km model field of view. The 50% catalog-cloud ceiling is only a
+  search prefilter; accepted samples still require at least 70% local clear support. See
   `reports/acquisition/EMIT_V002_TIME_ALIGNED_CANDIDATES.md`.
-- [x] Freeze product-matched Sentinel-2 pairs for all 80 candidates: six-band L1C target/reference
+- [x] Freeze product-matched Sentinel-2 pairs for all 70 candidates: six-band L1C target/reference
   radiometry with co-temporal L2A SCL used only for observability. All targets and references are
   unique, all references are prior same-tile acquisitions, and the actual maximum lookback is 30
   days; see `reports/acquisition/EMIT_V002_L1C_PAIRS.md`.
@@ -667,9 +669,9 @@ shopping.
   v3 training transfer awaits the user's download; do not perform the full ~100 GB mirror.
 - The MARS adapter, group/leakage protocol, classical baselines, released checkpoint reproduction,
   and validation-only MIL failure audit are complete.
-- The exact larger EMIT candidate list is now frozen from public CMR/STAC metadata: 80 independent
-  candidates from 704 queried records, all within six hours and at most 20% catalog scene cloud.
-  Product-matched L1C target/prior-reference pairs also pass for all 80. Next acquire their public
+- The exact larger EMIT candidate list is now frozen from public CMR/STAC metadata: 70 independent
+  candidates from 512 queried records, all within six hours and within the native 2 km field of
+  view. Product-matched L1C target/prior-reference pairs also pass for all 70. Next acquire their public
   six-band L1C crops plus co-temporal L2A SCL masks and run local ROI-clear/containment gates before
   expanding protected EMIT downloads. The 12-scene protected contract pilot is complete.
 - Keep raw data and trained models ignored; commit only manifests, hashes, code, configs, and

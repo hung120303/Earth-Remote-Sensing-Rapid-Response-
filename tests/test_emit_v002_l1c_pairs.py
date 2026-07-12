@@ -9,7 +9,7 @@ TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from build_emit_v002_l1c_pairs import corresponding_l1c_id, mgrs_tile
+from build_emit_v002_l1c_pairs import corresponding_l1c_id, mgrs_tile, official_l1c_url
 
 
 class L1CPairContractTests(unittest.TestCase):
@@ -27,6 +27,16 @@ class L1CPairContractTests(unittest.TestCase):
         self.assertEqual(mgrs_tile("S2B_13RFQ_20241210_0_L2A"), "13RFQ")
         with self.assertRaises(ValueError):
             mgrs_tile("not-a-sentinel-scene")
+
+    def test_official_l1c_url_corrects_l2a_catalog_bucket(self) -> None:
+        url, corrected = official_l1c_url(
+            "s3://sentinel-s2-l2a/tiles/40/Q/CK/2023/2/2/0/B02.jp2"
+        )
+        self.assertTrue(corrected)
+        self.assertEqual(
+            url,
+            "https://sentinel-s2-l1c.s3.amazonaws.com/tiles/40/Q/CK/2023/2/2/0/B02.jp2",
+        )
 
 
 if __name__ == "__main__":

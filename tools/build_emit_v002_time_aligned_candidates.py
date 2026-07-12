@@ -118,7 +118,16 @@ def circular_hours(left: float, right: float) -> float:
     return min(difference, 24.0 - difference)
 
 
-def query_order(records: list[dict[str, Any]], excluded: set[str]) -> list[dict[str, Any]]:
+def bbox_extent_km(bbox: list[float]) -> tuple[float, float, float]:
+    center_lon, center_lat = bbox_center(bbox)
+    width = haversine_km([bbox[0], center_lat], [bbox[2], center_lat])
+    height = haversine_km([center_lon, bbox[1]], [center_lon, bbox[3]])
+    return width, height, max(width, height)
+
+
+def query_order(
+    records: list[dict[str, Any]], excluded: set[str], *, max_plume_extent_km: float
+) -> list[dict[str, Any]]:
     buckets: dict[tuple[int, int], list[tuple[float, str, dict[str, Any]]]] = defaultdict(list)
     for record in records:
         if record.get("GranuleUR") in excluded:
@@ -129,6 +138,9 @@ def query_order(records: list[dict[str, Any]], excluded: set[str]) -> list[dict[
         except (KeyError, TypeError, ValueError):
             continue
         lon, lat = bbox_center(feature["bbox"])
+        _, _, maximum_extent = bbox_extent_km(feature["bbox"])
+        if maximum_extent > max_plume_extent_km:
+            continue
         local_solar_hour = (observed.hour + observed.minute / 60.0 + lon / 15.0) % 24.0
         solar_distance = circular_hours(local_solar_hour, 10.5)
         cell = (math.floor((lat + 90.0) / 10.0), math.floor((lon + 180.0) / 10.0))
@@ -184,6 +196,9 @@ def query_one(
             },
         )
         center_lon, center_lat = bbox_center(feature["bbox"])
+        plume_width_km, plume_height_km, plume_maximum_extent_km = bbox_extent_km(
+            feature["bbox"]
+        )
         candidates = []
         for item in response.get("features", []):
             bbox = item.get("bbox")
@@ -221,6 +236,11 @@ def query_one(
             "emit_datetime": observed.isoformat(),
             "bbox": [round(float(value), 7) for value in feature["bbox"]],
             "center": [round(center_lon, 7), round(center_lat, 7)],
+            "plume_extent_km": {
+                "width": round(plume_width_km, 6),
+                "height": round(plume_height_km, 6),
+                "maximum": round(plume_maximum_extent_km, 6),
+            },
             "emit_cloud_cover_pct": record.get("CloudCover"),
             "s2_scene_id": scene_id,
             "s2_datetime": scene_time.isoformat(),
@@ -337,16 +357,18 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- Query errors: {summary['query_errors']:,}",
         f"- Time gate: +/-{report['contract']['max_offset_hours']:.1f} h",
         f"- Scene-cloud prefilter: <={report['contract']['max_scene_cloud_pct']:.1f}%",
+        f"- Maximum plume extent: <={report['contract']['max_plume_extent_km']:.1f} km inside a 2.0 km model field of view",
         "",
         "Candidate selection uses only public CMR geometry/time metadata and public Sentinel-2 catalog metadata. No detector checkpoint or prediction participates in selection.",
         "",
-        "| Group | EMIT plume | Sentinel-2 scene | Offset h | Cloud % | Center lon/lat |",
-        "|---|---|---|---:|---:|---|",
+        "| Group | EMIT plume | Sentinel-2 scene | Offset h | Cloud % | Plume max km | Center lon/lat |",
+        "|---|---|---|---:|---:|---:|---|",
     ]
     for item in report["candidates"]:
         lines.append(
             f"| `{item['group_id']}` | `{item['granule_id']}` | `{item['s2_scene_id']}` | "
             f"{item['offset_hours']:.3f} | {item['scene_cloud_cover_pct']:.2f} | "
+            f"{item['plume_extent_km']['maximum']:.3f} | "
             f"{item['center'][0]:.3f}, {item['center'][1]:.3f} |"
         )
     lines.extend(
@@ -354,7 +376,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
             "",
             "## Use boundary",
             "",
-            "These are acquisition candidates, not accepted labels. Each scene must still pass local ROI-clear, common EMIT enhancement/uncertainty/sensitivity support, exact product-grid, plume-containment, deduplication, and two-annotator review gates. An absent catalog plume cannot create a `NO_PLUME` label.",
+            "These are acquisition candidates, not accepted labels. The primary cohort is geometry-filtered to complexes that fit the native model field of view; larger complexes require a separately declared tiled analysis. Each scene must still pass local ROI-clear, common EMIT enhancement/uncertainty/sensitivity support, exact product-grid, plume-containment, deduplication, and two-annotator review gates. An absent catalog plume cannot create a `NO_PLUME` label.",
         ]
     )
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -365,7 +387,11 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     root = repo_root()
     records = cmr_records()
     excluded = pilot_ids(root)
-    ordered = query_order(records, excluded)
+    ordered = query_order(
+        records,
+        excluded,
+        max_plume_extent_km=args.max_plume_extent_km,
+    )
     outcomes: list[dict[str, Any]] = []
     queries_completed = 0
     for start in range(0, min(len(ordered), args.max_queries), args.workers):
@@ -402,6 +428,8 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "max_offset_hours": args.max_offset_hours,
             "max_scene_cloud_pct": args.max_cloud,
             "group_radius_km": args.group_radius_km,
+            "max_plume_extent_km": args.max_plume_extent_km,
+            "native_model_field_of_view_km": 2.0,
             "one_candidate_per_source_scene": True,
             "one_candidate_per_sentinel2_scene": True,
             "pilot_granules_excluded": sorted(excluded),
@@ -437,12 +465,13 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--target-groups", type=int, default=80)
-    parser.add_argument("--max-queries", type=int, default=800)
+    parser.add_argument("--target-groups", type=int, default=70)
+    parser.add_argument("--max-queries", type=int, default=1600)
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--max-offset-hours", type=float, default=6.0)
-    parser.add_argument("--max-cloud", type=float, default=20.0)
+    parser.add_argument("--max-cloud", type=float, default=50.0)
     parser.add_argument("--group-radius-km", type=float, default=25.0)
+    parser.add_argument("--max-plume-extent-km", type=float, default=2.0)
     parser.add_argument("--output-json", default=DEFAULT_JSON.as_posix())
     parser.add_argument("--output-markdown", default=DEFAULT_MARKDOWN.as_posix())
     args = parser.parse_args()
@@ -454,6 +483,8 @@ def main() -> int:
         parser.error("max-cloud must be in [0, 100]")
     if not 0 < args.group_radius_km <= 100:
         parser.error("group-radius-km must be in (0, 100]")
+    if not 0 < args.max_plume_extent_km <= 2.0:
+        parser.error("max-plume-extent-km must be in (0, 2]")
     root = repo_root()
     try:
         report = build(args)

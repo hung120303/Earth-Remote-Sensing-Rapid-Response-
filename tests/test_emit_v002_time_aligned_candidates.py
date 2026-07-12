@@ -9,7 +9,11 @@ TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from build_emit_v002_time_aligned_candidates import haversine_km, independent_best
+from build_emit_v002_time_aligned_candidates import (
+    bbox_extent_km,
+    haversine_km,
+    independent_best,
+)
 
 
 def candidate(
@@ -37,6 +41,12 @@ class CandidateGroupingTests(unittest.TestCase):
         self.assertGreater(one_degree_equator, 111.0)
         self.assertLess(one_degree_equator, 112.0)
         self.assertEqual(haversine_km([1.0, 0.0], [0.0, 0.0]), one_degree_equator)
+
+    def test_bbox_extent_reports_width_height_and_maximum(self) -> None:
+        width, height, maximum = bbox_extent_km([0.0, 0.0, 0.01, 0.02])
+        self.assertGreater(width, 1.0)
+        self.assertGreater(height, 2.0)
+        self.assertEqual(maximum, height)
 
     def test_independent_best_deduplicates_source_and_sentinel_scene(self) -> None:
         records = [
