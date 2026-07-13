@@ -16,9 +16,14 @@ from evaluate_methanes2cm_v5_1_test import (  # noqa: E402
     build_v4_batch,
     model_metrics,
 )
+from acquire_methanes2cm_v5_test import verified_freeze  # noqa: E402
 
 
 class MethaneS2CMV51LocationTestEvaluatorTests(unittest.TestCase):
+    def test_pretest_report_identities_match_frozen_files(self) -> None:
+        ensemble = verified_freeze(ROOT)
+        self.assertTrue(ensemble["freeze"]["location_test_still_sealed"])
+
     def test_v4_compatibility_batch_uses_frozen_channel_contract(self) -> None:
         values = torch.arange(2 * 20 * 4 * 4, dtype=torch.float32).reshape(2, 20, 4, 4)
         converted = build_v4_batch(values)
