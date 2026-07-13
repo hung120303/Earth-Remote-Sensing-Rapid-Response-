@@ -1,0 +1,594 @@
+{
+  "cohort": {
+    "groups": 24,
+    "negatives": 5440,
+    "positives": 505,
+    "scenes": 5945,
+    "strict_spatial_test_loaded": false
+  },
+  "decision": "Promote the frozen v4.3 ensemble to one evaluation on the already-opened strict MARS cohort using only these validation calibrators, scene thresholds, and pixel threshold. Treat the comparison as development evidence, not a new untouched paper test.",
+  "ensemble_rule": {
+    "learned_combiner": false,
+    "scene": "mean of three per-seed empirical percentiles; each seed score is sigmoid(mean of top 2% observable segmentation logits)",
+    "segmentation": "arithmetic mean of three per-pixel plume probabilities"
+  },
+  "final_development_rule": {
+    "calibration": "per-seed empirical CDF fitted on all internal-validation scores; arithmetic mean of the three percentiles",
+    "operating_points": {
+      "0.05": {
+        "target_fpr": 0.05,
+        "threshold": 0.8740117746005046,
+        "training_fpr": 0.05,
+        "training_precision": 0.6075036075036075,
+        "training_recall": 0.8336633663366336
+      },
+      "0.08": {
+        "target_fpr": 0.08,
+        "threshold": 0.8424446313428652,
+        "training_fpr": 0.07463235294117647,
+        "training_precision": 0.5195266272189349,
+        "training_recall": 0.8693069306930693
+      },
+      "0.095": {
+        "target_fpr": 0.095,
+        "threshold": 0.8187832912811887,
+        "training_fpr": 0.09283088235294118,
+        "training_precision": 0.4695378151260504,
+        "training_recall": 0.8851485148514852
+      }
+    },
+    "ranking": {
+      "auroc": 0.9536302417006406,
+      "average_precision": 0.8125500549558754
+    }
+  },
+  "generated_at_utc": "2026-07-13T20:33:00.824347+00:00",
+  "group_held_audit": {
+    "folds": [
+      {
+        "fold": 1,
+        "held_out_groups": 5,
+        "held_out_operating_points": {
+          "0.05": {
+            "false_positive_rate": 0.08139534883720931,
+            "fn": 48,
+            "fp": 70,
+            "precision": 0.8412698412698413,
+            "recall": 0.8854415274463007,
+            "tn": 790,
+            "tp": 371
+          },
+          "0.08": {
+            "false_positive_rate": 0.11976744186046512,
+            "fn": 33,
+            "fp": 103,
+            "precision": 0.7893660531697342,
+            "recall": 0.9212410501193318,
+            "tn": 757,
+            "tp": 386
+          },
+          "0.095": {
+            "false_positive_rate": 0.12674418604651164,
+            "fn": 30,
+            "fp": 109,
+            "precision": 0.7811244979919679,
+            "recall": 0.9284009546539379,
+            "tn": 751,
+            "tp": 389
+          }
+        },
+        "held_out_positives": 419,
+        "held_out_ranking": {
+          "auroc": 0.9596103679857911,
+          "average_precision": 0.9269844519472936
+        },
+        "held_out_scenes": 1279,
+        "thresholds_selected_on_training_groups": {
+          "0.05": {
+            "target_fpr": 0.05,
+            "threshold": 0.9319902843263325,
+            "training_fpr": 0.04759825327510917,
+            "training_precision": 0.1925925925925926,
+            "training_recall": 0.6046511627906976
+          },
+          "0.08": {
+            "target_fpr": 0.08,
+            "threshold": 0.8852693241891699,
+            "training_fpr": 0.07991266375545851,
+            "training_precision": 0.13679245283018868,
+            "training_recall": 0.6744186046511628
+          },
+          "0.095": {
+            "target_fpr": 0.095,
+            "threshold": 0.8748392627518217,
+            "training_fpr": 0.09039301310043668,
+            "training_precision": 0.12473572938689217,
+            "training_recall": 0.686046511627907
+          }
+        },
+        "training_groups": 19,
+        "training_scenes": 4666
+      },
+      {
+        "fold": 2,
+        "held_out_groups": 4,
+        "held_out_operating_points": {
+          "0.05": {
+            "false_positive_rate": 0.03882397286091217,
+            "fn": 8,
+            "fp": 103,
+            "precision": 0.11206896551724138,
+            "recall": 0.6190476190476191,
+            "tn": 2550,
+            "tp": 13
+          },
+          "0.08": {
+            "false_positive_rate": 0.06633999246136449,
+            "fn": 7,
+            "fp": 176,
+            "precision": 0.07368421052631578,
+            "recall": 0.6666666666666666,
+            "tn": 2477,
+            "tp": 14
+          },
+          "0.095": {
+            "false_positive_rate": 0.07802487749717302,
+            "fn": 7,
+            "fp": 207,
+            "precision": 0.06334841628959276,
+            "recall": 0.6666666666666666,
+            "tn": 2446,
+            "tp": 14
+          }
+        },
+        "held_out_positives": 21,
+        "held_out_ranking": {
+          "auroc": 0.8697969953152764,
+          "average_precision": 0.3855679476622435
+        },
+        "held_out_scenes": 2674,
+        "thresholds_selected_on_training_groups": {
+          "0.05": {
+            "target_fpr": 0.05,
+            "threshold": 0.8294099663711404,
+            "training_fpr": 0.049874416935773234,
+            "training_precision": 0.7435424354243543,
+            "training_recall": 0.8326446280991735
+          },
+          "0.08": {
+            "target_fpr": 0.08,
+            "threshold": 0.7889534291246306,
+            "training_fpr": 0.0792967348403301,
+            "training_precision": 0.6578947368421053,
+            "training_recall": 0.878099173553719
+          },
+          "0.095": {
+            "target_fpr": 0.095,
+            "threshold": 0.7702027922144095,
+            "training_fpr": 0.09257265877287406,
+            "training_precision": 0.6244541484716157,
+            "training_recall": 0.8863636363636364
+          }
+        },
+        "training_groups": 20,
+        "training_scenes": 3271
+      },
+      {
+        "fold": 3,
+        "held_out_groups": 4,
+        "held_out_operating_points": {
+          "0.05": {
+            "false_positive_rate": 0.042939719240297276,
+            "fn": 6,
+            "fp": 52,
+            "precision": 0.14754098360655737,
+            "recall": 0.6,
+            "tn": 1159,
+            "tp": 9
+          },
+          "0.08": {
+            "false_positive_rate": 0.07184145334434351,
+            "fn": 3,
+            "fp": 87,
+            "precision": 0.12121212121212122,
+            "recall": 0.8,
+            "tn": 1124,
+            "tp": 12
+          },
+          "0.095": {
+            "false_positive_rate": 0.09000825763831544,
+            "fn": 3,
+            "fp": 109,
+            "precision": 0.09917355371900827,
+            "recall": 0.8,
+            "tn": 1102,
+            "tp": 12
+          }
+        },
+        "held_out_positives": 15,
+        "held_out_ranking": {
+          "auroc": 0.8958987063033307,
+          "average_precision": 0.41216468757067193
+        },
+        "held_out_scenes": 1226,
+        "thresholds_selected_on_training_groups": {
+          "0.05": {
+            "target_fpr": 0.05,
+            "threshold": 0.8600692237055872,
+            "training_fpr": 0.049420666824308346,
+            "training_precision": 0.6629032258064517,
+            "training_recall": 0.8387755102040816
+          },
+          "0.08": {
+            "target_fpr": 0.08,
+            "threshold": 0.825598643780462,
+            "training_fpr": 0.07637739418302199,
+            "training_precision": 0.5693333333333334,
+            "training_recall": 0.8714285714285714
+          },
+          "0.095": {
+            "target_fpr": 0.095,
+            "threshold": 0.8030656212474394,
+            "training_fpr": 0.09482147079687869,
+            "training_precision": 0.5203349282296651,
+            "training_recall": 0.8877551020408163
+          }
+        },
+        "training_groups": 20,
+        "training_scenes": 4719
+      },
+      {
+        "fold": 4,
+        "held_out_groups": 6,
+        "held_out_operating_points": {
+          "0.05": {
+            "false_positive_rate": 0.049429657794676805,
+            "fn": 6,
+            "fp": 13,
+            "precision": 0.4583333333333333,
+            "recall": 0.6470588235294118,
+            "tn": 250,
+            "tp": 11
+          },
+          "0.08": {
+            "false_positive_rate": 0.07604562737642585,
+            "fn": 6,
+            "fp": 20,
+            "precision": 0.3548387096774194,
+            "recall": 0.6470588235294118,
+            "tn": 243,
+            "tp": 11
+          },
+          "0.095": {
+            "false_positive_rate": 0.08745247148288973,
+            "fn": 6,
+            "fp": 23,
+            "precision": 0.3235294117647059,
+            "recall": 0.6470588235294118,
+            "tn": 240,
+            "tp": 11
+          }
+        },
+        "held_out_positives": 17,
+        "held_out_ranking": {
+          "auroc": 0.8559606352046523,
+          "average_precision": 0.6045833089128229
+        },
+        "held_out_scenes": 280,
+        "thresholds_selected_on_training_groups": {
+          "0.05": {
+            "target_fpr": 0.05,
+            "threshold": 0.8725507502206531,
+            "training_fpr": 0.04983581224647479,
+            "training_precision": 0.6137724550898204,
+            "training_recall": 0.8401639344262295
+          },
+          "0.08": {
+            "target_fpr": 0.08,
+            "threshold": 0.840894380700206,
+            "training_fpr": 0.07417423218079969,
+            "training_precision": 0.5270935960591133,
+            "training_recall": 0.8770491803278688
+          },
+          "0.095": {
+            "target_fpr": 0.095,
+            "threshold": 0.8168284789644013,
+            "training_fpr": 0.0938767626038246,
+            "training_precision": 0.47288503253796094,
+            "training_recall": 0.8934426229508197
+          }
+        },
+        "training_groups": 18,
+        "training_scenes": 5665
+      },
+      {
+        "fold": 5,
+        "held_out_groups": 5,
+        "held_out_operating_points": {
+          "0.05": {
+            "false_positive_rate": 0.04415011037527594,
+            "fn": 16,
+            "fp": 20,
+            "precision": 0.4594594594594595,
+            "recall": 0.5151515151515151,
+            "tn": 433,
+            "tp": 17
+          },
+          "0.08": {
+            "false_positive_rate": 0.0640176600441501,
+            "fn": 13,
+            "fp": 29,
+            "precision": 0.40816326530612246,
+            "recall": 0.6060606060606061,
+            "tn": 424,
+            "tp": 20
+          },
+          "0.095": {
+            "false_positive_rate": 0.09271523178807947,
+            "fn": 12,
+            "fp": 42,
+            "precision": 0.3333333333333333,
+            "recall": 0.6363636363636364,
+            "tn": 411,
+            "tp": 21
+          }
+        },
+        "held_out_positives": 33,
+        "held_out_ranking": {
+          "auroc": 0.897049969897652,
+          "average_precision": 0.4728946062673924
+        },
+        "held_out_scenes": 486,
+        "thresholds_selected_on_training_groups": {
+          "0.05": {
+            "target_fpr": 0.05,
+            "threshold": 0.8736032240337058,
+            "training_fpr": 0.0481251253258472,
+            "training_precision": 0.6261682242990654,
+            "training_recall": 0.8516949152542372
+          },
+          "0.08": {
+            "target_fpr": 0.08,
+            "threshold": 0.8393478659095073,
+            "training_fpr": 0.07499498696611188,
+            "training_precision": 0.5283732660781841,
+            "training_recall": 0.8877118644067796
+          },
+          "0.095": {
+            "target_fpr": 0.095,
+            "threshold": 0.8154729193380961,
+            "training_fpr": 0.0930419089633046,
+            "training_precision": 0.4786516853932584,
+            "training_recall": 0.902542372881356
+          }
+        },
+        "training_groups": 19,
+        "training_scenes": 5459
+      }
+    ],
+    "method": "five fixed 25 km group folds; fit each seed empirical CDF and every operating threshold on four folds, then apply the mean calibrated percentile to the held fold",
+    "operating_points": {
+      "0.05": {
+        "false_positive_rate": 0.04742647058823529,
+        "fn": 84,
+        "fp": 258,
+        "precision": 0.6200294550810015,
+        "recall": 0.8336633663366336,
+        "tn": 5182,
+        "tp": 421
+      },
+      "0.08": {
+        "false_positive_rate": 0.07628676470588236,
+        "fn": 62,
+        "fp": 415,
+        "precision": 0.5163170163170163,
+        "recall": 0.8772277227722772,
+        "tn": 5025,
+        "tp": 443
+      },
+      "0.095": {
+        "false_positive_rate": 0.0900735294117647,
+        "fn": 58,
+        "fp": 490,
+        "precision": 0.47705442902881534,
+        "recall": 0.8851485148514852,
+        "tn": 4950,
+        "tp": 447
+      }
+    },
+    "ranking": {
+      "auroc": 0.9619558095515435,
+      "average_precision": 0.8557586847595288
+    }
+  },
+  "ignored_calibration_cache": {
+    "bytes": 207383,
+    "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v4_3_internal_validation_ensemble.npz",
+    "sha256": "6fa1ba053be68a1dd84dec427acc03db2eeec022ebbaa5792f66a0077b8534d0",
+    "tracked": false
+  },
+  "promotion_checks": {
+    "final_ap_not_below_v3_mean": true,
+    "final_auroc_not_below_v3_mean": true,
+    "final_fpr_at_most_0_05": true,
+    "final_recall_at_fpr5_not_below_v3_mean": true,
+    "group_held_ap_not_below_v3_mean": true,
+    "group_held_auroc_not_below_v3_mean": true,
+    "group_held_fpr_at_most_0_05": true,
+    "group_held_recall_at_fpr5_not_below_v3_mean": true,
+    "pixel_dice_not_below_v3_mean": true
+  },
+  "protocol": {
+    "path": "reports/experiments/MARS_V4_3_ENSEMBLE_PROTOCOL.md",
+    "sha256": "6284a595725095a1852d19745fff151a8baf7c1ade2823a9dcdf06448cd4035f"
+  },
+  "provenance": {
+    "git_commit": "f0f60e5113011b9525fb43a779f25eeb9ba2e970",
+    "git_tracked_worktree_dirty_at_start": false,
+    "runtime": {
+      "cuda_runtime": "12.8",
+      "device": "NVIDIA GeForce RTX 5070",
+      "numpy": "2.4.4",
+      "rasterio": "1.4.4",
+      "sklearn": "1.9.0",
+      "torch": "2.11.0+cu128"
+    },
+    "script": "tools/evaluate_mars_v4_3_ensemble.py",
+    "script_sha256": "ae6f0bfa1db94d4e9c2a35033b57dec079308dffbc12e9a6eacf00ecb964b7cb"
+  },
+  "schema_version": 1,
+  "scope": "v4_3_predeclared_internal_validation_ensemble",
+  "segmentation": {
+    "selected": {
+      "intersection_pixels": 667756,
+      "positive_pixel_dice": 0.723509653932,
+      "positive_pixel_iou": 0.5667960248666524,
+      "predicted_pixels": 930899,
+      "threshold": 0.8,
+      "truth_pixels": 914981
+    },
+    "selection": "maximum positive-pixel Dice; lower threshold breaks an exact tie",
+    "threshold_grid": [
+      {
+        "intersection_pixels": 864894,
+        "positive_pixel_dice": 0.5175931422771624,
+        "positive_pixel_iou": 0.3491572772890771,
+        "predicted_pixels": 2427003,
+        "threshold": 0.1,
+        "truth_pixels": 914981
+      },
+      {
+        "intersection_pixels": 838177,
+        "positive_pixel_dice": 0.6041217920465205,
+        "positive_pixel_iou": 0.4327897581639545,
+        "predicted_pixels": 1859880,
+        "threshold": 0.2,
+        "truth_pixels": 914981
+      },
+      {
+        "intersection_pixels": 816312,
+        "positive_pixel_dice": 0.6495782538116306,
+        "positive_pixel_iou": 0.4810188044180247,
+        "predicted_pixels": 1598379,
+        "threshold": 0.30000000000000004,
+        "truth_pixels": 914981
+      },
+      {
+        "intersection_pixels": 793899,
+        "positive_pixel_dice": 0.6791931288393944,
+        "positive_pixel_iou": 0.5142259202835469,
+        "predicted_pixels": 1422790,
+        "threshold": 0.4,
+        "truth_pixels": 914981
+      },
+      {
+        "intersection_pixels": 769250,
+        "positive_pixel_dice": 0.6993353473221615,
+        "positive_pixel_iou": 0.5376753691909393,
+        "predicted_pixels": 1284965,
+        "threshold": 0.5,
+        "truth_pixels": 914981
+      },
+      {
+        "intersection_pixels": 743475,
+        "positive_pixel_dice": 0.714273019026625,
+        "positive_pixel_iou": 0.555540196011035,
+        "predicted_pixels": 1166786,
+        "threshold": 0.6,
+        "truth_pixels": 914981
+      },
+      {
+        "intersection_pixels": 711353,
+        "positive_pixel_dice": 0.7230975504138213,
+        "positive_pixel_iou": 0.5662903619991991,
+        "predicted_pixels": 1052535,
+        "threshold": 0.7000000000000001,
+        "truth_pixels": 914981
+      },
+      {
+        "intersection_pixels": 667756,
+        "positive_pixel_dice": 0.723509653932,
+        "positive_pixel_iou": 0.5667960248666524,
+        "predicted_pixels": 930899,
+        "threshold": 0.8,
+        "truth_pixels": 914981
+      },
+      {
+        "intersection_pixels": 593737,
+        "positive_pixel_dice": 0.7063664191702823,
+        "positive_pixel_iou": 0.5460328408584054,
+        "predicted_pixels": 766121,
+        "threshold": 0.9,
+        "truth_pixels": 914981
+      }
+    ]
+  },
+  "source_reports": [
+    {
+      "checkpoint": {
+        "bytes": 54528731,
+        "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v4_2_seed606.pt",
+        "sha256": "2c37d6f9da00881f194e6f1e87fd3a6b2e272def860bba8ec7b408962974f211",
+        "tracked": false
+      },
+      "path": "reports/experiments/mars_v4_2_seed606_validation.json",
+      "seed": 606,
+      "sha256": "36661657477a40d3791e800bd0aa61ef6f793e5a76f171c3213f88fedada4fc7"
+    },
+    {
+      "checkpoint": {
+        "bytes": 54528731,
+        "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v4_2_seed707.pt",
+        "sha256": "1be167d3913d5ea41259bb6ae740b8ce5d3d4bc673171752803f91329328b123",
+        "tracked": false
+      },
+      "path": "reports/experiments/mars_v4_2_seed707_validation.json",
+      "seed": 707,
+      "sha256": "2ea899f3b63c1ccb8c8efb7c00a9e03e1a92addb3dafdca9c9d6e43c5c1cead0"
+    },
+    {
+      "checkpoint": {
+        "bytes": 54528731,
+        "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v4_2_seed808.pt",
+        "sha256": "96621572f97ce623c5875d6dd18ab8b390a2632fc23686e0d8d248f0eaa33766",
+        "tracked": false
+      },
+      "path": "reports/experiments/mars_v4_2_seed808_validation.json",
+      "seed": 808,
+      "sha256": "c7400fc89459dc5d4293bda45152d4be83ba2907250771699a63c892bb2065a8"
+    }
+  ],
+  "strict_evaluation_authorized": true,
+  "v3_internal_reference": {
+    "description": "five-seed ERSRR v3 mean on the same internal-validation cohort",
+    "inputs": [
+      {
+        "path": "reports/experiments/mars_v3_seed101_validation.json",
+        "sha256": "9b352945bf4c86560c6a1d0579e413a3b8ca24c1fc18b1c77e7806ab0dbe1220"
+      },
+      {
+        "path": "reports/experiments/mars_v3_seed202_validation.json",
+        "sha256": "e8caa6c59ec776bd28e81329f0cf171a0006b1212be5c876be9c8231da4459fc"
+      },
+      {
+        "path": "reports/experiments/mars_v3_validation.json",
+        "sha256": "f3e9c182c0c239801d96d4f4ac520d846b3031a0bb4153c25116d369a294d2e2"
+      },
+      {
+        "path": "reports/experiments/mars_v3_seed404_validation.json",
+        "sha256": "c9a1aeb65df8f7d5f9a79e207b9c48ea81f0c6e149ea4b04874eb78535d7ec2a"
+      },
+      {
+        "path": "reports/experiments/mars_v3_seed505_validation.json",
+        "sha256": "000db71e4369d9c56b2729fe52bacf4117081478eb72cbb554ae9dd66fce6214"
+      }
+    ],
+    "mean": {
+      "auroc": 0.9287843258590565,
+      "average_precision": 0.8102610640555105,
+      "positive_pixel_dice": 0.5769508190919819,
+      "recall_at_fpr5": 0.8312871287128714
+    },
+    "seeds": 5
+  }
+}
