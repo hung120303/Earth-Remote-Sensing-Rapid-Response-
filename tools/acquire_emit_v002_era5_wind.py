@@ -38,6 +38,18 @@ def repo_root() -> Path:
     return Path(value).resolve()
 
 
+def cds_credentials_available(
+    environment: dict[str, str] | None = None, home: Path | None = None
+) -> bool:
+    """Check the credential locations supported by pinned cdsapi without reading secrets."""
+    values = os.environ if environment is None else environment
+    if values.get("CDSAPI_URL") and values.get("CDSAPI_KEY"):
+        return True
+    default = (Path.home() if home is None else home) / ".cdsapirc"
+    path = Path(values.get("CDSAPI_RC", str(default))).expanduser()
+    return path.is_file() and path.stat().st_size > 0
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -227,6 +239,12 @@ def main() -> None:
         import cdsapi
     except ImportError as exc:
         raise RuntimeError('Install the pinned dependency with pip install "cdsapi>=0.7.7"') from exc
+    if not args.verify_only and not cds_credentials_available():
+        raise RuntimeError(
+            "Copernicus CDS credentials are not configured. Accept the ERA5-Land terms, "
+            "then follow https://cds.climate.copernicus.eu/how-to-api and create "
+            "$HOME/.cdsapirc outside the repository. Earthdata credentials do not apply."
+        )
     client = None if args.verify_only else cdsapi.Client()
 
     def run(item: dict[str, Any]) -> dict[str, Any]:

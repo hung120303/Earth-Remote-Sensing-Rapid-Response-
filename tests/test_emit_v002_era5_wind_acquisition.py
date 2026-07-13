@@ -10,10 +10,29 @@ TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from acquire_emit_v002_era5_wind import parse_wind_csv
+from acquire_emit_v002_era5_wind import cds_credentials_available, parse_wind_csv
 
 
 class Era5WindAcquisitionTests(unittest.TestCase):
+    def test_credentials_accept_nonempty_rc_without_reading_secret(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            (home / ".cdsapirc").write_text("configured", encoding="utf-8")
+            self.assertTrue(cds_credentials_available({}, home))
+
+    def test_credentials_accept_paired_environment(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            home = Path(directory)
+            self.assertTrue(
+                cds_credentials_available(
+                    {"CDSAPI_URL": "https://example.test", "CDSAPI_KEY": "configured"},
+                    home,
+                )
+            )
+            self.assertFalse(
+                cds_credentials_available({"CDSAPI_URL": "https://example.test"}, home)
+            )
+
     def test_parse_wind_csv_selects_frozen_hourly_bracket(self) -> None:
         content = """valid_time,latitude,longitude,u10,v10
 2023-02-21T08:00:00Z,31.9,36.2,1.25,-2.5
