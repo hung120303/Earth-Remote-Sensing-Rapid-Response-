@@ -1,0 +1,600 @@
+{
+  "calibration_cache": {
+    "bytes": 13559029,
+    "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_1_ensemble_calibration.npz",
+    "sha256": "6e6ad2334b046292ca2c88d9364215f8964f0b49a28478e5d04cbc72a7ea7510",
+    "tracked": false
+  },
+  "campaign_protocol": {
+    "path": "reports/experiments/methanes2cm_v5_1_campaign_protocol.json",
+    "sha256": "295f04e00e2d6762920dcd7162daa7fe6b34566fdf82fc09c6b6cfa952553a1f"
+  },
+  "cohort": {
+    "geographic_groups": 64,
+    "location_test_images_opened": false,
+    "negatives": 7656,
+    "positives": 7802,
+    "scenes": 15458
+  },
+  "controlled_v5_seed1101_reference": {
+    "pixel_average_precision": 0.3170876556376502,
+    "pixel_dice": 0.4317820633375676,
+    "pixel_intersection_over_union": 0.27533294527705116,
+    "recall_at_fpr_le_0.05": 0.34209177134068186,
+    "report_sha256": "dd23389a96c99407f80cc20327be605b85ab446bfae849fb84a7ed9dc5228d45",
+    "scene_auroc": 0.8341466144709566,
+    "scene_average_precision": 0.8224551121841779
+  },
+  "final_all_development_rule": {
+    "operating_points": {
+      "0.02": {
+        "false_positive_rate": 0.019984326018808778,
+        "precision": 0.9332169358358795,
+        "recall": 0.2740322994104076,
+        "threshold": 0.8273817225169275
+      },
+      "0.05": {
+        "false_positive_rate": 0.049895506792058515,
+        "precision": 0.905116741182315,
+        "recall": 0.46705972827480136,
+        "threshold": 0.7335791607366197
+      },
+      "0.08": {
+        "false_positive_rate": 0.07993730407523511,
+        "precision": 0.8836501901140684,
+        "recall": 0.5957446808510638,
+        "threshold": 0.6632380213050416
+      },
+      "0.095": {
+        "false_positive_rate": 0.09495820271682341,
+        "precision": 0.8725455820476858,
+        "recall": 0.6379133555498591,
+        "threshold": 0.6363910812092982
+      }
+    },
+    "ranking": {
+      "auroc": 0.8654762450053666,
+      "average_precision": 0.865757657702295
+    },
+    "scene_calibration": "equal mean of three per-seed empirical-CDF percentiles fitted on all internal development scores",
+    "segmentation": {
+      "average_precision": 0.30902676286474456,
+      "dice": 0.4423896627361422,
+      "intersection_over_union": 0.28401818616153796,
+      "intersection_pixels": 2350524,
+      "method": "equal arithmetic mean of three seed probability maps",
+      "observable_pixels": 15781295,
+      "predicted_positive_pixels": 7672502,
+      "threshold": 0.39999999999999997,
+      "threshold_grid": [
+        {
+          "dice": 0.39889838773478103,
+          "intersection_over_union": 0.249139957563608,
+          "intersection_pixels": 2807466,
+          "predicted_positive_pixels": 11122111,
+          "threshold": 0.05
+        },
+        {
+          "dice": 0.4073441637028551,
+          "intersection_over_union": 0.25576408563567155,
+          "intersection_pixels": 2724963,
+          "predicted_positive_pixels": 10425183,
+          "threshold": 0.1
+        },
+        {
+          "dice": 0.41508026039010587,
+          "intersection_over_union": 0.26189355209385684,
+          "intersection_pixels": 2667263,
+          "predicted_positive_pixels": 9897809,
+          "threshold": 0.15
+        },
+        {
+          "dice": 0.4254933613074421,
+          "intersection_over_union": 0.2702391662576692,
+          "intersection_pixels": 2612108,
+          "predicted_positive_pixels": 9324035,
+          "threshold": 0.2
+        },
+        {
+          "dice": 0.43225961488407066,
+          "intersection_over_union": 0.2757214261927089,
+          "intersection_pixels": 2553369,
+          "predicted_positive_pixels": 8860068,
+          "threshold": 0.25
+        },
+        {
+          "dice": 0.43423625701215113,
+          "intersection_over_union": 0.2773319148286863,
+          "intersection_pixels": 2490016,
+          "predicted_positive_pixels": 8514500,
+          "threshold": 0.3
+        },
+        {
+          "dice": 0.4388891594378339,
+          "intersection_over_union": 0.2811390120638629,
+          "intersection_pixels": 2437832,
+          "predicted_positive_pixels": 8155116,
+          "threshold": 0.35
+        },
+        {
+          "dice": 0.4423896627361422,
+          "intersection_over_union": 0.28401818616153796,
+          "intersection_pixels": 2350524,
+          "predicted_positive_pixels": 7672502,
+          "threshold": 0.39999999999999997
+        },
+        {
+          "dice": 0.4409717818817125,
+          "intersection_over_union": 0.2828504171745882,
+          "intersection_pixels": 2208022,
+          "predicted_positive_pixels": 7060361,
+          "threshold": 0.44999999999999996
+        },
+        {
+          "dice": 0.4377896129334402,
+          "intersection_over_union": 0.280237294898224,
+          "intersection_pixels": 2090216,
+          "predicted_positive_pixels": 6594967,
+          "threshold": 0.49999999999999994
+        },
+        {
+          "dice": 0.4339733290797735,
+          "intersection_over_union": 0.27711745728108367,
+          "intersection_pixels": 1972501,
+          "predicted_positive_pixels": 6136440,
+          "threshold": 0.5499999999999999
+        },
+        {
+          "dice": 0.420722718745078,
+          "intersection_over_union": 0.2664020585484293,
+          "intersection_pixels": 1732265,
+          "predicted_positive_pixels": 5280726,
+          "threshold": 0.6
+        },
+        {
+          "dice": 0.2997114231301359,
+          "intersection_over_union": 0.17627091495367675,
+          "intersection_pixels": 831958,
+          "predicted_positive_pixels": 2597742,
+          "threshold": 0.65
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.7
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.75
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.7999999999999999
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.85
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.9
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.95
+        }
+      ],
+      "truth_positive_pixels": 2953985
+    }
+  },
+  "freeze": {
+    "architecture_frozen": true,
+    "checkpoints_frozen": true,
+    "location_test_still_sealed": true,
+    "pixel_threshold_frozen": true,
+    "remaining_before_unlock": "commit the one-shot test acquisition and comparison evaluator against these hashes",
+    "scene_calibrators_frozen": true,
+    "scene_thresholds_frozen": true
+  },
+  "generated_at_utc": "2026-07-13T23:31:15.433845+00:00",
+  "group_bootstrap": {
+    "auroc": {
+      "95ci": [
+        0.8123537852144472,
+        0.9109949818691668
+      ],
+      "bootstrap_mean": 0.8642893100487118,
+      "bootstrap_standard_deviation": 0.025907448624997064,
+      "point_estimate": 0.8621868250699055
+    },
+    "average_precision": {
+      "95ci": [
+        0.8232158901599749,
+        0.902003526249249
+      ],
+      "bootstrap_mean": 0.8651818023058856,
+      "bootstrap_standard_deviation": 0.020304567024750423,
+      "point_estimate": 0.8646781793520106
+    },
+    "false_positive_rate": {
+      "95ci": [
+        0.04012980284481025,
+        0.06496554271519195
+      ],
+      "bootstrap_mean": 0.051968562708197705,
+      "bootstrap_standard_deviation": 0.006367401887865174,
+      "point_estimate": 0.05185475444096134
+    },
+    "method": "2000 nonparametric resamples of the 64 frozen 25 km groups with replacement",
+    "pixel_dice": {
+      "95ci": [
+        0.36748762560455145,
+        0.5200296884824367
+      ],
+      "bootstrap_mean": 0.44206174043414886,
+      "bootstrap_standard_deviation": 0.040254746630687246,
+      "point_estimate": 0.43888122771352384
+    },
+    "pixel_intersection_over_union": {
+      "95ci": [
+        0.22510556818654384,
+        0.35137845978542626
+      ],
+      "bootstrap_mean": 0.2846079541529466,
+      "bootstrap_standard_deviation": 0.03332056934295513,
+      "point_estimate": 0.2811325028592931
+    },
+    "precision": {
+      "95ci": [
+        0.8753579096045198,
+        0.9246693267569187
+      ],
+      "bootstrap_mean": 0.9018527158076931,
+      "bootstrap_standard_deviation": 0.01256459828036024,
+      "point_estimate": 0.902072027627035
+    },
+    "recall": {
+      "95ci": [
+        0.38251363764664087,
+        0.55447584671609
+      ],
+      "bootstrap_mean": 0.4709956683740755,
+      "bootstrap_standard_deviation": 0.0437753730587227,
+      "point_estimate": 0.4687259677005896
+    },
+    "replicates": 2000,
+    "seed": 20260713
+  },
+  "group_held_calibration_audit": {
+    "folds": [
+      {
+        "fold": 0,
+        "held_groups": 11,
+        "held_scenes": 3627,
+        "pixel_threshold_selected_on_training_groups": 0.44999999999999996,
+        "scene_thresholds_selected_on_training_groups": {
+          "0.02": {
+            "false_positive_rate": 0.019925068119891007,
+            "precision": 0.9309734513274336,
+            "recall": 0.2648095318006377,
+            "threshold": 0.8326712309469473
+          },
+          "0.05": {
+            "false_positive_rate": 0.04989782016348774,
+            "precision": 0.9022681787858572,
+            "recall": 0.45393522403087766,
+            "threshold": 0.7408503085115375
+          },
+          "0.08": {
+            "false_positive_rate": 0.07987057220708448,
+            "precision": 0.8803266139321255,
+            "recall": 0.5789562007048162,
+            "threshold": 0.671709914631054
+          },
+          "0.095": {
+            "false_positive_rate": 0.09485694822888284,
+            "precision": 0.8687249587555974,
+            "recall": 0.6185601611008559,
+            "threshold": 0.6478178795818894
+          }
+        },
+        "training_groups": 53,
+        "training_scenes": 11831
+      },
+      {
+        "fold": 1,
+        "held_groups": 10,
+        "held_scenes": 3097,
+        "pixel_threshold_selected_on_training_groups": 0.39999999999999997,
+        "scene_thresholds_selected_on_training_groups": {
+          "0.02": {
+            "false_positive_rate": 0.019957467691804353,
+            "precision": 0.9368530020703933,
+            "recall": 0.28969270166453265,
+            "threshold": 0.8172747620203328
+          },
+          "0.05": {
+            "false_positive_rate": 0.04989366922951088,
+            "precision": 0.9091179976162098,
+            "recall": 0.4883162612035851,
+            "threshold": 0.7218401963163714
+          },
+          "0.08": {
+            "false_positive_rate": 0.0799934565679699,
+            "precision": 0.8891407844026298,
+            "recall": 0.6277208706786171,
+            "threshold": 0.6483833562548876
+          },
+          "0.095": {
+            "false_positive_rate": 0.09487976443644691,
+            "precision": 0.8785340314136125,
+            "recall": 0.6714148527528809,
+            "threshold": 0.6221449181565677
+          }
+        },
+        "training_groups": 54,
+        "training_scenes": 12361
+      },
+      {
+        "fold": 2,
+        "held_groups": 18,
+        "held_scenes": 4595,
+        "pixel_threshold_selected_on_training_groups": 0.39999999999999997,
+        "scene_thresholds_selected_on_training_groups": {
+          "0.02": {
+            "false_positive_rate": 0.01986632008911994,
+            "precision": 0.9356197352587244,
+            "recall": 0.28391455176191344,
+            "threshold": 0.8263831354137898
+          },
+          "0.05": {
+            "false_positive_rate": 0.04994430003713331,
+            "precision": 0.9058782365290413,
+            "recall": 0.4727040350556874,
+            "threshold": 0.7320568289913775
+          },
+          "0.08": {
+            "false_positive_rate": 0.0798366134422577,
+            "precision": 0.8851802403204272,
+            "recall": 0.6052583531130181,
+            "threshold": 0.6601614041547762
+          },
+          "0.095": {
+            "false_positive_rate": 0.09487560341626439,
+            "precision": 0.8749694152189871,
+            "recall": 0.6529121781997443,
+            "threshold": 0.6301205928380742
+          }
+        },
+        "training_groups": 46,
+        "training_scenes": 10863
+      },
+      {
+        "fold": 3,
+        "held_groups": 9,
+        "held_scenes": 1505,
+        "pixel_threshold_selected_on_training_groups": 0.39999999999999997,
+        "scene_thresholds_selected_on_training_groups": {
+          "0.02": {
+            "false_positive_rate": 0.01996816669078281,
+            "precision": 0.9261241970021413,
+            "recall": 0.24566884407838682,
+            "threshold": 0.8410377696552712
+          },
+          "0.05": {
+            "false_positive_rate": 0.049920416726957025,
+            "precision": 0.8962717979555022,
+            "recall": 0.42331723942061916,
+            "threshold": 0.7521202130963474
+          },
+          "0.08": {
+            "false_positive_rate": 0.07987266676313123,
+            "precision": 0.8755635707844905,
+            "recall": 0.5515478557228061,
+            "threshold": 0.6818844215103085
+          },
+          "0.095": {
+            "false_positive_rate": 0.09492114021125742,
+            "precision": 0.8647701504844362,
+            "recall": 0.595711445612042,
+            "threshold": 0.6545545760768293
+          }
+        },
+        "training_groups": 55,
+        "training_scenes": 13953
+      },
+      {
+        "fold": 4,
+        "held_groups": 16,
+        "held_scenes": 2634,
+        "pixel_threshold_selected_on_training_groups": 0.44999999999999996,
+        "scene_thresholds_selected_on_training_groups": {
+          "0.02": {
+            "false_positive_rate": 0.019867549668874173,
+            "precision": 0.937375745526839,
+            "recall": 0.29095958037642705,
+            "threshold": 0.8211686421293408
+          },
+          "0.05": {
+            "false_positive_rate": 0.0499842321034374,
+            "precision": 0.9109550561797752,
+            "recall": 0.5003085467448318,
+            "threshold": 0.719718236639634
+          },
+          "0.08": {
+            "false_positive_rate": 0.07994323557237465,
+            "precision": 0.8875582168995343,
+            "recall": 0.6174020364085159,
+            "threshold": 0.650629028904138
+          },
+          "0.095": {
+            "false_positive_rate": 0.09492273730684327,
+            "precision": 0.8754654530409599,
+            "recall": 0.6528849120641778,
+            "threshold": 0.6254938656685383
+          }
+        },
+        "training_groups": 48,
+        "training_scenes": 12824
+      }
+    ],
+    "method": "five stable-hash folds of frozen 25 km groups; calibrate each seed and select scene/pixel thresholds on four folds, then apply to the held fold",
+    "operating_points": {
+      "0.02": {
+        "false_negative": 5678,
+        "false_positive": 154,
+        "false_positive_rate": 0.020114942528735632,
+        "precision": 0.932396839332748,
+        "recall": 0.27223788772109714,
+        "true_negative": 7502,
+        "true_positive": 2124
+      },
+      "0.05": {
+        "false_negative": 4145,
+        "false_positive": 397,
+        "false_positive_rate": 0.05185475444096134,
+        "precision": 0.902072027627035,
+        "recall": 0.4687259677005896,
+        "true_negative": 7259,
+        "true_positive": 3657
+      },
+      "0.08": {
+        "false_negative": 3099,
+        "false_positive": 643,
+        "false_positive_rate": 0.08398641588296761,
+        "precision": 0.8797231575009353,
+        "recall": 0.6027941553447834,
+        "true_negative": 7013,
+        "true_positive": 4703
+      },
+      "0.095": {
+        "false_negative": 2755,
+        "false_positive": 771,
+        "false_positive_rate": 0.10070532915360501,
+        "precision": 0.8674802337573049,
+        "recall": 0.6468854139964112,
+        "true_negative": 6885,
+        "true_positive": 5047
+      }
+    },
+    "ranking": {
+      "auroc": 0.8621868250699055,
+      "average_precision": 0.8646781793520106
+    },
+    "segmentation": {
+      "dice": 0.43888122771352384,
+      "intersection_over_union": 0.2811325028592931,
+      "intersection_pixels": 2271247,
+      "predicted_positive_pixels": 7396182,
+      "truth_positive_pixels": 2953985
+    }
+  },
+  "interpretation": "Internal development confirmation. Group-held calibration reduces calibration-rule optimism, but checkpoints were selected on this cohort; external performance is unknown until the one-shot location test.",
+  "provenance": {
+    "git_commit": "4bc1f48f20eb5fe04d9bea9cefc13977e704184c",
+    "script": "tools/aggregate_methanes2cm_v5_1.py",
+    "script_sha256": "d296ea385323f4a88cfe4d22128a2f4121f218c36d1bee62f8ca4c0828ef49a2",
+    "tracked_worktree_dirty_at_start": false
+  },
+  "schema_version": 1,
+  "scope": "methanes2cm_v5_1_three_seed_internal_development_ensemble",
+  "seed_mean": {
+    "pixel_average_precision": 0.30284145095735077,
+    "pixel_dice": 0.4329881191993499,
+    "pixel_intersection_over_union": 0.276324681990716,
+    "recall_at_fpr_le_0.05": 0.41250106810219594,
+    "scene_auroc": 0.8523755502456255,
+    "scene_average_precision": 0.8481152563185246
+  },
+  "seeds": [
+    {
+      "best_epoch": 10,
+      "checkpoint": {
+        "bytes": 37480589,
+        "path": "EarthRemoteSensingRapidResponse/artifacts/methanes2cm_v5_1_seed1101.pt",
+        "sha256": "7b648548cc62ca3f6d428df2cf427e373fba5a7bdcf03aabada68bf6f1cfc446",
+        "tracked": false
+      },
+      "pixel_average_precision": 0.31153134117827613,
+      "pixel_dice": 0.4365800865375604,
+      "pixel_intersection_over_union": 0.2792468503043978,
+      "prediction_cache": {
+        "bytes": 12171360,
+        "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_1_validation_seed1101.npz",
+        "sha256": "e2f168a0f637a17c2619330b9f38b53eb42459e70345b2a7bd5295778b5f6ca1",
+        "tracked": false
+      },
+      "recall_at_fpr_le_0.05": 0.4320687003332479,
+      "report_path": "reports/experiments/methanes2cm_v5_1_seed1101_validation.json",
+      "report_sha256": "a4a830619d217859c586b78d23d06ca6c54a91800a7d6497e1ed70ff9628997c",
+      "scene_auroc": 0.8572073845304516,
+      "scene_average_precision": 0.8542347097027895,
+      "seed": 1101
+    },
+    {
+      "best_epoch": 6,
+      "checkpoint": {
+        "bytes": 37480589,
+        "path": "EarthRemoteSensingRapidResponse/artifacts/methanes2cm_v5_1_seed2202.pt",
+        "sha256": "f6bb7e8f549bb81b176c34a2635db37408bb8367c1db4d06e6657ce460cf74ec",
+        "tracked": false
+      },
+      "pixel_average_precision": 0.3060130600825231,
+      "pixel_dice": 0.4267495719995633,
+      "pixel_intersection_over_union": 0.2712534281919451,
+      "prediction_cache": {
+        "bytes": 11670518,
+        "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_1_validation_seed2202.npz",
+        "sha256": "f68fc37663361e72d703b71d9e73b78f5450caaa02b90fce0c916308bff636a7",
+        "tracked": false
+      },
+      "recall_at_fpr_le_0.05": 0.41361189438605483,
+      "report_path": "reports/experiments/methanes2cm_v5_1_seed2202_validation.json",
+      "report_sha256": "ad4b1577cd811dbea129aee3098af9ac6b23483a408ffb0edf560081f785565d",
+      "scene_auroc": 0.8509195773958236,
+      "scene_average_precision": 0.849270583242592,
+      "seed": 2202
+    },
+    {
+      "best_epoch": 12,
+      "checkpoint": {
+        "bytes": 37480589,
+        "path": "EarthRemoteSensingRapidResponse/artifacts/methanes2cm_v5_1_seed3303.pt",
+        "sha256": "b67f2b1a1f9a591cb4848ffd6f0c1249ec359f0e21f553d83b0f0ec4c34ca29f",
+        "tracked": false
+      },
+      "pixel_average_precision": 0.290979951611253,
+      "pixel_dice": 0.4356346990609258,
+      "pixel_intersection_over_union": 0.2784737674758052,
+      "prediction_cache": {
+        "bytes": 13581218,
+        "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_1_validation_seed3303.npz",
+        "sha256": "56653621950bf208167ce942a046839fad05c37df576eb93cb7cf44d751da470",
+        "tracked": false
+      },
+      "recall_at_fpr_le_0.05": 0.3918226095872853,
+      "report_path": "reports/experiments/methanes2cm_v5_1_seed3303_validation.json",
+      "report_sha256": "2469ddc4a36ca06df81e386113a40e0f4f1fb3b32fb1c591c54ca5351ee36a30",
+      "scene_auroc": 0.8489996888106016,
+      "scene_average_precision": 0.8408404760101922,
+      "seed": 3303
+    }
+  ]
+}
