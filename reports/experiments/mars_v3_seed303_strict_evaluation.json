@@ -1,0 +1,428 @@
+{
+  "artifact": {
+    "bytes": 57104805,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v3_seed303.pt",
+    "sha256": "86c1bc2e55b73de21fa4e8831b009f50a1d75ea3da16f03cfc152c64fff53426",
+    "tracked": false
+  },
+  "cohort": {
+    "groups": 150,
+    "negatives": 4334,
+    "positives": 67,
+    "samples": 4401
+  },
+  "decision": "V3 does not clear the frozen full-MARS gate. Preserve this result; do not retune from strict-test behavior.",
+  "generated_at_utc": "2026-07-13T00:29:29.895199+00:00",
+  "model": {
+    "heads": [
+      "segmentation",
+      "proposal_presence",
+      "quality"
+    ],
+    "initialization": "from_scratch_required_for_primary_experiment",
+    "input_channels": [
+      "mbmp_release",
+      "target_B02",
+      "target_B03",
+      "target_B04",
+      "target_B08",
+      "target_B11",
+      "target_B12",
+      "reference_B02",
+      "reference_B03",
+      "reference_B04",
+      "reference_B08",
+      "reference_B11",
+      "reference_B12",
+      "wind_u_div8",
+      "wind_v_div8",
+      "cloud_binary"
+    ],
+    "model_name": "ersrr_mars_full_unet_proposal_v3",
+    "normalization": "GroupNorm",
+    "parameter_count": 14268915,
+    "schema_version": 1,
+    "topk_fraction": 0.01
+  },
+  "operating_rule": {
+    "neural_scene": {
+      "lower_no_plume_threshold": 0.4578857421875,
+      "lower_selection": {
+        "accepted_samples": 5260,
+        "npv": 0.9832699619771863,
+        "weighted_coverage": 0.8847771236333053
+      },
+      "quality_selection": {
+        "fn": 203,
+        "fp": 3,
+        "recall_high_quality": 0.9633242999096657,
+        "specificity_low_quality": 0.9926829268292683,
+        "tn": 407,
+        "tp": 5332
+      },
+      "quality_threshold": 0.88818359375,
+      "segmentation": {
+        "minimum_connected_pixels": 200,
+        "pixel_threshold": 0.8818359375
+      },
+      "selected_on": "internal_validation_only",
+      "upper_plume_threshold": 0.46240234375
+    },
+    "primary_scene": {
+      "lower_no_plume_threshold": 0.4578857421875,
+      "lower_selection": {
+        "accepted_samples": 5260,
+        "npv": 0.9832699619771863,
+        "weighted_coverage": 0.8847771236333053
+      },
+      "neural_presence_weight": 1.0,
+      "scene_score": "validation-selected convex blend of neural presence and maximum calibrated connected-proposal probability; proposal score is zero with no proposal",
+      "selected_on": "internal_validation_only",
+      "upper_plume_threshold": 0.46240234375
+    }
+  },
+  "primary_scene_score": "validation-selected neural/proposal blended probability",
+  "promotion_gate_passed": false,
+  "proposal_artifact": {
+    "bytes": 51639,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v3_proposals_seed303.joblib",
+    "sha256": "aa15e4294c9d1931de510778761b61098966069ab5c5d48e1721342b1b882caa",
+    "tracked": false
+  },
+  "provenance": {
+    "git_commit": "6144ec1df8e019b2270e35271fc32bd6c149b8cf",
+    "git_tracked_worktree_dirty_at_start": false,
+    "script": "tools/evaluate_mars_v3.py",
+    "script_sha256": "4ea367af0de89d977a8e0b00d2c076579f36f9d8a33a9b4a3562af55ed80115b"
+  },
+  "runtime": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "numpy": "2.4.4",
+    "rasterio": "1.4.4",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128"
+  },
+  "scene_prediction_cache": {
+    "bytes": 165211,
+    "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+    "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed303.npz",
+    "sha256": "22ba73fedf33ed9963928111e43d2a775afe36f08029a4f22f6ac5684adc058f",
+    "tracked": false
+  },
+  "schema_version": 2,
+  "scope": "frozen_v3_full_strict_spatial_evaluation",
+  "source": {
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "proposal_experiment_sha256": "5b2ad3e6af4d0b771a1020e882fb985be3664ea0aa41c19561f9aa6b818a3494",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "strict_manifest_sha256": "6e959ae0af50c5a309247cbe674fe01b31a36f8b149f9be3292acebed3e5f906",
+    "validation_experiment_sha256": "f3e9c182c0c239801d96d4f4ac520d846b3031a0bb4153c25116d369a294d2e2"
+  },
+  "strict_spatial_test": {
+    "calibration": {
+      "representative_weighted": {
+        "bins": [
+          {
+            "absolute_gap": 0.002906817885101303,
+            "lower": 0.0,
+            "mean_probability": 0.007509848781565363,
+            "observed_prevalence": 0.010416666666666666,
+            "samples": 4128,
+            "upper": 0.1,
+            "weight": 4128.0
+          },
+          {
+            "absolute_gap": 0.09616972270764802,
+            "lower": 0.1,
+            "mean_probability": 0.13564340691817434,
+            "observed_prevalence": 0.039473684210526314,
+            "samples": 76,
+            "upper": 0.2,
+            "weight": 76.0
+          },
+          {
+            "absolute_gap": 0.19223785400390625,
+            "lower": 0.2,
+            "mean_probability": 0.25473785400390625,
+            "observed_prevalence": 0.0625,
+            "samples": 32,
+            "upper": 0.30000000000000004,
+            "weight": 32.0
+          },
+          {
+            "absolute_gap": 0.31678989955357145,
+            "lower": 0.30000000000000004,
+            "mean_probability": 0.35250418526785715,
+            "observed_prevalence": 0.03571428571428571,
+            "samples": 28,
+            "upper": 0.4,
+            "weight": 28.0
+          },
+          {
+            "absolute_gap": 0.4457804361979167,
+            "lower": 0.4,
+            "mean_probability": 0.4457804361979167,
+            "observed_prevalence": 0.0,
+            "samples": 24,
+            "upper": 0.5,
+            "weight": 24.0
+          },
+          {
+            "absolute_gap": 0.506103515625,
+            "lower": 0.5,
+            "mean_probability": 0.5445650540865384,
+            "observed_prevalence": 0.038461538461538464,
+            "samples": 26,
+            "upper": 0.6000000000000001,
+            "weight": 26.0
+          },
+          {
+            "absolute_gap": 0.48445638020833337,
+            "lower": 0.6000000000000001,
+            "mean_probability": 0.651123046875,
+            "observed_prevalence": 0.16666666666666666,
+            "samples": 18,
+            "upper": 0.7000000000000001,
+            "weight": 18.0
+          },
+          {
+            "absolute_gap": 0.6012451171875,
+            "lower": 0.7000000000000001,
+            "mean_probability": 0.7512451171875,
+            "observed_prevalence": 0.15,
+            "samples": 20,
+            "upper": 0.8,
+            "weight": 20.0
+          },
+          {
+            "absolute_gap": 0.7195567255434783,
+            "lower": 0.8,
+            "mean_probability": 0.849991508152174,
+            "observed_prevalence": 0.13043478260869565,
+            "samples": 23,
+            "upper": 0.9,
+            "weight": 23.0
+          },
+          {
+            "absolute_gap": 0.6307091346153846,
+            "lower": 0.9,
+            "mean_probability": 0.9384014423076923,
+            "observed_prevalence": 0.3076923076923077,
+            "samples": 26,
+            "upper": 1.0,
+            "weight": 26.0
+          }
+        ],
+        "expected_calibration_error": 0.025421666194297757,
+        "method": "10 fixed-width probability bins"
+      },
+      "unweighted": {
+        "bins": [
+          {
+            "absolute_gap": 0.002906817885101303,
+            "lower": 0.0,
+            "mean_probability": 0.007509848781565363,
+            "observed_prevalence": 0.010416666666666666,
+            "samples": 4128,
+            "upper": 0.1,
+            "weight": 4128.0
+          },
+          {
+            "absolute_gap": 0.09616972270764802,
+            "lower": 0.1,
+            "mean_probability": 0.13564340691817434,
+            "observed_prevalence": 0.039473684210526314,
+            "samples": 76,
+            "upper": 0.2,
+            "weight": 76.0
+          },
+          {
+            "absolute_gap": 0.19223785400390625,
+            "lower": 0.2,
+            "mean_probability": 0.25473785400390625,
+            "observed_prevalence": 0.0625,
+            "samples": 32,
+            "upper": 0.30000000000000004,
+            "weight": 32.0
+          },
+          {
+            "absolute_gap": 0.31678989955357145,
+            "lower": 0.30000000000000004,
+            "mean_probability": 0.35250418526785715,
+            "observed_prevalence": 0.03571428571428571,
+            "samples": 28,
+            "upper": 0.4,
+            "weight": 28.0
+          },
+          {
+            "absolute_gap": 0.4457804361979167,
+            "lower": 0.4,
+            "mean_probability": 0.4457804361979167,
+            "observed_prevalence": 0.0,
+            "samples": 24,
+            "upper": 0.5,
+            "weight": 24.0
+          },
+          {
+            "absolute_gap": 0.506103515625,
+            "lower": 0.5,
+            "mean_probability": 0.5445650540865384,
+            "observed_prevalence": 0.038461538461538464,
+            "samples": 26,
+            "upper": 0.6000000000000001,
+            "weight": 26.0
+          },
+          {
+            "absolute_gap": 0.48445638020833337,
+            "lower": 0.6000000000000001,
+            "mean_probability": 0.651123046875,
+            "observed_prevalence": 0.16666666666666666,
+            "samples": 18,
+            "upper": 0.7000000000000001,
+            "weight": 18.0
+          },
+          {
+            "absolute_gap": 0.6012451171875,
+            "lower": 0.7000000000000001,
+            "mean_probability": 0.7512451171875,
+            "observed_prevalence": 0.15,
+            "samples": 20,
+            "upper": 0.8,
+            "weight": 20.0
+          },
+          {
+            "absolute_gap": 0.7195567255434783,
+            "lower": 0.8,
+            "mean_probability": 0.849991508152174,
+            "observed_prevalence": 0.13043478260869565,
+            "samples": 23,
+            "upper": 0.9,
+            "weight": 23.0
+          },
+          {
+            "absolute_gap": 0.6307091346153846,
+            "lower": 0.9,
+            "mean_probability": 0.9384014423076923,
+            "observed_prevalence": 0.3076923076923077,
+            "samples": 26,
+            "upper": 1.0,
+            "weight": 26.0
+          }
+        ],
+        "expected_calibration_error": 0.025421666194297757,
+        "method": "10 fixed-width probability bins"
+      }
+    },
+    "group_bootstrap": {
+      "recall_95ci": [
+        0.09496263022799335,
+        0.5869565217391305
+      ],
+      "replicates": 2000,
+      "specificity_95ci": [
+        0.9689625189704958,
+        0.9826465285298803
+      ],
+      "unit": "frozen 25 km group"
+    },
+    "neural_scene_unweighted": {
+      "accuracy": 0.9650079527380141,
+      "auroc": 0.7522970059715267,
+      "average_precision": 0.11163587740917169,
+      "brier": 0.025653356686234474,
+      "false_positive_rate": 0.024227041993539457,
+      "false_positives_per_100_scenes": 2.4227041993539458,
+      "fn": 49.0,
+      "fp": 105.0,
+      "negative_predictive_value": 0.9885460495558672,
+      "precision": 0.14634146341463414,
+      "recall": 0.26865671641791045,
+      "specificity": 0.9757729580064606,
+      "tn": 4229.0,
+      "tp": 18.0
+    },
+    "proposal_stage": {
+      "proposal_count": 765,
+      "scenes_without_proposals": 4146
+    },
+    "quality_auroc": 0.9921336439843393,
+    "scene_representative_weighted": {
+      "accuracy": 0.9650079527380141,
+      "auroc": 0.7522970059715267,
+      "average_precision": 0.11163587740917169,
+      "brier": 0.02565335620111765,
+      "false_positive_rate": 0.024227041993539457,
+      "false_positives_per_100_scenes": 2.4227041993539458,
+      "fn": 49.0,
+      "fp": 105.0,
+      "negative_predictive_value": 0.9885460495558672,
+      "precision": 0.14634146341463414,
+      "recall": 0.26865671641791045,
+      "specificity": 0.9757729580064606,
+      "tn": 4229.0,
+      "tp": 18.0
+    },
+    "scene_unweighted": {
+      "accuracy": 0.9650079527380141,
+      "auroc": 0.7522970059715267,
+      "average_precision": 0.11163587740917169,
+      "brier": 0.02565335620111765,
+      "false_positive_rate": 0.024227041993539457,
+      "false_positives_per_100_scenes": 2.4227041993539458,
+      "fn": 49.0,
+      "fp": 105.0,
+      "negative_predictive_value": 0.9885460495558672,
+      "precision": 0.14634146341463414,
+      "recall": 0.26865671641791045,
+      "specificity": 0.9757729580064606,
+      "tn": 4229.0,
+      "tp": 18.0
+    },
+    "segmentation": {
+      "false_positive_rate": 0.04291647438855561,
+      "fn": 45,
+      "fp": 186,
+      "group_bootstrap": {
+        "recall_95ci": [
+          0.11590062111801243,
+          0.6512102515424772
+        ],
+        "replicates": 2000,
+        "specificity_95ci": [
+          0.9460351205939198,
+          0.9687185151788398
+        ],
+        "unit": "frozen 25 km group"
+      },
+      "pixel": {
+        "average_precision": 0.08481434631698956,
+        "dice": 0.14713398319955698,
+        "intersection_over_union": 0.07940886273775485,
+        "predicted_positive_pixels": 202030,
+        "truth_positive_pixels": 97724
+      },
+      "precision": 0.10576923076923077,
+      "recall": 0.3283582089552239,
+      "specificity": 0.9570835256114444,
+      "tn": 4148,
+      "tp": 22
+    },
+    "selective_with_quality": {
+      "abstention_rate": 0.11338332197227907,
+      "accepted_error_rate": 0.03613531522296258,
+      "accepted_no_plume": 3791,
+      "accepted_no_plume_npv": 0.9873384331310999,
+      "accepted_plume": 111,
+      "accepted_precision": 0.16216216216216217,
+      "accepted_samples": 3902,
+      "sample_coverage": 0.8866166780277209,
+      "weighted_confusion": {
+        "fn": 48.0,
+        "fp": 93.0,
+        "tn": 3743.0,
+        "tp": 18.0
+      },
+      "weighted_coverage": 0.8866166780277209
+    }
+  }
+}
