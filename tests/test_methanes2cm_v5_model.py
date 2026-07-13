@@ -39,6 +39,21 @@ class MethaneS2CMV5ModelTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Expected"):
             model(torch.zeros(1, 19, 32, 32), torch.ones(1, 1, 32, 32))
 
+    def test_context_head_has_fixed_scene_fusion(self) -> None:
+        torch.manual_seed(9)
+        model = MethaneS2CMV5Model(context_scene_weight=0.65).eval()
+        output = model(
+            torch.rand(2, len(V5_INPUT_CHANNELS), 32, 32),
+            torch.ones(2, 1, 32, 32),
+        )
+        expected = 0.35 * output["mask_scene_logit"] + 0.65 * output[
+            "context_scene_logit"
+        ]
+        torch.testing.assert_close(output["scene_logit"], expected)
+        metadata = model.artifact_metadata()
+        self.assertTrue(metadata["scene_classifier_head"])
+        self.assertEqual(metadata["context_scene_weight"], 0.65)
+
 
 if __name__ == "__main__":
     unittest.main()

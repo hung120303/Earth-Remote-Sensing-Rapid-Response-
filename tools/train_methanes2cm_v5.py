@@ -544,6 +544,7 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--learning-rate", type=float, default=3e-4)
     parser.add_argument("--patience", type=int, default=4)
+    parser.add_argument("--context-scene-weight", type=float, default=0.0)
     parser.add_argument("--device", choices=("cuda", "cpu"), default="cuda")
     parser.add_argument("--smoke", action="store_true")
     args = parser.parse_args()
@@ -613,7 +614,9 @@ def main() -> int:
     validation_options["generator"] = torch.Generator().manual_seed(args.seed + 1)
     validation_loader = DataLoader(development_dataset, shuffle=False, **validation_options)
 
-    model = MethaneS2CMV5Model().to(device)
+    model = MethaneS2CMV5Model(
+        context_scene_weight=args.context_scene_weight
+    ).to(device)
     epochs = 1 if args.smoke else args.epochs
     history, best_epoch = train(
         model,
@@ -682,7 +685,11 @@ def main() -> int:
             "scheduler": "CosineAnnealingLR",
             "objective": (
                 "positive-pixel BCE + top-2%-negative BCE + 0.5 positive soft-Dice + "
-                "0.5 BCE on segmentation-derived scene logit"
+                + (
+                    "0.5 BCE on fixed mask/context-fused scene logit"
+                    if args.context_scene_weight > 0.0
+                    else "0.5 BCE on segmentation-derived scene logit"
+                )
             ),
             "augmentation": "random right-angle rotations and horizontal/vertical flips",
             "selection_rank": [
