@@ -1,0 +1,1664 @@
+{
+  "checkpoint": {
+    "bytes": 37274171,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/methanes2cm_v5_seed1101.pt",
+    "sha256": "a14a11f527b42175ad2c43791df2a23ed8efb558320c8d01380cf23b8683cc47",
+    "tracked": false
+  },
+  "cohort": {
+    "development_exact_locations": 763,
+    "development_groups": 64,
+    "development_positives": 7802,
+    "development_samples": 15458,
+    "fitting_exact_locations": 2697,
+    "fitting_groups": 193,
+    "fitting_positives": 32623,
+    "fitting_samples": 64759,
+    "geographic_group_overlap": 0
+  },
+  "decision": "Internal development candidate only. Keep the location-test imagery sealed until the multi-seed rule is frozen.",
+  "generated_at_utc": "2026-07-13T22:38:25.378749+00:00",
+  "model": {
+    "frames": [
+      "T",
+      "T-90",
+      "T-365"
+    ],
+    "initialization": "from_scratch",
+    "input_channels": [
+      "mbmp_T_over_Tminus90",
+      "mbmp_T_over_Tminus365",
+      "target_B02",
+      "target_B03",
+      "target_B04",
+      "target_B08",
+      "target_B11",
+      "target_B12",
+      "reference90_B02",
+      "reference90_B03",
+      "reference90_B04",
+      "reference90_B08",
+      "reference90_B11",
+      "reference90_B12",
+      "reference365_B02",
+      "reference365_B03",
+      "reference365_B04",
+      "reference365_B08",
+      "reference365_B11",
+      "reference365_B12"
+    ],
+    "model_name": "ersrr_methanes2cm_tri_temporal_v5",
+    "parameter_count": 9307299,
+    "physics_channels": [
+      "MBMP(T,T-90)-1",
+      "MBMP(T,T-365)-1"
+    ],
+    "scene_classifier_head": false,
+    "scene_max_weight": 0.15,
+    "scene_score": "sigmoid(0.85 * mean(top 1% observable mask logits) + 0.15 * max(observable mask logits))",
+    "scene_topk_fraction": 0.01,
+    "schema_version": 1,
+    "temporal_weight_sharing": true
+  },
+  "prediction_cache": {
+    "bytes": 14371036,
+    "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_validation_seed1101.npz",
+    "sha256": "1dcbe86edba016643c9c3c82c9d01cf851341901386c9760346d52cd6d41145d",
+    "tracked": false
+  },
+  "reproducibility": {
+    "cuda_device": "NVIDIA GeForce RTX 5070",
+    "deterministic_algorithms_enforced": false,
+    "device": "cuda",
+    "git_commit": "89367d7fe8ac0d5edc00608c6438de725cb8f97c",
+    "python": "3.11.14 (main, Jan 14 2026, 19:35:32) [Clang 21.1.4 ]",
+    "script": "tools/train_methanes2cm_v5.py",
+    "script_sha256": "4c5a5794cd5f918208d4b05318cfc68944920d0727cb63d8aa42685cf8df6ebc",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128",
+    "tracked_worktree_dirty_at_start": false
+  },
+  "schema_version": 1,
+  "scope": "methanes2cm_v5_internal_development",
+  "seal": {
+    "location_test_images_opened": false,
+    "manifest_path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_train_development_manifest.jsonl",
+    "manifest_sha256": "6f2137a0cf33bcae80a9ecee57d62cd9b37d4121903808bcdc7e7951a82558e3",
+    "packed_path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_train_packed.h5",
+    "packed_sha256": "f75ea0c35bba240d56e8deae8828722253c5b82fb59b515d8627fb4106951ca4",
+    "protocol_path": "reports/experiments/methanes2cm_v5_protocol.json",
+    "protocol_sha256": "aa7b41070acc26e80ff7a640a98bcaa31d5285af290289013949783e4891fffa"
+  },
+  "seed": 1101,
+  "smoke_test": false,
+  "source": {
+    "dataset": "H1deaki/MethaneS2CM",
+    "dataset_url": "https://huggingface.co/datasets/H1deaki/MethaneS2CM",
+    "license": "CC-BY-NC-4.0",
+    "model_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12"
+    ],
+    "paper_doi": "10.1145/3711896.3737415",
+    "patch_shape": [
+      32,
+      32
+    ],
+    "pixel_size_m": 20,
+    "product_level": "L2A surface reflectance",
+    "revision": "ee9a96d4994ca6bc45725c1e92d7a06258131eaf",
+    "sensor": "Sentinel-2 MSI",
+    "tiff_page_band_order": [
+      "B01",
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B09",
+      "B11",
+      "B12"
+    ]
+  },
+  "training": {
+    "augmentation": "random right-angle rotations and horizontal/vertical flips",
+    "batch_size": 256,
+    "best_epoch": 3,
+    "epochs_requested": 12,
+    "history": [
+      {
+        "epoch": 1,
+        "learning_rate": 0.0002948888739433602,
+        "seconds": 43.669,
+        "training": {
+          "hard_negative_bce": 0.7016717181375376,
+          "positive_bce": 0.638756710314468,
+          "positive_dice_loss": 0.7867594474389148,
+          "scene_bce": 0.5919321038035065,
+          "total": 2.0297741974766548
+        },
+        "validation": {
+          "auroc": 0.8155095620928321,
+          "average_precision": 0.8027653044881372,
+          "exact_locations": 763,
+          "geographic_groups": 64,
+          "negatives": 7656,
+          "operating_points": {
+            "0.02": {
+              "false_positive_rate": 0.019592476489028215,
+              "precision": 0.9017681728880157,
+              "recall": 0.17649320687003334,
+              "threshold": 0.66455078125
+            },
+            "0.05": {
+              "false_positive_rate": 0.04924242424242424,
+              "precision": 0.8584834834834835,
+              "recall": 0.29312996667521146,
+              "threshold": 0.64501953125
+            },
+            "0.08": {
+              "false_positive_rate": 0.07980668756530826,
+              "precision": 0.8355316285329745,
+              "recall": 0.39784670597282745,
+              "threshold": 0.62646484375
+            },
+            "0.095": {
+              "false_positive_rate": 0.09430512016718913,
+              "precision": 0.8266090297790586,
+              "recall": 0.4411689310433222,
+              "threshold": 0.619140625
+            }
+          },
+          "positives": 7802,
+          "scenes": 15458,
+          "segmentation": {
+            "average_precision_all_observable_pixels": 0.319426651067396,
+            "dice": 0.43624949111790784,
+            "intersection_over_union": 0.2789764023352918,
+            "observable_pixels": 15781295,
+            "predicted_positive_pixels": 8119307,
+            "threshold": 0.49999999999999994,
+            "threshold_grid": [
+              {
+                "dice": 0.31533929570307995,
+                "intersection_over_union": 0.18718267417217663,
+                "intersection_pixels": 2953985,
+                "predicted_positive_pixels": 15781295,
+                "threshold": 0.05
+              },
+              {
+                "dice": 0.3158978034404162,
+                "intersection_over_union": 0.18757638585458591,
+                "intersection_pixels": 2953985,
+                "predicted_positive_pixels": 15748171,
+                "threshold": 0.1
+              },
+              {
+                "dice": 0.36720298443952426,
+                "intersection_over_union": 0.224891998784967,
+                "intersection_pixels": 2908154,
+                "predicted_positive_pixels": 12885505,
+                "threshold": 0.15
+              },
+              {
+                "dice": 0.38959771713255575,
+                "intersection_over_union": 0.2419257109092315,
+                "intersection_pixels": 2831207,
+                "predicted_positive_pixels": 11580017,
+                "threshold": 0.2
+              },
+              {
+                "dice": 0.4002129811875036,
+                "intersection_over_union": 0.25016641370460496,
+                "intersection_pixels": 2773176,
+                "predicted_positive_pixels": 10904516,
+                "threshold": 0.25
+              },
+              {
+                "dice": 0.40855854198769714,
+                "intersection_over_union": 0.2567223192098963,
+                "intersection_pixels": 2726514,
+                "predicted_positive_pixels": 10393008,
+                "threshold": 0.3
+              },
+              {
+                "dice": 0.41575908205221707,
+                "intersection_over_union": 0.26243425311270785,
+                "intersection_pixels": 2671318,
+                "predicted_positive_pixels": 9896332,
+                "threshold": 0.35
+              },
+              {
+                "dice": 0.4228329659044339,
+                "intersection_over_union": 0.2680965026300524,
+                "intersection_pixels": 2610372,
+                "predicted_positive_pixels": 9393075,
+                "threshold": 0.39999999999999997
+              },
+              {
+                "dice": 0.428694003743914,
+                "intersection_over_union": 0.2728265562311562,
+                "intersection_pixels": 2528368,
+                "predicted_positive_pixels": 8841692,
+                "threshold": 0.44999999999999996
+              },
+              {
+                "dice": 0.43624949111790784,
+                "intersection_over_union": 0.2789764023352918,
+                "intersection_pixels": 2415359,
+                "predicted_positive_pixels": 8119307,
+                "threshold": 0.49999999999999994
+              },
+              {
+                "dice": 0.4288349148067458,
+                "intersection_over_union": 0.272940710589937,
+                "intersection_pixels": 2111852,
+                "predicted_positive_pixels": 6895269,
+                "threshold": 0.5499999999999999
+              },
+              {
+                "dice": 0.3982389992783602,
+                "intersection_over_union": 0.2486257307419409,
+                "intersection_pixels": 1556501,
+                "predicted_positive_pixels": 4862934,
+                "threshold": 0.6
+              },
+              {
+                "dice": 0.26770188076579465,
+                "intersection_over_union": 0.15453568747401125,
+                "intersection_pixels": 658919,
+                "predicted_positive_pixels": 1968797,
+                "threshold": 0.65
+              },
+              {
+                "dice": 0.0007620341846098872,
+                "intersection_over_union": 0.0003811623216644404,
+                "intersection_pixels": 1126,
+                "predicted_positive_pixels": 1263,
+                "threshold": 0.7
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.75
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.7999999999999999
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.85
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.9
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.95
+              }
+            ],
+            "truth_positive_pixels": 2953985
+          }
+        }
+      },
+      {
+        "epoch": 2,
+        "learning_rate": 0.0002799038105676658,
+        "seconds": 38.454,
+        "training": {
+          "hard_negative_bce": 0.6826607745155515,
+          "positive_bce": 0.5977011066180444,
+          "positive_dice_loss": 0.7853107454748492,
+          "scene_bce": 0.5273829327506039,
+          "total": 1.9367087203052205
+        },
+        "validation": {
+          "auroc": 0.8201971997909601,
+          "average_precision": 0.8126766479632637,
+          "exact_locations": 763,
+          "geographic_groups": 64,
+          "negatives": 7656,
+          "operating_points": {
+            "0.02": {
+              "false_positive_rate": 0.019853709508881923,
+              "precision": 0.9135872654917567,
+              "recall": 0.2059728274801333,
+              "threshold": 0.6533203125
+            },
+            "0.05": {
+              "false_positive_rate": 0.04950365726227795,
+              "precision": 0.8705158865732833,
+              "recall": 0.32658292745449885,
+              "threshold": 0.630859375
+            },
+            "0.08": {
+              "false_positive_rate": 0.07980668756530826,
+              "precision": 0.8451988852292881,
+              "recall": 0.4275826711099718,
+              "threshold": 0.607421875
+            },
+            "0.095": {
+              "false_positive_rate": 0.09495820271682341,
+              "precision": 0.8357804382200136,
+              "recall": 0.47423737503204305,
+              "threshold": 0.59619140625
+            }
+          },
+          "positives": 7802,
+          "scenes": 15458,
+          "segmentation": {
+            "average_precision_all_observable_pixels": 0.3303657690108912,
+            "dice": 0.44263523421101003,
+            "intersection_over_union": 0.2842206552597604,
+            "observable_pixels": 15781295,
+            "predicted_positive_pixels": 7154293,
+            "threshold": 0.49999999999999994,
+            "threshold_grid": [
+              {
+                "dice": 0.32411699929604265,
+                "intersection_over_union": 0.19340073212741984,
+                "intersection_pixels": 2950380,
+                "predicted_positive_pixels": 15251663,
+                "threshold": 0.05
+              },
+              {
+                "dice": 0.3747030061419221,
+                "intersection_over_union": 0.23054432977966946,
+                "intersection_pixels": 2911184,
+                "predicted_positive_pixels": 12584636,
+                "threshold": 0.1
+              },
+              {
+                "dice": 0.394394682087745,
+                "intersection_over_union": 0.2456361334182491,
+                "intersection_pixels": 2868019,
+                "predicted_positive_pixels": 11589918,
+                "threshold": 0.15
+              },
+              {
+                "dice": 0.4062328737244039,
+                "intersection_over_union": 0.254888475880232,
+                "intersection_pixels": 2812286,
+                "predicted_positive_pixels": 10891699,
+                "threshold": 0.2
+              },
+              {
+                "dice": 0.41595832024174717,
+                "intersection_over_union": 0.26259304004249956,
+                "intersection_pixels": 2771528,
+                "predicted_positive_pixels": 10372004,
+                "threshold": 0.25
+              },
+              {
+                "dice": 0.4225078506787472,
+                "intersection_over_union": 0.2678351526887405,
+                "intersection_pixels": 2705431,
+                "predicted_positive_pixels": 9852551,
+                "threshold": 0.3
+              },
+              {
+                "dice": 0.4281549274599409,
+                "intersection_over_union": 0.27239003063326983,
+                "intersection_pixels": 2635668,
+                "predicted_positive_pixels": 9357764,
+                "threshold": 0.35
+              },
+              {
+                "dice": 0.4346218231078617,
+                "intersection_over_union": 0.2776465326549708,
+                "intersection_pixels": 2547744,
+                "predicted_positive_pixels": 8769973,
+                "threshold": 0.39999999999999997
+              },
+              {
+                "dice": 0.4421232374071091,
+                "intersection_over_union": 0.2837985956419623,
+                "intersection_pixels": 2436974,
+                "predicted_positive_pixels": 8069973,
+                "threshold": 0.44999999999999996
+              },
+              {
+                "dice": 0.44263523421101003,
+                "intersection_over_union": 0.2842206552597604,
+                "intersection_pixels": 2237140,
+                "predicted_positive_pixels": 7154293,
+                "threshold": 0.49999999999999994
+              },
+              {
+                "dice": 0.4350471311560723,
+                "intersection_over_union": 0.2779937593120317,
+                "intersection_pixels": 1933180,
+                "predicted_positive_pixels": 5933236,
+                "threshold": 0.5499999999999999
+              },
+              {
+                "dice": 0.3896844073278749,
+                "intersection_over_union": 0.24199256909711744,
+                "intersection_pixels": 1381893,
+                "predicted_positive_pixels": 4138385,
+                "threshold": 0.6
+              },
+              {
+                "dice": 0.2559045929547347,
+                "intersection_over_union": 0.14672625816283288,
+                "intersection_pixels": 594835,
+                "predicted_positive_pixels": 1694896,
+                "threshold": 0.65
+              },
+              {
+                "dice": 1.5571947475144126e-05,
+                "intersection_over_union": 7.786034359431105e-06,
+                "intersection_pixels": 23,
+                "predicted_positive_pixels": 45,
+                "threshold": 0.7
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.75
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.7999999999999999
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.85
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.9
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.95
+              }
+            ],
+            "truth_positive_pixels": 2953985
+          }
+        }
+      },
+      {
+        "epoch": 3,
+        "learning_rate": 0.00025606601717798207,
+        "seconds": 38.485,
+        "training": {
+          "hard_negative_bce": 0.672615278497515,
+          "positive_bce": 0.5770744859229906,
+          "positive_dice_loss": 0.7844907064211698,
+          "scene_bce": 0.4920018543838984,
+          "total": 1.8879360403468015
+        },
+        "validation": {
+          "auroc": 0.8341466144709566,
+          "average_precision": 0.8224551121841779,
+          "exact_locations": 763,
+          "geographic_groups": 64,
+          "negatives": 7656,
+          "operating_points": {
+            "0.02": {
+              "false_positive_rate": 0.01972309299895507,
+              "precision": 0.9109144542772861,
+              "recall": 0.19789797487823635,
+              "threshold": 0.6689453125
+            },
+            "0.05": {
+              "false_positive_rate": 0.04832810867293626,
+              "precision": 0.8782494241526818,
+              "recall": 0.34209177134068186,
+              "threshold": 0.65380859375
+            },
+            "0.08": {
+              "false_positive_rate": 0.07993730407523511,
+              "precision": 0.8502569121605089,
+              "recall": 0.44539861573955397,
+              "threshold": 0.640625
+            },
+            "0.095": {
+              "false_positive_rate": 0.09391327063740856,
+              "precision": 0.8400089007565643,
+              "recall": 0.4838502947962061,
+              "threshold": 0.63525390625
+            }
+          },
+          "positives": 7802,
+          "scenes": 15458,
+          "segmentation": {
+            "average_precision_all_observable_pixels": 0.3170876556376502,
+            "dice": 0.4317820633375676,
+            "intersection_over_union": 0.27533294527705116,
+            "observable_pixels": 15781295,
+            "predicted_positive_pixels": 8138926,
+            "threshold": 0.5499999999999999,
+            "threshold_grid": [
+              {
+                "dice": 0.3501187939966733,
+                "intersection_over_union": 0.2122084867217812,
+                "intersection_pixels": 2938435,
+                "predicted_positive_pixels": 13831375,
+                "threshold": 0.05
+              },
+              {
+                "dice": 0.36975235912181204,
+                "intersection_over_union": 0.22680747994987585,
+                "intersection_pixels": 2918389,
+                "predicted_positive_pixels": 12831656,
+                "threshold": 0.1
+              },
+              {
+                "dice": 0.3781685794767595,
+                "intersection_over_union": 0.23317379025420137,
+                "intersection_pixels": 2875131,
+                "predicted_positive_pixels": 12251567,
+                "threshold": 0.15
+              },
+              {
+                "dice": 0.3839318452062466,
+                "intersection_over_union": 0.23757156780014949,
+                "intersection_pixels": 2827162,
+                "predicted_positive_pixels": 11773431,
+                "threshold": 0.2
+              },
+              {
+                "dice": 0.3880053377195828,
+                "intersection_over_union": 0.24069889733424357,
+                "intersection_pixels": 2781166,
+                "predicted_positive_pixels": 11381725,
+                "threshold": 0.25
+              },
+              {
+                "dice": 0.3932355984810031,
+                "intersection_over_union": 0.2447375596006779,
+                "intersection_pixels": 2752137,
+                "predicted_positive_pixels": 11043410,
+                "threshold": 0.3
+              },
+              {
+                "dice": 0.40057228203526674,
+                "intersection_over_union": 0.25044725531266504,
+                "intersection_pixels": 2724369,
+                "predicted_positive_pixels": 10648399,
+                "threshold": 0.35
+              },
+              {
+                "dice": 0.4067781766366069,
+                "intersection_over_union": 0.2553179793745683,
+                "intersection_pixels": 2680009,
+                "predicted_positive_pixels": 10222774,
+                "threshold": 0.39999999999999997
+              },
+              {
+                "dice": 0.4150609459877225,
+                "intersection_over_union": 0.26187817439225475,
+                "intersection_pixels": 2631503,
+                "predicted_positive_pixels": 9726095,
+                "threshold": 0.44999999999999996
+              },
+              {
+                "dice": 0.42208483013683734,
+                "intersection_over_union": 0.267495260960981,
+                "intersection_pixels": 2546377,
+                "predicted_positive_pixels": 9111727,
+                "threshold": 0.49999999999999994
+              },
+              {
+                "dice": 0.4317820633375676,
+                "intersection_over_union": 0.27533294527705116,
+                "intersection_pixels": 2394860,
+                "predicted_positive_pixels": 8138926,
+                "threshold": 0.5499999999999999
+              },
+              {
+                "dice": 0.4207177455661657,
+                "intersection_over_union": 0.2663980706330365,
+                "intersection_pixels": 1978344,
+                "predicted_positive_pixels": 6450629,
+                "threshold": 0.6
+              },
+              {
+                "dice": 0.3178688311172612,
+                "intersection_over_union": 0.18896792176343047,
+                "intersection_pixels": 948591,
+                "predicted_positive_pixels": 3014458,
+                "threshold": 0.65
+              },
+              {
+                "dice": 0.005194836712516415,
+                "intersection_over_union": 0.0026041825077067716,
+                "intersection_pixels": 7706,
+                "predicted_positive_pixels": 12807,
+                "threshold": 0.7
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.75
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.7999999999999999
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.85
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.9
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.95
+              }
+            ],
+            "truth_positive_pixels": 2953985
+          }
+        }
+      },
+      {
+        "epoch": 4,
+        "learning_rate": 0.00022499999999999997,
+        "seconds": 38.376,
+        "training": {
+          "hard_negative_bce": 0.6650527566082393,
+          "positive_bce": 0.5632280037101549,
+          "positive_dice_loss": 0.7835018479305765,
+          "scene_bce": 0.46789681558081286,
+          "total": 1.8539800921918845
+        },
+        "validation": {
+          "auroc": 0.8358845155182191,
+          "average_precision": 0.8209046233457344,
+          "exact_locations": 763,
+          "geographic_groups": 64,
+          "negatives": 7656,
+          "operating_points": {
+            "0.02": {
+              "false_positive_rate": 0.019592476489028215,
+              "precision": 0.9108204518430439,
+              "recall": 0.19635990771597026,
+              "threshold": 0.69482421875
+            },
+            "0.05": {
+              "false_positive_rate": 0.0493730407523511,
+              "precision": 0.8721677375718634,
+              "recall": 0.33055626762368623,
+              "threshold": 0.6806640625
+            },
+            "0.08": {
+              "false_positive_rate": 0.07915360501567398,
+              "precision": 0.8478915662650602,
+              "recall": 0.4329659061779031,
+              "threshold": 0.666015625
+            },
+            "0.095": {
+              "false_positive_rate": 0.09456635318704285,
+              "precision": 0.8375588961184653,
+              "recall": 0.4784670597282748,
+              "threshold": 0.65771484375
+            }
+          },
+          "positives": 7802,
+          "scenes": 15458,
+          "segmentation": {
+            "average_precision_all_observable_pixels": 0.34188945213716426,
+            "dice": 0.43271228653410804,
+            "intersection_over_union": 0.2760898862514594,
+            "observable_pixels": 15781295,
+            "predicted_positive_pixels": 7657722,
+            "threshold": 0.5499999999999999,
+            "threshold_grid": [
+              {
+                "dice": 0.37992842844930047,
+                "intersection_over_union": 0.23451336047187143,
+                "intersection_pixels": 2915358,
+                "predicted_positive_pixels": 12392895,
+                "threshold": 0.05
+              },
+              {
+                "dice": 0.3986163354941359,
+                "intersection_over_union": 0.24891994612492577,
+                "intersection_pixels": 2852584,
+                "predicted_positive_pixels": 11358444,
+                "threshold": 0.1
+              },
+              {
+                "dice": 0.4064691573580636,
+                "intersection_over_union": 0.2550745467117366,
+                "intersection_pixels": 2808031,
+                "predicted_positive_pixels": 10862714,
+                "threshold": 0.15
+              },
+              {
+                "dice": 0.41109232325029416,
+                "intersection_over_union": 0.25872637489626266,
+                "intersection_pixels": 2761228,
+                "predicted_positive_pixels": 10479630,
+                "threshold": 0.2
+              },
+              {
+                "dice": 0.4154668323487298,
+                "intersection_over_union": 0.262201411009004,
+                "intersection_pixels": 2717586,
+                "predicted_positive_pixels": 10128099,
+                "threshold": 0.25
+              },
+              {
+                "dice": 0.4190196564023891,
+                "intersection_over_union": 0.2650378659666862,
+                "intersection_pixels": 2672464,
+                "predicted_positive_pixels": 9801808,
+                "threshold": 0.3
+              },
+              {
+                "dice": 0.42136501957638656,
+                "intersection_over_union": 0.26691732085102843,
+                "intersection_pixels": 2615991,
+                "predicted_positive_pixels": 9462760,
+                "threshold": 0.35
+              },
+              {
+                "dice": 0.4219067162146432,
+                "intersection_over_union": 0.2673522031616659,
+                "intersection_pixels": 2548063,
+                "predicted_positive_pixels": 9124813,
+                "threshold": 0.39999999999999997
+              },
+              {
+                "dice": 0.4254014918031278,
+                "intersection_over_union": 0.2701650545130199,
+                "intersection_pixels": 2495828,
+                "predicted_positive_pixels": 8780003,
+                "threshold": 0.44999999999999996
+              },
+              {
+                "dice": 0.4300518024524199,
+                "intersection_over_union": 0.2739273837978889,
+                "intersection_pixels": 2426606,
+                "predicted_positive_pixels": 8331195,
+                "threshold": 0.49999999999999994
+              },
+              {
+                "dice": 0.43271228653410804,
+                "intersection_over_union": 0.2760898862514594,
+                "intersection_pixels": 2295908,
+                "predicted_positive_pixels": 7657722,
+                "threshold": 0.5499999999999999
+              },
+              {
+                "dice": 0.4275082975070566,
+                "intersection_over_union": 0.2718668065652162,
+                "intersection_pixels": 2041257,
+                "predicted_positive_pixels": 6595570,
+                "threshold": 0.6
+              },
+              {
+                "dice": 0.3992555981402748,
+                "intersection_over_union": 0.2494187064945687,
+                "intersection_pixels": 1497902,
+                "predicted_positive_pixels": 4549489,
+                "threshold": 0.65
+              },
+              {
+                "dice": 0.1696812040368075,
+                "intersection_over_union": 0.09270581956052851,
+                "intersection_pixels": 316815,
+                "predicted_positive_pixels": 780253,
+                "threshold": 0.7
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.75
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.7999999999999999
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.85
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.9
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.95
+              }
+            ],
+            "truth_positive_pixels": 2953985
+          }
+        }
+      },
+      {
+        "epoch": 5,
+        "learning_rate": 0.0001888228567653781,
+        "seconds": 38.119,
+        "training": {
+          "hard_negative_bce": 0.6677642550628647,
+          "positive_bce": 0.5309918850306937,
+          "positive_dice_loss": 0.7820750637487932,
+          "scene_bce": 0.4370591678167049,
+          "total": 1.8083232523424353
+        },
+        "validation": {
+          "auroc": 0.8296819807744283,
+          "average_precision": 0.8127481213081638,
+          "exact_locations": 763,
+          "geographic_groups": 64,
+          "negatives": 7656,
+          "operating_points": {
+            "0.02": {
+              "false_positive_rate": 0.019331243469174503,
+              "precision": 0.9099208764455264,
+              "recall": 0.19161753396564984,
+              "threshold": 0.68212890625
+            },
+            "0.05": {
+              "false_positive_rate": 0.04898119122257053,
+              "precision": 0.8570884146341463,
+              "recall": 0.2882594206613689,
+              "threshold": 0.67236328125
+            },
+            "0.08": {
+              "false_positive_rate": 0.07980668756530826,
+              "precision": 0.8283707865168539,
+              "recall": 0.37798000512689056,
+              "threshold": 0.662109375
+            },
+            "0.095": {
+              "false_positive_rate": 0.09443573667711598,
+              "precision": 0.8227941176470588,
+              "recall": 0.43027428864393746,
+              "threshold": 0.65625
+            }
+          },
+          "positives": 7802,
+          "scenes": 15458,
+          "segmentation": {
+            "average_precision_all_observable_pixels": 0.33680577011689333,
+            "dice": 0.44720554377280397,
+            "intersection_over_union": 0.28800047680449176,
+            "observable_pixels": 15781295,
+            "predicted_positive_pixels": 6922033,
+            "threshold": 0.6,
+            "threshold_grid": [
+              {
+                "dice": 0.3856359033605559,
+                "intersection_over_union": 0.23887789883541044,
+                "intersection_pixels": 2891831,
+                "predicted_positive_pixels": 12043742,
+                "threshold": 0.05
+              },
+              {
+                "dice": 0.3985897553532598,
+                "intersection_over_union": 0.24889921660341688,
+                "intersection_pixels": 2858382,
+                "predicted_positive_pixels": 11388491,
+                "threshold": 0.1
+              },
+              {
+                "dice": 0.4050596368118695,
+                "intersection_over_union": 0.2539653808761819,
+                "intersection_pixels": 2824413,
+                "predicted_positive_pixels": 10991680,
+                "threshold": 0.15
+              },
+              {
+                "dice": 0.40965631776506983,
+                "intersection_over_union": 0.25758980422984706,
+                "intersection_pixels": 2795736,
+                "predicted_positive_pixels": 10695193,
+                "threshold": 0.2
+              },
+              {
+                "dice": 0.4130326093907921,
+                "intersection_over_union": 0.26026534120038625,
+                "intersection_pixels": 2764191,
+                "predicted_positive_pixels": 10430871,
+                "threshold": 0.25
+              },
+              {
+                "dice": 0.4177323872066458,
+                "intersection_over_union": 0.26400868211488954,
+                "intersection_pixels": 2741859,
+                "predicted_positive_pixels": 10173362,
+                "threshold": 0.3
+              },
+              {
+                "dice": 0.42314131505152675,
+                "intersection_over_union": 0.26834447442280074,
+                "intersection_pixels": 2713330,
+                "predicted_positive_pixels": 9870714,
+                "threshold": 0.35
+              },
+              {
+                "dice": 0.42777328817390453,
+                "intersection_over_union": 0.2720811731261443,
+                "intersection_pixels": 2679774,
+                "predicted_positive_pixels": 9574960,
+                "threshold": 0.39999999999999997
+              },
+              {
+                "dice": 0.4342625865905803,
+                "intersection_over_union": 0.27735339455481633,
+                "intersection_pixels": 2638614,
+                "predicted_positive_pixels": 9198174,
+                "threshold": 0.44999999999999996
+              },
+              {
+                "dice": 0.43958675726197943,
+                "intersection_over_union": 0.28171175764353734,
+                "intersection_pixels": 2569338,
+                "predicted_positive_pixels": 8735803,
+                "threshold": 0.49999999999999994
+              },
+              {
+                "dice": 0.4459808010326517,
+                "intersection_over_union": 0.28698538687875136,
+                "intersection_pixels": 2464130,
+                "predicted_positive_pixels": 8096401,
+                "threshold": 0.5499999999999999
+              },
+              {
+                "dice": 0.44720554377280397,
+                "intersection_over_union": 0.28800047680449176,
+                "intersection_pixels": 2208305,
+                "predicted_positive_pixels": 6922033,
+                "threshold": 0.6
+              },
+              {
+                "dice": 0.40820168778119237,
+                "intersection_over_union": 0.2564405833627252,
+                "intersection_pixels": 1497772,
+                "predicted_positive_pixels": 4384407,
+                "threshold": 0.65
+              },
+              {
+                "dice": 0.043348165323972745,
+                "intersection_over_union": 0.022154255834252762,
+                "intersection_pixels": 67488,
+                "predicted_positive_pixels": 159780,
+                "threshold": 0.7
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.75
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.7999999999999999
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.85
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.9
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.95
+              }
+            ],
+            "truth_positive_pixels": 2953985
+          }
+        }
+      },
+      {
+        "epoch": 6,
+        "learning_rate": 0.00015,
+        "seconds": 38.824,
+        "training": {
+          "hard_negative_bce": 0.6602450461962478,
+          "positive_bce": 0.5121500321292123,
+          "positive_dice_loss": 0.7809108634711254,
+          "scene_bce": 0.4087185996323235,
+          "total": 1.7672098125864866
+        },
+        "validation": {
+          "auroc": 0.8252224029848467,
+          "average_precision": 0.8037156008238235,
+          "exact_locations": 763,
+          "geographic_groups": 64,
+          "negatives": 7656,
+          "operating_points": {
+            "0.02": {
+              "false_positive_rate": 0.01972309299895507,
+              "precision": 0.8777327935222672,
+              "recall": 0.1389387336580364,
+              "threshold": 0.6875
+            },
+            "0.05": {
+              "false_positive_rate": 0.049764890282131664,
+              "precision": 0.8509972624168948,
+              "recall": 0.2789028454242502,
+              "threshold": 0.66357421875
+            },
+            "0.08": {
+              "false_positive_rate": 0.07980668756530826,
+              "precision": 0.8336962438758846,
+              "recall": 0.3925916431684184,
+              "threshold": 0.6328125
+            },
+            "0.095": {
+              "false_positive_rate": 0.0946969696969697,
+              "precision": 0.8295721673718853,
+              "recall": 0.45231991796975135,
+              "threshold": 0.61083984375
+            }
+          },
+          "positives": 7802,
+          "scenes": 15458,
+          "segmentation": {
+            "average_precision_all_observable_pixels": 0.3170359119762899,
+            "dice": 0.4242759328657078,
+            "intersection_over_union": 0.2692577601085461,
+            "observable_pixels": 15781295,
+            "predicted_positive_pixels": 8026454,
+            "threshold": 0.15,
+            "threshold_grid": [
+              {
+                "dice": 0.419599519519797,
+                "intersection_over_union": 0.2655020197110432,
+                "intersection_pixels": 2542677,
+                "predicted_positive_pixels": 9165557,
+                "threshold": 0.05
+              },
+              {
+                "dice": 0.4242425464024542,
+                "intersection_over_union": 0.2692308676274282,
+                "intersection_pixels": 2420466,
+                "predicted_positive_pixels": 8456780,
+                "threshold": 0.1
+              },
+              {
+                "dice": 0.4242759328657078,
+                "intersection_over_union": 0.2692577601085461,
+                "intersection_pixels": 2329368,
+                "predicted_positive_pixels": 8026454,
+                "threshold": 0.15
+              },
+              {
+                "dice": 0.4206002230572003,
+                "intersection_over_union": 0.26630383845649547,
+                "intersection_pixels": 2236152,
+                "predicted_positive_pixels": 7679162,
+                "threshold": 0.2
+              },
+              {
+                "dice": 0.4183128424223591,
+                "intersection_over_union": 0.26447255414465565,
+                "intersection_pixels": 2159877,
+                "predicted_positive_pixels": 7372626,
+                "threshold": 0.25
+              },
+              {
+                "dice": 0.4154205004287348,
+                "intersection_over_union": 0.26216450518332074,
+                "intersection_pixels": 2090257,
+                "predicted_positive_pixels": 7109346,
+                "threshold": 0.3
+              },
+              {
+                "dice": 0.41426513882673915,
+                "intersection_over_union": 0.26124489595961253,
+                "intersection_pixels": 2023749,
+                "predicted_positive_pixels": 6816323,
+                "threshold": 0.35
+              },
+              {
+                "dice": 0.40866756608953525,
+                "intersection_over_union": 0.2568084187697318,
+                "intersection_pixels": 1930603,
+                "predicted_positive_pixels": 6494296,
+                "threshold": 0.39999999999999997
+              },
+              {
+                "dice": 0.40396618390471006,
+                "intersection_over_union": 0.253106281227184,
+                "intersection_pixels": 1840110,
+                "predicted_positive_pixels": 6156233,
+                "threshold": 0.44999999999999996
+              },
+              {
+                "dice": 0.3992641009217304,
+                "intersection_over_union": 0.24942534315100534,
+                "intersection_pixels": 1741920,
+                "predicted_positive_pixels": 5771668,
+                "threshold": 0.49999999999999994
+              },
+              {
+                "dice": 0.3926747924756525,
+                "intersection_over_union": 0.24430326273577363,
+                "intersection_pixels": 1619286,
+                "predicted_positive_pixels": 5293481,
+                "threshold": 0.5499999999999999
+              },
+              {
+                "dice": 0.3753633724843961,
+                "intersection_over_union": 0.23104450935493323,
+                "intersection_pixels": 1394032,
+                "predicted_positive_pixels": 4473655,
+                "threshold": 0.6
+              },
+              {
+                "dice": 0.32772982069161327,
+                "intersection_over_union": 0.19597898996629537,
+                "intersection_pixels": 978830,
+                "predicted_positive_pixels": 3019411,
+                "threshold": 0.65
+              },
+              {
+                "dice": 0.08127330149814567,
+                "intersection_over_union": 0.04235793537537369,
+                "intersection_pixels": 132889,
+                "predicted_positive_pixels": 316191,
+                "threshold": 0.7
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.75
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.7999999999999999
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.85
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.9
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.95
+              }
+            ],
+            "truth_positive_pixels": 2953985
+          }
+        }
+      },
+      {
+        "epoch": 7,
+        "learning_rate": 0.0001111771432346219,
+        "seconds": 38.968,
+        "training": {
+          "hard_negative_bce": 0.6585163594234602,
+          "positive_bce": 0.4862661614955178,
+          "positive_dice_loss": 0.7792596329342235,
+          "scene_bce": 0.38024229353124445,
+          "total": 1.724533478261925
+        },
+        "validation": {
+          "auroc": 0.8314306716628401,
+          "average_precision": 0.8126530236244306,
+          "exact_locations": 763,
+          "geographic_groups": 64,
+          "negatives": 7656,
+          "operating_points": {
+            "0.02": {
+              "false_positive_rate": 0.01893939393939394,
+              "precision": 0.8890589135424637,
+              "recall": 0.14893617021276595,
+              "threshold": 0.69384765625
+            },
+            "0.05": {
+              "false_positive_rate": 0.0493730407523511,
+              "precision": 0.8606194690265486,
+              "recall": 0.29915406306075365,
+              "threshold": 0.67626953125
+            },
+            "0.08": {
+              "false_positive_rate": 0.07915360501567398,
+              "precision": 0.8422696512233212,
+              "recall": 0.4147654447577544,
+              "threshold": 0.6572265625
+            },
+            "0.095": {
+              "false_positive_rate": 0.09404388714733543,
+              "precision": 0.833641404805915,
+              "recall": 0.4624455267880031,
+              "threshold": 0.646484375
+            }
+          },
+          "positives": 7802,
+          "scenes": 15458,
+          "segmentation": {
+            "average_precision_all_observable_pixels": 0.3115779134423808,
+            "dice": 0.41721329241185573,
+            "intersection_over_union": 0.2635941345802725,
+            "observable_pixels": 15781295,
+            "predicted_positive_pixels": 7703825,
+            "threshold": 0.39999999999999997,
+            "threshold_grid": [
+              {
+                "dice": 0.4072429598881846,
+                "intersection_over_union": 0.2556842943601713,
+                "intersection_pixels": 2614882,
+                "predicted_positive_pixels": 9887892,
+                "threshold": 0.05
+              },
+              {
+                "dice": 0.41186920958694545,
+                "intersection_over_union": 0.259342122244115,
+                "intersection_pixels": 2523986,
+                "predicted_positive_pixels": 9302265,
+                "threshold": 0.1
+              },
+              {
+                "dice": 0.41230343072666004,
+                "intersection_over_union": 0.2596865413114572,
+                "intersection_pixels": 2462186,
+                "predicted_positive_pixels": 8989578,
+                "threshold": 0.15
+              },
+              {
+                "dice": 0.41260546052145136,
+                "intersection_over_union": 0.2599262188825408,
+                "intersection_pixels": 2405109,
+                "predicted_positive_pixels": 8704169,
+                "threshold": 0.2
+              },
+              {
+                "dice": 0.4128311875321345,
+                "intersection_over_union": 0.26010540547998123,
+                "intersection_pixels": 2356620,
+                "predicted_positive_pixels": 8462885,
+                "threshold": 0.25
+              },
+              {
+                "dice": 0.41566298431788185,
+                "intersection_over_union": 0.2623576803442435,
+                "intersection_pixels": 2322296,
+                "predicted_positive_pixels": 8219952,
+                "threshold": 0.3
+              },
+              {
+                "dice": 0.41721299247801014,
+                "intersection_over_union": 0.2635938951326107,
+                "intersection_pixels": 2279366,
+                "predicted_positive_pixels": 7972645,
+                "threshold": 0.35
+              },
+              {
+                "dice": 0.41721329241185573,
+                "intersection_over_union": 0.2635941345802725,
+                "intersection_pixels": 2223290,
+                "predicted_positive_pixels": 7703825,
+                "threshold": 0.39999999999999997
+              },
+              {
+                "dice": 0.41694626152368097,
+                "intersection_over_union": 0.2633809904172865,
+                "intersection_pixels": 2156474,
+                "predicted_positive_pixels": 7390149,
+                "threshold": 0.44999999999999996
+              },
+              {
+                "dice": 0.4142976708532035,
+                "intersection_over_union": 0.2612707714670008,
+                "intersection_pixels": 2065648,
+                "predicted_positive_pixels": 7017821,
+                "threshold": 0.49999999999999994
+              },
+              {
+                "dice": 0.41353520599381927,
+                "intersection_over_union": 0.2606645968799281,
+                "intersection_pixels": 1950946,
+                "predicted_positive_pixels": 6481468,
+                "threshold": 0.5499999999999999
+              },
+              {
+                "dice": 0.4050711682692129,
+                "intersection_over_union": 0.2539744471417181,
+                "intersection_pixels": 1746453,
+                "predicted_positive_pixels": 5668959,
+                "threshold": 0.6
+              },
+              {
+                "dice": 0.37017852305773763,
+                "intersection_over_union": 0.22712826422697305,
+                "intersection_pixels": 1303731,
+                "predicted_positive_pixels": 4089811,
+                "threshold": 0.65
+              },
+              {
+                "dice": 0.12401864600808792,
+                "intersection_over_union": 0.06610867732996807,
+                "intersection_pixels": 219703,
+                "predicted_positive_pixels": 589079,
+                "threshold": 0.7
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.75
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.7999999999999999
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.85
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.9
+              },
+              {
+                "dice": 0.0,
+                "intersection_over_union": 0.0,
+                "intersection_pixels": 0,
+                "predicted_positive_pixels": 0,
+                "threshold": 0.95
+              }
+            ],
+            "truth_positive_pixels": 2953985
+          }
+        }
+      }
+    ],
+    "learning_rate": 0.0003,
+    "objective": "positive-pixel BCE + top-2%-negative BCE + 0.5 positive soft-Dice + 0.5 BCE on segmentation-derived scene logit",
+    "optimizer": "AdamW(weight_decay=1e-4)",
+    "scheduler": "CosineAnnealingLR",
+    "selection_rank": [
+      "scene_average_precision",
+      "scene_auroc",
+      "recall_at_fpr_le_0.05",
+      "pixel_dice"
+    ]
+  },
+  "validation": {
+    "auroc": 0.8341466144709566,
+    "average_precision": 0.8224551121841779,
+    "exact_locations": 763,
+    "geographic_groups": 64,
+    "negatives": 7656,
+    "operating_points": {
+      "0.02": {
+        "false_positive_rate": 0.01972309299895507,
+        "precision": 0.9109144542772861,
+        "recall": 0.19789797487823635,
+        "threshold": 0.6689453125
+      },
+      "0.05": {
+        "false_positive_rate": 0.04832810867293626,
+        "precision": 0.8782494241526818,
+        "recall": 0.34209177134068186,
+        "threshold": 0.65380859375
+      },
+      "0.08": {
+        "false_positive_rate": 0.07993730407523511,
+        "precision": 0.8502569121605089,
+        "recall": 0.44539861573955397,
+        "threshold": 0.640625
+      },
+      "0.095": {
+        "false_positive_rate": 0.09391327063740856,
+        "precision": 0.8400089007565643,
+        "recall": 0.4838502947962061,
+        "threshold": 0.63525390625
+      }
+    },
+    "positives": 7802,
+    "scenes": 15458,
+    "segmentation": {
+      "average_precision_all_observable_pixels": 0.3170876556376502,
+      "dice": 0.4317820633375676,
+      "intersection_over_union": 0.27533294527705116,
+      "observable_pixels": 15781295,
+      "predicted_positive_pixels": 8138926,
+      "threshold": 0.5499999999999999,
+      "threshold_grid": [
+        {
+          "dice": 0.3501187939966733,
+          "intersection_over_union": 0.2122084867217812,
+          "intersection_pixels": 2938435,
+          "predicted_positive_pixels": 13831375,
+          "threshold": 0.05
+        },
+        {
+          "dice": 0.36975235912181204,
+          "intersection_over_union": 0.22680747994987585,
+          "intersection_pixels": 2918389,
+          "predicted_positive_pixels": 12831656,
+          "threshold": 0.1
+        },
+        {
+          "dice": 0.3781685794767595,
+          "intersection_over_union": 0.23317379025420137,
+          "intersection_pixels": 2875131,
+          "predicted_positive_pixels": 12251567,
+          "threshold": 0.15
+        },
+        {
+          "dice": 0.3839318452062466,
+          "intersection_over_union": 0.23757156780014949,
+          "intersection_pixels": 2827162,
+          "predicted_positive_pixels": 11773431,
+          "threshold": 0.2
+        },
+        {
+          "dice": 0.3880053377195828,
+          "intersection_over_union": 0.24069889733424357,
+          "intersection_pixels": 2781166,
+          "predicted_positive_pixels": 11381725,
+          "threshold": 0.25
+        },
+        {
+          "dice": 0.3932355984810031,
+          "intersection_over_union": 0.2447375596006779,
+          "intersection_pixels": 2752137,
+          "predicted_positive_pixels": 11043410,
+          "threshold": 0.3
+        },
+        {
+          "dice": 0.40057228203526674,
+          "intersection_over_union": 0.25044725531266504,
+          "intersection_pixels": 2724369,
+          "predicted_positive_pixels": 10648399,
+          "threshold": 0.35
+        },
+        {
+          "dice": 0.4067781766366069,
+          "intersection_over_union": 0.2553179793745683,
+          "intersection_pixels": 2680009,
+          "predicted_positive_pixels": 10222774,
+          "threshold": 0.39999999999999997
+        },
+        {
+          "dice": 0.4150609459877225,
+          "intersection_over_union": 0.26187817439225475,
+          "intersection_pixels": 2631503,
+          "predicted_positive_pixels": 9726095,
+          "threshold": 0.44999999999999996
+        },
+        {
+          "dice": 0.42208483013683734,
+          "intersection_over_union": 0.267495260960981,
+          "intersection_pixels": 2546377,
+          "predicted_positive_pixels": 9111727,
+          "threshold": 0.49999999999999994
+        },
+        {
+          "dice": 0.4317820633375676,
+          "intersection_over_union": 0.27533294527705116,
+          "intersection_pixels": 2394860,
+          "predicted_positive_pixels": 8138926,
+          "threshold": 0.5499999999999999
+        },
+        {
+          "dice": 0.4207177455661657,
+          "intersection_over_union": 0.2663980706330365,
+          "intersection_pixels": 1978344,
+          "predicted_positive_pixels": 6450629,
+          "threshold": 0.6
+        },
+        {
+          "dice": 0.3178688311172612,
+          "intersection_over_union": 0.18896792176343047,
+          "intersection_pixels": 948591,
+          "predicted_positive_pixels": 3014458,
+          "threshold": 0.65
+        },
+        {
+          "dice": 0.005194836712516415,
+          "intersection_over_union": 0.0026041825077067716,
+          "intersection_pixels": 7706,
+          "predicted_positive_pixels": 12807,
+          "threshold": 0.7
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.75
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.7999999999999999
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.85
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.9
+        },
+        {
+          "dice": 0.0,
+          "intersection_over_union": 0.0,
+          "intersection_pixels": 0,
+          "predicted_positive_pixels": 0,
+          "threshold": 0.95
+        }
+      ],
+      "truth_positive_pixels": 2953985
+    }
+  }
+}
