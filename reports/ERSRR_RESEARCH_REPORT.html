@@ -2,745 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="ERSRR architecture, data-acquisition, and experiment report — 9 July 2026">
-  <title>ERSRR · Research Architecture Decision & Evidence</title>
+  <title>ERSRR Research Dossier — Frozen V3 Campaign</title>
   <style>
-    :root {
-      --ink: #f1f6f3;
-      --muted: #aebbb6;
-      --dim: #7d8c87;
-      --paper: #08100f;
-      --surface: #0d1816;
-      --surface-2: #12221e;
-      --line: #243a34;
-      --mint: #7de2b8;
-      --mint-deep: #36aa7d;
-      --sky: #82c7f4;
-      --amber: #efc36d;
-      --coral: #f08f78;
-      --violet: #b3a0f6;
-      --good: #8be0a7;
-      --warning: #f0c97a;
-      --bad: #f19583;
-      --max: 1180px;
-      --radius: 20px;
-      --shadow: 0 22px 60px rgba(0, 0, 0, .28);
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background:
-        radial-gradient(circle at 75% -10%, rgba(54,170,125,.16), transparent 35rem),
-        radial-gradient(circle at 8% 18%, rgba(130,199,244,.09), transparent 28rem),
-        var(--paper);
-      color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 16px;
-      line-height: 1.65;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a { color: var(--mint); text-underline-offset: .2em; }
-    a:hover { color: #b6f5da; }
-    h1, h2, h3, h4 { margin: 0; line-height: 1.12; letter-spacing: -.025em; }
-    h1 { max-width: 900px; font-size: clamp(2.7rem, 7vw, 6.3rem); font-weight: 720; }
-    h2 { font-size: clamp(2rem, 4vw, 3.3rem); }
-    h3 { font-size: 1.18rem; letter-spacing: -.01em; }
-    p { margin: 0; }
-    code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
-    code { color: #d8f6e9; overflow-wrap: anywhere; }
-    strong { color: #fff; }
-
-    .skip-link {
-      position: fixed; left: 1rem; top: -5rem; z-index: 100;
-      padding: .7rem 1rem; border-radius: 10px; background: var(--mint); color: #052018;
-      font-weight: 700;
-    }
-    .skip-link:focus { top: 1rem; }
-
-    .shell { width: min(var(--max), calc(100% - 40px)); margin-inline: auto; }
-    .topbar {
-      position: sticky; top: 0; z-index: 20;
-      border-bottom: 1px solid rgba(125,226,184,.13);
-      background: rgba(8,16,15,.84); backdrop-filter: blur(18px);
-    }
-    .topbar-inner { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-    .brand { font-size: .82rem; font-weight: 800; letter-spacing: .18em; color: var(--mint); text-transform: uppercase; }
-    .topnav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .35rem 1.1rem; }
-    .topnav a { color: var(--muted); font-size: .78rem; font-weight: 650; text-decoration: none; }
-    .topnav a:hover { color: var(--ink); }
-
-    .hero { padding: clamp(5rem, 11vw, 9rem) 0 4rem; }
-    .eyebrow { display: flex; align-items: center; flex-wrap: wrap; gap: .7rem; margin-bottom: 1.4rem; }
-    .pill {
-      display: inline-flex; align-items: center; gap: .45rem;
-      min-height: 30px; padding: .25rem .72rem; border: 1px solid var(--line); border-radius: 999px;
-      color: var(--muted); background: rgba(13,24,22,.75); font-size: .73rem; font-weight: 720; letter-spacing: .055em; text-transform: uppercase;
-    }
-    .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(125,226,184,.09); }
-    .pill.research { color: var(--amber); border-color: rgba(239,195,109,.35); }
-    .pill.verified { color: var(--mint); border-color: rgba(125,226,184,.35); }
-    .hero .lede { max-width: 770px; margin-top: 1.6rem; color: var(--muted); font-size: clamp(1.05rem, 2vw, 1.32rem); }
-    .hero-meta { display: flex; flex-wrap: wrap; gap: .6rem 1.8rem; margin-top: 2rem; color: var(--dim); font-size: .82rem; }
-
-    .metric-strip {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
-      overflow: hidden; margin-top: 3.6rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--line); box-shadow: var(--shadow);
-    }
-    .metric { min-height: 155px; padding: 1.4rem; background: linear-gradient(155deg, rgba(18,34,30,.98), rgba(10,20,18,.98)); }
-    .metric .value { color: var(--mint); font-size: clamp(2rem, 4vw, 3.3rem); line-height: 1; font-weight: 760; letter-spacing: -.045em; }
-    .metric .label { margin-top: .7rem; color: var(--ink); font-size: .86rem; font-weight: 700; }
-    .metric .context { margin-top: .25rem; color: var(--dim); font-size: .76rem; line-height: 1.45; }
-
-    main { padding-bottom: 8rem; }
-    section { padding: clamp(4rem, 8vw, 7rem) 0; border-top: 1px solid rgba(36,58,52,.78); }
-    .section-head { display: grid; grid-template-columns: minmax(0, .7fr) minmax(280px, 1fr); gap: 2rem 5rem; align-items: end; margin-bottom: 2.8rem; }
-    .section-index { color: var(--mint); font: 700 .72rem/1.2 "SFMono-Regular", Consolas, monospace; letter-spacing: .14em; text-transform: uppercase; }
-    .section-title { margin-top: .6rem; }
-    .section-intro { color: var(--muted); max-width: 660px; }
-
-    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-    .grid-2 > *, .grid-3 > *, .section-head > *, .roadmap > * { min-width: 0; }
-    .card { border: 1px solid var(--line); border-radius: var(--radius); background: rgba(13,24,22,.78); padding: clamp(1.25rem, 3vw, 2rem); }
-    .card.soft { background: linear-gradient(150deg, rgba(18,34,30,.82), rgba(10,18,17,.82)); }
-    .card h3 + p, .card h3 + ul { margin-top: .8rem; }
-    .card p, .card li { color: var(--muted); }
-    .card .kicker { margin-bottom: .6rem; color: var(--mint); font: 700 .69rem/1.2 "SFMono-Regular", Consolas, monospace; letter-spacing: .12em; text-transform: uppercase; }
-    .verdict { position: relative; overflow: hidden; border-color: rgba(125,226,184,.28); }
-    .verdict::after { content: ""; position: absolute; inset: auto -6rem -8rem auto; width: 15rem; height: 15rem; border-radius: 50%; background: rgba(54,170,125,.11); filter: blur(2px); }
-    .verdict .large { position: relative; z-index: 1; max-width: 900px; font-size: clamp(1.35rem, 3vw, 2.15rem); line-height: 1.35; letter-spacing: -.022em; }
-    .verdict .large em { color: var(--mint); font-style: normal; }
-
-    ul.clean { margin: .8rem 0 0; padding: 0; list-style: none; }
-    ul.clean li { position: relative; padding-left: 1.15rem; margin-top: .55rem; }
-    ul.clean li::before { content: ""; position: absolute; left: 0; top: .68em; width: 5px; height: 5px; border-radius: 50%; background: var(--mint-deep); }
-    .callout { padding: 1.15rem 1.3rem; border-left: 3px solid var(--amber); border-radius: 0 14px 14px 0; background: rgba(239,195,109,.07); color: var(--muted); }
-    .callout strong { color: var(--amber); }
-    .callout.good { border-color: var(--mint); background: rgba(125,226,184,.065); }
-    .callout.good strong { color: var(--mint); }
-
-    .architecture {
-      overflow-x: auto; padding: 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); background: #0a1513;
-    }
-    .architecture svg { display: block; width: 100%; min-width: 820px; height: auto; }
-
-    .decision-table { width: 100%; border-collapse: collapse; }
-    .decision-table th, .decision-table td { padding: .95rem 1rem; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
-    .decision-table th { color: var(--dim); font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; }
-    .decision-table td { color: var(--muted); }
-    .decision-table tr:last-child td { border-bottom: 0; }
-    .decision-table .chosen td { background: rgba(125,226,184,.045); }
-    .status { display: inline-block; padding: .18rem .55rem; border-radius: 999px; font-size: .68rem; font-weight: 750; white-space: nowrap; }
-    .status.selected { color: var(--mint); background: rgba(125,226,184,.1); }
-    .status.baseline { color: var(--sky); background: rgba(130,199,244,.1); }
-    .status.blocked { color: var(--coral); background: rgba(240,143,120,.1); }
-    .status.next { color: var(--violet); background: rgba(179,160,246,.1); }
-
-    .timeline { display: grid; gap: 0; counter-reset: step; }
-    .step { display: grid; grid-template-columns: 48px 1fr; gap: 1rem; }
-    .step-marker { display: grid; grid-template-rows: 42px 1fr; justify-items: center; }
-    .step-marker::before { counter-increment: step; content: counter(step, decimal-leading-zero); display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid rgba(125,226,184,.35); border-radius: 50%; color: var(--mint); background: var(--surface); font: 700 .7rem/1 "SFMono-Regular", Consolas, monospace; }
-    .step-marker::after { content: ""; width: 1px; background: var(--line); }
-    .step:last-child .step-marker::after { display: none; }
-    .step-body { min-width: 0; padding: .35rem 0 2rem; }
-    .step-body p { margin-top: .4rem; color: var(--muted); }
-
-    .integrity { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-top: 1rem; }
-    .check { display: flex; gap: .75rem; align-items: flex-start; padding: .9rem; border: 1px solid var(--line); border-radius: 13px; background: rgba(8,16,15,.55); }
-    .check-icon { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(125,226,184,.12); color: var(--mint); font-size: .75rem; font-weight: 900; }
-    .check b { display: block; color: var(--ink); font-size: .82rem; }
-    .check span { display: block; color: var(--dim); font-size: .73rem; line-height: 1.4; }
-
-    .audit-bars { display: grid; gap: 1rem; margin-top: 1rem; }
-    .bar-row { display: grid; grid-template-columns: 150px 1fr 76px; gap: 1rem; align-items: center; }
-    .bar-label { color: var(--muted); font-size: .8rem; }
-    .bar-track { height: 10px; overflow: hidden; border-radius: 999px; background: #1a2a26; }
-    .bar-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--mint-deep), var(--mint)); }
-    .bar-fill.warn { background: linear-gradient(90deg, #ae6d56, var(--coral)); }
-    .bar-value { color: var(--ink); font: 700 .75rem/1 "SFMono-Regular", Consolas, monospace; text-align: right; }
-
-    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(13,24,22,.7); }
-    table.metrics { width: 100%; min-width: 720px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-    .metrics caption { padding: 1.15rem 1.2rem; color: var(--ink); font-weight: 720; text-align: left; }
-    .metrics caption span { display: block; margin-top: .2rem; color: var(--dim); font-size: .73rem; font-weight: 500; }
-    .metrics th, .metrics td { padding: .78rem 1rem; border-top: 1px solid var(--line); text-align: right; }
-    .metrics th { color: var(--dim); font-size: .67rem; letter-spacing: .07em; text-transform: uppercase; }
-    .metrics td { color: var(--muted); font-size: .84rem; }
-    .metrics th:first-child, .metrics td:first-child { text-align: left; }
-    .metrics tr.highlight td { color: var(--ink); background: rgba(125,226,184,.045); }
-    .metrics .best { color: var(--mint); font-weight: 760; }
-    .metrics .caution { color: var(--amber); }
-    .table-note { margin-top: .7rem; color: var(--dim); font-size: .78rem; }
-
-    .compare-chart { display: grid; gap: 1rem; }
-    .compare-row { display: grid; grid-template-columns: 160px 1fr 62px; gap: 1rem; align-items: center; }
-    .compare-label { color: var(--muted); font-size: .78rem; }
-    .compare-track { height: 24px; border-radius: 6px; background: #162621; overflow: hidden; }
-    .compare-fill { display: flex; align-items: center; height: 100%; padding-left: .5rem; border-radius: inherit; background: linear-gradient(90deg, rgba(54,170,125,.65), rgba(125,226,184,.85)); color: #06100d; font-size: .64rem; font-weight: 800; }
-    .compare-fill.sky { background: linear-gradient(90deg, rgba(68,128,167,.85), var(--sky)); }
-    .compare-fill.amber { background: linear-gradient(90deg, rgba(170,119,42,.85), var(--amber)); }
-    .compare-value { color: var(--ink); font: 700 .76rem/1 "SFMono-Regular", Consolas, monospace; text-align: right; }
-
-    .finding { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start; }
-    .finding + .finding { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
-    .finding-num { color: var(--mint); font: 700 .74rem/1.2 "SFMono-Regular", Consolas, monospace; }
-    .finding p { margin-top: .35rem; color: var(--muted); }
-
-    pre {
-      position: relative; overflow-x: auto; margin: 0; padding: 1.25rem;
-      border: 1px solid var(--line); border-radius: 15px; background: #050b0a; color: #cfe8de;
-      font-size: .78rem; line-height: 1.7; tab-size: 2;
-    }
-    .code-label { display: inline-block; margin: 0 0 .5rem .2rem; color: var(--dim); font: 700 .66rem/1 "SFMono-Regular", Consolas, monospace; letter-spacing: .1em; text-transform: uppercase; }
-
-    .roadmap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; }
-    .roadmap-item { min-height: 220px; padding: 1.2rem; border: 1px solid var(--line); border-radius: 16px; background: rgba(13,24,22,.72); }
-    .roadmap-item .order { color: var(--mint); font: 700 .7rem/1.2 "SFMono-Regular", Consolas, monospace; }
-    .roadmap-item h3 { margin-top: .7rem; }
-    .roadmap-item p { margin-top: .65rem; color: var(--muted); font-size: .83rem; }
-    .roadmap-item .gate { display: inline-block; margin-top: 1rem; color: var(--amber); font-size: .7rem; font-weight: 750; }
-
-    .sources { columns: 2 340px; column-gap: 3rem; }
-    .source { break-inside: avoid; margin-bottom: 1.35rem; }
-    .source h3 { font-size: .92rem; }
-    .source p { margin-top: .35rem; color: var(--dim); font-size: .78rem; }
-
-    footer { padding: 2.5rem 0 4rem; border-top: 1px solid var(--line); color: var(--dim); font-size: .78rem; }
-    .footer-inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-
-    @media (max-width: 900px) {
-      .topnav { display: none; }
-      .metric-strip { grid-template-columns: repeat(2, 1fr); }
-      .section-head { grid-template-columns: 1fr; gap: 1rem; }
-      .grid-3 { grid-template-columns: 1fr; }
-      .roadmap { grid-template-columns: repeat(2, 1fr); }
-      .integrity { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 640px) {
-      .shell { width: min(var(--max), calc(100% - 24px)); }
-      .hero { padding-top: 4rem; }
-      .metric-strip, .grid-2, .roadmap, .integrity { grid-template-columns: 1fr; }
-      .metric { min-height: 130px; }
-      .bar-row, .compare-row { grid-template-columns: 105px 1fr 48px; gap: .55rem; }
-      .card { border-radius: 16px; }
-    }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-    @media print {
-      :root { --ink: #10201b; --muted: #334942; --dim: #5a6c66; --paper: #fff; --surface: #fff; --surface-2: #f6faf8; --line: #cad8d2; }
-      body { background: #fff; color: var(--ink); font-size: 10pt; }
-      .topbar { position: static; background: #fff; }
-      .topnav { display: none; }
-      .hero { padding: 2.2rem 0; }
-      section { padding: 2.4rem 0; break-inside: avoid; }
-      .card, .table-wrap, .architecture, pre, .roadmap-item { background: #fff; box-shadow: none; }
-      .metric { background: #f6faf8; }
-      a { color: #166d50; }
-    }
+    :root{--ink:#f4f0e7;--muted:#a9afa7;--black:#07100d;--panel:#0d1814;--line:#24332d;--green:#8bffb0;--green2:#39c878;--coral:#ff786f;--sand:#d8c9a6;--max:1180px;--mono:ui-monospace,SFMono-Regular,Consolas,monospace;--serif:Georgia,"Times New Roman",serif;--sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--black);color:var(--ink);font-family:var(--sans);line-height:1.55} body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:linear-gradient(rgba(139,255,176,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(139,255,176,.04) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(to bottom,#000,transparent 85%)}
+    a{color:var(--green)} .progress{position:fixed;z-index:30;left:0;top:0;height:3px;background:var(--green);width:0;box-shadow:0 0 14px var(--green)}
+    .rail{position:fixed;z-index:20;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:9px}.rail a{width:8px;height:8px;border:1px solid var(--muted);border-radius:50%;background:var(--black);font-size:0}.rail a.on{background:var(--green);border-color:var(--green)}
+    .wrap{width:min(var(--max),calc(100% - 48px));margin:auto}.hero{min-height:100svh;display:grid;align-items:end;padding:92px 0 64px;position:relative;overflow:hidden}.hero:after{content:"CH₄";position:absolute;right:-.03em;top:-.2em;font:700 min(48vw,620px)/1 var(--serif);color:transparent;-webkit-text-stroke:1px rgba(139,255,176,.12);z-index:-1}.eyebrow{font:600 11px/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--green)}h1{font:400 clamp(54px,9.5vw,132px)/.88 var(--serif);letter-spacing:-.055em;max-width:1030px;margin:24px 0 36px}.hero-copy{display:grid;grid-template-columns:1.25fr .75fr;gap:50px;align-items:end}.hero-copy p{font-size:clamp(18px,2vw,25px);max-width:720px;margin:0;color:#d9ded8}.stamp{border-left:1px solid var(--green);padding-left:18px;font:12px/1.7 var(--mono);color:var(--muted)}
+    section{padding:112px 0;border-top:1px solid var(--line);position:relative}.section-head{display:grid;grid-template-columns:1fr 2fr;gap:32px;margin-bottom:52px}.section-head h2{font:400 clamp(35px,5vw,68px)/.98 var(--serif);letter-spacing:-.035em;margin:0}.section-head p{max-width:670px;margin:7px 0 0;color:var(--muted);font-size:17px}.kicker{font:600 11px/1.4 var(--mono);letter-spacing:.14em;color:var(--green);text-transform:uppercase;margin-bottom:14px}.verdict{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}.metric{background:var(--panel);padding:36px;min-height:270px}.metric small{font:600 11px var(--mono);letter-spacing:.12em;color:var(--muted);text-transform:uppercase}.metric .num{font:400 clamp(60px,9vw,118px)/1 var(--serif);letter-spacing:-.06em;margin:20px 0 6px}.metric p{margin:0;color:var(--muted)}.baseline .num{color:var(--sand)}.candidate .num{color:var(--green)}.failed{color:var(--coral)}
+    .gate{margin-top:24px;padding:22px 25px;border:1px solid rgba(255,120,111,.5);background:rgba(255,120,111,.055);display:flex;justify-content:space-between;gap:30px}.gate strong{font:600 12px var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--coral)}.gate span{max-width:720px;color:#d8d0c9}
+    .chart{border-top:1px solid var(--line)}.barrow{display:grid;grid-template-columns:110px 1fr 68px;gap:18px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}.barrow label{font:12px var(--mono);color:var(--muted)}.track{height:14px;background:#14221c;overflow:hidden}.fill{height:100%;width:0;background:var(--green);transition:width 900ms cubic-bezier(.2,.8,.2,1)}.fill.sand{background:var(--sand)}.fill.coral{background:var(--coral)}.barrow output{text-align:right;font:13px var(--mono)}
+    table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{text-align:right;padding:13px 12px;border-bottom:1px solid var(--line);font:13px var(--mono)}th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}th:first-child,td:first-child{text-align:left}.drop{color:var(--coral)}
+    .ci-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}.ci{border-left:1px solid var(--line);padding-left:24px}.ci h3{font:400 25px var(--serif);margin:0 0 8px}.ci .estimate{font:400 48px var(--serif);color:var(--coral)}.ci.good .estimate{color:var(--green)}.ci p{color:var(--muted);margin:4px 0}.range{height:6px;background:#1c2b25;margin:22px 0 8px;position:relative}.range:before{content:"";position:absolute;left:50%;top:-8px;height:22px;width:1px;background:#7c8982}.range span{position:absolute;height:100%;background:currentColor}.range i{position:absolute;width:9px;height:9px;border-radius:50%;background:currentColor;top:-2px;transform:translateX(-50%)}
+    .anatomy{display:grid;grid-template-columns:.8fr 1.2fr;gap:55px}.counts{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}.count{padding:24px 8px 26px 0;border-bottom:1px solid var(--line)}.count b{display:block;font:400 52px var(--serif)}.count span{font-size:12px;color:var(--muted)}.strata h3{font:400 25px var(--serif);margin:0 0 22px}.strata-block{margin-bottom:36px}.strata .barrow{grid-template-columns:100px 1fr 120px}.duo{height:28px;display:flex;flex-direction:column;gap:3px;background:none}.duo span{height:12px;display:block}.duo .e{background:var(--green)}.duo .m{background:var(--sand)}
+    .architecture{display:grid;grid-template-columns:1fr 1fr;gap:60px}.big-stat{font:400 clamp(72px,10vw,130px)/.9 var(--serif);letter-spacing:-.06em;color:var(--green)}.big-stat-label{font:11px var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-top:15px}.pipeline{list-style:none;padding:0;margin:0;counter-reset:p}.pipeline li{counter-increment:p;padding:20px 0 20px 58px;border-bottom:1px solid var(--line);position:relative}.pipeline li:before{content:"0" counter(p);position:absolute;left:0;color:var(--green);font:12px var(--mono)}.pipeline strong{display:block;margin-bottom:4px}.pipeline span{color:var(--muted);font-size:14px}
+    .claims{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}.claim{background:var(--panel);padding:30px}.claim h3{font:400 26px var(--serif);margin:0 0 16px}.claim ul{margin:0;padding-left:18px;color:var(--muted)}.claim li{margin:10px 0}.claim.yes{border-top:3px solid var(--green)}.claim.no{border-top:3px solid var(--coral)}
+    .next{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);counter-reset:n}.next article{background:var(--panel);padding:27px;counter-increment:n}.next article:before{content:"0" counter(n);font:11px var(--mono);color:var(--green)}.next h3{font:400 22px var(--serif);margin:30px 0 10px}.next p{font-size:14px;color:var(--muted)}
+    .provenance{font:12px/1.8 var(--mono);color:var(--muted);overflow-wrap:anywhere}.provenance dl{display:grid;grid-template-columns:190px 1fr;border-top:1px solid var(--line)}.provenance dt,.provenance dd{margin:0;padding:12px;border-bottom:1px solid var(--line)}.provenance dt{color:var(--ink)}.external{padding:28px;border:1px solid var(--line);margin-bottom:30px}.external strong{font:400 40px var(--serif);color:var(--green)}.external p{color:var(--muted)}footer{padding:50px 0 80px;border-top:1px solid var(--line);font:11px var(--mono);color:var(--muted);display:flex;justify-content:space-between;gap:20px}
+    [data-reveal]{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}[data-reveal].seen{opacity:1;transform:none}
+    @media(max-width:800px){.rail{display:none}.hero-copy,.section-head,.anatomy,.architecture{grid-template-columns:1fr}.verdict,.ci-grid,.claims{grid-template-columns:1fr}.next{grid-template-columns:1fr 1fr}.section-head{gap:12px}.metric{min-height:230px}.barrow{grid-template-columns:85px 1fr 56px}section{padding:78px 0}.wrap{width:min(100% - 30px,var(--max))}.gate{display:block}.gate strong{display:block;margin-bottom:9px}.provenance dl{grid-template-columns:1fr}.provenance dd{padding-top:0}.strata .barrow{grid-template-columns:76px 1fr 92px}}
+    @media(max-width:520px){.next{grid-template-columns:1fr}.counts{grid-template-columns:1fr}.metric{padding:24px}th,td{padding:10px 5px;font-size:11px}.hero{padding-top:70px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}[data-reveal]{opacity:1;transform:none}}
+    @media print{.rail,.progress{display:none}body{background:#fff;color:#111}body:before,.hero:after{display:none}:root{--ink:#111;--muted:#555;--black:#fff;--panel:#fff;--line:#bbb;--green:#087b3b;--coral:#b52219;--sand:#6b5520}section{break-inside:avoid;padding:40px 0}[data-reveal]{opacity:1;transform:none}.hero{min-height:auto}.metric,.claim,.next article{background:#fff}}
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to report</a>
-  <header class="topbar">
-    <div class="shell topbar-inner">
-      <div class="brand">ERSRR / Research brief</div>
-      <nav class="topnav" aria-label="Report sections">
-        <a href="#decision">Decision</a>
-        <a href="#acquisition">Acquisition</a>
-        <a href="#audit">Audit</a>
-        <a href="#experiments">Experiments</a>
-        <a href="#reproducibility">Reproduce</a>
-        <a href="#roadmap">Roadmap</a>
-      </nav>
+  <div class="progress" aria-hidden="true"></div>
+  <nav class="rail" aria-label="Report sections"></nav>
+  <header class="hero" id="conclusion" data-title="Conclusion">
+    <div class="wrap" data-reveal>
+      <div class="eyebrow">ERSRR / frozen v3 campaign / research dossier 01</div>
+      <h1>We cut false alarms.<br>We lost too many plumes.</h1>
+      <div class="hero-copy"><p>The architecture is substantially more conservative than released MARS-S2L on the same strict spatial cohort. That is useful—but it is not superiority. Recall collapsed under transfer, and the preregistered promotion gate failed.</p><div class="stamp">DECISION: DO NOT RETUNE V3<br>COHORT: <span id="hero-cohort"></span><br>STATUS: FROZEN &amp; AUDITABLE<br>COMMIT: <span id="hero-commit"></span></div></div>
     </div>
   </header>
 
-  <div class="shell">
-    <header class="hero">
-      <div class="eyebrow">
-        <span class="pill verified">Evidence checked</span>
-        <span class="pill research">Research only</span>
+  <main>
+    <section id="benchmark" data-title="Benchmark"><div class="wrap">
+      <div class="section-head" data-reveal><div><div class="kicker">01 / paired benchmark</div><h2>Same scenes.<br>Different tradeoff.</h2></div><p>Released MARS-S2L and all five ERSRR seeds were evaluated on the identical untouched strict cohort. The candidate reduced false alarms by roughly three fifths, while detecting only about half as many true plumes.</p></div>
+      <div class="verdict" data-reveal>
+        <article class="metric baseline"><small>Released MARS-S2L · recall</small><div class="num" id="m-recall"></div><p>On 67 positive scenes</p></article>
+        <article class="metric candidate"><small>ERSRR five-seed mean · recall</small><div class="num" id="e-recall"></div><p class="failed">Promotion requirement not met</p></article>
+        <article class="metric baseline"><small>Released MARS-S2L · false-positive rate</small><div class="num" id="m-fpr"></div><p>On 4,334 no-plume scenes</p></article>
+        <article class="metric candidate"><small>ERSRR five-seed mean · false-positive rate</small><div class="num" id="e-fpr"></div><p>61.2% relative reduction (bootstrap mean)</p></article>
       </div>
-      <h1>Better data before a bigger model.</h1>
-      <p class="lede">A leakage-aware architecture decision for methane-plume detection from Sentinel-2, grounded in a full dataset audit, a new NASA EMIT V002 acquisition pilot, and grouped classical and neural experiments.</p>
-      <div class="hero-meta">
-        <span>Research date · 09 July 2026</span>
-        <span>Clean evidence revision · <code>6bf20592</code></span>
-        <span>Canonical input · B2 / B3 / B4 / B11 / B12</span>
-      </div>
+      <div class="gate" data-reveal><strong>Promotion gate / failed</strong><span>The 95% confidence interval for recall difference stayed below zero, and candidate recall’s lower bound did not reach 0.75. Mean FPR, specificity, and relative FPR reduction criteria passed.</span></div>
+    </div></section>
 
-      <div class="metric-strip" aria-label="Key research measurements">
-        <div class="metric">
-          <div class="value">12</div>
-          <div class="label">new EMIT V002 granules</div>
-          <div class="context">public CMR plume geometry + browse provenance</div>
-        </div>
-        <div class="metric">
-          <div class="value">24</div>
-          <div class="label">Sentinel-2 L2A stacks</div>
-          <div class="context">bracketing five-band, 20 m, 256 × 256 scenes</div>
-        </div>
-        <div class="metric">
-          <div class="value">65 / 32</div>
-          <div class="label">quality scenes / safe components</div>
-          <div class="context">connected by MGRS, S2 acquisition, or EMIT granule</div>
-        </div>
-        <div class="metric">
-          <div class="value">0.4168</div>
-          <div class="label">raw ResU-Net AUPRC</div>
-          <div class="context">group-held-out, &gt;300 ppm·m; not deployment-ready</div>
-        </div>
-      </div>
-    </header>
+    <section id="transfer" data-title="Transfer"><div class="wrap">
+      <div class="section-head" data-reveal><div><div class="kicker">02 / validation → strict</div><h2>The optimistic signal did not travel.</h2></div><p>Validation looked materially stronger for every seed. The strict spatial cohort exposed the generalization gap. Bars show recall; tables preserve the full scene-level metrics.</p></div>
+      <div class="chart" id="transfer-chart" data-reveal></div>
+      <div style="overflow-x:auto;margin-top:42px" data-reveal><table><thead><tr><th>Seed</th><th>Val recall</th><th>Strict recall</th><th>Strict FPR</th><th>Strict AP</th><th>Strict AUROC</th></tr></thead><tbody id="seed-table"></tbody></table></div>
+    </div></section>
 
-    <main id="main">
-      <section id="decision">
-        <div class="section-head">
-          <div>
-            <div class="section-index">01 · Executive decision</div>
-            <h2 class="section-title">Architecture follows label quality.</h2>
-          </div>
-          <p class="section-intro">The research does not support scaling the legacy Vision Transformer. It supports a compact, segmentation-first core with a strict artifact contract—while the project invests primarily in physically meaningful labels, temporal pairs, negatives, and leakage-proof evaluation.</p>
-        </div>
+    <section id="uncertainty" data-title="Uncertainty"><div class="wrap">
+      <div class="section-head" data-reveal><div><div class="kicker">03 / paired uncertainty</div><h2>The conclusion survives resampling.</h2></div><p>Two thousand paired bootstrap replicates resampled the 150 frozen 25 km groups and the five fixed training seeds. Intervals below are 95% confidence intervals.</p></div>
+      <div class="ci-grid" id="ci-grid" data-reveal></div>
+    </div></section>
 
-        <div class="card verdict">
-          <p class="large"><em>Adopt the 144,433-parameter, five-channel raw residual U-Net as the shared research core</em>, label it <code>research_only</code>, and keep regression disabled until physical-unit calibration no longer depends on the target. Physics features and bitemporal L2A remain experiments, not selected architecture.</p>
-        </div>
+    <section id="failures" data-title="Failure anatomy"><div class="wrap">
+      <div class="section-head" data-reveal><div><div class="kicker">04 / post-hoc anatomy</div><h2>A representation failure, not a threshold problem.</h2></div><p>Large, clear, baseline-detected plumes often received near-zero ERSRR scores. False alarms varied strongly by seed. These are exploratory diagnostics only; they may inform a preregistered v4, never retuning of v3.</p></div>
+      <div class="anatomy"><div class="counts" id="counts" data-reveal></div><div class="strata" data-reveal><div class="strata-block"><h3>Recall by observable plume area</h3><div id="area-strata"></div></div><div class="strata-block"><h3>Recall by wind speed</h3><div id="wind-strata"></div></div><div class="strata-block"><h3>No-plume FPR by reference interval</h3><div id="ref-strata"></div></div></div></div>
+    </div></section>
 
-        <div class="grid-3" style="margin-top:1rem">
-          <article class="card soft">
-            <div class="kicker">Why this core</div>
-            <h3>Small enough to diagnose</h3>
-            <p>It trains quickly on CPU, preserves spatial structure, handles explicit nodata masks, and uses only the five declared bands. The clean ablation does not justify expanding the serving contract with physics-derived channels.</p>
-          </article>
-          <article class="card soft">
-            <div class="kicker">What changes</div>
-            <h3>One train/serve contract</h3>
-            <p>Canonical band order, feature transforms, train-only normalization, masked losses, model construction, artifact metadata, and SHA-256 validation belong in one shared core.</p>
-          </article>
-          <article class="card soft">
-            <div class="kicker">What stays blocked</div>
-            <h3>No physical regression claim</h3>
-            <p>The legacy predictor uses the held-out EMIT target percentiles to denormalize outputs. Until a target-independent calibration exists, only segmentation is scientifically defensible.</p>
-          </article>
-        </div>
+    <section id="system" data-title="System"><div class="wrap">
+      <div class="section-head" data-reveal><div><div class="kicker">05 / architecture &amp; data</div><h2>A serious system, now honestly measured.</h2></div><p>The experiment combines a 16-channel, three-head encoder-decoder with release-compatible methane enhancement, temporal pairing, wind, and observability. Data and checkpoints are kept outside Git; compact manifests, hashes, metrics, and code are committed.</p></div>
+      <div class="architecture"><div data-reveal><div class="big-stat" id="params"></div><div class="big-stat-label">trainable parameters</div><p style="color:var(--muted);margin-top:30px"><span id="train-assets"></span> training assets · <span id="train-size"></span><br><span id="strict-assets"></span> strict-cohort assets · <span id="strict-size"></span></p></div><ol class="pipeline" data-reveal><li><strong>Target–reference pairing</strong><span>Six Sentinel-2 bands at each date; spatial and temporal grouping prevents leakage.</span></li><li><strong>Physical context</strong><span>MBMP enhancement, ERA5-Land wind vectors, and CloudSEN12 observability.</span></li><li><strong>Shared representation</strong><span>14.27M-parameter full U-Net proposal network.</span></li><li><strong>Three explicit outputs</strong><span>Pixel segmentation, plume presence, and quality / abstention.</span></li><li><strong>Frozen evaluation</strong><span>Five seeds, one strict campaign, paired group bootstrap, no post-hoc v3 tuning.</span></li></ol></div>
+    </div></section>
 
-        <div class="architecture" style="margin-top:1rem">
-          <svg viewBox="0 0 980 250" role="img" aria-labelledby="arch-title arch-desc">
-            <title id="arch-title">Selected ERSRR research architecture</title>
-            <desc id="arch-desc">A declared Sentinel-2 product is transformed into five raw logarithmic features, passed through the shared compact residual U-Net, and packaged as a versioned research-only artifact.</desc>
-            <defs>
-              <linearGradient id="node" x1="0" x2="1"><stop offset="0" stop-color="#132720"/><stop offset="1" stop-color="#0d1b18"/></linearGradient>
-              <linearGradient id="selected" x1="0" x2="1"><stop offset="0" stop-color="#174a38"/><stop offset="1" stop-color="#13352b"/></linearGradient>
-              <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8z" fill="#4f7366"/></marker>
-            </defs>
-            <g fill="none" stroke="#4f7366" stroke-width="2" marker-end="url(#arrow)">
-              <path d="M210 125H257"/><path d="M467 125H514"/><path d="M724 125H771"/>
-            </g>
-            <g font-family="Inter,system-ui,sans-serif">
-              <g transform="translate(0 75)"><rect width="210" height="100" rx="16" fill="url(#node)" stroke="#2f4c42"/><text x="18" y="31" fill="#7de2b8" font-size="11" font-weight="700">INPUT</text><text x="18" y="55" fill="#f1f6f3" font-size="15" font-weight="700">Declared S2 product</text><text x="18" y="77" fill="#aebbb6" font-size="11">B2 · B3 · B4 · B11 · B12</text></g>
-              <g transform="translate(257 75)"><rect width="210" height="100" rx="16" fill="url(#node)" stroke="#2f4c42"/><text x="18" y="31" fill="#82c7f4" font-size="11" font-weight="700">FEATURE CONTRACT</text><text x="18" y="55" fill="#f1f6f3" font-size="15" font-weight="700">Raw log features</text><text x="18" y="77" fill="#aebbb6" font-size="11">5 channels · train-only norm</text></g>
-              <g transform="translate(514 75)"><rect width="210" height="100" rx="16" fill="url(#selected)" stroke="#7de2b8"/><text x="18" y="31" fill="#7de2b8" font-size="11" font-weight="700">SHARED CORE</text><text x="18" y="55" fill="#ffffff" font-size="15" font-weight="700">Compact ResU-Net</text><text x="18" y="77" fill="#c6e8da" font-size="11">144,433 params · masked loss</text></g>
-              <g transform="translate(771 75)"><rect width="209" height="100" rx="16" fill="url(#node)" stroke="#2f4c42"/><text x="18" y="31" fill="#b3a0f6" font-size="11" font-weight="700">ARTIFACT</text><text x="18" y="55" fill="#f1f6f3" font-size="15" font-weight="700">Versioned contract</text><text x="18" y="77" fill="#aebbb6" font-size="11">config · norm · SHA-256</text></g>
-            </g>
-          </svg>
-        </div>
+    <section id="claims" data-title="Claims"><div class="wrap">
+      <div class="section-head" data-reveal><div><div class="kicker">06 / paper posture</div><h2>What the evidence permits.</h2></div><p>The strongest paper is currently a rigorous spatial-transfer and false-alarm tradeoff study, not a model-superiority claim. Published MARS-S2L numbers remain contextual because their cohort is not this paired strict cohort.</p></div>
+      <div class="claims" data-reveal><article class="claim yes"><h3>Supported</h3><ul><li>ERSRR materially lowers same-cohort false-positive rate.</li><li>The recall loss is large, statistically stable, and deployment-relevant.</li><li>Failures concentrate in transferable representation, with seed-unstable false positives.</li><li>The evaluation is reproducible, leakage-aware, and uncertainty-quantified.</li></ul></article><article class="claim no"><h3>Not supported</h3><ul><li>ERSRR does not outperform released MARS-S2L overall.</li><li>Published MARS-S2L test results are not a paired comparison.</li><li>Post-hoc strata do not authorize threshold changes.</li><li>External positive-domain confirmation is not complete until CDS wind is acquired.</li></ul></article></div>
+      <div class="next" style="margin-top:34px" data-reveal><article><h3>Representation first</h3><p>Pretrain or distill against released MARS-S2L features; preserve sensitivity before optimizing abstention.</p></article><article><h3>Hard strata</h3><p>Design acquisition around medium plumes, low/high wind, long reference intervals, and geography.</p></article><article><h3>Calibrated cascade</h3><p>Separate high-recall proposal generation from quality-aware false-alarm rejection.</p></article><article><h3>New untouched cohort</h3><p>Preregister v4 hypotheses and evaluate exactly once on spatial groups never used here.</p></article></div>
+    </div></section>
 
-        <div class="table-wrap" style="margin-top:1rem">
-          <table class="decision-table">
-            <thead><tr><th>Candidate</th><th>Evidence</th><th>Decision</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Legacy ViT + two heads</strong></td><td>Random tile split, relative top-decile mask, inconsistent preprocessing, target-dependent denormalization, duplicated server architecture.</td><td><span class="status blocked">Historical only</span></td></tr>
-              <tr><td><strong>Logistic / HistGB</strong></td><td>Fast grouped sanity checks; often matches or beats the neural model on current labels. Essential controls, not spatial production models.</td><td><span class="status baseline">Retain baseline</span></td></tr>
-              <tr class="chosen"><td><strong>Raw residual U-Net</strong></td><td>Stronger neural results than the physics variant at both thresholds; compact, spatially appropriate, and limited to the declared five-band contract.</td><td><span class="status selected">Selected research core</span></td></tr>
-              <tr><td><strong>Physics features</strong></td><td>Raw and physics single-time baselines are effectively tied on V002, while the raw neural input is stronger on the legacy cohort.</td><td><span class="status baseline">Ablation only</span></td></tr>
-              <tr><td><strong>Bitemporal L2A model</strong></td><td>Unproven with six complete groups and one EMIT-time polygon reused for non-contemporaneous pre/post observations.</td><td><span class="status next">Research question</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+    <section id="provenance" data-title="Provenance"><div class="wrap">
+      <div class="section-head" data-reveal><div><div class="kicker">07 / external confirmation &amp; provenance</div><h2>The audit trail is part of the result.</h2></div><p>Frozen hashes and source reports make every displayed number traceable. Independent EMIT positives are sealed; the only remaining acquisition dependency is ERA5-Land wind from Copernicus CDS.</p></div>
+      <div class="external" data-reveal><strong><span id="emit-count"></span> EMIT groups sealed</strong><p><span id="wind-count"></span> ERA5-Land requests were accepted by the official costing API. Download remains authentication-gated. Earthdata access does not supply Copernicus credentials.</p><p><a href="https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=download">ERA5-Land time-series dataset</a> · <a href="https://cds.climate.copernicus.eu/how-to-api">Copernicus API setup</a></p></div>
+      <div class="provenance" data-reveal><dl id="prov"></dl><p>Primary research notes: <a href="../docs/RESEARCH_LEDGER.md">RESEARCH_LEDGER.md</a> · <a href="../docs/PAPER_OUTLINE.md">PAPER_OUTLINE.md</a></p></div>
+    </div></section>
+  </main>
 
-      <section id="acquisition">
-        <div class="section-head">
-          <div>
-            <div class="section-index">02 · Computer-use acquisition</div>
-            <h2 class="section-title">A real V002 pilot, with provenance.</h2>
-          </div>
-          <p class="section-intro">NASA Earthdata Search was inspected interactively, a genuinely new EMIT V002 plume granule was selected, and the public metadata path was turned into a repeatable acquisition pipeline. Eleven more granules were then collected in parallel.</p>
-        </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="kicker">Workflow executed</div>
-            <div class="timeline">
-              <div class="step"><div class="step-marker"></div><div class="step-body"><h3>Select an unseen V002 plume</h3><p><code>EMIT_L2B_CH4PLM_002_20250922T204933_003374</code>, near −102.047°, 32.241° in the Permian region.</p></div></div>
-              <div class="step"><div class="step-marker"></div><div class="step-body"><h3>Capture authoritative metadata</h3><p>Query NASA CMR for the exact granule; store UMM JSON, physical plume polygon GeoJSON, browse image, source URLs, timestamps, and hashes.</p></div></div>
-              <div class="step"><div class="step-marker"></div><div class="step-body"><h3>Pair public Sentinel-2 L2A</h3><p>Search Element84 Earth Search within ±14 days and &lt;20% cloud; choose bracketing acquisitions and crop B2/B3/B4/B11/B12 COGs.</p></div></div>
-              <div class="step"><div class="step-marker"></div><div class="step-body"><h3>Force one geospatial contract</h3><p>Reproject both timestamps and the physical polygon to a shared 20 m, 256 × 256 grid. This caught and fixed a cross-UTM-zone mismatch in the initial pair.</p></div></div>
-              <div class="step"><div class="step-marker"></div><div class="step-body"><h3>Scale and validate</h3><p>Run the collector across 12 granules, then verify every declared file, SHA-256, grid, and before/after mask footprint.</p></div></div>
-            </div>
-          </div>
-
-          <div>
-            <div class="card soft">
-              <div class="kicker">Pilot pair</div>
-              <h3>Bracketing overpasses within 48 hours</h3>
-              <div class="table-wrap" style="margin-top:1rem;border-radius:13px">
-                <table class="metrics" style="min-width:520px">
-                  <thead><tr><th>Scene</th><th>Offset</th><th>ROI clear</th></tr></thead>
-                  <tbody>
-                    <tr><td><code>S2C_13SGR_20250921</code></td><td>−27.071 h</td><td class="best">100%</td></tr>
-                    <tr><td><code>S2B_14SKA_20250923</code></td><td>+20.759 h</td><td class="best">100%</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <ul class="clean">
-                <li>Shared grid: EPSG:32613, 20 m, 256 × 256</li>
-                <li>Physical plume footprint: 2,651 pixels (4.05% of tile)</li>
-                <li>Before/after mask hashes match by design</li>
-              </ul>
-            </div>
-
-            <div class="card" style="margin-top:1rem">
-              <div class="kicker">Batch integrity · 11.31 MB local</div>
-              <h3>All declared outputs verified</h3>
-              <div class="integrity">
-                <div class="check"><span class="check-icon">✓</span><div><b>12 / 12</b><span>manifests & granules</span></div></div>
-                <div class="check"><span class="check-icon">✓</span><div><b>24</b><span>S2 L2A scenes</span></div></div>
-                <div class="check"><span class="check-icon">✓</span><div><b>0</b><span>missing files</span></div></div>
-                <div class="check"><span class="check-icon">✓</span><div><b>0</b><span>SHA-256 mismatches</span></div></div>
-                <div class="check"><span class="check-icon">✓</span><div><b>0</b><span>grid mismatches</span></div></div>
-                <div class="check"><span class="check-icon">✓</span><div><b>0</b><span>mask-hash mismatches</span></div></div>
-              </div>
-              <p class="table-note">The batch contains 24 five-band stacks and 24 matching physical-mask rasters. Six plume polygons are clipped by their fixed tiles; four of those also cover more than 50% of a tile. Requiring complete polygons leaves only six feasibility groups.</p>
-            </div>
-
-            <aside class="callout" style="margin-top:1rem"><strong>Credential boundary respected.</strong> The original EMIT concentration COG and companion protected JSON require an authenticated Earthdata session. No credentials were available or handled. The pilot therefore uses the public CMR UMM plume geometry as a physical segmentation target; the public browse PNG is provenance only and is never treated as training concentration data.</aside>
-          </div>
-        </div>
-      </section>
-
-      <section id="audit">
-        <div class="section-head">
-          <div>
-            <div class="section-index">03 · Dataset and leakage audit</div>
-            <h2 class="section-title">The bottleneck is measurable.</h2>
-          </div>
-          <p class="section-intro">The existing 102-tile dataset is internally consistent in shape but not in label validity, temporal alignment, or evaluation design. These defects are large enough to dominate architectural differences.</p>
-        </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="kicker">Current corpus · 102 GeoTIFFs</div>
-            <h3>Target coverage</h3>
-            <div class="audit-bars" aria-label="Existing target validity summary">
-              <div class="bar-row"><div class="bar-label">Valid target pixels</div><div class="bar-track"><div class="bar-fill" style="width:41.64%"></div></div><div class="bar-value">41.64%</div></div>
-              <div class="bar-row"><div class="bar-label">Nodata pixels</div><div class="bar-track"><div class="bar-fill warn" style="width:58.36%"></div></div><div class="bar-value">58.36%</div></div>
-              <div class="bar-row"><div class="bar-label">Positive of valid</div><div class="bar-track"><div class="bar-fill warn" style="width:75.95%"></div></div><div class="bar-value">75.95%</div></div>
-            </div>
-            <p class="table-note">All files are 256 × 256 × 6 float32 in EPSG:4326. Every one of the 102 files has a target nodata metadata mismatch: −9999 appears in the target while the GeoTIFF profile usually declares 0.</p>
-          </div>
-          <div class="card">
-            <div class="kicker">Temporal and split risk</div>
-            <h3>Not an independent test set</h3>
-            <div class="grid-2" style="margin-top:1rem">
-              <div><div class="metric" style="min-height:120px;border-radius:13px"><div class="value" style="font-size:2rem">5.95 d</div><div class="label">mean S2↔EMIT gap</div><div class="context">worst absolute gap 53.08 d</div></div></div>
-              <div><div class="metric" style="min-height:120px;border-radius:13px"><div class="value" style="font-size:2rem">3</div><div class="label">validation tiles</div><div class="context">only one filename exposes an EMIT ID</div></div></div>
-            </div>
-            <ul class="clean">
-              <li>No true negative/background tiles are present.</li>
-              <li>Four MGRS groups cross train/validation; eight cross train/test under the legacy random split.</li>
-              <li>Validation tile <code>T34RET</code> also occurs in training.</li>
-              <li>A quality gate of ≥10% valid target and |gap| ≤7 days leaves 65 scenes in 32 leakage-safe connected components.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="grid-3" style="margin-top:1rem">
-          <article class="card">
-            <div class="kicker">Label semantics</div>
-            <h3>Every tile is forced positive</h3>
-            <p>The legacy segmentation code labels each tile’s top 10% of methane values. That is a relative rank, not a physical plume boundary, and it cannot represent a true negative.</p>
-          </article>
-          <article class="card">
-            <div class="kicker">Evaluation leakage</div>
-            <h3>Target used at inference</h3>
-            <p>Standalone inference denormalizes predictions using percentile statistics from the held-out EMIT target. Physical-unit performance derived this way is circular.</p>
-          </article>
-          <article class="card">
-            <div class="kicker">Serving mismatch</div>
-            <h3>Legacy training ≠ production</h3>
-            <p>The pre-refactor server reversed the canonical visible-band order, normalized each tile differently, and loaded a different checkpoint. The shared artifact contract now prevents those mismatches; its output remains a research probability mask, not a calibrated methane quantity.</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="experiments">
-        <div class="section-head">
-          <div>
-            <div class="section-index">04 · Grouped experiments</div>
-            <h2 class="section-title">Useful signals, modest absolute accuracy.</h2>
-          </div>
-          <p class="section-intro">All clean legacy comparisons use the same 128 × 128 (~20 m) grid, 2,048 sampled valid pixels per scene, and five outer folds over 32 leakage-safe connected components. Normalization, early stopping, and threshold calibration use training groups only, with a disjoint inner split. AUPRC is emphasized because calibrated F1 can be inflated by broad positive predictions.</p>
-        </div>
-
-        <div class="table-wrap">
-          <table class="metrics">
-            <caption>Legacy quality cohort · moderate enhancement (&gt;300 ppm·m)<span>65 scenes / 32 leakage-safe components · 128 × 128 grid · disjoint inner calibration</span></caption>
-            <thead><tr><th>Model</th><th>Features</th><th>Pixel AUPRC</th><th>Pixel AUROC</th><th>Scene F1</th><th>Scene IoU</th></tr></thead>
-            <tbody>
-              <tr><td>Prior dummy</td><td>5</td><td>0.3548</td><td>0.5000</td><td class="caution">0.4988</td><td class="caution">0.3548</td></tr>
-              <tr><td>Raw logistic</td><td>5</td><td class="best">0.4481</td><td class="best">0.5995</td><td>0.4781</td><td>0.3398</td></tr>
-              <tr><td>Physics logistic</td><td>11</td><td>0.4350</td><td>0.5805</td><td>0.4606</td><td>0.3268</td></tr>
-              <tr class="highlight"><td><strong>Raw residual U-Net</strong></td><td>5</td><td>0.4168</td><td>0.5659</td><td>0.4988</td><td>0.3546</td></tr>
-              <tr><td>Physics residual U-Net</td><td>11</td><td>0.4079</td><td>0.5556</td><td>0.4939</td><td>0.3502</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="table-note">The dummy’s high calibrated F1 is not evidence of skill: its chance AUROC and prevalence-level AUPRC expose a broad-positive operating point. Raw logistic has the strongest ranking performance. The selected raw U-Net nearly matches the prior on scene F1/IoU but does not beat the classical ranker.</p>
-
-        <div class="grid-2" style="margin-top:1rem">
-          <div class="card">
-            <div class="kicker">Controlled architecture delta</div>
-            <h3>Raw bands are the stronger neural input</h3>
-            <div class="compare-chart" style="margin-top:1.2rem" aria-label="Raw versus physics U-Net metrics">
-              <div class="compare-row"><div class="compare-label">Raw · AUPRC</div><div class="compare-track"><div class="compare-fill" style="width:83.36%">raw</div></div><div class="compare-value">.4168</div></div>
-              <div class="compare-row"><div class="compare-label">Physics · AUPRC</div><div class="compare-track"><div class="compare-fill sky" style="width:81.58%">physics</div></div><div class="compare-value">.4079</div></div>
-              <div class="compare-row"><div class="compare-label">Raw · AUROC</div><div class="compare-track"><div class="compare-fill" style="width:56.59%">raw</div></div><div class="compare-value">.5659</div></div>
-              <div class="compare-row"><div class="compare-label">Physics · AUROC</div><div class="compare-track"><div class="compare-fill sky" style="width:55.56%">physics</div></div><div class="compare-value">.5556</div></div>
-              <div class="compare-row"><div class="compare-label">Raw · IoU</div><div class="compare-track"><div class="compare-fill" style="width:70.92%">raw</div></div><div class="compare-value">.3546</div></div>
-              <div class="compare-row"><div class="compare-label">Physics · IoU</div><div class="compare-track"><div class="compare-fill sky" style="width:70.04%">physics</div></div><div class="compare-value">.3502</div></div>
-            </div>
-            <p class="table-note">At &gt;300 ppm·m, the raw input is stronger on every reported neural metric. It also remains stronger at &gt;1000 ppm·m.</p>
-          </div>
-
-          <div class="card">
-            <div class="kicker">High enhancement · &gt;1000 ppm·m</div>
-            <h3>No neural model establishes high-label skill</h3>
-            <div class="table-wrap" style="margin-top:1rem;border-radius:13px">
-              <table class="metrics" style="min-width:600px">
-                <thead><tr><th>Model</th><th>Features</th><th>AUPRC</th><th>AUROC</th><th>F1</th><th>IoU</th></tr></thead>
-                <tbody>
-                  <tr><td>Prior dummy</td><td>5</td><td>0.0601</td><td>0.5000</td><td class="caution">0.2234</td><td class="caution">0.2133</td></tr>
-                  <tr><td>Raw logistic</td><td>5</td><td class="best">0.1243</td><td class="best">0.6384</td><td>0.1614</td><td>0.1266</td></tr>
-                  <tr class="highlight"><td>Raw ResU-Net</td><td>5</td><td>0.0953</td><td>0.5793</td><td>0.1203</td><td>0.1016</td></tr>
-                  <tr><td>Physics ResU-Net</td><td>11</td><td>0.0767</td><td>0.5504</td><td>0.0868</td><td>0.0622</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="table-note">Raw ResU-Net remains the better neural variant, but raw logistic ranks substantially better and the prior has the highest calibrated scene F1/IoU. None is evidence of operational accuracy.</p>
-          </div>
-        </div>
-
-        <div class="card soft" style="margin-top:1rem">
-          <div class="kicker">Packaged artifact diagnostic · not an outer-fold result</div>
-          <h3>The contract works; the calibrated operating point does not.</h3>
-          <div class="grid-3" style="margin-top:1rem">
-            <div class="metric" style="min-height:120px;border-radius:13px"><div class="value" style="font-size:2rem">50 / 26</div><div class="label">fit scenes / split groups</div><div class="context">train-only normalization and optimization</div></div>
-            <div class="metric" style="min-height:120px;border-radius:13px"><div class="value" style="font-size:2rem">15 / 6</div><div class="label">calibration scenes / groups</div><div class="context">threshold selection, not an independent test</div></div>
-            <div class="metric" style="min-height:120px;border-radius:13px"><div class="value" style="font-size:2rem">5 / 12</div><div class="label">epochs run / requested</div><div class="context">early stopping selected the artifact</div></div>
-          </div>
-          <div class="table-wrap" style="margin-top:1rem;border-radius:13px">
-            <table class="metrics" style="min-width:760px">
-              <caption>Sampled calibration diagnostic<span>2,048 pixels per scene · decision threshold 0.01</span></caption>
-              <thead><tr><th>AUPRC</th><th>AUROC</th><th>F1</th><th>IoU</th><th>Recall</th><th>Specificity</th></tr></thead>
-              <tbody><tr><td>0.4754</td><td>0.6162</td><td>0.5275</td><td>0.3582</td><td class="caution">0.9984</td><td class="caution">0.00127</td></tr></tbody>
-            </table>
-          </div>
-          <p class="table-note">The near-perfect recall and near-zero specificity mean the artifact predicts almost everywhere positive. The ignored model and tracked <code>reports/artifacts/compact_resunet_v1_config.json</code> snapshot verify a reproducible five-band train/serve package—not a deployable detector.</p>
-        </div>
-
-        <div class="table-wrap" style="margin-top:1rem">
-          <table class="metrics">
-            <caption>New V002 physical-mask benchmark · calibrated feasibility metrics<span>Six complete groups after excluding clipped polygons · nested folds leave only 3–4 fit groups</span></caption>
-            <thead><tr><th>Model</th><th>Features</th><th>Pixel AUPRC</th><th>Pixel AUROC</th><th>Scene F1</th><th>Scene IoU</th></tr></thead>
-            <tbody>
-              <tr><td>Prior dummy</td><td>5</td><td>0.1708</td><td>0.5000</td><td>0.2819</td><td>0.1708</td></tr>
-              <tr><td>Raw single-time logistic</td><td>5</td><td>0.2410</td><td>0.6367</td><td>0.2294</td><td>0.1406</td></tr>
-              <tr><td>Physics single-time logistic</td><td>11</td><td class="best">0.2415</td><td class="best">0.6397</td><td>0.2292</td><td>0.1404</td></tr>
-              <tr><td>Physics single-time HistGB</td><td>11</td><td>0.1941</td><td>0.5861</td><td class="best">0.2939</td><td class="best">0.1777</td></tr>
-              <tr><td>Bitemporal logistic</td><td>33</td><td>0.2271</td><td>0.6212</td><td>0.1917</td><td>0.1152</td></tr>
-              <tr><td>Bitemporal HistGB</td><td>33</td><td>0.2070</td><td>0.5995</td><td>0.2673</td><td>0.1635</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="table-note">Raw and physics single-time logistic are effectively tied. Bitemporal input is unproven: the same EMIT-time polygon is applied to non-contemporaneous pre/post Sentinel-2 scenes, so the model may measure persistent source or land-cover context rather than plume change. Six groups cannot support a generalization claim.</p>
-
-        <div class="grid-2" style="margin-top:1rem">
-          <div class="card">
-            <div class="kicker">What did not work</div>
-            <div class="finding"><div class="finding-num">01</div><div><h3>Physics expansion was not selected</h3><p>Raw ResU-Net beats physics ResU-Net at both thresholds; single-time raw and physics logistic are effectively tied on V002.</p></div></div>
-            <div class="finding"><div class="finding-num">02</div><div><h3>The U-Net did not beat simple ranking</h3><p>Raw logistic AUPRC exceeds raw ResU-Net at &gt;300 (0.4481 vs 0.4168) and &gt;1000 ppm·m (0.1243 vs 0.0953).</p></div></div>
-            <div class="finding"><div class="finding-num">03</div><div><h3>V002 cannot adjudicate temporal input</h3><p>Six polygons are clipped, only six complete groups remain, and nested folds train on just three or four groups.</p></div></div>
-          </div>
-          <div class="card">
-            <div class="kicker">Interpretation boundary</div>
-            <h3>These numbers answer a narrower question</h3>
-            <ul class="clean">
-              <li>They test leakage-aware ranking and segmentation on the data currently available.</li>
-              <li>They do not establish calibrated methane concentration or flux.</li>
-              <li>They do not validate geographic transfer or detection on true negative scenes.</li>
-              <li>The V002 masks are plume-complex polygons, not per-pixel enhancement rasters.</li>
-              <li>The same EMIT-time polygon on pre/post S2 cannot distinguish transient methane from persistent context.</li>
-              <li>Legacy L1C and new L2A observations must remain separate domains unless harmonization is explicit.</li>
-            </ul>
-            <aside class="callout good" style="margin-top:1rem"><strong>Useful result:</strong> the clean experiments narrow the supported architecture to a five-band raw research baseline. Complete labels, contemporaneous controls, negatives, and independent groups—not extra channels—are the next investment.</aside>
-          </div>
-        </div>
-      </section>
-
-      <section id="reproducibility">
-        <div class="section-head">
-          <div>
-            <div class="section-index">05 · Reproducibility & Git hygiene</div>
-            <h2 class="section-title">Evidence in Git; bulk pixels out.</h2>
-          </div>
-          <p class="section-intro">The reproducible unit is a small script, manifest, configuration, hash, and metrics file—not a directory of downloaded rasters or an opaque checkpoint.</p>
-        </div>
-
-        <div class="grid-2">
-          <div>
-            <span class="code-label">Dataset audit</span>
-            <pre><code>python tools/ersrr.py status
-python tools/ersrr.py audit --dry-run
-python tools/ersrr.py audit</code></pre>
-
-            <span class="code-label" style="margin-top:1rem">Acquire one exact V002 granule</span>
-            <pre><code>python tools/acquire_v002_pilot.py \
-  EMIT_L2B_CH4PLM_002_20250922T204933_003374 \
-  --batch emit-v002-2026-07 \
-  --window-days 14 --max-cloud 20 \
-  --temporal-mode bracketing \
-  --tile-size 256 --resolution 20</code></pre>
-          </div>
-          <div>
-            <span class="code-label">Grouped classical baselines</span>
-            <pre><code>python tools/run_research_baselines.py \
-  --folds 5 --thresholds 300 1000 \
-  --image-size 128 --pixels-per-scene 2048 \
-  --output reports/experiments/baseline_results.json \
-  --markdown reports/experiments/BASELINE_RESULTS.md</code></pre>
-
-            <span class="code-label" style="margin-top:1rem">Compact residual U-Net</span>
-            <pre><code>CUDA_VISIBLE_DEVICES=-1 python tools/run_unet_experiment.py \
-  --architectures raw_resunet physics_resunet \
-  --folds 5 --epochs 12 --threshold 300 \
-  --image-size 128 --base-filters 8 \
-  --sampled-pixels 2048 --positive-weight 1 \
-  --seed 42 \
-  --output reports/experiments/unet_unweighted_300_results.json \
-  --markdown reports/experiments/UNET_UNWEIGHTED_300_RESULTS.md
-
-# Repeat with --threshold 1000 and the high-enhancement output paths.</code></pre>
-          </div>
-        </div>
-
-        <div class="grid-3" style="margin-top:1rem">
-          <article class="card">
-            <div class="kicker">Kept local</div>
-            <h3>11.31 MB acquisition batch</h3>
-            <p>V002 metadata, browse PNGs, 24 S2 stacks, and 24 masks live under ignored <code>Data Collection</code> batch paths. Integrity checks found zero missing files or hash/grid mismatches.</p>
-          </article>
-          <article class="card">
-            <div class="kicker">Committed evidence</div>
-            <h3>Small, inspectable outputs</h3>
-            <p>Collector and experiment code, aggregate JSON/Markdown metrics, architecture documentation, and this HTML report are the reviewable scientific record.</p>
-          </article>
-          <article class="card">
-            <div class="kicker">Repository hygiene completed</div>
-            <h3>Dependencies are not source</h3>
-            <p>Commit <code>4e9d8787</code> removed 233 generated dependency, prediction, checkpoint, and unprocessed-data files from the index while preserving them locally. Tracked <code>node_modules</code> is now zero. Revision <code>6bf20592</code> consolidated tracked frontend assets into canonical <code>ERSRR_Website/</code> and removed the lowercase path. The 2.97 GiB historical pack remains because history was not destructively rewritten.</p>
-          </article>
-        </div>
-
-        <div class="card soft" style="margin-top:1rem">
-          <div class="kicker">Content-addressed evidence · clean tracked tree</div>
-          <h3>Runs resolve to revision <code>6bf2059213c77c521416b0e460fb0f49de8d4fd7</code></h3>
-          <div class="grid-2" style="margin-top:1rem">
-            <ul class="clean">
-              <li>V002 batch identity: <code>81410698329cdab6b0dabe5f39e1252617aaa1e4c539d51d382e30016d49f0fd</code></li>
-              <li>V002 summary script: <code>7edc5ac1ed0018719abce25473030e9afc40ec352a28f634a689f70c381ef11c</code></li>
-              <li>Legacy baseline input: <code>9b3b12e97d74c9ea65ad3b95eb3dafc2b1ec770bc7fdc9f0c8a216dcc0048c83</code></li>
-              <li>V002 baseline input: <code>f98fb4b70978bba4a14593c274a7967f3fb76d4c106db2762bead05f3df7ffc9</code></li>
-            </ul>
-            <ul class="clean">
-              <li>Baseline script: <code>ed5764d222567887d94241ab4ff55a175a81bc2a2a2d3ba526223f52ace7ae77</code></li>
-              <li>Neural cohort: <code>b93fee1bd96de7300b2f92e137e32d83640f626050357f5c4d2447a8761b1964</code></li>
-              <li>Neural script: <code>e455cc2f5e6c66f2a992af9fc20398b934044f78736973a7acb6445e2f79e5cb</code></li>
-              <li>Packaged raw model: <code>d73dd7728626a6a2e584f1ff7757087ed84f26b41fd05596db53c952a84a48e6</code></li>
-            </ul>
-          </div>
-        </div>
-
-        <aside class="callout" style="margin-top:1rem"><strong>Data lineage rule.</strong> Never silently mix the legacy <code>COPERNICUS/S2_HARMONIZED</code> L1C/TOA cohort with the new Sentinel-2 L2A/surface-reflectance cohort. Every artifact must declare product level, band order, feature names, normalization statistics, cohort/hash, threshold, model hash, and <code>research_only</code> status.</aside>
-      </section>
-
-      <section id="roadmap">
-        <div class="section-head">
-          <div>
-            <div class="section-index">06 · Best path forward</div>
-            <h2 class="section-title">A data-first research sequence.</h2>
-          </div>
-          <p class="section-intro">Each gate is designed to prevent compute from hiding a data or evaluation defect. A larger foundation backbone is deliberately deferred until the benchmark demonstrates learnable methane signal.</p>
-        </div>
-
-        <div class="roadmap">
-          <article class="roadmap-item"><div class="order">NEXT · 01</div><h3>Build the negative class</h3><p>Add at least 200 geographically and seasonally matched plume-free L2A pairs. Validate absence using known-plume catalogs and explicit valid masks.</p><span class="gate">Gate: AUPRC above prevalence</span></article>
-          <article class="roadmap-item"><div class="order">NEXT · 02</div><h3>Expand physical V002 masks</h3><p>Acquire protected EMIT V002 COGs through an authorized Earthdata session, grow to ≥50 geographically held-out validation groups, and keep temporal offsets tight.</p><span class="gate">Gate: stable 5-fold intervals</span></article>
-          <article class="roadmap-item"><div class="order">NEXT · 03</div><h3>Test bitemporal input</h3><p>Collect contemporaneous labels or explicit no-plume controls before stacking pre/post L2A observations. Compare against MBMP and single-time controls under identical grouped folds.</p><span class="gate">Gate: beat single-time baseline</span></article>
-          <article class="roadmap-item"><div class="order">NEXT · 04</div><h3>Inject physics-shaped plumes</h3><p>Add controlled synthetic methane absorption to plume-free SWIR scenes using flux/wind buckets, then fine-tune on real V002 masks and test by region.</p><span class="gate">Gate: real-only holdout gain</span></article>
-        </div>
-
-        <div class="grid-2" style="margin-top:1rem">
-          <div class="card soft">
-            <div class="kicker">Only after the gates</div>
-            <h3>Consider a pretrained Earth-observation backbone</h3>
-            <p>Prithvi-EO-2.0, SatMAE, or another multispectral encoder may help once the physical-mask benchmark has enough independent positives and negatives. Until then, a bigger model mostly increases variance and hides failure modes.</p>
-          </div>
-          <div class="card soft">
-            <div class="kicker">Publication-grade endpoint</div>
-            <h3>Detection, then calibrated quantification</h3>
-            <p>Report per-region precision/recall, IoU, AUPRC, detection-vs-flux curves, repeated-seed intervals, and a frozen external holdout. Add IME-to-flux only after target-independent concentration calibration and wind uncertainty are validated.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="sources">
-        <div class="section-head">
-          <div>
-            <div class="section-index">07 · Sources</div>
-            <h2 class="section-title">Primary data and research references.</h2>
-          </div>
-          <p class="section-intro">Official product documentation supports the acquisition contract; peer-reviewed literature motivates the temporal and synthetic-plume path. External performance claims were not copied into this report’s measured results.</p>
-        </div>
-
-        <div class="sources">
-          <article class="source"><h3><a href="https://www.earthdata.nasa.gov/data/catalog/lpcloud-emitl2bch4plm-002">NASA Earthdata · EMIT L2B CH4PLM V002</a></h3><p>Official product catalog and data-access entry point.</p></article>
-          <article class="source"><h3><a href="https://search.earthdata.nasa.gov/search/granules?p=C3242707413-LPCLOUD">Earthdata Search · V002 collection</a></h3><p>Granule discovery for concept C3242707413-LPCLOUD.</p></article>
-          <article class="source"><h3><a href="https://doi.org/10.5067/EMIT/EMITL2BCH4PLM.002">EMIT L2B CH4PLM V002 DOI</a></h3><p>Version-specific persistent identifier: 10.5067/EMIT/EMITL2BCH4PLM.002.</p></article>
-          <article class="source"><h3><a href="https://developers.google.com/earth-engine/datasets/catalog/NASA_EMIT_L2B_CH4PLM">Google Earth Engine · EMIT CH4PLM</a></h3><p>Convenient V001 catalog; not a replacement for the V002 contract used here.</p></article>
-          <article class="source"><h3><a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_HARMONIZED">Sentinel-2 harmonized L1C</a> · <a href="https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED">L2A surface reflectance</a></h3><p>Official collection descriptions; the distinction is material to model preprocessing.</p></article>
-          <article class="source"><h3><a href="https://amt.copernicus.org/articles/14/2771/2021/">Varon et al. 2021 · Sentinel-2 methane monitoring</a></h3><p>Multi-band / multi-pass retrieval baseline and methane point-source framing.</p></article>
-          <article class="source"><h3><a href="https://www.nature.com/articles/s41467-024-47754-y">Rouet-Leduc & Hulbert 2024 · Automated plume detection</a></h3><p>Motivation for two-timestep inputs and physics-shaped synthetic training.</p></article>
-          <article class="source"><h3><a href="https://amt.copernicus.org/articles/17/2583/2024/">Allen et al. 2024 · CH4Net</a></h3><p>Closest deep-learning comparison for Sentinel-2 methane plume detection.</p></article>
-          <article class="source"><h3><a href="https://www.science.org/doi/10.1126/sciadv.adh2391">Thorpe et al. 2023 · EMIT source attribution</a></h3><p>EMIT methane/carbon-dioxide point-source product context.</p></article>
-          <article class="source"><h3><a href="https://amt.copernicus.org/articles/11/5673/2018/">Varon et al. 2018 · IME-to-flux</a></h3><p>Quantification method to consider only after calibrated enhancement estimates exist.</p></article>
-          <article class="source"><h3><a href="https://nvlpubs.nist.gov/nistpubs/ir/2025/NIST.IR.8575.pdf">NIST IR 8575 · Methane plume quantification</a></h3><p>Common practices and uncertainty considerations for a later flux stage.</p></article>
-          <article class="source"><h3><a href="https://arxiv.org/abs/2412.02732">Prithvi-EO-2.0</a> · <a href="https://sustainlab-group.github.io/SatMAE/">SatMAE</a></h3><p>Candidate pretrained backbones after data and evaluation gates are passed.</p></article>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <footer>
-    <div class="shell footer-inner">
-      <span>ERSRR · Earth Remote Sensing Rapid Response</span>
-      <span>Measured locally · 2026-07-09 · status: research_only</span>
-    </div>
-  </footer>
+  <footer class="wrap"><span>ERSRR · research dossier generated from frozen machine-readable evidence</span><span id="generated"></span></footer>
+  <script id="report-data" type="application/json">{"architecture":{"channels":16,"heads":["segmentation","proposal presence","quality / abstention"],"inputs":["release-compatible MBMP","six target Sentinel-2 L1C bands","six reference Sentinel-2 L1C bands","ERA5-Land u/v wind","CloudSEN12 observability mask"],"name":"ersrr_mars_full_unet_proposal_v3","parameters":14268915},"baseline":{"accuracy":0.9011588275391956,"auroc":0.8175464394685548,"average_precision":0.35212281291315817,"false_positive_rate":0.09483156437471159,"fn":24.0,"fp":411.0,"negative_predictive_value":0.9939194324803649,"precision":0.0947136563876652,"recall":0.6417910447761194,"specificity":0.9051684356252884,"tn":3923.0,"tp":43.0},"bootstrap":{"auroc_delta":{"95ci":[-0.21417676840739489,-0.010855719320675456],"mean":-0.08744984078184495,"standard_deviation":0.05126254119002084},"average_precision_delta":{"95ci":[-0.42605523315770355,-0.0645344246338776],"mean":-0.21606374601612555,"standard_deviation":0.08811587881384204},"candidate_auroc":{"95ci":[0.6374857807341908,0.8644876826861104],"mean":0.746402456894065,"standard_deviation":0.058223324378580764},"candidate_average_precision":{"95ci":[0.052830381968069356,0.3344872115148741],"mean":0.16465394553352075,"standard_deviation":0.07410402305532479},"candidate_false_positive_rate":{"95ci":[0.024538670376939895,0.05],"mean":0.03660967532330276,"standard_deviation":0.006551067224140397},"candidate_recall":{"95ci":[0.1310747307457834,0.6182445141065827],"mean":0.3441314699606313,"standard_deviation":0.1340164473819501},"false_positive_rate_delta":{"95ci":[-0.07712065637065638,-0.03920421663246095],"mean":-0.05798891713864647,"standard_deviation":0.009589241643076738},"group_count":150,"method":"paired nonparametric bootstrap: resample frozen 25 km groups with replacement and resample the five fixed training seeds with replacement inside each replicate","random_seed":20260712,"recall_delta":{"95ci":[-0.4220055555555555,-0.16444047619047628],"mean":-0.31463939980711886,"standard_deviation":0.06661077073803033},"relative_false_positive_rate_reduction":{"95ci":[0.4671356645356318,0.7278035403449714],"mean":0.6115256807986638,"standard_deviation":0.06604535073297706},"replicates":2000},"cohort":{"groups":150,"negatives":4334,"positives":67,"samples":4401,"strict_manifest_sha256":"6e959ae0af50c5a309247cbe674fe01b31a36f8b149f9be3292acebed3e5f906"},"data":{"emit_preliminary":60,"emit_sealed":55,"strict_assets":8869,"strict_bytes":4489575260,"strict_verified":8869,"training_assets":61928,"training_bytes":30366803325,"wind_authentication":"required_before_download","wind_requests":70,"wind_validation":"70/70 accepted"},"decision":"ERSRR v3 does not clear every frozen same-cohort MARS-S2L promotion criterion; preserve the result and do not retune from strict-test behavior.","delta":{"auroc":-0.07399355323061663,"average_precision":-0.2086272075406211,"false_positive_rate":-0.0581449007844947,"recall":-0.32238805970149254,"relative_false_positive_rate_reduction":0.6131386861313869},"diagnostic":{"agreement":{"negative_all_seed_false_positive":14,"negative_any_seed_false_positive":451,"negative_seed_hit_counts":{"0":3883,"1":263,"2":92,"3":50,"4":32,"5":14},"positive_baseline_only_vs_ersrr_zero":15,"positive_both_baseline_and_any_ersrr":28,"positive_neither_baseline_nor_ersrr":21,"positive_seed_hit_counts":{"0":36,"1":7,"2":3,"3":3,"4":5,"5":13}},"atlas":{"baseline_only_true_positives":[{"cloud_fraction":0.0,"country":"United States of America","ersrr_mean_score":0.000592803955078125,"ersrr_seed_hits":0,"group_id":"geo25_67937cbf0f2b2f35","label":1,"latitude":31.068304160300528,"longitude":-89.2973041534424,"reference_interval_days":4.999745370370371,"released_prediction":1,"released_score":0.9926887154579163,"sample_id":"9123854a-64f6-4791-9255-63ad109e0896","truth_plume_pixels":8123,"wind_speed_mps":0.328180002363392},{"cloud_fraction":0.0,"country":"United States of America","ersrr_mean_score":0.00419156551361084,"ersrr_seed_hits":0,"group_id":"geo25_6f9d9dd796c223ac","label":1,"latitude":33.97824344802937,"longitude":-96.00603461265564,"reference_interval_days":4.99962962962963,"released_prediction":1,"released_score":0.99951171875,"sample_id":"f5f18f8b-c0ac-4bc2-885a-e9b83edf9bf4","truth_plume_pixels":7859,"wind_speed_mps":2.177588949112211},{"cloud_fraction":0.0,"country":"China","ersrr_mean_score":0.004387521743774414,"ersrr_seed_hits":0,"group_id":"geo25_655d73f64fe6b0c3","label":1,"latitude":35.87117678178808,"longitude":112.89249300956726,"reference_interval_days":15.001527777777778,"released_prediction":1,"released_score":0.993662416934967,"sample_id":"06491efa-726a-4b2f-a771-7ab69e3241b1","truth_plume_pixels":5038,"wind_speed_mps":4.010516844020055},{"cloud_fraction":0.0585972,"country":"Venezuela","ersrr_mean_score":0.024820709228515626,"ersrr_seed_hits":0,"group_id":"geo25_4f704646654d5f29","label":1,"latitude":9.67865065161665,"longitude":-63.47446560859681,"reference_interval_days":10.0,"released_prediction":1,"released_score":0.99951171875,"sample_id":"fc3ac2a0-816a-437d-99c6-f7210dd6c3bb","truth_plume_pixels":1717,"wind_speed_mps":2.8804272563989217},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.039990234375,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":5.0000231481481485,"released_prediction":1,"released_score":0.99169921875,"sample_id":"bfeb5bf2-2bc7-4937-8677-97ce31a93d29","truth_plume_pixels":1589,"wind_speed_mps":4.659893886846627},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.02608489990234375,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":10.0,"released_prediction":1,"released_score":0.986372709274292,"sample_id":"9a7e5701-163a-47cb-aded-5613d12e7543","truth_plume_pixels":1389,"wind_speed_mps":4.540921522457089},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.020781707763671876,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":5.0000231481481485,"released_prediction":1,"released_score":0.5207949876785278,"sample_id":"fc59f949-7889-4851-a579-1cc81fe9b39e","truth_plume_pixels":1231,"wind_speed_mps":2.8837832112026374},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.010024642944335938,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":10.0,"released_prediction":1,"released_score":0.7332837581634521,"sample_id":"282610f7-fb5a-4dc7-9834-9734d1907ecc","truth_plume_pixels":1194,"wind_speed_mps":3.214573517425456},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.01521453857421875,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":20.000462962962963,"released_prediction":1,"released_score":0.99951171875,"sample_id":"299462b1-d3ac-4d0e-955e-36498e400451","truth_plume_pixels":1145,"wind_speed_mps":4.222546495529074},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.02431068420410156,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":5.000949074074074,"released_prediction":1,"released_score":0.9398913383483887,"sample_id":"7513f26e-0b10-48f0-8358-3ac7060453fa","truth_plume_pixels":1047,"wind_speed_mps":3.6536309445232638},{"cloud_fraction":0.0,"country":"Iran (Islamic Republic of)","ersrr_mean_score":0.015407180786132813,"ersrr_seed_hits":0,"group_id":"geo25_03737e695db0843d","label":1,"latitude":28.050177867524532,"longitude":53.196800778530736,"reference_interval_days":29.99988425925926,"released_prediction":1,"released_score":0.9771690368652344,"sample_id":"2212de35-63b1-41d8-a9ab-2954c8bac501","truth_plume_pixels":956,"wind_speed_mps":2.442654896188088},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.023525238037109375,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":10.000347222222222,"released_prediction":1,"released_score":0.9693431854248047,"sample_id":"4a9475d1-f419-4d14-acb3-82b2932fca94","truth_plume_pixels":687,"wind_speed_mps":1.210728165766689}],"consensus_false_negatives":[{"cloud_fraction":0.0,"country":"United States of America","ersrr_mean_score":0.000592803955078125,"ersrr_seed_hits":0,"group_id":"geo25_67937cbf0f2b2f35","label":1,"latitude":31.068304160300528,"longitude":-89.2973041534424,"reference_interval_days":4.999745370370371,"released_prediction":1,"released_score":0.9926887154579163,"sample_id":"9123854a-64f6-4791-9255-63ad109e0896","truth_plume_pixels":8123,"wind_speed_mps":0.328180002363392},{"cloud_fraction":0.0,"country":"United States of America","ersrr_mean_score":0.00419156551361084,"ersrr_seed_hits":0,"group_id":"geo25_6f9d9dd796c223ac","label":1,"latitude":33.97824344802937,"longitude":-96.00603461265564,"reference_interval_days":4.99962962962963,"released_prediction":1,"released_score":0.99951171875,"sample_id":"f5f18f8b-c0ac-4bc2-885a-e9b83edf9bf4","truth_plume_pixels":7859,"wind_speed_mps":2.177588949112211},{"cloud_fraction":0.0,"country":"China","ersrr_mean_score":0.004387521743774414,"ersrr_seed_hits":0,"group_id":"geo25_655d73f64fe6b0c3","label":1,"latitude":35.87117678178808,"longitude":112.89249300956726,"reference_interval_days":15.001527777777778,"released_prediction":1,"released_score":0.993662416934967,"sample_id":"06491efa-726a-4b2f-a771-7ab69e3241b1","truth_plume_pixels":5038,"wind_speed_mps":4.010516844020055},{"cloud_fraction":0.0,"country":"China","ersrr_mean_score":0.0010796070098876953,"ersrr_seed_hits":0,"group_id":"geo25_ab0ba9dfa4dea896","label":1,"latitude":39.29853526602727,"longitude":116.5220367908478,"reference_interval_days":8.007037037037037,"released_prediction":0,"released_score":0.3532935082912445,"sample_id":"b0df8c90-2066-425a-9f39-15c4cf27b69f","truth_plume_pixels":4873,"wind_speed_mps":4.421617409620053},{"cloud_fraction":0.0585972,"country":"Venezuela","ersrr_mean_score":0.024820709228515626,"ersrr_seed_hits":0,"group_id":"geo25_4f704646654d5f29","label":1,"latitude":9.67865065161665,"longitude":-63.47446560859681,"reference_interval_days":10.0,"released_prediction":1,"released_score":0.99951171875,"sample_id":"fc3ac2a0-816a-437d-99c6-f7210dd6c3bb","truth_plume_pixels":1717,"wind_speed_mps":2.8804272563989217},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.039990234375,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":5.0000231481481485,"released_prediction":1,"released_score":0.99169921875,"sample_id":"bfeb5bf2-2bc7-4937-8677-97ce31a93d29","truth_plume_pixels":1589,"wind_speed_mps":4.659893886846627},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.004236698150634766,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.03283700693446,"longitude":40.70173859596253,"reference_interval_days":5.000949074074074,"released_prediction":0,"released_score":0.0389816090464592,"sample_id":"2b3a0fec-9ffc-4bc7-b4e6-67d11328f5d2","truth_plume_pixels":1498,"wind_speed_mps":2.9063899241986855},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.01099987030029297,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":4.9999768518518515,"released_prediction":0,"released_score":0.005744053050875664,"sample_id":"76f4318c-f366-4ef4-bc6c-3857ead398e9","truth_plume_pixels":1447,"wind_speed_mps":4.949801456761591},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.02608489990234375,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":10.0,"released_prediction":1,"released_score":0.986372709274292,"sample_id":"9a7e5701-163a-47cb-aded-5613d12e7543","truth_plume_pixels":1389,"wind_speed_mps":4.540921522457089},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.0070593833923339845,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.03283700693446,"longitude":40.70173859596253,"reference_interval_days":5.001064814814815,"released_prediction":0,"released_score":0.0012961924076080322,"sample_id":"ec5f6287-0975-49f2-97d0-8ad1236e524e","truth_plume_pixels":1248,"wind_speed_mps":1.8448213808921694},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.020781707763671876,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":5.0000231481481485,"released_prediction":1,"released_score":0.5207949876785278,"sample_id":"fc59f949-7889-4851-a579-1cc81fe9b39e","truth_plume_pixels":1231,"wind_speed_mps":2.8837832112026374},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.012351799011230468,"ersrr_seed_hits":0,"group_id":"geo25_67b03fc450867731","label":1,"latitude":35.048230774,"longitude":40.6967144891,"reference_interval_days":14.999513888888888,"released_prediction":0,"released_score":0.4953969419002533,"sample_id":"abbaceb6-7725-4504-a3dc-2b714ccb0672","truth_plume_pixels":1227,"wind_speed_mps":0.5357238784145154}],"consensus_true_positives":[{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.7972065806388855,"ersrr_seed_hits":5,"group_id":"geo25_0c204cb6f3043c9e","label":1,"latitude":34.681681420675545,"longitude":38.62430179819614,"reference_interval_days":5.0000231481481485,"released_prediction":1,"released_score":0.99951171875,"sample_id":"036334fd-fb89-46cd-958c-ff1bfcfa18db","truth_plume_pixels":6332,"wind_speed_mps":2.0656014716476108},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.7969136118888855,"ersrr_seed_hits":5,"group_id":"geo25_0c204cb6f3043c9e","label":1,"latitude":34.681681420675545,"longitude":38.62430179819614,"reference_interval_days":15.001643518518518,"released_prediction":1,"released_score":0.9849200248718262,"sample_id":"5998380c-ee9f-4262-a4c4-10a6eb474520","truth_plume_pixels":4131,"wind_speed_mps":2.6220010967303646},{"cloud_fraction":0.0,"country":"Egypt","ersrr_mean_score":0.8688862681388855,"ersrr_seed_hits":5,"group_id":"geo25_5671df95139ac723","label":1,"latitude":29.85013198974708,"longitude":27.819239711544213,"reference_interval_days":19.99849537037037,"released_prediction":1,"released_score":0.99951171875,"sample_id":"d9f97dc8-0350-42d0-be86-b6407b3930de","truth_plume_pixels":2933,"wind_speed_mps":3.1735423814656603},{"cloud_fraction":0.0,"country":"Iran (Islamic Republic of)","ersrr_mean_score":0.9028706431388855,"ersrr_seed_hits":5,"group_id":"geo25_0ba67b310bd2ee91","label":1,"latitude":30.474517,"longitude":53.251812,"reference_interval_days":10.00011574074074,"released_prediction":1,"released_score":0.99951171875,"sample_id":"7d544baf-9585-4161-a4e4-eaf39253398b","truth_plume_pixels":2690,"wind_speed_mps":2.8764242812763072},{"cloud_fraction":0.0,"country":"Iran (Islamic Republic of)","ersrr_mean_score":0.8935444712638855,"ersrr_seed_hits":5,"group_id":"geo25_117e41f66a349bbc","label":1,"latitude":31.78047,"longitude":51.82611,"reference_interval_days":15.000949074074073,"released_prediction":1,"released_score":0.99951171875,"sample_id":"1debc326-8fed-43c7-acfc-31ae8a6e33eb","truth_plume_pixels":2434,"wind_speed_mps":1.1227853713775713},{"cloud_fraction":0.0,"country":"Iran (Islamic Republic of)","ersrr_mean_score":0.7839741587638855,"ersrr_seed_hits":5,"group_id":"geo25_03737e695db0843d","label":1,"latitude":28.050177867524532,"longitude":53.196800778530736,"reference_interval_days":9.99988425925926,"released_prediction":1,"released_score":0.99951171875,"sample_id":"acab80f3-d3eb-4a1e-9f62-d566a3888f31","truth_plume_pixels":1731,"wind_speed_mps":1.5148884161751766},{"cloud_fraction":0.0,"country":"Iran (Islamic Republic of)","ersrr_mean_score":0.7493306040763855,"ersrr_seed_hits":5,"group_id":"geo25_0ba67b310bd2ee91","label":1,"latitude":30.474517,"longitude":53.251812,"reference_interval_days":5.000092592592592,"released_prediction":1,"released_score":0.996584415435791,"sample_id":"aa97cd17-212e-4b04-8668-e7002772b498","truth_plume_pixels":1425,"wind_speed_mps":3.671634785622109},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.8646870493888855,"ersrr_seed_hits":5,"group_id":"geo25_0c204cb6f3043c9e","label":1,"latitude":34.681681420675545,"longitude":38.62430179819614,"reference_interval_days":4.999675925925926,"released_prediction":1,"released_score":0.9926886558532715,"sample_id":"cede6aff-e1ac-4355-9391-eb428fabfded","truth_plume_pixels":897,"wind_speed_mps":3.050685165649959},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.6946186900138855,"ersrr_seed_hits":5,"group_id":"geo25_0c204cb6f3043c9e","label":1,"latitude":34.681681420675545,"longitude":38.62430179819614,"reference_interval_days":14.999444444444444,"released_prediction":1,"released_score":0.99951171875,"sample_id":"9048f20f-fad5-4d2c-832d-c125b4ad0413","truth_plume_pixels":621,"wind_speed_mps":3.0789425608077234},{"cloud_fraction":0.0,"country":"Libya","ersrr_mean_score":0.6364115476608276,"ersrr_seed_hits":5,"group_id":"geo25_d390f068a2a35df2","label":1,"latitude":28.759445374363715,"longitude":22.794313430786136,"reference_interval_days":5.0000231481481485,"released_prediction":1,"released_score":0.9820151329040527,"sample_id":"255cb140-53fc-4f47-b8ca-591bc688e8c5","truth_plume_pixels":620,"wind_speed_mps":4.007740304211358},{"cloud_fraction":0.0,"country":"Syrian Arab Republic","ersrr_mean_score":0.8832417368888855,"ersrr_seed_hits":5,"group_id":"geo25_0c204cb6f3043c9e","label":1,"latitude":34.681681420675545,"longitude":38.62430179819614,"reference_interval_days":19.999537037037037,"released_prediction":1,"released_score":0.99951171875,"sample_id":"a9fb0653-8668-4631-9789-3c52faf51988","truth_plume_pixels":419,"wind_speed_mps":3.746256992366391},{"cloud_fraction":0.0,"country":"Iran (Islamic Republic of)","ersrr_mean_score":0.7375141978263855,"ersrr_seed_hits":5,"group_id":"geo25_60ae4758f7528a8a","label":1,"latitude":35.47121,"longitude":51.80603,"reference_interval_days":4.9998611111111115,"released_prediction":0,"released_score":0.4794180989265442,"sample_id":"00e1b18e-81d7-4ac8-841c-4558e504bf10","truth_plume_pixels":394,"wind_speed_mps":3.3376428710101353}],"persistent_false_positives":[{"cloud_fraction":0.00695103,"country":"United Arab Emirates","ersrr_mean_score":0.9008198618888855,"ersrr_seed_hits":5,"group_id":"geo25_43b18ffc69c3679d","label":0,"latitude":23.70051500487665,"longitude":54.40968157861669,"reference_interval_days":15.000717592592592,"released_prediction":0,"released_score":0.12049078941345215,"sample_id":"af08d4ce-a620-4b4b-87ee-96b743d57b38","truth_plume_pixels":0,"wind_speed_mps":3.194411863363127},{"cloud_fraction":0.0,"country":"Egypt","ersrr_mean_score":0.8661030650138855,"ersrr_seed_hits":5,"group_id":"geo25_5671df95139ac723","label":0,"latitude":29.85013198974708,"longitude":27.819239711544213,"reference_interval_days":4.9991666666666665,"released_prediction":1,"released_score":0.992196798324585,"sample_id":"5c60017f-6154-4268-8fa1-24bc3eaaf569","truth_plume_pixels":0,"wind_speed_mps":3.2199648415910342},{"cloud_fraction":0.0,"country":"Egypt","ersrr_mean_score":0.8592671275138855,"ersrr_seed_hits":5,"group_id":"geo25_5671df95139ac723","label":0,"latitude":29.85013198974708,"longitude":27.819239711544213,"reference_interval_days":5.000601851851852,"released_prediction":1,"released_score":0.8731296062469482,"sample_id":"b4aba282-baad-41a9-9f82-2d02ab14a330","truth_plume_pixels":0,"wind_speed_mps":1.7739527582785457},{"cloud_fraction":0.0,"country":"Libya","ersrr_mean_score":0.8083882212638855,"ersrr_seed_hits":5,"group_id":"geo25_554be88b380a6310","label":0,"latitude":28.941788148857366,"longitude":17.3190450668335,"reference_interval_days":9.99988425925926,"released_prediction":0,"released_score":0.4116913378238678,"sample_id":"4bacd064-b22a-4797-b268-a0ade7c321a6","truth_plume_pixels":0,"wind_speed_mps":1.356216857795409},{"cloud_fraction":0.0,"country":"Libya","ersrr_mean_score":0.8008198618888855,"ersrr_seed_hits":5,"group_id":"geo25_04cbb2e8a8231934","label":0,"latitude":26.57124029949184,"longitude":12.187786102294924,"reference_interval_days":15.003263888888888,"released_prediction":0,"released_score":0.13847501575946808,"sample_id":"3d566163-8561-49eb-922d-5b6da9c6365c","truth_plume_pixels":0,"wind_speed_mps":4.558932932271216},{"cloud_fraction":0.0,"country":"Libya","ersrr_mean_score":0.7786030650138855,"ersrr_seed_hits":5,"group_id":"geo25_554be88b380a6310","label":0,"latitude":28.941788148857366,"longitude":17.3190450668335,"reference_interval_days":4.996736111111111,"released_prediction":1,"released_score":0.9980475902557373,"sample_id":"f958e636-bb4d-49bb-82fb-481cb982a8b3","truth_plume_pixels":0,"wind_speed_mps":1.8220347103295194},{"cloud_fraction":0.0,"country":"Libya","ersrr_mean_score":0.7622416257858277,"ersrr_seed_hits":5,"group_id":"geo25_8b73750edc6d4079","label":0,"latitude":28.824949134658468,"longitude":22.291409969329838,"reference_interval_days":49.99768518518518,"released_prediction":0,"released_score":0.013518125750124454,"sample_id":"a0b60cde-ce23-40d2-93a0-eff4d1560896","truth_plume_pixels":0,"wind_speed_mps":9.61244289226802},{"cloud_fraction":0.00024507,"country":"Libya","ersrr_mean_score":0.7323140025138855,"ersrr_seed_hits":5,"group_id":"geo25_04cbb2e8a8231934","label":0,"latitude":26.57124029949184,"longitude":12.187786102294924,"reference_interval_days":9.999768518518518,"released_prediction":0,"released_score":0.2112593650817871,"sample_id":"9c69d22e-a517-492f-aa9f-1ac1b0e22437","truth_plume_pixels":0,"wind_speed_mps":3.8030176079772664},{"cloud_fraction":0.00044113,"country":"Libya","ersrr_mean_score":0.6943257212638855,"ersrr_seed_hits":5,"group_id":"geo25_a8c8a24264429a5d","label":0,"latitude":29.78878799708897,"longitude":17.55203247070313,"reference_interval_days":40.0,"released_prediction":1,"released_score":0.9603607654571533,"sample_id":"48c79983-698b-44e4-8aa6-611f0cfe262c","truth_plume_pixels":0,"wind_speed_mps":6.852976033518439},{"cloud_fraction":0.0,"country":"Libya","ersrr_mean_score":0.6827534556388855,"ersrr_seed_hits":5,"group_id":"geo25_50c7f9241ac0609e","label":0,"latitude":28.564498358256103,"longitude":18.707962632179264,"reference_interval_days":5.003148148148148,"released_prediction":1,"released_score":0.7379143834114075,"sample_id":"df72fc89-b693-4576-92eb-f65035aca7fb","truth_plume_pixels":0,"wind_speed_mps":5.822014446288684},{"cloud_fraction":0.0,"country":"Libya","ersrr_mean_score":0.6618061900138855,"ersrr_seed_hits":5,"group_id":"geo25_632c1129a00a8ac3","label":0,"latitude":29.564896960622814,"longitude":19.604791402816776,"reference_interval_days":20.00011574074074,"released_prediction":1,"released_score":0.8439746499061584,"sample_id":"52b5985b-6588-4e3c-a21d-1578316899ed","truth_plume_pixels":0,"wind_speed_mps":4.878914606907638},{"cloud_fraction":0.0,"country":"Libya","ersrr_mean_score":0.5936177134513855,"ersrr_seed_hits":5,"group_id":"geo25_8b73750edc6d4079","label":0,"latitude":28.83993085811245,"longitude":22.07938671112061,"reference_interval_days":5.000949074074074,"released_prediction":1,"released_score":0.9941432476043701,"sample_id":"80f14f6d-6f6c-4ea7-b68b-37860a08039a","truth_plume_pixels":0,"wind_speed_mps":1.5567564967208984}],"selection_rule":"Deterministic post-hoc examples: largest plume area for consensus FN/TP and baseline-only TP; then most seed hits and highest mean frozen score for FP; sample id breaks ties. No visual selection."},"decision":"Exploratory description after the once-only strict campaign. Do not retune v3 from these strata or examples. Use them only to preregister v4 hypotheses and acquisition strata, then evaluate v4 on a newly untouched cohort.","negative_strata":{"cloud_fraction":[{"ersrr_per_seed_rate":[0.05214917825537294,0.026864728192161822,0.022439949431099875,0.04329962073324905,0.03603034134007586],"ersrr_seed_mean_rate":0.03615676359039191,"ersrr_seed_standard_deviation":0.010782269057001463,"field":"cloud_fraction","maximum":0.0,"minimum":0.0,"name":"zero","released_mars_s2l_rate":0.0979772439949431,"samples":3164},{"ersrr_per_seed_rate":[0.04786324786324787,0.037606837606837605,0.02905982905982906,0.0452991452991453,0.03076923076923077],"ersrr_seed_mean_rate":0.038119658119658124,"ersrr_seed_standard_deviation":0.007521367521367521,"field":"cloud_fraction","maximum":0.19983335,"minimum":2.114e-05,"name":"nonzero","released_mars_s2l_rate":0.08632478632478632,"samples":1170}],"country_minimum_100_negatives":[{"country":"Libya","ersrr_per_seed_rate":[0.10284167794316644,0.05345060893098782,0.041271989174560215,0.07104194857916103,0.06495263870094722],"ersrr_seed_mean_rate":0.06671177266576453,"ersrr_seed_standard_deviation":0.02073767623809898,"released_mars_s2l_rate":0.13125845737483086,"samples":1478},{"country":"Iran (Islamic Republic of)","ersrr_per_seed_rate":[0.020588235294117647,0.011764705882352941,0.011764705882352941,0.03431372549019608,0.01764705882352941],"ersrr_seed_mean_rate":0.019215686274509803,"ersrr_seed_standard_deviation":0.008286488866319781,"released_mars_s2l_rate":0.0696078431372549,"samples":1020},{"country":"United Arab Emirates","ersrr_per_seed_rate":[0.041343669250646,0.03359173126614987,0.028423772609819122,0.06718346253229975,0.04392764857881137],"ersrr_seed_mean_rate":0.04289405684754523,"ersrr_seed_standard_deviation":0.013336938398515701,"released_mars_s2l_rate":0.09302325581395349,"samples":387},{"country":"Qatar","ersrr_per_seed_rate":[0.029239766081871343,0.023391812865497075,0.005847953216374269,0.017543859649122806,0.017543859649122806],"ersrr_seed_mean_rate":0.01871345029239766,"ersrr_seed_standard_deviation":0.007758186644106198,"released_mars_s2l_rate":0.07602339181286549,"samples":171},{"country":"United States of America","ersrr_per_seed_rate":[0.0,0.00641025641025641,0.01282051282051282,0.0,0.0],"ersrr_seed_mean_rate":0.0038461538461538464,"ersrr_seed_standard_deviation":0.005128205128205128,"released_mars_s2l_rate":0.038461538461538464,"samples":156},{"country":"Kazakhstan","ersrr_per_seed_rate":[0.016260162601626018,0.0,0.008130081300813009,0.016260162601626018,0.0],"ersrr_seed_mean_rate":0.008130081300813007,"ersrr_seed_standard_deviation":0.0072717657804871215,"released_mars_s2l_rate":0.04065040650406504,"samples":123},{"country":"Turkmenistan","ersrr_per_seed_rate":[0.04201680672268908,0.01680672268907563,0.008403361344537815,0.025210084033613446,0.008403361344537815],"ersrr_seed_mean_rate":0.020168067226890758,"ersrr_seed_standard_deviation":0.012576999619408209,"released_mars_s2l_rate":0.058823529411764705,"samples":119},{"country":"Uzbekistan","ersrr_per_seed_rate":[0.0,0.025423728813559324,0.00847457627118644,0.01694915254237288,0.03389830508474576],"ersrr_seed_mean_rate":0.01694915254237288,"ersrr_seed_standard_deviation":0.011984860698077079,"released_mars_s2l_rate":0.03389830508474576,"samples":118},{"country":"China","ersrr_per_seed_rate":[0.008771929824561403,0.0,0.017543859649122806,0.008771929824561403,0.008771929824561403],"ersrr_seed_mean_rate":0.008771929824561403,"ersrr_seed_standard_deviation":0.005547855544155052,"released_mars_s2l_rate":0.12280701754385964,"samples":114},{"country":"Syrian Arab Republic","ersrr_per_seed_rate":[0.04424778761061947,0.035398230088495575,0.008849557522123894,0.02654867256637168,0.008849557522123894],"ersrr_seed_mean_rate":0.024778761061946902,"ersrr_seed_standard_deviation":0.014159292035398232,"released_mars_s2l_rate":0.11504424778761062,"samples":113},{"country":"Pakistan","ersrr_per_seed_rate":[0.019230769230769232,0.038461538461538464,0.0,0.0,0.019230769230769232],"ersrr_seed_mean_rate":0.015384615384615385,"ersrr_seed_standard_deviation":0.014390989949130545,"released_mars_s2l_rate":0.10576923076923077,"samples":104}],"reference_interval":[{"ersrr_per_seed_rate":[0.03737024221453287,0.02422145328719723,0.019377162629757784,0.03529411764705882,0.03044982698961938],"ersrr_seed_mean_rate":0.02934256055363322,"ersrr_seed_standard_deviation":0.00673239391391851,"field":"reference_interval_days","maximum":5.0000231481481485,"minimum":0.0002314814814814815,"name":"low","released_mars_s2l_rate":0.07612456747404844,"samples":1445},{"ersrr_per_seed_rate":[0.047058823529411764,0.02906574394463668,0.019377162629757784,0.03875432525951557,0.03875432525951557],"ersrr_seed_mean_rate":0.03460207612456747,"ersrr_seed_standard_deviation":0.00950896278882639,"field":"reference_interval_days","maximum":10.000578703703704,"minimum":5.0000231481481485,"name":"middle","released_mars_s2l_rate":0.08235294117647059,"samples":1445},{"ersrr_per_seed_rate":[0.0685595567867036,0.036011080332409975,0.03393351800554017,0.0574792243767313,0.03462603878116344],"ersrr_seed_mean_rate":0.046121883656509696,"ersrr_seed_standard_deviation":0.01425045553118225,"field":"reference_interval_days","maximum":115.00488425925926,"minimum":10.000578703703704,"name":"high","released_mars_s2l_rate":0.1260387811634349,"samples":1444}],"wind_speed":[{"ersrr_per_seed_rate":[0.03321799307958478,0.020761245674740483,0.022837370242214532,0.04359861591695502,0.03044982698961938],"ersrr_seed_mean_rate":0.03017301038062284,"ersrr_seed_standard_deviation":0.008148476694552265,"field":"wind_speed_mps","maximum":2.324089851251631,"minimum":0.014527670698875053,"name":"low","released_mars_s2l_rate":0.08719723183391004,"samples":1445},{"ersrr_per_seed_rate":[0.03944636678200692,0.022145328719723183,0.01522491349480969,0.03667820069204152,0.02491349480968858],"ersrr_seed_mean_rate":0.027681660899653977,"ersrr_seed_standard_deviation":0.009086586885630368,"field":"wind_speed_mps","maximum":3.888391446794904,"minimum":2.324340720191971,"name":"middle","released_mars_s2l_rate":0.0809688581314879,"samples":1445},{"ersrr_per_seed_rate":[0.08033240997229917,0.046398891966759004,0.03462603878116344,0.05124653739612189,0.04847645429362881],"ersrr_seed_mean_rate":0.052216066481994464,"ersrr_seed_standard_deviation":0.015157190050198837,"field":"wind_speed_mps","maximum":11.647860156107578,"minimum":3.8919611250260653,"name":"high","released_mars_s2l_rate":0.11634349030470914,"samples":1444}]},"positive_strata":{"cloud_fraction":[{"ersrr_per_seed_rate":[0.31666666666666665,0.2833333333333333,0.2833333333333333,0.38333333333333336,0.2833333333333333],"ersrr_seed_mean_rate":0.30999999999999994,"ersrr_seed_standard_deviation":0.038873012632302015,"field":"cloud_fraction","maximum":0.0,"minimum":0.0,"name":"zero","released_mars_s2l_rate":0.6166666666666667,"samples":60},{"ersrr_per_seed_rate":[0.7142857142857143,0.42857142857142855,0.14285714285714285,0.42857142857142855,0.2857142857142857],"ersrr_seed_mean_rate":0.4,"ersrr_seed_standard_deviation":0.18952141659173713,"field":"cloud_fraction","maximum":0.0585972,"minimum":0.00019606,"name":"nonzero","released_mars_s2l_rate":0.8571428571428571,"samples":7}],"country_minimum_5_positives":[{"country":"Syrian Arab Republic","ersrr_per_seed_rate":[0.24242424242424243,0.21212121212121213,0.24242424242424243,0.24242424242424243,0.24242424242424243],"ersrr_seed_mean_rate":0.2363636363636364,"ersrr_seed_standard_deviation":0.01212121212121212,"released_mars_s2l_rate":0.5757575757575758,"samples":33},{"country":"Iran (Islamic Republic of)","ersrr_per_seed_rate":[0.6,0.5333333333333333,0.4666666666666667,0.8,0.4],"ersrr_seed_mean_rate":0.56,"ersrr_seed_standard_deviation":0.13727506854649335,"released_mars_s2l_rate":0.8,"samples":15},{"country":"Libya","ersrr_per_seed_rate":[0.6,0.4,0.2,0.4,0.3],"ersrr_seed_mean_rate":0.38,"ersrr_seed_standard_deviation":0.132664991614216,"released_mars_s2l_rate":0.6,"samples":10}],"plume_area":[{"ersrr_per_seed_rate":[0.43478260869565216,0.30434782608695654,0.21739130434782608,0.34782608695652173,0.21739130434782608],"ersrr_seed_mean_rate":0.30434782608695654,"ersrr_seed_standard_deviation":0.08249419983047945,"field":"truth_plume_pixels","maximum":621.0,"minimum":111.0,"name":"small","released_mars_s2l_rate":0.5217391304347826,"samples":23},{"ersrr_per_seed_rate":[0.09090909090909091,0.13636363636363635,0.09090909090909091,0.2727272727272727,0.13636363636363635],"ersrr_seed_mean_rate":0.14545454545454545,"ersrr_seed_standard_deviation":0.06680426571226848,"field":"truth_plume_pixels","maximum":1389.0,"minimum":643.0,"name":"medium","released_mars_s2l_rate":0.5454545454545454,"samples":22},{"ersrr_per_seed_rate":[0.5454545454545454,0.45454545454545453,0.5,0.5454545454545454,0.5],"ersrr_seed_mean_rate":0.509090909090909,"ersrr_seed_standard_deviation":0.034015067152490364,"field":"truth_plume_pixels","maximum":8123.0,"minimum":1425.0,"name":"large","released_mars_s2l_rate":0.8636363636363636,"samples":22}],"reference_interval":[{"ersrr_per_seed_rate":[0.391304347826087,0.30434782608695654,0.21739130434782608,0.43478260869565216,0.30434782608695654],"ersrr_seed_mean_rate":0.33043478260869563,"ersrr_seed_standard_deviation":0.07580693814853345,"field":"reference_interval_days","maximum":5.000092592592592,"minimum":1.9930787037037037,"name":"low","released_mars_s2l_rate":0.6521739130434783,"samples":23},{"ersrr_per_seed_rate":[0.3181818181818182,0.22727272727272727,0.2727272727272727,0.36363636363636365,0.22727272727272727],"ersrr_seed_mean_rate":0.2818181818181818,"ersrr_seed_standard_deviation":0.05300865358950274,"field":"reference_interval_days","maximum":10.00011574074074,"minimum":5.000092592592592,"name":"middle","released_mars_s2l_rate":0.6363636363636364,"samples":22},{"ersrr_per_seed_rate":[0.36363636363636365,0.36363636363636365,0.3181818181818182,0.36363636363636365,0.3181818181818182],"ersrr_seed_mean_rate":0.34545454545454546,"ersrr_seed_standard_deviation":0.022268088570756173,"field":"reference_interval_days","maximum":29.99988425925926,"minimum":10.00011574074074,"name":"high","released_mars_s2l_rate":0.6363636363636364,"samples":22}],"wind_speed":[{"ersrr_per_seed_rate":[0.2608695652173913,0.17391304347826086,0.21739130434782608,0.34782608695652173,0.21739130434782608],"ersrr_seed_mean_rate":0.24347826086956523,"ersrr_seed_standard_deviation":0.05897678246195885,"field":"wind_speed_mps","maximum":2.442654896188088,"minimum":0.328180002363392,"name":"low","released_mars_s2l_rate":0.5652173913043478,"samples":23},{"ersrr_per_seed_rate":[0.45454545454545453,0.5,0.45454545454545453,0.5,0.4090909090909091],"ersrr_seed_mean_rate":0.4636363636363637,"ersrr_seed_standard_deviation":0.03401506715249037,"field":"wind_speed_mps","maximum":3.704182314728853,"minimum":2.6220010967303646,"name":"middle","released_mars_s2l_rate":0.7272727272727273,"samples":22},{"ersrr_per_seed_rate":[0.36363636363636365,0.22727272727272727,0.13636363636363635,0.3181818181818182,0.22727272727272727],"ersrr_seed_mean_rate":0.2545454545454545,"ersrr_seed_standard_deviation":0.0792527080643759,"field":"wind_speed_mps","maximum":10.049779731346685,"minimum":3.7051368297022553,"name":"high","released_mars_s2l_rate":0.6363636363636364,"samples":22}]}},"ersrr_mean":{"accuracy":0.9535105657805044,"auroc":0.7435528862379381,"average_precision":0.14349560537253706,"false_positive_rate":0.03668666359021689,"negative_predictive_value":0.9892013784093587,"precision":0.12226504817617911,"recall":0.31940298507462683,"specificity":0.963313336409783},"ersrr_sd":{"accuracy":0.009935045492291315,"auroc":0.014411307570436653,"average_precision":0.04839598326738444,"false_positive_rate":0.010761941744364413,"negative_predictive_value":0.0007067167247837542,"precision":0.01880133975842914,"recall":0.05127034040990349,"specificity":0.01076194174436443},"gate":{"criteria":{"candidate_mean_fpr_at_most_0_05":true,"candidate_mean_specificity_at_least_0_95":true,"candidate_recall_lower_95ci_at_least_0_75":false,"recall_noninferiority_lower_95ci_at_least_0":false,"relative_fpr_reduction_lower_95ci_at_least_0_25":true},"passed":false},"generated_at_utc":"2026-07-13T00:56:09.435754+00:00","git_commit":"2521509967a11b9833761a4882a03f15b6e0c8df","official_mars":{"full_official_test":{"average_precision":0.6408,"false_positive_rate":0.0713,"images":43529,"pixel_intersection_over_union":0.3224,"plume_images":1813,"probability_threshold":0.5,"recall":0.7915,"sites":1289},"full_official_test_strict_threshold":{"false_positive_rate":0.0116,"probability_threshold":0.98,"recall":0.5836},"source":"arXiv:2511.21777v3, Tables S1 and S3-S7 and S11","test_only_sites":{"average_precision":0.4496,"false_positive_rate":0.0763,"images":15655,"plume_images":227,"probability_threshold":0.5,"recall":0.7753,"sites":697}},"provenance":{"bootstrap_replicates":2000,"bootstrap_seed":20260712,"campaign_report":"reports/experiments/mars_v3_strict_campaign.json","diagnostic_report":"reports/experiments/mars_v3_strict_posthoc_diagnostic.json","manifest_sha256":"6e959ae0af50c5a309247cbe674fe01b31a36f8b149f9be3292acebed3e5f906","paper_outline":"docs/PAPER_OUTLINE.md","research_ledger":"docs/RESEARCH_LEDGER.md"},"seeds":[{"ap":0.822000712085939,"auroc":0.9309298558532324,"fpr":0.04889705882352941,"proposal_weight":0.5,"recall":0.8336633663366336,"seed":101,"strict_ap":0.117830696007795,"strict_auroc":0.7624114085777849,"strict_fpr":0.05099215505306876,"strict_recall":0.3582089552238806},{"ap":0.7963501458047448,"auroc":0.9227347845078626,"fpr":0.04871323529411765,"proposal_weight":1.0,"recall":0.8316831683168316,"seed":202,"strict_ap":0.19480916707597778,"strict_auroc":0.7436117749967284,"strict_fpr":0.02976465159206276,"strict_recall":0.29850746268656714},{"ap":0.8117906932585001,"auroc":0.9237041351193942,"fpr":0.049080882352941176,"proposal_weight":1.0,"recall":0.8257425742574257,"seed":303,"strict_ap":0.11163587740917169,"strict_auroc":0.7522970059715267,"strict_fpr":0.024227041993539457,"strict_recall":0.26865671641791045},{"ap":0.8279878462901805,"auroc":0.9396924140943506,"fpr":0.04871323529411765,"proposal_weight":1.0,"recall":0.8475247524752475,"seed":404,"strict_ap":0.19681361475402967,"strict_auroc":0.7325554966285324,"strict_fpr":0.043839409321642826,"strict_recall":0.3880597014925373},{"ap":0.7938351043438361,"auroc":0.9269570835760046,"fpr":0.04889705882352941,"proposal_weight":1.0,"recall":0.8198019801980198,"seed":505,"strict_ap":0.09638867161571103,"strict_auroc":0.7268887450151181,"strict_fpr":0.03461005999077065,"strict_recall":0.2835820895522388}],"segmentation":{"delta":{"average_precision":-0.16233320875033297,"dice":-0.0767492204976577,"intersection_over_union":-0.04701329311877116},"ersrr_per_seed":[{"average_precision":0.08758071979220046,"dice":0.15134477694143567,"intersection_over_union":0.08186749754831982,"seed":101},{"average_precision":0.10279816068787609,"dice":0.1762518929735159,"intersection_over_union":0.09664267356575049,"seed":202},{"average_precision":0.08481434631698956,"dice":0.14713398319955698,"intersection_over_union":0.07940886273775485,"seed":303},{"average_precision":0.08185924529938499,"dice":0.12256222270782029,"intersection_over_union":0.06528164298717332,"seed":404},{"average_precision":0.07173585296593636,"dice":0.19193865436640004,"intersection_over_union":0.10615715823466093,"seed":505}],"ersrr_seed_mean":{"average_precision":0.0857576650124775,"dice":0.15784630603774577,"intersection_over_union":0.08587156701473188},"ersrr_seed_standard_deviation":{"average_precision":0.011251674998443123,"dice":0.026939952313549856,"intersection_over_union":0.015884473848695794},"released_mars_s2l":{"average_precision":0.24809087376281047,"dice":0.23459552653540347,"intersection_over_union":0.13288486013350304}}}</script>
+  <script>
+  (()=>{'use strict';const d=JSON.parse(document.getElementById('report-data').textContent),$=s=>document.querySelector(s),pct=v=>(v*100).toFixed(2)+'%',fmt=n=>new Intl.NumberFormat('en-US').format(n),gb=n=>(n/1e9).toFixed(2)+' GB';
+    $('#hero-cohort').textContent=`${fmt(d.cohort.samples)} scenes / ${d.cohort.groups} groups`;$('#hero-commit').textContent=d.git_commit.slice(0,10);$('#m-recall').textContent=pct(d.baseline.recall);$('#e-recall').textContent=pct(d.ersrr_mean.recall);$('#m-fpr').textContent=pct(d.baseline.false_positive_rate);$('#e-fpr').textContent=pct(d.ersrr_mean.false_positive_rate);
+    const tc=$('#transfer-chart');d.seeds.forEach(s=>{tc.insertAdjacentHTML('beforeend',`<div class="barrow"><label>seed ${s.seed} / val</label><div class="track"><div class="fill sand" data-w="${s.recall*100}"></div></div><output>${pct(s.recall)}</output></div><div class="barrow"><label>seed ${s.seed} / strict</label><div class="track"><div class="fill coral" data-w="${s.strict_recall*100}"></div></div><output>${pct(s.strict_recall)}</output></div>`);$('#seed-table').insertAdjacentHTML('beforeend',`<tr><td>${s.seed}</td><td>${pct(s.recall)}</td><td class="drop">${pct(s.strict_recall)}</td><td>${pct(s.strict_fpr)}</td><td>${s.strict_ap.toFixed(3)}</td><td>${s.strict_auroc.toFixed(3)}</td></tr>`)});
+    const cis=[['Recall difference',d.bootstrap.recall_delta,'Percentage points',false],['False-positive-rate difference',d.bootstrap.false_positive_rate_delta,'Percentage points',true],['Relative FPR reduction',d.bootstrap.relative_false_positive_rate_reduction,'Candidate reduction',true],['Average-precision difference',d.bootstrap.average_precision_delta,'Absolute difference',false]];cis.forEach(([name,x,label,good])=>{const lo=x['95ci'][0],hi=x['95ci'][1],scale=name.startsWith('Relative')?1:2,min=name.startsWith('Relative')?0:-1,max=1,pos=v=>(v-min)/(max-min)*100;$('#ci-grid').insertAdjacentHTML('beforeend',`<article class="ci ${good?'good':''}"><h3>${name}</h3><div class="estimate">${name.startsWith('Relative')?pct(x.mean):(x.mean*100).toFixed(1)+' pp'}</div><p>95% CI ${name.startsWith('Relative')?pct(lo)+' to '+pct(hi):(lo*100).toFixed(1)+' to '+(hi*100).toFixed(1)+' pp'}</p><div class="range" style="color:${good?'var(--green)':'var(--coral)'}"><span style="left:${pos(lo)}%;width:${Math.max(1,pos(hi)-pos(lo))}%"></span><i style="left:${pos(x.mean)}%"></i></div><p>${label}</p></article>`)});
+    const a=d.diagnostic.agreement,counts=[[a.positive_seed_hit_counts['0'],'of 67 plumes missed by all five seeds'],[a.positive_seed_hit_counts['5'],'of 67 detected by all five seeds'],[a.positive_baseline_only_vs_ersrr_zero,'MARS true positives missed by every ERSRR seed'],[a.positive_neither_baseline_nor_ersrr,'plumes missed by both systems'],[a.negative_any_seed_false_positive,'of 4,334 negatives flagged by any ERSRR seed'],[a.negative_all_seed_false_positive,'negatives flagged by all five seeds']];counts.forEach(x=>$('#counts').insertAdjacentHTML('beforeend',`<div class="count"><b>${x[0]}</b><span>${x[1]}</span></div>`));
+    function strata(target,rows){rows.forEach(r=>$(target).insertAdjacentHTML('beforeend',`<div class="barrow"><label>${r.name}<br>n=${r.samples}</label><div class="duo"><span class="e" style="width:${r.ersrr_seed_mean_rate*100}%"></span><span class="m" style="width:${r.released_mars_s2l_rate*100}%"></span></div><output>${pct(r.ersrr_seed_mean_rate)} / ${pct(r.released_mars_s2l_rate)}</output></div>`))}strata('#area-strata',d.diagnostic.positive_strata.plume_area);strata('#wind-strata',d.diagnostic.positive_strata.wind_speed);strata('#ref-strata',d.diagnostic.negative_strata.reference_interval);
+    $('#params').textContent=(d.architecture.parameters/1e6).toFixed(2)+'M';$('#train-assets').textContent=fmt(d.data.training_assets);$('#train-size').textContent=gb(d.data.training_bytes);$('#strict-assets').textContent=fmt(d.data.strict_assets);$('#strict-size').textContent=gb(d.data.strict_bytes);$('#emit-count').textContent=d.data.emit_sealed;$('#wind-count').textContent=d.data.wind_validation;
+    const prov=[['Strict manifest SHA-256',d.provenance.manifest_sha256],['Campaign report',d.provenance.campaign_report],['Diagnostic report',d.provenance.diagnostic_report],['Bootstrap',`${fmt(d.provenance.bootstrap_replicates)} replicates · seed ${d.provenance.bootstrap_seed} · ${d.cohort.groups} groups`],['Generator commit',d.git_commit],['Generated UTC',d.generated_at_utc]];prov.forEach(x=>$('#prov').insertAdjacentHTML('beforeend',`<dt>${x[0]}</dt><dd>${x[1]}</dd>`));$('#generated').textContent=new Date(d.generated_at_utc).toISOString().slice(0,10);
+    const sections=[...document.querySelectorAll('[data-title]')],rail=$('.rail');sections.forEach(s=>rail.insertAdjacentHTML('beforeend',`<a href="#${s.id}" aria-label="${s.dataset.title}"></a>`));const links=[...rail.children];const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.hash==='#'+e.target.id))}}),{rootMargin:'-40% 0px -50%'});sections.forEach(s=>io.observe(s));const rio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');e.target.querySelectorAll?.('[data-w]').forEach(b=>b.style.width=b.dataset.w+'%')}}),{threshold:.12});document.querySelectorAll('[data-reveal]').forEach(x=>rio.observe(x));addEventListener('scroll',()=>{$('.progress').style.width=(scrollY/(document.documentElement.scrollHeight-innerHeight)*100)+'%'},{passive:true});
+  })();
+  </script>
 </body>
 </html>

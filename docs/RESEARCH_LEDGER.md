@@ -167,11 +167,15 @@ demonstrate that movement with paired geographic uncertainty on an untouched coh
 - Claim and manuscript structure: `docs/PAPER_OUTLINE.md`.
 - Architecture decision and evaluation contract: `docs/ARCHITECTURE_DECISION_V3.md`.
 - Data/acquisition chronology: `docs/PUBLICATION_ROADMAP.md` and `reports/acquisition/`.
+- Verification: 50/50 tests passed in the project WSL environment on 2026-07-12; the report's
+  inline script also passed a standalone JavaScript parse check.
 
 Still required for the final package:
 
 1. complete ERA5-Land wind retrieval after a user-managed Copernicus CDS token is configured;
 2. run the sealed 55-scene EMIT positive-only confirmation exactly once;
-3. produce preregistered/post-hoc-labeled figures and an error atlas;
-4. update and visually verify the HTML research report and README;
-5. run the full test suite and final requirement-by-requirement audit.
+3. convert the deterministic error-atlas selections into manuscript figures while retaining their
+   post-hoc labels;
+4. visually inspect the generated HTML in a local browser (automated browser preview was blocked
+   by the local-file URL policy; structural and content checks are automated);
+5. run the final requirement-by-requirement audit.
