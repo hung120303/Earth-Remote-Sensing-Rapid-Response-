@@ -117,7 +117,9 @@ def verify_archive(path: Path, expected: tuple[int, str]) -> None:
         raise ValueError(f"Pinned archive identity mismatch: {path.name}")
 
 
-def validate_packed(path: Path, expected_samples: int) -> dict[str, Any]:
+def validate_packed(
+    path: Path, expected_samples: int, *, source_partition: str = "train"
+) -> dict[str, Any]:
     with h5py.File(path, "r") as source:
         required = {
             "sample_id": (expected_samples,),
@@ -134,6 +136,8 @@ def validate_packed(path: Path, expected_samples: int) -> dict[str, Any]:
                 raise ValueError(f"Packed MethaneS2CM dataset {name!r} has the wrong shape")
         if str(source.attrs.get("source_revision")) != REVISION:
             raise ValueError("Packed MethaneS2CM source revision mismatch")
+        if str(source.attrs.get("source_split")) != f"{SPLIT}/{source_partition}.csv":
+            raise ValueError("Packed MethaneS2CM source partition mismatch")
         mismatches = 0
         positives = 0
         for start in range(0, expected_samples, 2048):
@@ -157,9 +161,15 @@ def pack_selected(
     expected: dict[str, tuple[int, str]],
     rows: list[dict[str, str]],
     destination: Path,
+    *,
+    source_partition: str = "train",
 ) -> dict[str, Any]:
+    if source_partition not in {"train", "test"}:
+        raise ValueError("MethaneS2CM source partition must be train or test")
     if destination.exists():
-        reused = validate_packed(destination, len(rows))
+        reused = validate_packed(
+            destination, len(rows), source_partition=source_partition
+        )
         return {
             "expected_files": len(expected),
             "archive_members_seen": len(expected),
@@ -174,7 +184,7 @@ def pack_selected(
     with h5py.File(temporary, "w") as packed:
         packed.attrs["source_dataset"] = REPO_ID
         packed.attrs["source_revision"] = REVISION
-        packed.attrs["source_split"] = f"{SPLIT}/train.csv"
+        packed.attrs["source_split"] = f"{SPLIT}/{source_partition}.csv"
         packed.create_dataset(
             "sample_id", data=np.asarray([int(row["id"]) for row in rows], dtype=np.int64)
         )
@@ -205,7 +215,10 @@ def pack_selected(
             shuffle=True,
         )
         for archive_path in archives:
-            print(f"Scanning {archive_path.name} for sealed training members", flush=True)
+            print(
+                f"Scanning {archive_path.name} for frozen {source_partition} members",
+                flush=True,
+            )
             with tarfile.open(archive_path, mode="r|gz") as archive:
                 for member in archive:
                     target = expected.get(member.name)
@@ -213,7 +226,7 @@ def pack_selected(
                         continue
                     if member.name in seen:
                         raise ValueError(
-                            f"Duplicate training member across archives: {member.name}"
+                            f"Duplicate {source_partition} member across archives: {member.name}"
                         )
                     seen.add(member.name)
                     if not member.isfile() or member.size <= 0:
@@ -238,10 +251,14 @@ def pack_selected(
             print(f"Found {len(seen):,}/{len(expected):,} required members", flush=True)
         missing = set(expected) - seen
         if missing:
-            raise ValueError(f"Archives lack {len(missing):,} expected training assets")
+            raise ValueError(
+                f"Archives lack {len(missing):,} expected {source_partition} assets"
+            )
         packed.flush()
     os.replace(temporary, destination)
-    validation = validate_packed(destination, len(rows))
+    validation = validate_packed(
+        destination, len(rows), source_partition=source_partition
+    )
     return {
         "expected_files": len(expected),
         "archive_members_seen": len(seen),
