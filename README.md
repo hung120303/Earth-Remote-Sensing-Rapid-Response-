@@ -36,10 +36,10 @@ On Windows PowerShell, activate with `.\.venv\Scripts\Activate.ps1` if the envir
 ```bash
 python tools/ersrr.py status
 python tools/ersrr.py audit
-python -m unittest discover -s tests -v
-python tools/aggregate_mars_v3_strict.py
-python tools/analyze_mars_v3_strict_posthoc.py
-python tools/build_research_report.py
+.venv/bin/python -m unittest discover -s tests -v
+.venv/bin/python tools/aggregate_mars_v3_strict.py
+.venv/bin/python tools/analyze_mars_v3_strict_posthoc.py
+.venv/bin/python tools/build_research_report.py
 ```
 
 The aggregation and diagnostic commands verify frozen prediction-cache identities before rewriting reports. Experiment summaries are stored under `reports/experiments/`; checkpoints, proposal classifiers, and prediction caches under `EarthRemoteSensingRapidResponse/artifacts/` are intentionally ignored by Git.
