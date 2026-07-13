@@ -1,0 +1,154 @@
+{
+  "cohort": {
+    "geographic_groups": 64,
+    "location_test_images_opened": false,
+    "negatives": 7656,
+    "positives": 7802,
+    "samples": 15458
+  },
+  "generated_at_utc": "2026-07-13T22:44:34.644082+00:00",
+  "interpretation": "Exploratory internal-development diagnostics. Candidate evidence definitions and their ranking may inform later fitting experiments, so none are test claims.",
+  "learned_v5_seed1101_reference": {
+    "operating_point_0.05": {
+      "false_positive_rate": 0.04832810867293626,
+      "precision": 0.8782494241526818,
+      "recall": 0.34209177134068186,
+      "threshold": 0.65380859375
+    },
+    "pixel_average_precision": 0.3170876556376502,
+    "pixel_dice": 0.4317820633375676,
+    "scene_auroc": 0.8341466144709566,
+    "scene_average_precision": 0.8224551121841779
+  },
+  "mask_audit": {
+    "negative_crops_with_positive_mask_pixels": 0,
+    "observable_pixels": {
+      "maximum": 1024.0,
+      "mean": 1020.9144132488032,
+      "median": 1024.0,
+      "minimum": 300.0,
+      "p10": 1022.0,
+      "p90": 1024.0
+    },
+    "positive_crops_at_least_90pct_masked": 758,
+    "positive_crops_at_least_half_masked": 2552,
+    "positive_crops_fully_masked": 103,
+    "positive_mask_pixels": {
+      "maximum": 1024.0,
+      "mean": 378.6189438605486,
+      "median": 226.0,
+      "minimum": 15.0,
+      "p10": 49.0,
+      "p90": 918.0
+    }
+  },
+  "physics_baselines": {
+    "T_over_Tminus365_high": {
+      "operating_point_0.05": {
+        "false_positive_rate": 0.049895506792058515,
+        "precision": 0.3685950413223141,
+        "recall": 0.028582414765444757,
+        "threshold": 0.6235936284065247
+      },
+      "pixel_average_precision": 0.17337520534826567,
+      "scene_auroc": 0.5543957076220576,
+      "scene_average_precision": 0.5208070044798567,
+      "scene_score": "0.85 * mean(top 1% evidence pixels) + 0.15 * maximum evidence pixel"
+    },
+    "T_over_Tminus365_low": {
+      "operating_point_0.05": {
+        "false_positive_rate": 0.049895506792058515,
+        "precision": 0.4947089947089947,
+        "recall": 0.047936426557293,
+        "threshold": 0.632684588432312
+      },
+      "pixel_average_precision": 0.16921027302547448,
+      "scene_auroc": 0.5773488555033848,
+      "scene_average_precision": 0.5509029397883023,
+      "scene_score": "0.85 * mean(top 1% evidence pixels) + 0.15 * maximum evidence pixel"
+    },
+    "T_over_Tminus90_high": {
+      "operating_point_0.05": {
+        "false_positive_rate": 0.049895506792058515,
+        "precision": 0.2952029520295203,
+        "recall": 0.020507562163547807,
+        "threshold": 0.6457768678665161
+      },
+      "pixel_average_precision": 0.17286795232933094,
+      "scene_auroc": 0.545654931806195,
+      "scene_average_precision": 0.5116072639019746,
+      "scene_score": "0.85 * mean(top 1% evidence pixels) + 0.15 * maximum evidence pixel"
+    },
+    "T_over_Tminus90_low": {
+      "operating_point_0.05": {
+        "false_positive_rate": 0.049895506792058515,
+        "precision": 0.5352798053527981,
+        "recall": 0.05639579594975647,
+        "threshold": 0.6328595876693726
+      },
+      "pixel_average_precision": 0.16900296135544732,
+      "scene_auroc": 0.5641196145885483,
+      "scene_average_precision": 0.5399208464750802,
+      "scene_score": "0.85 * mean(top 1% evidence pixels) + 0.15 * maximum evidence pixel"
+    },
+    "reference_consensus_low": {
+      "operating_point_0.05": {
+        "false_positive_rate": 0.049895506792058515,
+        "precision": 0.4980289093298292,
+        "recall": 0.04857728787490387,
+        "threshold": 0.4537366032600403
+      },
+      "pixel_average_precision": 0.1809251890740225,
+      "scene_auroc": 0.5745305054674779,
+      "scene_average_precision": 0.5476394400500874,
+      "scene_score": "0.85 * mean(top 1% evidence pixels) + 0.15 * maximum evidence pixel"
+    },
+    "reference_max_absolute_change": {
+      "operating_point_0.05": {
+        "false_positive_rate": 0.049895506792058515,
+        "precision": 0.403125,
+        "recall": 0.033068443988720844,
+        "threshold": 0.8377079367637634
+      },
+      "pixel_average_precision": 0.13799122329628843,
+      "scene_auroc": 0.5541359813294398,
+      "scene_average_precision": 0.5237973926934549,
+      "scene_score": "0.85 * mean(top 1% evidence pixels) + 0.15 * maximum evidence pixel"
+    },
+    "reference_max_low": {
+      "operating_point_0.05": {
+        "false_positive_rate": 0.049895506792058515,
+        "precision": 0.4823848238482385,
+        "recall": 0.045629325813893874,
+        "threshold": 0.7336930632591248
+      },
+      "pixel_average_precision": 0.15910041733552152,
+      "scene_auroc": 0.5670688238848813,
+      "scene_average_precision": 0.5426678313965547,
+      "scene_score": "0.85 * mean(top 1% evidence pixels) + 0.15 * maximum evidence pixel"
+    },
+    "reference_mean_low": {
+      "operating_point_0.05": {
+        "false_positive_rate": 0.049895506792058515,
+        "precision": 0.48655913978494625,
+        "recall": 0.046398359395026914,
+        "threshold": 0.5590261816978455
+      },
+      "pixel_average_precision": 0.1684928543123433,
+      "scene_auroc": 0.5710351912552498,
+      "scene_average_precision": 0.5427690701050382,
+      "scene_score": "0.85 * mean(top 1% evidence pixels) + 0.15 * maximum evidence pixel"
+    }
+  },
+  "provenance": {
+    "git_commit": "b7a6f47a24fa39882334cbc020b9b7e5cbdd307f",
+    "manifest_sha256": "6f2137a0cf33bcae80a9ecee57d62cd9b37d4121903808bcdc7e7951a82558e3",
+    "packed_sha256": "f75ea0c35bba240d56e8deae8828722253c5b82fb59b515d8627fb4106951ca4",
+    "script": "tools/analyze_methanes2cm_v5_signal.py",
+    "script_sha256": "5628bd2ae75a98d8da4053ebdc63e949b5f9564351e8bfe84463ffdf6a4eb84c",
+    "tracked_worktree_dirty_at_start": false,
+    "v5_report_sha256": "dd23389a96c99407f80cc20327be605b85ab446bfae849fb84a7ed9dc5228d45"
+  },
+  "schema_version": 1,
+  "scope": "methanes2cm_v5_internal_development_signal_audit"
+}
