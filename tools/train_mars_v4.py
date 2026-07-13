@@ -61,14 +61,16 @@ from train_mars_v3 import (  # noqa: E402
 
 DEFAULT_SEED = 606
 DEFAULT_LUT = Path("configs/mars_s2_integrated_transmittances.json")
-DEFAULT_CHECKPOINT = Path("EarthRemoteSensingRapidResponse/artifacts/mars_v4_seed606.pt")
-DEFAULT_JSON = Path("reports/experiments/mars_v4_seed606_validation.json")
-DEFAULT_MARKDOWN = Path("reports/experiments/MARS_V4_SEED606_VALIDATION.md")
-SMOKE_CHECKPOINT = Path("EarthRemoteSensingRapidResponse/artifacts/mars_v4_smoke_seed606.pt")
-SMOKE_JSON = Path("reports/experiments/mars_v4_smoke.json")
-SMOKE_MARKDOWN = Path("reports/experiments/MARS_V4_SMOKE.md")
+DEFAULT_CHECKPOINT = Path("EarthRemoteSensingRapidResponse/artifacts/mars_v4_1_seed606.pt")
+DEFAULT_JSON = Path("reports/experiments/mars_v4_1_seed606_validation.json")
+DEFAULT_MARKDOWN = Path("reports/experiments/MARS_V4_1_SEED606_VALIDATION.md")
+SMOKE_CHECKPOINT = Path("EarthRemoteSensingRapidResponse/artifacts/mars_v4_1_smoke_seed606.pt")
+SMOKE_JSON = Path("reports/experiments/mars_v4_1_smoke.json")
+SMOKE_MARKDOWN = Path("reports/experiments/MARS_V4_1_SMOKE.md")
 TARGET_FPRS = (0.05, 0.08, 0.095)
 PIXEL_THRESHOLDS = tuple(float(value) for value in np.linspace(0.1, 0.9, 9))
+OBJECTIVES = ("segmentation_bce_dice", "hard_negative_scene")
+SEGMENTATION_POSITIVE_WEIGHT = 20.0
 V3_INTERNAL_REPORTS = (
     Path("reports/experiments/mars_v3_seed101_validation.json"),
     Path("reports/experiments/mars_v3_seed202_validation.json"),
@@ -394,9 +396,43 @@ def hard_negative_segmentation_loss(
     }
 
 
+def masked_weighted_segmentation_loss(
+    logits: torch.Tensor, target: torch.Tensor, observable: torch.Tensor
+) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
+    """Use the morphology-learning loss that trained the successful v3 masks."""
+    positive_weight = torch.tensor(
+        SEGMENTATION_POSITIVE_WEIGHT, device=logits.device, dtype=logits.dtype
+    )
+    bce = F.binary_cross_entropy_with_logits(
+        logits, target, reduction="none", pos_weight=positive_weight
+    )
+    bce = (bce * observable).sum() / observable.sum().clamp_min(1.0)
+    probability = torch.sigmoid(logits) * observable
+    truth = target * observable
+    intersection = (probability * truth).sum(dim=(-2, -1))
+    denominator = probability.sum(dim=(-2, -1)) + truth.sum(dim=(-2, -1))
+    dice_loss = 1.0 - ((2.0 * intersection + 1.0) / (denominator + 1.0)).mean()
+    total = bce + 0.5 * dice_loss
+    return total, {"segmentation_bce": bce, "dice_loss": dice_loss}
+
+
 def total_loss(
-    output: dict[str, torch.Tensor], batch: dict[str, torch.Tensor]
+    output: dict[str, torch.Tensor],
+    batch: dict[str, torch.Tensor],
+    objective: str,
 ) -> tuple[torch.Tensor, dict[str, float]]:
+    if objective == "segmentation_bce_dice":
+        total, parts = masked_weighted_segmentation_loss(
+            output["segmentation_logits"], batch["mask"], batch["observable"]
+        )
+        return total, {
+            "total": float(total.detach()),
+            "segmentation_bce": float(parts["segmentation_bce"].detach()),
+            "dice_loss": float(parts["dice_loss"].detach()),
+            "simulated_fraction": float(batch["simulated"].mean().detach()),
+        }
+    if objective != "hard_negative_scene":
+        raise ValueError(f"Unknown v4 objective: {objective}")
     segmentation, parts = hard_negative_segmentation_loss(
         output["segmentation_logits"], batch["mask"], batch["observable"]
     )
@@ -566,6 +602,7 @@ def train(
     learning_rate: float,
     patience: int,
     validation_every: int,
+    objective: str,
     seed: int,
 ) -> tuple[list[dict[str, Any]], int]:
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-4)
@@ -585,7 +622,7 @@ def train(
             optimizer.zero_grad(set_to_none=True)
             with torch.amp.autocast("cuda", dtype=torch.float16):
                 output = model(batch["inputs"], batch["observable"])
-                loss, loss_parts = total_loss(output, batch)
+                loss, loss_parts = total_loss(output, batch, objective)
             scaler.scale(loss).backward()
             scaler.unscale_(optimizer)
             torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
@@ -646,7 +683,7 @@ def train(
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
     validation = report["validation"]
     lines = [
-        "# ERSRR MARS v4 simulation-first validation",
+        f"# ERSRR MARS {report['architecture_revision']} simulation-first validation",
         "",
         "Pipeline smoke test only; not an accuracy result."
         if report["smoke_test"]
@@ -691,6 +728,7 @@ def main() -> int:
     parser.add_argument("--samples-per-epoch", type=int, default=32768)
     parser.add_argument("--learning-rate", type=float, default=2e-4)
     parser.add_argument("--simulation-fraction", type=float, default=0.5)
+    parser.add_argument("--objective", choices=OBJECTIVES, default="segmentation_bce_dice")
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--smoke", action="store_true")
     args = parser.parse_args()
@@ -803,6 +841,7 @@ def main() -> int:
         learning_rate=args.learning_rate,
         patience=args.patience,
         validation_every=args.validation_every,
+        objective=args.objective,
         seed=args.seed,
     )
     validation = validation_summary(model, validation_loader, torch.device("cuda"))
@@ -814,6 +853,7 @@ def main() -> int:
         development_checks, decision = development_decision(validation, reference)
     report = {
         "schema_version": 1,
+        "architecture_revision": "v4.1" if args.objective == "segmentation_bce_dice" else "v4.0",
         "scope": "v4_pipeline_smoke" if args.smoke else "v4_internal_validation_selection",
         "smoke_test": args.smoke,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -850,7 +890,12 @@ def main() -> int:
             "learning_rate": args.learning_rate,
             "validation_every": args.validation_every,
             "history": history,
-            "loss": "positive BCE + top-2%-hard-negative BCE + 0.5 Dice + 0.5 segmentation-derived scene BCE",
+            "objective": args.objective,
+            "loss": (
+                "observable weighted BCE (positive weight 20) + 0.5 soft Dice; no scene-loss gradient"
+                if args.objective == "segmentation_bce_dice"
+                else "positive BCE + top-2%-hard-negative BCE + 0.5 Dice + 0.5 segmentation-derived scene BCE"
+            ),
         },
         "validation": validation,
         "v3_internal_reference": reference,

@@ -16,6 +16,7 @@ from train_mars_v4 import (  # noqa: E402
     choose_threshold_at_fpr,
     development_decision,
     hard_negative_segmentation_loss,
+    masked_weighted_segmentation_loss,
 )
 
 
@@ -41,6 +42,17 @@ class TrainMarsV4Tests(unittest.TestCase):
         self.assertEqual(result["threshold"], 0.7)
         self.assertEqual(result["recall"], 1.0)
         self.assertLessEqual(result["false_positive_rate"], 0.25)
+
+    def test_weighted_segmentation_loss_rewards_detected_plume(self) -> None:
+        target = torch.zeros(1, 1, 8, 8)
+        target[:, :, 3:5, 3:5] = 1
+        observable = torch.ones_like(target)
+        missed = torch.full_like(target, -5.0)
+        detected = missed.clone()
+        detected[target > 0.5] = 5.0
+        missed_loss, _ = masked_weighted_segmentation_loss(missed, target, observable)
+        detected_loss, _ = masked_weighted_segmentation_loss(detected, target, observable)
+        self.assertLess(float(detected_loss.detach()), float(missed_loss.detach()))
 
     def test_development_decision_rejects_internal_regression(self) -> None:
         validation = {
