@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 
@@ -17,10 +18,17 @@ from evaluate_emit_v002_external import (
     connected_mask,
     paired_bootstrap,
     positive_metrics,
+    tracked_dirty,
 )
 
 
 class ExternalEvaluationContractTests(unittest.TestCase):
+    @patch("evaluate_emit_v002_external.subprocess.check_output", return_value="")
+    def test_dirty_check_uses_repository_line_endings(self, check_output) -> None:
+        self.assertFalse(tracked_dirty(ROOT))
+        command = check_output.call_args.args[0]
+        self.assertIn("core.autocrlf=true", command)
+
     def test_every_fixed_seed_has_one_explicit_report_pair(self) -> None:
         self.assertEqual(set(SEED_REPORT_PATHS), set(FIXED_SEEDS))
         self.assertEqual(

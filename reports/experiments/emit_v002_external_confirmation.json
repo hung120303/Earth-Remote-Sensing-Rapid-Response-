@@ -1,0 +1,2401 @@
+{
+  "cohort": {
+    "groups": 55,
+    "label_scope": "positive confirmation only",
+    "scenes": 55,
+    "seal_sha256": "9d4950aa6768e89d4f486cca74ce711d694f5d6fa454d60897cdda5b07172dd8",
+    "wind_acquisition_sha256": "82cc125879af534642cfb0de337633ac16ed61c3ca607a18d4ee4808ccaf6e1b"
+  },
+  "five_seed_summary": {
+    "mean_dice": 0.0012149860587400464,
+    "mean_intersection_over_union": 0.0006082924773570012,
+    "mean_recall": 0.010909090909090908,
+    "seeds": [
+      101,
+      202,
+      303,
+      404,
+      505
+    ],
+    "standard_deviation_recall": 0.009958591954639382
+  },
+  "generated_at_utc": "2026-07-13T13:50:21.903180+00:00",
+  "limitations": [
+    "positive-only cohort cannot estimate false-positive rate, specificity, precision, AP, or AUROC",
+    "EMIT and Sentinel-2 acquisition times differ by up to six hours",
+    "EMIT polygon overlap is a descriptive segmentation proxy rather than simultaneous Sentinel-2 truth"
+  ],
+  "paired_bootstrap": {
+    "ersrr_recall": {
+      "95ci": [
+        0.0,
+        0.03636363636363636
+      ],
+      "mean": 0.01093090909090909
+    },
+    "method": "paired bootstrap over 55 independent groups with five-seed resampling",
+    "random_seed": 20260713,
+    "recall_delta": {
+      "95ci": [
+        -0.05454545454545454,
+        0.02909090909090909
+      ],
+      "mean": -0.0069963636363636365
+    },
+    "released_mars_s2l_recall": {
+      "95ci": [
+        0.0,
+        0.05454545454545454
+      ],
+      "mean": 0.01792727272727273
+    },
+    "replicates": 2000
+  },
+  "provenance": {
+    "git_commit": "df62b146fcd9b012f42a08cd42119198236a2219",
+    "git_tracked_worktree_dirty_at_start": false,
+    "git_tracked_worktree_dirty_at_start_amendment": {
+      "amended_at_utc": "2026-07-13T13:53:00+00:00",
+      "evidence": "git -c core.autocrlf=true status --porcelain --untracked-files=no returned zero entries; host Git status was also clean",
+      "original_report_sha256": "629f53a9ecbbd8e652e5b52b50cb4e27fc40f5777bd2439929c32f7f1fc5a324",
+      "original_value": true,
+      "reason": "the WSL provenance check omitted the repository's Windows core.autocrlf setting and treated 15 CRLF-normalized tracked reports as modified; predictions and metrics were not rerun or changed"
+    },
+    "script": "tools/evaluate_emit_v002_external.py",
+    "script_sha256": "a80f2810b9c7428dfb251297f05b104879b92a91b31fa6ff4afe91f1b4a8dd34"
+  },
+  "released_mars_s2l": {
+    "author_rule": {
+      "minimum_connected_pixels": 100,
+      "pixel_threshold": 0.5
+    },
+    "checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "model": "MARS-S2L released MARSS2L_20250326",
+    "records": [
+      {
+        "group_id": "emit25km-0001",
+        "prediction": false,
+        "score": 0.05650758743286133
+      },
+      {
+        "group_id": "emit25km-0003",
+        "prediction": false,
+        "score": 0.4479269480216317
+      },
+      {
+        "group_id": "emit25km-0004",
+        "prediction": false,
+        "score": 0.003354649990797043
+      },
+      {
+        "group_id": "emit25km-0006",
+        "prediction": false,
+        "score": 0.00044573843479156494
+      },
+      {
+        "group_id": "emit25km-0007",
+        "prediction": false,
+        "score": 0.00029383599758148193
+      },
+      {
+        "group_id": "emit25km-0008",
+        "prediction": false,
+        "score": 0.0004634261131286621
+      },
+      {
+        "group_id": "emit25km-0009",
+        "prediction": false,
+        "score": 0.10183349763974547
+      },
+      {
+        "group_id": "emit25km-0010",
+        "prediction": false,
+        "score": 0.009494949132204056
+      },
+      {
+        "group_id": "emit25km-0011",
+        "prediction": false,
+        "score": 0.3628227710723877
+      },
+      {
+        "group_id": "emit25km-0012",
+        "prediction": false,
+        "score": 0.006091916933655739
+      },
+      {
+        "group_id": "emit25km-0013",
+        "prediction": false,
+        "score": 0.006649971008300781
+      },
+      {
+        "group_id": "emit25km-0014",
+        "prediction": false,
+        "score": 0.014189452864229679
+      },
+      {
+        "group_id": "emit25km-0015",
+        "prediction": false,
+        "score": 0.012233500368893147
+      },
+      {
+        "group_id": "emit25km-0016",
+        "prediction": false,
+        "score": 0.004595563746988773
+      },
+      {
+        "group_id": "emit25km-0017",
+        "prediction": false,
+        "score": 0.02891270350664854
+      },
+      {
+        "group_id": "emit25km-0018",
+        "prediction": false,
+        "score": 0.0834866453660652
+      },
+      {
+        "group_id": "emit25km-0021",
+        "prediction": false,
+        "score": 0.013739824295043945
+      },
+      {
+        "group_id": "emit25km-0022",
+        "prediction": false,
+        "score": 0.0013668537139892578
+      },
+      {
+        "group_id": "emit25km-0023",
+        "prediction": false,
+        "score": 0.01457888726145029
+      },
+      {
+        "group_id": "emit25km-0024",
+        "prediction": false,
+        "score": 0.000393599271774292
+      },
+      {
+        "group_id": "emit25km-0025",
+        "prediction": false,
+        "score": 0.0008650049567222595
+      },
+      {
+        "group_id": "emit25km-0026",
+        "prediction": false,
+        "score": 0.004326961934566498
+      },
+      {
+        "group_id": "emit25km-0027",
+        "prediction": false,
+        "score": 0.0017430447041988373
+      },
+      {
+        "group_id": "emit25km-0028",
+        "prediction": false,
+        "score": 0.00032030045986175537
+      },
+      {
+        "group_id": "emit25km-0029",
+        "prediction": false,
+        "score": 0.08944276394322515
+      },
+      {
+        "group_id": "emit25km-0030",
+        "prediction": false,
+        "score": 0.00029665231704711914
+      },
+      {
+        "group_id": "emit25km-0032",
+        "prediction": false,
+        "score": 0.0016713142395019531
+      },
+      {
+        "group_id": "emit25km-0033",
+        "prediction": false,
+        "score": 0.0015094354748725891
+      },
+      {
+        "group_id": "emit25km-0034",
+        "prediction": false,
+        "score": 0.012363910675048828
+      },
+      {
+        "group_id": "emit25km-0035",
+        "prediction": false,
+        "score": 0.0004605017602443695
+      },
+      {
+        "group_id": "emit25km-0036",
+        "prediction": false,
+        "score": 0.018172364681959152
+      },
+      {
+        "group_id": "emit25km-0037",
+        "prediction": false,
+        "score": 0.023943572479765862
+      },
+      {
+        "group_id": "emit25km-0038",
+        "prediction": false,
+        "score": 0.002813100814819336
+      },
+      {
+        "group_id": "emit25km-0039",
+        "prediction": false,
+        "score": 0.03402590751647949
+      },
+      {
+        "group_id": "emit25km-0042",
+        "prediction": true,
+        "score": 0.6864359865139704
+      },
+      {
+        "group_id": "emit25km-0044",
+        "prediction": false,
+        "score": 0.023813349660485983
+      },
+      {
+        "group_id": "emit25km-0046",
+        "prediction": false,
+        "score": 0.03585226787254214
+      },
+      {
+        "group_id": "emit25km-0047",
+        "prediction": false,
+        "score": 0.005293074995279312
+      },
+      {
+        "group_id": "emit25km-0049",
+        "prediction": false,
+        "score": 0.2033771545975469
+      },
+      {
+        "group_id": "emit25km-0054",
+        "prediction": false,
+        "score": 0.0029058419167995453
+      },
+      {
+        "group_id": "emit25km-0055",
+        "prediction": false,
+        "score": 0.012746959924697876
+      },
+      {
+        "group_id": "emit25km-0056",
+        "prediction": false,
+        "score": 0.03751938696950674
+      },
+      {
+        "group_id": "emit25km-0057",
+        "prediction": false,
+        "score": 0.029366614064201713
+      },
+      {
+        "group_id": "emit25km-0058",
+        "prediction": false,
+        "score": 0.005467564333230257
+      },
+      {
+        "group_id": "emit25km-0059",
+        "prediction": false,
+        "score": 0.004053693264722824
+      },
+      {
+        "group_id": "emit25km-0060",
+        "prediction": false,
+        "score": 0.00092354416847229
+      },
+      {
+        "group_id": "emit25km-0061",
+        "prediction": false,
+        "score": 0.00031131505966186523
+      },
+      {
+        "group_id": "emit25km-0062",
+        "prediction": false,
+        "score": 0.04652959550730884
+      },
+      {
+        "group_id": "emit25km-0063",
+        "prediction": false,
+        "score": 0.00576166994869709
+      },
+      {
+        "group_id": "emit25km-0064",
+        "prediction": false,
+        "score": 0.00030604004859924316
+      },
+      {
+        "group_id": "emit25km-0065",
+        "prediction": false,
+        "score": 0.013776994310319424
+      },
+      {
+        "group_id": "emit25km-0066",
+        "prediction": false,
+        "score": 0.0003566741943359375
+      },
+      {
+        "group_id": "emit25km-0067",
+        "prediction": false,
+        "score": 0.028357251547276974
+      },
+      {
+        "group_id": "emit25km-0068",
+        "prediction": false,
+        "score": 0.0016773194074630737
+      },
+      {
+        "group_id": "emit25km-0069",
+        "prediction": false,
+        "score": 0.018951590172946453
+      }
+    ],
+    "scene": {
+      "false_negative": 54,
+      "recall": 0.01818181818181818,
+      "scenes": 55,
+      "true_positive": 1
+    },
+    "segmentation": {
+      "dice": 0.0005844663703793795,
+      "intersection_over_union": 0.00029231861038829374,
+      "intersection_pixels": 173,
+      "predicted_positive_pixels": 173,
+      "truth_positive_pixels": 591820
+    }
+  },
+  "runtime": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "once_only_emit_v002_external_positive_confirmation",
+  "seed_results": [
+    {
+      "neural_presence_weight": 0.5,
+      "records": [
+        {
+          "group_id": "emit25km-0001",
+          "neural_score": 0.00861358642578125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004306793212890625
+        },
+        {
+          "group_id": "emit25km-0003",
+          "neural_score": 0.047607421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0238037109375
+        },
+        {
+          "group_id": "emit25km-0004",
+          "neural_score": 0.03253173828125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.016265869140625
+        },
+        {
+          "group_id": "emit25km-0006",
+          "neural_score": 0.034423828125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0172119140625
+        },
+        {
+          "group_id": "emit25km-0007",
+          "neural_score": 0.04534912109375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.022674560546875
+        },
+        {
+          "group_id": "emit25km-0008",
+          "neural_score": 0.0255126953125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01275634765625
+        },
+        {
+          "group_id": "emit25km-0009",
+          "neural_score": 0.07183837890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.035919189453125
+        },
+        {
+          "group_id": "emit25km-0010",
+          "neural_score": 0.0212860107421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01064300537109375
+        },
+        {
+          "group_id": "emit25km-0011",
+          "neural_score": 0.1578369140625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.07891845703125
+        },
+        {
+          "group_id": "emit25km-0012",
+          "neural_score": 0.02606201171875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.013031005859375
+        },
+        {
+          "group_id": "emit25km-0013",
+          "neural_score": 0.045867919921875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0229339599609375
+        },
+        {
+          "group_id": "emit25km-0014",
+          "neural_score": 0.0038394927978515625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0019197463989257812
+        },
+        {
+          "group_id": "emit25km-0015",
+          "neural_score": 0.034820556640625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0174102783203125
+        },
+        {
+          "group_id": "emit25km-0016",
+          "neural_score": 0.10284423828125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.051422119140625
+        },
+        {
+          "group_id": "emit25km-0017",
+          "neural_score": 0.103759765625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0518798828125
+        },
+        {
+          "group_id": "emit25km-0018",
+          "neural_score": 0.0775146484375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.03875732421875
+        },
+        {
+          "group_id": "emit25km-0021",
+          "neural_score": 0.03948974609375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.019744873046875
+        },
+        {
+          "group_id": "emit25km-0022",
+          "neural_score": 0.01287078857421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.006435394287109375
+        },
+        {
+          "group_id": "emit25km-0023",
+          "neural_score": 0.01073455810546875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.005367279052734375
+        },
+        {
+          "group_id": "emit25km-0024",
+          "neural_score": 0.023284912109375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0116424560546875
+        },
+        {
+          "group_id": "emit25km-0025",
+          "neural_score": 0.04876708984375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.024383544921875
+        },
+        {
+          "group_id": "emit25km-0026",
+          "neural_score": 0.0207672119140625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01038360595703125
+        },
+        {
+          "group_id": "emit25km-0027",
+          "neural_score": 0.107421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0537109375
+        },
+        {
+          "group_id": "emit25km-0028",
+          "neural_score": 0.4033203125,
+          "prediction": true,
+          "proposal_score": 0.5105998991088431,
+          "score": 0.45696010580442153
+        },
+        {
+          "group_id": "emit25km-0029",
+          "neural_score": 0.029541015625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0147705078125
+        },
+        {
+          "group_id": "emit25km-0030",
+          "neural_score": 0.0280609130859375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01403045654296875
+        },
+        {
+          "group_id": "emit25km-0032",
+          "neural_score": 0.0311431884765625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01557159423828125
+        },
+        {
+          "group_id": "emit25km-0033",
+          "neural_score": 0.0262603759765625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01313018798828125
+        },
+        {
+          "group_id": "emit25km-0034",
+          "neural_score": 0.050323486328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0251617431640625
+        },
+        {
+          "group_id": "emit25km-0035",
+          "neural_score": 0.070068359375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0350341796875
+        },
+        {
+          "group_id": "emit25km-0036",
+          "neural_score": 0.03265380859375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.016326904296875
+        },
+        {
+          "group_id": "emit25km-0037",
+          "neural_score": 0.038543701171875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0192718505859375
+        },
+        {
+          "group_id": "emit25km-0038",
+          "neural_score": 0.01262664794921875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.006313323974609375
+        },
+        {
+          "group_id": "emit25km-0039",
+          "neural_score": 0.06536865234375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.032684326171875
+        },
+        {
+          "group_id": "emit25km-0042",
+          "neural_score": 0.094482421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0472412109375
+        },
+        {
+          "group_id": "emit25km-0044",
+          "neural_score": 0.053192138671875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0265960693359375
+        },
+        {
+          "group_id": "emit25km-0046",
+          "neural_score": 0.030731201171875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0153656005859375
+        },
+        {
+          "group_id": "emit25km-0047",
+          "neural_score": 0.0180206298828125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00901031494140625
+        },
+        {
+          "group_id": "emit25km-0049",
+          "neural_score": 0.009674072265625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0048370361328125
+        },
+        {
+          "group_id": "emit25km-0054",
+          "neural_score": 0.01337432861328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.006687164306640625
+        },
+        {
+          "group_id": "emit25km-0055",
+          "neural_score": 0.00524139404296875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.002620697021484375
+        },
+        {
+          "group_id": "emit25km-0056",
+          "neural_score": 0.02801513671875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.014007568359375
+        },
+        {
+          "group_id": "emit25km-0057",
+          "neural_score": 0.056121826171875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0280609130859375
+        },
+        {
+          "group_id": "emit25km-0058",
+          "neural_score": 0.035736083984375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0178680419921875
+        },
+        {
+          "group_id": "emit25km-0059",
+          "neural_score": 0.01132965087890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.005664825439453125
+        },
+        {
+          "group_id": "emit25km-0060",
+          "neural_score": 0.01078033447265625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.005390167236328125
+        },
+        {
+          "group_id": "emit25km-0061",
+          "neural_score": 0.014617919921875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0073089599609375
+        },
+        {
+          "group_id": "emit25km-0062",
+          "neural_score": 0.036346435546875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0181732177734375
+        },
+        {
+          "group_id": "emit25km-0063",
+          "neural_score": 0.040924072265625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0204620361328125
+        },
+        {
+          "group_id": "emit25km-0064",
+          "neural_score": 0.02691650390625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.013458251953125
+        },
+        {
+          "group_id": "emit25km-0065",
+          "neural_score": 0.0792236328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.03961181640625
+        },
+        {
+          "group_id": "emit25km-0066",
+          "neural_score": 0.09808349609375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.049041748046875
+        },
+        {
+          "group_id": "emit25km-0067",
+          "neural_score": 0.0704345703125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.03521728515625
+        },
+        {
+          "group_id": "emit25km-0068",
+          "neural_score": 0.0206451416015625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01032257080078125
+        },
+        {
+          "group_id": "emit25km-0069",
+          "neural_score": 0.0163421630859375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00817108154296875
+        }
+      ],
+      "scene": {
+        "false_negative": 54,
+        "recall": 0.01818181818181818,
+        "scenes": 55,
+        "true_positive": 1
+      },
+      "seed": 101,
+      "segmentation": {
+        "dice": 0.0007634541910594785,
+        "intersection_over_union": 0.00038187286675002533,
+        "intersection_pixels": 226,
+        "predicted_positive_pixels": 226,
+        "truth_positive_pixels": 591820
+      },
+      "upper_plume_threshold": 0.16229248046875
+    },
+    {
+      "neural_presence_weight": 1.0,
+      "records": [
+        {
+          "group_id": "emit25km-0001",
+          "neural_score": 0.0004839897155761719,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0004839897155761719
+        },
+        {
+          "group_id": "emit25km-0003",
+          "neural_score": 0.019195556640625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.019195556640625
+        },
+        {
+          "group_id": "emit25km-0004",
+          "neural_score": 0.009521484375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.009521484375
+        },
+        {
+          "group_id": "emit25km-0006",
+          "neural_score": 0.00130462646484375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00130462646484375
+        },
+        {
+          "group_id": "emit25km-0007",
+          "neural_score": 0.00555419921875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00555419921875
+        },
+        {
+          "group_id": "emit25km-0008",
+          "neural_score": 0.0010442733764648438,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0010442733764648438
+        },
+        {
+          "group_id": "emit25km-0009",
+          "neural_score": 0.0020427703857421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0020427703857421875
+        },
+        {
+          "group_id": "emit25km-0010",
+          "neural_score": 0.0016937255859375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0016937255859375
+        },
+        {
+          "group_id": "emit25km-0011",
+          "neural_score": 0.0003101825714111328,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0003101825714111328
+        },
+        {
+          "group_id": "emit25km-0012",
+          "neural_score": 0.006488800048828125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.006488800048828125
+        },
+        {
+          "group_id": "emit25km-0013",
+          "neural_score": 0.0011339187622070312,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0011339187622070312
+        },
+        {
+          "group_id": "emit25km-0014",
+          "neural_score": 0.00022518634796142578,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00022518634796142578
+        },
+        {
+          "group_id": "emit25km-0015",
+          "neural_score": 0.0020503997802734375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0020503997802734375
+        },
+        {
+          "group_id": "emit25km-0016",
+          "neural_score": 0.0011243820190429688,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0011243820190429688
+        },
+        {
+          "group_id": "emit25km-0017",
+          "neural_score": 0.03338623046875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.03338623046875
+        },
+        {
+          "group_id": "emit25km-0018",
+          "neural_score": 0.01177978515625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01177978515625
+        },
+        {
+          "group_id": "emit25km-0021",
+          "neural_score": 0.0020351409912109375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0020351409912109375
+        },
+        {
+          "group_id": "emit25km-0022",
+          "neural_score": 0.0034027099609375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0034027099609375
+        },
+        {
+          "group_id": "emit25km-0023",
+          "neural_score": 0.0001596212387084961,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0001596212387084961
+        },
+        {
+          "group_id": "emit25km-0024",
+          "neural_score": 0.0006189346313476562,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0006189346313476562
+        },
+        {
+          "group_id": "emit25km-0025",
+          "neural_score": 0.00266265869140625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00266265869140625
+        },
+        {
+          "group_id": "emit25km-0026",
+          "neural_score": 0.00263214111328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00263214111328125
+        },
+        {
+          "group_id": "emit25km-0027",
+          "neural_score": 0.0068511962890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0068511962890625
+        },
+        {
+          "group_id": "emit25km-0028",
+          "neural_score": 0.00841522216796875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00841522216796875
+        },
+        {
+          "group_id": "emit25km-0029",
+          "neural_score": 0.007965087890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.007965087890625
+        },
+        {
+          "group_id": "emit25km-0030",
+          "neural_score": 0.0004935264587402344,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0004935264587402344
+        },
+        {
+          "group_id": "emit25km-0032",
+          "neural_score": 0.0014047622680664062,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0014047622680664062
+        },
+        {
+          "group_id": "emit25km-0033",
+          "neural_score": 0.00266265869140625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00266265869140625
+        },
+        {
+          "group_id": "emit25km-0034",
+          "neural_score": 0.0017137527465820312,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0017137527465820312
+        },
+        {
+          "group_id": "emit25km-0035",
+          "neural_score": 0.004116058349609375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004116058349609375
+        },
+        {
+          "group_id": "emit25km-0036",
+          "neural_score": 0.0014324188232421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0014324188232421875
+        },
+        {
+          "group_id": "emit25km-0037",
+          "neural_score": 0.0045928955078125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0045928955078125
+        },
+        {
+          "group_id": "emit25km-0038",
+          "neural_score": 0.00027370452880859375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00027370452880859375
+        },
+        {
+          "group_id": "emit25km-0039",
+          "neural_score": 0.01363372802734375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01363372802734375
+        },
+        {
+          "group_id": "emit25km-0042",
+          "neural_score": 0.0029010772705078125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0029010772705078125
+        },
+        {
+          "group_id": "emit25km-0044",
+          "neural_score": 0.0007467269897460938,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0007467269897460938
+        },
+        {
+          "group_id": "emit25km-0046",
+          "neural_score": 0.00238800048828125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00238800048828125
+        },
+        {
+          "group_id": "emit25km-0047",
+          "neural_score": 0.004627227783203125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004627227783203125
+        },
+        {
+          "group_id": "emit25km-0049",
+          "neural_score": 0.0009622573852539062,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0009622573852539062
+        },
+        {
+          "group_id": "emit25km-0054",
+          "neural_score": 0.0027141571044921875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0027141571044921875
+        },
+        {
+          "group_id": "emit25km-0055",
+          "neural_score": 0.0006361007690429688,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0006361007690429688
+        },
+        {
+          "group_id": "emit25km-0056",
+          "neural_score": 0.0008831024169921875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0008831024169921875
+        },
+        {
+          "group_id": "emit25km-0057",
+          "neural_score": 0.0136871337890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0136871337890625
+        },
+        {
+          "group_id": "emit25km-0058",
+          "neural_score": 0.0010280609130859375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0010280609130859375
+        },
+        {
+          "group_id": "emit25km-0059",
+          "neural_score": 0.001129150390625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001129150390625
+        },
+        {
+          "group_id": "emit25km-0060",
+          "neural_score": 0.0003554821014404297,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0003554821014404297
+        },
+        {
+          "group_id": "emit25km-0061",
+          "neural_score": 0.0006361007690429688,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0006361007690429688
+        },
+        {
+          "group_id": "emit25km-0062",
+          "neural_score": 0.001949310302734375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001949310302734375
+        },
+        {
+          "group_id": "emit25km-0063",
+          "neural_score": 0.0029354095458984375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0029354095458984375
+        },
+        {
+          "group_id": "emit25km-0064",
+          "neural_score": 0.0005273818969726562,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0005273818969726562
+        },
+        {
+          "group_id": "emit25km-0065",
+          "neural_score": 0.0014896392822265625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0014896392822265625
+        },
+        {
+          "group_id": "emit25km-0066",
+          "neural_score": 0.07684326171875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.07684326171875
+        },
+        {
+          "group_id": "emit25km-0067",
+          "neural_score": 0.0013885498046875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0013885498046875
+        },
+        {
+          "group_id": "emit25km-0068",
+          "neural_score": 0.0010318756103515625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0010318756103515625
+        },
+        {
+          "group_id": "emit25km-0069",
+          "neural_score": 0.001926422119140625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001926422119140625
+        }
+      ],
+      "scene": {
+        "false_negative": 55,
+        "recall": 0.0,
+        "scenes": 55,
+        "true_positive": 0
+      },
+      "seed": 202,
+      "segmentation": {
+        "dice": 0.0,
+        "intersection_over_union": 0.0,
+        "intersection_pixels": 0,
+        "predicted_positive_pixels": 0,
+        "truth_positive_pixels": 591820
+      },
+      "upper_plume_threshold": 0.125274658203125
+    },
+    {
+      "neural_presence_weight": 1.0,
+      "records": [
+        {
+          "group_id": "emit25km-0001",
+          "neural_score": 0.03955078125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.03955078125
+        },
+        {
+          "group_id": "emit25km-0003",
+          "neural_score": 0.00916290283203125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00916290283203125
+        },
+        {
+          "group_id": "emit25km-0004",
+          "neural_score": 0.0024051666259765625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0024051666259765625
+        },
+        {
+          "group_id": "emit25km-0006",
+          "neural_score": 0.0036792755126953125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0036792755126953125
+        },
+        {
+          "group_id": "emit25km-0007",
+          "neural_score": 0.00557708740234375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00557708740234375
+        },
+        {
+          "group_id": "emit25km-0008",
+          "neural_score": 0.0016679763793945312,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0016679763793945312
+        },
+        {
+          "group_id": "emit25km-0009",
+          "neural_score": 0.0325927734375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0325927734375
+        },
+        {
+          "group_id": "emit25km-0010",
+          "neural_score": 0.0019044876098632812,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0019044876098632812
+        },
+        {
+          "group_id": "emit25km-0011",
+          "neural_score": 0.014617919921875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.014617919921875
+        },
+        {
+          "group_id": "emit25km-0012",
+          "neural_score": 0.006511688232421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.006511688232421875
+        },
+        {
+          "group_id": "emit25km-0013",
+          "neural_score": 0.00274658203125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00274658203125
+        },
+        {
+          "group_id": "emit25km-0014",
+          "neural_score": 0.0007152557373046875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0007152557373046875
+        },
+        {
+          "group_id": "emit25km-0015",
+          "neural_score": 0.00128936767578125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00128936767578125
+        },
+        {
+          "group_id": "emit25km-0016",
+          "neural_score": 0.007965087890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.007965087890625
+        },
+        {
+          "group_id": "emit25km-0017",
+          "neural_score": 0.0035648345947265625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0035648345947265625
+        },
+        {
+          "group_id": "emit25km-0018",
+          "neural_score": 0.015899658203125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.015899658203125
+        },
+        {
+          "group_id": "emit25km-0021",
+          "neural_score": 0.0024814605712890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0024814605712890625
+        },
+        {
+          "group_id": "emit25km-0022",
+          "neural_score": 0.0013723373413085938,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0013723373413085938
+        },
+        {
+          "group_id": "emit25km-0023",
+          "neural_score": 0.0007734298706054688,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0007734298706054688
+        },
+        {
+          "group_id": "emit25km-0024",
+          "neural_score": 0.004314422607421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004314422607421875
+        },
+        {
+          "group_id": "emit25km-0025",
+          "neural_score": 0.0020427703857421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0020427703857421875
+        },
+        {
+          "group_id": "emit25km-0026",
+          "neural_score": 0.0013780593872070312,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0013780593872070312
+        },
+        {
+          "group_id": "emit25km-0027",
+          "neural_score": 0.0167236328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0167236328125
+        },
+        {
+          "group_id": "emit25km-0028",
+          "neural_score": 0.048858642578125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.048858642578125
+        },
+        {
+          "group_id": "emit25km-0029",
+          "neural_score": 0.0025119781494140625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0025119781494140625
+        },
+        {
+          "group_id": "emit25km-0030",
+          "neural_score": 0.0009365081787109375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0009365081787109375
+        },
+        {
+          "group_id": "emit25km-0032",
+          "neural_score": 0.00669097900390625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00669097900390625
+        },
+        {
+          "group_id": "emit25km-0033",
+          "neural_score": 0.0015544891357421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0015544891357421875
+        },
+        {
+          "group_id": "emit25km-0034",
+          "neural_score": 0.002216339111328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.002216339111328125
+        },
+        {
+          "group_id": "emit25km-0035",
+          "neural_score": 0.003551483154296875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.003551483154296875
+        },
+        {
+          "group_id": "emit25km-0036",
+          "neural_score": 0.00133514404296875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00133514404296875
+        },
+        {
+          "group_id": "emit25km-0037",
+          "neural_score": 0.0104522705078125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0104522705078125
+        },
+        {
+          "group_id": "emit25km-0038",
+          "neural_score": 0.0011692047119140625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0011692047119140625
+        },
+        {
+          "group_id": "emit25km-0039",
+          "neural_score": 0.0255126953125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0255126953125
+        },
+        {
+          "group_id": "emit25km-0042",
+          "neural_score": 0.09808349609375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.09808349609375
+        },
+        {
+          "group_id": "emit25km-0044",
+          "neural_score": 0.001220703125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001220703125
+        },
+        {
+          "group_id": "emit25km-0046",
+          "neural_score": 0.007549285888671875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.007549285888671875
+        },
+        {
+          "group_id": "emit25km-0047",
+          "neural_score": 0.00046181678771972656,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00046181678771972656
+        },
+        {
+          "group_id": "emit25km-0049",
+          "neural_score": 0.001956939697265625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001956939697265625
+        },
+        {
+          "group_id": "emit25km-0054",
+          "neural_score": 0.0015668869018554688,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0015668869018554688
+        },
+        {
+          "group_id": "emit25km-0055",
+          "neural_score": 0.004299163818359375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004299163818359375
+        },
+        {
+          "group_id": "emit25km-0056",
+          "neural_score": 0.0014438629150390625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0014438629150390625
+        },
+        {
+          "group_id": "emit25km-0057",
+          "neural_score": 0.0022525787353515625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0022525787353515625
+        },
+        {
+          "group_id": "emit25km-0058",
+          "neural_score": 0.0014553070068359375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0014553070068359375
+        },
+        {
+          "group_id": "emit25km-0059",
+          "neural_score": 0.0011157989501953125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0011157989501953125
+        },
+        {
+          "group_id": "emit25km-0060",
+          "neural_score": 0.0017004013061523438,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0017004013061523438
+        },
+        {
+          "group_id": "emit25km-0061",
+          "neural_score": 0.0015430450439453125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0015430450439453125
+        },
+        {
+          "group_id": "emit25km-0062",
+          "neural_score": 0.0021152496337890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0021152496337890625
+        },
+        {
+          "group_id": "emit25km-0063",
+          "neural_score": 0.00490570068359375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00490570068359375
+        },
+        {
+          "group_id": "emit25km-0064",
+          "neural_score": 0.00131988525390625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00131988525390625
+        },
+        {
+          "group_id": "emit25km-0065",
+          "neural_score": 0.0092315673828125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0092315673828125
+        },
+        {
+          "group_id": "emit25km-0066",
+          "neural_score": 0.0033245086669921875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0033245086669921875
+        },
+        {
+          "group_id": "emit25km-0067",
+          "neural_score": 0.0013093948364257812,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0013093948364257812
+        },
+        {
+          "group_id": "emit25km-0068",
+          "neural_score": 0.0018177032470703125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0018177032470703125
+        },
+        {
+          "group_id": "emit25km-0069",
+          "neural_score": 0.001918792724609375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001918792724609375
+        }
+      ],
+      "scene": {
+        "false_negative": 55,
+        "recall": 0.0,
+        "scenes": 55,
+        "true_positive": 0
+      },
+      "seed": 303,
+      "segmentation": {
+        "dice": 0.0,
+        "intersection_over_union": 0.0,
+        "intersection_pixels": 0,
+        "predicted_positive_pixels": 0,
+        "truth_positive_pixels": 591820
+      },
+      "upper_plume_threshold": 0.46240234375
+    },
+    {
+      "neural_presence_weight": 1.0,
+      "records": [
+        {
+          "group_id": "emit25km-0001",
+          "neural_score": 0.00787353515625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00787353515625
+        },
+        {
+          "group_id": "emit25km-0003",
+          "neural_score": 0.01525115966796875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01525115966796875
+        },
+        {
+          "group_id": "emit25km-0004",
+          "neural_score": 0.0028553009033203125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0028553009033203125
+        },
+        {
+          "group_id": "emit25km-0006",
+          "neural_score": 0.00881195068359375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00881195068359375
+        },
+        {
+          "group_id": "emit25km-0007",
+          "neural_score": 0.0103302001953125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0103302001953125
+        },
+        {
+          "group_id": "emit25km-0008",
+          "neural_score": 0.0011425018310546875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0011425018310546875
+        },
+        {
+          "group_id": "emit25km-0009",
+          "neural_score": 0.01332855224609375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01332855224609375
+        },
+        {
+          "group_id": "emit25km-0010",
+          "neural_score": 0.12200927734375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.12200927734375
+        },
+        {
+          "group_id": "emit25km-0011",
+          "neural_score": 0.047149658203125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.047149658203125
+        },
+        {
+          "group_id": "emit25km-0012",
+          "neural_score": 0.001941680908203125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001941680908203125
+        },
+        {
+          "group_id": "emit25km-0013",
+          "neural_score": 0.007518768310546875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.007518768310546875
+        },
+        {
+          "group_id": "emit25km-0014",
+          "neural_score": 0.0009889602661132812,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0009889602661132812
+        },
+        {
+          "group_id": "emit25km-0015",
+          "neural_score": 0.008575439453125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.008575439453125
+        },
+        {
+          "group_id": "emit25km-0016",
+          "neural_score": 0.06732177734375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.06732177734375
+        },
+        {
+          "group_id": "emit25km-0017",
+          "neural_score": 0.10467529296875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.10467529296875
+        },
+        {
+          "group_id": "emit25km-0018",
+          "neural_score": 0.007904052734375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.007904052734375
+        },
+        {
+          "group_id": "emit25km-0021",
+          "neural_score": 0.004608154296875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004608154296875
+        },
+        {
+          "group_id": "emit25km-0022",
+          "neural_score": 0.0016813278198242188,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0016813278198242188
+        },
+        {
+          "group_id": "emit25km-0023",
+          "neural_score": 0.0007381439208984375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0007381439208984375
+        },
+        {
+          "group_id": "emit25km-0024",
+          "neural_score": 0.0026531219482421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0026531219482421875
+        },
+        {
+          "group_id": "emit25km-0025",
+          "neural_score": 0.0034027099609375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0034027099609375
+        },
+        {
+          "group_id": "emit25km-0026",
+          "neural_score": 0.003147125244140625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.003147125244140625
+        },
+        {
+          "group_id": "emit25km-0027",
+          "neural_score": 0.0023975372314453125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0023975372314453125
+        },
+        {
+          "group_id": "emit25km-0028",
+          "neural_score": 0.43017578125,
+          "prediction": true,
+          "proposal_score": 0.0,
+          "score": 0.43017578125
+        },
+        {
+          "group_id": "emit25km-0029",
+          "neural_score": 0.002002716064453125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.002002716064453125
+        },
+        {
+          "group_id": "emit25km-0030",
+          "neural_score": 0.002471923828125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.002471923828125
+        },
+        {
+          "group_id": "emit25km-0032",
+          "neural_score": 0.00130462646484375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00130462646484375
+        },
+        {
+          "group_id": "emit25km-0033",
+          "neural_score": 0.0007295608520507812,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0007295608520507812
+        },
+        {
+          "group_id": "emit25km-0034",
+          "neural_score": 0.0017137527465820312,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0017137527465820312
+        },
+        {
+          "group_id": "emit25km-0035",
+          "neural_score": 0.003124237060546875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.003124237060546875
+        },
+        {
+          "group_id": "emit25km-0036",
+          "neural_score": 0.0022869110107421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0022869110107421875
+        },
+        {
+          "group_id": "emit25km-0037",
+          "neural_score": 0.005512237548828125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.005512237548828125
+        },
+        {
+          "group_id": "emit25km-0038",
+          "neural_score": 0.0021076202392578125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0021076202392578125
+        },
+        {
+          "group_id": "emit25km-0039",
+          "neural_score": 0.05877685546875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.05877685546875
+        },
+        {
+          "group_id": "emit25km-0042",
+          "neural_score": 0.01490020751953125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.01490020751953125
+        },
+        {
+          "group_id": "emit25km-0044",
+          "neural_score": 0.0018606185913085938,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0018606185913085938
+        },
+        {
+          "group_id": "emit25km-0046",
+          "neural_score": 0.0023975372314453125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0023975372314453125
+        },
+        {
+          "group_id": "emit25km-0047",
+          "neural_score": 0.0018892288208007812,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0018892288208007812
+        },
+        {
+          "group_id": "emit25km-0049",
+          "neural_score": 0.006984710693359375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.006984710693359375
+        },
+        {
+          "group_id": "emit25km-0054",
+          "neural_score": 0.0006070137023925781,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0006070137023925781
+        },
+        {
+          "group_id": "emit25km-0055",
+          "neural_score": 0.0006461143493652344,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0006461143493652344
+        },
+        {
+          "group_id": "emit25km-0056",
+          "neural_score": 0.001926422119140625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001926422119140625
+        },
+        {
+          "group_id": "emit25km-0057",
+          "neural_score": 0.0230712890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0230712890625
+        },
+        {
+          "group_id": "emit25km-0058",
+          "neural_score": 0.00424957275390625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00424957275390625
+        },
+        {
+          "group_id": "emit25km-0059",
+          "neural_score": 0.001094818115234375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001094818115234375
+        },
+        {
+          "group_id": "emit25km-0060",
+          "neural_score": 0.0009288787841796875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0009288787841796875
+        },
+        {
+          "group_id": "emit25km-0061",
+          "neural_score": 0.001956939697265625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001956939697265625
+        },
+        {
+          "group_id": "emit25km-0062",
+          "neural_score": 0.0026721954345703125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0026721954345703125
+        },
+        {
+          "group_id": "emit25km-0063",
+          "neural_score": 0.003223419189453125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.003223419189453125
+        },
+        {
+          "group_id": "emit25km-0064",
+          "neural_score": 0.0007581710815429688,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0007581710815429688
+        },
+        {
+          "group_id": "emit25km-0065",
+          "neural_score": 0.07904052734375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.07904052734375
+        },
+        {
+          "group_id": "emit25km-0066",
+          "neural_score": 0.05224609375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.05224609375
+        },
+        {
+          "group_id": "emit25km-0067",
+          "neural_score": 0.004608154296875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004608154296875
+        },
+        {
+          "group_id": "emit25km-0068",
+          "neural_score": 0.002216339111328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.002216339111328125
+        },
+        {
+          "group_id": "emit25km-0069",
+          "neural_score": 0.0028228759765625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0028228759765625
+        }
+      ],
+      "scene": {
+        "false_negative": 54,
+        "recall": 0.01818181818181818,
+        "scenes": 55,
+        "true_positive": 1
+      },
+      "seed": 404,
+      "segmentation": {
+        "dice": 0.0034545285867300895,
+        "intersection_over_union": 0.0017302528974132382,
+        "intersection_pixels": 1024,
+        "predicted_positive_pixels": 1025,
+        "truth_positive_pixels": 591820
+      },
+      "upper_plume_threshold": 0.32861328125
+    },
+    {
+      "neural_presence_weight": 1.0,
+      "records": [
+        {
+          "group_id": "emit25km-0001",
+          "neural_score": 0.007038116455078125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.007038116455078125
+        },
+        {
+          "group_id": "emit25km-0003",
+          "neural_score": 0.027374267578125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.027374267578125
+        },
+        {
+          "group_id": "emit25km-0004",
+          "neural_score": 0.00595855712890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00595855712890625
+        },
+        {
+          "group_id": "emit25km-0006",
+          "neural_score": 0.0017547607421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0017547607421875
+        },
+        {
+          "group_id": "emit25km-0007",
+          "neural_score": 0.00536346435546875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00536346435546875
+        },
+        {
+          "group_id": "emit25km-0008",
+          "neural_score": 0.00428009033203125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00428009033203125
+        },
+        {
+          "group_id": "emit25km-0009",
+          "neural_score": 0.0030155181884765625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0030155181884765625
+        },
+        {
+          "group_id": "emit25km-0010",
+          "neural_score": 0.004039764404296875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004039764404296875
+        },
+        {
+          "group_id": "emit25km-0011",
+          "neural_score": 0.004573822021484375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004573822021484375
+        },
+        {
+          "group_id": "emit25km-0012",
+          "neural_score": 0.0029010772705078125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0029010772705078125
+        },
+        {
+          "group_id": "emit25km-0013",
+          "neural_score": 0.004718780517578125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004718780517578125
+        },
+        {
+          "group_id": "emit25km-0014",
+          "neural_score": 0.0008358955383300781,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0008358955383300781
+        },
+        {
+          "group_id": "emit25km-0015",
+          "neural_score": 0.00653839111328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00653839111328125
+        },
+        {
+          "group_id": "emit25km-0016",
+          "neural_score": 0.00800323486328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00800323486328125
+        },
+        {
+          "group_id": "emit25km-0017",
+          "neural_score": 0.0033512115478515625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0033512115478515625
+        },
+        {
+          "group_id": "emit25km-0018",
+          "neural_score": 0.00518035888671875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00518035888671875
+        },
+        {
+          "group_id": "emit25km-0021",
+          "neural_score": 0.0150146484375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0150146484375
+        },
+        {
+          "group_id": "emit25km-0022",
+          "neural_score": 0.00279998779296875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00279998779296875
+        },
+        {
+          "group_id": "emit25km-0023",
+          "neural_score": 0.004791259765625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004791259765625
+        },
+        {
+          "group_id": "emit25km-0024",
+          "neural_score": 0.0016613006591796875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0016613006591796875
+        },
+        {
+          "group_id": "emit25km-0025",
+          "neural_score": 0.0018463134765625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0018463134765625
+        },
+        {
+          "group_id": "emit25km-0026",
+          "neural_score": 0.0029926300048828125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0029926300048828125
+        },
+        {
+          "group_id": "emit25km-0027",
+          "neural_score": 0.003376007080078125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.003376007080078125
+        },
+        {
+          "group_id": "emit25km-0028",
+          "neural_score": 0.014617919921875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.014617919921875
+        },
+        {
+          "group_id": "emit25km-0029",
+          "neural_score": 0.0048675537109375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0048675537109375
+        },
+        {
+          "group_id": "emit25km-0030",
+          "neural_score": 0.0007524490356445312,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0007524490356445312
+        },
+        {
+          "group_id": "emit25km-0032",
+          "neural_score": 0.00605010986328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00605010986328125
+        },
+        {
+          "group_id": "emit25km-0033",
+          "neural_score": 0.0029697418212890625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0029697418212890625
+        },
+        {
+          "group_id": "emit25km-0034",
+          "neural_score": 0.00891876220703125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00891876220703125
+        },
+        {
+          "group_id": "emit25km-0035",
+          "neural_score": 0.005687713623046875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.005687713623046875
+        },
+        {
+          "group_id": "emit25km-0036",
+          "neural_score": 0.0007319450378417969,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0007319450378417969
+        },
+        {
+          "group_id": "emit25km-0037",
+          "neural_score": 0.00621795654296875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00621795654296875
+        },
+        {
+          "group_id": "emit25km-0038",
+          "neural_score": 0.0027370452880859375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0027370452880859375
+        },
+        {
+          "group_id": "emit25km-0039",
+          "neural_score": 0.1697998046875,
+          "prediction": true,
+          "proposal_score": 0.0,
+          "score": 0.1697998046875
+        },
+        {
+          "group_id": "emit25km-0042",
+          "neural_score": 0.00536346435546875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00536346435546875
+        },
+        {
+          "group_id": "emit25km-0044",
+          "neural_score": 0.00518035888671875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00518035888671875
+        },
+        {
+          "group_id": "emit25km-0046",
+          "neural_score": 0.0012845993041992188,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0012845993041992188
+        },
+        {
+          "group_id": "emit25km-0047",
+          "neural_score": 0.0030269622802734375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0030269622802734375
+        },
+        {
+          "group_id": "emit25km-0049",
+          "neural_score": 0.0017137527465820312,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0017137527465820312
+        },
+        {
+          "group_id": "emit25km-0054",
+          "neural_score": 0.000690460205078125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.000690460205078125
+        },
+        {
+          "group_id": "emit25km-0055",
+          "neural_score": 0.005535125732421875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.005535125732421875
+        },
+        {
+          "group_id": "emit25km-0056",
+          "neural_score": 0.0009436607360839844,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0009436607360839844
+        },
+        {
+          "group_id": "emit25km-0057",
+          "neural_score": 0.00319671630859375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00319671630859375
+        },
+        {
+          "group_id": "emit25km-0058",
+          "neural_score": 0.0020580291748046875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0020580291748046875
+        },
+        {
+          "group_id": "emit25km-0059",
+          "neural_score": 0.0005316734313964844,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0005316734313964844
+        },
+        {
+          "group_id": "emit25km-0060",
+          "neural_score": 0.0010004043579101562,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0010004043579101562
+        },
+        {
+          "group_id": "emit25km-0061",
+          "neural_score": 0.0010776519775390625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0010776519775390625
+        },
+        {
+          "group_id": "emit25km-0062",
+          "neural_score": 0.0015735626220703125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0015735626220703125
+        },
+        {
+          "group_id": "emit25km-0063",
+          "neural_score": 0.004100799560546875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.004100799560546875
+        },
+        {
+          "group_id": "emit25km-0064",
+          "neural_score": 0.0009398460388183594,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0009398460388183594
+        },
+        {
+          "group_id": "emit25km-0065",
+          "neural_score": 0.006412506103515625,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.006412506103515625
+        },
+        {
+          "group_id": "emit25km-0066",
+          "neural_score": 0.00047469139099121094,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.00047469139099121094
+        },
+        {
+          "group_id": "emit25km-0067",
+          "neural_score": 0.0021991729736328125,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.0021991729736328125
+        },
+        {
+          "group_id": "emit25km-0068",
+          "neural_score": 0.001964569091796875,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.001964569091796875
+        },
+        {
+          "group_id": "emit25km-0069",
+          "neural_score": 0.002834320068359375,
+          "prediction": false,
+          "proposal_score": 0.0,
+          "score": 0.002834320068359375
+        }
+      ],
+      "scene": {
+        "false_negative": 54,
+        "recall": 0.01818181818181818,
+        "scenes": 55,
+        "true_positive": 1
+      },
+      "seed": 505,
+      "segmentation": {
+        "dice": 0.0018569475159106639,
+        "intersection_over_union": 0.0009293366226217431,
+        "intersection_pixels": 550,
+        "predicted_positive_pixels": 550,
+        "truth_positive_pixels": 591820
+      },
+      "upper_plume_threshold": 0.12921142578125
+    }
+  ]
+}

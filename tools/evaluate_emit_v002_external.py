@@ -92,7 +92,14 @@ def safe_path(root: Path, value: str | Path) -> Path:
 
 def tracked_dirty(root: Path) -> bool:
     output = subprocess.check_output(
-        ["git", "status", "--porcelain", "--untracked-files=no"],
+        [
+            "git",
+            "-c",
+            "core.autocrlf=true",
+            "status",
+            "--porcelain",
+            "--untracked-files=no",
+        ],
         cwd=root,
         text=True,
     )
