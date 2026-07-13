@@ -14,6 +14,7 @@ for directory in (ROOT / "tools", ROOT / "EarthRemoteSensingRapidResponse"):
 
 from train_mars_v4 import (  # noqa: E402
     choose_threshold_at_fpr,
+    development_decision,
     hard_negative_segmentation_loss,
 )
 
@@ -40,6 +41,25 @@ class TrainMarsV4Tests(unittest.TestCase):
         self.assertEqual(result["threshold"], 0.7)
         self.assertEqual(result["recall"], 1.0)
         self.assertLessEqual(result["false_positive_rate"], 0.25)
+
+    def test_development_decision_rejects_internal_regression(self) -> None:
+        validation = {
+            "average_precision": 0.2,
+            "auroc": 0.6,
+            "positive_pixel_dice": 0.1,
+            "operating_points": {"0.05": {"recall": 0.1}},
+        }
+        reference = {
+            "mean": {
+                "average_precision": 0.8,
+                "auroc": 0.9,
+                "positive_pixel_dice": 0.5,
+                "recall_at_fpr5": 0.8,
+            }
+        }
+        checks, decision = development_decision(validation, reference)
+        self.assertFalse(any(checks.values()))
+        self.assertTrue(decision.startswith("Reject"))
 
 
 if __name__ == "__main__":

@@ -69,6 +69,13 @@ SMOKE_JSON = Path("reports/experiments/mars_v4_smoke.json")
 SMOKE_MARKDOWN = Path("reports/experiments/MARS_V4_SMOKE.md")
 TARGET_FPRS = (0.05, 0.08, 0.095)
 PIXEL_THRESHOLDS = tuple(float(value) for value in np.linspace(0.1, 0.9, 9))
+V3_INTERNAL_REPORTS = (
+    Path("reports/experiments/mars_v3_seed101_validation.json"),
+    Path("reports/experiments/mars_v3_seed202_validation.json"),
+    Path("reports/experiments/mars_v3_validation.json"),
+    Path("reports/experiments/mars_v3_seed404_validation.json"),
+    Path("reports/experiments/mars_v3_seed505_validation.json"),
+)
 
 
 def finite_float(value: Any, default: float = math.nan) -> float:
@@ -439,6 +446,61 @@ def choose_threshold_at_fpr(
     return result
 
 
+def v3_internal_reference(root: Path) -> dict[str, Any]:
+    """Load the five-seed v3 internal-validation reference without fitting."""
+    values: dict[str, list[float]] = {
+        "average_precision": [],
+        "auroc": [],
+        "recall_at_fpr5": [],
+        "positive_pixel_dice": [],
+    }
+    inputs = []
+    for relative in V3_INTERNAL_REPORTS:
+        path = root / relative
+        report = json.loads(path.read_text(encoding="utf-8"))
+        scene = report["validation"]["scene"]
+        values["average_precision"].append(float(scene["average_precision"]))
+        values["auroc"].append(float(scene["auroc"]))
+        values["recall_at_fpr5"].append(float(scene["recall"]))
+        values["positive_pixel_dice"].append(
+            float(report["validation"]["segmentation"]["pixel_dice"])
+        )
+        inputs.append({"path": relative.as_posix(), "sha256": sha256(path)})
+    return {
+        "description": "five-seed ERSRR v3 mean on the same internal-validation cohort",
+        "seeds": 5,
+        "mean": {key: float(np.mean(metric)) for key, metric in values.items()},
+        "inputs": inputs,
+    }
+
+
+def development_decision(
+    validation: dict[str, Any], reference: dict[str, Any]
+) -> tuple[dict[str, bool], str]:
+    baseline = reference["mean"]
+    checks = {
+        "ap_not_below_v3_mean": validation["average_precision"] >= baseline["average_precision"],
+        "auroc_not_below_v3_mean": validation["auroc"] >= baseline["auroc"],
+        "recall_at_fpr5_not_below_v3_mean": (
+            validation["operating_points"]["0.05"]["recall"]
+            >= baseline["recall_at_fpr5"]
+        ),
+        "pixel_dice_not_below_v3_mean": (
+            validation["positive_pixel_dice"] >= baseline["positive_pixel_dice"]
+        ),
+    }
+    if all(checks.values()):
+        return checks, (
+            "Retain this v4 checkpoint as a development candidate and freeze its operating rules "
+            "before one evaluation on the already-opened strict cohort. This is not a final paper claim."
+        )
+    return checks, (
+        "Reject this v4 pilot before strict-cohort evaluation because it does not match the five-seed "
+        "v3 internal reference on every gate. Preserve the negative result and revise the objective; "
+        "do not spend the opened strict cohort on this checkpoint."
+    )
+
+
 @torch.no_grad()
 def validation_summary(
     model: MarsV4Model,
@@ -602,6 +664,12 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         "",
         report["decision"],
     ]
+    if report.get("v3_internal_reference"):
+        baseline = report["v3_internal_reference"]["mean"]
+        lines[10:10] = [
+            f"- Five-seed v3 reference AP / AUROC: {baseline['average_precision']:.3f} / {baseline['auroc']:.3f}",
+            f"- Five-seed v3 reference recall@5% FPR / pixel Dice: {baseline['recall_at_fpr5']:.3f} / {baseline['positive_pixel_dice']:.3f}",
+        ]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -738,6 +806,12 @@ def main() -> int:
         seed=args.seed,
     )
     validation = validation_summary(model, validation_loader, torch.device("cuda"))
+    reference = None if args.smoke else v3_internal_reference(root)
+    if reference is None:
+        development_checks = None
+        decision = "Pipeline contract passes. Do not interpret smoke metrics."
+    else:
+        development_checks, decision = development_decision(validation, reference)
     report = {
         "schema_version": 1,
         "scope": "v4_pipeline_smoke" if args.smoke else "v4_internal_validation_selection",
@@ -779,6 +853,8 @@ def main() -> int:
             "loss": "positive BCE + top-2%-hard-negative BCE + 0.5 Dice + 0.5 segmentation-derived scene BCE",
         },
         "validation": validation,
+        "v3_internal_reference": reference,
+        "development_checks": development_checks,
         "operating_rule": {
             "selected_on": "internal_validation_only",
             "scene_thresholds": validation["operating_points"],
@@ -810,11 +886,7 @@ def main() -> int:
             "simulation_source": "EarthRemoteSensingRapidResponse/mars_v4_simulation.py",
             "simulation_source_sha256": sha256(MODEL_ROOT / "mars_v4_simulation.py"),
         },
-        "decision": (
-            "Pipeline contract passes. Do not interpret smoke metrics."
-            if args.smoke
-            else "Freeze this validation-selected checkpoint before one development evaluation on the already-opened strict cohort."
-        ),
+        "decision": decision,
     }
     write_json(output_json, report)
     write_markdown(output_markdown, report)
