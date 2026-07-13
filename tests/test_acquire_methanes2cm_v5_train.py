@@ -64,7 +64,9 @@ class MethaneS2CMAcquisitionTests(unittest.TestCase):
                 for name in expected:
                     dataset = expected[name][1]
                     if dataset == "mask":
-                        values = np.zeros((32, 32), dtype=np.uint8)
+                        # The published MethaneS2CM plume TIFFs use float64
+                        # storage despite containing binary values.
+                        values = np.zeros((32, 32), dtype=np.float64)
                     else:
                         values = np.full((12, 32, 32), 1000, dtype=np.uint16)
                     buffer = io.BytesIO()

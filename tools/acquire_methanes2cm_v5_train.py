@@ -28,10 +28,12 @@ import tifffile
 from huggingface_hub import hf_hub_download
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT / "tools") not in sys.path:
-    sys.path.insert(0, str(ROOT / "tools"))
+for module_directory in (ROOT / "tools", ROOT / "EarthRemoteSensingRapidResponse"):
+    if str(module_directory) not in sys.path:
+        sys.path.insert(0, str(module_directory))
 
 from acquire_mars_metadata import repo_root, sha256  # noqa: E402
+from methanes2cm_adapter import normalize_binary_mask  # noqa: E402
 from train_mars_v3 import tracked_dirty, write_json  # noqa: E402
 
 REPO_ID = "H1deaki/MethaneS2CM"
@@ -225,16 +227,13 @@ def pack_selected(
                         values = np.asarray(tifffile.imread(io.BytesIO(source.read())))
                     index, dataset = target
                     expected_shape = (32, 32) if dataset == "mask" else (12, 32, 32)
-                    expected_dtype = np.uint8 if dataset == "mask" else np.uint16
-                    if values.shape != expected_shape or values.dtype != expected_dtype:
+                    if dataset == "mask":
+                        values = normalize_binary_mask(values)
+                    elif values.shape != expected_shape or values.dtype != np.uint16:
                         raise ValueError(
                             f"Unexpected {dataset} raster contract in {member.name}: "
                             f"{values.shape} {values.dtype}"
                         )
-                    if dataset == "mask" and not set(
-                        int(value) for value in np.unique(values)
-                    ).issubset({0, 1}):
-                        raise ValueError(f"Nonbinary plume mask in {member.name}")
                     packed[dataset][index] = values
             print(f"Found {len(seen):,}/{len(expected):,} required members", flush=True)
         missing = set(expected) - seen

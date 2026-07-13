@@ -34,7 +34,8 @@ def write_sample(root: Path, *, label: int = 1) -> dict[str, str]:
     tifffile.imwrite(directory / "s2.tif", base)
     tifffile.imwrite(directory / "s2_pre.tif", base + 10)
     tifffile.imwrite(directory / "s2_pre_pre.tif", base + 20)
-    mask = np.zeros(PATCH_SHAPE, dtype=np.uint8)
+    # Match the published dataset's binary-valued float64 TIFF contract.
+    mask = np.zeros(PATCH_SHAPE, dtype=np.float64)
     if label:
         mask[4:8, 6:10] = 1
     tifffile.imwrite(directory / "plume.tif", mask)

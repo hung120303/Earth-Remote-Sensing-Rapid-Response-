@@ -103,15 +103,27 @@ def read_stack(path: Path) -> np.ndarray:
     return values
 
 
-def read_mask(path: Path) -> np.ndarray:
-    values = np.asarray(tifffile.imread(path))
-    if values.shape != PATCH_SHAPE or values.dtype != np.uint8:
+def normalize_binary_mask(values: np.ndarray) -> np.ndarray:
+    """Validate a source mask and return the canonical packed uint8 form.
+
+    MethaneS2CM stores the released plume TIFFs as float64 even though their
+    values are binary.  Validate the semantic contract rather than silently
+    depending on the storage dtype, then canonicalize before training.
+    """
+    values = np.asarray(values)
+    if values.shape != PATCH_SHAPE or not np.issubdtype(values.dtype, np.number):
         raise ValueError(
-            f"Expected uint8 MethaneS2CM mask {PATCH_SHAPE}, got {values.shape} {values.dtype}"
+            f"Expected numeric MethaneS2CM mask {PATCH_SHAPE}, got "
+            f"{values.shape} {values.dtype}"
         )
-    if not set(int(value) for value in np.unique(values)).issubset({0, 1}):
-        raise ValueError("MethaneS2CM plume mask is not binary")
-    return values.astype(bool)
+    if not np.all(np.isfinite(values)) or not np.all(np.isin(np.unique(values), (0, 1))):
+        raise ValueError("MethaneS2CM plume mask is not finite and binary")
+    return values.astype(np.uint8, copy=False)
+
+
+def read_mask(path: Path) -> np.ndarray:
+    values = normalize_binary_mask(np.asarray(tifffile.imread(path)))
+    return values.astype(bool, copy=False)
 
 
 def _reflectance(stack: np.ndarray) -> np.ndarray:
