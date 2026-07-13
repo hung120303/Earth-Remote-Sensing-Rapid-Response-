@@ -16,10 +16,10 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-# Xet's multi-file worker can leave large Windows-mounted downloads in
-# CLOSE-WAIT after a transient CDN disconnect.  The standard Hub HTTP transport
-# is slower but resumable and substantially more reliable for this acquisition.
-os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
+# Keep native Xet (ordinary CAS-bridge file URLs return 403 for this repository)
+# but cap each shard to four range workers.  Together with --workers 1 this
+# avoids the socket exhaustion observed with three simultaneous 3 GB shards.
+os.environ.setdefault("HF_XET_NUM_CONCURRENT_RANGE_GETS", "4")
 os.environ.setdefault("HF_HUB_DOWNLOAD_TIMEOUT", "600")
 
 import h5py
@@ -320,6 +320,11 @@ def main() -> int:
             "repo_id": REPO_ID,
             "revision": REVISION,
             "license": "CC-BY-NC-4.0",
+            "transport": "huggingface_hub native Xet",
+            "file_workers": args.workers,
+            "xet_concurrent_range_gets": int(
+                os.environ["HF_XET_NUM_CONCURRENT_RANGE_GETS"]
+            ),
         },
         "archives": [
             {
