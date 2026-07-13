@@ -1,0 +1,108 @@
+{
+  "artifact": {
+    "checkpoint_bytes": 163291870,
+    "checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "checkpoint_tracked": false,
+    "config_sha256": "abeb92d01313fbb2939e6c5fc1c6281846b8102ea5edd7081668fe0db05bf79f"
+  },
+  "generated_at_utc": "2026-07-13T00:20:48.942401+00:00",
+  "interpretation": "Released checkpoint baseline on the ERSRR strict spatial cohort; not an official-split paper metric and not eligible for validation recalibration because the checkpoint saw the official training subset used by ERSRR internal validation.",
+  "model": {
+    "architecture": "UnetOriginal",
+    "checkpoint_loaded_with_weights_only": true,
+    "input_channels": 16,
+    "kind": "mars-s2l",
+    "name": "MARS-S2L released MARSS2L_20250326",
+    "parameter_count": 13587585
+  },
+  "provenance": {
+    "git_commit": "cfce7f458b536609675b9293115a6ba39d1b5c42",
+    "git_tracked_worktree_dirty_at_start": false,
+    "script": "tools/evaluate_released_marss2l.py",
+    "script_sha256": "22363ab23e5b98bff3c294ded35952636318f2d67bdfe99673ed481081edb5d7"
+  },
+  "runtime": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128"
+  },
+  "scene_prediction_cache": {
+    "bytes": 161470,
+    "contents": "compact per-scene labels, groups, scores, and author-fixed predictions; no raster pixels",
+    "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_released_mars-s2l_publication_v3_strict_samples_scene_predictions.npz",
+    "sha256": "84c3255c5ac972428642e272afcd7c9b20e218c12ad990e0802b58615db9290a",
+    "tracked": false
+  },
+  "schema_version": 2,
+  "scope": "released_mars-s2l_on_frozen_full_strict_spatial_cohort",
+  "source": {
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "dataset_revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "evaluation_manifest_sha256": "6e959ae0af50c5a309247cbe674fe01b31a36f8b149f9be3292acebed3e5f906",
+    "metadata_csv_sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2",
+    "upstream_repository": "UNEP-IMEO-MARS/marss2l",
+    "upstream_revision": "f7d264c2c845dfba1cb27f76ef6026275f8d8758"
+  },
+  "strict_spatial_test": {
+    "author_fixed_rule": {
+      "comparison": ">",
+      "connectivity": 8,
+      "minimum_connected_pixels": 100,
+      "pixel_threshold": 0.5,
+      "selected_on": "released_author_configuration; no ERSRR tuning"
+    },
+    "group_bootstrap": {
+      "recall_95ci": [
+        0.4799897959183673,
+        0.8611350574712643
+      ],
+      "replicates": 2000,
+      "specificity_95ci": [
+        0.8854391467763427,
+        0.9240696342056088
+      ],
+      "unit": "frozen 25 km group"
+    },
+    "group_count": 150,
+    "negative_count": 4334,
+    "pixel_validity_aware": {
+      "average_precision": 0.24809087376281047,
+      "dice": 0.23459552653540347,
+      "intersection_over_union": 0.13288486013350304,
+      "predicted_positive_pixels": 338448,
+      "truth_positive_pixels": 97724
+    },
+    "positive_count": 67,
+    "sample_count": 4401,
+    "scene_representative_weighted": {
+      "accuracy": 0.9011588275391956,
+      "auroc": 0.8175464394685548,
+      "average_precision": 0.35212281291315817,
+      "false_positive_rate": 0.09483156437471159,
+      "fn": 24.0,
+      "fp": 411.0,
+      "negative_predictive_value": 0.9939194324803649,
+      "precision": 0.0947136563876652,
+      "recall": 0.6417910447761194,
+      "specificity": 0.9051684356252884,
+      "tn": 3923.0,
+      "tp": 43.0
+    },
+    "scene_unweighted": {
+      "accuracy": 0.9011588275391956,
+      "auroc": 0.8175464394685548,
+      "average_precision": 0.35212281291315817,
+      "false_positive_rate": 0.09483156437471159,
+      "fn": 24.0,
+      "fp": 411.0,
+      "negative_predictive_value": 0.9939194324803649,
+      "precision": 0.0947136563876652,
+      "recall": 0.6417910447761194,
+      "specificity": 0.9051684356252884,
+      "tn": 3923.0,
+      "tp": 43.0
+    }
+  }
+}
