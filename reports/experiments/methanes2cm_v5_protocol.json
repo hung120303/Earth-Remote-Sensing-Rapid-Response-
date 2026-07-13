@@ -1,0 +1,205 @@
+{
+  "cohort": {
+    "coordinate_overlap": 0,
+    "geographic_training_groups": {
+      "connected_groups": 257,
+      "exact_locations": 3460,
+      "largest_group_locations": 937,
+      "largest_group_samples": 32595,
+      "radius_km": 25.0
+    },
+    "test": {
+      "exact_locations": 816,
+      "negatives": 10336,
+      "positives": 10453,
+      "samples": 20789
+    },
+    "train": {
+      "exact_locations": 3460,
+      "negatives": 39792,
+      "positives": 40425,
+      "samples": 80217
+    }
+  },
+  "development_protocol": {
+    "achieved_positive_fraction": 0.19299938157081015,
+    "achieved_sample_fraction": 0.19270229502474537,
+    "development_group_ids": [
+      "geo25_00a925d044568ee3",
+      "geo25_01a45fb839daf217",
+      "geo25_090bcf55761ca8b3",
+      "geo25_0cc7884699484fbb",
+      "geo25_0fd9f9be72b0fb53",
+      "geo25_14793426afd3f479",
+      "geo25_16d8efb04c26472f",
+      "geo25_17232ddb7bf1aada",
+      "geo25_180156995187a974",
+      "geo25_1d4086e5be4affe8",
+      "geo25_1eb82d455fad6abc",
+      "geo25_20b624c06298bf28",
+      "geo25_2312d100ad69864a",
+      "geo25_24eb04a9a0752db1",
+      "geo25_26b097778f090858",
+      "geo25_29edcf571788dcd8",
+      "geo25_2adc870ae6909878",
+      "geo25_2f41ca59e9406dc5",
+      "geo25_3266291acb33cd6d",
+      "geo25_3644b30ed2e38196",
+      "geo25_39c1757b84025e43",
+      "geo25_3da351226bda080b",
+      "geo25_4183b03bc44d840b",
+      "geo25_44f4c6003a471957",
+      "geo25_4795632da3a24e88",
+      "geo25_4a6ca069c324d3e7",
+      "geo25_58da2d17189f3a32",
+      "geo25_5d76be68d4838800",
+      "geo25_64fb991f1b9229d8",
+      "geo25_6bb0e56fd01311b7",
+      "geo25_6c30dad52e46b538",
+      "geo25_6c780e73ac1d77f3",
+      "geo25_6de41bfbac0b270d",
+      "geo25_6fe441f3eaf62de9",
+      "geo25_71271b809f6c73e7",
+      "geo25_71285e22de7ab43a",
+      "geo25_7177127723489035",
+      "geo25_72250df5907de549",
+      "geo25_749c16055441ae82",
+      "geo25_7adcafae6648c806",
+      "geo25_7f5e29b3ae04088b",
+      "geo25_8f3889ed557d6d1f",
+      "geo25_981b31b33c6465ad",
+      "geo25_99c3cd059bc55e70",
+      "geo25_9d91e1bfaaa88b9e",
+      "geo25_ad44bb0a138cf721",
+      "geo25_ae0f35de4ef652aa",
+      "geo25_c0d4affdac80d122",
+      "geo25_c11d96b1ed3870fe",
+      "geo25_c2449132d58b762e",
+      "geo25_c76996bcef100a6f",
+      "geo25_d5ff623cf1eaeb8c",
+      "geo25_db9eed2d23f1ea56",
+      "geo25_dcc07bab9e0e4618",
+      "geo25_e015a7febaedffd1",
+      "geo25_e101ee02c0b61d47",
+      "geo25_e42fe03ec4886622",
+      "geo25_e6daa51c7d191cc5",
+      "geo25_e9de8c456c7a6f39",
+      "geo25_eece120a00700657",
+      "geo25_f0e0d626322bb98d",
+      "geo25_f11deb46578b8dfb",
+      "geo25_fda8d07511545377",
+      "geo25_feec74dbf1d29b99"
+    ],
+    "development_groups": 64,
+    "development_positives": 7802,
+    "development_samples": 15458,
+    "fitting_groups": 193,
+    "fitting_positives": 32623,
+    "fitting_samples": 64759,
+    "group_overlap": 0,
+    "manifest": {
+      "bytes": 47779126,
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_train_development_manifest.jsonl",
+      "sha256": "6f2137a0cf33bcae80a9ecee57d62cd9b37d4121903808bcdc7e7951a82558e3",
+      "tracked": false
+    },
+    "method": "deterministic staged greedy selection of 25% of frozen 25 km components followed by objective-improving one-for-one swaps; sample and positive targets are jointly optimized with stable-hash tie-breaking; any one component exceeding 5% of all crops remains in fitting",
+    "seed": 20260713,
+    "target_fraction": 0.2
+  },
+  "generated_at_utc": "2026-07-13T21:22:34.615965+00:00",
+  "input_contract": {
+    "cloud": "per-pixel cloud mask unavailable; source paper filtered scenes above 20% cloud before cropping",
+    "frames": [
+      "T",
+      "T-90",
+      "T-365"
+    ],
+    "observability": "all six selected bands in all three frames are nonzero",
+    "reflectance_divisor": 10000,
+    "test_comparator_missing_wind": [
+      4.0,
+      4.0
+    ],
+    "wind": "not present in the processed dataset and not used by v5"
+  },
+  "interpretation_limits": [
+    "balanced positive/negative crops do not represent deployment prevalence",
+    "L2A-to-L1C product shift limits direct attribution in the MARS-S2L comparison",
+    "processed metadata omits acquisition date, wind, and per-pixel cloud mask",
+    "multiple crops per location require group-aware splits and confidence intervals"
+  ],
+  "metadata_identities": {
+    "test.csv": {
+      "bytes": 2479516,
+      "sha256": "117a6de1bb8e0d0cb4a746afc2e5f1727e49870a71b9167e578472e89d41d2c4"
+    },
+    "train.csv": {
+      "bytes": 9693624,
+      "sha256": "3b14c6b7d34f469f1cf6fe4fceeac403ba80aae5b047098c83b36ea0482cf698"
+    }
+  },
+  "provenance": {
+    "script": "tools/build_methanes2cm_v5_protocol.py",
+    "script_sha256": "9da71891de35c16d344dce92d8dc2be6fbddb68b5334d6f88e235ffc71b4399f",
+    "sealed_from_git_commit": "fc97ae5a88ec9c3b91a6aabcb5c5a20f98fcb4eb",
+    "tracked_worktree_dirty_at_start": false
+  },
+  "schema_version": 1,
+  "scope": "methanes2cm_v5_development_and_sealed_location_test_protocol",
+  "sealed_test": {
+    "image_directories_present_at_seal": 0,
+    "images_opened": false,
+    "metadata_used_for_counts_and_group_audit": true,
+    "rule": "Do not extract or open any l2a_location_split_32x32 test imagery until the v5 architecture, selected checkpoints, ensemble, pixel threshold, scene calibration, and comparison code are checksum-bound in a clean tracked commit. Then run one test campaign; never retune from its outcomes."
+  },
+  "selection_metrics": {
+    "pixel": [
+      "average_precision",
+      "dice",
+      "intersection_over_union"
+    ],
+    "scene": [
+      "average_precision",
+      "auroc",
+      "recall_at_fpr_le_0.05"
+    ],
+    "uncertainty": "2,000 nonparametric bootstrap resamples of frozen 25 km groups"
+  },
+  "source": {
+    "dataset": "H1deaki/MethaneS2CM",
+    "dataset_url": "https://huggingface.co/datasets/H1deaki/MethaneS2CM",
+    "license": "CC-BY-NC-4.0",
+    "model_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12"
+    ],
+    "paper_doi": "10.1145/3711896.3737415",
+    "patch_shape": [
+      32,
+      32
+    ],
+    "pixel_size_m": 20,
+    "product_level": "L2A surface reflectance",
+    "revision": "ee9a96d4994ca6bc45725c1e92d7a06258131eaf",
+    "sensor": "Sentinel-2 MSI",
+    "tiff_page_band_order": [
+      "B01",
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B09",
+      "B11",
+      "B12"
+    ]
+  }
+}
