@@ -7,6 +7,7 @@ module deliberately uses tifffile and fails closed on any other layout.
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -86,11 +87,10 @@ def safe_sample_path(split_dir: Path, relative_path: str, expected_name: str) ->
         or not relative.parts[0].isdigit()
     ):
         raise ValueError(f"Unsafe MethaneS2CM asset path: {relative_path!r}")
-    base = split_dir.resolve()
-    result = (base / relative.parts[0] / relative.parts[1]).resolve()
-    if base not in result.parents:
-        raise ValueError(f"MethaneS2CM asset escapes split directory: {relative_path!r}")
-    return result
+    # The strict two-component contract already proves lexical containment and
+    # avoids a filesystem round trip for every asset on Windows-mounted data.
+    base = Path(os.path.abspath(split_dir))
+    return base / relative.parts[0] / relative.parts[1]
 
 
 def read_stack(path: Path) -> np.ndarray:

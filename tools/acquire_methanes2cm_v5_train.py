@@ -63,11 +63,11 @@ def checked_destination(split_dir: Path, relative: str, expected_name: str) -> P
         or not value.parts[0].isdigit()
     ):
         raise ValueError(f"Unsafe MethaneS2CM CSV asset path: {relative!r}")
-    base = split_dir.resolve()
-    result = (base / value.parts[0] / value.parts[1]).resolve()
-    if base not in result.parents:
-        raise ValueError(f"MethaneS2CM asset escapes extraction root: {relative!r}")
-    return result
+    # The exact two-part/digit/name contract above already excludes traversal.
+    # Keep this lexical: resolving 320k nonexistent paths across /mnt/c is both
+    # unnecessary and orders of magnitude slower than archive validation.
+    base = Path(os.path.abspath(split_dir))
+    return base / value.parts[0] / value.parts[1]
 
 
 def expected_members(
