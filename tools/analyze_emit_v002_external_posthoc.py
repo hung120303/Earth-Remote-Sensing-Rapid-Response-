@@ -39,6 +39,7 @@ DEFAULT_CAMPAIGN = Path("reports/experiments/mars_v3_strict_campaign.json")
 DEFAULT_JSON = Path("reports/experiments/emit_v002_external_posthoc_diagnostic.json")
 DEFAULT_MARKDOWN = Path("reports/experiments/EMIT_V002_EXTERNAL_POSTHOC_DIAGNOSTIC.md")
 REFERENCE_TIME = re.compile(r"_(\d{8}T\d{6})_")
+FROZEN_CONFIRMATION_SCOPE = "once_only_emit_v002_external_positive_confirmation"
 
 
 def safe_path(root: Path, value: str | Path) -> Path:
@@ -468,7 +469,7 @@ def main() -> int:
     seal = json.loads(seal_path.read_text(encoding="utf-8"))
     wind = json.loads(wind_path.read_text(encoding="utf-8"))
     campaign = json.loads(campaign_path.read_text(encoding="utf-8"))
-    if confirmation.get("scope") != "once_only_external_emit_v002_positive_confirmation":
+    if confirmation.get("scope") != FROZEN_CONFIRMATION_SCOPE:
         raise ValueError("Expected the frozen once-only external confirmation")
     if campaign.get("scope") != "frozen_v3_five_seed_full_strict_campaign":
         raise ValueError("Expected the frozen strict MARS campaign")

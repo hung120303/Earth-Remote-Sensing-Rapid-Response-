@@ -11,6 +11,7 @@ if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 
 from analyze_emit_v002_external_posthoc import (  # noqa: E402
+    FROZEN_CONFIRMATION_SCOPE,
     binary_auc,
     distribution_comparison,
     mask_signal_features,
@@ -20,6 +21,12 @@ from analyze_emit_v002_external_posthoc import (  # noqa: E402
 
 
 class EmitV002ExternalPosthocTests(unittest.TestCase):
+    def test_frozen_confirmation_scope_matches_committed_receipt(self) -> None:
+        payload = (ROOT / "reports/experiments/emit_v002_external_confirmation.json").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(f'"scope": "{FROZEN_CONFIRMATION_SCOPE}"', payload)
+
     def test_binary_auc_is_tie_aware(self) -> None:
         labels = np.asarray([1, 1, 0, 0])
         self.assertAlmostEqual(binary_auc(labels, np.asarray([2.0, 1.0, 1.0, 0.0])), 0.875)
