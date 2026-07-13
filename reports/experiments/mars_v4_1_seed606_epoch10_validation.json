@@ -1,0 +1,472 @@
+{
+  "architecture_revision": "v4.1",
+  "artifact": {
+    "bytes": 54528667,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v4_1_seed606.pt",
+    "sha256": "029f4220f2ef1fc47ac40621abcbff61eb49e4eeba838d90b9261b2cbf09bbc5",
+    "tracked": false
+  },
+  "cohort": {
+    "group_overlap": 0,
+    "strict_spatial_test_loaded": false,
+    "training": 23763,
+    "training_groups": 98,
+    "validation": 5945,
+    "validation_groups": 24
+  },
+  "decision": "Reject this v4 pilot before strict-cohort evaluation because it does not match the five-seed v3 internal reference on every gate. Preserve the negative result and revise the objective; do not spend the opened strict cohort on this checkpoint.",
+  "development_checks": {
+    "ap_not_below_v3_mean": false,
+    "auroc_not_below_v3_mean": true,
+    "pixel_dice_not_below_v3_mean": true,
+    "recall_at_fpr5_not_below_v3_mean": false
+  },
+  "generated_at_utc": "2026-07-13T17:13:02.075363+00:00",
+  "model": {
+    "initialization": "from_scratch",
+    "input_channels": [
+      "mbmp_release",
+      "target_B02",
+      "target_B03",
+      "target_B04",
+      "target_B08",
+      "target_B11",
+      "target_B12",
+      "reference_B02",
+      "reference_B03",
+      "reference_B04",
+      "reference_B08",
+      "reference_B11",
+      "reference_B12",
+      "wind_u_div8",
+      "wind_v_div8",
+      "cloud_binary"
+    ],
+    "model_name": "ersrr_temporal_siamese_simulation_v4",
+    "parameter_count": 13621491,
+    "scene_score": "sigmoid(0.8 * mean(top 0.5% observable segmentation logits) + 0.2 * max(observable segmentation logits))",
+    "schema_version": 1,
+    "temporal_weight_sharing": true
+  },
+  "operating_rule": {
+    "scene_thresholds": {
+      "0.05": {
+        "false_positive_rate": 0.04963235294117647,
+        "precision": 0.6035242290748899,
+        "recall": 0.8138613861386138,
+        "target_fpr": 0.05,
+        "threshold": 0.9873046875
+      },
+      "0.08": {
+        "false_positive_rate": 0.07867647058823529,
+        "precision": 0.5,
+        "recall": 0.8475247524752475,
+        "target_fpr": 0.08,
+        "threshold": 0.9794921875
+      },
+      "0.095": {
+        "false_positive_rate": 0.09319852941176471,
+        "precision": 0.46462513199577615,
+        "recall": 0.8712871287128713,
+        "target_fpr": 0.095,
+        "threshold": 0.97509765625
+      }
+    },
+    "segmentation_threshold": 0.8,
+    "selected_on": "internal_validation_only"
+  },
+  "provenance": {
+    "git_commit": "6bf9097d3e3936ad587d8e2f2cd2d12ac9515a0b",
+    "git_tracked_worktree_dirty_at_start": false,
+    "model_source": "EarthRemoteSensingRapidResponse/mars_v4_model.py",
+    "model_source_sha256": "a407d7356be24ea6455dae1a097d526b75826a7e9d3216e3855945b3510bf267",
+    "script": "tools/train_mars_v4.py",
+    "script_sha256": "6972f30291b7b5eff270bd7685e8847bb865a3719038795ddb2ab2e81866df02",
+    "simulation_source": "EarthRemoteSensingRapidResponse/mars_v4_simulation.py",
+    "simulation_source_sha256": "b394fba574ad0071a58cdbcfe8a71df34c87b2bc29ace9620f5246eddd1a933c"
+  },
+  "runtime": {
+    "cuda_runtime": "12.8",
+    "device": "NVIDIA GeForce RTX 5070",
+    "numpy": "2.4.4",
+    "rasterio": "1.4.4",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "v4_internal_validation_selection",
+  "simulation": {
+    "cross_split_plume_use": false,
+    "fit_split_plumes_with_ch4": 257,
+    "lut_path": "configs/mars_s2_integrated_transmittances.json",
+    "lut_sha256": "1c11ef3f84a9d2a8ce65fc7301166ce20517bb57425ed3f5dca5a313a876c03f",
+    "method": "MARS-S2L integrated-transmittance LUT; real fit-split CH4 fields rotated to target wind and scaled uniformly 0.5-1.5x",
+    "requested_fraction_of_positive_draws": 0.5,
+    "validation_simulation": false
+  },
+  "smoke_test": false,
+  "source": {
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "manifest": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_training_samples.jsonl",
+    "manifest_sha256": "edd3c1da3d706b109798dcf86bc3db284f639d401d4953f3ced175c27b27d566",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32"
+  },
+  "training": {
+    "batch_size": 12,
+    "best_epoch": 10,
+    "epochs_requested": 10,
+    "history": [
+      {
+        "epoch": 1,
+        "learning_rate": 0.00019510565162951537,
+        "seconds": 69.187,
+        "training": {
+          "dice_loss": 0.9171471052002489,
+          "segmentation_bce": 0.4178363930499345,
+          "simulated_fraction": 0.2324561452743603,
+          "total": 0.876409945257923
+        },
+        "validation": null
+      },
+      {
+        "epoch": 2,
+        "learning_rate": 0.00018090169943749473,
+        "seconds": 148.462,
+        "training": {
+          "dice_loss": 0.8734523260105423,
+          "segmentation_bce": 0.321639533345288,
+          "simulated_fraction": 0.25852827157019176,
+          "total": 0.7583656948909425
+        },
+        "validation": {
+          "auroc": 0.875813191613279,
+          "average_precision": 0.47344573822686586,
+          "negatives": 5440,
+          "operating_points": {
+            "0.05": {
+              "false_positive_rate": 0.046875,
+              "precision": 0.5048543689320388,
+              "recall": 0.5148514851485149,
+              "target_fpr": 0.05,
+              "threshold": 0.990234375
+            },
+            "0.08": {
+              "false_positive_rate": 0.07977941176470588,
+              "precision": 0.4205607476635514,
+              "recall": 0.6237623762376238,
+              "target_fpr": 0.08,
+              "threshold": 0.986328125
+            },
+            "0.095": {
+              "false_positive_rate": 0.09485294117647058,
+              "precision": 0.39436619718309857,
+              "recall": 0.6653465346534654,
+              "target_fpr": 0.095,
+              "threshold": 0.98486328125
+            }
+          },
+          "positive_pixel_dice": 0.6180128812690555,
+          "positive_soft_dice": 0.34112149477005005,
+          "positives": 505,
+          "scenes": 5945,
+          "segmentation_threshold": 0.9
+        }
+      },
+      {
+        "epoch": 3,
+        "learning_rate": 0.00015877852522924732,
+        "seconds": 66.021,
+        "training": {
+          "dice_loss": 0.8560642281122375,
+          "segmentation_bce": 0.3065997795664776,
+          "simulated_fraction": 0.2536549768165538,
+          "total": 0.7346318934918844
+        },
+        "validation": null
+      },
+      {
+        "epoch": 4,
+        "learning_rate": 0.00013090169943749474,
+        "seconds": 148.742,
+        "training": {
+          "dice_loss": 0.8481559345596715,
+          "segmentation_bce": 0.28522960366735683,
+          "simulated_fraction": 0.2526803177220431,
+          "total": 0.7093075695965025
+        },
+        "validation": {
+          "auroc": 0.8940401135701804,
+          "average_precision": 0.5966387172288317,
+          "negatives": 5440,
+          "operating_points": {
+            "0.05": {
+              "false_positive_rate": 0.04889705882352941,
+              "precision": 0.5421686746987951,
+              "recall": 0.6237623762376238,
+              "target_fpr": 0.05,
+              "threshold": 0.98095703125
+            },
+            "0.08": {
+              "false_positive_rate": 0.07922794117647058,
+              "precision": 0.44884910485933505,
+              "recall": 0.695049504950495,
+              "target_fpr": 0.08,
+              "threshold": 0.97265625
+            },
+            "0.095": {
+              "false_positive_rate": 0.09485294117647058,
+              "precision": 0.4129692832764505,
+              "recall": 0.7188118811881188,
+              "target_fpr": 0.095,
+              "threshold": 0.96826171875
+            }
+          },
+          "positive_pixel_dice": 0.6193830761566947,
+          "positive_soft_dice": 0.347097247838974,
+          "positives": 505,
+          "scenes": 5945,
+          "segmentation_threshold": 0.7000000000000001
+        }
+      },
+      {
+        "epoch": 5,
+        "learning_rate": 9.999999999999999e-05,
+        "seconds": 65.974,
+        "training": {
+          "dice_loss": 0.8344583680406649,
+          "segmentation_bce": 0.2672233955596971,
+          "simulated_fraction": 0.25024367102056916,
+          "total": 0.6844525788611139
+        },
+        "validation": null
+      },
+      {
+        "epoch": 6,
+        "learning_rate": 6.909830056250526e-05,
+        "seconds": 148.444,
+        "training": {
+          "dice_loss": 0.8270670783798597,
+          "segmentation_bce": 0.24407878295894256,
+          "simulated_fraction": 0.232699810674316,
+          "total": 0.6576123201881933
+        },
+        "validation": {
+          "auroc": 0.9311903028538149,
+          "average_precision": 0.7116894688728962,
+          "negatives": 5440,
+          "operating_points": {
+            "0.05": {
+              "false_positive_rate": 0.04963235294117647,
+              "precision": 0.5846153846153846,
+              "recall": 0.7524752475247525,
+              "target_fpr": 0.05,
+              "threshold": 0.97412109375
+            },
+            "0.08": {
+              "false_positive_rate": 0.07996323529411764,
+              "precision": 0.48823529411764705,
+              "recall": 0.8217821782178217,
+              "target_fpr": 0.08,
+              "threshold": 0.958984375
+            },
+            "0.095": {
+              "false_positive_rate": 0.09448529411764706,
+              "precision": 0.44967880085653106,
+              "recall": 0.8316831683168316,
+              "target_fpr": 0.095,
+              "threshold": 0.9521484375
+            }
+          },
+          "positive_pixel_dice": 0.6700512342803913,
+          "positive_soft_dice": 0.44502413272857666,
+          "positives": 505,
+          "scenes": 5945,
+          "segmentation_threshold": 0.7000000000000001
+        }
+      },
+      {
+        "epoch": 7,
+        "learning_rate": 4.122147477075269e-05,
+        "seconds": 66.671,
+        "training": {
+          "dice_loss": 0.8146176892414427,
+          "segmentation_bce": 0.24372771987963837,
+          "simulated_fraction": 0.24366472321644164,
+          "total": 0.651036563236811
+        },
+        "validation": null
+      },
+      {
+        "epoch": 8,
+        "learning_rate": 1.9098300562505263e-05,
+        "seconds": 148.18,
+        "training": {
+          "dice_loss": 0.8106315148155592,
+          "segmentation_bce": 0.2251450703288728,
+          "simulated_fraction": 0.2468323640917477,
+          "total": 0.6304608270613073
+        },
+        "validation": {
+          "auroc": 0.93832138177053,
+          "average_precision": 0.7663024386381008,
+          "negatives": 5440,
+          "operating_points": {
+            "0.05": {
+              "false_positive_rate": 0.04963235294117647,
+              "precision": 0.5933734939759037,
+              "recall": 0.7801980198019802,
+              "target_fpr": 0.05,
+              "threshold": 0.97119140625
+            },
+            "0.08": {
+              "false_positive_rate": 0.07996323529411764,
+              "precision": 0.48823529411764705,
+              "recall": 0.8217821782178217,
+              "target_fpr": 0.08,
+              "threshold": 0.9541015625
+            },
+            "0.095": {
+              "false_positive_rate": 0.09485294117647058,
+              "precision": 0.45454545454545453,
+              "recall": 0.8514851485148515,
+              "target_fpr": 0.095,
+              "threshold": 0.9443359375
+            }
+          },
+          "positive_pixel_dice": 0.688034599106165,
+          "positive_soft_dice": 0.4963177740573883,
+          "positives": 505,
+          "scenes": 5945,
+          "segmentation_threshold": 0.7000000000000001
+        }
+      },
+      {
+        "epoch": 9,
+        "learning_rate": 4.894348370484646e-06,
+        "seconds": 65.833,
+        "training": {
+          "dice_loss": 0.7961983523870769,
+          "segmentation_bce": 0.22201050735182232,
+          "simulated_fraction": 0.2582846066059425,
+          "total": 0.6201096827175185
+        },
+        "validation": null
+      },
+      {
+        "epoch": 10,
+        "learning_rate": 0.0,
+        "seconds": 147.316,
+        "training": {
+          "dice_loss": 0.8043814071437769,
+          "segmentation_bce": 0.2184572267558491,
+          "simulated_fraction": 0.24317739368007893,
+          "total": 0.6206479306109467
+        },
+        "validation": {
+          "auroc": 0.9458703407105417,
+          "average_precision": 0.7813988695806494,
+          "negatives": 5440,
+          "operating_points": {
+            "0.05": {
+              "false_positive_rate": 0.04963235294117647,
+              "precision": 0.6035242290748899,
+              "recall": 0.8138613861386138,
+              "target_fpr": 0.05,
+              "threshold": 0.9873046875
+            },
+            "0.08": {
+              "false_positive_rate": 0.07867647058823529,
+              "precision": 0.5,
+              "recall": 0.8475247524752475,
+              "target_fpr": 0.08,
+              "threshold": 0.9794921875
+            },
+            "0.095": {
+              "false_positive_rate": 0.09319852941176471,
+              "precision": 0.46462513199577615,
+              "recall": 0.8712871287128713,
+              "target_fpr": 0.095,
+              "threshold": 0.97509765625
+            }
+          },
+          "positive_pixel_dice": 0.6994603779773988,
+          "positive_soft_dice": 0.515859842300415,
+          "positives": 505,
+          "scenes": 5945,
+          "segmentation_threshold": 0.8
+        }
+      }
+    ],
+    "learning_rate": 0.0002,
+    "loss": "observable weighted BCE (positive weight 20) + 0.5 soft Dice; no scene-loss gradient",
+    "objective": "segmentation_bce_dice",
+    "samples_per_epoch": 4096,
+    "seed": 606,
+    "validation_every": 2
+  },
+  "v3_internal_reference": {
+    "description": "five-seed ERSRR v3 mean on the same internal-validation cohort",
+    "inputs": [
+      {
+        "path": "reports/experiments/mars_v3_seed101_validation.json",
+        "sha256": "9b352945bf4c86560c6a1d0579e413a3b8ca24c1fc18b1c77e7806ab0dbe1220"
+      },
+      {
+        "path": "reports/experiments/mars_v3_seed202_validation.json",
+        "sha256": "e8caa6c59ec776bd28e81329f0cf171a0006b1212be5c876be9c8231da4459fc"
+      },
+      {
+        "path": "reports/experiments/mars_v3_validation.json",
+        "sha256": "f3e9c182c0c239801d96d4f4ac520d846b3031a0bb4153c25116d369a294d2e2"
+      },
+      {
+        "path": "reports/experiments/mars_v3_seed404_validation.json",
+        "sha256": "c9a1aeb65df8f7d5f9a79e207b9c48ea81f0c6e149ea4b04874eb78535d7ec2a"
+      },
+      {
+        "path": "reports/experiments/mars_v3_seed505_validation.json",
+        "sha256": "000db71e4369d9c56b2729fe52bacf4117081478eb72cbb554ae9dd66fce6214"
+      }
+    ],
+    "mean": {
+      "auroc": 0.9287843258590565,
+      "average_precision": 0.8102610640555105,
+      "positive_pixel_dice": 0.5769508190919819,
+      "recall_at_fpr5": 0.8312871287128714
+    },
+    "seeds": 5
+  },
+  "validation": {
+    "auroc": 0.9458703407105417,
+    "average_precision": 0.7813988695806494,
+    "negatives": 5440,
+    "operating_points": {
+      "0.05": {
+        "false_positive_rate": 0.04963235294117647,
+        "precision": 0.6035242290748899,
+        "recall": 0.8138613861386138,
+        "target_fpr": 0.05,
+        "threshold": 0.9873046875
+      },
+      "0.08": {
+        "false_positive_rate": 0.07867647058823529,
+        "precision": 0.5,
+        "recall": 0.8475247524752475,
+        "target_fpr": 0.08,
+        "threshold": 0.9794921875
+      },
+      "0.095": {
+        "false_positive_rate": 0.09319852941176471,
+        "precision": 0.46462513199577615,
+        "recall": 0.8712871287128713,
+        "target_fpr": 0.095,
+        "threshold": 0.97509765625
+      }
+    },
+    "positive_pixel_dice": 0.6994603779773988,
+    "positive_soft_dice": 0.515859842300415,
+    "positives": 505,
+    "scenes": 5945,
+    "segmentation_threshold": 0.8
+  }
+}
