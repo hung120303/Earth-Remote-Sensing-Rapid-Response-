@@ -76,13 +76,29 @@ class EmitV002ExternalPosthocTests(unittest.TestCase):
     def test_haversine_and_spatial_overlap_use_25km_contract(self) -> None:
         self.assertAlmostEqual(haversine_km((0.0, 0.0), (0.0, 0.0)), 0.0)
         rows = [
-            {"group_id": "near", "latitude": 0.0, "longitude": 0.0},
-            {"group_id": "far", "latitude": 1.0, "longitude": 1.0},
+            {
+                "group_id": "near",
+                "latitude": 0.0,
+                "longitude": 0.0,
+                "released_prediction": 1,
+                "seed_predictions": [1, 0, 0, 0, 0],
+            },
+            {
+                "group_id": "far",
+                "latitude": 1.0,
+                "longitude": 1.0,
+                "released_prediction": 0,
+                "seed_predictions": [0, 0, 0, 0, 0],
+            },
         ]
         locations = [{"location_id": "origin", "latitude": 0.0, "longitude": 0.0}]
         result = spatial_overlap_audit(rows, locations, locations, locations)
         self.assertEqual(result["ersrr_v3_fit"]["within_25km"], 1)
         self.assertEqual(result["ersrr_v3_fit"]["overlap_group_ids"], ["near"])
+        self.assertEqual(
+            result["ersrr_v3_fit"]["within_25km_rates"]["released_mars_s2l_recall"],
+            1.0,
+        )
 
 
 if __name__ == "__main__":

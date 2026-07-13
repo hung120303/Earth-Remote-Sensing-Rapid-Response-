@@ -256,10 +256,20 @@ def spatial_overlap_audit(
         for row in rows:
             row[field] = nearest_location(row["latitude"], row["longitude"], locations)
         distances = [float(row[field]["distance_km"]) for row in rows]
+        within = np.asarray(
+            [index for index, value in enumerate(distances) if value <= radius_km],
+            dtype=np.int64,
+        )
+        beyond = np.asarray(
+            [index for index, value in enumerate(distances) if value > radius_km],
+            dtype=np.int64,
+        )
         summaries[name] = {
             "comparator_locations": len(locations),
-            "within_25km": int(sum(value <= radius_km for value in distances)),
-            "beyond_25km": int(sum(value > radius_km for value in distances)),
+            "within_25km": int(within.size),
+            "beyond_25km": int(beyond.size),
+            "within_25km_rates": rate_summary(rows, within),
+            "beyond_25km_rates": rate_summary(rows, beyond),
             "nearest_distance_km": finite_summary(distances),
             "overlap_group_ids": [
                 row["group_id"] for row in rows if row[field]["distance_km"] <= radius_km
@@ -541,6 +551,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
     near = report["external_strata"]["time_offset"][0]
     agreement = report["agreement"]
     overlap = report["spatial_overlap_audit"]
+    v3_novel = overlap["ersrr_v3_fit"]["beyond_25km_rates"]
     lines = [
         "# EMIT V002 external post-hoc diagnostic",
         "",
@@ -555,6 +566,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- External scenes missed by both released MARS and every ERSRR seed: {agreement['neither_released_nor_any_ersrr']}",
         f"- Within 25 km of an ERSRR v3 fit location: {overlap['ersrr_v3_fit']['within_25km']} / {report['cohorts']['external_emit']['samples']}",
         f"- Within 25 km of a released MARS-S2L training location: {overlap['released_mars_s2l_training']['within_25km']} / {report['cohorts']['external_emit']['samples']}",
+        f"- Beyond 25 km of ERSRR v3 fit locations: n={v3_novel['samples']}; released MARS recall {v3_novel['released_mars_s2l_recall']:.3f}; ERSRR seed-mean recall {v3_novel['ersrr_seed_mean_recall']:.3f}",
         "",
     ]
     markdown_strata(lines, "Recall by fixed EMIT/Sentinel-2 offset", report["external_strata"]["time_offset"])
