@@ -4,6 +4,8 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import numpy as np
 
@@ -27,6 +29,7 @@ from evaluate_mars_v3 import (  # noqa: E402
     write_scene_prediction_cache as write_v3_scene_prediction_cache,
 )
 from evaluate_released_marss2l import (  # noqa: E402
+    evaluate as evaluate_released,
     write_scene_prediction_cache as write_released_scene_prediction_cache,
 )
 from train_mars_v3 import MarsV3Dataset  # noqa: E402
@@ -134,6 +137,31 @@ class MarsV3ProposalTests(unittest.TestCase):
             with np.load(root / "released.npz", allow_pickle=False) as cache:
                 np.testing.assert_array_equal(cache["predictions"], [1, 0])
                 self.assertEqual(str(cache["model_kind"][0]), "mars-s2l")
+
+    def test_released_evaluator_accepts_detector_only_strict_samples(self) -> None:
+        record = {"sample_id": "scene-a", "group_id": "group-a"}
+        sample = SimpleNamespace(sample_id="scene-a")
+        with (
+            patch("evaluate_released_marss2l.load_sample", return_value=sample) as loader,
+            patch(
+                "evaluate_released_marss2l.released_input",
+                side_effect=RuntimeError("stop after loading"),
+            ),
+        ):
+            with self.assertRaisesRegex(RuntimeError, "stop after loading"):
+                evaluate_released(
+                    Path("."),
+                    Path("."),
+                    [record],
+                    {"scene-a": (0.0, 0.0)},
+                    None,
+                    "mars-s2l",
+                    None,
+                    1,
+                )
+        loader.assert_called_once_with(
+            Path("."), record, require_enhancement=False
+        )
 
     def test_paired_campaign_bootstrap_preserves_seed_and_group_pairing(self) -> None:
         labels = np.tile(np.asarray([1, 0], dtype=np.uint8), 10)

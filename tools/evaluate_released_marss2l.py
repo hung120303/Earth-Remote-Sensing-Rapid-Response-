@@ -337,7 +337,10 @@ def evaluate(
 
     for start in range(0, len(records), batch_size):
         batch_records = records[start : start + batch_size]
-        samples = [load_sample(metadata_dir, record) for record in batch_records]
+        samples = [
+            load_sample(metadata_dir, record, require_enhancement=False)
+            for record in batch_records
+        ]
         batch = np.stack(
             [
                 released_input(sample, winds[sample.sample_id], model_kind)
