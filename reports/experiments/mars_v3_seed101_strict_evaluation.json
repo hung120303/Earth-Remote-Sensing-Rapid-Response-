@@ -1,0 +1,392 @@
+{
+  "artifact": {
+    "bytes": 57104805,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v3_seed101.pt",
+    "sha256": "688ea56ecabc5f4020c94a45ab8feef03e5fa556ddeed07f244e53eb33437803",
+    "tracked": false
+  },
+  "cohort": {
+    "groups": 150,
+    "negatives": 4334,
+    "positives": 67,
+    "samples": 4401
+  },
+  "decision": "V3 does not clear the frozen full-MARS gate. Preserve this result; do not retune from strict-test behavior.",
+  "generated_at_utc": "2026-07-13T00:23:34.312960+00:00",
+  "model": {
+    "heads": [
+      "segmentation",
+      "proposal_presence",
+      "quality"
+    ],
+    "initialization": "from_scratch_required_for_primary_experiment",
+    "input_channels": [
+      "mbmp_release",
+      "target_B02",
+      "target_B03",
+      "target_B04",
+      "target_B08",
+      "target_B11",
+      "target_B12",
+      "reference_B02",
+      "reference_B03",
+      "reference_B04",
+      "reference_B08",
+      "reference_B11",
+      "reference_B12",
+      "wind_u_div8",
+      "wind_v_div8",
+      "cloud_binary"
+    ],
+    "model_name": "ersrr_mars_full_unet_proposal_v3",
+    "normalization": "GroupNorm",
+    "parameter_count": 14268915,
+    "schema_version": 1,
+    "topk_fraction": 0.01
+  },
+  "operating_rule": {
+    "neural_scene": {
+      "lower_no_plume_threshold": 0.25048828125,
+      "lower_selection": {
+        "accepted_samples": 5253,
+        "npv": 0.9838187702265372,
+        "weighted_coverage": 0.8835996635828427
+      },
+      "quality_selection": {
+        "fn": 256,
+        "fp": 12,
+        "recall_high_quality": 0.9537488708220415,
+        "specificity_low_quality": 0.9707317073170731,
+        "tn": 398,
+        "tp": 5279
+      },
+      "quality_threshold": 0.91796875,
+      "segmentation": {
+        "minimum_connected_pixels": 200,
+        "pixel_threshold": 0.8935546875
+      },
+      "selected_on": "internal_validation_only",
+      "upper_plume_threshold": 0.2510986328125
+    },
+    "primary_scene": {
+      "lower_no_plume_threshold": 0.15802001953125,
+      "lower_selection": {
+        "accepted_samples": 5257,
+        "npv": 0.9840213049267643,
+        "weighted_coverage": 0.8842724978973928
+      },
+      "neural_presence_weight": 0.5,
+      "scene_score": "validation-selected convex blend of neural presence and maximum calibrated connected-proposal probability; proposal score is zero with no proposal",
+      "selected_on": "internal_validation_only",
+      "upper_plume_threshold": 0.16229248046875
+    }
+  },
+  "primary_scene_score": "validation-selected neural/proposal blended probability",
+  "promotion_gate_passed": false,
+  "proposal_artifact": {
+    "bytes": 50197,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v3_proposals_seed101.joblib",
+    "sha256": "3173f519780139e65be1d28f4cd11dafd7056468a4494f97eef769a8095dfb6c",
+    "tracked": false
+  },
+  "provenance": {
+    "git_commit": "1b3d51313a00456954831439ac19183aac240d0e",
+    "git_tracked_worktree_dirty_at_start": false,
+    "script": "tools/evaluate_mars_v3.py",
+    "script_sha256": "4ea367af0de89d977a8e0b00d2c076579f36f9d8a33a9b4a3562af55ed80115b"
+  },
+  "runtime": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "numpy": "2.4.4",
+    "rasterio": "1.4.4",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128"
+  },
+  "scene_prediction_cache": {
+    "bytes": 166042,
+    "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+    "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed101.npz",
+    "sha256": "5054837fa47937f1baf76a66286b95c61d1558d0e6899da4467e22e94361e9c1",
+    "tracked": false
+  },
+  "schema_version": 2,
+  "scope": "frozen_v3_full_strict_spatial_evaluation",
+  "source": {
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "proposal_experiment_sha256": "793516ad1974e183d8325a88ff7ee78b09177735f9985acc1495a7ca09297d2e",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "strict_manifest_sha256": "6e959ae0af50c5a309247cbe674fe01b31a36f8b149f9be3292acebed3e5f906",
+    "validation_experiment_sha256": "9b352945bf4c86560c6a1d0579e413a3b8ca24c1fc18b1c77e7806ab0dbe1220"
+  },
+  "strict_spatial_test": {
+    "calibration": {
+      "representative_weighted": {
+        "bins": [
+          {
+            "absolute_gap": 0.00828714469044479,
+            "lower": 0.0,
+            "mean_probability": 0.018596423040960253,
+            "observed_prevalence": 0.010309278350515464,
+            "samples": 4074,
+            "upper": 0.1,
+            "weight": 4074.0
+          },
+          {
+            "absolute_gap": 0.11398667555588941,
+            "lower": 0.1,
+            "mean_probability": 0.13321744478665865,
+            "observed_prevalence": 0.019230769230769232,
+            "samples": 104,
+            "upper": 0.2,
+            "weight": 104.0
+          },
+          {
+            "absolute_gap": 0.24965414748020714,
+            "lower": 0.2,
+            "mean_probability": 0.24965414748020714,
+            "observed_prevalence": 0.0,
+            "samples": 19,
+            "upper": 0.30000000000000004,
+            "weight": 19.0
+          },
+          {
+            "absolute_gap": 0.312585754821767,
+            "lower": 0.30000000000000004,
+            "mean_probability": 0.3453726400676686,
+            "observed_prevalence": 0.03278688524590164,
+            "samples": 61,
+            "upper": 0.4,
+            "weight": 61.0
+          },
+          {
+            "absolute_gap": 0.4205319551916009,
+            "lower": 0.4,
+            "mean_probability": 0.4461729808326266,
+            "observed_prevalence": 0.02564102564102564,
+            "samples": 39,
+            "upper": 0.5,
+            "weight": 39.0
+          },
+          {
+            "absolute_gap": 0.4498148636941143,
+            "lower": 0.5,
+            "mean_probability": 0.5550780215888511,
+            "observed_prevalence": 0.10526315789473684,
+            "samples": 57,
+            "upper": 0.6000000000000001,
+            "weight": 57.0
+          },
+          {
+            "absolute_gap": 0.3307054265164526,
+            "lower": 0.6000000000000001,
+            "mean_probability": 0.6432054265164526,
+            "observed_prevalence": 0.3125,
+            "samples": 32,
+            "upper": 0.7000000000000001,
+            "weight": 32.0
+          },
+          {
+            "absolute_gap": 0.4487933132060881,
+            "lower": 0.7000000000000001,
+            "mean_probability": 0.7154599798727548,
+            "observed_prevalence": 0.26666666666666666,
+            "samples": 15,
+            "upper": 0.8,
+            "weight": 15.0
+          }
+        ],
+        "expected_calibration_error": 0.029262046899020917,
+        "method": "10 fixed-width probability bins"
+      },
+      "unweighted": {
+        "bins": [
+          {
+            "absolute_gap": 0.00828714469044479,
+            "lower": 0.0,
+            "mean_probability": 0.018596423040960253,
+            "observed_prevalence": 0.010309278350515464,
+            "samples": 4074,
+            "upper": 0.1,
+            "weight": 4074.0
+          },
+          {
+            "absolute_gap": 0.11398667555588941,
+            "lower": 0.1,
+            "mean_probability": 0.13321744478665865,
+            "observed_prevalence": 0.019230769230769232,
+            "samples": 104,
+            "upper": 0.2,
+            "weight": 104.0
+          },
+          {
+            "absolute_gap": 0.24965414748020714,
+            "lower": 0.2,
+            "mean_probability": 0.24965414748020714,
+            "observed_prevalence": 0.0,
+            "samples": 19,
+            "upper": 0.30000000000000004,
+            "weight": 19.0
+          },
+          {
+            "absolute_gap": 0.312585754821767,
+            "lower": 0.30000000000000004,
+            "mean_probability": 0.3453726400676686,
+            "observed_prevalence": 0.03278688524590164,
+            "samples": 61,
+            "upper": 0.4,
+            "weight": 61.0
+          },
+          {
+            "absolute_gap": 0.4205319551916009,
+            "lower": 0.4,
+            "mean_probability": 0.4461729808326266,
+            "observed_prevalence": 0.02564102564102564,
+            "samples": 39,
+            "upper": 0.5,
+            "weight": 39.0
+          },
+          {
+            "absolute_gap": 0.4498148636941143,
+            "lower": 0.5,
+            "mean_probability": 0.5550780215888511,
+            "observed_prevalence": 0.10526315789473684,
+            "samples": 57,
+            "upper": 0.6000000000000001,
+            "weight": 57.0
+          },
+          {
+            "absolute_gap": 0.3307054265164526,
+            "lower": 0.6000000000000001,
+            "mean_probability": 0.6432054265164526,
+            "observed_prevalence": 0.3125,
+            "samples": 32,
+            "upper": 0.7000000000000001,
+            "weight": 32.0
+          },
+          {
+            "absolute_gap": 0.4487933132060881,
+            "lower": 0.7000000000000001,
+            "mean_probability": 0.7154599798727548,
+            "observed_prevalence": 0.26666666666666666,
+            "samples": 15,
+            "upper": 0.8,
+            "weight": 15.0
+          }
+        ],
+        "expected_calibration_error": 0.029262046899020917,
+        "method": "10 fixed-width probability bins"
+      }
+    },
+    "group_bootstrap": {
+      "recall_95ci": [
+        0.15217391304347827,
+        0.6363636363636364
+      ],
+      "replicates": 2000,
+      "specificity_95ci": [
+        0.9334005626375887,
+        0.9640667058910349
+      ],
+      "unit": "frozen 25 km group"
+    },
+    "neural_scene_unweighted": {
+      "accuracy": 0.9459213815042036,
+      "auroc": 0.7625973730792277,
+      "average_precision": 0.117289397067499,
+      "brier": 0.02534167841076851,
+      "false_positive_rate": 0.04453161052145824,
+      "false_positives_per_100_scenes": 4.453161052145823,
+      "fn": 45.0,
+      "fp": 193.0,
+      "negative_predictive_value": 0.9892498805542284,
+      "precision": 0.10232558139534884,
+      "recall": 0.3283582089552239,
+      "specificity": 0.9554683894785417,
+      "tn": 4141.0,
+      "tp": 22.0
+    },
+    "proposal_stage": {
+      "proposal_count": 725,
+      "scenes_without_proposals": 4194
+    },
+    "quality_auroc": 0.9908052372984038,
+    "scene_representative_weighted": {
+      "accuracy": 0.940013633265167,
+      "auroc": 0.7624114085777849,
+      "average_precision": 0.117830696007795,
+      "brier": 0.02169042703811517,
+      "false_positive_rate": 0.05099215505306876,
+      "false_positives_per_100_scenes": 5.099215505306876,
+      "fn": 43.0,
+      "fp": 221.0,
+      "negative_predictive_value": 0.9896535129932628,
+      "precision": 0.09795918367346938,
+      "recall": 0.3582089552238806,
+      "specificity": 0.9490078449469312,
+      "tn": 4113.0,
+      "tp": 24.0
+    },
+    "scene_unweighted": {
+      "accuracy": 0.940013633265167,
+      "auroc": 0.7624114085777849,
+      "average_precision": 0.117830696007795,
+      "brier": 0.02169042703811517,
+      "false_positive_rate": 0.05099215505306876,
+      "false_positives_per_100_scenes": 5.099215505306876,
+      "fn": 43.0,
+      "fp": 221.0,
+      "negative_predictive_value": 0.9896535129932628,
+      "precision": 0.09795918367346938,
+      "recall": 0.3582089552238806,
+      "specificity": 0.9490078449469312,
+      "tn": 4113.0,
+      "tp": 24.0
+    },
+    "segmentation": {
+      "false_positive_rate": 0.03299492385786802,
+      "fn": 45,
+      "fp": 143,
+      "group_bootstrap": {
+        "recall_95ci": [
+          0.14812091503267974,
+          0.5769366197183098
+        ],
+        "replicates": 2000,
+        "specificity_95ci": [
+          0.9581813484375716,
+          0.9775296039525061
+        ],
+        "unit": "frozen 25 km group"
+      },
+      "pixel": {
+        "average_precision": 0.08758071979220046,
+        "dice": 0.15134477694143567,
+        "intersection_over_union": 0.08186749754831982,
+        "predicted_positive_pixels": 163732,
+        "truth_positive_pixels": 97724
+      },
+      "precision": 0.13333333333333333,
+      "recall": 0.3283582089552239,
+      "specificity": 0.9670050761421319,
+      "tn": 4191,
+      "tp": 22
+    },
+    "selective_with_quality": {
+      "abstention_rate": 0.11270165871392868,
+      "accepted_error_rate": 0.06248399487836107,
+      "accepted_no_plume": 3679,
+      "accepted_no_plume_npv": 0.9885838543082359,
+      "accepted_plume": 226,
+      "accepted_precision": 0.10619469026548672,
+      "accepted_samples": 3905,
+      "sample_coverage": 0.8872983412860713,
+      "weighted_confusion": {
+        "fn": 42.0,
+        "fp": 202.0,
+        "tn": 3637.0,
+        "tp": 24.0
+      },
+      "weighted_coverage": 0.8872983412860713
+    }
+  }
+}
