@@ -12,7 +12,9 @@ if str(ROOT / "tools") not in sys.path:
 
 from train_mars_v4_cascade import (  # noqa: E402
     balanced_group_splits,
+    cascade_decision,
     choose_threshold_at_fpr,
+    fold_balance_constraints,
     largest_component_pixels,
     metrics,
     physics_features,
@@ -31,6 +33,23 @@ class MarsV4CascadeTests(unittest.TestCase):
             self.assertFalse(set(groups[training]) & set(groups[validation]))
             positive_counts.append(int(np.count_nonzero(labels[validation] == 1)))
         self.assertLessEqual(max(positive_counts) - min(positive_counts), 1)
+
+    def test_fold_balance_constraints_expose_indivisible_positive_cluster(self) -> None:
+        groups = np.asarray(["large", "large", "large", "small", "negative"])
+        labels = np.asarray([1, 1, 1, 1, 0], dtype=np.uint8)
+        result = fold_balance_constraints(labels, groups, folds=2)
+        self.assertEqual(result["positive_groups"], 2)
+        self.assertEqual(result["largest_indivisible_group_positive_scenes"], 3)
+        self.assertEqual(result["minimum_possible_maximum_fold_positives"], 3)
+
+    def test_cascade_decision_rejects_when_any_gate_fails(self) -> None:
+        promotion = {
+            "ap_exceeds_released_mars": True,
+            "auroc_exceeds_released_mars": True,
+            "recall_at_0_095_exceeds_released_mars": False,
+            "fpr_at_0_095_not_above_released_mars": True,
+        }
+        self.assertTrue(cascade_decision(promotion).startswith("Reject"))
 
     def test_largest_component_uses_eight_connectivity(self) -> None:
         mask = np.asarray([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=bool)

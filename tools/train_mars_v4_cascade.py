@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import subprocess
 import sys
@@ -559,6 +560,49 @@ def artifact_record(path: Path, root: Path) -> dict[str, Any]:
     }
 
 
+def fold_balance_constraints(labels: np.ndarray, groups: np.ndarray, folds: int) -> dict[str, Any]:
+    """Describe the irreducible class imbalance imposed by indivisible spatial groups."""
+    truth = np.asarray(labels, dtype=np.uint8)
+    group_values = np.asarray(groups)
+    positive_counts = np.asarray(
+        [np.count_nonzero(truth[group_values == group] == 1) for group in np.unique(group_values)],
+        dtype=np.int64,
+    )
+    largest = int(np.max(positive_counts, initial=0))
+    positives = int(np.count_nonzero(truth == 1))
+    return {
+        "positive_groups": int(np.count_nonzero(positive_counts)),
+        "largest_indivisible_group_positive_scenes": largest,
+        "ideal_positive_scenes_per_fold": float(positives / folds),
+        "minimum_possible_maximum_fold_positives": int(max(largest, math.ceil(positives / folds))),
+    }
+
+
+def cascade_decision(promotion: dict[str, bool]) -> str:
+    promising = all(
+        promotion[key]
+        for key in (
+            "ap_exceeds_released_mars",
+            "auroc_exceeds_released_mars",
+            "recall_at_0_095_exceeds_released_mars",
+            "fpr_at_0_095_not_above_released_mars",
+        )
+    )
+    if promising:
+        return (
+            "Retain the score/physics cascade as a v4 development candidate, but do not claim "
+            "improvement or tune it on this opened cohort again. Freeze its feature contract and "
+            "evaluate once on a newly acquired, prediction-blind, same-sensor plume/no-plume cohort "
+            "with spatial and temporal isolation from every fit location."
+        )
+    return (
+        "Reject the score/physics cascade as the v4 architecture because it did not exceed released "
+        "MARS-S2L on every development gate. Do not carry its fitted artifact into confirmatory "
+        "evaluation. Redirect v4 toward simulation-trained segmentation, explicit hard negatives, "
+        "and domain-aware sampling; keep this result as a documented negative experiment."
+    )
+
+
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -572,6 +616,9 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
     op5 = report["nested_crossfit"]["operating_points"]["0.05"]
     op95 = report["nested_crossfit"]["operating_points"]["0.095"]
     selection = report["final_development_fit"]["selected_candidate"]
+    observed_positive_counts = "/".join(
+        str(fold["held_out_positives"]) for fold in report["nested_crossfit"]["folds"]
+    )
     lines = [
         "# ERSRR v4 nested development experiment",
         "",
@@ -584,6 +631,12 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- Nested v4 at 5% FPR target: recall {op5['recall']:.3f}, observed FPR {op5['false_positive_rate']:.3f}, precision {op5['precision']:.3f}",
         f"- Nested v4 at 9.5% FPR target: recall {op95['recall']:.3f}, observed FPR {op95['false_positive_rate']:.3f}, precision {op95['precision']:.3f}",
         f"- Final development fit: `{selection['name']}` with {selection['feature_count']} features",
+        "",
+        "## Spatial-fold constraint",
+        "",
+        f"The largest indivisible 25 km component contains {report['method']['fold_balance_constraints']['largest_indivisible_group_positive_scenes']} positive scenes. "
+        f"With {report['method']['outer_folds']} folds, at least one held-out fold must therefore contain at least "
+        f"{report['method']['fold_balance_constraints']['minimum_possible_maximum_fold_positives']} positives; the observed {observed_positive_counts} allocation reaches that lower bound.",
         "",
         "## Outer-fold architecture selections",
         "",
@@ -800,12 +853,7 @@ def main() -> int:
         "fpr_at_0_095_not_above_released_mars": operating["0.095"]["false_positive_rate"] <= baseline_metrics["false_positive_rate"],
         "confirmatory_promotion_permitted": False,
     }
-    decision = (
-        "Use the winning cross-fitted candidate as the v4 development architecture only. "
-        "Do not claim improvement or tune it on the former strict cohort again. Freeze its "
-        "feature contract and evaluate once on a newly acquired, prediction-blind, same-sensor "
-        "plume/no-plume cohort with spatial and temporal isolation from every fit location."
-    )
+    decision = cascade_decision(promotion)
     report = {
         "schema_version": 1,
         "scope": "ersrr_v4_group_nested_cascade_development_not_final_test",
@@ -822,6 +870,7 @@ def main() -> int:
             "inner_folds": INNER_FOLDS,
             "group_unit": "frozen 25 km connected component",
             "fold_assignment": "500-trial deterministic label-count/row-count/group-count balancing; independent of model scores and features",
+            "fold_balance_constraints": fold_balance_constraints(labels, groups, OUTER_FOLDS),
             "candidate_selection": "maximum inner out-of-fold average precision; AUROC, fewer features, then name break ties",
             "operating_thresholds": "selected separately inside each outer-training split from inner OOF predictions",
             "target_false_positive_rates": list(TARGET_FPRS),
@@ -851,6 +900,7 @@ def main() -> int:
         "limitations": [
             "The cohort was already used for the v3 primary result, so v4 results are development estimates even though every v4 prediction is group-cross-fitted.",
             "Only 67 positive scenes are available; outer-fold estimates and architecture selection remain high variance.",
+            "One indivisible 25 km component contains 25 positive scenes, imposing an irreducible outer-fold imbalance.",
             "The cascade depends on the non-commercial ShareAlike MARS-S2L release and inherits its deployment/license constraints.",
             "Cross-fitted probabilities come from fold-specific models; ranking metrics estimate the procedure, not one already-frozen final artifact.",
             "No EMIT cross-sensor label is used for training or final selection.",
