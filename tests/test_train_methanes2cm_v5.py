@@ -16,6 +16,7 @@ for directory in (ROOT / "tools", ROOT / "EarthRemoteSensingRapidResponse"):
         sys.path.insert(0, str(directory))
 
 from methanes2cm_v5_model import MethaneS2CMV5Model  # noqa: E402
+from analyze_methanes2cm_v5_signal import robust_scene_score  # noqa: E402
 from train_methanes2cm_v5 import (  # noqa: E402
     PackedMethaneS2CMDataset,
     choose_threshold_at_fpr,
@@ -100,6 +101,17 @@ class MethaneS2CMV5TrainingTests(unittest.TestCase):
         )
         self.assertEqual(selected["recall"], 0.5)
         self.assertEqual(selected["false_positive_rate"], 0.0)
+
+    def test_robust_scene_score_uses_only_observable_top_pixels(self) -> None:
+        evidence = np.zeros((1, 4, 4), dtype=np.float32)
+        observable = np.ones_like(evidence, dtype=bool)
+        evidence[0, 0, 0] = 3.0
+        evidence[0, 0, 1] = 2.0
+        observable[0, 0, 0] = False
+        score = robust_scene_score(
+            evidence, observable, topk_fraction=0.125, max_weight=0.0
+        )
+        self.assertEqual(float(score[0]), 1.0)
 
 
 if __name__ == "__main__":
