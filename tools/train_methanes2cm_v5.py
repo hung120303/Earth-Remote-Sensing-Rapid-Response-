@@ -278,7 +278,16 @@ def segmentation_first_loss(
     )
     negative_bce = bce.masked_fill(~negative, -1e4).flatten(1)
     hard_count = max(1, int(negative_bce.shape[1] * hard_negative_fraction))
-    hard_negative_bce = torch.topk(negative_bce, k=hard_count, dim=1).values.mean()
+    hard_values = torch.topk(negative_bce, k=hard_count, dim=1).values
+    negative_count = negative.flatten(1).sum(dim=1)
+    selected_count = negative_count.clamp(max=hard_count)
+    selected_rank = torch.arange(hard_count, device=logits.device)[None] < selected_count[:, None]
+    hard_by_scene = (hard_values * selected_rank).sum(dim=1) / selected_count.clamp_min(1)
+    hard_negative_bce = (
+        hard_by_scene[negative_count > 0].mean()
+        if torch.any(negative_count > 0)
+        else logits.sum() * 0.0
+    )
     probability = torch.sigmoid(logits) * observable
     truth = target * observable
     intersection = (probability * truth).sum(dim=(-2, -1))

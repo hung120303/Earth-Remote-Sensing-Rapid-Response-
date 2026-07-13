@@ -65,6 +65,12 @@ class MethaneS2CMV5TrainingTests(unittest.TestCase):
             loss, parts = segmentation_first_loss(output, batch)
             self.assertTrue(torch.isfinite(loss))
             self.assertIn("scene_bce", parts)
+            full_mask = dict(batch)
+            full_mask["mask"] = torch.ones_like(batch["mask"])
+            full_mask["presence"] = torch.ones_like(batch["presence"])
+            full_loss, full_parts = segmentation_first_loss(output, full_mask)
+            self.assertTrue(torch.isfinite(full_loss))
+            self.assertGreaterEqual(full_parts["hard_negative_bce"], 0.0)
 
     def test_manifest_and_fpr_threshold_contracts(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
