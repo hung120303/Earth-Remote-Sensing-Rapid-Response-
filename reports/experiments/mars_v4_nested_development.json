@@ -1,0 +1,654 @@
+{
+  "cohort": {
+    "groups": 150,
+    "negatives": 4334,
+    "positives": 67,
+    "scenes": 4401,
+    "status": "former frozen v3 strict test; opened once for v3 and now irreversibly development-only for v4"
+  },
+  "decision": "Reject the score/physics cascade as the v4 architecture because it did not exceed released MARS-S2L on every development gate. Do not carry its fitted artifact into confirmatory evaluation. Redirect v4 toward simulation-trained segmentation, explicit hard negatives, and domain-aware sampling; keep this result as a documented negative experiment.",
+  "development_promotion_checks": {
+    "ap_exceeds_released_mars": false,
+    "auroc_exceeds_released_mars": false,
+    "confirmatory_promotion_permitted": false,
+    "development_only": true,
+    "fpr_at_0_095_not_above_released_mars": false,
+    "recall_at_0_095_exceeds_released_mars": false
+  },
+  "final_development_fit": {
+    "all_candidate_crossfit_results": [
+      {
+        "auroc": 0.7632172547507042,
+        "average_precision": 0.26382923562245314,
+        "feature_count": 1,
+        "features": "released_only",
+        "model": "logistic",
+        "name": "released_only:logistic"
+      },
+      {
+        "auroc": 0.7485759940491359,
+        "average_precision": 0.2843152740001383,
+        "feature_count": 6,
+        "features": "released_plus_v3",
+        "model": "logistic",
+        "name": "released_plus_v3:logistic"
+      },
+      {
+        "auroc": 0.6885197914442553,
+        "average_precision": 0.08352207619098435,
+        "feature_count": 43,
+        "features": "released_plus_physics",
+        "model": "logistic",
+        "name": "released_plus_physics:logistic"
+      },
+      {
+        "auroc": 0.6381578494238545,
+        "average_precision": 0.12126283512667649,
+        "feature_count": 48,
+        "features": "all",
+        "model": "logistic",
+        "name": "all:logistic"
+      },
+      {
+        "auroc": 0.7399561950285489,
+        "average_precision": 0.2245611191559125,
+        "feature_count": 43,
+        "features": "released_plus_physics",
+        "model": "hist_gradient_boosting",
+        "name": "released_plus_physics:hist_gradient_boosting"
+      },
+      {
+        "auroc": 0.7305546563444889,
+        "average_precision": 0.28511627987647853,
+        "feature_count": 48,
+        "features": "all",
+        "model": "hist_gradient_boosting",
+        "name": "all:hist_gradient_boosting"
+      }
+    ],
+    "artifact": {
+      "bytes": 181215,
+      "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v4_cascade.joblib",
+      "sha256": "069bf235888dbea5ddbb91f4343b31823907bba699bd793c491b07774de8d1a6",
+      "tracked": false
+    },
+    "feature_cache": {
+      "bytes": 822799,
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v4_strict_development_features.npz",
+      "sha256": "d66fd70cabd437c4c0f20f0a81ee583968a4b8f88208596f3cd4ebe90192d7b3",
+      "tracked": false
+    },
+    "selected_candidate": {
+      "auroc": 0.7305546563444889,
+      "average_precision": 0.28511627987647853,
+      "feature_count": 48,
+      "features": "all",
+      "model": "hist_gradient_boosting",
+      "name": "all:hist_gradient_boosting"
+    },
+    "thresholds_from_full_group_oof": {
+      "0.05": {
+        "target_fpr": 0.05,
+        "threshold": 0.16428852749813846,
+        "training_fpr": 0.046608214120904476,
+        "training_precision": 0.1440677966101695,
+        "training_recall": 0.5074626865671642
+      },
+      "0.095": {
+        "target_fpr": 0.095,
+        "threshold": 0.09617900722699975,
+        "training_fpr": 0.08375634517766498,
+        "training_precision": 0.09476309226932668,
+        "training_recall": 0.5671641791044776
+      }
+    }
+  },
+  "generated_at_utc": "2026-07-13T15:41:42.386136+00:00",
+  "interpretation_amendment": {
+    "git_commit": "3d41ae51bdd0ceb7f7dba0c48e2d8d1175916ba7",
+    "numerical_results_recomputed": false,
+    "reason": "Correct the architecture decision to reject a candidate that failed every promotion check and document the irreducible positive-group concentration."
+  },
+  "limitations": [
+    "The cohort was already used for the v3 primary result, so v4 results are development estimates even though every v4 prediction is group-cross-fitted.",
+    "Only 67 positive scenes are available; outer-fold estimates and architecture selection remain high variance.",
+    "One indivisible 25 km component contains 25 positive scenes, imposing an irreducible outer-fold imbalance.",
+    "The cascade depends on the non-commercial ShareAlike MARS-S2L release and inherits its deployment/license constraints.",
+    "Cross-fitted probabilities come from fold-specific models; ranking metrics estimate the procedure, not one already-frozen final artifact.",
+    "No EMIT cross-sensor label is used for training or final selection."
+  ],
+  "method": {
+    "candidate_selection": "maximum inner out-of-fold average precision; AUROC, fewer features, then name break ties",
+    "candidate_specs": [
+      {
+        "features": "released_only",
+        "model": "logistic",
+        "name": "released_only:logistic"
+      },
+      {
+        "features": "released_plus_v3",
+        "model": "logistic",
+        "name": "released_plus_v3:logistic"
+      },
+      {
+        "features": "released_plus_physics",
+        "model": "logistic",
+        "name": "released_plus_physics:logistic"
+      },
+      {
+        "features": "all",
+        "model": "logistic",
+        "name": "all:logistic"
+      },
+      {
+        "features": "released_plus_physics",
+        "model": "hist_gradient_boosting",
+        "name": "released_plus_physics:hist_gradient_boosting"
+      },
+      {
+        "features": "all",
+        "model": "hist_gradient_boosting",
+        "name": "all:hist_gradient_boosting"
+      }
+    ],
+    "feature_schemas": {
+      "all": [
+        "released_mars_s2l_score",
+        "v3_score_mean",
+        "v3_score_standard_deviation",
+        "v3_score_minimum",
+        "v3_score_maximum",
+        "v3_seed_hit_fraction",
+        "cloud_fraction",
+        "observable_fraction",
+        "wind_speed_m_s",
+        "reference_interval_days",
+        "mbmp_p01",
+        "mbmp_p05",
+        "mbmp_median",
+        "mbmp_p95",
+        "mbmp_p99",
+        "mbmp_mad",
+        "mbmp_fraction_le_99",
+        "mbmp_largest_component_le_99",
+        "mbmp_fraction_le_98",
+        "mbmp_largest_component_le_98",
+        "mbmp_fraction_le_97",
+        "mbmp_largest_component_le_97",
+        "mbmp_fraction_le_95",
+        "mbmp_largest_component_le_95",
+        "target_B02_median",
+        "reference_B02_median",
+        "absolute_B02_median_change",
+        "absolute_B02_difference_median",
+        "target_B03_median",
+        "reference_B03_median",
+        "absolute_B03_median_change",
+        "absolute_B03_difference_median",
+        "target_B04_median",
+        "reference_B04_median",
+        "absolute_B04_median_change",
+        "absolute_B04_difference_median",
+        "target_B08_median",
+        "reference_B08_median",
+        "absolute_B08_median_change",
+        "absolute_B08_difference_median",
+        "target_B11_median",
+        "reference_B11_median",
+        "absolute_B11_median_change",
+        "absolute_B11_difference_median",
+        "target_B12_median",
+        "reference_B12_median",
+        "absolute_B12_median_change",
+        "absolute_B12_difference_median"
+      ],
+      "released_only": [
+        "released_mars_s2l_score"
+      ],
+      "released_plus_physics": [
+        "released_mars_s2l_score",
+        "cloud_fraction",
+        "observable_fraction",
+        "wind_speed_m_s",
+        "reference_interval_days",
+        "mbmp_p01",
+        "mbmp_p05",
+        "mbmp_median",
+        "mbmp_p95",
+        "mbmp_p99",
+        "mbmp_mad",
+        "mbmp_fraction_le_99",
+        "mbmp_largest_component_le_99",
+        "mbmp_fraction_le_98",
+        "mbmp_largest_component_le_98",
+        "mbmp_fraction_le_97",
+        "mbmp_largest_component_le_97",
+        "mbmp_fraction_le_95",
+        "mbmp_largest_component_le_95",
+        "target_B02_median",
+        "reference_B02_median",
+        "absolute_B02_median_change",
+        "absolute_B02_difference_median",
+        "target_B03_median",
+        "reference_B03_median",
+        "absolute_B03_median_change",
+        "absolute_B03_difference_median",
+        "target_B04_median",
+        "reference_B04_median",
+        "absolute_B04_median_change",
+        "absolute_B04_difference_median",
+        "target_B08_median",
+        "reference_B08_median",
+        "absolute_B08_median_change",
+        "absolute_B08_difference_median",
+        "target_B11_median",
+        "reference_B11_median",
+        "absolute_B11_median_change",
+        "absolute_B11_difference_median",
+        "target_B12_median",
+        "reference_B12_median",
+        "absolute_B12_median_change",
+        "absolute_B12_difference_median"
+      ],
+      "released_plus_v3": [
+        "released_mars_s2l_score",
+        "v3_score_mean",
+        "v3_score_standard_deviation",
+        "v3_score_minimum",
+        "v3_score_maximum",
+        "v3_seed_hit_fraction"
+      ]
+    },
+    "fold_assignment": "500-trial deterministic label-count/row-count/group-count balancing; independent of model scores and features",
+    "fold_balance_constraints": {
+      "ideal_positive_scenes_per_fold": 13.4,
+      "largest_indivisible_group_positive_scenes": 25,
+      "minimum_possible_maximum_fold_positives": 25,
+      "positive_groups": 19
+    },
+    "group_unit": "frozen 25 km connected component",
+    "inner_folds": 4,
+    "operating_thresholds": "selected separately inside each outer-training split from inner OOF predictions",
+    "outer_folds": 5,
+    "raw_feature_label_blinding": "physics features use imagery, cloud, wind, and reference interval; never plume masks or labels",
+    "target_false_positive_rates": [
+      0.05,
+      0.095
+    ]
+  },
+  "nested_crossfit": {
+    "folds": [
+      {
+        "held_out_groups": 30,
+        "held_out_positives": 25,
+        "held_out_ranking": {
+          "auroc": 0.6382830626450117,
+          "average_precision": 0.08037234876461159
+        },
+        "held_out_scenes": 887,
+        "outer_fold": 1,
+        "selected_candidate": {
+          "auroc": 0.7956440640772439,
+          "average_precision": 0.5568094273138455,
+          "feature_count": 48,
+          "features": "all",
+          "model": "hist_gradient_boosting",
+          "name": "all:hist_gradient_boosting"
+        },
+        "thresholds_selected_from_inner_oof": {
+          "0.05": {
+            "target_fpr": 0.05,
+            "threshold": 0.2536629809096025,
+            "training_fpr": 0.017857142857142856,
+            "training_precision": 0.31868131868131866,
+            "training_recall": 0.6904761904761905
+          },
+          "0.095": {
+            "target_fpr": 0.095,
+            "threshold": 0.05741162580283156,
+            "training_fpr": 0.06797235023041474,
+            "training_precision": 0.11278195488721804,
+            "training_recall": 0.7142857142857143
+          }
+        },
+        "training_groups": 120,
+        "training_scenes": 3514
+      },
+      {
+        "held_out_groups": 30,
+        "held_out_positives": 10,
+        "held_out_ranking": {
+          "auroc": 0.9630184331797236,
+          "average_precision": 0.680126832121288
+        },
+        "held_out_scenes": 878,
+        "outer_fold": 2,
+        "selected_candidate": {
+          "auroc": 0.7060011540680899,
+          "average_precision": 0.21304927014325317,
+          "feature_count": 48,
+          "features": "all",
+          "model": "hist_gradient_boosting",
+          "name": "all:hist_gradient_boosting"
+        },
+        "thresholds_selected_from_inner_oof": {
+          "0.05": {
+            "target_fpr": 0.05,
+            "threshold": 0.16460336263023825,
+            "training_fpr": 0.04096941719561454,
+            "training_precision": 0.15476190476190477,
+            "training_recall": 0.45614035087719296
+          },
+          "0.095": {
+            "target_fpr": 0.095,
+            "threshold": 0.07355473097809943,
+            "training_fpr": 0.09492210040392383,
+            "training_precision": 0.08356545961002786,
+            "training_recall": 0.5263157894736842
+          }
+        },
+        "training_groups": 120,
+        "training_scenes": 3523
+      },
+      {
+        "held_out_groups": 30,
+        "held_out_positives": 11,
+        "held_out_ranking": {
+          "auroc": 0.8421658986175113,
+          "average_precision": 0.33258516640250446
+        },
+        "held_out_scenes": 879,
+        "outer_fold": 3,
+        "selected_candidate": {
+          "auroc": 0.7321170966944193,
+          "average_precision": 0.27012524574867797,
+          "feature_count": 6,
+          "features": "released_plus_v3",
+          "model": "logistic",
+          "name": "released_plus_v3:logistic"
+        },
+        "thresholds_selected_from_inner_oof": {
+          "0.05": {
+            "target_fpr": 0.05,
+            "threshold": 0.7884790390994879,
+            "training_fpr": 0.045297172533179456,
+            "training_precision": 0.16042780748663102,
+            "training_recall": 0.5357142857142857
+          },
+          "0.095": {
+            "target_fpr": 0.095,
+            "threshold": 0.600149451317184,
+            "training_fpr": 0.0946335833814195,
+            "training_precision": 0.09392265193370165,
+            "training_recall": 0.6071428571428571
+          }
+        },
+        "training_groups": 120,
+        "training_scenes": 3522
+      },
+      {
+        "held_out_groups": 30,
+        "held_out_positives": 11,
+        "held_out_ranking": {
+          "auroc": 0.6021156263091747,
+          "average_precision": 0.15450003167048565
+        },
+        "held_out_scenes": 879,
+        "outer_fold": 4,
+        "selected_candidate": {
+          "auroc": 0.7506079465831341,
+          "average_precision": 0.257941976654676,
+          "feature_count": 48,
+          "features": "all",
+          "model": "hist_gradient_boosting",
+          "name": "all:hist_gradient_boosting"
+        },
+        "thresholds_selected_from_inner_oof": {
+          "0.05": {
+            "target_fpr": 0.05,
+            "threshold": 0.1354179017152005,
+            "training_fpr": 0.0447201384881708,
+            "training_precision": 0.15760869565217392,
+            "training_recall": 0.5178571428571429
+          },
+          "0.095": {
+            "target_fpr": 0.095,
+            "threshold": 0.05960502176687674,
+            "training_fpr": 0.08799769186381996,
+            "training_precision": 0.09495548961424333,
+            "training_recall": 0.5714285714285714
+          }
+        },
+        "training_groups": 120,
+        "training_scenes": 3522
+      },
+      {
+        "held_out_groups": 30,
+        "held_out_positives": 10,
+        "held_out_ranking": {
+          "auroc": 0.8539170506912442,
+          "average_precision": 0.4952128470070381
+        },
+        "held_out_scenes": 878,
+        "outer_fold": 5,
+        "selected_candidate": {
+          "auroc": 0.7485599457385529,
+          "average_precision": 0.2490535352421066,
+          "feature_count": 48,
+          "features": "all",
+          "model": "hist_gradient_boosting",
+          "name": "all:hist_gradient_boosting"
+        },
+        "thresholds_selected_from_inner_oof": {
+          "0.05": {
+            "target_fpr": 0.05,
+            "threshold": 0.12086091905245251,
+            "training_fpr": 0.04414310444316215,
+            "training_precision": 0.15,
+            "training_recall": 0.47368421052631576
+          },
+          "0.095": {
+            "target_fpr": 0.095,
+            "threshold": 0.05038554697826499,
+            "training_fpr": 0.0894402769763416,
+            "training_precision": 0.09090909090909091,
+            "training_recall": 0.543859649122807
+          }
+        },
+        "training_groups": 120,
+        "training_scenes": 3523
+      }
+    ],
+    "operating_points": {
+      "0.05": {
+        "auroc": 0.698585981031621,
+        "average_precision": 0.1833368931668912,
+        "false_positive_rate": 0.05237655745269958,
+        "fn": 33,
+        "fp": 227,
+        "negatives": 4334,
+        "positives": 67,
+        "precision": 0.13026819923371646,
+        "recall": 0.5074626865671642,
+        "scenes": 4401,
+        "tn": 4107,
+        "tp": 34
+      },
+      "0.095": {
+        "auroc": 0.698585981031621,
+        "average_precision": 0.1833368931668912,
+        "false_positive_rate": 0.1278264882325796,
+        "fn": 28,
+        "fp": 554,
+        "negatives": 4334,
+        "positives": 67,
+        "precision": 0.0657672849915683,
+        "recall": 0.582089552238806,
+        "scenes": 4401,
+        "tn": 3780,
+        "tp": 39
+      }
+    },
+    "ranking": {
+      "auroc": 0.698585981031621,
+      "average_precision": 0.1833368931668912
+    },
+    "selection_counts": {
+      "all:hist_gradient_boosting": 4,
+      "released_plus_v3:logistic": 1
+    }
+  },
+  "paired_group_bootstrap": {
+    "0.05": {
+      "candidate_minus_released_mars_s2l": {
+        "auroc": {
+          "95ci": [
+            -0.24633859096979033,
+            -0.006578354228990404
+          ],
+          "mean": -0.11684192749972257
+        },
+        "average_precision": {
+          "95ci": [
+            -0.33476847458893133,
+            -0.012279582112259138
+          ],
+          "mean": -0.1667077881855779
+        },
+        "false_positive_rate": {
+          "95ci": [
+            -0.06262810134437033,
+            -0.01884002926923224
+          ],
+          "mean": -0.041574024591226125
+        },
+        "recall": {
+          "95ci": [
+            -0.24545454545454543,
+            0.038499999999999764
+          ],
+          "mean": -0.12368711670838053
+        }
+      },
+      "random_seed": 20260714,
+      "replicates_requested": 2000,
+      "replicates_valid": 2000
+    },
+    "0.095": {
+      "candidate_minus_released_mars_s2l": {
+        "auroc": {
+          "95ci": [
+            -0.24633859096979033,
+            -0.006578354228990404
+          ],
+          "mean": -0.11684192749972257
+        },
+        "average_precision": {
+          "95ci": [
+            -0.33476847458893133,
+            -0.012279582112259138
+          ],
+          "mean": -0.1667077881855779
+        },
+        "false_positive_rate": {
+          "95ci": [
+            0.005221085498132376,
+            0.07068313777950573
+          ],
+          "mean": 0.034866723408394085
+        },
+        "recall": {
+          "95ci": [
+            -0.21878125,
+            0.05558176100628919
+          ],
+          "mean": -0.059676648150876956
+        }
+      },
+      "random_seed": 20260714,
+      "replicates_requested": 2000,
+      "replicates_valid": 2000
+    }
+  },
+  "provenance": {
+    "git_commit": "42775d8c8e68360d67dfe067e6102a2e93ae207c",
+    "git_tracked_worktree_dirty_at_start": false,
+    "inputs": {
+      "campaign": {
+        "path": "reports/experiments/mars_v3_strict_campaign.json",
+        "sha256": "2d6d722696d95c3d033df5c780df0a6981454831f76de26fa41d2f5a24d50aac"
+      },
+      "released_scene_cache": {
+        "bytes": 161470,
+        "contents": "compact per-scene labels, groups, scores, and author-fixed predictions; no raster pixels",
+        "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_released_mars-s2l_publication_v3_strict_samples_scene_predictions.npz",
+        "sha256": "84c3255c5ac972428642e272afcd7c9b20e218c12ad990e0802b58615db9290a",
+        "tracked": false
+      },
+      "strict_manifest": {
+        "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_samples.jsonl",
+        "sha256": "6e959ae0af50c5a309247cbe674fe01b31a36f8b149f9be3292acebed3e5f906"
+      },
+      "v3_scene_caches": [
+        {
+          "bytes": 166042,
+          "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed101.npz",
+          "sha256": "5054837fa47937f1baf76a66286b95c61d1558d0e6899da4467e22e94361e9c1",
+          "tracked": false
+        },
+        {
+          "bytes": 165286,
+          "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed202.npz",
+          "sha256": "2fb4250179dd53918efee1a360ff310b02d190c8974ee9bf1dcadf1ed408e91a",
+          "tracked": false
+        },
+        {
+          "bytes": 165211,
+          "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed303.npz",
+          "sha256": "22ba73fedf33ed9963928111e43d2a775afe36f08029a4f22f6ac5684adc058f",
+          "tracked": false
+        },
+        {
+          "bytes": 165914,
+          "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed404.npz",
+          "sha256": "9e15451f9f4c49f59139f3409790a7ccf7faf31131de316f1740f128061b9bed",
+          "tracked": false
+        },
+        {
+          "bytes": 164932,
+          "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed505.npz",
+          "sha256": "b0fda1022efb1ee91d42d77ca3589c0405d03d8a3698aeda9937a0bd6d405584",
+          "tracked": false
+        }
+      ]
+    },
+    "script": "tools/train_mars_v4_cascade.py",
+    "script_sha256": "f0d45d753a2ce0ff333c3821b9e465421d5e3c5ecb84e2dc4bf898691b1a7bcb"
+  },
+  "released_mars_s2l": {
+    "auroc": 0.8175464394685548,
+    "average_precision": 0.35212281291315817,
+    "false_positive_rate": 0.09483156437471159,
+    "fn": 24,
+    "fp": 411,
+    "negatives": 4334,
+    "positives": 67,
+    "precision": 0.0947136563876652,
+    "recall": 0.6417910447761194,
+    "scenes": 4401,
+    "tn": 3923,
+    "tp": 43
+  },
+  "runtime": {
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "sklearn": "1.9.0"
+  },
+  "schema_version": 1,
+  "scope": "ersrr_v4_group_nested_cascade_development_not_final_test"
+}
