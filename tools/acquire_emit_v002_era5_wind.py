@@ -9,7 +9,9 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
+import zipfile
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
@@ -108,6 +110,30 @@ def parse_wind_csv(path: Path, validity_times: dict[str, str]) -> dict[str, Any]
     return {"rows": len(rows), "selected": selected}
 
 
+def normalize_csv_download(path: Path) -> None:
+    """Replace a CDS ZIP response in place with its single CSV member."""
+    if not zipfile.is_zipfile(path):
+        return
+    extracted = path.with_suffix(path.suffix + ".extract.tmp")
+    if extracted.exists():
+        extracted.unlink()
+    with zipfile.ZipFile(path) as archive:
+        members = sorted(
+            (item for item in archive.infolist() if not item.is_dir() and item.filename.lower().endswith(".csv")),
+            key=lambda item: item.filename,
+        )
+        if len(members) != 1:
+            raise ValueError(
+                f"CDS ZIP must contain exactly one CSV, found {len(members)}: {path}"
+            )
+        with archive.open(members[0]) as source, extracted.open("xb") as destination:
+            shutil.copyfileobj(source, destination)
+    if extracted.stat().st_size == 0:
+        extracted.unlink()
+        raise ValueError(f"CDS ZIP contains an empty CSV: {path}")
+    os.replace(extracted, path)
+
+
 def verify_record(root: Path, record: dict[str, Any]) -> Path:
     path = safe_path(root, record["path"])
     if not path.is_file() or path.stat().st_size != int(record["bytes"]):
@@ -145,6 +171,7 @@ def acquire_one(
     client.retrieve(dataset, item["cds_request"], str(temporary))
     if not temporary.is_file() or temporary.stat().st_size == 0:
         raise ValueError(f"CDS produced no CSV for {item['group_id']}")
+    normalize_csv_download(temporary)
     os.replace(temporary, csv_path)
     parsed = parse_wind_csv(csv_path, item["hourly_validity_times"])
     manifest = {

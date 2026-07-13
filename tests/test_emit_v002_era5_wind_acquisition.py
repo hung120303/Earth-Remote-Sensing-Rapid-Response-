@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,10 +11,32 @@ TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from acquire_emit_v002_era5_wind import cds_credentials_available, parse_wind_csv
+from acquire_emit_v002_era5_wind import (
+    cds_credentials_available,
+    normalize_csv_download,
+    parse_wind_csv,
+)
 
 
 class Era5WindAcquisitionTests(unittest.TestCase):
+    def test_zip_response_is_replaced_by_its_single_csv(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "download.tmp"
+            with zipfile.ZipFile(path, "w") as archive:
+                archive.writestr("data.csv", "valid_time,u10,v10\n2024-01-01T00:00:00Z,1,2\n")
+            normalize_csv_download(path)
+            self.assertFalse(zipfile.is_zipfile(path))
+            self.assertTrue(path.read_text(encoding="utf-8").startswith("valid_time"))
+
+    def test_zip_response_rejects_ambiguous_csv_members(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "download.tmp"
+            with zipfile.ZipFile(path, "w") as archive:
+                archive.writestr("one.csv", "a\n1\n")
+                archive.writestr("two.csv", "a\n2\n")
+            with self.assertRaises(ValueError):
+                normalize_csv_download(path)
+
     def test_credentials_accept_nonempty_rc_without_reading_secret(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
