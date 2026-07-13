@@ -42,6 +42,28 @@ The strongest permissible claim is selected only after the sealed campaign.
 MARS-S2L paper metrics and same-cohort checkpoint metrics must remain in separate tables. The
 official paper test uses a different cohort and cannot support a paired superiority statement.
 
+## Frozen campaign outcome (2026-07-12)
+
+The final row of the claim ladder applies. ERSRR v3 did **not** meet the promotion boundary and did
+not outperform the released MARS-S2L checkpoint overall. The five-seed ERSRR mean reduced the
+same-cohort false-positive rate from 0.0948 to 0.0367 (61.3% relative reduction), but recall fell
+from 0.6418 to 0.3194. In the paired 2,000-replicate seed-and-25-km-group bootstrap, the relative
+FPR reduction was 61.2% (95% CI 46.7% to 72.8%) and the recall delta was -31.5 percentage points
+(95% CI -42.2 to -16.4). AP, AUROC, and pixel segmentation were also inferior.
+
+The paper must therefore be framed as a rigorous spatial-transfer and false-alarm trade-off study,
+not as an architecture-superiority paper. The central empirical finding is that strong random-seed
+internal validation (mean recall 0.8317 at mean FPR 0.0489) did not predict performance on unseen
+25 km groups (mean recall 0.3194 at mean FPR 0.0367). The released MARS-S2L checkpoint also
+transferred poorly relative to its different-cohort paper values, but remained materially stronger
+than ERSRR on recall, AP, AUROC, and segmentation on this paired cohort.
+
+No v3 threshold, loss, architecture, or postprocessing rule may be changed in response to these
+strict results. Any v4 system informed by this result requires a newly untouched final cohort.
+The authoritative campaign artifact is `reports/experiments/mars_v3_strict_campaign.json`; the
+chronology, interpretation boundaries, and next-study decisions are maintained in
+`docs/RESEARCH_LEDGER.md`.
+
 ## Manuscript structure
 
 1. **Introduction** — methane point-source monitoring, no-plume rejection, spatial leakage, and the
@@ -125,3 +147,7 @@ The method/data-evaluation emphasis is suitable for *Remote Sensing of Environme
 Measurement Techniques*, or *IEEE Transactions on Geoscience and Remote Sensing*. Venue choice
 should follow the final evidence: a strong paired and external result supports a methods paper; a
 failed promotion gate is better framed as a rigorous benchmark/evaluation study.
+
+Given the frozen negative promotion result, the present manuscript should target the benchmark,
+evaluation, or methods-validation framing. A later superiority manuscript requires a genuinely new
+v4 development cycle and untouched confirmation cohort rather than reinterpretation of v3.
