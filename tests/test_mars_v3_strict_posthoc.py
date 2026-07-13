@@ -13,6 +13,7 @@ if str(ROOT / "tools") not in sys.path:
 from analyze_mars_v3_strict_posthoc import (  # noqa: E402
     rank_strata_indices,
     rate_summary,
+    zero_nonzero_strata,
 )
 
 
@@ -36,6 +37,20 @@ class MarsV3StrictPosthocTests(unittest.TestCase):
         self.assertEqual(result["samples"], 2)
         self.assertAlmostEqual(result["released_mars_s2l_rate"], 1.0)
         self.assertAlmostEqual(result["ersrr_seed_mean_rate"], 0.5)
+
+    def test_zero_nonzero_strata_do_not_split_tied_zeros(self) -> None:
+        rows = [{"cloud": 0.0}, {"cloud": 0.0}, {"cloud": 0.2}]
+        baseline = np.asarray([0, 1, 1], dtype=np.uint8)
+        candidates = np.asarray([[0, 0, 1], [0, 1, 1]], dtype=np.uint8)
+        result = zero_nonzero_strata(
+            rows,
+            np.arange(3),
+            "cloud",
+            baseline,
+            candidates,
+        )
+        self.assertEqual([item["name"] for item in result], ["zero", "nonzero"])
+        self.assertEqual([item["samples"] for item in result], [2, 1])
 
 
 if __name__ == "__main__":

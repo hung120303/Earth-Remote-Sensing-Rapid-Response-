@@ -181,6 +181,37 @@ def country_strata(
     return result
 
 
+def zero_nonzero_strata(
+    rows: list[dict[str, Any]],
+    indices: np.ndarray,
+    field: str,
+    baseline_predictions: np.ndarray,
+    candidate_predictions: np.ndarray,
+) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for name, predicate in (
+        ("zero", lambda value: value == 0.0),
+        ("nonzero", lambda value: value > 0.0),
+    ):
+        selected = np.asarray(
+            [index for index in indices if predicate(float(rows[index][field]))],
+            dtype=np.int64,
+        )
+        if selected.size == 0:
+            continue
+        values = np.asarray([rows[index][field] for index in selected], dtype=np.float64)
+        result.append(
+            {
+                "name": name,
+                "field": field,
+                "minimum": float(np.min(values)),
+                "maximum": float(np.max(values)),
+                **rate_summary(selected, baseline_predictions, candidate_predictions),
+            }
+        )
+    return result
+
+
 def atlas_row(row: dict[str, Any]) -> dict[str, Any]:
     return {
         name: row[name]
@@ -422,8 +453,8 @@ def main() -> int:
             baseline_predictions,
             prediction_matrix,
         ),
-        "cloud_fraction": ranked_strata(
-            rows, positive, "cloud_fraction", tertiles, baseline_predictions, prediction_matrix
+        "cloud_fraction": zero_nonzero_strata(
+            rows, positive, "cloud_fraction", baseline_predictions, prediction_matrix
         ),
         "country_minimum_5_positives": country_strata(
             rows, positive, 5, baseline_predictions, prediction_matrix
@@ -441,8 +472,8 @@ def main() -> int:
             baseline_predictions,
             prediction_matrix,
         ),
-        "cloud_fraction": ranked_strata(
-            rows, negative, "cloud_fraction", tertiles, baseline_predictions, prediction_matrix
+        "cloud_fraction": zero_nonzero_strata(
+            rows, negative, "cloud_fraction", baseline_predictions, prediction_matrix
         ),
         "country_minimum_100_negatives": country_strata(
             rows, negative, 100, baseline_predictions, prediction_matrix
