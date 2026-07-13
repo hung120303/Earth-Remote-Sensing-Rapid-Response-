@@ -9,7 +9,7 @@ TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from build_emit_v002_era5_wind_requests import cds_request, hourly_bracket
+from build_emit_v002_era5_wind_requests import cds_request, hourly_bracket, markdown
 
 
 class Era5WindRequestContractTests(unittest.TestCase):
@@ -41,6 +41,27 @@ class Era5WindRequestContractTests(unittest.TestCase):
     def test_cds_request_rejects_invalid_center(self) -> None:
         with self.assertRaises(ValueError):
             cds_request([181.0, 0.0], "2023-02-21T08:00:00Z")
+
+    def test_handoff_keeps_credentials_outside_repository(self) -> None:
+        text = markdown(
+            {
+                "summary": {
+                    "requests": 70,
+                    "unique_groups": 70,
+                    "unique_target_scenes": 70,
+                    "official_costing_api_validation": "70/70 accepted",
+                },
+                "contract": {
+                    "dataset": "reanalysis-era5-land-timeseries",
+                    "dataset_url": "https://example.test/era5-land",
+                    "raw_storage": "ignored/era5_land",
+                },
+            }
+        )
+        self.assertIn("/home/joshu/.cdsapirc", text)
+        self.assertIn("--verify-only", text)
+        self.assertIn("Earthdata authentication is unrelated", text)
+        self.assertNotIn("CDSAPI_KEY", text)
 
 
 if __name__ == "__main__":

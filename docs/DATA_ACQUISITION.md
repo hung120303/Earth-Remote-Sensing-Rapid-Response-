@@ -233,7 +233,13 @@ python tools/ersrr.py audit
 
 ## Immediate acquisition priorities
 
-1. Retrieve the 70 frozen official ERA5-Land point requests after the user configures a CDS token outside the repository.
+1. Retrieve the 70 frozen official ERA5-Land point requests after the user accepts the
+   [dataset terms](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=download)
+   and follows the [official API setup](https://cds.climate.copernicus.eu/how-to-api). The token
+   belongs at `/home/joshu/.cdsapirc` inside WSL, never in this repository. Then run
+   `.venv/bin/python tools/acquire_emit_v002_era5_wind.py --workers 1` followed by the same command
+   with `--verify-only`. Raw CSVs go to the ignored `emit-v002-external-l1c-2026-07/era5_land`
+   directory; compact checksums and parsed winds go under `reports/acquisition/`.
 2. Preserve the 55-scene external cohort seal; do not inspect methane predictions until all five internal seeds are frozen.
 3. Use the complete MARS reviewed-negative strict cohort for no-plume evaluation; an absent EMIT catalogue plume is never a negative label.
 4. Have two annotators review the external positive-confirmation packet and mark ambiguous time-offset cases uncertain.
