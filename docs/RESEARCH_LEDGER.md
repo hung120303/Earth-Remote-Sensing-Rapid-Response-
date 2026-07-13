@@ -110,6 +110,31 @@ ranking on the paired cohort.
 - Any subgroup analysis of strict predictions is exploratory and must be labeled post hoc.
 - Any v4 model informed by this campaign needs a newly untouched final test cohort.
 
+## Frozen post-hoc diagnostic
+
+`reports/experiments/mars_v3_strict_posthoc_diagnostic.json` describes the already-frozen scene
+decisions and is explicitly exploratory. It does not select a new threshold, seed, model, or rule.
+
+- 36/67 plumes were missed by all five ERSRR seeds; only 13/67 were detected by all five.
+- 15 plumes were detected by released MARS-S2L but missed by every ERSRR seed; 21 were missed by
+  both the released baseline and every ERSRR seed.
+- 451/4,334 no-plume scenes were flagged by at least one ERSRR seed, but only 14 were flagged by all
+  five. Most ERSRR false alarms are therefore seed-unstable rather than consensus errors.
+- Mean ERSRR recall was 0.304 for the smallest plume-area third, 0.145 for the middle third, and
+  0.509 for the largest third. MARS-S2L achieved 0.522, 0.545, and 0.864, respectively. The
+  non-monotonic ERSRR middle-bin result is descriptive and may reflect geography/site confounding.
+- ERSRR recall was highest in the middle wind-speed third (0.464) and lower in the low/high thirds
+  (0.243/0.255). This is a hypothesis for data stratification, not a powered wind-effect claim.
+- False alarms rose with longer target/reference intervals: ERSRR mean FPR increased from 0.029 in
+  the shortest third to 0.046 in the longest, while MARS-S2L increased from 0.076 to 0.126.
+- Several of the largest consensus false negatives were clear, baseline-detected plumes for which
+  the ERSRR five-seed mean score was near zero. That pattern cannot be repaired by a modest threshold
+  change and supports prioritizing representation/domain generalization over further postprocessing.
+
+The diagnostic JSON also freezes deterministic sample ids for consensus false negatives, consensus
+true positives, persistent false positives, and baseline-only true positives. Selection is based on
+plume area, seed-hit count, frozen score, and sample-id tie-breaking—never visual preference.
+
 ## Evidence-based v4 research path
 
 The next study should address spatial generalization before increasing architecture complexity:
@@ -138,6 +163,7 @@ demonstrate that movement with paired geographic uncertainty on an untouched coh
 - Primary aggregate: `reports/experiments/mars_v3_strict_campaign.json`.
 - Released same-cohort baseline: `reports/experiments/mars_released_model_full_strict_baseline.json`.
 - Per-seed strict reports: `reports/experiments/mars_v3_seed{101,202,303,404,505}_strict_evaluation.json`.
+- Frozen exploratory diagnostic: `reports/experiments/mars_v3_strict_posthoc_diagnostic.json`.
 - Claim and manuscript structure: `docs/PAPER_OUTLINE.md`.
 - Architecture decision and evaluation contract: `docs/ARCHITECTURE_DECISION_V3.md`.
 - Data/acquisition chronology: `docs/PUBLICATION_ROADMAP.md` and `reports/acquisition/`.
