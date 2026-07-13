@@ -16,6 +16,12 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+# Xet's multi-file worker can leave large Windows-mounted downloads in
+# CLOSE-WAIT after a transient CDN disconnect.  The standard Hub HTTP transport
+# is slower but resumable and substantially more reliable for this acquisition.
+os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
+os.environ.setdefault("HF_HUB_DOWNLOAD_TIMEOUT", "600")
+
 import h5py
 import numpy as np
 import tifffile
