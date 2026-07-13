@@ -22,7 +22,6 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, roc_auc_score
-from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -275,8 +274,69 @@ def estimator(kind: str, seed: int) -> Any:
     raise ValueError(f"Unknown estimator kind: {kind}")
 
 
-def splitter(folds: int, seed: int) -> StratifiedGroupKFold:
-    return StratifiedGroupKFold(n_splits=folds, shuffle=True, random_state=seed)
+def balanced_group_splits(
+    labels: np.ndarray,
+    groups: np.ndarray,
+    *,
+    folds: int,
+    seed: int,
+    trials: int = 500,
+) -> list[tuple[np.ndarray, np.ndarray]]:
+    """Balance rows and both labels while keeping every 25 km group intact."""
+    truth = np.asarray(labels, dtype=np.uint8)
+    group_values = np.asarray(groups)
+    unique, inverse = np.unique(group_values, return_inverse=True)
+    if truth.shape != group_values.shape or unique.size < folds:
+        raise ValueError("Balanced group splitting requires aligned labels and enough groups")
+    stats = np.zeros((unique.size, 4), dtype=np.float64)
+    for index in range(unique.size):
+        local = truth[inverse == index]
+        stats[index] = [local.size, np.count_nonzero(local == 1), np.count_nonzero(local == 0), 1]
+    targets = np.sum(stats, axis=0) / folds
+    if targets[1] < 1.0 or targets[2] < 1.0:
+        raise ValueError("Every fold requires expected positive and negative support")
+    weights = np.asarray([1.0, 5.0, 1.0, 0.25])
+
+    def objective(counts: np.ndarray) -> float:
+        relative = (counts - targets[None, :]) / np.maximum(targets[None, :], 1.0)
+        value = float(np.sum(weights[None, :] * np.square(relative)))
+        value += 100.0 * float(np.count_nonzero(counts[:, 1] == 0))
+        value += 100.0 * float(np.count_nonzero(counts[:, 2] == 0))
+        return value
+
+    rng = np.random.default_rng(seed)
+    best: tuple[float, tuple[int, ...], np.ndarray] | None = None
+    difficulty = np.max(stats[:, :3] / np.maximum(targets[None, :3], 1.0), axis=1)
+    for _ in range(trials):
+        order = np.argsort(-(difficulty + 0.05 * rng.random(unique.size)), kind="stable")
+        counts = np.zeros((folds, 4), dtype=np.float64)
+        assignment = np.full(unique.size, -1, dtype=np.int64)
+        tie_order = rng.permutation(folds)
+        for group_index in order:
+            choices = []
+            for fold in tie_order:
+                candidate = counts.copy()
+                candidate[fold] += stats[group_index]
+                # With fixed assigned totals, minimizing squared load balances the folds.
+                load = candidate / np.maximum(targets[None, :], 1.0)
+                choices.append((float(np.sum(weights[None, :] * np.square(load))), int(fold)))
+            _, selected = min(choices)
+            assignment[group_index] = selected
+            counts[selected] += stats[group_index]
+        score = objective(counts)
+        candidate_key = (score, tuple(int(value) for value in assignment), counts.copy())
+        if best is None or candidate_key[:2] < best[:2]:
+            best = candidate_key
+    assert best is not None
+    assignment = np.asarray(best[1], dtype=np.int64)
+    result = []
+    for fold in range(folds):
+        validation = np.flatnonzero(assignment[inverse] == fold)
+        training = np.flatnonzero(assignment[inverse] != fold)
+        if not validation.size or np.unique(truth[validation]).size != 2:
+            raise ValueError("Balanced group splitter produced an invalid fold")
+        result.append((training, validation))
+    return result
 
 
 def spec_crossfit(
@@ -284,15 +344,13 @@ def spec_crossfit(
     feature_sets: dict[str, np.ndarray],
     labels: np.ndarray,
     groups: np.ndarray,
+    splits: Sequence[tuple[np.ndarray, np.ndarray]],
     *,
-    folds: int,
     seed: int,
 ) -> np.ndarray:
     values = feature_sets[spec["features"]]
     predictions = np.full(labels.shape, np.nan, dtype=np.float64)
-    for fold, (train, validation) in enumerate(
-        splitter(folds, seed).split(values, labels, groups), start=1
-    ):
+    for fold, (train, validation) in enumerate(splits, start=1):
         model = estimator(spec["model"], seed + fold)
         model.fit(values[train], labels[train])
         predictions[validation] = model.predict_proba(values[validation])[:, 1]
@@ -374,22 +432,26 @@ def nested_crossfit(
         target: np.zeros(labels.shape, dtype=bool) for target in TARGET_FPRS
     }
     folds = []
-    for outer_fold, (train, test) in enumerate(
-        splitter(OUTER_FOLDS, RANDOM_SEED).split(
-            feature_sets["released_only"], labels, groups
-        ),
-        start=1,
-    ):
+    outer_splits = balanced_group_splits(
+        labels, groups, folds=OUTER_FOLDS, seed=RANDOM_SEED
+    )
+    for outer_fold, (train, test) in enumerate(outer_splits, start=1):
         inner_results = []
         inner_predictions: dict[str, np.ndarray] = {}
+        inner_splits = balanced_group_splits(
+            labels[train],
+            groups[train],
+            folds=INNER_FOLDS,
+            seed=RANDOM_SEED + outer_fold * 100,
+        )
         for spec_index, spec in enumerate(specs):
             predictions = spec_crossfit(
                 spec,
                 {name: values[train] for name, values in feature_sets.items()},
                 labels[train],
                 groups[train],
-                folds=INNER_FOLDS,
-                seed=RANDOM_SEED + outer_fold * 100 + spec_index * 10,
+                inner_splits,
+                seed=RANDOM_SEED + outer_fold * 100 + spec_index,
             )
             inner_predictions[spec["name"]] = predictions
             inner_results.append(
@@ -664,14 +726,17 @@ def main() -> int:
 
     full_cv = []
     full_predictions: dict[str, np.ndarray] = {}
+    full_splits = balanced_group_splits(
+        labels, groups, folds=OUTER_FOLDS, seed=RANDOM_SEED + 10_000
+    )
     for index, spec in enumerate(specs):
         predictions = spec_crossfit(
             spec,
             feature_sets,
             labels,
             groups,
-            folds=OUTER_FOLDS,
-            seed=RANDOM_SEED + 10_000 + index * 10,
+            full_splits,
+            seed=RANDOM_SEED + 10_000 + index,
         )
         full_predictions[spec["name"]] = predictions
         full_cv.append(
@@ -756,6 +821,7 @@ def main() -> int:
             "outer_folds": OUTER_FOLDS,
             "inner_folds": INNER_FOLDS,
             "group_unit": "frozen 25 km connected component",
+            "fold_assignment": "500-trial deterministic label-count/row-count/group-count balancing; independent of model scores and features",
             "candidate_selection": "maximum inner out-of-fold average precision; AUROC, fewer features, then name break ties",
             "operating_thresholds": "selected separately inside each outer-training split from inner OOF predictions",
             "target_false_positive_rates": list(TARGET_FPRS),

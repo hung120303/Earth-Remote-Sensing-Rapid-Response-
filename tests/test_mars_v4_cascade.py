@@ -11,6 +11,7 @@ if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 
 from train_mars_v4_cascade import (  # noqa: E402
+    balanced_group_splits,
     choose_threshold_at_fpr,
     largest_component_pixels,
     metrics,
@@ -19,6 +20,18 @@ from train_mars_v4_cascade import (  # noqa: E402
 
 
 class MarsV4CascadeTests(unittest.TestCase):
+    def test_balanced_group_splits_are_disjoint_complete_and_balanced(self) -> None:
+        groups = np.repeat(np.asarray([f"g{index:02d}" for index in range(20)]), 3)
+        labels = np.tile(np.asarray([1, 0, 0], dtype=np.uint8), 20)
+        splits = balanced_group_splits(labels, groups, folds=5, seed=7, trials=25)
+        held_out = np.concatenate([validation for _, validation in splits])
+        self.assertEqual(sorted(held_out.tolist()), list(range(labels.size)))
+        positive_counts = []
+        for training, validation in splits:
+            self.assertFalse(set(groups[training]) & set(groups[validation]))
+            positive_counts.append(int(np.count_nonzero(labels[validation] == 1)))
+        self.assertLessEqual(max(positive_counts) - min(positive_counts), 1)
+
     def test_largest_component_uses_eight_connectivity(self) -> None:
         mask = np.asarray([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=bool)
         self.assertEqual(largest_component_pixels(mask), 3)
