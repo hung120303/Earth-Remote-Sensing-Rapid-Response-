@@ -1,0 +1,1994 @@
+{
+  "contract": {
+    "costing_validation": {
+      "accepted": 70,
+      "checked": 70,
+      "endpoint": "https://cds.climate.copernicus.eu/api/retrieve/v1/processes/reanalysis-era5-land-timeseries/costing"
+    },
+    "credentials": "CDS personal access token in $HOME/.cdsapirc outside the repository; dataset CC-BY terms must be accepted manually",
+    "dataset": "reanalysis-era5-land-timeseries",
+    "dataset_url": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land-timeseries?tab=download",
+    "input_manifest": "reports/acquisition/emit_v002_l1c_pairs.json",
+    "input_manifest_sha256": "6947f62b6c21023f926e82b5e1f9342932a105bb78a943f83095a6ad3c4761c5",
+    "license": "CC-BY-4.0",
+    "raw_storage": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/era5_land",
+    "selection_inputs": "frozen public metadata only; no detector predictions",
+    "sensitivity_policy": "also retain previous and following hourly values",
+    "spatial_policy": "CDS nearest native 0.1-degree ERA5-Land grid point",
+    "temporal_policy": "nearest UTC hourly validity time to Sentinel-2 target acquisition; ties choose the later hour",
+    "units": "m s-1",
+    "variables": [
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "records": [
+    {
+      "cds_request_sha256": "5415e4924fa23f0c6d8cc98eda2b4af4663a3a601b3910632b34fe3dac4b0beb",
+      "following": {
+        "grid_latitude": 31.90000000000102,
+        "grid_longitude": 36.200000000000244,
+        "validity_time": "2023-02-21T09:00:00Z",
+        "wind_u_m_s": 3.525055,
+        "wind_v_m_s": -1.8488312
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230221T093954_000697",
+      "grid_latitude": 31.90000000000102,
+      "grid_longitude": 36.200000000000244,
+      "group_id": "emit25km-0001",
+      "previous": {
+        "grid_latitude": 31.90000000000102,
+        "grid_longitude": 36.200000000000244,
+        "validity_time": "2023-02-21T08:00:00Z",
+        "wind_u_m_s": 3.486679,
+        "wind_v_m_s": -2.0863647
+      },
+      "raw_csv_bytes": 5638,
+      "raw_csv_sha256": "e4fc3d691d41f4282a7d13f5f2a0e75a200912879d72e6a0d8ed1c0384b640fe",
+      "sentinel2_target_datetime": "2023-02-21T08:21:17.899000+00:00",
+      "sentinel2_target_scene_id": "S2B_36SYA_20230221_0_L1C",
+      "validity_time": "2023-02-21T08:00:00Z",
+      "wind_u_m_s": 3.486679,
+      "wind_v_m_s": -2.0863647
+    },
+    {
+      "cds_request_sha256": "f19cd0ca81cf55eb87e00c0b1426c7f40871c5184ae7f7251f682271b3a50bd6",
+      "following": {
+        "grid_latitude": 40.20000000000114,
+        "grid_longitude": 58.400000000000546,
+        "validity_time": "2022-08-16T07:00:00Z",
+        "wind_u_m_s": -5.8456116,
+        "wind_v_m_s": -4.447069
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220816T101035_000502",
+      "grid_latitude": 40.20000000000114,
+      "grid_longitude": 58.400000000000546,
+      "group_id": "emit25km-0002",
+      "previous": {
+        "grid_latitude": 40.20000000000114,
+        "grid_longitude": 58.400000000000546,
+        "validity_time": "2022-08-16T06:00:00Z",
+        "wind_u_m_s": -5.5140686,
+        "wind_v_m_s": -3.289606
+      },
+      "raw_csv_bytes": 5668,
+      "raw_csv_sha256": "0baac655291e2113080e4632ae8ffaef89af6d47b17569eb119035c6c1a1ef2c",
+      "sentinel2_target_datetime": "2022-08-16T06:58:36.696000+00:00",
+      "sentinel2_target_scene_id": "S2A_40TFK_20220816_0_L1C",
+      "validity_time": "2022-08-16T07:00:00Z",
+      "wind_u_m_s": -5.8456116,
+      "wind_v_m_s": -4.447069
+    },
+    {
+      "cds_request_sha256": "bdd1a414d99fe19ce62e525636cf76ec7f2e1b40e43c9184f11902a962583ffe",
+      "following": {
+        "grid_latitude": 44.000000000001194,
+        "grid_longitude": 87.8999999999993,
+        "validity_time": "2022-08-18T06:00:00Z",
+        "wind_u_m_s": 1.6367798,
+        "wind_v_m_s": -2.7378588
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220818T070105_000508",
+      "grid_latitude": 44.000000000001194,
+      "grid_longitude": 87.8999999999993,
+      "group_id": "emit25km-0003",
+      "previous": {
+        "grid_latitude": 44.000000000001194,
+        "grid_longitude": 87.8999999999993,
+        "validity_time": "2022-08-18T05:00:00Z",
+        "wind_u_m_s": 1.8562775,
+        "wind_v_m_s": -2.1570826
+      },
+      "raw_csv_bytes": 5578,
+      "raw_csv_sha256": "e0a6cc9d524e6681864be9d4b175236f32a89b39e136b10554f13b4db0e0f23c",
+      "sentinel2_target_datetime": "2022-08-18T05:06:38.392000+00:00",
+      "sentinel2_target_scene_id": "S2B_45TWJ_20220818_0_L1C",
+      "validity_time": "2022-08-18T05:00:00Z",
+      "wind_u_m_s": 1.8562775,
+      "wind_v_m_s": -2.1570826
+    },
+    {
+      "cds_request_sha256": "b0e8d3e4b645c5236933ff5e3790716a0182ba2a42ecea08af49e9d085a14bc0",
+      "following": {
+        "grid_latitude": 36.00000000000108,
+        "grid_longitude": 61.9000000000006,
+        "validity_time": "2022-08-23T07:00:00Z",
+        "wind_u_m_s": 0.6642914,
+        "wind_v_m_s": -5.668167
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220823T074504_000522",
+      "grid_latitude": 36.00000000000108,
+      "grid_longitude": 61.9000000000006,
+      "group_id": "emit25km-0004",
+      "previous": {
+        "grid_latitude": 36.00000000000108,
+        "grid_longitude": 61.9000000000006,
+        "validity_time": "2022-08-23T06:00:00Z",
+        "wind_u_m_s": 1.5936432,
+        "wind_v_m_s": -4.453827
+      },
+      "raw_csv_bytes": 5504,
+      "raw_csv_sha256": "3ee8ff1040e142ca8176690fc49895cdfd922dea45d37229638754d59fdd76b4",
+      "sentinel2_target_datetime": "2022-08-23T06:49:44.991000+00:00",
+      "sentinel2_target_scene_id": "S2A_41SLV_20220823_0_L1C",
+      "validity_time": "2022-08-23T07:00:00Z",
+      "wind_u_m_s": 0.6642914,
+      "wind_v_m_s": -5.668167
+    },
+    {
+      "cds_request_sha256": "1976eb966a78916078d797c6553bb7997fada38716b1af4578dbaa0493f4b4ef",
+      "following": {
+        "grid_latitude": 28.100000000000968,
+        "grid_longitude": 0.30000000000001137,
+        "validity_time": "2022-08-27T11:00:00Z",
+        "wind_u_m_s": -0.089263916,
+        "wind_v_m_s": 0.15330982
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220827T104927_000526",
+      "grid_latitude": 28.100000000000968,
+      "grid_longitude": 0.30000000000001137,
+      "group_id": "emit25km-0005",
+      "previous": {
+        "grid_latitude": 28.100000000000968,
+        "grid_longitude": 0.30000000000001137,
+        "validity_time": "2022-08-27T10:00:00Z",
+        "wind_u_m_s": -0.7976074,
+        "wind_v_m_s": -0.15248299
+      },
+      "raw_csv_bytes": 5789,
+      "raw_csv_sha256": "f22d070fdb535dfa7283c1099da621773812b63ebddde22f77df5ae0d492765d",
+      "sentinel2_target_datetime": "2022-08-27T10:43:14.835000+00:00",
+      "sentinel2_target_scene_id": "S2B_31RBM_20220827_0_L1C",
+      "validity_time": "2022-08-27T11:00:00Z",
+      "wind_u_m_s": -0.089263916,
+      "wind_v_m_s": 0.15330982
+    },
+    {
+      "cds_request_sha256": "89f7f6d28160111bdbc0eafdb73fe7237578cc63e1c99b5ac5658ca4cc8a4799",
+      "following": {
+        "grid_latitude": 39.00000000000112,
+        "grid_longitude": 64.10000000000065,
+        "validity_time": "2022-08-28T07:00:00Z",
+        "wind_u_m_s": -0.092422485,
+        "wind_v_m_s": -4.6792755
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220828T051929_000919",
+      "grid_latitude": 39.00000000000112,
+      "grid_longitude": 64.10000000000065,
+      "group_id": "emit25km-0006",
+      "previous": {
+        "grid_latitude": 39.00000000000112,
+        "grid_longitude": 64.10000000000065,
+        "validity_time": "2022-08-28T06:00:00Z",
+        "wind_u_m_s": 0.309906,
+        "wind_v_m_s": -4.5040627
+      },
+      "raw_csv_bytes": 5637,
+      "raw_csv_sha256": "299ce4aad3e7460e71301f8cc6cfebc38ca6544c7bdde3e8a590ef650aea3d89",
+      "sentinel2_target_datetime": "2022-08-28T06:48:27.057000+00:00",
+      "sentinel2_target_scene_id": "S2B_41SND_20220828_0_L1C",
+      "validity_time": "2022-08-28T07:00:00Z",
+      "wind_u_m_s": -0.092422485,
+      "wind_v_m_s": -4.6792755
+    },
+    {
+      "cds_request_sha256": "8a0e94815d85049156e4e994ff8654283aba662b73b16f3e93aeb8e679a19995",
+      "following": {
+        "grid_latitude": 38.30000000000111,
+        "grid_longitude": 66.00000000000051,
+        "validity_time": "2022-09-01T07:00:00Z",
+        "wind_u_m_s": 2.3010864,
+        "wind_v_m_s": 1.6956177
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20220901T034318_000554",
+      "grid_latitude": 38.30000000000111,
+      "grid_longitude": 66.00000000000051,
+      "group_id": "emit25km-0007",
+      "previous": {
+        "grid_latitude": 38.30000000000111,
+        "grid_longitude": 66.00000000000051,
+        "validity_time": "2022-09-01T06:00:00Z",
+        "wind_u_m_s": 1.6644287,
+        "wind_v_m_s": 2.0884857
+      },
+      "raw_csv_bytes": 5622,
+      "raw_csv_sha256": "03f30f2aeeceee1cbbec999332bcc5db694476527f6a33e8cd128a8b38e02b96",
+      "sentinel2_target_datetime": "2022-09-01T06:28:42.489000+00:00",
+      "sentinel2_target_scene_id": "S2B_42STH_20220901_0_L1C",
+      "validity_time": "2022-09-01T06:00:00Z",
+      "wind_u_m_s": 1.6644287,
+      "wind_v_m_s": 2.0884857
+    },
+    {
+      "cds_request_sha256": "b578c596087c1bc5b790c71d923a477d07ace6fa139284e0f01b7d17934cdae9",
+      "following": {
+        "grid_latitude": 28.500000000000973,
+        "grid_longitude": 7.5,
+        "validity_time": "2023-01-28T11:00:00Z",
+        "wind_u_m_s": -1.6285858,
+        "wind_v_m_s": 2.593216
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230128T124118_000593",
+      "grid_latitude": 28.500000000000973,
+      "grid_longitude": 7.5,
+      "group_id": "emit25km-0008",
+      "previous": {
+        "grid_latitude": 28.500000000000973,
+        "grid_longitude": 7.5,
+        "validity_time": "2023-01-28T10:00:00Z",
+        "wind_u_m_s": -1.5306244,
+        "wind_v_m_s": 2.6265259
+      },
+      "raw_csv_bytes": 4627,
+      "raw_csv_sha256": "4a9e97cd2ba95b958a4e1a891d5a352ef1495e814de7fc3d39bb3d21f6837c06",
+      "sentinel2_target_datetime": "2023-01-28T10:22:56.628000+00:00",
+      "sentinel2_target_scene_id": "S2B_32RLS_20230128_0_L1C",
+      "validity_time": "2023-01-28T10:00:00Z",
+      "wind_u_m_s": -1.5306244,
+      "wind_v_m_s": 2.6265259
+    },
+    {
+      "cds_request_sha256": "81c382d2208151d10e1724cf17222dfcb717688d07240113142cded9badc5c64",
+      "following": {
+        "grid_latitude": 21.90000000000088,
+        "grid_longitude": 56.00000000000051,
+        "validity_time": "2023-02-02T08:00:00Z",
+        "wind_u_m_s": -3.7003632,
+        "wind_v_m_s": 4.303299
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230202T070803_000606",
+      "grid_latitude": 21.90000000000088,
+      "grid_longitude": 56.00000000000051,
+      "group_id": "emit25km-0009",
+      "previous": {
+        "grid_latitude": 21.90000000000088,
+        "grid_longitude": 56.00000000000051,
+        "validity_time": "2023-02-02T07:00:00Z",
+        "wind_u_m_s": -4.0055847,
+        "wind_v_m_s": 4.2640686
+      },
+      "raw_csv_bytes": 5572,
+      "raw_csv_sha256": "524778653f810b5cde879f6a5faadaf9a4bd86cb6ad16045a59df200b21fa898",
+      "sentinel2_target_datetime": "2023-02-02T07:03:23.296000+00:00",
+      "sentinel2_target_scene_id": "S2A_40QCK_20230202_0_L1C",
+      "validity_time": "2023-02-02T07:00:00Z",
+      "wind_u_m_s": -4.0055847,
+      "wind_v_m_s": 4.2640686
+    },
+    {
+      "cds_request_sha256": "de824e75b1b74ade016590c2726f55dbb58fbec89600424fa321c25bc475e2a7",
+      "following": {
+        "grid_latitude": 38.70000000000112,
+        "grid_longitude": 80.49999999999972,
+        "validity_time": "2023-02-03T06:00:00Z",
+        "wind_u_m_s": 1.5972443,
+        "wind_v_m_s": -0.35483742
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230203T062629_000615",
+      "grid_latitude": 38.70000000000112,
+      "grid_longitude": 80.49999999999972,
+      "group_id": "emit25km-0010",
+      "previous": {
+        "grid_latitude": 38.70000000000112,
+        "grid_longitude": 80.49999999999972,
+        "validity_time": "2023-02-03T05:00:00Z",
+        "wind_u_m_s": 1.5952759,
+        "wind_v_m_s": 0.4115696
+      },
+      "raw_csv_bytes": 5600,
+      "raw_csv_sha256": "2edf6c8034512a4463a5cd2dd61457d7967cbbdf587692c5ac6b54f516f40222",
+      "sentinel2_target_datetime": "2023-02-03T05:38:11.489000+00:00",
+      "sentinel2_target_scene_id": "S2B_44SMH_20230203_0_L1C",
+      "validity_time": "2023-02-03T06:00:00Z",
+      "wind_u_m_s": 1.5972443,
+      "wind_v_m_s": -0.35483742
+    },
+    {
+      "cds_request_sha256": "7b450fc0e72543afd1e7c0e3b540906128dbc7be2870e868b8089c622e48495b",
+      "following": {
+        "grid_latitude": 31.200000000001012,
+        "grid_longitude": 49.000000000000426,
+        "validity_time": "2023-02-19T08:00:00Z",
+        "wind_u_m_s": 3.0843506,
+        "wind_v_m_s": -2.591134
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230219T094118_000669",
+      "grid_latitude": 31.200000000001012,
+      "grid_longitude": 49.000000000000426,
+      "group_id": "emit25km-0011",
+      "previous": {
+        "grid_latitude": 31.200000000001012,
+        "grid_longitude": 49.000000000000426,
+        "validity_time": "2023-02-19T07:00:00Z",
+        "wind_u_m_s": 3.078659,
+        "wind_v_m_s": -2.3510761
+      },
+      "raw_csv_bytes": 5691,
+      "raw_csv_sha256": "d5d4b34c052e59c74c12c569efb644bd00c951e1a6313b616dbe753680cacb3e",
+      "sentinel2_target_datetime": "2023-02-19T07:41:05.623000+00:00",
+      "sentinel2_target_scene_id": "S2B_39RTQ_20230219_0_L1C",
+      "validity_time": "2023-02-19T08:00:00Z",
+      "wind_u_m_s": 3.0843506,
+      "wind_v_m_s": -2.591134
+    },
+    {
+      "cds_request_sha256": "bfd6269f42fb3f6d4a3e560e2dddcdb241dab4b575d440e315fe0cb0097a2afe",
+      "following": {
+        "grid_latitude": 37.4000000000011,
+        "grid_longitude": 94.19999999999891,
+        "validity_time": "2023-02-20T05:00:00Z",
+        "wind_u_m_s": 1.8587036,
+        "wind_v_m_s": -1.7260284
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230220T054540_000688",
+      "grid_latitude": 37.4000000000011,
+      "grid_longitude": 94.19999999999891,
+      "group_id": "emit25km-0012",
+      "previous": {
+        "grid_latitude": 37.4000000000011,
+        "grid_longitude": 94.19999999999891,
+        "validity_time": "2023-02-20T04:00:00Z",
+        "wind_u_m_s": 2.5220947,
+        "wind_v_m_s": -1.5541077
+      },
+      "raw_csv_bytes": 5496,
+      "raw_csv_sha256": "901e3155154d5937cdc0481bf614f7f639e23d799fcb0891a2c8848f9090ecc1",
+      "sentinel2_target_datetime": "2023-02-20T04:38:07.243000+00:00",
+      "sentinel2_target_scene_id": "S2A_46SEG_20230220_0_L1C",
+      "validity_time": "2023-02-20T05:00:00Z",
+      "wind_u_m_s": 1.8587036,
+      "wind_v_m_s": -1.7260284
+    },
+    {
+      "cds_request_sha256": "8a14fcbe14e29168a21e6e86001bf933afbe41ab8330991f029cae6127c183de",
+      "following": {
+        "grid_latitude": 36.400000000001086,
+        "grid_longitude": 42.90000000000035,
+        "validity_time": "2023-02-23T09:00:00Z",
+        "wind_u_m_s": -0.896225,
+        "wind_v_m_s": -0.19178772
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230223T080447_000700",
+      "grid_latitude": 36.400000000001086,
+      "grid_longitude": 42.90000000000035,
+      "group_id": "emit25km-0013",
+      "previous": {
+        "grid_latitude": 36.400000000001086,
+        "grid_longitude": 42.90000000000035,
+        "validity_time": "2023-02-23T08:00:00Z",
+        "wind_u_m_s": -1.4933167,
+        "wind_v_m_s": -0.3205452
+      },
+      "raw_csv_bytes": 5753,
+      "raw_csv_sha256": "4f5c4887fa9f3c1ad2ac8851661a8f9203b58b6286bf99135113b1276f85b282",
+      "sentinel2_target_datetime": "2023-02-23T08:09:41.161000+00:00",
+      "sentinel2_target_scene_id": "S2A_38SLF_20230223_0_L1C",
+      "validity_time": "2023-02-23T08:00:00Z",
+      "wind_u_m_s": -1.4933167,
+      "wind_v_m_s": -0.3205452
+    },
+    {
+      "cds_request_sha256": "e28bfbeb2bec2e6cb627b80ca1ea12b87738663b94023d6b98868860fdf557eb",
+      "following": {
+        "grid_latitude": 13.600000000000804,
+        "grid_longitude": 100.59999999999854,
+        "validity_time": "2023-02-25T04:00:00Z",
+        "wind_u_m_s": -6.8352985,
+        "wind_v_m_s": -2.5625992
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230225T050619_000722",
+      "grid_latitude": 13.600000000000804,
+      "grid_longitude": 100.59999999999854,
+      "group_id": "emit25km-0014",
+      "previous": {
+        "grid_latitude": 13.600000000000804,
+        "grid_longitude": 100.59999999999854,
+        "validity_time": "2023-02-25T03:00:00Z",
+        "wind_u_m_s": -7.1895046,
+        "wind_v_m_s": -2.7438745
+      },
+      "raw_csv_bytes": 5766,
+      "raw_csv_sha256": "268cc599fd0dfe43432dd99ef8d04e7e03abf30bb578a60ddcafd5cedaf07177",
+      "sentinel2_target_datetime": "2023-02-25T03:54:23.382000+00:00",
+      "sentinel2_target_scene_id": "S2A_47PPR_20230225_0_L1C",
+      "validity_time": "2023-02-25T04:00:00Z",
+      "wind_u_m_s": -6.8352985,
+      "wind_v_m_s": -2.5625992
+    },
+    {
+      "cds_request_sha256": "896ad06cf24a127687cf8395fee0cf97966f6308d696d48fd1d99f5d91a26cc6",
+      "following": {
+        "grid_latitude": 9.700000000000818,
+        "grid_longitude": -73.50000000000335,
+        "validity_time": "2023-02-27T16:00:00Z",
+        "wind_u_m_s": -0.4303131,
+        "wind_v_m_s": -0.06965637
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230227T155714_000737",
+      "grid_latitude": 9.700000000000818,
+      "grid_longitude": -73.50000000000335,
+      "group_id": "emit25km-0015",
+      "previous": {
+        "grid_latitude": 9.700000000000818,
+        "grid_longitude": -73.50000000000335,
+        "validity_time": "2023-02-27T15:00:00Z",
+        "wind_u_m_s": -0.7298889,
+        "wind_v_m_s": -0.10870361
+      },
+      "raw_csv_bytes": 5750,
+      "raw_csv_sha256": "9e677767ed15c7e6abeaf34a12ca4647a5ef4316f96e94d62a4d4e83d151da6a",
+      "sentinel2_target_datetime": "2023-02-27T15:30:30.063000+00:00",
+      "sentinel2_target_scene_id": "S2B_18PXR_20230227_0_L1C",
+      "validity_time": "2023-02-27T16:00:00Z",
+      "wind_u_m_s": -0.4303131,
+      "wind_v_m_s": -0.06965637
+    },
+    {
+      "cds_request_sha256": "dd51c1df62f3351cf58fab5b50e5d19b34b20153a7bbb9ca902d60110f2d0c06",
+      "following": {
+        "grid_latitude": 37.5000000000011,
+        "grid_longitude": 61.0000000000006,
+        "validity_time": "2023-03-26T07:00:00Z",
+        "wind_u_m_s": -1.8569946,
+        "wind_v_m_s": 1.7929878
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230326T112521_000769",
+      "grid_latitude": 37.5000000000011,
+      "grid_longitude": 61.0000000000006,
+      "group_id": "emit25km-0016",
+      "previous": {
+        "grid_latitude": 37.5000000000011,
+        "grid_longitude": 61.0000000000006,
+        "validity_time": "2023-03-26T06:00:00Z",
+        "wind_u_m_s": -2.0543213,
+        "wind_v_m_s": 1.7937717
+      },
+      "raw_csv_bytes": 5449,
+      "raw_csv_sha256": "9f7f7b0c5da03bc46d526f008cea468c082d6528178e3a579e3e15a51ed7922c",
+      "sentinel2_target_datetime": "2023-03-26T06:49:06.237000+00:00",
+      "sentinel2_target_scene_id": "S2B_41SLB_20230326_0_L1C",
+      "validity_time": "2023-03-26T07:00:00Z",
+      "wind_u_m_s": -1.8569946,
+      "wind_v_m_s": 1.7929878
+    },
+    {
+      "cds_request_sha256": "1cdf4463add787cebc1e352bd6e12fa4eafca8f723151efa65c279a7fe33c075",
+      "following": {
+        "grid_latitude": 35.80000000000108,
+        "grid_longitude": 10.499999999999972,
+        "validity_time": "2023-03-26T11:00:00Z",
+        "wind_u_m_s": 1.853775,
+        "wind_v_m_s": 3.0811615
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230326T143019_000762",
+      "grid_latitude": 35.80000000000108,
+      "grid_longitude": 10.499999999999972,
+      "group_id": "emit25km-0017",
+      "previous": {
+        "grid_latitude": 35.80000000000108,
+        "grid_longitude": 10.499999999999972,
+        "validity_time": "2023-03-26T10:00:00Z",
+        "wind_u_m_s": 1.9603577,
+        "wind_v_m_s": 4.185974
+      },
+      "raw_csv_bytes": 5620,
+      "raw_csv_sha256": "4ab9c165dd287a28230f52217cc30ef553d112b0eff42ee14322e54fcbda50a4",
+      "sentinel2_target_datetime": "2023-03-26T10:11:00.062000+00:00",
+      "sentinel2_target_scene_id": "S2B_32SPE_20230326_0_L1C",
+      "validity_time": "2023-03-26T10:00:00Z",
+      "wind_u_m_s": 1.9603577,
+      "wind_v_m_s": 4.185974
+    },
+    {
+      "cds_request_sha256": "2bc6b7b6cd41236a2fb6bf2f73842e5b41f17bebaf1a2691391dd9c81a7ef052",
+      "following": {
+        "grid_latitude": 31.600000000001017,
+        "grid_longitude": 5.900000000000006,
+        "validity_time": "2023-04-03T11:00:00Z",
+        "wind_u_m_s": 1.0381012,
+        "wind_v_m_s": -6.4926453
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230403T111837_000787",
+      "grid_latitude": 31.600000000001017,
+      "grid_longitude": 5.900000000000006,
+      "group_id": "emit25km-0018",
+      "previous": {
+        "grid_latitude": 31.600000000001017,
+        "grid_longitude": 5.900000000000006,
+        "validity_time": "2023-04-03T10:00:00Z",
+        "wind_u_m_s": 1.0315552,
+        "wind_v_m_s": -7.1686096
+      },
+      "raw_csv_bytes": 5622,
+      "raw_csv_sha256": "d0704f5be2f84d967d16d18d6857ed0ee679c72153021dab1216a885ce9051d7",
+      "sentinel2_target_datetime": "2023-04-03T10:22:21.335000+00:00",
+      "sentinel2_target_scene_id": "S2A_31RGQ_20230403_0_L1C",
+      "validity_time": "2023-04-03T10:00:00Z",
+      "wind_u_m_s": 1.0315552,
+      "wind_v_m_s": -7.1686096
+    },
+    {
+      "cds_request_sha256": "d0a71679a03b752a2de219a26eddf03e864d8ee53f08d8d3f8792fc415073821",
+      "following": {
+        "grid_latitude": 37.5000000000011,
+        "grid_longitude": 110.79999999999797,
+        "validity_time": "2023-04-18T04:00:00Z",
+        "wind_u_m_s": -0.38771057,
+        "wind_v_m_s": 1.8817902
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230418T060625_000823",
+      "grid_latitude": 37.5000000000011,
+      "grid_longitude": 110.79999999999797,
+      "group_id": "emit25km-0019",
+      "previous": {
+        "grid_latitude": 37.5000000000011,
+        "grid_longitude": 110.79999999999797,
+        "validity_time": "2023-04-18T03:00:00Z",
+        "wind_u_m_s": -0.83924866,
+        "wind_v_m_s": 1.71875
+      },
+      "raw_csv_bytes": 5560,
+      "raw_csv_sha256": "e88adcb9981f392daa7249852c091db12cc0864f9c6c906efa3c603d3f335ef7",
+      "sentinel2_target_datetime": "2023-04-18T03:37:40.945000+00:00",
+      "sentinel2_target_scene_id": "S2B_49SDB_20230418_0_L1C",
+      "validity_time": "2023-04-18T04:00:00Z",
+      "wind_u_m_s": -0.38771057,
+      "wind_v_m_s": 1.8817902
+    },
+    {
+      "cds_request_sha256": "1d1a6ab620abb912b7f423fa3ea58ace86fba458df171d1e6b4067b7b71e0b0c",
+      "following": {
+        "grid_latitude": 39.70000000000113,
+        "grid_longitude": 60.200000000000585,
+        "validity_time": "2023-04-18T07:00:00Z",
+        "wind_u_m_s": -6.258835,
+        "wind_v_m_s": -0.7680969
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230418T091117_002047",
+      "grid_latitude": 39.70000000000113,
+      "grid_longitude": 60.200000000000585,
+      "group_id": "emit25km-0020",
+      "previous": {
+        "grid_latitude": 39.70000000000113,
+        "grid_longitude": 60.200000000000585,
+        "validity_time": "2023-04-18T06:00:00Z",
+        "wind_u_m_s": -6.1414185,
+        "wind_v_m_s": -0.6839447
+      },
+      "raw_csv_bytes": 5691,
+      "raw_csv_sha256": "0cfe5fba7a2b16785bf5d599b17f3bfaafba2c172f66aa40f6031de8fe87984f",
+      "sentinel2_target_datetime": "2023-04-18T06:58:37.377000+00:00",
+      "sentinel2_target_scene_id": "S2B_40SGJ_20230418_0_L1C",
+      "validity_time": "2023-04-18T07:00:00Z",
+      "wind_u_m_s": -6.258835,
+      "wind_v_m_s": -0.7680969
+    },
+    {
+      "cds_request_sha256": "558a965e81c035d17795e434f24d35b505405c1029cbbb1bf91940edb01fd56e",
+      "following": {
+        "grid_latitude": 39.900000000001135,
+        "grid_longitude": 65.90000000000055,
+        "validity_time": "2023-06-03T07:00:00Z",
+        "wind_u_m_s": 0.003829956,
+        "wind_v_m_s": -1.4979858
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230603T080327_000264",
+      "grid_latitude": 39.900000000001135,
+      "grid_longitude": 65.90000000000055,
+      "group_id": "emit25km-0021",
+      "previous": {
+        "grid_latitude": 39.900000000001135,
+        "grid_longitude": 65.90000000000055,
+        "validity_time": "2023-06-03T06:00:00Z",
+        "wind_u_m_s": -0.90864563,
+        "wind_v_m_s": -0.019180298
+      },
+      "raw_csv_bytes": 5728,
+      "raw_csv_sha256": "220b299129d686960aa6e945e530ddeae270cb2b33cf15cdd03b5cf7fc0d390c",
+      "sentinel2_target_datetime": "2023-06-03T06:28:16.588000+00:00",
+      "sentinel2_target_scene_id": "S2A_41TQE_20230603_0_L1C",
+      "validity_time": "2023-06-03T06:00:00Z",
+      "wind_u_m_s": -0.90864563,
+      "wind_v_m_s": -0.019180298
+    },
+    {
+      "cds_request_sha256": "c2a28558f93cfe4ea021a820c01fcdbfe91bc5d6a89389cc7ed0606b768a90be",
+      "following": {
+        "grid_latitude": 36.00000000000108,
+        "grid_longitude": 61.60000000000059,
+        "validity_time": "2023-04-25T07:00:00Z",
+        "wind_u_m_s": -2.339325,
+        "wind_v_m_s": -1.3802338
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230425T064628_002840",
+      "grid_latitude": 36.00000000000108,
+      "grid_longitude": 61.60000000000059,
+      "group_id": "emit25km-0022",
+      "previous": {
+        "grid_latitude": 36.00000000000108,
+        "grid_longitude": 61.60000000000059,
+        "validity_time": "2023-04-25T06:00:00Z",
+        "wind_u_m_s": -0.5891571,
+        "wind_v_m_s": -1.8277941
+      },
+      "raw_csv_bytes": 5618,
+      "raw_csv_sha256": "f41f293b8346e00acf6180cdbfaae2b47a077587bdd8cec87dc59ec2a0042464",
+      "sentinel2_target_datetime": "2023-04-25T06:49:34.222000+00:00",
+      "sentinel2_target_scene_id": "S2B_41SLV_20230425_0_L1C",
+      "validity_time": "2023-04-25T07:00:00Z",
+      "wind_u_m_s": -2.339325,
+      "wind_v_m_s": -1.3802338
+    },
+    {
+      "cds_request_sha256": "6175540dc40945162d0324f527a5ba3587387e852002ee3da6d58919b7cb927a",
+      "following": {
+        "grid_latitude": 42.000000000001165,
+        "grid_longitude": 86.59999999999934,
+        "validity_time": "2023-06-02T06:00:00Z",
+        "wind_u_m_s": -1.6202087,
+        "wind_v_m_s": -1.635973
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230602T071917_000321",
+      "grid_latitude": 42.000000000001165,
+      "grid_longitude": 86.59999999999934,
+      "group_id": "emit25km-0023",
+      "previous": {
+        "grid_latitude": 42.000000000001165,
+        "grid_longitude": 86.59999999999934,
+        "validity_time": "2023-06-02T05:00:00Z",
+        "wind_u_m_s": -1.2608643,
+        "wind_v_m_s": -1.6031294
+      },
+      "raw_csv_bytes": 5718,
+      "raw_csv_sha256": "607eb2bc9b20af2d483cd50714660926518ee1d0e733ef7c79a96cdbc34cf803",
+      "sentinel2_target_datetime": "2023-06-02T05:17:09.448000+00:00",
+      "sentinel2_target_scene_id": "S2A_45TVG_20230602_0_L1C",
+      "validity_time": "2023-06-02T05:00:00Z",
+      "wind_u_m_s": -1.2608643,
+      "wind_v_m_s": -1.6031294
+    },
+    {
+      "cds_request_sha256": "d8db3b52790de76af8062731f368d7144848b4cce8597ab96868002516a6bc85",
+      "following": {
+        "grid_latitude": 31.80000000000102,
+        "grid_longitude": -104.30000000001024,
+        "validity_time": "2023-06-04T18:00:00Z",
+        "wind_u_m_s": -3.428978,
+        "wind_v_m_s": -1.1569796
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230604T180205_000219",
+      "grid_latitude": 31.80000000000102,
+      "grid_longitude": -104.30000000001024,
+      "group_id": "emit25km-0024",
+      "previous": {
+        "grid_latitude": 31.80000000000102,
+        "grid_longitude": -104.30000000001024,
+        "validity_time": "2023-06-04T17:00:00Z",
+        "wind_u_m_s": -2.8536377,
+        "wind_v_m_s": -0.65322685
+      },
+      "raw_csv_bytes": 5761,
+      "raw_csv_sha256": "4b14eda43e540cb8ea98cf780ea5298fb8684a9c922f2c5c5c4fdba19a757f8d",
+      "sentinel2_target_datetime": "2023-06-04T17:45:13.679000+00:00",
+      "sentinel2_target_scene_id": "S2A_13SER_20230604_0_L1C",
+      "validity_time": "2023-06-04T18:00:00Z",
+      "wind_u_m_s": -3.428978,
+      "wind_v_m_s": -1.1569796
+    },
+    {
+      "cds_request_sha256": "68470a3a9dc377de6df42208abaf87fbbb8fbea3dbec399055da51e1b6c82a42",
+      "following": {
+        "grid_latitude": 48.20000000000125,
+        "grid_longitude": 57.30000000000055,
+        "validity_time": "2023-06-06T08:00:00Z",
+        "wind_u_m_s": -2.5445404,
+        "wind_v_m_s": -0.9483948
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230606T085011_002433",
+      "grid_latitude": 48.20000000000125,
+      "grid_longitude": 57.30000000000055,
+      "group_id": "emit25km-0025",
+      "previous": {
+        "grid_latitude": 48.20000000000125,
+        "grid_longitude": 57.30000000000055,
+        "validity_time": "2023-06-06T07:00:00Z",
+        "wind_u_m_s": -1.8830872,
+        "wind_v_m_s": -1.1054535
+      },
+      "raw_csv_bytes": 5588,
+      "raw_csv_sha256": "6dd96151df5e3b85cab9dca671b5eee78d628ddfe7222c74da8de28b3a6ea6fc",
+      "sentinel2_target_datetime": "2023-06-06T07:26:11.624000+00:00",
+      "sentinel2_target_scene_id": "S2B_40UEU_20230606_0_L1C",
+      "validity_time": "2023-06-06T07:00:00Z",
+      "wind_u_m_s": -1.8830872,
+      "wind_v_m_s": -1.1054535
+    },
+    {
+      "cds_request_sha256": "763f78dcfb6674b59403d775d8b4ce84f39e8c62550462c3bfcfc49db96a6129",
+      "following": {
+        "grid_latitude": 29.60000000000099,
+        "grid_longitude": 7.0,
+        "validity_time": "2023-06-07T11:00:00Z",
+        "wind_u_m_s": -2.8904266,
+        "wind_v_m_s": -3.2955627
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230607T092641_000939",
+      "grid_latitude": 29.60000000000099,
+      "grid_longitude": 7.0,
+      "group_id": "emit25km-0026",
+      "previous": {
+        "grid_latitude": 29.60000000000099,
+        "grid_longitude": 7.0,
+        "validity_time": "2023-06-07T10:00:00Z",
+        "wind_u_m_s": -3.5030975,
+        "wind_v_m_s": -3.541565
+      },
+      "raw_csv_bytes": 4604,
+      "raw_csv_sha256": "4b60922cc3914d15544486867d0107cf0871b79276f9d73586bd3edea1689f59",
+      "sentinel2_target_datetime": "2023-06-07T10:22:49.557000+00:00",
+      "sentinel2_target_scene_id": "S2B_32RLT_20230607_0_L1C",
+      "validity_time": "2023-06-07T10:00:00Z",
+      "wind_u_m_s": -3.5030975,
+      "wind_v_m_s": -3.541565
+    },
+    {
+      "cds_request_sha256": "9e53f12c63bbcacfc21119dba1cdc3a22cfa67953d739c727ad473a863cfebb2",
+      "following": {
+        "grid_latitude": 36.400000000001086,
+        "grid_longitude": -114.90000000000964,
+        "validity_time": "2023-06-09T19:00:00Z",
+        "wind_u_m_s": -0.110687256,
+        "wind_v_m_s": 2.9896088
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230609T171010_000953",
+      "grid_latitude": 36.400000000001086,
+      "grid_longitude": -114.90000000000964,
+      "group_id": "emit25km-0027",
+      "previous": {
+        "grid_latitude": 36.400000000001086,
+        "grid_longitude": -114.90000000000964,
+        "validity_time": "2023-06-09T18:00:00Z",
+        "wind_u_m_s": 0.20111084,
+        "wind_v_m_s": 3.5858393
+      },
+      "raw_csv_bytes": 5791,
+      "raw_csv_sha256": "9c3f562c6690de025de1a7d76b46b23e4bf6623f2dcd962643d6145e0e91afb8",
+      "sentinel2_target_datetime": "2023-06-09T18:34:16.764000+00:00",
+      "sentinel2_target_scene_id": "S2A_11SPA_20230609_0_L1C",
+      "validity_time": "2023-06-09T19:00:00Z",
+      "wind_u_m_s": -0.110687256,
+      "wind_v_m_s": 2.9896088
+    },
+    {
+      "cds_request_sha256": "b5269ce3ad32153f57b8c175712ee6132c2e0420f186a80c45f00153607a9356",
+      "following": {
+        "grid_latitude": 40.80000000000115,
+        "grid_longitude": 61.30000000000061,
+        "validity_time": "2023-06-14T07:00:00Z",
+        "wind_u_m_s": -2.0404205,
+        "wind_v_m_s": -5.116049
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230614T102403_000043",
+      "grid_latitude": 40.80000000000115,
+      "grid_longitude": 61.30000000000061,
+      "group_id": "emit25km-0028",
+      "previous": {
+        "grid_latitude": 40.80000000000115,
+        "grid_longitude": 61.30000000000061,
+        "validity_time": "2023-06-14T06:00:00Z",
+        "wind_u_m_s": -2.0317688,
+        "wind_v_m_s": -4.874584
+      },
+      "raw_csv_bytes": 5621,
+      "raw_csv_sha256": "6d44198b7273050aacc7d35e3a9e951dc85165f08eb81ddf7e291db158c195c1",
+      "sentinel2_target_datetime": "2023-06-14T06:48:10.242000+00:00",
+      "sentinel2_target_scene_id": "S2B_41TLF_20230614_0_L1C",
+      "validity_time": "2023-06-14T07:00:00Z",
+      "wind_u_m_s": -2.0404205,
+      "wind_v_m_s": -5.116049
+    },
+    {
+      "cds_request_sha256": "e132e239334fe51b573069082b49259503fdc78c889ccf965d4c19f89ca35bba",
+      "following": {
+        "grid_latitude": 40.00000000000114,
+        "grid_longitude": 61.700000000000614,
+        "validity_time": "2023-07-29T07:00:00Z",
+        "wind_u_m_s": -2.704712,
+        "wind_v_m_s": -4.473297
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230729T100630_000234",
+      "grid_latitude": 40.00000000000114,
+      "grid_longitude": 61.700000000000614,
+      "group_id": "emit25km-0029",
+      "previous": {
+        "grid_latitude": 40.00000000000114,
+        "grid_longitude": 61.700000000000614,
+        "validity_time": "2023-07-29T06:00:00Z",
+        "wind_u_m_s": -2.2048645,
+        "wind_v_m_s": -4.2083435
+      },
+      "raw_csv_bytes": 5697,
+      "raw_csv_sha256": "f3cfe025c0da85fdde06dab21b4a3328b0f959a60df42d80cb04e21b7b2026d4",
+      "sentinel2_target_datetime": "2023-07-29T06:48:25.294000+00:00",
+      "sentinel2_target_scene_id": "S2A_41TLE_20230729_0_L1C",
+      "validity_time": "2023-07-29T07:00:00Z",
+      "wind_u_m_s": -2.704712,
+      "wind_v_m_s": -4.473297
+    },
+    {
+      "cds_request_sha256": "d08a55ed0db8cd599b01a817ab5ebfaba54addd6761b153604cd3ef842d74fc6",
+      "following": {
+        "grid_latitude": 40.40000000000114,
+        "grid_longitude": 62.10000000000062,
+        "validity_time": "2023-06-14T07:00:00Z",
+        "wind_u_m_s": -2.4173737,
+        "wind_v_m_s": -4.559408
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230614T102415_000044",
+      "grid_latitude": 40.40000000000114,
+      "grid_longitude": 62.10000000000062,
+      "group_id": "emit25km-0030",
+      "previous": {
+        "grid_latitude": 40.40000000000114,
+        "grid_longitude": 62.10000000000062,
+        "validity_time": "2023-06-14T06:00:00Z",
+        "wind_u_m_s": -1.245636,
+        "wind_v_m_s": -5.230053
+      },
+      "raw_csv_bytes": 5597,
+      "raw_csv_sha256": "76232ca6643683a812bebdfe76964312187591921b96adbda22967f61e3594b9",
+      "sentinel2_target_datetime": "2023-06-14T06:48:21.395000+00:00",
+      "sentinel2_target_scene_id": "S2B_41TME_20230614_0_L1C",
+      "validity_time": "2023-06-14T07:00:00Z",
+      "wind_u_m_s": -2.4173737,
+      "wind_v_m_s": -4.559408
+    },
+    {
+      "cds_request_sha256": "6291cbb2a5283b623920160db720db4ca2215a4d2474d50f431697ac7675b1e1",
+      "following": {
+        "grid_latitude": 47.80000000000125,
+        "grid_longitude": -96.6000000000086,
+        "validity_time": "2023-06-14T18:00:00Z",
+        "wind_u_m_s": -0.78382874,
+        "wind_v_m_s": -2.3995667
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230614T193706_000038",
+      "grid_latitude": 47.80000000000125,
+      "grid_longitude": -96.6000000000086,
+      "group_id": "emit25km-0031",
+      "previous": {
+        "grid_latitude": 47.80000000000125,
+        "grid_longitude": -96.6000000000086,
+        "validity_time": "2023-06-14T17:00:00Z",
+        "wind_u_m_s": -1.026413,
+        "wind_v_m_s": -1.8831329
+      },
+      "raw_csv_bytes": 5632,
+      "raw_csv_sha256": "205c601a3f58aeda65205386fa2e9030874666cf7d33e4adfaa25203a36678ca",
+      "sentinel2_target_datetime": "2023-06-14T17:40:45.057000+00:00",
+      "sentinel2_target_scene_id": "S2A_14TPT_20230614_0_L1C",
+      "validity_time": "2023-06-14T18:00:00Z",
+      "wind_u_m_s": -0.78382874,
+      "wind_v_m_s": -2.3995667
+    },
+    {
+      "cds_request_sha256": "cdb1ae9aaa629525aa0f3aa71fead4edfaa625f07858a047cfdb14b64843c18d",
+      "following": {
+        "grid_latitude": 31.90000000000102,
+        "grid_longitude": -101.80000000000979,
+        "validity_time": "2023-12-01T18:00:00Z",
+        "wind_u_m_s": 4.3942566,
+        "wind_v_m_s": 1.6922665
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231201T183549_001997",
+      "grid_latitude": 31.90000000000102,
+      "grid_longitude": -101.80000000000979,
+      "group_id": "emit25km-0032",
+      "previous": {
+        "grid_latitude": 31.90000000000102,
+        "grid_longitude": -101.80000000000979,
+        "validity_time": "2023-12-01T17:00:00Z",
+        "wind_u_m_s": 2.789566,
+        "wind_v_m_s": 1.7674427
+      },
+      "raw_csv_bytes": 5666,
+      "raw_csv_sha256": "602accfe5efe35927fc26137ea72a5ff21574bf92beb1189013cdd4409d872bd",
+      "sentinel2_target_datetime": "2023-12-01T17:44:54.751000+00:00",
+      "sentinel2_target_scene_id": "S2A_13SGR_20231201_0_L1C",
+      "validity_time": "2023-12-01T18:00:00Z",
+      "wind_u_m_s": 4.3942566,
+      "wind_v_m_s": 1.6922665
+    },
+    {
+      "cds_request_sha256": "59877025c97ebcad3d31622686e5d5961b701a07eb312bab157ac3761237c16c",
+      "following": {
+        "grid_latitude": 46.100000000001224,
+        "grid_longitude": 65.10000000000059,
+        "validity_time": "2023-06-24T07:00:00Z",
+        "wind_u_m_s": 4.556534,
+        "wind_v_m_s": 2.5330677
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230624T053036_000180",
+      "grid_latitude": 46.100000000001224,
+      "grid_longitude": 65.10000000000059,
+      "group_id": "emit25km-0033",
+      "previous": {
+        "grid_latitude": 46.100000000001224,
+        "grid_longitude": 65.10000000000059,
+        "validity_time": "2023-06-24T06:00:00Z",
+        "wind_u_m_s": 3.776001,
+        "wind_v_m_s": 3.87251
+      },
+      "raw_csv_bytes": 5646,
+      "raw_csv_sha256": "2cbc31e608336dec8b03fbba3a79a1687414b7802ad042c94e47ecb946c31962",
+      "sentinel2_target_datetime": "2023-06-24T06:46:32.121000+00:00",
+      "sentinel2_target_scene_id": "S2B_41TPM_20230624_0_L1C",
+      "validity_time": "2023-06-24T07:00:00Z",
+      "wind_u_m_s": 4.556534,
+      "wind_v_m_s": 2.5330677
+    },
+    {
+      "cds_request_sha256": "9d00dc660a0fbb4e6c383ad02ba204fe58982a1d44647869299d3bac28abb107",
+      "following": {
+        "grid_latitude": 37.800000000001106,
+        "grid_longitude": 111.09999999999798,
+        "validity_time": "2023-06-29T04:00:00Z",
+        "wind_u_m_s": 1.6890106,
+        "wind_v_m_s": -0.5704346
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230629T013516_000143",
+      "grid_latitude": 37.800000000001106,
+      "grid_longitude": 111.09999999999798,
+      "group_id": "emit25km-0034",
+      "previous": {
+        "grid_latitude": 37.800000000001106,
+        "grid_longitude": 111.09999999999798,
+        "validity_time": "2023-06-29T03:00:00Z",
+        "wind_u_m_s": 1.3205566,
+        "wind_v_m_s": -0.9113159
+      },
+      "raw_csv_bytes": 5728,
+      "raw_csv_sha256": "fdc32a4dd8b843e4c958d130c9ad9b4f82533aee98d9675f28d0d89d4d362431",
+      "sentinel2_target_datetime": "2023-06-29T03:27:43.690000+00:00",
+      "sentinel2_target_scene_id": "S2A_49SEB_20230629_0_L1C",
+      "validity_time": "2023-06-29T03:00:00Z",
+      "wind_u_m_s": 1.3205566,
+      "wind_v_m_s": -0.9113159
+    },
+    {
+      "cds_request_sha256": "6a55006e5891383fad30f9eec3a3b99f8554b05d6f8095bec3bbd962865de78f",
+      "following": {
+        "grid_latitude": 38.60000000000112,
+        "grid_longitude": 63.000000000000625,
+        "validity_time": "2023-08-10T07:00:00Z",
+        "wind_u_m_s": 1.8414764,
+        "wind_v_m_s": -4.712448
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230810T051552_001411",
+      "grid_latitude": 38.60000000000112,
+      "grid_longitude": 63.000000000000625,
+      "group_id": "emit25km-0035",
+      "previous": {
+        "grid_latitude": 38.60000000000112,
+        "grid_longitude": 63.000000000000625,
+        "validity_time": "2023-08-10T06:00:00Z",
+        "wind_u_m_s": 1.1877289,
+        "wind_v_m_s": -4.875929
+      },
+      "raw_csv_bytes": 5659,
+      "raw_csv_sha256": "99f217cd64aaf3be1ca3d080cbfe5493b765fec3309eec700cba51e7891948b1",
+      "sentinel2_target_datetime": "2023-08-10T06:38:50.764000+00:00",
+      "sentinel2_target_scene_id": "S2B_41SNC_20230810_0_L1C",
+      "validity_time": "2023-08-10T07:00:00Z",
+      "wind_u_m_s": 1.8414764,
+      "wind_v_m_s": -4.712448
+    },
+    {
+      "cds_request_sha256": "9cc7325dcc6c94ee7cc7c2f377a64acab51dfacf4e3e1cceb94d7d1d9d1fea6d",
+      "following": {
+        "grid_latitude": 38.500000000001116,
+        "grid_longitude": 54.2000000000005,
+        "validity_time": "2023-07-28T08:00:00Z",
+        "wind_u_m_s": 0.96673584,
+        "wind_v_m_s": -2.0866547
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230728T105313_001637",
+      "grid_latitude": 38.500000000001116,
+      "grid_longitude": 54.2000000000005,
+      "group_id": "emit25km-0036",
+      "previous": {
+        "grid_latitude": 38.500000000001116,
+        "grid_longitude": 54.2000000000005,
+        "validity_time": "2023-07-28T07:00:00Z",
+        "wind_u_m_s": 0.7384186,
+        "wind_v_m_s": -1.8085175
+      },
+      "raw_csv_bytes": 5526,
+      "raw_csv_sha256": "663da77dba0b2bf586fca14e872bfff5c329830b9dd1240391abae89a30f4afc",
+      "sentinel2_target_datetime": "2023-07-28T07:19:06.722000+00:00",
+      "sentinel2_target_scene_id": "S2A_39SYC_20230728_0_L1C",
+      "validity_time": "2023-07-28T07:00:00Z",
+      "wind_u_m_s": 0.7384186,
+      "wind_v_m_s": -1.8085175
+    },
+    {
+      "cds_request_sha256": "661863071370030a5f8fed93221ac4ea70337273440d18e29247ec8b7beb8fad",
+      "following": {
+        "grid_latitude": 44.000000000001194,
+        "grid_longitude": 58.70000000000056,
+        "validity_time": "2023-08-04T08:00:00Z",
+        "wind_u_m_s": -3.9690247,
+        "wind_v_m_s": -2.0468292
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230804T082948_000973",
+      "grid_latitude": 44.000000000001194,
+      "grid_longitude": 58.70000000000056,
+      "group_id": "emit25km-0037",
+      "previous": {
+        "grid_latitude": 44.000000000001194,
+        "grid_longitude": 58.70000000000056,
+        "validity_time": "2023-08-04T07:00:00Z",
+        "wind_u_m_s": -4.291214,
+        "wind_v_m_s": -2.1198273
+      },
+      "raw_csv_bytes": 5697,
+      "raw_csv_sha256": "bbaa0e6baa4159d4811ef20de27475ea7c222f80e721f4d1ff5ee416aa7685cf",
+      "sentinel2_target_datetime": "2023-08-04T07:07:27.874000+00:00",
+      "sentinel2_target_scene_id": "S2A_40TFP_20230804_0_L1C",
+      "validity_time": "2023-08-04T07:00:00Z",
+      "wind_u_m_s": -4.291214,
+      "wind_v_m_s": -2.1198273
+    },
+    {
+      "cds_request_sha256": "d2997b356adec2ab509f3ef6055d7258bed6e4179a4329e5c532b65efe23fa3e",
+      "following": {
+        "grid_latitude": 39.100000000001124,
+        "grid_longitude": 109.69999999999806,
+        "validity_time": "2023-08-06T04:00:00Z",
+        "wind_u_m_s": -0.79325867,
+        "wind_v_m_s": 3.0317535
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230806T034659_001088",
+      "grid_latitude": 39.100000000001124,
+      "grid_longitude": 109.69999999999806,
+      "group_id": "emit25km-0038",
+      "previous": {
+        "grid_latitude": 39.100000000001124,
+        "grid_longitude": 109.69999999999806,
+        "validity_time": "2023-08-06T03:00:00Z",
+        "wind_u_m_s": -0.763504,
+        "wind_v_m_s": 2.6568756
+      },
+      "raw_csv_bytes": 5720,
+      "raw_csv_sha256": "1c39b74db9cbbea390e12f7a7022ce33e305c41118f466d233b5323bca2d9b5f",
+      "sentinel2_target_datetime": "2023-08-06T03:37:19.211000+00:00",
+      "sentinel2_target_scene_id": "S2B_49SCD_20230806_0_L1C",
+      "validity_time": "2023-08-06T04:00:00Z",
+      "wind_u_m_s": -0.79325867,
+      "wind_v_m_s": 3.0317535
+    },
+    {
+      "cds_request_sha256": "50a2ad8e5e7f1c35534c302946fd5ce9244de6a43a739fada4156e05fdf5185b",
+      "following": {
+        "grid_latitude": 46.900000000001235,
+        "grid_longitude": 48.40000000000043,
+        "validity_time": "2023-08-14T08:00:00Z",
+        "wind_u_m_s": -2.8340454,
+        "wind_v_m_s": 4.4206543
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230814T100720_001443",
+      "grid_latitude": 46.900000000001235,
+      "grid_longitude": 48.40000000000043,
+      "group_id": "emit25km-0039",
+      "previous": {
+        "grid_latitude": 46.900000000001235,
+        "grid_longitude": 48.40000000000043,
+        "validity_time": "2023-08-14T07:00:00Z",
+        "wind_u_m_s": -2.9461975,
+        "wind_v_m_s": 4.16185
+      },
+      "raw_csv_bytes": 5607,
+      "raw_csv_sha256": "c16fe3d43f98d99911879663d6b86f2d2755c191d6abcc5e0cc43bfcd54b00cc",
+      "sentinel2_target_datetime": "2023-08-14T07:57:00.449000+00:00",
+      "sentinel2_target_scene_id": "S2B_38TQS_20230814_0_L1C",
+      "validity_time": "2023-08-14T08:00:00Z",
+      "wind_u_m_s": -2.8340454,
+      "wind_v_m_s": 4.4206543
+    },
+    {
+      "cds_request_sha256": "31ce57a7e20ca064ffca949e0ae141c5f487548a8c9e1705105adce5de6825c8",
+      "following": {
+        "grid_latitude": 35.40000000000107,
+        "grid_longitude": 40.40000000000032,
+        "validity_time": "2023-08-17T09:00:00Z",
+        "wind_u_m_s": 1.8469696,
+        "wind_v_m_s": -2.503952
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230817T105803_001184",
+      "grid_latitude": 35.40000000000107,
+      "grid_longitude": 40.40000000000032,
+      "group_id": "emit25km-0040",
+      "previous": {
+        "grid_latitude": 35.40000000000107,
+        "grid_longitude": 40.40000000000032,
+        "validity_time": "2023-08-17T08:00:00Z",
+        "wind_u_m_s": 2.4348755,
+        "wind_v_m_s": -3.3450012
+      },
+      "raw_csv_bytes": 5548,
+      "raw_csv_sha256": "119103ee39eae0446412576edf90b401db4f02bc3883f7187b781889ebe6ad44",
+      "sentinel2_target_datetime": "2023-08-17T08:10:13.072000+00:00",
+      "sentinel2_target_scene_id": "S2B_37SFV_20230817_0_L1C",
+      "validity_time": "2023-08-17T08:00:00Z",
+      "wind_u_m_s": 2.4348755,
+      "wind_v_m_s": -3.3450012
+    },
+    {
+      "cds_request_sha256": "b682a8bc9911d5ad1b05ca0a6ebada74e0c0b073010a2c293f54631e785a44c8",
+      "following": {
+        "grid_latitude": 38.30000000000111,
+        "grid_longitude": -121.80000000000928,
+        "validity_time": "2023-08-22T20:00:00Z",
+        "wind_u_m_s": 0.8268738,
+        "wind_v_m_s": 0.95684814
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230822T192519_002906",
+      "grid_latitude": 38.30000000000111,
+      "grid_longitude": -121.80000000000928,
+      "group_id": "emit25km-0041",
+      "previous": {
+        "grid_latitude": 38.30000000000111,
+        "grid_longitude": -121.80000000000928,
+        "validity_time": "2023-08-22T19:00:00Z",
+        "wind_u_m_s": 0.7936096,
+        "wind_v_m_s": 0.4658661
+      },
+      "raw_csv_bytes": 5695,
+      "raw_csv_sha256": "41b580f5be5b1f5bd675142f4c8d0469b94183ef5a97a11c37c8d0ba46106ce3",
+      "sentinel2_target_datetime": "2023-08-22T19:03:59.396000+00:00",
+      "sentinel2_target_scene_id": "S2B_10SEH_20230822_0_L1C",
+      "validity_time": "2023-08-22T19:00:00Z",
+      "wind_u_m_s": 0.7936096,
+      "wind_v_m_s": 0.4658661
+    },
+    {
+      "cds_request_sha256": "2874451995460a87a15e301849eb1ca34084a11d3d65ec404f70453be8862fe1",
+      "following": {
+        "grid_latitude": -21.699999999999203,
+        "grid_longitude": 144.3999999999961,
+        "validity_time": "2023-09-03T01:00:00Z",
+        "wind_u_m_s": 0.6314087,
+        "wind_v_m_s": -5.597168
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230903T010049_001659",
+      "grid_latitude": -21.699999999999203,
+      "grid_longitude": 144.3999999999961,
+      "group_id": "emit25km-0042",
+      "previous": {
+        "grid_latitude": -21.699999999999203,
+        "grid_longitude": 144.3999999999961,
+        "validity_time": "2023-09-03T00:00:00Z",
+        "wind_u_m_s": -0.1709137,
+        "wind_v_m_s": -5.5672607
+      },
+      "raw_csv_bytes": 5740,
+      "raw_csv_sha256": "fc4a417a2f2362fe4332540f34d11d6d46f5def31eb37ebd191b05e7ec1c7497",
+      "sentinel2_target_datetime": "2023-09-03T00:43:10.347000+00:00",
+      "sentinel2_target_scene_id": "S2A_54KZA_20230903_0_L1C",
+      "validity_time": "2023-09-03T01:00:00Z",
+      "wind_u_m_s": 0.6314087,
+      "wind_v_m_s": -5.597168
+    },
+    {
+      "cds_request_sha256": "20980400ecf05f01606c7527c3a0217f051f0072df35de1edf6a0670df111e1e",
+      "following": {
+        "grid_latitude": -39.19999999999945,
+        "grid_longitude": -64.20000000000124,
+        "validity_time": "2023-09-08T15:00:00Z",
+        "wind_u_m_s": 3.7942047,
+        "wind_v_m_s": 0.9174347
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230908T141043_000225",
+      "grid_latitude": -39.19999999999945,
+      "grid_longitude": -64.20000000000124,
+      "group_id": "emit25km-0043",
+      "previous": {
+        "grid_latitude": -39.19999999999945,
+        "grid_longitude": -64.20000000000124,
+        "validity_time": "2023-09-08T14:00:00Z",
+        "wind_u_m_s": 4.1453247,
+        "wind_v_m_s": 1.0740204
+      },
+      "raw_csv_bytes": 5716,
+      "raw_csv_sha256": "28c2fcb22a342c85539e9e053a1b67490acb56aa8e4238ae43f7edeb6cd52c4b",
+      "sentinel2_target_datetime": "2023-09-08T14:13:46.662000+00:00",
+      "sentinel2_target_scene_id": "S2B_20HLB_20230908_0_L1C",
+      "validity_time": "2023-09-08T14:00:00Z",
+      "wind_u_m_s": 4.1453247,
+      "wind_v_m_s": 1.0740204
+    },
+    {
+      "cds_request_sha256": "24b5d854ecf2b786c64ca343da0b8d807cc3bab0469760186a21b53887643cda",
+      "following": {
+        "grid_latitude": 45.00000000000121,
+        "grid_longitude": 45.100000000000364,
+        "validity_time": "2023-09-28T08:00:00Z",
+        "wind_u_m_s": -5.0199738,
+        "wind_v_m_s": 0.17896271
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20230928T114538_001694",
+      "grid_latitude": 45.00000000000121,
+      "grid_longitude": 45.100000000000364,
+      "group_id": "emit25km-0044",
+      "previous": {
+        "grid_latitude": 45.00000000000121,
+        "grid_longitude": 45.100000000000364,
+        "validity_time": "2023-09-28T07:00:00Z",
+        "wind_u_m_s": -4.2844543,
+        "wind_v_m_s": -0.29645157
+      },
+      "raw_csv_bytes": 5689,
+      "raw_csv_sha256": "bec167cbe35cc9eda82b11954b22f5604e6183e041ccaebd021ed0b3b85afb16",
+      "sentinel2_target_datetime": "2023-09-28T07:57:33.108000+00:00",
+      "sentinel2_target_scene_id": "S2A_38TNQ_20230928_0_L1C",
+      "validity_time": "2023-09-28T08:00:00Z",
+      "wind_u_m_s": -5.0199738,
+      "wind_v_m_s": 0.17896271
+    },
+    {
+      "cds_request_sha256": "1558e033b06ec52dd4d8968255852c8867f250c9644c113199bcec63ba2d2a4e",
+      "following": {
+        "grid_latitude": 39.50000000000113,
+        "grid_longitude": 53.7000000000005,
+        "validity_time": "2024-10-05T08:00:00Z",
+        "wind_u_m_s": 3.7360077,
+        "wind_v_m_s": -3.1057806
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241005T065118_003706",
+      "grid_latitude": 39.50000000000113,
+      "grid_longitude": 53.7000000000005,
+      "group_id": "emit25km-0045",
+      "previous": {
+        "grid_latitude": 39.50000000000113,
+        "grid_longitude": 53.7000000000005,
+        "validity_time": "2024-10-05T07:00:00Z",
+        "wind_u_m_s": 3.2433014,
+        "wind_v_m_s": -2.6504354
+      },
+      "raw_csv_bytes": 5505,
+      "raw_csv_sha256": "c89bf1a6d007a51f61e1ca31e9dcaa62a6d61c75c4b9de8bb644416495dd6ce8",
+      "sentinel2_target_datetime": "2024-10-05T07:18:47.017000+00:00",
+      "sentinel2_target_scene_id": "S2B_40SBJ_20241005_0_L1C",
+      "validity_time": "2024-10-05T07:00:00Z",
+      "wind_u_m_s": 3.2433014,
+      "wind_v_m_s": -2.6504354
+    },
+    {
+      "cds_request_sha256": "acbd154e012386c5eb005e92477d7c631d13e194309e429cf4d91d6dde4a11fa",
+      "following": {
+        "grid_latitude": 32.100000000001025,
+        "grid_longitude": -106.9000000000101,
+        "validity_time": "2023-12-04T18:00:00Z",
+        "wind_u_m_s": -0.73057556,
+        "wind_v_m_s": -0.034957886
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231204T174618_002010",
+      "grid_latitude": 32.100000000001025,
+      "grid_longitude": -106.9000000000101,
+      "group_id": "emit25km-0046",
+      "previous": {
+        "grid_latitude": 32.100000000001025,
+        "grid_longitude": -106.9000000000101,
+        "validity_time": "2023-12-04T17:00:00Z",
+        "wind_u_m_s": -0.50476074,
+        "wind_v_m_s": -0.34863853
+      },
+      "raw_csv_bytes": 5753,
+      "raw_csv_sha256": "a96b434bf01abeb667818a39f9d9a3372f2549d027e49e6fe810745a7c538df1",
+      "sentinel2_target_datetime": "2023-12-04T17:55:05.893000+00:00",
+      "sentinel2_target_scene_id": "S2A_13SCR_20231204_0_L1C",
+      "validity_time": "2023-12-04T18:00:00Z",
+      "wind_u_m_s": -0.73057556,
+      "wind_v_m_s": -0.034957886
+    },
+    {
+      "cds_request_sha256": "bfed6eec521d849fd9ef56741049c935b3083a4791930d4c50aef1a5e55642eb",
+      "following": {
+        "grid_latitude": 29.70000000000099,
+        "grid_longitude": 21.100000000000023,
+        "validity_time": "2023-12-06T10:00:00Z",
+        "wind_u_m_s": 3.459076,
+        "wind_v_m_s": 2.0662384
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231206T082610_002181",
+      "grid_latitude": 29.70000000000099,
+      "grid_longitude": 21.100000000000023,
+      "group_id": "emit25km-0047",
+      "previous": {
+        "grid_latitude": 29.70000000000099,
+        "grid_longitude": 21.100000000000023,
+        "validity_time": "2023-12-06T09:00:00Z",
+        "wind_u_m_s": 2.8397675,
+        "wind_v_m_s": 2.376892
+      },
+      "raw_csv_bytes": 5620,
+      "raw_csv_sha256": "406b5227896e4906b4d486bcc0e6b6f49d760149bcc77550668e48b8696f6db9",
+      "sentinel2_target_datetime": "2023-12-06T09:22:20.014000+00:00",
+      "sentinel2_target_scene_id": "S2B_34RET_20231206_0_L1C",
+      "validity_time": "2023-12-06T09:00:00Z",
+      "wind_u_m_s": 2.8397675,
+      "wind_v_m_s": 2.376892
+    },
+    {
+      "cds_request_sha256": "15d4e7c71088e70ce227b5e91edcbd46398619c020a70e855394cbb177e04d0f",
+      "following": {
+        "grid_latitude": 26.20000000000094,
+        "grid_longitude": 67.50000000000045,
+        "validity_time": "2023-12-24T07:00:00Z",
+        "wind_u_m_s": -1.2222137,
+        "wind_v_m_s": -3.3370972
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231224T065746_002284",
+      "grid_latitude": 26.20000000000094,
+      "grid_longitude": 67.50000000000045,
+      "group_id": "emit25km-0048",
+      "previous": {
+        "grid_latitude": 26.20000000000094,
+        "grid_longitude": 67.50000000000045,
+        "validity_time": "2023-12-24T06:00:00Z",
+        "wind_u_m_s": -0.94148254,
+        "wind_v_m_s": -3.2485352
+      },
+      "raw_csv_bytes": 5652,
+      "raw_csv_sha256": "149cef7d23e46d6747cf88c6a411692d0f6bd944335c90448eee79f7379454e5",
+      "sentinel2_target_datetime": "2023-12-24T06:12:04.369000+00:00",
+      "sentinel2_target_scene_id": "S2A_42RUP_20231224_0_L1C",
+      "validity_time": "2023-12-24T06:00:00Z",
+      "wind_u_m_s": -0.94148254,
+      "wind_v_m_s": -3.2485352
+    },
+    {
+      "cds_request_sha256": "e745a02d0ec7f968df8458e4affcfaa39154b928ae220791d7785e42201e1ba9",
+      "following": {
+        "grid_latitude": 32.100000000001025,
+        "grid_longitude": -104.50000000001023,
+        "validity_time": "2023-12-24T18:00:00Z",
+        "wind_u_m_s": 5.5019684,
+        "wind_v_m_s": 0.08305359
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20231224T174533_002613",
+      "grid_latitude": 32.100000000001025,
+      "grid_longitude": -104.50000000001023,
+      "group_id": "emit25km-0049",
+      "previous": {
+        "grid_latitude": 32.100000000001025,
+        "grid_longitude": -104.50000000001023,
+        "validity_time": "2023-12-24T17:00:00Z",
+        "wind_u_m_s": 5.3644714,
+        "wind_v_m_s": 0.45723152
+      },
+      "raw_csv_bytes": 5763,
+      "raw_csv_sha256": "5816e2cd804b9e666f76429040af82f4fb134e2f60a976f7e334f6641e67df4f",
+      "sentinel2_target_datetime": "2023-12-24T17:55:02.273000+00:00",
+      "sentinel2_target_scene_id": "S2A_13SER_20231224_0_L1C",
+      "validity_time": "2023-12-24T18:00:00Z",
+      "wind_u_m_s": 5.5019684,
+      "wind_v_m_s": 0.08305359
+    },
+    {
+      "cds_request_sha256": "7db4cd9273de1452a2bb8febe320a75173b5236e66f0663cae000d87f3474d39",
+      "following": {
+        "grid_latitude": 9.00000000000082,
+        "grid_longitude": -64.10000000000122,
+        "validity_time": "2024-02-15T15:00:00Z",
+        "wind_u_m_s": -6.2024155,
+        "wind_v_m_s": 0.053466797
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240215T193436_002739",
+      "grid_latitude": 9.00000000000082,
+      "grid_longitude": -64.10000000000122,
+      "group_id": "emit25km-0050",
+      "previous": {
+        "grid_latitude": 9.00000000000082,
+        "grid_longitude": -64.10000000000122,
+        "validity_time": "2024-02-15T14:00:00Z",
+        "wind_u_m_s": -6.351035,
+        "wind_v_m_s": -0.35827637
+      },
+      "raw_csv_bytes": 5630,
+      "raw_csv_sha256": "faf8500aa5e5c10345947fa3e8f4de59645507372d221c6fcb6a1cea78ad8dd4",
+      "sentinel2_target_datetime": "2024-02-15T14:50:27.426000+00:00",
+      "sentinel2_target_scene_id": "S2A_20PLQ_20240215_0_L1C",
+      "validity_time": "2024-02-15T15:00:00Z",
+      "wind_u_m_s": -6.2024155,
+      "wind_v_m_s": 0.053466797
+    },
+    {
+      "cds_request_sha256": "7b8feb99bd5c54a51469eeda4e66ea12be9a458267e9ef8bbfd8a0bd565cc364",
+      "following": {
+        "grid_latitude": 36.50000000000109,
+        "grid_longitude": 110.59999999999798,
+        "validity_time": "2024-02-17T04:00:00Z",
+        "wind_u_m_s": -0.7002716,
+        "wind_v_m_s": 2.275299
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240217T052707_002783",
+      "grid_latitude": 36.50000000000109,
+      "grid_longitude": 110.59999999999798,
+      "group_id": "emit25km-0051",
+      "previous": {
+        "grid_latitude": 36.50000000000109,
+        "grid_longitude": 110.59999999999798,
+        "validity_time": "2024-02-17T03:00:00Z",
+        "wind_u_m_s": -0.97395325,
+        "wind_v_m_s": 1.4791718
+      },
+      "raw_csv_bytes": 5624,
+      "raw_csv_sha256": "906ad88c0f18b80ae0099326d9de2501acca717a2c5da103a039d49cadfd60c2",
+      "sentinel2_target_datetime": "2024-02-17T03:37:51.329000+00:00",
+      "sentinel2_target_scene_id": "S2A_49SDA_20240217_0_L1C",
+      "validity_time": "2024-02-17T04:00:00Z",
+      "wind_u_m_s": -0.7002716,
+      "wind_v_m_s": 2.275299
+    },
+    {
+      "cds_request_sha256": "99728f27db0bc3433fd573bcc2bfbb1d2a9ae358d02202555dd0eca11ef2604d",
+      "following": {
+        "grid_latitude": 26.600000000000946,
+        "grid_longitude": 105.39999999999827,
+        "validity_time": "2024-03-21T04:00:00Z",
+        "wind_u_m_s": 0.13890648,
+        "wind_v_m_s": 2.0011444
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240321T083455_002920",
+      "grid_latitude": 26.600000000000946,
+      "grid_longitude": 105.39999999999827,
+      "group_id": "emit25km-0052",
+      "previous": {
+        "grid_latitude": 26.600000000000946,
+        "grid_longitude": 105.39999999999827,
+        "validity_time": "2024-03-21T03:00:00Z",
+        "wind_u_m_s": 0.4303379,
+        "wind_v_m_s": 1.7388763
+      },
+      "raw_csv_bytes": 5700,
+      "raw_csv_sha256": "dc8f8e7aa84085a83216015969062880f514b94cbf8d0338fcac3aeb07e6a204",
+      "sentinel2_target_datetime": "2024-03-21T03:50:44.864000+00:00",
+      "sentinel2_target_scene_id": "S2A_48RWQ_20240321_0_L1C",
+      "validity_time": "2024-03-21T04:00:00Z",
+      "wind_u_m_s": 0.13890648,
+      "wind_v_m_s": 2.0011444
+    },
+    {
+      "cds_request_sha256": "0950adf7fb6578297e852f28268f2cc22ab30c14cdda39cffb94ccf514d84119",
+      "following": {
+        "grid_latitude": 32.100000000001025,
+        "grid_longitude": -94.30000000000808,
+        "validity_time": "2024-03-26T18:00:00Z",
+        "wind_u_m_s": 1.5434113,
+        "wind_v_m_s": -1.6070328
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240326T201210_002996",
+      "grid_latitude": 32.100000000001025,
+      "grid_longitude": -94.30000000000808,
+      "group_id": "emit25km-0053",
+      "previous": {
+        "grid_latitude": 32.100000000001025,
+        "grid_longitude": -94.30000000000808,
+        "validity_time": "2024-03-26T17:00:00Z",
+        "wind_u_m_s": 1.6471405,
+        "wind_v_m_s": -1.8890076
+      },
+      "raw_csv_bytes": 5731,
+      "raw_csv_sha256": "ed9c24134ed2fbc27eeb73b3386f244ff8804c2c65d809c27f0e9de39a07f5b8",
+      "sentinel2_target_datetime": "2024-03-26T17:14:49.671000+00:00",
+      "sentinel2_target_scene_id": "S2B_15SUR_20240326_0_L1C",
+      "validity_time": "2024-03-26T17:00:00Z",
+      "wind_u_m_s": 1.6471405,
+      "wind_v_m_s": -1.8890076
+    },
+    {
+      "cds_request_sha256": "34a4716236fa481c963d036beb384fe33f416b2aef912c0132bb5194cae77251",
+      "following": {
+        "grid_latitude": 30.200000000000998,
+        "grid_longitude": 50.40000000000043,
+        "validity_time": "2024-03-27T08:00:00Z",
+        "wind_u_m_s": 3.3578796,
+        "wind_v_m_s": -1.2773399
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240327T100708_002935",
+      "grid_latitude": 30.200000000000998,
+      "grid_longitude": 50.40000000000043,
+      "group_id": "emit25km-0054",
+      "previous": {
+        "grid_latitude": 30.200000000000998,
+        "grid_longitude": 50.40000000000043,
+        "validity_time": "2024-03-27T07:00:00Z",
+        "wind_u_m_s": 2.4796295,
+        "wind_v_m_s": -0.94534683
+      },
+      "raw_csv_bytes": 5670,
+      "raw_csv_sha256": "24c0bd3dc88f071e1077fa3a2f1f2caf1d2d7327b44b3dcc58e658d267d540c3",
+      "sentinel2_target_datetime": "2024-03-27T07:31:18.677000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RVP_20240327_0_L1C",
+      "validity_time": "2024-03-27T08:00:00Z",
+      "wind_u_m_s": 3.3578796,
+      "wind_v_m_s": -1.2773399
+    },
+    {
+      "cds_request_sha256": "c647d0c0334392bcdb7a6dc06e4dbc875ceefebdfecb1c4333b17a6294c41cc6",
+      "following": {
+        "grid_latitude": 30.000000000000995,
+        "grid_longitude": -95.20000000000829,
+        "validity_time": "2024-04-22T18:00:00Z",
+        "wind_u_m_s": -2.079071,
+        "wind_v_m_s": 1.3074341
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240422T175102_003071",
+      "grid_latitude": 30.000000000000995,
+      "grid_longitude": -95.20000000000829,
+      "group_id": "emit25km-0055",
+      "previous": {
+        "grid_latitude": 30.000000000000995,
+        "grid_longitude": -95.20000000000829,
+        "validity_time": "2024-04-22T17:00:00Z",
+        "wind_u_m_s": -2.3696594,
+        "wind_v_m_s": 1.1697998
+      },
+      "raw_csv_bytes": 5761,
+      "raw_csv_sha256": "a05df8540e4286dd52e478b49b8b7c988e14f7d2f4e73fbb4858e47c5dc6f350",
+      "sentinel2_target_datetime": "2024-04-22T17:05:25.773000+00:00",
+      "sentinel2_target_scene_id": "S2B_15RTP_20240422_0_L1C",
+      "validity_time": "2024-04-22T17:00:00Z",
+      "wind_u_m_s": -2.3696594,
+      "wind_v_m_s": 1.1697998
+    },
+    {
+      "cds_request_sha256": "7def5fc8452f3f86686bd1cb39954efde6e0e513e0dc6f70e261b40144958295",
+      "following": {
+        "grid_latitude": 30.100000000000996,
+        "grid_longitude": 51.500000000000455,
+        "validity_time": "2024-04-23T08:00:00Z",
+        "wind_u_m_s": 1.9965973,
+        "wind_v_m_s": 1.4666901
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240423T074559_003083",
+      "grid_latitude": 30.100000000000996,
+      "grid_longitude": 51.500000000000455,
+      "group_id": "emit25km-0056",
+      "previous": {
+        "grid_latitude": 30.100000000000996,
+        "grid_longitude": 51.500000000000455,
+        "validity_time": "2024-04-23T07:00:00Z",
+        "wind_u_m_s": 1.5836334,
+        "wind_v_m_s": 1.532486
+      },
+      "raw_csv_bytes": 5781,
+      "raw_csv_sha256": "2cde987d7d6cb8666411b0d64659ba2fa893405a4d990d20cb8f323b16572b55",
+      "sentinel2_target_datetime": "2024-04-23T07:21:21.774000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RWP_20240423_0_L1C",
+      "validity_time": "2024-04-23T07:00:00Z",
+      "wind_u_m_s": 1.5836334,
+      "wind_v_m_s": 1.532486
+    },
+    {
+      "cds_request_sha256": "bef6c29a496b2b95e00fce4aff9009a1da344b8dbfe78dc9d266ef05701af852",
+      "following": {
+        "grid_latitude": 29.00000000000098,
+        "grid_longitude": 48.0000000000004,
+        "validity_time": "2024-04-26T08:00:00Z",
+        "wind_u_m_s": -1.0976248,
+        "wind_v_m_s": 1.9601603
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240426T065455_003154",
+      "grid_latitude": 29.00000000000098,
+      "grid_longitude": 48.0000000000004,
+      "group_id": "emit25km-0057",
+      "previous": {
+        "grid_latitude": 29.00000000000098,
+        "grid_longitude": 48.0000000000004,
+        "validity_time": "2024-04-26T07:00:00Z",
+        "wind_u_m_s": -0.20795631,
+        "wind_v_m_s": 2.1308136
+      },
+      "raw_csv_bytes": 5477,
+      "raw_csv_sha256": "cfc53e38ccaf33a8673e8f7a79c1df7c973e5cb8a1cb91440a4b453f20ab7af4",
+      "sentinel2_target_datetime": "2024-04-26T07:31:42.128000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RTN_20240426_0_L1C",
+      "validity_time": "2024-04-26T08:00:00Z",
+      "wind_u_m_s": -1.0976248,
+      "wind_v_m_s": 1.9601603
+    },
+    {
+      "cds_request_sha256": "c5c53a0daca032f5767e85fec2e8c6e10164611eef325dd97a6c8742e5e79be2",
+      "following": {
+        "grid_latitude": 37.2000000000011,
+        "grid_longitude": 106.69999999999823,
+        "validity_time": "2024-06-24T04:00:00Z",
+        "wind_u_m_s": -0.4257202,
+        "wind_v_m_s": 0.10064697
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240624T025623_003265",
+      "grid_latitude": 37.2000000000011,
+      "grid_longitude": 106.69999999999823,
+      "group_id": "emit25km-0058",
+      "previous": {
+        "grid_latitude": 37.2000000000011,
+        "grid_longitude": 106.69999999999823,
+        "validity_time": "2024-06-24T03:00:00Z",
+        "wind_u_m_s": -0.5923767,
+        "wind_v_m_s": 0.71759033
+      },
+      "raw_csv_bytes": 5596,
+      "raw_csv_sha256": "1e5dea35653fdfbf16ab8d03d1ca1beabaa8f175f215bb6154451e8ced90a8bc",
+      "sentinel2_target_datetime": "2024-06-24T03:47:54.587000+00:00",
+      "sentinel2_target_scene_id": "S2B_48SXG_20240624_1_L1C",
+      "validity_time": "2024-06-24T04:00:00Z",
+      "wind_u_m_s": -0.4257202,
+      "wind_v_m_s": 0.10064697
+    },
+    {
+      "cds_request_sha256": "42aa7b6fc3abd9b8c01f27a79438b180fbdf30e49e6db15ec05f04753e933798",
+      "following": {
+        "grid_latitude": 36.400000000001086,
+        "grid_longitude": 114.19999999999777,
+        "validity_time": "2024-06-25T04:00:00Z",
+        "wind_u_m_s": -1.6424103,
+        "wind_v_m_s": 1.0558119
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T020940_003294",
+      "grid_latitude": 36.400000000001086,
+      "grid_longitude": 114.19999999999777,
+      "group_id": "emit25km-0059",
+      "previous": {
+        "grid_latitude": 36.400000000001086,
+        "grid_longitude": 114.19999999999777,
+        "validity_time": "2024-06-25T03:00:00Z",
+        "wind_u_m_s": -1.3449097,
+        "wind_v_m_s": 1.3594818
+      },
+      "raw_csv_bytes": 5748,
+      "raw_csv_sha256": "cd320d115d49439e98fcf0bb13314aade0daccffcd51c30eb25748a359ba0858",
+      "sentinel2_target_datetime": "2024-06-25T03:17:53.186000+00:00",
+      "sentinel2_target_scene_id": "S2B_50SKF_20240625_0_L1C",
+      "validity_time": "2024-06-25T03:00:00Z",
+      "wind_u_m_s": -1.3449097,
+      "wind_v_m_s": 1.3594818
+    },
+    {
+      "cds_request_sha256": "8aa0ec33976b57414652b1ab2213c9faa4bc4cbe4feece133ad9f3b1e61f60ad",
+      "following": {
+        "grid_latitude": 31.10000000000101,
+        "grid_longitude": 49.90000000000043,
+        "validity_time": "2024-06-25T08:00:00Z",
+        "wind_u_m_s": 3.2757568,
+        "wind_v_m_s": -0.77470016
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T065010_003276",
+      "grid_latitude": 31.10000000000101,
+      "grid_longitude": 49.90000000000043,
+      "group_id": "emit25km-0060",
+      "previous": {
+        "grid_latitude": 31.10000000000101,
+        "grid_longitude": 49.90000000000043,
+        "validity_time": "2024-06-25T07:00:00Z",
+        "wind_u_m_s": 2.2149048,
+        "wind_v_m_s": -1.5823917
+      },
+      "raw_csv_bytes": 5626,
+      "raw_csv_sha256": "8548acaa856f903f241e910baa706a848d1bbffedcfa988da1636ce96aa08d13",
+      "sentinel2_target_datetime": "2024-06-25T07:31:11.099000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RUQ_20240625_0_L1C",
+      "validity_time": "2024-06-25T08:00:00Z",
+      "wind_u_m_s": 3.2757568,
+      "wind_v_m_s": -0.77470016
+    },
+    {
+      "cds_request_sha256": "a861999c75363d8a32d8156b671ce1e0b959d6724029971733fe2444239422ef",
+      "following": {
+        "grid_latitude": 30.500000000001002,
+        "grid_longitude": 50.500000000000455,
+        "validity_time": "2024-06-25T08:00:00Z",
+        "wind_u_m_s": 3.139038,
+        "wind_v_m_s": -2.670208
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240625T065021_003279",
+      "grid_latitude": 30.500000000001002,
+      "grid_longitude": 50.500000000000455,
+      "group_id": "emit25km-0061",
+      "previous": {
+        "grid_latitude": 30.500000000001002,
+        "grid_longitude": 50.500000000000455,
+        "validity_time": "2024-06-25T07:00:00Z",
+        "wind_u_m_s": 1.5371704,
+        "wind_v_m_s": -3.025751
+      },
+      "raw_csv_bytes": 5751,
+      "raw_csv_sha256": "43e385c7fd09640e2e5915e62a1cbae7333a8de7648313a1b0b20c6bd06f1100",
+      "sentinel2_target_datetime": "2024-06-25T07:31:21.770000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RVP_20240625_0_L1C",
+      "validity_time": "2024-06-25T08:00:00Z",
+      "wind_u_m_s": 3.139038,
+      "wind_v_m_s": -2.670208
+    },
+    {
+      "cds_request_sha256": "9cf7179000ec15f86ec150d56aa1445af5e19697ca0729615710b9f69e90cce7",
+      "following": {
+        "grid_latitude": 28.30000000000097,
+        "grid_longitude": -99.60000000000929,
+        "validity_time": "2024-06-27T18:00:00Z",
+        "wind_u_m_s": -2.324768,
+        "wind_v_m_s": 1.8336945
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240627T160655_003333",
+      "grid_latitude": 28.30000000000097,
+      "grid_longitude": -99.60000000000929,
+      "group_id": "emit25km-0062",
+      "previous": {
+        "grid_latitude": 28.30000000000097,
+        "grid_longitude": -99.60000000000929,
+        "validity_time": "2024-06-27T17:00:00Z",
+        "wind_u_m_s": -2.1668243,
+        "wind_v_m_s": 1.3586578
+      },
+      "raw_csv_bytes": 5622,
+      "raw_csv_sha256": "69a5aa5457663b897e832178ac403da132294477730cfd787e437ee13199bc3d",
+      "sentinel2_target_datetime": "2024-06-27T17:26:03.476000+00:00",
+      "sentinel2_target_scene_id": "S2B_14RMS_20240627_0_L1C",
+      "validity_time": "2024-06-27T17:00:00Z",
+      "wind_u_m_s": -2.1668243,
+      "wind_v_m_s": 1.3586578
+    },
+    {
+      "cds_request_sha256": "3ed074138ae96e1f1be1931eb959149636e2e55654c5634253ccf2ae58e74599",
+      "following": {
+        "grid_latitude": 27.700000000000962,
+        "grid_longitude": 52.20000000000047,
+        "validity_time": "2024-07-22T08:00:00Z",
+        "wind_u_m_s": 1.8426361,
+        "wind_v_m_s": 1.9619446
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240722T112859_003354",
+      "grid_latitude": 27.700000000000962,
+      "grid_longitude": 52.20000000000047,
+      "group_id": "emit25km-0063",
+      "previous": {
+        "grid_latitude": 27.700000000000962,
+        "grid_longitude": 52.20000000000047,
+        "validity_time": "2024-07-22T07:00:00Z",
+        "wind_u_m_s": 1.9521637,
+        "wind_v_m_s": 0.9747162
+      },
+      "raw_csv_bytes": 5636,
+      "raw_csv_sha256": "9f25817f84604430289a8dac3d56bae120b210c39fb94945b8034eab16aaf131",
+      "sentinel2_target_datetime": "2024-07-22T07:22:00.570000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RXL_20240722_0_L1C",
+      "validity_time": "2024-07-22T07:00:00Z",
+      "wind_u_m_s": 1.9521637,
+      "wind_v_m_s": 0.9747162
+    },
+    {
+      "cds_request_sha256": "03d4de1ec4a7d8d4922404a1b867f0ea094a896d70d1870fea9399622c944f04",
+      "following": {
+        "grid_latitude": 28.700000000000976,
+        "grid_longitude": 52.40000000000049,
+        "validity_time": "2024-07-22T08:00:00Z",
+        "wind_u_m_s": 2.2723236,
+        "wind_v_m_s": 1.1601868
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240722T112911_003355",
+      "grid_latitude": 28.700000000000976,
+      "grid_longitude": 52.40000000000049,
+      "group_id": "emit25km-0064",
+      "previous": {
+        "grid_latitude": 28.700000000000976,
+        "grid_longitude": 52.40000000000049,
+        "validity_time": "2024-07-22T07:00:00Z",
+        "wind_u_m_s": 1.7656403,
+        "wind_v_m_s": 1.0557709
+      },
+      "raw_csv_bytes": 5689,
+      "raw_csv_sha256": "aa66996a652a27a62083b5ada367c6d9fee4ec729bed260544babaae0ad51960",
+      "sentinel2_target_datetime": "2024-07-22T07:21:46.290000+00:00",
+      "sentinel2_target_scene_id": "S2A_39RXM_20240722_0_L1C",
+      "validity_time": "2024-07-22T07:00:00Z",
+      "wind_u_m_s": 1.7656403,
+      "wind_v_m_s": 1.0557709
+    },
+    {
+      "cds_request_sha256": "598c6733c869a9dcf0264ccac1367817c6caa73e8aed9aa7348e0b34525e2f08",
+      "following": {
+        "grid_latitude": 32.40000000000103,
+        "grid_longitude": -101.70000000000977,
+        "validity_time": "2024-07-23T18:00:00Z",
+        "wind_u_m_s": -2.5095673,
+        "wind_v_m_s": -1.930397
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240723T213259_003368",
+      "grid_latitude": 32.40000000000103,
+      "grid_longitude": -101.70000000000977,
+      "group_id": "emit25km-0065",
+      "previous": {
+        "grid_latitude": 32.40000000000103,
+        "grid_longitude": -101.70000000000977,
+        "validity_time": "2024-07-23T17:00:00Z",
+        "wind_u_m_s": -2.1981964,
+        "wind_v_m_s": -2.0260572
+      },
+      "raw_csv_bytes": 5766,
+      "raw_csv_sha256": "bf174516445bc15218f269a7fd3fc77ec134ac31ba56a7f1adc39978c144051a",
+      "sentinel2_target_datetime": "2024-07-23T17:45:03.655000+00:00",
+      "sentinel2_target_scene_id": "S2B_14SKA_20240723_0_L1C",
+      "validity_time": "2024-07-23T18:00:00Z",
+      "wind_u_m_s": -2.5095673,
+      "wind_v_m_s": -1.930397
+    },
+    {
+      "cds_request_sha256": "45c0eca293ae4f8259f790e38677a74abccc27dd4da880c92cc7c7d9c5bfcd5d",
+      "following": {
+        "grid_latitude": 43.300000000001184,
+        "grid_longitude": 52.70000000000047,
+        "validity_time": "2024-08-07T08:00:00Z",
+        "wind_u_m_s": 0.66726685,
+        "wind_v_m_s": 2.99646
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240807T064102_003422",
+      "grid_latitude": 43.300000000001184,
+      "grid_longitude": 52.70000000000047,
+      "group_id": "emit25km-0066",
+      "previous": {
+        "grid_latitude": 43.300000000001184,
+        "grid_longitude": 52.70000000000047,
+        "validity_time": "2024-08-07T07:00:00Z",
+        "wind_u_m_s": 0.056137085,
+        "wind_v_m_s": 2.8261414
+      },
+      "raw_csv_bytes": 5639,
+      "raw_csv_sha256": "b91274c513c3d9504f7fa466077bfdfae0131c9909f9de6372a97fcb6673c3e1",
+      "sentinel2_target_datetime": "2024-08-07T07:37:31.234000+00:00",
+      "sentinel2_target_scene_id": "S2A_39TXJ_20240807_0_L1C",
+      "validity_time": "2024-08-07T08:00:00Z",
+      "wind_u_m_s": 0.66726685,
+      "wind_v_m_s": 2.99646
+    },
+    {
+      "cds_request_sha256": "65316e4adeaec349e2999455d5c7dafe76716c44d5b006f7a511ce539c767b17",
+      "following": {
+        "grid_latitude": 25.600000000000932,
+        "grid_longitude": 55.80000000000052,
+        "validity_time": "2024-08-25T08:00:00Z",
+        "wind_u_m_s": 2.5765076,
+        "wind_v_m_s": -1.7543335
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240825T064423_003500",
+      "grid_latitude": 25.600000000000932,
+      "grid_longitude": 55.80000000000052,
+      "group_id": "emit25km-0067",
+      "previous": {
+        "grid_latitude": 25.600000000000932,
+        "grid_longitude": 55.80000000000052,
+        "validity_time": "2024-08-25T07:00:00Z",
+        "wind_u_m_s": 2.0545197,
+        "wind_v_m_s": -0.08378601
+      },
+      "raw_csv_bytes": 5678,
+      "raw_csv_sha256": "7bcaafd11e2b22ff744b5ce1ba055725cb794cbb8d09d076d39111b1fb96cbb8",
+      "sentinel2_target_datetime": "2024-08-25T07:02:24.586000+00:00",
+      "sentinel2_target_scene_id": "S2A_40RCP_20240825_0_L1C",
+      "validity_time": "2024-08-25T07:00:00Z",
+      "wind_u_m_s": 2.0545197,
+      "wind_v_m_s": -0.08378601
+    },
+    {
+      "cds_request_sha256": "77b1045a57525342503aca38fa591a94a3af436d74336225d330e78f5c3c43c0",
+      "following": {
+        "grid_latitude": -16.299999999999127,
+        "grid_longitude": -71.60000000000292,
+        "validity_time": "2024-08-26T16:00:00Z",
+        "wind_u_m_s": 2.24057,
+        "wind_v_m_s": 1.5581207
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20240826T170043_003568",
+      "grid_latitude": -16.299999999999127,
+      "grid_longitude": -71.60000000000292,
+      "group_id": "emit25km-0068",
+      "previous": {
+        "grid_latitude": -16.299999999999127,
+        "grid_longitude": -71.60000000000292,
+        "validity_time": "2024-08-26T15:00:00Z",
+        "wind_u_m_s": 1.8201141,
+        "wind_v_m_s": 1.3440552
+      },
+      "raw_csv_bytes": 5826,
+      "raw_csv_sha256": "4366e4a52d7b1ceca5adc24f7f08c44a7c4b4018a6d627a29233fb56aa671a46",
+      "sentinel2_target_datetime": "2024-08-26T15:07:35.797000+00:00",
+      "sentinel2_target_scene_id": "S2A_18KZG_20240826_0_L1C",
+      "validity_time": "2024-08-26T15:00:00Z",
+      "wind_u_m_s": 1.8201141,
+      "wind_v_m_s": 1.3440552
+    },
+    {
+      "cds_request_sha256": "6155562f1f91d89692bffd1d91d31501b0f766f0ec0b3f1a63a9a1124746475c",
+      "following": {
+        "grid_latitude": 32.800000000001035,
+        "grid_longitude": -104.20000000001028,
+        "validity_time": "2024-10-04T18:00:00Z",
+        "wind_u_m_s": -0.4580841,
+        "wind_v_m_s": 0.8688202
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241004T165227_003636",
+      "grid_latitude": 32.800000000001035,
+      "grid_longitude": -104.20000000001028,
+      "group_id": "emit25km-0069",
+      "previous": {
+        "grid_latitude": 32.800000000001035,
+        "grid_longitude": -104.20000000001028,
+        "validity_time": "2024-10-04T17:00:00Z",
+        "wind_u_m_s": 0.08102417,
+        "wind_v_m_s": 0.43469238
+      },
+      "raw_csv_bytes": 5780,
+      "raw_csv_sha256": "d72276554bd216f9eea2624be6c9eef8f27b6fab45bffb8066c99cbdb56622e0",
+      "sentinel2_target_datetime": "2024-10-04T17:54:51.862000+00:00",
+      "sentinel2_target_scene_id": "S2B_13SES_20241004_0_L1C",
+      "validity_time": "2024-10-04T18:00:00Z",
+      "wind_u_m_s": -0.4580841,
+      "wind_v_m_s": 0.8688202
+    },
+    {
+      "cds_request_sha256": "9f935d6ac7596c6a41d79fcc931ab2243516f4bc508cc5d85d8950c988f4fae1",
+      "following": {
+        "grid_latitude": 30.300000000001,
+        "grid_longitude": 31.600000000000193,
+        "validity_time": "2024-10-19T09:00:00Z",
+        "wind_u_m_s": -1.5173645,
+        "wind_v_m_s": -1.9260101
+      },
+      "granule_id": "EMIT_L2B_CH4PLM_002_20241019T100941_003675",
+      "grid_latitude": 30.300000000001,
+      "grid_longitude": 31.600000000000193,
+      "group_id": "emit25km-0070",
+      "previous": {
+        "grid_latitude": 30.300000000001,
+        "grid_longitude": 31.600000000000193,
+        "validity_time": "2024-10-19T08:00:00Z",
+        "wind_u_m_s": -1.5554352,
+        "wind_v_m_s": -1.538559
+      },
+      "raw_csv_bytes": 5540,
+      "raw_csv_sha256": "76f2e17f48b5501f8fc4079268329f117ad899897299009e5fbda80838a6a8e5",
+      "sentinel2_target_datetime": "2024-10-19T08:41:53.209000+00:00",
+      "sentinel2_target_scene_id": "S2B_36RUU_20241019_0_L1C",
+      "validity_time": "2024-10-19T09:00:00Z",
+      "wind_u_m_s": -1.5173645,
+      "wind_v_m_s": -1.9260101
+    }
+  ],
+  "summary": {
+    "acquired": 70,
+    "complete": true,
+    "hash_verified": 70,
+    "requested": 70,
+    "total_raw_csv_bytes": 394189
+  }
+}
