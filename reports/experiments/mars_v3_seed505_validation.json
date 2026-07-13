@@ -1,0 +1,820 @@
+{
+  "artifact": {
+    "bytes": 57104805,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v3_seed505.pt",
+    "sha256": "fd100e622f49798764ef8497966d0b2741cd20196969c101d1a6e794deec8bd8",
+    "tracked": false
+  },
+  "cohort": {
+    "group_overlap": 0,
+    "strict_spatial_test_loaded": false,
+    "training": 23763,
+    "training_groups": 98,
+    "validation": 5945,
+    "validation_groups": 24
+  },
+  "decision": "Freeze this validation-selected checkpoint before any strict-spatial evaluation.",
+  "generated_at_utc": "2026-07-12T23:55:45.086067+00:00",
+  "model": {
+    "heads": [
+      "segmentation",
+      "proposal_presence",
+      "quality"
+    ],
+    "initialization": "from_scratch_required_for_primary_experiment",
+    "input_channels": [
+      "mbmp_release",
+      "target_B02",
+      "target_B03",
+      "target_B04",
+      "target_B08",
+      "target_B11",
+      "target_B12",
+      "reference_B02",
+      "reference_B03",
+      "reference_B04",
+      "reference_B08",
+      "reference_B11",
+      "reference_B12",
+      "wind_u_div8",
+      "wind_v_div8",
+      "cloud_binary"
+    ],
+    "model_name": "ersrr_mars_full_unet_proposal_v3",
+    "normalization": "GroupNorm",
+    "parameter_count": 14268915,
+    "schema_version": 1,
+    "topk_fraction": 0.01
+  },
+  "operating_rule": {
+    "lower_no_plume_threshold": 0.125244140625,
+    "lower_selection": {
+      "accepted_samples": 5264,
+      "npv": 0.9827127659574468,
+      "weighted_coverage": 0.8854499579478553
+    },
+    "quality_selection": {
+      "fn": 200,
+      "fp": 2,
+      "recall_high_quality": 0.96386630532972,
+      "specificity_low_quality": 0.9951219512195122,
+      "tn": 408,
+      "tp": 5335
+    },
+    "quality_threshold": 0.92529296875,
+    "segmentation": {
+      "minimum_connected_pixels": 200,
+      "pixel_threshold": 0.94482421875
+    },
+    "selected_on": "internal_validation_only",
+    "upper_plume_threshold": 0.12921142578125
+  },
+  "provenance": {
+    "adapter_source": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py",
+    "adapter_source_sha256": "fdbed22c231311a7eba6ef0289bf64f28591c8ca7dcd9643c3d5c210a8df73b7",
+    "git_commit": "bfff79feb51b146b27fc254888162a4f1028e0f7",
+    "git_tracked_worktree_dirty_at_start": false,
+    "model_source": "EarthRemoteSensingRapidResponse/mars_v3_model.py",
+    "model_source_sha256": "16fea9c93c587abdce16357861f1475966932c92221944556f6fd5553482ca5a",
+    "script": "tools/train_mars_v3.py",
+    "script_sha256": "e1f5abbf2daf996c897c390b06edf5d435a42f8c78abb1027bf38360f3402abb"
+  },
+  "runtime": {
+    "cuda_runtime": "12.8",
+    "device": "NVIDIA GeForce RTX 5070",
+    "numpy": "2.4.4",
+    "rasterio": "1.4.4",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "v3_internal_validation_selection",
+  "smoke_test": false,
+  "source": {
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "manifest": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_training_samples.jsonl",
+    "manifest_sha256": "edd3c1da3d706b109798dcf86bc3db284f639d401d4953f3ced175c27b27d566",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32"
+  },
+  "training": {
+    "batch_size": 24,
+    "best_epoch": 27,
+    "history": [
+      {
+        "epoch": 1,
+        "learning_rate": 0.0001996917333733128,
+        "seconds": 296.842,
+        "training": {
+          "dice_loss": 0.8795706031902286,
+          "presence_focal": 0.33792711507179424,
+          "quality_bce": 0.30765605650609124,
+          "segmentation_bce": 0.34057124865764804,
+          "total": 1.302630020619401
+        },
+        "validation": {
+          "observed_fpr": 0.048161764705882355,
+          "positive_soft_dice": 0.45286229252815247,
+          "presence_auroc": 0.8794818360512522,
+          "presence_average_precision": 0.533294922473258,
+          "presence_threshold": 0.760498046875,
+          "recall_at_fpr5": 0.6
+        }
+      },
+      {
+        "epoch": 2,
+        "learning_rate": 0.00019876883405951377,
+        "seconds": 272.618,
+        "training": {
+          "dice_loss": 0.8233389650536354,
+          "presence_focal": 0.2673166449868715,
+          "quality_bce": 0.30078409582857646,
+          "segmentation_bce": 0.23612232976165476,
+          "total": 1.063805979628616
+        },
+        "validation": {
+          "observed_fpr": 0.049080882352941176,
+          "positive_soft_dice": 0.4732317626476288,
+          "presence_auroc": 0.915705627548049,
+          "presence_average_precision": 0.7246448720793286,
+          "presence_threshold": 0.654296875,
+          "recall_at_fpr5": 0.7069306930693069
+        }
+      },
+      {
+        "epoch": 3,
+        "learning_rate": 0.00019723699203976766,
+        "seconds": 276.801,
+        "training": {
+          "dice_loss": 0.7948764974005167,
+          "presence_focal": 0.22914716598364468,
+          "quality_bce": 0.23972285618840158,
+          "segmentation_bce": 0.2003778809217283,
+          "total": 0.9535230169021999
+        },
+        "validation": {
+          "observed_fpr": 0.04926470588235294,
+          "positive_soft_dice": 0.5243917107582092,
+          "presence_auroc": 0.8874475829935935,
+          "presence_average_precision": 0.6953068094691484,
+          "presence_threshold": 0.700439453125,
+          "recall_at_fpr5": 0.695049504950495
+        }
+      },
+      {
+        "epoch": 4,
+        "learning_rate": 0.00019510565162951534,
+        "seconds": 281.202,
+        "training": {
+          "dice_loss": 0.7777934560381199,
+          "presence_focal": 0.19437571181929797,
+          "quality_bce": 0.07780785582680713,
+          "segmentation_bce": 0.1804404968375154,
+          "total": 0.8647911825285911
+        },
+        "validation": {
+          "observed_fpr": 0.047610294117647056,
+          "positive_soft_dice": 0.5060694217681885,
+          "presence_auroc": 0.8974817996505533,
+          "presence_average_precision": 0.7139401625284784,
+          "presence_threshold": 0.847900390625,
+          "recall_at_fpr5": 0.7148514851485148
+        }
+      },
+      {
+        "epoch": 5,
+        "learning_rate": 0.00019238795325112864,
+        "seconds": 264.465,
+        "training": {
+          "dice_loss": 0.7596340172225844,
+          "presence_focal": 0.1667779149237633,
+          "quality_bce": 0.053845734133282454,
+          "segmentation_bce": 0.1611889973959456,
+          "total": 0.7938651649730598
+        },
+        "validation": {
+          "observed_fpr": 0.049080882352941176,
+          "positive_soft_dice": 0.5028344988822937,
+          "presence_auroc": 0.9076392326732674,
+          "presence_average_precision": 0.7321340285034476,
+          "presence_threshold": 0.836181640625,
+          "recall_at_fpr5": 0.7326732673267327
+        }
+      },
+      {
+        "epoch": 6,
+        "learning_rate": 0.00018910065241883674,
+        "seconds": 260.588,
+        "training": {
+          "dice_loss": 0.6225269510815772,
+          "presence_focal": 0.1533276740307464,
+          "quality_bce": 0.04849085867700881,
+          "segmentation_bce": 0.1905908851642782,
+          "total": 0.734270412238046
+        },
+        "validation": {
+          "observed_fpr": 0.04926470588235294,
+          "positive_soft_dice": 0.5728518962860107,
+          "presence_auroc": 0.9261933969132208,
+          "presence_average_precision": 0.7466400414468981,
+          "presence_threshold": 0.842041015625,
+          "recall_at_fpr5": 0.7564356435643564
+        }
+      },
+      {
+        "epoch": 7,
+        "learning_rate": 0.0001852640164354092,
+        "seconds": 276.538,
+        "training": {
+          "dice_loss": 0.41349889339520157,
+          "presence_focal": 0.1502748452245392,
+          "quality_bce": 0.052179834093391,
+          "segmentation_bce": 0.21178322595165427,
+          "total": 0.6465539299665859
+        },
+        "validation": {
+          "observed_fpr": 0.04742647058823529,
+          "positive_soft_dice": 0.5433418154716492,
+          "presence_auroc": 0.9243253130460104,
+          "presence_average_precision": 0.745993645968383,
+          "presence_threshold": 0.58642578125,
+          "recall_at_fpr5": 0.7722772277227723
+        }
+      },
+      {
+        "epoch": 8,
+        "learning_rate": 0.00018090169943749473,
+        "seconds": 279.996,
+        "training": {
+          "dice_loss": 0.37886483968807877,
+          "presence_focal": 0.13803678211275822,
+          "quality_bce": 0.04531812523657904,
+          "segmentation_bce": 0.20996595569345894,
+          "total": 0.6087194521480083
+        },
+        "validation": {
+          "observed_fpr": 0.04852941176470588,
+          "positive_soft_dice": 0.5210952758789062,
+          "presence_auroc": 0.9289465637740244,
+          "presence_average_precision": 0.7698287159461493,
+          "presence_threshold": 0.671630859375,
+          "recall_at_fpr5": 0.7920792079207921
+        }
+      },
+      {
+        "epoch": 9,
+        "learning_rate": 0.00017604059656000309,
+        "seconds": 275.126,
+        "training": {
+          "dice_loss": 0.35370853768828897,
+          "presence_focal": 0.1281201200133075,
+          "quality_bce": 0.03877979228305192,
+          "segmentation_bce": 0.20216196342009587,
+          "total": 0.5731354003958216
+        },
+        "validation": {
+          "observed_fpr": 0.04852941176470588,
+          "positive_soft_dice": 0.5178336501121521,
+          "presence_auroc": 0.9254744831100757,
+          "presence_average_precision": 0.774141471832226,
+          "presence_threshold": 0.792236328125,
+          "recall_at_fpr5": 0.7841584158415842
+        }
+      },
+      {
+        "epoch": 10,
+        "learning_rate": 0.00017071067811865473,
+        "seconds": 280.698,
+        "training": {
+          "dice_loss": 0.33097520118765344,
+          "presence_focal": 0.11882466121034473,
+          "quality_bce": 0.03301979031088641,
+          "segmentation_bce": 0.1903006445962323,
+          "total": 0.5356762254409545
+        },
+        "validation": {
+          "observed_fpr": 0.05,
+          "positive_soft_dice": 0.5448787212371826,
+          "presence_auroc": 0.9215077169481654,
+          "presence_average_precision": 0.7515258695970646,
+          "presence_threshold": 0.784912109375,
+          "recall_at_fpr5": 0.7603960396039604
+        }
+      },
+      {
+        "epoch": 11,
+        "learning_rate": 0.00016494480483301836,
+        "seconds": 269.574,
+        "training": {
+          "dice_loss": 0.3087816945719791,
+          "presence_focal": 0.11025815487883452,
+          "quality_bce": 0.031807416731029256,
+          "segmentation_bce": 0.18113576755393768,
+          "total": 0.5025042158172782
+        },
+        "validation": {
+          "observed_fpr": 0.04742647058823529,
+          "positive_soft_dice": 0.5049489736557007,
+          "presence_auroc": 0.9185729105998834,
+          "presence_average_precision": 0.7568890373446462,
+          "presence_threshold": 0.615966796875,
+          "recall_at_fpr5": 0.7702970297029703
+        }
+      },
+      {
+        "epoch": 12,
+        "learning_rate": 0.0001587785252292473,
+        "seconds": 269.441,
+        "training": {
+          "dice_loss": 0.2971186906129392,
+          "presence_focal": 0.10101376001757882,
+          "quality_bce": 0.029082926367435664,
+          "segmentation_bce": 0.17521144151236528,
+          "total": 0.47674557171183085
+        },
+        "validation": {
+          "observed_fpr": 0.05,
+          "positive_soft_dice": 0.49557211995124817,
+          "presence_auroc": 0.9148127184041934,
+          "presence_average_precision": 0.7753403853745315,
+          "presence_threshold": 0.635009765625,
+          "recall_at_fpr5": 0.7900990099009901
+        }
+      },
+      {
+        "epoch": 13,
+        "learning_rate": 0.00015224985647159484,
+        "seconds": 278.366,
+        "training": {
+          "dice_loss": 0.28215867136609785,
+          "presence_focal": 0.08721916556184948,
+          "quality_bce": 0.0243899542013751,
+          "segmentation_bce": 0.15228535098284032,
+          "total": 0.425412931713519
+        },
+        "validation": {
+          "observed_fpr": 0.04926470588235294,
+          "positive_soft_dice": 0.5467422008514404,
+          "presence_auroc": 0.9204025917297614,
+          "presence_average_precision": 0.7807801140375554,
+          "presence_threshold": 0.71875,
+          "recall_at_fpr5": 0.7782178217821782
+        }
+      },
+      {
+        "epoch": 14,
+        "learning_rate": 0.00014539904997395463,
+        "seconds": 268.324,
+        "training": {
+          "dice_loss": 0.27446411578614344,
+          "presence_focal": 0.08788379601801545,
+          "quality_bce": 0.021748503841509077,
+          "segmentation_bce": 0.1478278007467327,
+          "total": 0.41797297649408804
+        },
+        "validation": {
+          "observed_fpr": 0.04926470588235294,
+          "positive_soft_dice": 0.540091335773468,
+          "presence_auroc": 0.9311262376237622,
+          "presence_average_precision": 0.8055217048377535,
+          "presence_threshold": 0.506591796875,
+          "recall_at_fpr5": 0.805940594059406
+        }
+      },
+      {
+        "epoch": 15,
+        "learning_rate": 0.00013826834323650894,
+        "seconds": 272.572,
+        "training": {
+          "dice_loss": 0.2645353625568925,
+          "presence_focal": 0.07840713546004036,
+          "quality_bce": 0.01935685583000093,
+          "segmentation_bce": 0.13911833827065231,
+          "total": 0.38996456480772057
+        },
+        "validation": {
+          "observed_fpr": 0.04852941176470588,
+          "positive_soft_dice": 0.5751051306724548,
+          "presence_auroc": 0.9283670646476412,
+          "presence_average_precision": 0.7893996755131817,
+          "presence_threshold": 0.828369140625,
+          "recall_at_fpr5": 0.7821782178217822
+        }
+      },
+      {
+        "epoch": 16,
+        "learning_rate": 0.0001309016994374947,
+        "seconds": 273.32,
+        "training": {
+          "dice_loss": 0.25342967555934315,
+          "presence_focal": 0.07010812522076619,
+          "quality_bce": 0.017681701447244663,
+          "segmentation_bce": 0.13571116865418031,
+          "total": 0.36847227923083375
+        },
+        "validation": {
+          "observed_fpr": 0.05,
+          "positive_soft_dice": 0.5442550182342529,
+          "presence_auroc": 0.9255050596971461,
+          "presence_average_precision": 0.776693472906909,
+          "presence_threshold": 0.750732421875,
+          "recall_at_fpr5": 0.7821782178217822
+        }
+      },
+      {
+        "epoch": 17,
+        "learning_rate": 0.00012334453638559052,
+        "seconds": 274.031,
+        "training": {
+          "dice_loss": 0.24177036991513942,
+          "presence_focal": 0.06283987986873535,
+          "quality_bce": 0.019602164115233293,
+          "segmentation_bce": 0.11929261362824803,
+          "total": 0.3354177261006339
+        },
+        "validation": {
+          "observed_fpr": 0.04889705882352941,
+          "positive_soft_dice": 0.5262182354927063,
+          "presence_auroc": 0.9376734493302271,
+          "presence_average_precision": 0.8007904007937112,
+          "presence_threshold": 0.66845703125,
+          "recall_at_fpr5": 0.8
+        }
+      },
+      {
+        "epoch": 18,
+        "learning_rate": 0.00011564344650402305,
+        "seconds": 270.579,
+        "training": {
+          "dice_loss": 0.23765286866398802,
+          "presence_focal": 0.06106218421224629,
+          "quality_bce": 0.01621479346456956,
+          "segmentation_bce": 0.11470697454517984,
+          "total": 0.325937423415249
+        },
+        "validation": {
+          "observed_fpr": 0.04871323529411765,
+          "positive_soft_dice": 0.5312250852584839,
+          "presence_auroc": 0.9304935934769949,
+          "presence_average_precision": 0.7973737497809437,
+          "presence_threshold": 0.503662109375,
+          "recall_at_fpr5": 0.801980198019802
+        }
+      },
+      {
+        "epoch": 19,
+        "learning_rate": 0.00010784590957278446,
+        "seconds": 278.548,
+        "training": {
+          "dice_loss": 0.23162773489110045,
+          "presence_focal": 0.05538091812152171,
+          "quality_bce": 0.014995608775423004,
+          "segmentation_bce": 0.10628873740222332,
+          "total": 0.3059237620423949
+        },
+        "validation": {
+          "observed_fpr": 0.04779411764705882,
+          "positive_soft_dice": 0.5785021781921387,
+          "presence_auroc": 0.92848190885265,
+          "presence_average_precision": 0.7813505640979093,
+          "presence_threshold": 0.748291015625,
+          "recall_at_fpr5": 0.7960396039603961
+        }
+      },
+      {
+        "epoch": 20,
+        "learning_rate": 9.999999999999996e-05,
+        "seconds": 267.237,
+        "training": {
+          "dice_loss": 0.2234164113714524,
+          "presence_focal": 0.05217498802383995,
+          "quality_bce": 0.014969703842344816,
+          "segmentation_bce": 0.10629940689865623,
+          "total": 0.2970185790936473
+        },
+        "validation": {
+          "observed_fpr": 0.04889705882352941,
+          "positive_soft_dice": 0.5070717930793762,
+          "presence_auroc": 0.9071756697728596,
+          "presence_average_precision": 0.7293078437858918,
+          "presence_threshold": 0.844970703125,
+          "recall_at_fpr5": 0.7485148514851485
+        }
+      },
+      {
+        "epoch": 21,
+        "learning_rate": 9.215409042721548e-05,
+        "seconds": 262.457,
+        "training": {
+          "dice_loss": 0.21234742856530922,
+          "presence_focal": 0.04575983360643507,
+          "quality_bce": 0.012842973521983147,
+          "segmentation_bce": 0.0939208175799049,
+          "total": 0.2693764296643188
+        },
+        "validation": {
+          "observed_fpr": 0.04963235294117647,
+          "positive_soft_dice": 0.5246352553367615,
+          "presence_auroc": 0.937994867501456,
+          "presence_average_precision": 0.7944980457445489,
+          "presence_threshold": 0.315185546875,
+          "recall_at_fpr5": 0.8138613861386138
+        }
+      },
+      {
+        "epoch": 22,
+        "learning_rate": 8.43565534959769e-05,
+        "seconds": 262.464,
+        "training": {
+          "dice_loss": 0.20485295459071756,
+          "presence_focal": 0.042588460798867286,
+          "quality_bce": 0.012126182851949862,
+          "segmentation_bce": 0.08732932071106586,
+          "total": 0.2542447976459769
+        },
+        "validation": {
+          "observed_fpr": 0.04650735294117647,
+          "positive_soft_dice": 0.5389239192008972,
+          "presence_auroc": 0.9308816249271986,
+          "presence_average_precision": 0.7952657022680288,
+          "presence_threshold": 0.2412109375,
+          "recall_at_fpr5": 0.7940594059405941
+        }
+      },
+      {
+        "epoch": 23,
+        "learning_rate": 7.665546361440944e-05,
+        "seconds": 262.778,
+        "training": {
+          "dice_loss": 0.19578878477772116,
+          "presence_focal": 0.03530915300187953,
+          "quality_bce": 0.010056087982730727,
+          "segmentation_bce": 0.08195415747612264,
+          "total": 0.2333150837574188
+        },
+        "validation": {
+          "observed_fpr": 0.04834558823529412,
+          "positive_soft_dice": 0.5144650936126709,
+          "presence_auroc": 0.9316717020966803,
+          "presence_average_precision": 0.7962810721156995,
+          "presence_threshold": 0.313232421875,
+          "recall_at_fpr5": 0.805940594059406
+        }
+      },
+      {
+        "epoch": 24,
+        "learning_rate": 6.909830056250523e-05,
+        "seconds": 262.923,
+        "training": {
+          "dice_loss": 0.19175295566333653,
+          "presence_focal": 0.03469941380347279,
+          "quality_bce": 0.010376438048954774,
+          "segmentation_bce": 0.0744123905624604,
+          "total": 0.222856811393432
+        },
+        "validation": {
+          "observed_fpr": 0.04724264705882353,
+          "positive_soft_dice": 0.5038293600082397,
+          "presence_auroc": 0.9279875873616773,
+          "presence_average_precision": 0.7830253171619792,
+          "presence_threshold": 0.3841552734375,
+          "recall_at_fpr5": 0.7960396039603961
+        }
+      },
+      {
+        "epoch": 25,
+        "learning_rate": 6.1731656763491e-05,
+        "seconds": 260.057,
+        "training": {
+          "dice_loss": 0.19199612144264275,
+          "presence_focal": 0.031904680813787466,
+          "quality_bce": 0.010673563331034055,
+          "segmentation_bce": 0.0737738112047856,
+          "total": 0.21816257056596902
+        },
+        "validation": {
+          "observed_fpr": 0.04963235294117647,
+          "positive_soft_dice": 0.5317883491516113,
+          "presence_auroc": 0.925873616773442,
+          "presence_average_precision": 0.7983733154035147,
+          "presence_threshold": 0.458984375,
+          "recall_at_fpr5": 0.803960396039604
+        }
+      },
+      {
+        "epoch": 26,
+        "learning_rate": 5.46009500260453e-05,
+        "seconds": 257.989,
+        "training": {
+          "dice_loss": 0.1850922446318279,
+          "presence_focal": 0.028480344784939916,
+          "quality_bce": 0.00983124266430134,
+          "segmentation_bce": 0.06780882892560676,
+          "total": 0.20356703084244135
+        },
+        "validation": {
+          "observed_fpr": 0.04724264705882353,
+          "positive_soft_dice": 0.5286264419555664,
+          "presence_auroc": 0.9295890361094932,
+          "presence_average_precision": 0.7791392957469346,
+          "presence_threshold": 0.6171875,
+          "recall_at_fpr5": 0.8
+        }
+      },
+      {
+        "epoch": 27,
+        "learning_rate": 4.77501435284051e-05,
+        "seconds": 262.305,
+        "training": {
+          "dice_loss": 0.1763396237861256,
+          "presence_focal": 0.027288924333141125,
+          "quality_bce": 0.0090503544314607,
+          "segmentation_bce": 0.06579652910076615,
+          "total": 0.19535224550186564
+        },
+        "validation": {
+          "observed_fpr": 0.04889705882352941,
+          "positive_soft_dice": 0.5025539398193359,
+          "presence_auroc": 0.9269570835760046,
+          "presence_average_precision": 0.7938351043438361,
+          "presence_threshold": 0.12921142578125,
+          "recall_at_fpr5": 0.8198019801980198
+        }
+      },
+      {
+        "epoch": 28,
+        "learning_rate": 4.122147477075268e-05,
+        "seconds": 258.264,
+        "training": {
+          "dice_loss": 0.17163866150872378,
+          "presence_focal": 0.02630127586773714,
+          "quality_bce": 0.006608876384136837,
+          "segmentation_bce": 0.06525254820113556,
+          "total": 0.19085423631817253
+        },
+        "validation": {
+          "observed_fpr": 0.05,
+          "positive_soft_dice": 0.5237364172935486,
+          "presence_auroc": 0.9220903101339546,
+          "presence_average_precision": 0.7750024878558998,
+          "presence_threshold": 0.2989501953125,
+          "recall_at_fpr5": 0.7900990099009901
+        }
+      },
+      {
+        "epoch": 29,
+        "learning_rate": 3.505519516698163e-05,
+        "seconds": 261.858,
+        "training": {
+          "dice_loss": 0.16184198501492605,
+          "presence_focal": 0.02160078375434642,
+          "quality_bce": 0.007224971907597432,
+          "segmentation_bce": 0.05718844120722456,
+          "total": 0.17087185818525305
+        },
+        "validation": {
+          "observed_fpr": 0.049448529411764704,
+          "positive_soft_dice": 0.5397968292236328,
+          "presence_auroc": 0.9259529702970297,
+          "presence_average_precision": 0.777551734185025,
+          "presence_threshold": 0.56201171875,
+          "recall_at_fpr5": 0.801980198019802
+        }
+      },
+      {
+        "epoch": 30,
+        "learning_rate": 2.928932188134524e-05,
+        "seconds": 260.898,
+        "training": {
+          "dice_loss": 0.1535537817283307,
+          "presence_focal": 0.01860387996676662,
+          "quality_bce": 0.0077547030515467035,
+          "segmentation_bce": 0.05476802035294075,
+          "total": 0.1598384658853955
+        },
+        "validation": {
+          "observed_fpr": 0.046691176470588236,
+          "positive_soft_dice": 0.5138123035430908,
+          "presence_auroc": 0.9306978013977869,
+          "presence_average_precision": 0.7869591972209404,
+          "presence_threshold": 0.0565948486328125,
+          "recall_at_fpr5": 0.803960396039604
+        }
+      },
+      {
+        "epoch": 31,
+        "learning_rate": 2.3959403439996893e-05,
+        "seconds": 262.304,
+        "training": {
+          "dice_loss": 0.1500939615559506,
+          "presence_focal": 0.01683890622044882,
+          "quality_bce": 0.006892676127417239,
+          "segmentation_bce": 0.053116371118665004,
+          "total": 0.15376634493873534
+        },
+        "validation": {
+          "observed_fpr": 0.04981617647058824,
+          "positive_soft_dice": 0.5007360577583313,
+          "presence_auroc": 0.9228953115899825,
+          "presence_average_precision": 0.7746773265583237,
+          "presence_threshold": 0.0414276123046875,
+          "recall_at_fpr5": 0.8
+        }
+      },
+      {
+        "epoch": 32,
+        "learning_rate": 1.9098300562505256e-05,
+        "seconds": 257.704,
+        "training": {
+          "dice_loss": 0.14573682250697484,
+          "presence_focal": 0.01649845409837639,
+          "quality_bce": 0.005418114343104912,
+          "segmentation_bce": 0.05140334199625326,
+          "total": 0.14929033965849733
+        },
+        "validation": {
+          "observed_fpr": 0.05,
+          "positive_soft_dice": 0.5248137712478638,
+          "presence_auroc": 0.9238278974956319,
+          "presence_average_precision": 0.7614121971601583,
+          "presence_threshold": 0.20379638671875,
+          "recall_at_fpr5": 0.7940594059405941
+        }
+      },
+      {
+        "epoch": 33,
+        "learning_rate": 1.4735983564590774e-05,
+        "seconds": 261.69,
+        "training": {
+          "dice_loss": 0.14054023852622594,
+          "presence_focal": 0.013680114738135393,
+          "quality_bce": 0.005298190373548539,
+          "segmentation_bce": 0.047506703460372404,
+          "total": 0.13856190427868825
+        },
+        "validation": {
+          "observed_fpr": 0.049448529411764704,
+          "positive_soft_dice": 0.5145830512046814,
+          "presence_auroc": 0.923078589108911,
+          "presence_average_precision": 0.7543386377488506,
+          "presence_threshold": 0.040313720703125,
+          "recall_at_fpr5": 0.801980198019802
+        }
+      },
+      {
+        "epoch": 34,
+        "learning_rate": 1.0899347581163216e-05,
+        "seconds": 255.475,
+        "training": {
+          "dice_loss": 0.13883060337195605,
+          "presence_focal": 0.012675994431541708,
+          "quality_bce": 0.0056321287530970085,
+          "segmentation_bce": 0.046755884728449895,
+          "total": 0.13546678441549406
+        },
+        "validation": {
+          "observed_fpr": 0.05,
+          "positive_soft_dice": 0.5015052556991577,
+          "presence_auroc": 0.9187241555037857,
+          "presence_average_precision": 0.7471560842688102,
+          "presence_threshold": 0.0076961517333984375,
+          "recall_at_fpr5": 0.805940594059406
+        }
+      }
+    ],
+    "learning_rate": 0.0002,
+    "seed": 505,
+    "small_plume_presence_weighting": "sqrt(1000/(valid_truth_pixels+1)), clipped [0.75,3]"
+  },
+  "validation": {
+    "presence_auroc": 0.9269570835760046,
+    "presence_average_precision": 0.7938351043438361,
+    "scene": {
+      "accuracy": 0.9399495374264087,
+      "auroc": 0.9269570835760046,
+      "average_precision": 0.7938351043438361,
+      "brier": 0.036687422543764114,
+      "false_positive_rate": 0.04889705882352941,
+      "fn": 91.0,
+      "fp": 266.0,
+      "negative_predictive_value": 0.9827160493827161,
+      "precision": 0.6088235294117647,
+      "recall": 0.8198019801980198,
+      "specificity": 0.9511029411764705,
+      "tn": 5174.0,
+      "tp": 414.0
+    },
+    "segmentation": {
+      "false_positive_rate": 0.03235294117647059,
+      "fn": 115,
+      "fp": 176,
+      "pixel_dice": 0.5488285869609636,
+      "precision": 0.6890459363957597,
+      "predicted_positive_pixels": 700077,
+      "recall": 0.7722772277227723,
+      "specificity": 0.9676470588235294,
+      "tn": 5264,
+      "tp": 390,
+      "truth_positive_pixels": 914981
+    }
+  }
+}

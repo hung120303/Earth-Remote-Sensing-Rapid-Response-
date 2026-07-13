@@ -1,0 +1,217 @@
+{
+  "artifact": {
+    "bytes": 50436,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_v3_proposals_seed505.joblib",
+    "sha256": "c3811c9880a485fc19678540c7a876ea6c7cbe3cba8e87214aa6ea32190a9360",
+    "tracked": false
+  },
+  "cache": {
+    "feature_count": 74,
+    "ignored_ambiguous_proposals": 200,
+    "labeled_proposals": 10634,
+    "negative_proposals": 5459,
+    "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_proposal_features_seed505.npz",
+    "positive_proposals": 5175,
+    "proposal_count": 10834,
+    "sha256": "b5f1437e6740bc6419ab9e28711d76c7cd037a4efc50c6e76d5b89fbf6ee98e0",
+    "tracked": false
+  },
+  "decision": "Freeze the calibrated component classifier with the v3 checkpoint before strict evaluation.",
+  "generated_at_utc": "2026-07-13T00:01:59.503729+00:00",
+  "operating_rule": {
+    "lower_no_plume_threshold": 0.125244140625,
+    "lower_selection": {
+      "accepted_samples": 5264,
+      "npv": 0.9827127659574468,
+      "weighted_coverage": 0.8854499579478553
+    },
+    "neural_presence_weight": 1.0,
+    "scene_score": "validation-selected convex blend of neural presence and maximum calibrated connected-proposal probability; proposal score is zero with no proposal",
+    "selected_on": "internal_validation_only",
+    "upper_plume_threshold": 0.12921142578125
+  },
+  "provenance": {
+    "git_commit": "bfff79feb51b146b27fc254888162a4f1028e0f7",
+    "git_tracked_worktree_dirty_at_start": false,
+    "proposal_source_sha256": "fafd3f82d060e5245a52038a2ea2047df50b5480e155b4632086e84ab347fd7c",
+    "script": "tools/train_mars_v3_proposals.py",
+    "script_sha256": "3a9d2cdd36d15fea77c287115562744c5718ea029df994f730e9f26d7cf7a85e"
+  },
+  "runtime": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "numpy": "2.4.4",
+    "rasterio": "1.4.4",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "v3_connected_proposal_internal_validation",
+  "source": {
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "manifest_sha256": "edd3c1da3d706b109798dcf86bc3db284f639d401d4953f3ced175c27b27d566",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "v3_checkpoint_sha256": "fd100e622f49798764ef8497966d0b2741cd20196969c101d1a6e794deec8bd8",
+    "v3_validation_experiment_sha256": "000db71e4369d9c56b2729fe52bacf4117081478eb72cbb554ae9dd66fce6214"
+  },
+  "training": {
+    "calibration": "group-held-out, class/group-balanced Platt logistic",
+    "calibration_groups": 9,
+    "calibration_proposals": 2101,
+    "classifier": "HistGradientBoostingClassifier",
+    "fit_groups": 36,
+    "fit_proposals": 6504,
+    "group_overlap": 0,
+    "seed": 505,
+    "validation_groups": 24,
+    "validation_proposals": 2029
+  },
+  "validation": {
+    "ablations": {
+      "neural_only": {
+        "accuracy": 0.9399495374264087,
+        "auroc": 0.9269570835760046,
+        "average_precision": 0.7938351043438361,
+        "brier": 0.036687422304513495,
+        "false_positive_rate": 0.04889705882352941,
+        "fn": 91.0,
+        "fp": 266.0,
+        "negative_predictive_value": 0.9827160493827161,
+        "precision": 0.6088235294117647,
+        "recall": 0.8198019801980198,
+        "specificity": 0.9511029411764705,
+        "tn": 5174.0,
+        "tp": 414.0,
+        "upper_plume_threshold": 0.12921142578125
+      },
+      "proposal_only": {
+        "accuracy": 0.9402859545836838,
+        "auroc": 0.8887964108910891,
+        "average_precision": 0.59290974391464,
+        "brier": 0.04350512366748219,
+        "false_positive_rate": 0.04779411764705882,
+        "fn": 95.0,
+        "fp": 260.0,
+        "negative_predictive_value": 0.9819905213270143,
+        "precision": 0.6119402985074627,
+        "recall": 0.8118811881188119,
+        "specificity": 0.9522058823529411,
+        "tn": 5180.0,
+        "tp": 410.0,
+        "upper_plume_threshold": 0.2647902245380251
+      }
+    },
+    "blend_candidates": [
+      {
+        "neural_presence_weight": 0.0,
+        "scene": {
+          "accuracy": 0.9402859545836838,
+          "auroc": 0.8887964108910891,
+          "average_precision": 0.59290974391464,
+          "brier": 0.04350512366748219,
+          "false_positive_rate": 0.04779411764705882,
+          "fn": 95.0,
+          "fp": 260.0,
+          "negative_predictive_value": 0.9819905213270143,
+          "precision": 0.6119402985074627,
+          "recall": 0.8118811881188119,
+          "specificity": 0.9522058823529411,
+          "tn": 5180.0,
+          "tp": 410.0
+        },
+        "upper_plume_threshold": 0.2647902245380251
+      },
+      {
+        "neural_presence_weight": 0.25,
+        "scene": {
+          "accuracy": 0.9397813288477712,
+          "auroc": 0.9268476994758299,
+          "average_precision": 0.7934012557584266,
+          "brier": 0.039297339673913786,
+          "false_positive_rate": 0.04889705882352941,
+          "fn": 92.0,
+          "fp": 266.0,
+          "negative_predictive_value": 0.982529434105583,
+          "precision": 0.6082474226804123,
+          "recall": 0.8178217821782178,
+          "specificity": 0.9511029411764705,
+          "tn": 5174.0,
+          "tp": 413.0
+        },
+        "upper_plume_threshold": 0.062744140625
+      },
+      {
+        "neural_presence_weight": 0.5,
+        "scene": {
+          "accuracy": 0.9397813288477712,
+          "auroc": 0.9268480634828189,
+          "average_precision": 0.7934031697392611,
+          "brier": 0.036758461448896204,
+          "false_positive_rate": 0.04889705882352941,
+          "fn": 92.0,
+          "fp": 266.0,
+          "negative_predictive_value": 0.982529434105583,
+          "precision": 0.6082474226804123,
+          "recall": 0.8178217821782178,
+          "specificity": 0.9511029411764705,
+          "tn": 5174.0,
+          "tp": 413.0
+        },
+        "upper_plume_threshold": 0.12548828125
+      },
+      {
+        "neural_presence_weight": 0.75,
+        "scene": {
+          "accuracy": 0.9424726661059714,
+          "auroc": 0.9268808241118229,
+          "average_precision": 0.793576679371971,
+          "brier": 0.03588848899242944,
+          "false_positive_rate": 0.04595588235294118,
+          "fn": 92.0,
+          "fp": 250.0,
+          "negative_predictive_value": 0.9825823551684968,
+          "precision": 0.6229260935143288,
+          "recall": 0.8178217821782178,
+          "specificity": 0.9540441176470589,
+          "tn": 5190.0,
+          "tp": 413.0
+        },
+        "upper_plume_threshold": 0.19901768552903754
+      },
+      {
+        "neural_presence_weight": 1.0,
+        "scene": {
+          "accuracy": 0.9399495374264087,
+          "auroc": 0.9269570835760046,
+          "average_precision": 0.7938351043438361,
+          "brier": 0.036687422304513495,
+          "false_positive_rate": 0.04889705882352941,
+          "fn": 91.0,
+          "fp": 266.0,
+          "negative_predictive_value": 0.9827160493827161,
+          "precision": 0.6088235294117647,
+          "recall": 0.8198019801980198,
+          "specificity": 0.9511029411764705,
+          "tn": 5174.0,
+          "tp": 414.0
+        },
+        "upper_plume_threshold": 0.12921142578125
+      }
+    ],
+    "samples": 5945,
+    "scene": {
+      "accuracy": 0.9399495374264087,
+      "auroc": 0.9269570835760046,
+      "average_precision": 0.7938351043438361,
+      "brier": 0.036687422304513495,
+      "false_positive_rate": 0.04889705882352941,
+      "fn": 91.0,
+      "fp": 266.0,
+      "negative_predictive_value": 0.9827160493827161,
+      "precision": 0.6088235294117647,
+      "recall": 0.8198019801980198,
+      "specificity": 0.9511029411764705,
+      "tn": 5174.0,
+      "tp": 414.0
+    }
+  }
+}
