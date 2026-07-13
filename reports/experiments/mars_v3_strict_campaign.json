@@ -1,0 +1,389 @@
+{
+  "cohort": {
+    "groups": 150,
+    "negatives": 4334,
+    "positives": 67,
+    "samples": 4401,
+    "strict_manifest_sha256": "6e959ae0af50c5a309247cbe674fe01b31a36f8b149f9be3292acebed3e5f906"
+  },
+  "decision": "ERSRR v3 does not clear every frozen same-cohort MARS-S2L promotion criterion; preserve the result and do not retune from strict-test behavior.",
+  "fixed_seeds": [
+    101,
+    202,
+    303,
+    404,
+    505
+  ],
+  "generated_at_utc": "2026-07-13T00:36:43.775270+00:00",
+  "inputs": {
+    "released_baseline_report": {
+      "path": "reports/experiments/mars_released_model_full_strict_baseline.json",
+      "scene_cache": {
+        "bytes": 161470,
+        "contents": "compact per-scene labels, groups, scores, and author-fixed predictions; no raster pixels",
+        "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_released_mars-s2l_publication_v3_strict_samples_scene_predictions.npz",
+        "sha256": "84c3255c5ac972428642e272afcd7c9b20e218c12ad990e0802b58615db9290a",
+        "tracked": false
+      },
+      "sha256": "433301db9591a10d6f702fb31b9fc34992f2704c1d074a8e897b71fe6c83c653"
+    },
+    "v3_reports": [
+      {
+        "path": "reports/experiments/mars_v3_seed101_strict_evaluation.json",
+        "scene_cache": {
+          "bytes": 166042,
+          "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed101.npz",
+          "sha256": "5054837fa47937f1baf76a66286b95c61d1558d0e6899da4467e22e94361e9c1",
+          "tracked": false
+        },
+        "sha256": "2b78525bcab2b46a7e8497a0343aa75299731830efa61cd922fe4e801f218633"
+      },
+      {
+        "path": "reports/experiments/mars_v3_seed202_strict_evaluation.json",
+        "scene_cache": {
+          "bytes": 165286,
+          "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed202.npz",
+          "sha256": "2fb4250179dd53918efee1a360ff310b02d190c8974ee9bf1dcadf1ed408e91a",
+          "tracked": false
+        },
+        "sha256": "ee222dc99a979acae01c737df6c331898795e99d07208e949f8345e4668263a0"
+      },
+      {
+        "path": "reports/experiments/mars_v3_seed303_strict_evaluation.json",
+        "scene_cache": {
+          "bytes": 165211,
+          "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed303.npz",
+          "sha256": "22ba73fedf33ed9963928111e43d2a775afe36f08029a4f22f6ac5684adc058f",
+          "tracked": false
+        },
+        "sha256": "1b7223558c61d142f5ca7f4dd94ae99e8f684ba7f5bf95dd0642ab043a0a777b"
+      },
+      {
+        "path": "reports/experiments/mars_v3_seed404_strict_evaluation.json",
+        "scene_cache": {
+          "bytes": 165914,
+          "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed404.npz",
+          "sha256": "9e15451f9f4c49f59139f3409790a7ccf7faf31131de316f1740f128061b9bed",
+          "tracked": false
+        },
+        "sha256": "275df5dd22bd309fc94184b64e513fa445d302df0fb26b9dc724f28dbb089a68"
+      },
+      {
+        "path": "reports/experiments/mars_v3_seed505_strict_evaluation.json",
+        "scene_cache": {
+          "bytes": 164932,
+          "contents": "compact per-scene labels, groups, scores, and fixed-threshold predictions; no raster pixels",
+          "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_scene_predictions_seed505.npz",
+          "sha256": "b0fda1022efb1ee91d42d77ca3589c0405d03d8a3698aeda9937a0bd6d405584",
+          "tracked": false
+        },
+        "sha256": "d35e8ccf2dc16beb3a94bf29bf629798220205cc9f89ee9ed02478a3b4e364b3"
+      }
+    ]
+  },
+  "official_mars_s2l_paper_targets_not_same_cohort": {
+    "full_official_test": {
+      "average_precision": 0.6408,
+      "false_positive_rate": 0.0713,
+      "images": 43529,
+      "pixel_intersection_over_union": 0.3224,
+      "plume_images": 1813,
+      "probability_threshold": 0.5,
+      "recall": 0.7915,
+      "sites": 1289
+    },
+    "full_official_test_strict_threshold": {
+      "false_positive_rate": 0.0116,
+      "probability_threshold": 0.98,
+      "recall": 0.5836
+    },
+    "source": "arXiv:2511.21777v3, Tables S1 and S3-S7 and S11",
+    "test_only_sites": {
+      "average_precision": 0.4496,
+      "false_positive_rate": 0.0763,
+      "images": 15655,
+      "plume_images": 227,
+      "probability_threshold": 0.5,
+      "recall": 0.7753,
+      "sites": 697
+    }
+  },
+  "paired_seed_group_bootstrap": {
+    "auroc_delta": {
+      "95ci": [
+        -0.21417676840739489,
+        -0.010855719320675456
+      ],
+      "mean": -0.08744984078184495,
+      "standard_deviation": 0.05126254119002084
+    },
+    "average_precision_delta": {
+      "95ci": [
+        -0.42605523315770355,
+        -0.0645344246338776
+      ],
+      "mean": -0.21606374601612555,
+      "standard_deviation": 0.08811587881384204
+    },
+    "candidate_auroc": {
+      "95ci": [
+        0.6374857807341908,
+        0.8644876826861104
+      ],
+      "mean": 0.746402456894065,
+      "standard_deviation": 0.058223324378580764
+    },
+    "candidate_average_precision": {
+      "95ci": [
+        0.052830381968069356,
+        0.3344872115148741
+      ],
+      "mean": 0.16465394553352075,
+      "standard_deviation": 0.07410402305532479
+    },
+    "candidate_false_positive_rate": {
+      "95ci": [
+        0.024538670376939895,
+        0.05
+      ],
+      "mean": 0.03660967532330276,
+      "standard_deviation": 0.006551067224140397
+    },
+    "candidate_recall": {
+      "95ci": [
+        0.1310747307457834,
+        0.6182445141065827
+      ],
+      "mean": 0.3441314699606313,
+      "standard_deviation": 0.1340164473819501
+    },
+    "false_positive_rate_delta": {
+      "95ci": [
+        -0.07712065637065638,
+        -0.03920421663246095
+      ],
+      "mean": -0.05798891713864647,
+      "standard_deviation": 0.009589241643076738
+    },
+    "group_count": 150,
+    "method": "paired nonparametric bootstrap: resample frozen 25 km groups with replacement and resample the five fixed training seeds with replacement inside each replicate",
+    "random_seed": 20260712,
+    "recall_delta": {
+      "95ci": [
+        -0.4220055555555555,
+        -0.16444047619047628
+      ],
+      "mean": -0.31463939980711886,
+      "standard_deviation": 0.06661077073803033
+    },
+    "relative_false_positive_rate_reduction": {
+      "95ci": [
+        0.4671356645356318,
+        0.7278035403449714
+      ],
+      "mean": 0.6115256807986638,
+      "standard_deviation": 0.06604535073297706
+    },
+    "replicates": 2000
+  },
+  "promotion_gate": {
+    "criteria": {
+      "candidate_mean_fpr_at_most_0_05": true,
+      "candidate_mean_specificity_at_least_0_95": true,
+      "candidate_recall_lower_95ci_at_least_0_75": false,
+      "recall_noninferiority_lower_95ci_at_least_0": false,
+      "relative_fpr_reduction_lower_95ci_at_least_0_25": true
+    },
+    "passed": false
+  },
+  "provenance": {
+    "git_commit": "71e9106d61836e4d89b4eabb702f8bfa59c6c45f",
+    "git_tracked_worktree_dirty_at_start": false,
+    "script": "tools/aggregate_mars_v3_strict.py",
+    "script_sha256": "aba30606cfc396ff7513422edb106580f85a0f734bfbea54b1d7169038905039"
+  },
+  "runtime": {
+    "numpy": "2.4.4",
+    "sklearn": "1.9.0"
+  },
+  "same_cohort_comparison": {
+    "delta": {
+      "auroc": -0.07399355323061663,
+      "average_precision": -0.2086272075406211,
+      "false_positive_rate": -0.0581449007844947,
+      "recall": -0.32238805970149254,
+      "relative_false_positive_rate_reduction": 0.6131386861313869
+    },
+    "ersrr_per_seed": [
+      {
+        "accuracy": 0.940013633265167,
+        "auroc": 0.7624114085777849,
+        "average_precision": 0.117830696007795,
+        "false_positive_rate": 0.05099215505306876,
+        "fn": 43.0,
+        "fp": 221.0,
+        "negative_predictive_value": 0.9896535129932628,
+        "precision": 0.09795918367346938,
+        "recall": 0.3582089552238806,
+        "seed": 101,
+        "specificity": 0.9490078449469312,
+        "tn": 4113.0,
+        "tp": 24.0
+      },
+      {
+        "accuracy": 0.9600090888434447,
+        "auroc": 0.7436117749967284,
+        "average_precision": 0.19480916707597778,
+        "false_positive_rate": 0.02976465159206276,
+        "fn": 47.0,
+        "fp": 129.0,
+        "negative_predictive_value": 0.9889463781749764,
+        "precision": 0.1342281879194631,
+        "recall": 0.29850746268656714,
+        "seed": 202,
+        "specificity": 0.9702353484079372,
+        "tn": 4205.0,
+        "tp": 20.0
+      },
+      {
+        "accuracy": 0.9650079527380141,
+        "auroc": 0.7522970059715267,
+        "average_precision": 0.11163587740917169,
+        "false_positive_rate": 0.024227041993539457,
+        "fn": 49.0,
+        "fp": 105.0,
+        "negative_predictive_value": 0.9885460495558672,
+        "precision": 0.14634146341463414,
+        "recall": 0.26865671641791045,
+        "seed": 303,
+        "specificity": 0.9757729580064606,
+        "tn": 4229.0,
+        "tp": 18.0
+      },
+      {
+        "accuracy": 0.9475119291070211,
+        "auroc": 0.7325554966285324,
+        "average_precision": 0.19681361475402967,
+        "false_positive_rate": 0.043839409321642826,
+        "fn": 41.0,
+        "fp": 190.0,
+        "negative_predictive_value": 0.9902031063321386,
+        "precision": 0.12037037037037036,
+        "recall": 0.3880597014925373,
+        "seed": 404,
+        "specificity": 0.9561605906783571,
+        "tn": 4144.0,
+        "tp": 26.0
+      },
+      {
+        "accuracy": 0.9550102249488752,
+        "auroc": 0.7268887450151181,
+        "average_precision": 0.09638867161571103,
+        "false_positive_rate": 0.03461005999077065,
+        "fn": 48.0,
+        "fp": 150.0,
+        "negative_predictive_value": 0.9886578449905482,
+        "precision": 0.11242603550295859,
+        "recall": 0.2835820895522388,
+        "seed": 505,
+        "specificity": 0.9653899400092294,
+        "tn": 4184.0,
+        "tp": 19.0
+      }
+    ],
+    "ersrr_seed_mean": {
+      "accuracy": 0.9535105657805044,
+      "auroc": 0.7435528862379381,
+      "average_precision": 0.14349560537253706,
+      "false_positive_rate": 0.03668666359021689,
+      "negative_predictive_value": 0.9892013784093587,
+      "precision": 0.12226504817617911,
+      "recall": 0.31940298507462683,
+      "specificity": 0.963313336409783
+    },
+    "ersrr_seed_standard_deviation": {
+      "accuracy": 0.009935045492291315,
+      "auroc": 0.014411307570436653,
+      "average_precision": 0.04839598326738444,
+      "false_positive_rate": 0.010761941744364413,
+      "negative_predictive_value": 0.0007067167247837542,
+      "precision": 0.01880133975842914,
+      "recall": 0.05127034040990349,
+      "specificity": 0.01076194174436443
+    },
+    "released_mars_s2l": {
+      "accuracy": 0.9011588275391956,
+      "auroc": 0.8175464394685548,
+      "average_precision": 0.35212281291315817,
+      "false_positive_rate": 0.09483156437471159,
+      "fn": 24.0,
+      "fp": 411.0,
+      "negative_predictive_value": 0.9939194324803649,
+      "precision": 0.0947136563876652,
+      "recall": 0.6417910447761194,
+      "specificity": 0.9051684356252884,
+      "tn": 3923.0,
+      "tp": 43.0
+    }
+  },
+  "schema_version": 1,
+  "scope": "frozen_v3_five_seed_full_strict_campaign",
+  "segmentation": {
+    "delta": {
+      "average_precision": -0.16233320875033297,
+      "dice": -0.0767492204976577,
+      "intersection_over_union": -0.04701329311877116
+    },
+    "ersrr_per_seed": [
+      {
+        "average_precision": 0.08758071979220046,
+        "dice": 0.15134477694143567,
+        "intersection_over_union": 0.08186749754831982,
+        "seed": 101
+      },
+      {
+        "average_precision": 0.10279816068787609,
+        "dice": 0.1762518929735159,
+        "intersection_over_union": 0.09664267356575049,
+        "seed": 202
+      },
+      {
+        "average_precision": 0.08481434631698956,
+        "dice": 0.14713398319955698,
+        "intersection_over_union": 0.07940886273775485,
+        "seed": 303
+      },
+      {
+        "average_precision": 0.08185924529938499,
+        "dice": 0.12256222270782029,
+        "intersection_over_union": 0.06528164298717332,
+        "seed": 404
+      },
+      {
+        "average_precision": 0.07173585296593636,
+        "dice": 0.19193865436640004,
+        "intersection_over_union": 0.10615715823466093,
+        "seed": 505
+      }
+    ],
+    "ersrr_seed_mean": {
+      "average_precision": 0.0857576650124775,
+      "dice": 0.15784630603774577,
+      "intersection_over_union": 0.08587156701473188
+    },
+    "ersrr_seed_standard_deviation": {
+      "average_precision": 0.011251674998443123,
+      "dice": 0.026939952313549856,
+      "intersection_over_union": 0.015884473848695794
+    },
+    "released_mars_s2l": {
+      "average_precision": 0.24809087376281047,
+      "dice": 0.23459552653540347,
+      "intersection_over_union": 0.13288486013350304
+    }
+  }
+}
