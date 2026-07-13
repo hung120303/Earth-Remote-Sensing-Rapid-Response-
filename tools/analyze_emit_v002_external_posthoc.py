@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
+import math
 import os
 import re
 import subprocess
@@ -36,6 +38,10 @@ from evaluate_emit_v002_external import (  # noqa: E402
 
 DEFAULT_CONFIRMATION = Path("reports/experiments/emit_v002_external_confirmation.json")
 DEFAULT_CAMPAIGN = Path("reports/experiments/mars_v3_strict_campaign.json")
+DEFAULT_CANDIDATES = Path("reports/acquisition/emit_v002_time_aligned_candidates.json")
+DEFAULT_TRAINING_COHORT = Path("reports/acquisition/mars_s2l_v3_training_cohort.json")
+DEFAULT_RELEASED_CONFIG = DEFAULT_OUTPUT / "trained_models/MARSS2L_20250326/config_experiment.json"
+DEFAULT_METADATA_CSV = DEFAULT_OUTPUT / "validated_images_all.csv"
 DEFAULT_JSON = Path("reports/experiments/emit_v002_external_posthoc_diagnostic.json")
 DEFAULT_MARKDOWN = Path("reports/experiments/EMIT_V002_EXTERNAL_POSTHOC_DIAGNOSTIC.md")
 REFERENCE_TIME = re.compile(r"_(\d{8}T\d{6})_")
@@ -151,6 +157,119 @@ def reflectance_features(
             result[f"{prefix}_{band}_median"] = float(np.median(values))
             result[f"{prefix}_{band}_p95"] = float(np.quantile(values, 0.95))
     return result
+
+
+def haversine_km(left: tuple[float, float], right: tuple[float, float]) -> float:
+    lat1, lon1 = map(math.radians, left)
+    lat2, lon2 = map(math.radians, right)
+    delta_lat = lat2 - lat1
+    delta_lon = lon2 - lon1
+    value = (
+        math.sin(delta_lat / 2.0) ** 2
+        + math.cos(lat1) * math.cos(lat2) * math.sin(delta_lon / 2.0) ** 2
+    )
+    return 6371.0088 * 2.0 * math.asin(min(1.0, math.sqrt(value)))
+
+
+def manifest_locations(records: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_id: dict[str, dict[str, Any]] = {}
+    for record in records:
+        identifier = str(record["physical_location_id"])
+        candidate = {
+            "location_id": identifier,
+            "latitude": float(record["latitude"]),
+            "longitude": float(record["longitude"]),
+        }
+        previous = by_id.setdefault(identifier, candidate)
+        if haversine_km(
+            (previous["latitude"], previous["longitude"]),
+            (candidate["latitude"], candidate["longitude"]),
+        ) > 0.1:
+            raise ValueError(f"Inconsistent MARS coordinates for location {identifier}")
+    return sorted(by_id.values(), key=lambda item: item["location_id"])
+
+
+def released_training_locations(
+    metadata_csv: Path, config: dict[str, Any]
+) -> list[dict[str, Any]]:
+    expected = {str(value) for value in config["all_locs_train"]}
+    by_name: dict[str, dict[str, Any]] = {}
+    csv.field_size_limit(sys.maxsize)
+    with metadata_csv.open("r", encoding="utf-8", newline="") as source:
+        for row in csv.DictReader(source):
+            name = str(row["location_name"])
+            if name not in expected:
+                continue
+            candidate = {
+                "location_id": name,
+                "latitude": float(row["lat"]),
+                "longitude": float(row["lon"]),
+            }
+            previous = by_name.setdefault(name, candidate)
+            if haversine_km(
+                (previous["latitude"], previous["longitude"]),
+                (candidate["latitude"], candidate["longitude"]),
+            ) > 0.1:
+                raise ValueError(f"Inconsistent released-model coordinates for {name}")
+    missing = expected - set(by_name)
+    if missing:
+        raise ValueError(f"Released training locations missing from metadata: {sorted(missing)[:5]}")
+    return sorted(by_name.values(), key=lambda item: item["location_id"])
+
+
+def nearest_location(
+    latitude: float, longitude: float, locations: Sequence[dict[str, Any]]
+) -> dict[str, Any]:
+    if not locations:
+        raise ValueError("Nearest-location audit requires at least one comparator")
+    candidates = [
+        (
+            haversine_km(
+                (latitude, longitude),
+                (float(item["latitude"]), float(item["longitude"])),
+            ),
+            item,
+        )
+        for item in locations
+    ]
+    distance, location = min(
+        candidates, key=lambda value: (value[0], value[1]["location_id"])
+    )
+    return {"distance_km": float(distance), "location_id": str(location["location_id"])}
+
+
+def spatial_overlap_audit(
+    rows: list[dict[str, Any]],
+    v3_locations: Sequence[dict[str, Any]],
+    released_locations: Sequence[dict[str, Any]],
+    strict_locations: Sequence[dict[str, Any]],
+    radius_km: float = 25.0,
+) -> dict[str, Any]:
+    contracts = {
+        "ersrr_v3_fit": v3_locations,
+        "released_mars_s2l_training": released_locations,
+        "mars_strict_test": strict_locations,
+    }
+    summaries: dict[str, Any] = {}
+    for name, locations in contracts.items():
+        field = f"nearest_{name}"
+        for row in rows:
+            row[field] = nearest_location(row["latitude"], row["longitude"], locations)
+        distances = [float(row[field]["distance_km"]) for row in rows]
+        summaries[name] = {
+            "comparator_locations": len(locations),
+            "within_25km": int(sum(value <= radius_km for value in distances)),
+            "beyond_25km": int(sum(value > radius_km for value in distances)),
+            "nearest_distance_km": finite_summary(distances),
+            "overlap_group_ids": [
+                row["group_id"] for row in rows if row[field]["distance_km"] <= radius_km
+            ],
+        }
+    return {
+        "radius_km": radius_km,
+        "interpretation": "Distances audit spatial novelty only; they do not change the frozen primary result or signal-support analysis.",
+        **summaries,
+    }
 
 
 def reference_interval_days(record: dict[str, Any]) -> float:
@@ -287,6 +406,7 @@ def external_rows(
     seal: dict[str, Any],
     wind: dict[str, Any],
     confirmation: dict[str, Any],
+    candidates: dict[str, Any],
 ) -> list[dict[str, Any]]:
     wind_by_group = {item["group_id"]: item for item in wind["records"]}
     released = {item["group_id"]: item for item in confirmation["released_mars_s2l"]["records"]}
@@ -297,11 +417,15 @@ def external_rows(
         {record["group_id"]: record for record in item["records"]}
         for item in confirmation["seed_results"]
     ]
+    candidate_by_group = {item["group_id"]: item for item in candidates["candidates"]}
     rows = []
     for seal_record in seal["records"]:
         if not seal_record["final_gate_pass"]:
             continue
         group = str(seal_record["group_id"])
+        candidate = candidate_by_group[group]
+        if candidate["granule_id"] != seal_record["granule_id"]:
+            raise ValueError(f"External candidate/seal identity mismatch for {group}")
         scene_dir = raw_root / seal_record["granule_id"]
         manifest_path = scene_dir / "manifest.json"
         if sha256(manifest_path) != seal_record["crop_manifest_sha256"]:
@@ -326,6 +450,8 @@ def external_rows(
                 "granule_id": scene.granule_id,
                 "target_scene_id": scene.target_scene_id,
                 "reference_scene_id": manifest["reference_scene_id"],
+                "longitude": float(candidate["center"][0]),
+                "latitude": float(candidate["center"][1]),
                 "signed_time_offset_hours": float(manifest["emit_to_target_offset_hours"]),
                 "absolute_time_offset_hours": abs(float(manifest["emit_to_target_offset_hours"])),
                 "reference_interval_days": float(manifest["reference_to_target_gap_hours"]) / 24.0,
@@ -414,6 +540,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
     ]
     near = report["external_strata"]["time_offset"][0]
     agreement = report["agreement"]
+    overlap = report["spatial_overlap_audit"]
     lines = [
         "# EMIT V002 external post-hoc diagnostic",
         "",
@@ -426,6 +553,8 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- Direction-free MBMP mask AUC median: external {external_signal['external_emit']['median']:.3f} vs strict MARS positives {external_signal['mars_strict_positive']['median']:.3f}",
         f"- Absolute robust MBMP mask contrast median: external {external_contrast['external_emit']['median']:.3f} vs strict MARS positives {external_contrast['mars_strict_positive']['median']:.3f}",
         f"- External scenes missed by both released MARS and every ERSRR seed: {agreement['neither_released_nor_any_ersrr']}",
+        f"- Within 25 km of an ERSRR v3 fit location: {overlap['ersrr_v3_fit']['within_25km']} / {report['cohorts']['external_emit']['samples']}",
+        f"- Within 25 km of a released MARS-S2L training location: {overlap['released_mars_s2l_training']['within_25km']} / {report['cohorts']['external_emit']['samples']}",
         "",
     ]
     markdown_strata(lines, "Recall by fixed EMIT/Sentinel-2 offset", report["external_strata"]["time_offset"])
@@ -437,6 +566,8 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
             "",
             "The EMIT mask is a cross-sensor, time-offset footprint, not simultaneous Sentinel-2 methane truth. Mask-aligned MBMP statistics test whether a colocated Sentinel-2 spectral signal is present; they do not prove methane causality. The MARS strict cohort remains the primary same-distribution plume/no-plume benchmark.",
             "",
+            "The candidate-builder's 25 km grouping prevents duplicates within this EMIT cohort. The separate proximity audit above determines novelty relative to model-development locations; those are different claims.",
+            "",
             "The JSON report contains all 55 external rows, all 67 strict-positive diagnostic rows, reflectance distribution comparisons, rank strata, score correlations, source hashes, and the exact frozen hit identities.",
         ]
     )
@@ -447,32 +578,47 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--confirmation", default=DEFAULT_CONFIRMATION.as_posix())
+    parser.add_argument("--candidates", default=DEFAULT_CANDIDATES.as_posix())
     parser.add_argument("--seal", default=DEFAULT_SEAL.as_posix())
     parser.add_argument("--wind", default=DEFAULT_WIND.as_posix())
     parser.add_argument("--raw-root", default=DEFAULT_RAW_ROOT.as_posix())
     parser.add_argument("--metadata-dir", default=DEFAULT_OUTPUT.as_posix())
     parser.add_argument("--campaign", default=DEFAULT_CAMPAIGN.as_posix())
+    parser.add_argument("--training-cohort", default=DEFAULT_TRAINING_COHORT.as_posix())
+    parser.add_argument("--released-config", default=DEFAULT_RELEASED_CONFIG.as_posix())
+    parser.add_argument("--metadata-csv", default=DEFAULT_METADATA_CSV.as_posix())
     parser.add_argument("--output-json", default=DEFAULT_JSON.as_posix())
     parser.add_argument("--output-markdown", default=DEFAULT_MARKDOWN.as_posix())
     args = parser.parse_args()
 
     root = repo_root()
     confirmation_path = safe_path(root, args.confirmation)
+    candidates_path = safe_path(root, args.candidates)
     seal_path = safe_path(root, args.seal)
     wind_path = safe_path(root, args.wind)
     raw_root = safe_path(root, args.raw_root)
     metadata_dir = safe_path(root, args.metadata_dir)
     campaign_path = safe_path(root, args.campaign)
+    training_cohort_path = safe_path(root, args.training_cohort)
+    released_config_path = safe_path(root, args.released_config)
+    metadata_csv_path = safe_path(root, args.metadata_csv)
     output_json = safe_path(root, args.output_json)
     output_markdown = safe_path(root, args.output_markdown)
     confirmation = json.loads(confirmation_path.read_text(encoding="utf-8"))
+    candidates = json.loads(candidates_path.read_text(encoding="utf-8"))
     seal = json.loads(seal_path.read_text(encoding="utf-8"))
     wind = json.loads(wind_path.read_text(encoding="utf-8"))
     campaign = json.loads(campaign_path.read_text(encoding="utf-8"))
+    training_cohort = json.loads(training_cohort_path.read_text(encoding="utf-8"))
+    released_config = json.loads(released_config_path.read_text(encoding="utf-8"))
     if confirmation.get("scope") != FROZEN_CONFIRMATION_SCOPE:
         raise ValueError("Expected the frozen once-only external confirmation")
     if campaign.get("scope") != "frozen_v3_five_seed_full_strict_campaign":
         raise ValueError("Expected the frozen strict MARS campaign")
+    if candidates.get("scope") != "prediction_blind_emit_v002_sentinel2_external_candidate_discovery":
+        raise ValueError("Expected the prediction-blind external candidate discovery")
+    if training_cohort.get("scope") != "minimum_mars_s2l_v3_fit_and_internal_validation_corpus":
+        raise ValueError("Expected the frozen v3 fit cohort")
     if not wind["summary"]["complete"]:
         raise ValueError("Expected complete frozen ERA5-Land acquisition")
     if sha256(seal_path) != confirmation["cohort"]["seal_sha256"]:
@@ -480,11 +626,22 @@ def main() -> int:
     if sha256(wind_path) != confirmation["cohort"]["wind_acquisition_sha256"]:
         raise ValueError("External wind identity differs from the confirmation")
 
-    ext_rows = external_rows(root, raw_root, seal, wind, confirmation)
+    ext_rows = external_rows(root, raw_root, seal, wind, confirmation, candidates)
     manifest_path = metadata_dir / V3_STRICT_SAMPLES
     if sha256(manifest_path) != campaign["cohort"]["strict_manifest_sha256"]:
         raise ValueError("Strict MARS manifest differs from the frozen campaign")
     mars_rows = strict_positive_rows(metadata_dir, list(iter_manifest(manifest_path)))
+    training_manifest_path = safe_path(root, training_cohort["identities"]["sample_manifest"])
+    if sha256(training_manifest_path) != training_cohort["identities"]["sample_manifest_sha256"]:
+        raise ValueError("V3 fit manifest differs from its frozen receipt")
+    training_records = list(iter_manifest(training_manifest_path))
+    strict_records = list(iter_manifest(manifest_path))
+    spatial_overlap = spatial_overlap_audit(
+        ext_rows,
+        manifest_locations(training_records),
+        released_training_locations(metadata_csv_path, released_config),
+        manifest_locations(strict_records),
+    )
     if len(ext_rows) != int(confirmation["cohort"]["scenes"]):
         raise ValueError("External diagnostic row count differs from the confirmation")
     if len(mars_rows) != int(campaign["cohort"]["positives"]):
@@ -561,6 +718,7 @@ def main() -> int:
             "both_released_and_any_ersrr": int(sum(row["released_prediction"] and row["seed_hits"] > 0 for row in ext_rows)),
             "neither_released_nor_any_ersrr": int(sum(not row["released_prediction"] and row["seed_hits"] == 0 for row in ext_rows)),
         },
+        "spatial_overlap_audit": spatial_overlap,
         "score_correlations": score_correlations(ext_rows),
         "distribution_shift": {"headline": headline, "reflectance": reflectance_shift},
         "external_rows": ext_rows,
@@ -579,10 +737,15 @@ def main() -> int:
             "git_tracked_worktree_dirty_at_start": tracked_dirty(root),
             "inputs": {
                 "external_confirmation": {"path": confirmation_path.relative_to(root).as_posix(), "sha256": sha256(confirmation_path)},
+                "external_candidates": {"path": candidates_path.relative_to(root).as_posix(), "sha256": sha256(candidates_path)},
                 "external_seal": {"path": seal_path.relative_to(root).as_posix(), "sha256": sha256(seal_path)},
                 "wind_acquisition": {"path": wind_path.relative_to(root).as_posix(), "sha256": sha256(wind_path)},
                 "strict_campaign": {"path": campaign_path.relative_to(root).as_posix(), "sha256": sha256(campaign_path)},
                 "strict_manifest": {"path": manifest_path.relative_to(root).as_posix(), "sha256": sha256(manifest_path)},
+                "v3_fit_receipt": {"path": training_cohort_path.relative_to(root).as_posix(), "sha256": sha256(training_cohort_path)},
+                "v3_fit_manifest": {"path": training_manifest_path.relative_to(root).as_posix(), "sha256": sha256(training_manifest_path)},
+                "released_config": {"path": released_config_path.relative_to(root).as_posix(), "sha256": sha256(released_config_path)},
+                "released_metadata_csv": {"path": metadata_csv_path.relative_to(root).as_posix(), "sha256": sha256(metadata_csv_path)},
             },
         },
     }

@@ -14,8 +14,10 @@ from analyze_emit_v002_external_posthoc import (  # noqa: E402
     FROZEN_CONFIRMATION_SCOPE,
     binary_auc,
     distribution_comparison,
+    haversine_km,
     mask_signal_features,
     rank_strata_indices,
+    spatial_overlap_audit,
     time_offset_strata,
 )
 
@@ -70,6 +72,17 @@ class EmitV002ExternalPosthocTests(unittest.TestCase):
         result = distribution_comparison(external, strict, "x")
         self.assertEqual(result["cliffs_delta_external_vs_mars"], 1.0)
         self.assertEqual(result["external_minus_mars_median"], 2.0)
+
+    def test_haversine_and_spatial_overlap_use_25km_contract(self) -> None:
+        self.assertAlmostEqual(haversine_km((0.0, 0.0), (0.0, 0.0)), 0.0)
+        rows = [
+            {"group_id": "near", "latitude": 0.0, "longitude": 0.0},
+            {"group_id": "far", "latitude": 1.0, "longitude": 1.0},
+        ]
+        locations = [{"location_id": "origin", "latitude": 0.0, "longitude": 0.0}]
+        result = spatial_overlap_audit(rows, locations, locations, locations)
+        self.assertEqual(result["ersrr_v3_fit"]["within_25km"], 1)
+        self.assertEqual(result["ersrr_v3_fit"]["overlap_group_ids"], ["near"])
 
 
 if __name__ == "__main__":
