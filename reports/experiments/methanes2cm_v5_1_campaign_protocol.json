@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "scope": "methanes2cm_v5_1_three_seed_confirmation_and_test_freeze",
+  "frozen_at_utc": "2026-07-13T22:58:00+00:00",
+  "rationale": "Seed 1101 controlled ablation improved scene AP, AUROC, recall at <=5% FPR, pixel Dice, and pixel IoU over mask-derived v5 while retaining a dense output. Confirm stability before opening the location test.",
+  "source": {
+    "dataset": "H1deaki/MethaneS2CM",
+    "revision": "ee9a96d4994ca6bc45725c1e92d7a06258131eaf",
+    "split": "l2a_location_split_32x32",
+    "protocol_sha256": "aa7b41070acc26e80ff7a640a98bcaa31d5285af290289013949783ee4891fffa",
+    "manifest_sha256": "6f2137a0cf33bcae80a9ecee57d62cd9b37d4121903808bcdc7e7951a82558e3",
+    "packed_train_sha256": "f75ea0c35bba240d56e8deae8828722253c5b82fb59b515d8627fb4106951ca4"
+  },
+  "architecture": {
+    "name": "ersrr_methanes2cm_tri_temporal_context_v5_1",
+    "architecture_commit": "39da5c20",
+    "frames": ["T", "T-90", "T-365"],
+    "context_scene_weight": 0.65,
+    "mask_scene_weight": 0.35,
+    "scene_topk_fraction": 0.01,
+    "scene_max_weight_within_mask_score": 0.15,
+    "scene_head": "128-unit MLP over mean/max fused bottleneck and mean/max/min centered two-reference MBMP",
+    "segmentation": "shared tri-temporal encoder, seven-term temporal fusion at five scales, U-Net decoder",
+    "initialization": "from_scratch_per_seed"
+  },
+  "training": {
+    "seeds": [1101, 2202, 3303],
+    "epochs": 12,
+    "patience": 4,
+    "batch_size": 256,
+    "learning_rate": 0.0003,
+    "optimizer": "AdamW(weight_decay=1e-4)",
+    "scheduler": "CosineAnnealingLR",
+    "augmentation": "random right-angle rotations and horizontal/vertical flips",
+    "checkpoint_selection_rank": [
+      "scene_average_precision",
+      "scene_auroc",
+      "recall_at_fpr_le_0.05",
+      "pixel_dice"
+    ]
+  },
+  "ensemble": {
+    "scene_calibration": "For each seed, transform any score to its empirical CDF percentile in that seed's frozen internal-development scores using right-continuous searchsorted; average the three percentiles equally.",
+    "scene_thresholds": "Select once on the internal-development ensemble for FPR targets 0.02, 0.05, 0.08, and 0.095.",
+    "segmentation": "Equal arithmetic mean of the three per-pixel sigmoid probabilities.",
+    "pixel_threshold": "Choose once on all observable internal-development pixels from the fixed 0.05 to 0.95 step-0.05 grid by maximum Dice; lower threshold breaks an exact tie.",
+    "uncertainty": "2000 nonparametric bootstrap resamples of the 64 frozen 25 km internal-development groups."
+  },
+  "promotion_rule": "Complete all three seeds and freeze the aggregate calibrators, scene thresholds, pixel threshold, checkpoint hashes, and comparison code in a clean commit. Do not change architecture or operating rules in response to the location-test result.",
+  "sealed_test": {
+    "images_opened_at_freeze": false,
+    "test_models": [
+      "three-seed ERSRR v5.1 ensemble",
+      "frozen ERSRR v4.3 ensemble with its internal-validation rules",
+      "released MARS-S2L model with its released/frozen rules"
+    ],
+    "rule": "After campaign freeze, extract only the pinned location-test assets and run one comparison campaign. Never retune from its results."
+  },
+  "known_seed_1101": {
+    "report": "reports/experiments/methanes2cm_v5_1_seed1101_validation.json",
+    "checkpoint_sha256": "7b648548cc62ca3f6d428df2cf427e373fba5a7bdcf03aabada68bf6f1cfc446",
+    "prediction_cache_sha256": "e2f168a0f637a17c2619330b9f38b53eb42459e70345b2a7bd5295778b5f6ca1"
+  }
+}
