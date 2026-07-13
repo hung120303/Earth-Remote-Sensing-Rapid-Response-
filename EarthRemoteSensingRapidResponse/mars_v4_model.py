@@ -124,11 +124,18 @@ class MarsV4Model(nn.Module):
 
     fused_channels = (48, 80, 128, 192, 256)
 
-    def __init__(self, scene_topk_fraction: float = 0.005) -> None:
+    def __init__(
+        self,
+        scene_topk_fraction: float = 0.005,
+        scene_max_weight: float = 0.2,
+    ) -> None:
         super().__init__()
         if not 0.0 < scene_topk_fraction <= 1.0:
             raise ValueError("scene_topk_fraction must be in (0, 1]")
+        if not 0.0 <= scene_max_weight <= 1.0:
+            raise ValueError("scene_max_weight must be in [0, 1]")
         self.scene_topk_fraction = scene_topk_fraction
+        self.scene_max_weight = scene_max_weight
         self.encoder = SharedTemporalEncoder()
         self.fusions = nn.ModuleList(
             TemporalFusion(temporal, fused)
@@ -181,7 +188,10 @@ class MarsV4Model(nn.Module):
         topk = torch.topk(masked, k=topk_count, dim=1).values
         # A small max contribution preserves sensitivity to compact plumes while
         # the robust top-k mean prevents one hot pixel from declaring a scene.
-        scene_logit = 0.8 * topk.mean(dim=1) + 0.2 * topk.max(dim=1).values
+        scene_logit = (
+            (1.0 - self.scene_max_weight) * topk.mean(dim=1)
+            + self.scene_max_weight * topk.max(dim=1).values
+        )
         return {
             "segmentation_logits": segmentation_logits,
             "scene_logit": scene_logit,
@@ -189,15 +199,19 @@ class MarsV4Model(nn.Module):
         }
 
     def artifact_metadata(self) -> dict[str, Any]:
+        percentage = 100.0 * self.scene_topk_fraction
+        mean_weight = 1.0 - self.scene_max_weight
         return {
             "schema_version": MODEL_SCHEMA_VERSION,
             "model_name": MODEL_NAME,
             "input_channels": list(INPUT_CHANNELS),
             "parameter_count": sum(parameter.numel() for parameter in self.parameters()),
             "scene_score": (
-                "sigmoid(0.8 * mean(top 0.5% observable segmentation logits) + "
-                "0.2 * max(observable segmentation logits))"
+                f"sigmoid({mean_weight:g} * mean(top {percentage:g}% observable segmentation "
+                f"logits) + {self.scene_max_weight:g} * max(observable segmentation logits))"
             ),
+            "scene_max_weight": self.scene_max_weight,
+            "scene_topk_fraction": self.scene_topk_fraction,
             "temporal_weight_sharing": True,
             "initialization": "from_scratch",
         }

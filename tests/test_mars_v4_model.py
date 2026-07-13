@@ -46,6 +46,13 @@ class MarsV4ModelTests(unittest.TestCase):
         output = model(inputs, observable)
         self.assertTrue(torch.isfinite(output["scene_logit"]).all())
 
+    def test_artifact_metadata_binds_scene_extent(self) -> None:
+        model = MarsV4Model(scene_topk_fraction=0.02, scene_max_weight=0.0)
+        metadata = model.artifact_metadata()
+        self.assertEqual(metadata["scene_topk_fraction"], 0.02)
+        self.assertEqual(metadata["scene_max_weight"], 0.0)
+        self.assertIn("top 2%", metadata["scene_score"])
+
     def test_released_lut_matches_upstream_reference_values(self) -> None:
         lut = MarsTransmittanceLut(LUT)
         enhancement = np.asarray([[0.0, 500.0, 2000.0]], dtype=np.float32)

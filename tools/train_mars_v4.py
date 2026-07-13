@@ -728,6 +728,8 @@ def main() -> int:
     parser.add_argument("--samples-per-epoch", type=int, default=32768)
     parser.add_argument("--learning-rate", type=float, default=2e-4)
     parser.add_argument("--simulation-fraction", type=float, default=0.5)
+    parser.add_argument("--scene-topk-fraction", type=float, default=0.005)
+    parser.add_argument("--scene-max-weight", type=float, default=0.2)
     parser.add_argument("--objective", choices=OBJECTIVES, default="segmentation_bce_dice")
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--smoke", action="store_true")
@@ -738,6 +740,10 @@ def main() -> int:
         raise RuntimeError("CUDA is required for v4 training")
     if args.epochs < 1 or args.validation_every < 1 or args.samples_per_epoch < 1:
         raise ValueError("Epoch, validation, and sample counts must be positive")
+    if not 0.0 < args.scene_topk_fraction <= 1.0:
+        raise ValueError("Scene top-k fraction must be in (0,1]")
+    if not 0.0 <= args.scene_max_weight <= 1.0:
+        raise ValueError("Scene max weight must be in [0,1]")
     seed_everything(args.seed)
     metadata_dir = checked_output_dir(root, args.metadata_dir)
     metadata_csv = (root / args.metadata_csv).resolve()
@@ -830,7 +836,10 @@ def main() -> int:
         args.output_markdown
         or (SMOKE_MARKDOWN.as_posix() if args.smoke else DEFAULT_MARKDOWN.as_posix()),
     )
-    model = MarsV4Model().to(torch.device("cuda"))
+    model = MarsV4Model(
+        scene_topk_fraction=args.scene_topk_fraction,
+        scene_max_weight=args.scene_max_weight,
+    ).to(torch.device("cuda"))
     history, best_epoch = train(
         model,
         train_loader,
@@ -853,7 +862,15 @@ def main() -> int:
         development_checks, decision = development_decision(validation, reference)
     report = {
         "schema_version": 1,
-        "architecture_revision": "v4.1" if args.objective == "segmentation_bce_dice" else "v4.0",
+        "architecture_revision": (
+            "v4.2"
+            if args.objective == "segmentation_bce_dice"
+            and math.isclose(args.scene_topk_fraction, 0.02)
+            and math.isclose(args.scene_max_weight, 0.0)
+            else "v4.1"
+            if args.objective == "segmentation_bce_dice"
+            else "v4.0"
+        ),
         "scope": "v4_pipeline_smoke" if args.smoke else "v4_internal_validation_selection",
         "smoke_test": args.smoke,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -887,6 +904,8 @@ def main() -> int:
             "epochs_requested": args.epochs,
             "batch_size": args.batch_size,
             "samples_per_epoch": args.samples_per_epoch,
+            "scene_max_weight": args.scene_max_weight,
+            "scene_topk_fraction": args.scene_topk_fraction,
             "learning_rate": args.learning_rate,
             "validation_every": args.validation_every,
             "history": history,
