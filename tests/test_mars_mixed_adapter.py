@@ -11,7 +11,10 @@ MODEL_ROOT = ROOT / "EarthRemoteSensingRapidResponse"
 if str(MODEL_ROOT) not in sys.path:
     sys.path.insert(0, str(MODEL_ROOT))
 
-from mars_s2l_adapter import iter_development_manifest  # noqa: E402
+from mars_s2l_adapter import (  # noqa: E402
+    iter_development_manifest,
+    validate_image_band_order,
+)
 
 
 class MarsMixedAdapterTests(unittest.TestCase):
@@ -53,6 +56,26 @@ class MarsMixedAdapterTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "Unsupported development role"):
             list(iter_development_manifest(path))
+
+    def test_landsat_native_descriptions_are_accepted(self) -> None:
+        native = (
+            "B02",
+            "B03",
+            "B04",
+            "B05",
+            "B06",
+            "B07",
+            "B02_bg",
+            "B03_bg",
+            "B04_bg",
+            "B05_bg",
+            "B06_bg",
+            "B07_bg",
+        )
+        self.assertEqual(
+            validate_image_band_order({"band_order": list(native)}, native),
+            "embedded_descriptions",
+        )
 
 
 if __name__ == "__main__":

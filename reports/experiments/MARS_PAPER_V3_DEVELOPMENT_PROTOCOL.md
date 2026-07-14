@@ -3,7 +3,7 @@
 - Development scenes: 44,363
 - Physical-location groups: 618
 - Assignment SHA-256: `013f784a28eaa88e20ee62ae8cb232c8d0c3e7c6265f1193a9b5e524fc264363`
-- Development manifest SHA-256: `6f5afe6dabd7fb52a078151980eda5f0d991855521d00ac42f6c35a5985d05c8`
+- Development manifest SHA-256: `31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e`
 
 | Fold | Sites | Scenes | Plume | No plume | Sentinel-2 | Landsat |
 |---:|---:|---:|---:|---:|---:|---:|

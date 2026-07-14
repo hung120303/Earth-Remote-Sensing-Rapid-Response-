@@ -1,0 +1,280 @@
+{
+  "artifact": {
+    "bytes": 5135658,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_paper_residual_smoke.pt",
+    "sha256": "a90e04050fd5b724a74cd16fa7948774eb373b75f019e2c32f167259c03e7e6c",
+    "tracked": false
+  },
+  "best_validation": {
+    "candidate": {
+      "accuracy": 0.9821428571428571,
+      "auroc": 0.9921875,
+      "average_precision": 0.9916666666666666,
+      "false_positive_rate": 0.0,
+      "fn": 1.0,
+      "fp": 0.0,
+      "negative_predictive_value": 0.9696969696969697,
+      "operating_points": {
+        "0.05": {
+          "false_positive_rate": 0.03125,
+          "precision": 0.9583333333333334,
+          "recall": 0.9583333333333334,
+          "target_fpr": 0.05,
+          "threshold": 0.4904012978076935
+        },
+        "0.0713": {
+          "false_positive_rate": 0.0625,
+          "precision": 0.92,
+          "recall": 0.9583333333333334,
+          "target_fpr": 0.0713,
+          "threshold": 0.3998282253742218
+        }
+      },
+      "pixel_fixed_0_5": {
+        "dice": 0.8118094907436111,
+        "intersection_over_union": 0.6832317582234095,
+        "intersection_pixels": 32735,
+        "predicted_positive_pixels": 43303,
+        "truth_positive_pixels": 37344
+      },
+      "precision": 1.0,
+      "recall": 0.9583333333333334,
+      "specificity": 1.0,
+      "tn": 32.0,
+      "tp": 23.0
+    },
+    "delta": {
+      "average_precision": -1.1102230246251565e-16,
+      "pixel_iou": -0.0011335278389277281,
+      "recall_at_fpr_0_0713": 0.0
+    },
+    "negative": 32,
+    "positive": 24,
+    "released_baseline": {
+      "accuracy": 0.9821428571428571,
+      "auroc": 0.9921875,
+      "average_precision": 0.9916666666666667,
+      "false_positive_rate": 0.0,
+      "fn": 1.0,
+      "fp": 0.0,
+      "negative_predictive_value": 0.9696969696969697,
+      "operating_points": {
+        "0.05": {
+          "false_positive_rate": 0.03125,
+          "precision": 0.9583333333333334,
+          "recall": 0.9583333333333334,
+          "target_fpr": 0.05,
+          "threshold": 0.454455703496933
+        },
+        "0.0713": {
+          "false_positive_rate": 0.0625,
+          "precision": 0.92,
+          "recall": 0.9583333333333334,
+          "target_fpr": 0.0713,
+          "threshold": 0.38311368227005005
+        }
+      },
+      "pixel_fixed_0_5": {
+        "dice": 0.8126091076861689,
+        "intersection_over_union": 0.6843652860623373,
+        "intersection_pixels": 32584,
+        "predicted_positive_pixels": 42852,
+        "truth_positive_pixels": 37344
+      },
+      "precision": 1.0,
+      "recall": 0.9583333333333334,
+      "specificity": 1.0,
+      "tn": 32.0,
+      "tp": 23.0
+    },
+    "rows": 56,
+    "sites": 35
+  },
+  "cohort": {
+    "fit_rows": 64,
+    "fit_sites": 50,
+    "missing_full_fit_at_start": -1,
+    "missing_full_validation_at_start": -1,
+    "validation_rows": 56,
+    "validation_sites": 35
+  },
+  "decision": "Smoke execution only; this result cannot promote an architecture.",
+  "experiment": {
+    "held_out_fold": 0,
+    "seed": 606,
+    "smoke": true
+  },
+  "generated_at_utc": "2026-07-14T02:33:07.144165+00:00",
+  "model": {
+    "initial_equivalence": "exact released U-Net logits before correction training",
+    "input_channels": [
+      "mbmp_release",
+      "target_B02",
+      "target_B03",
+      "target_B04",
+      "target_B08",
+      "target_B11",
+      "target_B12",
+      "reference_B02",
+      "reference_B03",
+      "reference_B04",
+      "reference_B08",
+      "reference_B11",
+      "reference_B12",
+      "wind_u_div8",
+      "wind_v_div8",
+      "cloud_binary"
+    ],
+    "model_name": "ersrr_mars_paper_residual_v1",
+    "parameter_count": 14865638,
+    "physics_features": [
+      "centered MBMP",
+      "target-reference reflectance",
+      "normalized temporal difference",
+      "log temporal ratio",
+      "wind",
+      "cloud",
+      "sensor identity",
+      "released baseline logit"
+    ],
+    "released_checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "scene_topk_fraction": 0.01,
+    "schema_version": 1,
+    "sensor_names": [
+      "Sentinel-2",
+      "Landsat"
+    ],
+    "trainable_parameter_count_correction_only": 1278053
+  },
+  "promotion_checks": {
+    "ap_higher": false,
+    "pixel_iou_higher": false,
+    "recall_at_fpr_0_0713_higher": false
+  },
+  "provenance": {
+    "development_manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "50bdc4e371c8b09f90ad8f1b47a1e65cbcfe99a2",
+    "numpy": "2.4.4",
+    "protocol": "configs/mars_paper_v3_group_folds.json",
+    "protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "rasterio": "1.4.4",
+    "released_checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "scipy": "1.17.1",
+    "script": "tools/train_mars_paper_residual.py",
+    "script_sha256": "55a793c6ba380eabd1e75f03a6dcba4e2c0d0b296aeeac0c15eed18ebe8c7abb",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "site-held architecture development; sealed paper test not loaded",
+  "training": {
+    "batch_size": 4,
+    "best_epoch": 1,
+    "epochs_requested": 1,
+    "history": [
+      {
+        "epoch": 1,
+        "learning_rate": 0.0,
+        "loss": {
+          "correction_l2": 0.00021693259358102068,
+          "hard_negative_bce": 0.3966736022848636,
+          "negative_upward_penalty": 0.0050036124360050005,
+          "positive_bce": 1.2263662030454725,
+          "positive_dice_loss": 0.3345254734158516,
+          "scene_bce": 0.4734315434616292,
+          "total": 1.9099117377772927
+        },
+        "seconds": 10.129,
+        "validation": {
+          "candidate": {
+            "accuracy": 0.9821428571428571,
+            "auroc": 0.9921875,
+            "average_precision": 0.9916666666666666,
+            "false_positive_rate": 0.0,
+            "fn": 1.0,
+            "fp": 0.0,
+            "negative_predictive_value": 0.9696969696969697,
+            "operating_points": {
+              "0.05": {
+                "false_positive_rate": 0.03125,
+                "precision": 0.9583333333333334,
+                "recall": 0.9583333333333334,
+                "target_fpr": 0.05,
+                "threshold": 0.4904012978076935
+              },
+              "0.0713": {
+                "false_positive_rate": 0.0625,
+                "precision": 0.92,
+                "recall": 0.9583333333333334,
+                "target_fpr": 0.0713,
+                "threshold": 0.3998282253742218
+              }
+            },
+            "pixel_fixed_0_5": {
+              "dice": 0.8118094907436111,
+              "intersection_over_union": 0.6832317582234095,
+              "intersection_pixels": 32735,
+              "predicted_positive_pixels": 43303,
+              "truth_positive_pixels": 37344
+            },
+            "precision": 1.0,
+            "recall": 0.9583333333333334,
+            "specificity": 1.0,
+            "tn": 32.0,
+            "tp": 23.0
+          },
+          "delta": {
+            "average_precision": -1.1102230246251565e-16,
+            "pixel_iou": -0.0011335278389277281,
+            "recall_at_fpr_0_0713": 0.0
+          },
+          "negative": 32,
+          "positive": 24,
+          "released_baseline": {
+            "accuracy": 0.9821428571428571,
+            "auroc": 0.9921875,
+            "average_precision": 0.9916666666666667,
+            "false_positive_rate": 0.0,
+            "fn": 1.0,
+            "fp": 0.0,
+            "negative_predictive_value": 0.9696969696969697,
+            "operating_points": {
+              "0.05": {
+                "false_positive_rate": 0.03125,
+                "precision": 0.9583333333333334,
+                "recall": 0.9583333333333334,
+                "target_fpr": 0.05,
+                "threshold": 0.454455703496933
+              },
+              "0.0713": {
+                "false_positive_rate": 0.0625,
+                "precision": 0.92,
+                "recall": 0.9583333333333334,
+                "target_fpr": 0.0713,
+                "threshold": 0.38311368227005005
+              }
+            },
+            "pixel_fixed_0_5": {
+              "dice": 0.8126091076861689,
+              "intersection_over_union": 0.6843652860623373,
+              "intersection_pixels": 32584,
+              "predicted_positive_pixels": 42852,
+              "truth_positive_pixels": 37344
+            },
+            "precision": 1.0,
+            "recall": 0.9583333333333334,
+            "specificity": 1.0,
+            "tn": 32.0,
+            "tp": 23.0
+          },
+          "rows": 56,
+          "sites": 35
+        }
+      }
+    ],
+    "learning_rate": 0.0002,
+    "patience": 4,
+    "samples_per_epoch": 128
+  }
+}

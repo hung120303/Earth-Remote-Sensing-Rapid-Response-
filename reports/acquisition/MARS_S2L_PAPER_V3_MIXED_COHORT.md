@@ -1,9 +1,9 @@
 # MARS-S2L paper-v3 mixed-sensor cohort
 
 - Remote assets: 187,014 / 82.909 GiB
-- Acquisition manifest SHA-256: `1f36bce70052024faa53c40206504ce16f52e2948282f457a453e21805689703`
-- Development-only manifest SHA-256: `6f5afe6dabd7fb52a078151980eda5f0d991855521d00ac42f6c35a5985d05c8`
-- Sealed-test manifest SHA-256: `90640495c00ca359dd927f9e70791af5d47757d1c363b58a764b11e48e7d9020`
+- Acquisition manifest SHA-256: `8e7a18cc6b20c23c6627f54830d2bec23064c55b939164ca3505bc1e860c89a9`
+- Development-only manifest SHA-256: `31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e`
+- Sealed-test manifest SHA-256: `685937eb599ce4612116dc5c16edc74c4c0c6273f2fa864e651cfee73d1f4f6d`
 - Catalog SHA-256: `363616a38f8e78e89a7b0f355d5697d9b07a1c27ead6eac687e22175ebeec292`
 
 | Research role | Rows | Plume | No plume | Sites | Sentinel-2 | Landsat |

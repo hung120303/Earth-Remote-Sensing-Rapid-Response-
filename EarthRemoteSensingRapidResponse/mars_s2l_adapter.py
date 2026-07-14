@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Iterator
 
@@ -74,6 +75,17 @@ class MarsS2Sample:
         return int(self.label_state == "PLUME")
 
 
+@lru_cache(maxsize=8192)
+def _validate_parent_chain(base_value: str, parent_value: str) -> None:
+    """Cache immutable acquisition-directory symlink checks by parent folder."""
+    base = Path(base_value)
+    parent = Path(parent_value)
+    while parent != base:
+        if parent.exists() and parent.is_symlink():
+            raise ValueError(f"MARS-S2L asset traverses a symlink: {parent}")
+        parent = parent.parent
+
+
 def safe_asset_path(base_dir: Path, relative_path: str) -> Path:
     """Resolve a release-relative asset without allowing acquisition-root escape."""
     relative = PurePosixPath(relative_path)
@@ -83,11 +95,7 @@ def safe_asset_path(base_dir: Path, relative_path: str) -> Path:
     result = Path(os.path.abspath(os.path.join(str(base), *relative.parts)))
     if os.path.normcase(os.path.commonpath([str(base), str(result)])) != os.path.normcase(str(base)):
         raise ValueError(f"MARS-S2L asset escapes base directory: {relative_path}")
-    parent = result.parent
-    while parent != base:
-        if parent.exists() and parent.is_symlink():
-            raise ValueError(f"MARS-S2L asset traverses a symlink: {relative_path}")
-        parent = parent.parent
+    _validate_parent_chain(str(base), str(result.parent))
     return result
 
 
@@ -107,10 +115,10 @@ def validate_image_band_order(
     record: dict[str, Any], descriptions: tuple[str | None, ...]
 ) -> str:
     """Validate embedded band labels or a narrowly scoped manifest fallback."""
-    if descriptions == MARS_IMAGE_BANDS:
-        return "embedded_descriptions"
     declared = tuple(record.get("band_order") or ())
-    if all(value is None for value in descriptions) and declared == MARS_IMAGE_BANDS:
+    if descriptions == MARS_IMAGE_BANDS or descriptions == declared:
+        return "embedded_descriptions"
+    if all(value is None for value in descriptions) and len(declared) == 12:
         # A small producer-side tranche omits TIFF band descriptions. The
         # frozen, hash-bound MARS manifest still declares the exact 12-band
         # order; accept only the all-missing case, never partial/mixed labels.

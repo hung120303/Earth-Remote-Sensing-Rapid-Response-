@@ -53,7 +53,6 @@ PAPER_TABLE_S3_COUNTS = {
     "validation_rows": 6_034,
     "validation_positive": 288,
 }
-CANONICAL_STORED_BANDS = ["B02", "B03", "B04", "B08", "B11", "B12"]
 DEFAULT_JSON = Path("reports/acquisition/mars_s2l_paper_v3_mixed_cohort.json")
 DEFAULT_MARKDOWN = Path("reports/acquisition/MARS_S2L_PAPER_V3_MIXED_COHORT.md")
 DEFAULT_ASSET_METADATA = DEFAULT_OUTPUT / "validated_images_all.csv"
@@ -116,6 +115,11 @@ def common_row(
     satellite = str(meta["satellite"])
     sentinel = satellite.startswith("S2")
     location = str(meta["location_name"]).strip()
+    native_bands = (
+        ["B02", "B03", "B04", "B08", "B11", "B12"]
+        if sentinel
+        else ["B02", "B03", "B04", "B05", "B06", "B07"]
+    )
     return {
         "sample_id": meta["id_loc_image"],
         "source_dataset": REPO_ID,
@@ -129,13 +133,8 @@ def common_row(
         "target_scene_id": meta["tile"],
         "reference_scene_id": meta["background_image_tile"],
         "target_datetime": meta["tile_date"],
-        "raw_band_order": (
-            ["B02", "B03", "B04", "B08", "B11", "B12"]
-            if sentinel
-            else ["B02", "B03", "B04", "B05", "B06", "B07"]
-        ),
-        "band_order": CANONICAL_STORED_BANDS
-        + [f"{band}_bg" for band in CANONICAL_STORED_BANDS],
+        "raw_band_order": native_bands,
+        "band_order": native_bands + [f"{band}_bg" for band in native_bands],
         "model_band_order": ["blue", "green", "red", "nir", "swir1", "swir2"],
         "input_contract": "MBMP + current/reference six-band TOA + wind_u/v + cloud mask = 16 channels",
         "crs": meta["crs"],
