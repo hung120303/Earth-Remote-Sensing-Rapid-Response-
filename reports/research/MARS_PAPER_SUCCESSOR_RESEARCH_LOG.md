@@ -469,6 +469,23 @@ The confirmation run is restricted to thresholds 0.50 and 0.70 on folds 0 and
 and both pooled sensor strata; no threshold refinement is permitted from the
 confirmation result.
 
+Threshold 0.70 passed that confirmation. Pooled folds-0--1 IoU rose from
+0.48871519 to 0.53703413 (delta +0.04831894). Fold-0 and fold-1 deltas were
++0.04916728 and +0.04737035; pooled Sentinel-2 and Landsat deltas were
++0.05415067 and +0.00909880. The threshold-0.50 fold identities were exactly
+0.5086263440 and 0.4693744219, matching the pinned released evaluations.
+The authoritative confirmation JSON SHA-256 is
+`b3d77820ce1fc2a81c95e479f4412f545310ae8146cbd25f97f5c398b33fc7fe`.
+
+The frozen integrated candidate therefore separates responsibilities: the
+alpha-0.5 temporal residual and 0.25-blend OOF-stable context head produce only
+the scene ranking, while the released U-Net logits at threshold 0.70 and the
+unchanged 100-pixel connected rule produce the dense mask. This candidate has
+strict AP/recall gains at matched FPR on both development confirmation folds
+and strict mask-IoU gains on all five development folds and both sensors. The
+paper test remains sealed pending an integrated evaluator, artifact/hash freeze,
+fixed operational scene threshold, and paired site-bootstrap implementation.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.

@@ -1,0 +1,123 @@
+{
+  "decision": "Mask threshold 0.70 passed the separate folds 0-1 development confirmation.",
+  "fold_rows": {
+    "0": 8987,
+    "1": 8798
+  },
+  "folds": [
+    0,
+    1
+  ],
+  "generated_at_utc": "2026-07-14T18:45:10.234044+00:00",
+  "minimum_connected_pixels": 100,
+  "provenance": {
+    "checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "d38893578f989da1cc91d84e9c15df95cf9f01fe",
+    "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "numpy": "2.4.4",
+    "protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "rasterio": "1.4.4",
+    "scipy": "1.17.1",
+    "script_sha256": "2b2d1d4c5a869ebb8a8acb0e03f4db46c5cdbcf8dba6179184a95f1a4613e6ff",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "development folds only; paper test not loaded",
+  "selected_passes_all_fold_and_sensor_gates": true,
+  "selected_threshold": 0.7,
+  "thresholds": {
+    "0.5": {
+      "delta": 0.0,
+      "folds": {
+        "0": {
+          "delta": 0.0,
+          "intersection": 884017,
+          "intersection_over_union": 0.5086263440365283,
+          "predicted": 1582560,
+          "truth": 1039505,
+          "union": 1738048
+        },
+        "1": {
+          "delta": 0.0,
+          "intersection": 839854,
+          "intersection_over_union": 0.4693744219124185,
+          "predicted": 1612653,
+          "truth": 1016506,
+          "union": 1789305
+        }
+      },
+      "pooled": {
+        "intersection": 1723871,
+        "intersection_over_union": 0.48871519238363725,
+        "predicted": 3195213,
+        "truth": 2056011,
+        "union": 3527353
+      },
+      "sensors": {
+        "Landsat": {
+          "delta": 0.0,
+          "intersection": 638391,
+          "intersection_over_union": 0.6860539092943131,
+          "predicted": 837736,
+          "truth": 731181,
+          "union": 930526
+        },
+        "Sentinel-2": {
+          "delta": 0.0,
+          "intersection": 1085480,
+          "intersection_over_union": 0.41800243142881677,
+          "predicted": 2357477,
+          "truth": 1324830,
+          "union": 2596827
+        }
+      }
+    },
+    "0.7": {
+      "delta": 0.04831894069879439,
+      "folds": {
+        "0": {
+          "delta": 0.049167279986281565,
+          "intersection": 812268,
+          "intersection_over_union": 0.5577936240228099,
+          "predicted": 1228979,
+          "truth": 1039505,
+          "union": 1456216
+        },
+        "1": {
+          "delta": 0.04737034538974705,
+          "intersection": 769928,
+          "intersection_over_union": 0.5167447673021656,
+          "predicted": 1243380,
+          "truth": 1016506,
+          "union": 1489958
+        }
+      },
+      "pooled": {
+        "intersection": 1582196,
+        "intersection_over_union": 0.5370341330824316,
+        "predicted": 2472359,
+        "truth": 2056011,
+        "union": 2946174
+      },
+      "sensors": {
+        "Landsat": {
+          "delta": 0.00909880075491809,
+          "intersection": 595871,
+          "intersection_over_union": 0.6951527100492312,
+          "predicted": 721870,
+          "truth": 731181,
+          "union": 857180
+        },
+        "Sentinel-2": {
+          "delta": 0.054150671930982275,
+          "intersection": 986325,
+          "intersection_over_union": 0.47215310335979904,
+          "predicted": 1750489,
+          "truth": 1324830,
+          "union": 2088994
+        }
+      }
+    }
+  }
+}
