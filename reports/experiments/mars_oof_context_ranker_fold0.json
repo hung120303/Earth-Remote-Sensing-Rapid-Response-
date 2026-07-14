@@ -1,0 +1,133 @@
+{
+  "architecture": {
+    "blend_lambda": 0.625,
+    "oof_stability_checks": {
+      "ap_higher": true,
+      "at_least_two_inner_folds_raise_recall": true,
+      "minimum_six_pooled_extra_true_positives": true,
+      "no_inner_fold_recall_regression": true,
+      "no_material_inner_fold_ap_regression": true,
+      "no_material_sensor_ap_regression": true,
+      "recall_at_fpr_0_0713_higher": true
+    },
+    "scene_head": "oof_stable_context_scene_ranker_v1",
+    "segmentation": "frozen primary residual at exact alpha 0.5",
+    "spec": {
+      "family": "hist_gradient_boosting",
+      "l2_regularization": 10.0,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 20
+    }
+  },
+  "decision": "Reject the OOF-stable context architecture on fold 0.",
+  "generated_at_utc": "2026-07-14T17:07:52.067844+00:00",
+  "positive": 745,
+  "primary_endpoint_identity": {
+    "accuracy": 0.9311227328363191,
+    "auroc": 0.9793368879971467,
+    "average_precision": 0.8889106066831371,
+    "false_positive_rate": 0.0712205775297258,
+    "fn": 32.0,
+    "fp": 587.0,
+    "negative_predictive_value": 0.9958371276180564,
+    "operating_point": {
+      "false_positive_rate": 0.0712205775297258,
+      "precision": 0.5484615384615384,
+      "recall": 0.9570469798657718,
+      "target_fpr": 0.0713,
+      "threshold": 0.548018753528595
+    },
+    "precision": 0.5484615384615384,
+    "recall": 0.9570469798657718,
+    "sensor_average_precision": {
+      "Landsat": 0.9749018979140949,
+      "Sentinel-2": 0.8482014323168472
+    },
+    "specificity": 0.9287794224702742,
+    "tn": 7655.0,
+    "tp": 713.0
+  },
+  "provenance": {
+    "artifact_sha256": "2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ec27c370",
+    "cache_sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7",
+    "git_commit": "6c82acc1547d4b5c05d307b1f286c615c42f8646",
+    "joblib": "1.5.3",
+    "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "numpy": "2.4.4",
+    "oof_report_sha256": "a125830c41d1d592a7d3a52ee2343ad5faa883061869e4638113c9df09f421e0",
+    "primary_report_sha256": "bb9763a9bdbf0ddd14c3e1c718af9bceff47e0a1c6f04a4749833968368b79b5",
+    "protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "scipy": "1.17.1",
+    "script_sha256": "5603452693a645dd509a6a8c844b5af6564a1e99aaacd240de3d02e99493dee6",
+    "sklearn": "1.9.0"
+  },
+  "result": {
+    "checks": {
+      "ap_higher": true,
+      "fpr_no_worse": true,
+      "no_material_sensor_regression": true,
+      "pixel_iou_higher": true,
+      "recall_at_fpr_0_0713_higher": false
+    },
+    "delta": {
+      "average_precision": 0.016267937017133915,
+      "false_positive_rate_at_target": 0.0,
+      "pixel_iou": 0.010340405464818847,
+      "recall_at_fpr_0_0713": -0.0013422818791946067
+    },
+    "pixel_iou": 0.5189667495013471,
+    "released_baseline": {
+      "average_precision": 0.8864523081045828,
+      "false_positive_rate_at_target": 0.0712205775297258,
+      "pixel_iou": 0.5086263440365283,
+      "recall_at_fpr_0_0713": 0.9570469798657718
+    },
+    "scene": {
+      "accuracy": 0.931011460999221,
+      "auroc": 0.9820560592415017,
+      "average_precision": 0.9027202451217167,
+      "false_positive_rate": 0.0712205775297258,
+      "fn": 33.0,
+      "fp": 587.0,
+      "negative_predictive_value": 0.9957075962539021,
+      "operating_point": {
+        "false_positive_rate": 0.0712205775297258,
+        "precision": 0.5481139337952271,
+        "recall": 0.9557046979865772,
+        "target_fpr": 0.0713,
+        "threshold": 0.17894059900320067
+      },
+      "precision": 0.5481139337952271,
+      "recall": 0.9557046979865772,
+      "sensor_average_precision": {
+        "Landsat": 0.9791506473419074,
+        "Sentinel-2": 0.8671914731814441
+      },
+      "specificity": 0.9287794224702742,
+      "tn": 7655.0,
+      "tp": 712.0
+    },
+    "sensor_strata": {
+      "Landsat": {
+        "average_precision": 0.9791506473419074,
+        "delta": {
+          "average_precision": 0.004558982816172841,
+          "pixel_iou": 0.005263845385902188
+        },
+        "pixel_iou": 0.7017323346330119
+      },
+      "Sentinel-2": {
+        "average_precision": 0.8671914731814441,
+        "delta": {
+          "average_precision": 0.022600829290371105,
+          "pixel_iou": 0.010733628303951137
+        },
+        "pixel_iou": 0.4479657398249622
+      }
+    }
+  },
+  "rows": 8987,
+  "schema_version": 1,
+  "scope": "one-shot OOF-stable context fold-0 evaluation; fold 1 and paper test not loaded",
+  "sites": 107
+}
