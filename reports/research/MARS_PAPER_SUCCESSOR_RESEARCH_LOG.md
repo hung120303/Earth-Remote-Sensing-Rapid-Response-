@@ -111,6 +111,27 @@ amended training-script SHA-256 is
 adapter SHA-256 is
 `60087bc668109e5146a42f96f996a14e34ccbff3164124cfeb3ff367b93625a3`.
 
+## Frozen correction trust region
+
+The correction-only run was rejected before fold 1, but its epoch-7 checkpoint
+was close to the released baseline and later epochs showed overshoot. Before
+evaluating any blend strength, the follow-up was frozen as
+`released_logits + alpha * (trained_logits - released_logits)` on fold 0 only.
+
+- Input artifact SHA-256: `b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49`
+- Evaluator commit: `34956c01fefda1ef8364387725411a84b6ac130c`
+- Evaluator SHA-256: `02b94256fa7d9ac7cfc6693e25b013ddf2ad96485ed638b12b1cc9904ff83961`
+- Alpha grid: 0, 1/32, 1/16, 1/8, 1/4, 3/8, 1/2, 3/4, 1
+- Alpha 0 is an excluded-from-selection identity control and must reproduce the stored released baseline exactly overall and by sensor.
+- Positive alphas use the primary run's balanced rank and identical AP, recall, IoU, and sensor non-regression promotion gates.
+- Fold 1 remains unread unless a positive alpha passes every fold-0 gate.
+
+The frozen command is:
+
+```text
+python tools/evaluate_mars_residual_trust_region.py
+```
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
