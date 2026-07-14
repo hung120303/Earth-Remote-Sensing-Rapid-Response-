@@ -486,6 +486,35 @@ and strict mask-IoU gains on all five development folds and both sensors. The
 paper test remains sealed pending an integrated evaluator, artifact/hash freeze,
 fixed operational scene threshold, and paired site-bootstrap implementation.
 
+## Frozen official paper-test evaluator
+
+The integrated architecture is now preregistered in
+`configs/mars_successor_paper_test_v1.json` (SHA-256
+`b6ada879e727be8de73f287c707bb05d5fb699473cee339faa18f402b6d60926`).
+The fixed operational scene threshold is 0.5240683426, the conservative maximum
+of the two independent confirmation-fold target-FPR thresholds; AP and recall
+are additionally evaluated at the comparator's matched FPR without changing
+the ranking. The mask threshold is 0.70 with a 100-pixel connected minimum.
+
+The one-shot evaluator SHA-256 is
+`740b27cdbf089c4307f713bfd0946bb9b6e3c4a855de5be8360d58a061d12735`.
+It pins every model/report hash and the 43,524-row sealed manifest hash, then
+reconstructs the paper's hybrid general/offshore 43,529-row comparator from the
+authors' archived per-scene files. The five historical scenes without current
+rasters receive adversarial candidate scene and 200x200 pixel outcomes. The two
+available positive scenes without pixel masks receive zero candidate
+intersection, archived truth pixels as false negatives, and all predicted
+pixels as false positives.
+
+For both the full 43,529-image view and the 15,655-image test-only-site view,
+the evaluator runs 10,000 paired physical-site bootstrap replicates. Promotion
+requires lower 95% bounds above zero for AP, pixel IoU, and matched-FPR recall,
+plus an upper 95% bound at or below zero for the frozen operational FPR delta,
+and point estimates above both the exact reconstructed comparator and all
+published paper metrics that exist for the view. No test manifest row has been
+loaded by the evaluator; test assets may now be acquired byte-for-byte, after
+which this exact code is the only authorized result-producing path.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "architecture": {
+    "name": "ersrr_mars_successor_v1",
+    "scene_residual_alpha": 0.5,
+    "scene_head_blend": 0.25,
+    "operational_scene_threshold": 0.524068342606931,
+    "operational_threshold_rule": "maximum target-FPR threshold across independent folds 0 and 1; conservative no-plume control",
+    "mask_probability_threshold": 0.7,
+    "mask_minimum_connected_pixels": 100
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20260714,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "expected": {
+    "sealed_manifest_sha256": "685937eb599ce4612116dc5c16edc74c4c0c6273f2fa864e651cfee73d1f4f6d",
+    "residual_sha256": "b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49",
+    "scene_head_sha256": "2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ec27c370",
+    "scene_selection_sha256": "8fc190bf4cac9d3abb24979cd20678930f09143302a69ddbfb944a7959951b0b",
+    "scene_fold0_result_sha256": "4eec74a60109e6ed48d10358bde3c077755cfb15fa166dbec20d655ec2c492ce",
+    "mask_selection_sha256": "9d4dd8140908489e48be849c0e89100a8f663c3368db9354c1b30ed8670865be",
+    "mask_confirmation_sha256": "b3d77820ce1fc2a81c95e479f4412f545310ae8146cbd25f97f5c398b33fc7fe",
+    "paper_benchmark_sha256": "ebb39ab22720988b2657d0e4d6b9a5669c24fbca1083575797622a7f1e788eb0",
+    "mixed_cohort_sha256": "df0c592522b42fc66bf698456cd52b859b95cc44a2670e046ac5464745adbf8f"
+  },
+  "missing_data_policy": {
+    "missing_raster_scene_score": "positive=0, negative=1",
+    "missing_raster_pixel_policy": "zero intersection, all truth pixels false-negative, full 200x200 candidate mask false-positive",
+    "missing_raster_grid_pixels": 40000,
+    "missing_pixel_truth_policy": "zero intersection, archived truth pixels false-negative, predicted candidate pixels false-positive"
+  },
+  "superiority_gate": {
+    "views": ["full", "test_only_sites"],
+    "average_precision_delta_lower_95_gt_zero": true,
+    "pixel_iou_delta_lower_95_gt_zero": true,
+    "matched_fpr_recall_delta_lower_95_gt_zero": true,
+    "operational_fpr_delta_upper_95_lte_zero": true,
+    "must_beat_reconstructed_and_published_point_metrics": true
+  }
+}

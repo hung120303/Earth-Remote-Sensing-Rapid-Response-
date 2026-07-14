@@ -15,6 +15,8 @@ if str(MODEL_ROOT) not in sys.path:
 
 from mars_s2l_adapter import (  # noqa: E402
     iter_development_manifest,
+    label_state,
+    role_paths,
     validate_image_band_order,
     validate_positive_mask,
 )
@@ -93,6 +95,18 @@ class MarsMixedAdapterTests(unittest.TestCase):
             validate_positive_mask(
                 np.asarray([[0, 2]], dtype=np.uint8), "sample", allow_empty=True
             )
+
+    def test_missing_pixel_truth_contract_is_explicit(self) -> None:
+        record = {
+            "label_state": "PLUME",
+            "pixel_truth_available": False,
+            "assets": [
+                {"role": "image", "path": "image.tif"},
+                {"role": "cloud_mask", "path": "cloud.tif"},
+            ],
+        }
+        self.assertEqual(label_state(record), "PLUME")
+        self.assertEqual(set(role_paths(record)), {"image", "cloud_mask"})
 
 
 if __name__ == "__main__":

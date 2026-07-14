@@ -270,6 +270,7 @@ def load_sample(
     *,
     require_enhancement: bool = True,
     allow_empty_positive_mask: bool = False,
+    allow_missing_positive_mask: bool = False,
 ) -> MarsS2Sample:
     """Load and validate one pinned MARS-S2L sample.
 
@@ -281,10 +282,20 @@ def load_sample(
     paths = role_paths(record)
     required = {"image", "cloud_mask"}
     allowed = set(required)
+    missing_positive_truth = (
+        state == "PLUME"
+        and not bool(record.get("pixel_truth_available", True))
+    )
     if state == "PLUME":
-        required.add("plume_mask")
         allowed |= {"plume_mask", "methane_enhancement"}
-        if require_enhancement:
+        if missing_positive_truth:
+            if not allow_missing_positive_mask:
+                raise ValueError(
+                    f"Positive sample has no pixel truth: {identifier}"
+                )
+        else:
+            required.add("plume_mask")
+        if require_enhancement and not missing_positive_truth:
             required.add("methane_enhancement")
     if not required.issubset(paths) or not set(paths).issubset(allowed):
         raise ValueError(
@@ -325,7 +336,7 @@ def load_sample(
     reference = reflectance_pair[6:]
 
     enhancement: np.ndarray | None = None
-    if state == "PLUME":
+    if state == "PLUME" and not missing_positive_truth:
         plume, _ = _read_single_band(
             safe_asset_path(base_dir, paths["plume_mask"]), image_grid
         )

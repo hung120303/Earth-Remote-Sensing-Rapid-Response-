@@ -145,11 +145,13 @@ class MarsPaperDataset(Dataset[dict[str, Any]]):
         *,
         augment: bool,
         seed: int,
+        allow_missing_positive_mask: bool = False,
     ) -> None:
         self.metadata_dir = metadata_dir
         self.records = records
         self.augment = augment
         self.seed = seed
+        self.allow_missing_positive_mask = allow_missing_positive_mask
         self._rng: np.random.Generator | None = None
 
     def __len__(self) -> int:
@@ -173,6 +175,7 @@ class MarsPaperDataset(Dataset[dict[str, Any]]):
             record,
             require_enhancement=False,
             allow_empty_positive_mask=True,
+            allow_missing_positive_mask=self.allow_missing_positive_mask,
         )
         spectral = sample.reflectance_pair.copy()
         cloud = (sample.cloud_classes > 0).astype(np.float32)
@@ -226,6 +229,9 @@ class MarsPaperDataset(Dataset[dict[str, Any]]):
             "sensor_index": torch.tensor(sensor_index, dtype=torch.long),
             "sample_id": sample.sample_id,
             "group_id": str(record["group_id"]),
+            "pixel_truth_available": torch.tensor(
+                bool(record.get("pixel_truth_available", True)), dtype=torch.bool
+            ),
         }
 
 
