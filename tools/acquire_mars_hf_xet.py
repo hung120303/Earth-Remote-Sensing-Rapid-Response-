@@ -159,6 +159,12 @@ def main() -> int:
     parser.add_argument("--catalog-file", default=REMOTE_CATALOG)
     parser.add_argument("--manifest-file", default=DEFAULT_MANIFEST)
     parser.add_argument("--workers", type=int, default=12)
+    parser.add_argument(
+        "--batch-assets",
+        type=int,
+        default=1000,
+        help="Checkpoint the ignored worklist after this many verified assets",
+    )
     parser.add_argument("--max-assets", type=int)
     parser.add_argument(
         "--worklist-file",
@@ -175,6 +181,8 @@ def main() -> int:
     args = parser.parse_args()
     if args.workers <= 0:
         parser.error("--workers must be positive")
+    if args.batch_assets <= 0:
+        parser.error("--batch-assets must be positive")
     if args.max_assets is not None and args.max_assets <= 0:
         parser.error("--max-assets must be positive")
 
@@ -259,23 +267,38 @@ def main() -> int:
                 f"bytes including reserve, have {disk.free:,}"
             )
         seed_tree_cache(metadata_dir, revision)
-        results = parallel_map(
-            lambda item: download_verified(metadata_dir, item, revision=revision),
-            missing,
-            workers=args.workers,
-            progress_label="Xet acquired and catalog-verified",
-        )
-        completed_paths = {str(result["path"]) for result in results}
-        remaining_candidates = [
-            item for item in candidates if str(item["path"]) not in completed_paths
-        ]
-        write_worklist(
-            worklist_path,
-            remaining_candidates,
-            catalog_sha256=catalog_hash,
-            manifest_sha256=manifest_hash,
-        )
-        state["downloaded_and_verified_count"] = len(results)
+        remaining_candidates = list(candidates)
+        downloaded_count = 0
+        for start in range(0, len(missing), args.batch_assets):
+            batch = missing[start : start + args.batch_assets]
+            results = parallel_map(
+                lambda item: download_verified(
+                    metadata_dir, item, revision=revision
+                ),
+                batch,
+                workers=args.workers,
+                progress_label="Xet acquired and catalog-verified",
+            )
+            completed_paths = {str(result["path"]) for result in results}
+            remaining_candidates = [
+                item
+                for item in remaining_candidates
+                if str(item["path"]) not in completed_paths
+            ]
+            write_worklist(
+                worklist_path,
+                remaining_candidates,
+                catalog_sha256=catalog_hash,
+                manifest_sha256=manifest_hash,
+            )
+            downloaded_count += len(results)
+            print(
+                f"Worklist checkpoint: {downloaded_count:,}/{len(missing):,}; "
+                f"{len(remaining_candidates):,} remain",
+                file=sys.stderr,
+                flush=True,
+            )
+        state["downloaded_and_verified_count"] = downloaded_count
         state["remaining_asset_count"] = len(remaining_candidates)
         state["ok"] = state["remaining_asset_count"] == 0 or args.max_assets is not None
         print(json.dumps(state, indent=None if args.compact else 2, sort_keys=True))
