@@ -1,0 +1,135 @@
+{
+  "architecture": {
+    "residual_alpha": 0.5,
+    "residual_epoch": 7,
+    "residual_fold": 1,
+    "scene_blend": 0.25,
+    "scene_head": "oof_stable_context_scene_ranker_v1",
+    "spec": {
+      "family": "hist_gradient_boosting",
+      "l2_regularization": 10.0,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 20
+    }
+  },
+  "decision": "Independent fold-1 confirmation failed; do not open the paper test.",
+  "generated_at_utc": "2026-07-14T18:23:40.803394+00:00",
+  "positive": 745,
+  "provenance": {
+    "baseline_sha256": "4085d6e1e3683dfe4f73d25fd1bc0906a756b7433cc850ed64392db08f1f7935",
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "4b005d9c9a81ea571b1cce6950f95e44a1ab4d3d",
+    "head_sha256": "2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ec27c370",
+    "joblib": "1.5.3",
+    "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "numpy": "2.4.4",
+    "protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "rasterio": "1.4.4",
+    "residual_sha256": "f6054d0fc8f17d661bce2a17b3947de0e6e566976730aa88f5bc1b6bed347e12",
+    "scipy": "1.17.1",
+    "script_sha256": "c839cf4481f3fac0f385af5bdc7f68e4064f51d6611426fb61ba7a5745247722",
+    "selection_sha256": "8fc190bf4cac9d3abb24979cd20678930f09143302a69ddbfb944a7959951b0b",
+    "sklearn": "1.9.0",
+    "torch": "2.11.0+cu128"
+  },
+  "released_identity": {
+    "metrics": {
+      "accuracy": 0.9294157763127984,
+      "auroc": 0.9801412121207069,
+      "average_precision": 0.8597483469941496,
+      "false_positive_rate": 0.07127778467651807,
+      "fn": 47.0,
+      "fp": 574.0,
+      "negative_predictive_value": 0.9937549827265479,
+      "operating_point": {
+        "false_positive_rate": 0.07127778467651807,
+        "precision": 0.5487421383647799,
+        "recall": 0.9369127516778524,
+        "target_fpr": 0.0713,
+        "threshold": 0.7249849438667297
+      },
+      "precision": 0.5487421383647799,
+      "recall": 0.9369127516778524,
+      "sensor_average_precision": {
+        "Landsat": 0.9741566545863006,
+        "Sentinel-2": 0.8104372017590227
+      },
+      "specificity": 0.928722215323482,
+      "tn": 7479.0,
+      "tp": 698.0
+    },
+    "pixels": {
+      "dice": 0.6388765380868939,
+      "intersection_over_union": 0.4693744219124185,
+      "intersection_pixels": 839854,
+      "predicted_positive_pixels": 1612653,
+      "truth_positive_pixels": 1016506
+    },
+    "pixels_by_sensor": {
+      "Landsat": {
+        "dice": 0.8059856093816473,
+        "intersection_over_union": 0.6750216879415045,
+        "intersection_pixels": 305018,
+        "predicted_positive_pixels": 401304,
+        "truth_positive_pixels": 355578
+      },
+      "Sentinel-2": {
+        "dice": 0.5713214444230207,
+        "intersection_over_union": 0.39989502340664,
+        "intersection_pixels": 534836,
+        "predicted_positive_pixels": 1211349,
+        "truth_positive_pixels": 660928
+      }
+    }
+  },
+  "result": {
+    "candidate": {
+      "average_precision": 0.8803883371729858,
+      "false_positive_rate": 0.07127778467651807,
+      "pixel_iou": 0.4602609668472599,
+      "recall": 0.9503355704697987,
+      "threshold": 0.524068342606931
+    },
+    "checks": {
+      "ap_higher": true,
+      "fpr_no_worse": true,
+      "no_material_sensor_regression": true,
+      "pixel_iou_higher": false,
+      "recall_at_fpr_0_0713_higher": true
+    },
+    "delta": {
+      "average_precision": 0.02063999017883622,
+      "false_positive_rate_at_target": 0.0,
+      "pixel_iou": -0.009113455065158593,
+      "recall_at_fpr_0_0713": 0.01342281879194629
+    },
+    "released_baseline": {
+      "average_precision": 0.8597483469941496,
+      "false_positive_rate": 0.07127778467651807,
+      "pixel_iou": 0.4693744219124185,
+      "recall": 0.9369127516778524
+    },
+    "sensor_strata": {
+      "Landsat": {
+        "average_precision": 0.9773621804887294,
+        "delta": {
+          "average_precision": 0.0032055259024287297,
+          "pixel_iou": -0.002392788018034664
+        },
+        "pixel_iou": 0.6726288999234699
+      },
+      "Sentinel-2": {
+        "average_precision": 0.8347645254811653,
+        "delta": {
+          "average_precision": 0.024327323722142635,
+          "pixel_iou": -0.00933680144533855
+        },
+        "pixel_iou": 0.39055822196130147
+      }
+    }
+  },
+  "rows": 8798,
+  "schema_version": 1,
+  "scope": "single sealed independent fold-1 confirmation; paper test not loaded",
+  "sites": 108
+}

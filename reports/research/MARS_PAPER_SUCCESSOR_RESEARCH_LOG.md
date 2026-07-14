@@ -418,6 +418,27 @@ for released identity, primary score, and final blend. This is a pre-result
 dtype amendment; no successor metric was revealed and no scientific choice
 changed.
 
+## Fold-1 confirmation result: retrieval passes, segmentation fails
+
+The single authorized fold-1 read failed the joint promotion gate, so the paper
+test remains sealed. The released model and frozen successor respectively
+scored AP 0.85974835 and 0.88038834 (delta +0.02063999), recall 0.93691275
+and 0.95033557 at the same 0.07127778 FPR (delta +0.01342282, ten additional
+true positives), and pixel IoU 0.46937442 and 0.46026097 (delta -0.00911346).
+The AP gains were positive for both Landsat (+0.00320553) and Sentinel-2
+(+0.02432732), while IoU regressed for both (-0.00239279 and -0.00933680).
+
+This is evidence for a split architecture decision, not a near pass. The
+label-free site-context scene head generalized independently and should remain
+the retrieval candidate. Alpha-0.5 residual masks did not generalize and must
+not remain coupled to that scene-score path. Subsequent work will construct
+fully cross-fitted mask predictions on development folds, select a separate
+mask trust rule using only out-of-fold evidence, and require per-fold and
+per-sensor IoU stability before freezing a final model. Fold 1 is now
+development evidence; it cannot be described as an independent confirmation
+again. The authoritative result JSON SHA-256 is
+`eff232d7aaf08b87ea54c6d7e0929c9ed6f3e5bc6a7c9e10d0dcb4e51e99ab5d0`.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
