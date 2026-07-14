@@ -342,6 +342,12 @@ The selected minimum blend is 0.25. Its authoritative report SHA-256 is
 The next evaluator must pin this report, the unchanged HGB artifact, the
 unchanged fold-0 cache, and the primary endpoint before loading predictions.
 
+The fold-0 minimum-intervention run is frozen to blend 0.25, selection SHA-256
+`8fc190bf4cac9d3abb24979cd20678930f09143302a69ddbfb944a7959951b0b`,
+the unchanged HGB artifact/cache/primary hashes, and the same strict promotion
+gates. The evaluator rejects any selection other than the exact OOF-stable 0.25
+value. It is a one-shot result; fold 1 remains unread unless all gates pass.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
