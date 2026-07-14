@@ -386,6 +386,22 @@ and embeds fold 1, seed 606, epoch 7, protocol
 `6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873`,
 and the deferred-confirmation marker. Fold-1 outcomes remain sealed.
 
+## Frozen single-read fold-1 confirmation
+
+The confirmation evaluator pins residual
+`f6054d0fc8f17d661bce2a17b3947de0e6e566976730aa88f5bc1b6bed347e12`,
+scene head `2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ec27c370`,
+minimum-blend report
+`8fc190bf4cac9d3abb24979cd20678930f09143302a69ddbfb944a7959951b0b`,
+and released fold report
+`4085d6e1e3683dfe4f73d25fd1bc0906a756b7433cc850ed64392db08f1f7935`.
+It loads fold-1 images once, writes no reusable feature cache, asserts exact
+released AP/recall/FPR/IoU and both sensor AP/IoU identities, applies exact
+alpha-0.5 arithmetic, derives the same 108 base and 61 label-free site-context
+features, and uses the fixed HGB head at blend 0.25. Promotion requires strict
+AP, recall, and IoU gains, no worse FPR, and sensor AP/IoU protection. A failure
+forbids paper-test access; a pass authorizes final protocol freeze only.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
