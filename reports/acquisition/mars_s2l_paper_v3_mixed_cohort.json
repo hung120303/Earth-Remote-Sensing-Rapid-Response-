@@ -1,0 +1,175 @@
+{
+  "cohort": {
+    "current_asset_metadata_rows_used": 87887,
+    "development_train_validation_site_overlap": 89,
+    "excluded": {
+      "paper_test_no_current_asset_metadata": 5
+    },
+    "historical_asset_metadata_fallback_ids": [],
+    "historical_asset_metadata_fallback_rows": 0,
+    "paper_table_s3_counts": {
+      "training_positive": 3433,
+      "training_rows": 38366,
+      "validation_positive": 288,
+      "validation_rows": 6034
+    },
+    "paper_test_label_disagreements_vs_public_metadata": 23,
+    "paper_test_positive_rows_without_pixel_truth": 2,
+    "paper_test_public_rows": 43524,
+    "paper_test_unavailable_ids": [
+      "3a42905f-bb33-4585-83c3-077e39b1a7be",
+      "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
+      "689601b8-e36b-4252-8cb3-27b0ff280c03",
+      "78ed244b-208a-460f-a6b5-6a8cb1ffe8ea",
+      "b25c9cf2-7082-40d5-ae42-1bc3e1412e5a"
+    ],
+    "paper_test_unavailable_rows": 5,
+    "public_development_split_label_disagreements_vs_asset_metadata": 0,
+    "public_development_split_sha256": {
+      "train.csv": "f163f3986d46875270014fb958c7a5931c5c661ec650ab26391b3e7bde7f9053",
+      "val.csv": "be11301ce4d9668d7c707883598794e37bec7d5523b1061a5defd3b3e5dc96db"
+    },
+    "released_checkpoint_internal_counts": {
+      "source": "az://imeodata/models/data/marss2l_20250302/validated_images_all.csv",
+      "training_positive": 3433,
+      "training_rows": 38366,
+      "validation_positive": 281,
+      "validation_rows": 5921
+    },
+    "role_counts": {
+      "development_training": {
+        "landsat": 6683,
+        "negative": 34833,
+        "positive": 3512,
+        "rows": 38345,
+        "sentinel2": 31662,
+        "sites": 618
+      },
+      "development_validation": {
+        "landsat": 262,
+        "negative": 5719,
+        "positive": 299,
+        "rows": 6018,
+        "sentinel2": 5756,
+        "sites": 89
+      },
+      "sealed_paper_test": {
+        "landsat": 18086,
+        "negative": 41713,
+        "positive": 1811,
+        "rows": 43524,
+        "sentinel2": 25438,
+        "sites": 1289
+      }
+    }
+  },
+  "firewall": {
+    "development_may_read": [
+      "development_training",
+      "development_validation"
+    ],
+    "missing_test_policy": "five unavailable historical scene rasters and all missing pixel truth receive adversarial candidate outcomes",
+    "sealed_until_freeze": [
+      "sealed_paper_test"
+    ],
+    "test_tuning": "prohibited"
+  },
+  "generated_at_utc": "2026-07-14T01:55:22.725516+00:00",
+  "local_ignored_artifacts": {
+    "manifest": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_mixed_samples.jsonl",
+    "manifest_bytes": 214700741,
+    "manifest_sha256": "52e4c9220a11e6b8b09d2204988583ef7fb3764e16ea48d23fbf31ed992a14bf",
+    "remote_catalog": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_mixed_remote_catalog.jsonl",
+    "remote_catalog_bytes": 96592958,
+    "remote_catalog_sha256": "363616a38f8e78e89a7b0f355d5697d9b07a1c27ead6eac687e22175ebeec292"
+  },
+  "paper_training_snapshot_limit": {
+    "interpretation": "the checkpoint names an unavailable internal Azure March-2025 CSV, its validation counts differ from paper Table S3, and the public train/val CSVs differ from both; public splits are used reproducibly for successor development, while the paper test assignment is reconstructed exactly",
+    "paper_table_s3": {
+      "training_positive": 3433,
+      "training_rows": 38366,
+      "validation_positive": 288,
+      "validation_rows": 6034
+    },
+    "public_release_counts": {
+      "development_training": {
+        "landsat": 6683,
+        "negative": 34833,
+        "positive": 3512,
+        "rows": 38345,
+        "sentinel2": 31662,
+        "sites": 618
+      },
+      "development_validation": {
+        "landsat": 262,
+        "negative": 5719,
+        "positive": 299,
+        "rows": 6018,
+        "sentinel2": 5756,
+        "sites": 89
+      },
+      "sealed_paper_test": {
+        "landsat": 18086,
+        "negative": 41713,
+        "positive": 1811,
+        "rows": 43524,
+        "sentinel2": 25438,
+        "sites": 1289
+      }
+    },
+    "released_checkpoint_config": {
+      "source": "az://imeodata/models/data/marss2l_20250302/validated_images_all.csv",
+      "training_positive": 3433,
+      "training_rows": 38366,
+      "validation_positive": 281,
+      "validation_rows": 5921
+    }
+  },
+  "provenance": {
+    "git_commit": "47990e471b0ac26d809f1c9398aa8870b7597be6",
+    "python": "3.11.14",
+    "script": "tools/build_mars_paper_cohort.py",
+    "script_sha256": "ee696a1592f52f7ce073a467cdcd305321cdd7129fbbcfc9257decfeaed78968"
+  },
+  "remote_assets": {
+    "asset_counts_by_role": {
+      "cloud_mask": 87887,
+      "image": 87887,
+      "methane_enhancement": 5620,
+      "plume_mask": 5620
+    },
+    "binary_gib": 82.909,
+    "bytes_by_asset_role": {
+      "cloud_mask": 112719942,
+      "image": 87938791334,
+      "methane_enhancement": 963800214,
+      "plume_mask": 7984690
+    },
+    "bytes_by_research_role_nonexclusive": {
+      "development_training": 39344871549,
+      "development_validation": 6195349639,
+      "sealed_paper_test": 43483074992
+    },
+    "total_bytes": 89023296180,
+    "unique_asset_count": 187014
+  },
+  "schema_version": 1,
+  "selection": {
+    "development_training": "complete pinned public train.csv; candidate fitting only",
+    "development_validation": "complete pinned public val.csv; candidate development only",
+    "input_channels": 16,
+    "sealed_paper_test": "paper archive IDs and targets; never used for selection",
+    "sensors": [
+      "Sentinel-2 MSI L1C",
+      "Landsat Collection 2 TOA"
+    ]
+  },
+  "source": {
+    "asset_metadata_revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "license": "CC-BY-NC-SA-4.0",
+    "paper_identity_metadata_revision": "8ebb807c5b055ee98ff1039cd9e8f4b3e92c6e73",
+    "prediction_archive_revision": "1a722445d7e344a1581ade9741aa41fb707c6d0e",
+    "repository": "UNEP-IMEO/MARS-S2L"
+  },
+  "status": "frozen_before_mixed_sensor_training_and_test_access"
+}

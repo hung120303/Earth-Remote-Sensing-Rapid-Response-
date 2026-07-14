@@ -39,6 +39,10 @@ DATA_ROOT = Path(
     "publication-v1/external/MARS-S2L-paper-source"
 )
 DEFAULT_METADATA = DATA_ROOT / "validated_images_all_20250704.csv"
+DEFAULT_ASSET_METADATA = Path(
+    "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/"
+    "publication-v1/external/MARS-S2L/validated_images_all.csv"
+)
 DEFAULT_ONSHORE = DATA_ROOT / "mars_onshore_preds_test_2023th100.csv"
 DEFAULT_OFFSHORE = DATA_ROOT / "mars_offshore_preds_test_2023thr100.csv"
 DEFAULT_CONFIG = Path(
@@ -52,6 +56,7 @@ DEFAULT_MARKDOWN = Path("reports/acquisition/MARS_S2L_PAPER_V3_BENCHMARK.md")
 
 EXPECTED_HASHES = {
     "metadata": "1ab3beb83d9c062fa5b6e5c07fb2cd9ceac54b353149428e71ec43457539891f",
+    "asset_metadata": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2",
     "onshore_predictions": "396c6af6d7ae4afa122eac271347889e6137d11e09ff434a426d435c23874c7e",
     "offshore_predictions": "42b6fa72fa5825c00355baeb129c2a74dd15f40a5b11cb5e8e1b31a7bf042525",
     "released_config": "abeb92d01313fbb2939e6c5fc1c6281846b8102ea5edd7081668fe0db05bf79f",
@@ -147,6 +152,7 @@ def reconstruct(
     onshore_path: Path,
     offshore_path: Path,
     config_path: Path,
+    asset_metadata_path: Path | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     for name, path in {
         "metadata": metadata_path,
@@ -157,6 +163,16 @@ def reconstruct(
         observed = sha256(path)
         if observed != EXPECTED_HASHES[name]:
             raise ValueError(f"{name} hash mismatch: expected {EXPECTED_HASHES[name]}, got {observed}")
+
+    asset_metadata: dict[str, dict[str, str]] | None = None
+    if asset_metadata_path is not None:
+        observed = sha256(asset_metadata_path)
+        if observed != EXPECTED_HASHES["asset_metadata"]:
+            raise ValueError(
+                "asset_metadata hash mismatch: expected "
+                f"{EXPECTED_HASHES['asset_metadata']}, got {observed}"
+            )
+        asset_metadata = index_unique(read_csv(asset_metadata_path), "id_loc_image")
 
     metadata = index_unique(read_csv(metadata_path), "id_loc_image")
     onshore = read_csv(onshore_path)
@@ -228,6 +244,34 @@ def reconstruct(
         "paper_target_vs_public_metadata_label_disagreements": metadata_label_disagreements,
         "training_site_count_from_released_config": len(training_sites),
     }
+    if asset_metadata is not None:
+        current_ids = set(asset_metadata)
+        missing_current = sorted(
+            str(row["id_loc_image"])
+            for row in combined
+            if str(row["id_loc_image"]) not in current_ids
+        )
+        positive_without_pixel_truth = sorted(
+            str(row["id_loc_image"])
+            for row in combined
+            if int(row["target"]) == 1
+            and (
+                str(row["id_loc_image"]) not in asset_metadata
+                or not parse_bool(asset_metadata[str(row["id_loc_image"])]["isplume"])
+                or not str(asset_metadata[str(row["id_loc_image"])]["plumepath"]).strip()
+            )
+        )
+        audit.update(
+            {
+                "current_released_raster_rows": len(combined) - len(missing_current),
+                "missing_current_released_raster_rows": len(missing_current),
+                "missing_current_released_raster_ids": missing_current,
+                "positive_rows_without_current_pixel_truth": len(
+                    positive_without_pixel_truth
+                ),
+                "positive_ids_without_current_pixel_truth": positive_without_pixel_truth,
+            }
+        )
     return combined, audit
 
 
@@ -283,13 +327,14 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"| Paper Table S5 | 15,655 | 227 | 697 | 0.4496 | 0.7753 | 0.0763 | not reported |",
         "",
         f"- Assignment SHA-256: `{report['artifacts']['assignment_sha256']}`",
-        f"- Public raster coverage: {audit['public_metadata_rows']:,} / {full['rows']:,}; {audit['missing_public_metadata_rows']} historical rows have predictions but no released metadata row.",
+        f"- Paper-identity metadata coverage: {audit['public_metadata_rows']:,} / {full['rows']:,}; current released raster coverage: {audit['current_released_raster_rows']:,} / {full['rows']:,}.",
+        f"- Unavailable current scene rasters: {audit['missing_current_released_raster_rows']}; positive scenes without current pixel truth: {audit['positive_rows_without_current_pixel_truth']}.",
         f"- Paper-era targets disagree with the July 2025 public metadata label on {audit['paper_target_vs_public_metadata_label_disagreements']} available scenes.",
         "- Exact scene, positive, site, unseen-site, and recall counts reproduce. Small residual AP/FPR/IoU differences are retained explicitly and never rounded into an exact reproduction claim.",
         "",
         "## Superiority gate",
         "",
-        "A successor must beat both the paper table and the reconstructed per-scene comparator. On full and test-only views, paired site-bootstrap 95% confidence intervals must show AP and IoU improvements; recall must improve while FPR is no worse. The two historical scenes without public rasters are scored adversarially for the candidate (positive as a miss, negative as a false alarm, and worst-case pixel error). Test outputs remain sealed until architecture, ensemble, and thresholds are frozen.",
+        "A successor must beat both the paper table and the reconstructed per-scene comparator. On full and test-only views, paired site-bootstrap 95% confidence intervals must show AP and IoU improvements; recall must improve while FPR is no worse. All historical scenes without current rasters are scored adversarially for the candidate (positive as a miss, negative as a false alarm, and worst-case pixel error); missing pixel truth is handled adversarially for IoU. Test outputs remain sealed until architecture, ensemble, and thresholds are frozen.",
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -298,6 +343,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--metadata", default=DEFAULT_METADATA.as_posix())
+    parser.add_argument("--asset-metadata", default=DEFAULT_ASSET_METADATA.as_posix())
     parser.add_argument("--onshore-predictions", default=DEFAULT_ONSHORE.as_posix())
     parser.add_argument("--offshore-predictions", default=DEFAULT_OFFSHORE.as_posix())
     parser.add_argument("--config", default=DEFAULT_CONFIG.as_posix())
@@ -311,6 +357,7 @@ def main() -> int:
         name: (root / value).resolve()
         for name, value in {
             "metadata": args.metadata,
+            "asset_metadata": args.asset_metadata,
             "onshore": args.onshore_predictions,
             "offshore": args.offshore_predictions,
             "config": args.config,
@@ -319,7 +366,13 @@ def main() -> int:
             "markdown": args.output_markdown,
         }.items()
     }
-    rows, audit = reconstruct(paths["metadata"], paths["onshore"], paths["offshore"], paths["config"])
+    rows, audit = reconstruct(
+        paths["metadata"],
+        paths["onshore"],
+        paths["offshore"],
+        paths["config"],
+        paths["asset_metadata"],
+    )
     expected_assignment_hash = hashlib.sha256(
         "".join(assignment_line(row) for row in rows).encode("utf-8")
     ).hexdigest()
@@ -354,7 +407,7 @@ def main() -> int:
             "primary": ["average_precision", "pixel_iou"],
             "operating_point": "recall higher and false_positive_rate no worse",
             "uncertainty": "paired site-block bootstrap, 10000 replicates, two-sided 95% intervals",
-            "missing_raster_policy": "candidate adversarial: positive miss, negative false alarm, worst-case pixel error",
+            "missing_raster_policy": "candidate adversarial for every unavailable scene raster and every positive without current pixel truth",
             "selection_data": "training and development/validation only",
             "test_tuning": "prohibited; one-shot after model, ensemble, calibration, threshold, and postprocessing hashes are frozen",
         },

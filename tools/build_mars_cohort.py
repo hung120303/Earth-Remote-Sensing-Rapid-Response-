@@ -20,6 +20,7 @@ import subprocess
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -35,7 +36,6 @@ from acquire_mars_metadata import (
     checked_output_dir,
     repo_root,
     sha256,
-    source_url,
     verify_files,
 )
 from acquire_mars_pilot import MIN_CLEAR_PCT, parse_bool, recommended_s2
@@ -247,7 +247,16 @@ def batches(values: list[str], size: int) -> Iterable[list[str]]:
         yield values[offset : offset + size]
 
 
-def simplify_remote(item: dict[str, Any]) -> dict[str, Any]:
+def source_url_at_revision(relative_path: str, revision: str) -> str:
+    """Return a pinned Hub download URL for an arbitrary dataset revision."""
+    encoded = urllib.parse.quote(relative_path, safe="/")
+    return (
+        f"https://huggingface.co/datasets/{REPO_ID}/resolve/"
+        f"{revision}/{encoded}?download=true"
+    )
+
+
+def simplify_remote(item: dict[str, Any], revision: str = REVISION) -> dict[str, Any]:
     lfs = item.get("lfs")
     return {
         "path": item["path"],
@@ -255,29 +264,42 @@ def simplify_remote(item: dict[str, Any]) -> dict[str, Any]:
         "remote_oid": lfs["oid"] if lfs else item["oid"],
         "remote_oid_type": "sha256_lfs" if lfs else "git_blob_sha1",
         "xet_hash": item.get("xetHash"),
-        "source_url": source_url(item["path"]),
+        "source_url": source_url_at_revision(item["path"], revision),
     }
 
 
-def request_batch(paths: list[str]) -> list[dict[str, Any]]:
+def request_batch(
+    paths: list[str],
+    *,
+    paths_info_url: str = PATHS_INFO_URL,
+    revision: str = REVISION,
+) -> list[dict[str, Any]]:
     body = json.dumps({"paths": paths, "expand": True}, separators=(",", ":")).encode("utf-8")
     request = urllib.request.Request(
-        PATHS_INFO_URL,
+        paths_info_url,
         data=body,
         headers={"Content-Type": "application/json", "User-Agent": USER_AGENT},
         method="POST",
     )
-    for attempt in range(5):
+    for attempt in range(8):
         try:
             with urllib.request.urlopen(request, timeout=120) as response:
                 payload = json.load(response)
-            return [simplify_remote(item) for item in payload if item.get("type") == "file"]
+            return [
+                simplify_remote(item, revision)
+                for item in payload
+                if item.get("type") == "file"
+            ]
         except (TimeoutError, urllib.error.HTTPError, urllib.error.URLError) as exc:
             if isinstance(exc, urllib.error.HTTPError) and exc.code not in (429, 500, 502, 503, 504):
                 raise
-            if attempt == 4:
+            if attempt == 7:
                 raise
-            time.sleep(2**attempt)
+            retry_after = None
+            if isinstance(exc, urllib.error.HTTPError):
+                retry_after = exc.headers.get("Retry-After")
+            delay = min(float(retry_after) if retry_after else 2**attempt, 60.0)
+            time.sleep(delay)
     raise RuntimeError("Unreachable catalog retry state")
 
 
@@ -295,8 +317,27 @@ def load_catalog(path: Path) -> dict[str, dict[str, Any]]:
     return catalog
 
 
+def write_catalog(path: Path, catalog: dict[str, dict[str, Any]]) -> None:
+    """Atomically checkpoint a complete or resumable partial remote catalog."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("w", encoding="utf-8", newline="\n") as target:
+        for item_path in sorted(catalog):
+            target.write(
+                json.dumps(catalog[item_path], sort_keys=True, separators=(",", ":"))
+                + "\n"
+            )
+    os.replace(temporary, path)
+
+
 def resolve_catalog(
-    paths: list[str], catalog_path: Path, *, offline: bool, refresh: bool
+    paths: list[str],
+    catalog_path: Path,
+    *,
+    offline: bool,
+    refresh: bool,
+    paths_info_url: str = PATHS_INFO_URL,
+    revision: str = REVISION,
 ) -> dict[str, dict[str, Any]]:
     catalog = {} if refresh else load_catalog(catalog_path)
     required = set(paths)
@@ -312,11 +353,23 @@ def resolve_catalog(
             flush=True,
         )
         with ThreadPoolExecutor(max_workers=CATALOG_WORKERS) as executor:
-            futures = {executor.submit(request_batch, job): job for job in jobs}
+            futures = {
+                executor.submit(
+                    request_batch,
+                    job,
+                    paths_info_url=paths_info_url,
+                    revision=revision,
+                ): job
+                for job in jobs
+            }
             completed = 0
             for future in as_completed(futures):
                 requested = futures[future]
-                result = future.result()
+                try:
+                    result = future.result()
+                except Exception:
+                    write_catalog(catalog_path, catalog)
+                    raise
                 returned = {item["path"] for item in result}
                 absent = set(requested) - returned
                 if absent:
@@ -327,6 +380,7 @@ def resolve_catalog(
                 catalog.update({item["path"]: item for item in result})
                 completed += 1
                 if completed % 20 == 0 or completed == len(jobs):
+                    write_catalog(catalog_path, catalog)
                     print(
                         f"Resolved {completed:,}/{len(jobs):,} catalog batches",
                         file=sys.stderr,
@@ -334,12 +388,7 @@ def resolve_catalog(
                     )
     if set(catalog) != required:
         raise ValueError("Resolved catalog does not exactly match the cohort asset set")
-    catalog_path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = catalog_path.with_suffix(catalog_path.suffix + ".tmp")
-    with temporary.open("w", encoding="utf-8", newline="\n") as target:
-        for path in sorted(catalog):
-            target.write(json.dumps(catalog[path], sort_keys=True, separators=(",", ":")) + "\n")
-    os.replace(temporary, catalog_path)
+    write_catalog(catalog_path, catalog)
     return catalog
 
 

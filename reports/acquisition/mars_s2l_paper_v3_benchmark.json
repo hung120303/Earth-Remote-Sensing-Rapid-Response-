@@ -5,18 +5,19 @@
     "assignment_sha256": "e3e7296c9837123b6d43870f7c5323cea5cc9b667f4c2b00fbc6e4ec8a87d797",
     "assignment_tracked": false
   },
-  "generated_at_utc": "2026-07-14T01:12:43.240469+00:00",
+  "generated_at_utc": "2026-07-14T01:37:00.747494+00:00",
   "paper": {
     "revision": "v3",
     "revision_date": "2026-04-24",
     "url": "https://arxiv.org/html/2511.21777v3"
   },
   "provenance": {
-    "git_commit": "3c7b778c6bc83f217991b361d755e0a731de9153",
+    "git_commit": "47990e471b0ac26d809f1c9398aa8870b7597be6",
     "script": "tools/audit_mars_paper_benchmark.py",
-    "script_sha256": "7118dfbfd3da6bec4a834bb3f9fed8e50655436f8f9b25a7b8838d33e3adfe36"
+    "script_sha256": "d6918e6b982c637dae06eb90e7a509ee2742d5902f1449b673f54d03181fde93"
   },
   "reconstruction": {
+    "current_released_raster_rows": 43524,
     "delta_vs_published": {
       "full": {
         "average_precision": 0.00021960241042173756,
@@ -61,6 +62,14 @@
       "test_only_rows": true,
       "test_only_sites": true
     },
+    "missing_current_released_raster_ids": [
+      "3a42905f-bb33-4585-83c3-077e39b1a7be",
+      "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
+      "689601b8-e36b-4252-8cb3-27b0ff280c03",
+      "78ed244b-208a-460f-a6b5-6a8cb1ffe8ea",
+      "b25c9cf2-7082-40d5-ae42-1bc3e1412e5a"
+    ],
+    "missing_current_released_raster_rows": 5,
     "missing_public_metadata_ids": [
       "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
       "689601b8-e36b-4252-8cb3-27b0ff280c03"
@@ -68,6 +77,13 @@
     "missing_public_metadata_rows": 2,
     "offshore_replacements": 2185,
     "paper_target_vs_public_metadata_label_disagreements": 23,
+    "positive_ids_without_current_pixel_truth": [
+      "3a42905f-bb33-4585-83c3-077e39b1a7be",
+      "4e7d0fbd-f197-4ee3-813d-e383695c7ece",
+      "689601b8-e36b-4252-8cb3-27b0ff280c03",
+      "f23e3c5b-8349-491e-9aa5-a627cefb6213"
+    ],
+    "positive_rows_without_current_pixel_truth": 4,
     "public_metadata_rows": 43527,
     "published": {
       "full": {
@@ -122,6 +138,7 @@
   "source": {
     "dataset": "UNEP-IMEO/MARS-S2L",
     "hashes": {
+      "asset_metadata": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2",
       "metadata": "1ab3beb83d9c062fa5b6e5c07fb2cd9ceac54b353149428e71ec43457539891f",
       "offshore_predictions": "42b6fa72fa5825c00355baeb129c2a74dd15f40a5b11cb5e8e1b31a7bf042525",
       "onshore_predictions": "396c6af6d7ae4afa122eac271347889e6137d11e09ff434a426d435c23874c7e",
@@ -133,7 +150,7 @@
   },
   "status": "frozen_before_exact_mixed_sensor_training",
   "superiority_gate": {
-    "missing_raster_policy": "candidate adversarial: positive miss, negative false alarm, worst-case pixel error",
+    "missing_raster_policy": "candidate adversarial for every unavailable scene raster and every positive without current pixel truth",
     "must_exceed": [
       "paper_published_table",
       "paired_reconstructed_archive"
