@@ -3,7 +3,146 @@
 This ledger records paper-relevant decisions, outcomes, and interpretation boundaries. Compact JSON
 reports are authoritative for numbers and hashes; this document is the human-readable study map.
 
-## Study question and frozen decision rule
+## Current study: tri-temporal v5.1 (2026-07-13)
+
+### Research question and claim boundary
+
+The current question is whether a tri-temporal, physics-aware ERSRR model can accurately rank and
+segment methane-plume crops while rejecting no-plume crops at geographically isolated locations,
+and how that result compares with the frozen ERSRR v4.3 ensemble and released MARS-S2L checkpoint.
+The primary confirmation cohort is the pinned MethaneS2CM L2A location test. It is approximately
+balanced by crop construction, so its precision is benchmark precision rather than operational
+positive predictive value.
+
+V5.1 was trained on MethaneS2CM L2A. V4.3 and released MARS-S2L were trained on MARS-S2L L1C and
+are zero-shot comparators on this test. This is a same-cohort performance comparison, not an
+architecture-only causal experiment. Published MARS-S2L metrics remain different-cohort context.
+
+### Data and seal
+
+- Source: `H1deaki/MethaneS2CM`, revision
+  `ee9a96d4994ca6bc45725c1e92d7a06258131eaf`, CC-BY-NC-4.0.
+- Location training metadata: 80,217 crops, 40,425 positives, and 3,460 exact locations.
+- Internal fitting: 64,759 crops in 193 frozen 25 km groups.
+- Internal development: 15,458 crops in 64 disjoint 25 km groups.
+- Sealed location test: 20,789 crops, 10,453 positives, 10,336 negatives, 816 exact locations, and
+  100 test-only 25 km components; exact train/test coordinate overlap is zero.
+- Six source archives total 16,050,584,895 compressed bytes. The ignored train pack is
+  4,249,375,485 bytes; the ignored test pack is 1,075,369,707 bytes.
+- The test pack SHA-256 is
+  `7e0c7d06cdf6fde8eb81c6feea179f9cb6b1e6d887797a5ebadf99037670caca`.
+- Architecture, seed reports, checkpoint hashes, empirical-CDF calibrators, scene thresholds,
+  pixel threshold, acquisition code, and comparison code were committed before any test TIFF was
+  decoded. The one-shot evaluator ran from commit `4076e690`.
+
+Bulk archives, HDF5 packs, checkpoints, and prediction caches remain ignored. Compact protocols,
+source identities, code, and result reports are tracked.
+
+### Architecture decision
+
+V5.1 uses a 9,358,256-parameter model per seed:
+
+1. Sentinel-2 L2A frames at T, T-90, and T-365 using B02/B03/B04/B08/B11/B12;
+2. shared encoder weights across all three frames;
+3. two scale-invariant MBMP channels and seven-term temporal fusion at five scales;
+4. a full-resolution U-Net decoder with a learned physics prior;
+5. a scene logit fixed to 35% mask-derived evidence and 65% of a small context head; and
+6. a three-seed ensemble using per-seed empirical-CDF scene percentiles and equal dense-probability
+   averaging.
+
+The context head was a controlled response to the released mask geometry: the positive crop has a
+median 226/1,024 mask pixels, but 2,552 positive crops are at least half masked, 758 are at least
+90% masked, and 103 are fully masked. A purely mask-derived scene bottleneck was therefore too
+restrictive for this benchmark. The best frozen physics-only scene baseline achieved AP 0.5509 and
+at most 0.0564 recall at approximately 5% FPR; learned v5/v5.1 performance is not explained by an
+MBMP threshold alone.
+
+### Internal development confirmation
+
+| Estimate | Scene AP | AUROC | Recall at 5% target | Realized FPR | Pixel AP | Dice | IoU |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| V5.1 seed mean | 0.8481 | 0.8524 | 0.4125 | ~0.0500 | 0.3028 | 0.4330 | 0.2763 |
+| Five-fold 25 km group-held calibration | 0.8647 | 0.8622 | 0.4687 | 0.0519 | — | 0.4389 | 0.2811 |
+| Final all-development rule | 0.8658 | 0.8655 | 0.4671 | 0.0499 | 0.3090 | 0.4424 | 0.2840 |
+
+The group-held 2,000-resample bootstrap gave AP 0.8647 (95% CI 0.8232–0.9020), AUROC 0.8622
+(0.8124–0.9110), recall 0.4687 (0.3825–0.5545), FPR 0.0519 (0.0401–0.0650), Dice 0.4389
+(0.3675–0.5200), and IoU 0.2811 (0.2251–0.3514). Checkpoints were still selected on this
+development cohort, so these were confirmation/freeze values rather than an external estimate.
+
+### One-shot location-test result
+
+| Frozen model/rule | Scene AP | AUROC | Recall | FPR | Precision* | Pixel AP | Dice | IoU |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| ERSRR v5.1 three-seed | 0.8180 | 0.8276 | 0.3778 | 0.0607 | 0.8630 | 0.2083 | 0.3125 | 0.1852 |
+| ERSRR v4.3 zero-shot | 0.5911 | 0.5950 | 0.0000 | 0.0000 | 0.0000 | 0.1561 | 0.0000 | 0.0000 |
+| Released MARS-S2L zero-shot | 0.5252 | 0.5126 | 0.0052 | 0.0033 | 0.6136 | 0.1691 | 0.0045 | 0.0023 |
+
+*Precision is not operational PPV on this approximately balanced benchmark.
+
+At its frozen primary rule, v5.1 detected 3,949/10,453 plume crops and falsely flagged
+627/10,336 no-plume crops. Released MARS-S2L rejected almost every no-plume crop but detected only
+54/10,453 plume crops. V4.3 made no positive scene or pixel prediction at its frozen rules.
+
+V5.1 minus released MARS-S2L point deltas were +0.2928 AP, +0.3149 AUROC, +0.3726 recall,
++0.0574 FPR, +0.3080 Dice, and +0.1829 IoU. Paired 2,000-resample 25 km group intervals supported
+the AP delta [0.2256, 0.3824], AUROC delta [0.2495, 0.4061], recall delta [0.2886, 0.5036], Dice
+delta [0.2079, 0.4805], and IoU delta [0.1163, 0.3183]. They also established that the FPR delta
+was higher, not lower: [0.0319, 0.0914].
+
+The strongest permissible claim is therefore: **v5.1 materially improves plume ranking and dense
+localization over the frozen zero-shot comparators on the MethaneS2CM location test, but does not
+establish across-the-board MARS-S2L superiority because the no-plume FPR criterion fails.**
+
+### Frozen post-hoc calibration audit
+
+After the primary report was committed, the four thresholds already selected on development were
+applied without choosing any new rule:
+
+| Development FPR target | Frozen threshold | Dev recall | Test recall | Dev FPR | Test FPR |
+|---:|---:|---:|---:|---:|---:|
+| 2.0% | 0.827382 | 0.2740 | 0.2436 | 0.0200 | 0.0244 |
+| 5.0% | 0.733579 | 0.4671 | 0.3778 | 0.0499 | 0.0607 |
+| 8.0% | 0.663238 | 0.5957 | 0.4912 | 0.0799 | 0.1035 |
+| 9.5% | 0.636391 | 0.6379 | 0.5345 | 0.0950 | 0.1242 |
+
+Every frozen point transferred to higher FPR and lower recall. This supports calibration/domain
+transfer as a future hypothesis. It does not authorize selecting a threshold from test labels.
+
+### Relationship to MARS-S2L benchmarks
+
+On the separate strict MARS cohort, v4.3 achieved AP 0.3903, AUROC 0.8644, recall 0.5224, FPR
+0.0277, Dice 0.1422, and IoU 0.0766. Released MARS-S2L on those same scenes achieved AP 0.3521,
+AUROC 0.8175, recall 0.6418, FPR 0.0948, Dice 0.2346, and IoU 0.1329. V4.3 improved ranking and
+FPR but not recall or overlap; only its FPR delta was bootstrap-conclusive.
+
+The MARS-S2L paper reports full-test AP 0.6408, recall 0.7915, FPR 0.0713, and IoU 0.3224, and
+test-only-site AP 0.4496, recall 0.7753, and FPR 0.0763. Those are different-cohort context. V5.1’s
+MethaneS2CM AP is numerically higher, but its recall and IoU are lower than the paper full-test
+numbers; none of those cross-table differences is a paired superiority estimate.
+
+### V5.2 research path fixed from the evidence
+
+1. Fit spatially group-held calibration or conformal/risk-control rules on new calibration groups.
+   The current test may audit transfer but may not fit the rule.
+2. Train product-aware L1C/L2A harmonization with explicit product tokens, missing-frame handling,
+   and shared development folds across MARS-S2L and MethaneS2CM.
+3. Improve dense boundaries using mask-quality weighting, plume-scale sampling, and hard-negative
+   scene balance while retaining a high-capacity ranking head.
+4. Evaluate calibration by geography and prevalence under a preregistered coverage-risk contract,
+   not a single pooled threshold.
+5. Acquire a new, geographically isolated and prevalence-aware confirmation cohort before v5.2 is
+   finalized. Seal it before model selection and open it exactly once.
+
+Authoritative current artifacts:
+
+- `reports/experiments/methanes2cm_v5_1_ensemble_validation.json`;
+- `reports/experiments/methanes2cm_v5_1_location_test.json`;
+- `reports/experiments/methanes2cm_v5_1_location_test_posthoc.json`;
+- `reports/experiments/mars_v4_3_strict_comparison.json`;
+- `reports/ERSRR_RESEARCH_REPORT.html`.
+
+## Retired v3 study question and frozen decision rule
 
 The primary question was whether the 14.27 M-parameter, 16-channel ERSRR v3 detector could reduce
 false alarms on observable no-plume Sentinel-2 scenes while preserving plume recall relative to the

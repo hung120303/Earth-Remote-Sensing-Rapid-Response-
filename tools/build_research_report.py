@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the self-contained ERSRR publication-facing HTML research report."""
+"""Build the self-contained ERSRR publication research dossier."""
 
 from __future__ import annotations
 
@@ -14,126 +14,171 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_TEMPLATE = Path("tools/templates/ersrr_research_report.html")
 DEFAULT_OUTPUT = Path("reports/ERSRR_RESEARCH_REPORT.html")
-SEEDS = (101, 202, 303, 404, 505)
 
 
 def read_json(root: Path, value: str | Path) -> dict[str, Any]:
     return json.loads((root / value).read_text(encoding="utf-8"))
 
 
-def validation_path(seed: int) -> Path:
-    if seed == 303:
-        return Path("reports/experiments/mars_v3_proposal_validation.json")
-    return Path(f"reports/experiments/mars_v3_seed{seed}_proposal_validation.json")
+def model_row(
+    name: str,
+    display: str,
+    primary: dict[str, Any],
+    bootstrap: dict[str, Any],
+) -> dict[str, Any]:
+    model = primary["models"][name]
+    return {
+        "name": name,
+        "display": display,
+        "metrics": model["metrics"],
+        "rule": model["rule"],
+        "uncertainty": bootstrap["models"][name],
+    }
 
 
 def build_data(root: Path) -> dict[str, Any]:
-    campaign = read_json(root, "reports/experiments/mars_v3_strict_campaign.json")
-    diagnostic = read_json(
-        root, "reports/experiments/mars_v3_strict_posthoc_diagnostic.json"
+    primary = read_json(root, "reports/experiments/methanes2cm_v5_1_location_test.json")
+    ensemble = read_json(
+        root, "reports/experiments/methanes2cm_v5_1_ensemble_validation.json"
     )
-    strict_download = read_json(
-        root, "reports/acquisition/mars_s2l_v3_strict_download.json"
+    posthoc = read_json(
+        root, "reports/experiments/methanes2cm_v5_1_location_test_posthoc.json"
     )
-    emit_seal = read_json(
-        root, "reports/acquisition/emit_v002_external_cohort_seal.json"
+    protocol = read_json(root, "reports/experiments/methanes2cm_v5_protocol.json")
+    campaign = read_json(
+        root, "reports/experiments/methanes2cm_v5_1_campaign_protocol.json"
     )
-    wind = read_json(root, "reports/acquisition/emit_v002_era5_wind_requests.json")
-
-    validation: list[dict[str, Any]] = []
-    validation_by_seed: dict[int, dict[str, Any]] = {}
-    for seed in SEEDS:
-        report = read_json(root, validation_path(seed))
-        scene = report["validation"]["scene"]
-        item = {
-            "seed": seed,
-            "recall": scene["recall"],
-            "fpr": scene["false_positive_rate"],
-            "ap": scene["average_precision"],
-            "auroc": scene["auroc"],
-            "proposal_weight": report["operating_rule"]["neural_presence_weight"],
-        }
-        validation.append(item)
-        validation_by_seed[seed] = item
-
-    strict = campaign["same_cohort_comparison"]["ersrr_per_seed"]
-    strict_by_seed = {int(item["seed"]): item for item in strict}
-    seeds = [
-        {
-            **validation_by_seed[seed],
-            "strict_recall": strict_by_seed[seed]["recall"],
-            "strict_fpr": strict_by_seed[seed]["false_positive_rate"],
-            "strict_ap": strict_by_seed[seed]["average_precision"],
-            "strict_auroc": strict_by_seed[seed]["auroc"],
-        }
-        for seed in SEEDS
+    signal = read_json(root, "reports/experiments/methanes2cm_v5_signal_audit.json")
+    train_acquisition = read_json(
+        root, "reports/experiments/methanes2cm_v5_train_acquisition.json"
+    )
+    test_acquisition = read_json(
+        root, "reports/experiments/methanes2cm_v5_location_test_acquisition.json"
+    )
+    strict = read_json(root, "reports/experiments/mars_v4_3_strict_comparison.json")
+    v3 = read_json(root, "reports/experiments/mars_v3_strict_campaign.json")
+    bootstrap = primary["group_bootstrap"]
+    models = [
+        model_row("ersrr_v5_1", "ERSRR v5.1", primary, bootstrap),
+        model_row("ersrr_v4_3", "ERSRR v4.3 zero-shot", primary, bootstrap),
+        model_row(
+            "released_mars_s2l", "Released MARS-S2L zero-shot", primary, bootstrap
+        ),
     ]
-
+    best_physics_name, best_physics = max(
+        signal["physics_baselines"].items(),
+        key=lambda item: item[1]["scene_average_precision"],
+    )
     commit = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=root, text=True
     ).strip()
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "git_commit": commit,
-        "decision": campaign["decision"],
-        "gate": campaign["promotion_gate"],
-        "cohort": campaign["cohort"],
-        "seeds": seeds,
-        "baseline": campaign["same_cohort_comparison"]["released_mars_s2l"],
-        "ersrr_mean": campaign["same_cohort_comparison"]["ersrr_seed_mean"],
-        "ersrr_sd": campaign["same_cohort_comparison"][
-            "ersrr_seed_standard_deviation"
-        ],
-        "delta": campaign["same_cohort_comparison"]["delta"],
-        "bootstrap": campaign["paired_seed_group_bootstrap"],
-        "segmentation": campaign["segmentation"],
-        "official_mars": campaign[
-            "official_mars_s2l_paper_targets_not_same_cohort"
-        ],
-        "diagnostic": {
-            "agreement": diagnostic["agreement"],
-            "positive_strata": diagnostic["positive_strata"],
-            "negative_strata": diagnostic["negative_strata"],
-            "atlas": diagnostic["error_atlas"],
-            "decision": diagnostic["decision"],
+        "status": {
+            "decision": primary["decision"],
+            "test_frozen": True,
+            "retuning_permitted": False,
+            "all_mars_point_checks": primary["comparison"][
+                "v5_1_vs_released_mars_s2l"
+            ]["all_point_checks_pass"],
+            "all_mars_bootstrap_checks": primary["comparison"][
+                "v5_1_vs_released_mars_s2l"
+            ]["all_bootstrap_checks_pass"],
         },
-        "architecture": {
-            "name": "ersrr_mars_full_unet_proposal_v3",
-            "parameters": 14_268_915,
-            "channels": 16,
-            "heads": ["segmentation", "proposal presence", "quality / abstention"],
-            "inputs": [
-                "release-compatible MBMP",
-                "six target Sentinel-2 L1C bands",
-                "six reference Sentinel-2 L1C bands",
-                "ERA5-Land u/v wind",
-                "CloudSEN12 observability mask",
+        "cohort": primary["cohort"],
+        "models": models,
+        "paired_delta_vs_mars": bootstrap["deltas"][
+            "ersrr_v5_1_minus_released_mars_s2l"
+        ],
+        "development": {
+            "group_held": ensemble["group_held_calibration_audit"],
+            "final_rule": ensemble["final_all_development_rule"],
+            "seed_mean": ensemble["seed_mean"],
+            "seeds": ensemble["seeds"],
+            "v5_mask_derived_reference": ensemble[
+                "controlled_v5_seed1101_reference"
             ],
+            "bootstrap": ensemble["group_bootstrap"],
+        },
+        "calibration_transfer": posthoc["frozen_operating_points"],
+        "architecture": {
+            **campaign["architecture"],
+            "checkpoint_bytes_per_seed": ensemble["seeds"][0]["checkpoint"]["bytes"],
+            "learned_parameters_per_seed": 9_358_256,
+            "input_contract": protocol["input_contract"],
+            "model_bands": protocol["source"]["model_bands"],
+            "patch_shape": protocol["source"]["patch_shape"],
+            "pixel_size_m": protocol["source"]["pixel_size_m"],
+            "best_physics_baseline": {
+                "name": best_physics_name,
+                **best_physics,
+            },
+            "mask_audit": signal["mask_audit"],
+        },
+        "mars_context": {
+            "same_strict_cohort": {
+                "ersrr_v4_3": strict["strict_spatial_test"],
+                "released_mars_s2l": strict["same_cohort_comparison"][
+                    "released_mars_s2l"
+                ],
+                "comparison": strict["same_cohort_comparison"],
+            },
+            "official_different_cohort": strict[
+                "official_mars_s2l_paper_targets_not_same_cohort"
+            ],
+            "v3_retired": {
+                "ersrr_mean": v3["same_cohort_comparison"]["ersrr_seed_mean"],
+                "released_mars_s2l": v3["same_cohort_comparison"][
+                    "released_mars_s2l"
+                ],
+                "decision": v3["decision"],
+            },
         },
         "data": {
-            "training_assets": 61_928,
-            "training_bytes": 30_366_803_325,
-            "strict_assets": strict_download["result"]["selected_asset_count"],
-            "strict_bytes": strict_download["result"]["selected_total_bytes"],
-            "strict_verified": strict_download["result"]["complete_size_match_count"],
-            "emit_sealed": emit_seal["summary"]["final_gate_pass"],
-            "emit_preliminary": emit_seal["summary"]["preliminary_gate_pass"],
-            "wind_requests": wind["summary"]["requests"],
-            "wind_validation": wind["summary"][
-                "official_costing_api_validation"
+            "dataset": protocol["source"]["dataset"],
+            "revision": protocol["source"]["revision"],
+            "license": protocol["source"]["license"],
+            "train": protocol["cohort"]["train"],
+            "development": protocol["development_protocol"],
+            "test": protocol["cohort"]["test"],
+            "compressed_archive_bytes": sum(
+                int(item["bytes"]) for item in train_acquisition["archives"]
+            ),
+            "packed_train_bytes": train_acquisition["extraction"]["packed_bytes"],
+            "packed_test_bytes": test_acquisition["extraction"]["packed_bytes"],
+            "test_assets": test_acquisition["extraction"]["files_decoded"],
+            "coordinate_overlap": protocol["cohort"]["coordinate_overlap"],
+        },
+        "paper": {
+            "supported": [
+                "V5.1 materially improves scene ranking and dense localization over both frozen zero-shot comparators on the same MethaneS2CM location test.",
+                "The paired 25 km bootstrap supports positive AP, AUROC, recall, Dice, and IoU deltas versus released MARS-S2L.",
+                "A small context head improved scene discrimination over mask-only v5 while preserving the dense decoder.",
+                "Spatial grouping, sealed-test discipline, immutable hashes, and bulk-data exclusion are implemented end to end.",
             ],
-            "wind_authentication": wind["summary"]["authentication_state"],
+            "not_supported": [
+                "Across-the-board MARS-S2L superiority is not established: v5.1 has higher frozen-rule FPR on MethaneS2CM.",
+                "MethaneS2CM precision is not operational PPV because the crop benchmark is approximately balanced.",
+                "The L2A in-domain versus L1C zero-shot comparison is not an architecture-only causal experiment.",
+                "No concentration, flux, operational deployment, or test-driven recalibration claim is supported.",
+            ],
+            "next_study": [
+                "Fit spatially group-held calibration or conformal risk control on new calibration groups, never on this test.",
+                "Train product-aware L1C/L2A domain harmonization with missing-frame handling across MARS-S2L and MethaneS2CM.",
+                "Improve dense boundaries with mask-quality weighting and plume-scale sampling while retaining hard no-plume negatives.",
+                "Acquire and preregister a new geographically isolated, prevalence-aware confirmation cohort before v5.2 is frozen.",
+            ],
         },
         "provenance": {
-            "manifest_sha256": campaign["cohort"]["strict_manifest_sha256"],
-            "bootstrap_seed": campaign["paired_seed_group_bootstrap"][
-                "random_seed"
-            ],
-            "bootstrap_replicates": campaign["paired_seed_group_bootstrap"][
-                "replicates"
-            ],
-            "campaign_report": "reports/experiments/mars_v3_strict_campaign.json",
-            "diagnostic_report": "reports/experiments/mars_v3_strict_posthoc_diagnostic.json",
+            "primary_report": "reports/experiments/methanes2cm_v5_1_location_test.json",
+            "primary_prediction_cache_sha256": primary["prediction_cache"]["sha256"],
+            "test_pack_sha256": primary["seal"]["packed_test"]["sha256"],
+            "ensemble_report": "reports/experiments/methanes2cm_v5_1_ensemble_validation.json",
+            "campaign_protocol": "reports/experiments/methanes2cm_v5_1_campaign_protocol.json",
+            "posthoc_report": "reports/experiments/methanes2cm_v5_1_location_test_posthoc.json",
+            "bootstrap_seed": bootstrap["seed"],
+            "bootstrap_replicates": bootstrap["replicates"],
             "research_ledger": "docs/RESEARCH_LEDGER.md",
             "paper_outline": "docs/PAPER_OUTLINE.md",
         },
@@ -142,7 +187,7 @@ def build_data(root: Path) -> dict[str, Any]:
 
 def render(template: str, data: dict[str, Any]) -> str:
     payload = json.dumps(data, sort_keys=True, separators=(",", ":")).replace(
-        "</", "<\\/"
+        "</", "<\/"
     )
     if template.count("__ERSRR_REPORT_DATA__") != 1:
         raise ValueError("Report template must contain exactly one data placeholder")
@@ -166,8 +211,7 @@ def main() -> int:
     output = (root / args.output).resolve()
     if root not in output.parents:
         raise ValueError("Output must resolve beneath the repository root")
-    data = build_data(root)
-    write(output, render(template, data))
+    write(output, render(template, build_data(root)))
     print(output.relative_to(root).as_posix())
     return 0
 

@@ -12,13 +12,23 @@ from build_research_report import build_data, render  # noqa: E402
 
 
 class ResearchReportTests(unittest.TestCase):
-    def test_data_is_bound_to_frozen_campaign(self) -> None:
+    def test_data_is_bound_to_frozen_v5_1_location_test(self) -> None:
         data = build_data(ROOT)
-        self.assertFalse(data["gate"]["passed"])
-        self.assertEqual(data["cohort"]["samples"], 4401)
-        self.assertEqual([item["seed"] for item in data["seeds"]], [101, 202, 303, 404, 505])
-        self.assertAlmostEqual(data["baseline"]["recall"], 0.6417910447761194)
-        self.assertAlmostEqual(data["ersrr_mean"]["recall"], 0.31940298507462683)
+        self.assertTrue(data["status"]["test_frozen"])
+        self.assertFalse(data["status"]["retuning_permitted"])
+        self.assertEqual(data["cohort"]["scenes"], 20789)
+        self.assertEqual(
+            [item["name"] for item in data["models"]],
+            ["ersrr_v5_1", "ersrr_v4_3", "released_mars_s2l"],
+        )
+        self.assertAlmostEqual(
+            data["models"][0]["metrics"]["scene"]["average_precision"],
+            0.8180196480303749,
+        )
+        self.assertAlmostEqual(
+            data["models"][0]["metrics"]["scene"]["false_positive_rate"],
+            0.06066176470588235,
+        )
 
     def test_render_embeds_data_once_without_placeholder(self) -> None:
         output = render(
@@ -37,11 +47,11 @@ class ResearchReportTests(unittest.TestCase):
         self.assertNotIn('src="http', output)
         self.assertNotIn("@import", output)
         self.assertEqual(output.count("<section "), 7)
-        self.assertIn("We cut false alarms.", output)
-        self.assertIn("Promotion gate / failed", output)
-        self.assertIn('"samples":4401', output)
-        self.assertIn('"emit_sealed":55', output)
-        self.assertIn("https://cds.climate.copernicus.eu/how-to-api", output)
+        self.assertIn("The signal travels.", output)
+        self.assertIn("Across-the-board MARS-S2L superiority", output)
+        self.assertIn('"scenes":20789', output)
+        self.assertIn('"retuning_permitted":false', output)
+        self.assertIn("Prediction cache SHA-256", output)
 
 
 if __name__ == "__main__":

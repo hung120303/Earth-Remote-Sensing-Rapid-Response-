@@ -1,22 +1,25 @@
 # Earth Remote Sensing Rapid Response (ERSRR)
 
-ERSRR is a research system for detecting and segmenting methane plumes in paired Sentinel-2 imagery. The current publication candidate is a **14,268,915-parameter, 16-channel, three-head U-Net** with scene presence, pixel segmentation, and quality/abstention outputs. It is a research model, not an operational detector or physical concentration/flux estimator.
+ERSRR is a research system for detecting and segmenting methane plumes in multi-temporal Sentinel-2 imagery. The current publication candidate is **v5.1**, a 9,358,256-parameter shared tri-temporal U-Net using T, T-90, and T-365 imagery, two MBMP physics maps, dense segmentation, and a fixed small context head. It is a research model, not an operational detector or physical concentration/flux estimator.
 
-The frozen v3 result is a useful negative result: on the same geographically isolated 4,401-scene cohort, ERSRR reduced mean false-positive rate from 9.48% for released MARS-S2L to 3.67%, but mean recall fell from 64.18% to 31.94%. The preregistered promotion gate failed, so v3 must not be retuned from strict-test behavior. See the [research dossier](reports/ERSRR_RESEARCH_REPORT.html), [research ledger](docs/RESEARCH_LEDGER.md), and [paper outline](docs/PAPER_OUTLINE.md).
+On the sealed 20,789-crop MethaneS2CM location test, v5.1 achieved scene AP 0.8180, AUROC 0.8276, recall 0.3778, false-positive rate 0.0607, pixel AP 0.2083, Dice 0.3125, and IoU 0.1852. It substantially exceeded released MARS-S2L's zero-shot ranking, recall, and dense overlap on the same test, with paired 25 km bootstrap support, but MARS-S2L had lower FPR at an almost-zero 0.0052 recall. Across-the-board superiority is therefore **not** established, and no threshold may be retuned from the test result. See the [research dossier](reports/ERSRR_RESEARCH_REPORT.html), [research ledger](docs/RESEARCH_LEDGER.md), and [paper outline](docs/PAPER_OUTLINE.md).
+
+The retired v3 campaign remains an important negative result: on its separate geographically isolated MARS cohort, ERSRR reduced mean FPR from 9.48% for released MARS-S2L to 3.67%, but mean recall fell from 64.18% to 31.94%. V4.3 later improved strict-cohort AP/AUROC/FPR point estimates but still lost recall and overlap. These studies are preserved rather than overwritten.
 
 The original capstone was created by Eduardo Gonon, Kincaid Larson, Kevin Nguyen, and Hung-Nghi Vu for Dr. Cenek, advised by Dr. Nuxoll.
 
 ## Publication architecture and evidence
 
-- `EarthRemoteSensingRapidResponse/mars_v3_model.py` defines the 16-channel U-Net and its three heads.
-- `EarthRemoteSensingRapidResponse/mars_v3_proposals.py` defines deterministic connected-plume proposals and descriptors.
-- `tools/train_mars_v3.py` and `tools/train_mars_v3_proposals.py` implement the frozen five-seed development protocol.
-- `tools/evaluate_mars_v3.py` and `tools/evaluate_released_marss2l.py` evaluate ERSRR and the released baseline on the same strict cohort.
-- `tools/aggregate_mars_v3_strict.py` performs the paired 2,000-replicate group-and-seed bootstrap.
-- `tools/analyze_mars_v3_strict_posthoc.py` creates explicitly exploratory failure strata and a deterministic error atlas.
+- `EarthRemoteSensingRapidResponse/methanes2cm_v5_model.py` defines the shared tri-temporal v5/v5.1 architecture.
+- `EarthRemoteSensingRapidResponse/methanes2cm_adapter.py` enforces the 12-page TIFF, band, reflectance, mask, and comparator contracts.
+- `tools/train_methanes2cm_v5.py` implements the frozen fitting/development and three-seed campaign.
+- `tools/aggregate_methanes2cm_v5_1.py` freezes ensemble calibration, thresholds, dense averaging, spatial cross-fitting, and uncertainty.
+- `tools/acquire_methanes2cm_v5_test.py` and `tools/evaluate_methanes2cm_v5_1_test.py` implement the precommitted one-shot location-test boundary.
+- `tools/analyze_methanes2cm_v5_1_test_posthoc.py` applies only already-frozen thresholds and cannot select a test operating rule.
+- `tools/evaluate_mars_v4_3_strict.py` preserves the paired v4.3 versus released MARS-S2L strict comparison.
 - `tools/build_research_report.py` regenerates the self-contained HTML dossier from committed machine-readable evidence.
 
-The v3 inputs are release-compatible MBMP, six target and six reference Sentinel-2 L1C bands, ERA5-Land u/v wind, and a CloudSEN12 observability mask. Legacy L1C/TOA and EMIT V002 L2A/surface-reflectance experiments remain explicitly separated.
+V5.1 inputs are two MBMP maps plus six Sentinel-2 L2A bands for each of T, T-90, and T-365. MethaneS2CM lacks wind and per-pixel cloud masks; frozen L1C comparators therefore use documented wind imputation and an unavailable-cloud zero channel. L1C/MARS, L2A/MethaneS2CM, and EMIT studies remain explicitly separated.
 
 ## Setup
 
@@ -37,12 +40,10 @@ On Windows PowerShell, activate with `.\.venv\Scripts\Activate.ps1` if the envir
 python tools/ersrr.py status
 python tools/ersrr.py audit
 .venv/bin/python -m unittest discover -s tests -v
-.venv/bin/python tools/aggregate_mars_v3_strict.py
-.venv/bin/python tools/analyze_mars_v3_strict_posthoc.py
 .venv/bin/python tools/build_research_report.py
 ```
 
-The aggregation and diagnostic commands verify frozen prediction-cache identities before rewriting reports. Experiment summaries are stored under `reports/experiments/`; checkpoints, proposal classifiers, and prediction caches under `EarthRemoteSensingRapidResponse/artifacts/` are intentionally ignored by Git.
+The one-shot test must not be rerun as a tuning loop. Its immutable result is `reports/experiments/methanes2cm_v5_1_location_test.json`; the post-hoc diagnostic verifies frozen report/cache identities before rewriting its explicitly exploratory report. Checkpoints, HDF5 packs, imagery, and prediction caches are intentionally ignored by Git.
 
 ## Acquire an EMIT V002 pilot pair
 

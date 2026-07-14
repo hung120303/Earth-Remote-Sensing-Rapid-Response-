@@ -2,152 +2,166 @@
 
 ## Working title
 
-**Physics-guided selective methane-plume detection in Sentinel-2 imagery with spatially isolated evaluation**
+**Tri-temporal physics-aware methane-plume detection in Sentinel-2 imagery under spatially isolated evaluation**
+
+Alternative benchmark framing:
+
+**What transfers in methane-plume detection? A sealed, product-aware comparison of ERSRR and MARS-S2L**
 
 ## Central research question
 
-Can a dual-temporal, physics-guided detector reduce false alarms on observable no-plume
-Sentinel-2 scenes while preserving plume recall at geographically isolated sites, relative to the
-released MARS-S2L checkpoint?
+Can a shared-weight tri-temporal Sentinel-2 detector improve methane-plume ranking and dense
+localization while correctly rejecting no-plume crops at geographically isolated locations, and
+does that performance exceed frozen ERSRR v4.3 and released MARS-S2L baselines under the same test?
 
-The paper is a detection and segmentation study. It does not claim emission-rate retrieval,
-continuous methane concentration estimation, or operational deployment.
+The study concerns binary scene detection and dense mask segmentation. It does not claim methane
+concentration, emission flux, operational deployment, or prevalence-representative positive
+predictive value.
 
-## Contributions that may be claimed from methods alone
+## Primary contribution set
 
-1. A pinned MARS-S2L data contract with explicit `PLUME`, `NO_PLUME`, `UNCERTAIN`, and
-   `UNOBSERVABLE` states; target/reference identity; wind and cloud provenance; and SHA-256-bound
-   raw artifacts kept outside Git.
-2. A 25 km connected-component split that separates 23,763 training scenes, 5,945 internal
-   validation scenes, and a 4,401-scene strict test whose groups do not intersect official training.
-3. A 14.27 M-parameter full-resolution U-Net with target/reference fusion, release-compatible MBMP,
-   wind, CloudSEN12 observability, segmentation, scene-presence, and quality/abstention outputs.
-4. A predeclared five-seed operating-point protocol: maximize validation recall subject to FPR
-   <= 0.05, then AP and positive-mask Dice; never tune from strict-test behavior.
-5. A prediction-blind external-confirmation funnel linking EMIT V002 plumes to product-matched
-   Sentinel-2 L1C target/reference scenes and retaining 55 independent scenes after exact-input
-   radiometry and CloudSEN12 gates.
+1. A pinned MethaneS2CM L2A contract with three temporal frames, exact 12-page TIFF semantics,
+   binary-mask validation, immutable train/test metadata, and Git-safe HDF5 packing.
+2. A leakage-resistant development protocol: exact-location-disjoint official split plus 25 km
+   connected-component fitting/development groups, immutable manifests, and a one-shot test seal.
+3. A 9.36 M-parameter shared tri-temporal U-Net with two MBMP physics maps, seven-term fusion at five
+   scales, dense segmentation, and a controlled small context-head ablation.
+4. A fixed three-seed ensemble with empirical-CDF scene calibration, predeclared FPR thresholds,
+   equal dense-probability averaging, and 2,000 spatial group-bootstrap replicates.
+5. A same-cohort comparison with zero-shot v4.3 and released MARS-S2L, alongside a separate paired
+   MARS strict comparison and clearly separated published-MARS context.
+6. A fully audited negative claim: ranking/localization improve strongly, but calibration transfer
+   misses the no-plume criterion, so across-the-board superiority is rejected.
 
-## Result-dependent claim ladder
+## Frozen result and permissible abstract language
 
-The strongest permissible claim is selected only after the sealed campaign.
+On the 20,789-crop MethaneS2CM location test, ERSRR v5.1 achieved scene AP 0.8180, AUROC 0.8276,
+recall 0.3778, FPR 0.0607, pixel AP 0.2083, Dice 0.3125, and IoU 0.1852. Released MARS-S2L achieved
+AP 0.5252, AUROC 0.5126, recall 0.0052, FPR 0.0033, pixel AP 0.1691, Dice 0.0045, and IoU 0.0023.
+V4.3 made no positive prediction at its frozen rule.
 
-| Evidence | Permissible wording |
+Paired 2,000-resample 25 km group intervals supported positive v5.1-minus-MARS deltas for AP,
+AUROC, recall, Dice, and IoU. The v5.1 FPR delta was also conclusively positive. The abstract may
+therefore say:
+
+> ERSRR v5.1 substantially improved plume ranking, recall, and dense localization over frozen
+> zero-shot comparators on a spatially isolated MethaneS2CM test, but its development-frozen
+> threshold transferred to a higher false-positive rate; full MARS-S2L superiority was not
+> established.
+
+It may not say that v5.1 categorically outperforms MARS-S2L, solves no-plume rejection, or is ready
+for operational monitoring.
+
+## Comparison boundaries
+
+| Evidence | Valid use |
 |---|---|
-| Five-seed strict gate and paired baseline gate both pass | ERSRR outperformed the released MARS-S2L checkpoint on the same spatially isolated cohort at the frozen operating rules. |
-| ERSRR gate passes but paired superiority is uncertain | ERSRR met its predeclared operating target; superiority to MARS-S2L was not established. |
-| Mean improves but confidence interval or a gate fails | ERSRR showed a directional improvement that requires confirmatory evaluation. |
-| Recall or false-alarm gate fails | The proposed architecture did not meet the promotion boundary; report the negative result without retuning. |
-
-MARS-S2L paper metrics and same-cohort checkpoint metrics must remain in separate tables. The
-official paper test uses a different cohort and cannot support a paired superiority statement.
-
-## Frozen campaign outcome (2026-07-12)
-
-The final row of the claim ladder applies. ERSRR v3 did **not** meet the promotion boundary and did
-not outperform the released MARS-S2L checkpoint overall. The five-seed ERSRR mean reduced the
-same-cohort false-positive rate from 0.0948 to 0.0367 (61.3% relative reduction), but recall fell
-from 0.6418 to 0.3194. In the paired 2,000-replicate seed-and-25-km-group bootstrap, the relative
-FPR reduction was 61.2% (95% CI 46.7% to 72.8%) and the recall delta was -31.5 percentage points
-(95% CI -42.2 to -16.4). AP, AUROC, and pixel segmentation were also inferior.
-
-The paper must therefore be framed as a rigorous spatial-transfer and false-alarm trade-off study,
-not as an architecture-superiority paper. The central empirical finding is that strong random-seed
-internal validation (mean recall 0.8317 at mean FPR 0.0489) did not predict performance on unseen
-25 km groups (mean recall 0.3194 at mean FPR 0.0367). The released MARS-S2L checkpoint also
-transferred poorly relative to its different-cohort paper values, but remained materially stronger
-than ERSRR on recall, AP, AUROC, and segmentation on this paired cohort.
-
-No v3 threshold, loss, architecture, or postprocessing rule may be changed in response to these
-strict results. Any v4 system informed by this result requires a newly untouched final cohort.
-The authoritative campaign artifact is `reports/experiments/mars_v3_strict_campaign.json`; the
-chronology, interpretation boundaries, and next-study decisions are maintained in
-`docs/RESEARCH_LEDGER.md`.
+| V5.1, v4.3, and released MARS-S2L on MethaneS2CM | Same-test performance comparison; note L2A in-domain versus L1C zero-shot training difference. |
+| V4.3 and released MARS-S2L on strict MARS cohort | Paired L1C comparison; v4.3 improves AP/AUROC/FPR point estimates but loses recall/overlap. |
+| MARS-S2L full official and test-only-site tables | Different-cohort context only; no paired delta or superiority inference. |
+| Frozen MethaneS2CM post-hoc thresholds | Calibration-transfer diagnostic only; cannot select a new test operating point. |
 
 ## Manuscript structure
 
-1. **Introduction** — methane point-source monitoring, no-plume rejection, spatial leakage, and the
-   research question.
-2. **Related work** — MBMP/multipass retrieval, CH4Net, MARS-S2L, small-plume segmentation,
-   EMIT confirmation, and selective prediction.
-3. **Data** — MARS-S2L revision and cohort construction; label states; negative provenance; EMIT
-   V002/Sentinel-2 confirmation funnel; licenses and exclusions.
-4. **Methods** — exact 16-channel input contract, architecture, loss terms, group-balanced sampling,
-   proposal ablation, quality head, and three-state decision policy.
-5. **Evaluation protocol** — frozen seeds, thresholds, strict spatial split, author-fixed released
-   baseline, paired block bootstrap, metrics, and prediction-blind external seal.
-6. **Results** — internal validation variability, strict paired results, segmentation results,
-   calibration/selective results, error strata, and external positive confirmation.
-7. **Discussion** — practical false-alarm implications, small-plume behavior, domain shift,
-   determinism, and why positive-only EMIT evidence cannot measure FPR.
-8. **Limitations and ethics** — label uncertainty, source attribution, monitoring misuse, geographic
-   coverage, meteorological dependence, and non-operational status.
-9. **Reproducibility statement** — commit, environment, manifests, hashes, ignored bulk data,
-   commands, seed policy, and artifact availability.
+1. **Introduction** — point-source methane monitoring, false-alarm cost, temporal context, spatial
+   leakage, product shift, and the need to separate ranking from operating-policy transfer.
+2. **Related work** — MBMP/multipass retrieval, CH4Net, MARS-S2L, MethaneS2CM/MEECNet, dense
+   segmentation, selective prediction, and risk-controlling calibration.
+3. **Datasets and contracts** — MethaneS2CM revision/license/splits, MARS-S2L comparators, TIFF and
+   band semantics, label geometry, observability, missing wind/cloud metadata, and bulk-data policy.
+4. **Leakage-resistant protocol** — exact locations, 25 km components, fitting/development/test
+   boundaries, campaign freeze, one-shot unlock, seeds, hashes, and preregistered metrics.
+5. **Methods** — v5/v5.1 architecture, physics features, losses, augmentation, context-head
+   ablation, ensemble calibration, and frozen operating points.
+6. **Results** — physics baselines, single-seed ablation, three-seed development confirmation,
+   one-shot test, paired uncertainty, zero-shot baselines, and the strict MARS context table.
+7. **Calibration transfer** — development-to-test AP/recall/FPR/overlap gaps and the explicitly
+   post-hoc four-threshold audit; no test-selected threshold.
+8. **Discussion** — why rank transfer is stronger than policy transfer, product mismatch, broad
+   mask geometry, no-plume implications, and the new calibration/domain-generalization study.
+9. **Limitations and ethics** — balanced prevalence, missing timestamps/wind/cloud mask,
+   non-operational status, source attribution, license limits, and monitoring misuse.
+10. **Reproducibility statement** — commits, environment, manifests, seeds, checksums, ignored bulk
+    artifacts, commands, and deterministic/non-deterministic runtime boundaries.
 
-## Required primary tables
+## Primary tables
 
-1. Dataset funnel and exclusions, with plume/no-plume counts and spatial groups.
-2. MARS-S2L published targets, clearly labeled as different-cohort context.
-3. Five internal-validation seeds with selected epoch, threshold, proposal weight, recall, FPR, AP,
-   AUROC, calibration, and Dice.
-4. Same-cohort strict results for released MARS-S2L and every ERSRR seed.
-5. Seed-aggregated paired deltas with 95% 25 km group-bootstrap intervals.
-6. Selective decision metrics: coverage, abstention, accepted no-plume error, and NPV.
-7. EMIT positive-confirmation recall and descriptive mask overlap for ERSRR and released MARS-S2L;
-   no FPR, specificity, or AP columns.
+1. Data funnel: train/fitting/development/test crops, positives/negatives, exact locations, 25 km
+   groups, overlap checks, archive bytes, and licenses.
+2. Input/product contract: L2A/L1C product, bands, temporal frames, reflectance scale, wind/cloud
+   availability, patch size, and comparator imputations.
+3. Physics baselines and v5 mask-derived seed-1101 reference.
+4. V5.1 seeds 1101/2202/3303: selected epoch, AP, AUROC, recall at target FPR, FPR, pixel AP, Dice,
+   IoU, and artifact hashes.
+5. V5.1 ensemble group-held and all-development freeze values with confidence intervals.
+6. One-shot same-test results for v5.1, v4.3, and released MARS-S2L.
+7. V5.1-minus-baseline paired 25 km group-bootstrap deltas.
+8. Separate MARS strict comparison and published-MARS different-cohort context.
+9. Frozen four-threshold calibration-transfer audit, labeled post hoc.
 
-## Required figures
+## Primary figures
 
-1. Cohort construction and prediction-blind sealing flow.
-2. Architecture/input-contract diagram.
-3. Strict-test precision-recall or operating-point plot with per-seed dispersion.
-4. Paired group-bootstrap delta distributions for recall and FPR.
-5. Recall by plume-size and observability strata.
-6. Representative true positive, false negative, false positive, and abstained scenes selected by a
-   declared rule rather than visual preference.
+1. Acquisition, grouping, development, freeze, and one-shot unlock flow.
+2. Tri-temporal shared encoder and seven-term fusion diagram.
+3. Development and location-test PR/ROC curves with frozen operating points.
+4. Paired group-bootstrap distributions for AP, recall, FPR, Dice, and IoU deltas.
+5. Development-to-test calibration transfer across all four predeclared thresholds.
+6. Deterministically selected true positive, false negative, false positive, and no-plume examples;
+   selection rule declared before viewing and labeled as test error analysis.
+7. Product/domain matrix showing L2A in-domain and L1C zero-shot comparisons.
 
 ## Statistical analysis contract
 
-- Unit of resampling: frozen 25 km group, never individual pixels or temporally related scenes.
-- Replicates: 2,000 with the committed bootstrap seed.
-- Primary endpoint: scene recall at the validation-frozen operating point under FPR <= 0.05.
+- Primary external unit: frozen 25 km MethaneS2CM test component, not crops or pixels.
+- Replicates: 2,000 paired nonparametric group resamples with committed seed 20,260,713.
+- Primary scene metrics: AP, AUROC, recall, FPR, and precision at each frozen rule.
+- Primary dense metrics: all-observable-pixel AP, Dice, and IoU at each frozen rule.
 - Report point estimates, two-sided percentile intervals, and absolute paired deltas.
-- Report relative FPR reduction only when the baseline FPR is nonzero, with the absolute delta beside it.
-- Report every fixed seed and failures; do not choose a best seed from strict results.
-- Treat EMIT as positive confirmation only. An absent catalog plume is not a no-plume label.
-- Do not infer physical concentration or flux from the unresolved MARS enhancement units.
+- Treat balanced-benchmark precision as descriptive, never operational PPV.
+- Keep the primary 5%-development target and test-realized FPR distinct.
+- Never choose a model, seed, context weight, scene threshold, pixel threshold, or postprocessing rule
+  from the location-test result.
+- Published MARS-S2L tables and ERSRR same-cohort tables remain separate.
 
-## Ablations and secondary analyses
+## Ablations and negative results to retain
 
-The current campaign may report only ablations selected before strict evaluation: neural presence
-versus connected-proposal blends, released MBMP/MARS-S2L/CH4Net baselines, and the recorded legacy
-compact model. Any new architecture, loss, threshold, backbone, or postprocessing idea is future work
-and requires a new sealed test cohort or a preregistered confirmatory split.
+- Physics-only MBMP evidence is weak (best scene AP 0.5509 and recall 0.0564 at approximately 5%
+  FPR), supporting learned temporal/context features.
+- Mask-only v5 seed 1101 achieved AP 0.8225 and recall 0.3421; v5.1 seed 1101 achieved AP 0.8542
+  and recall 0.4321 while retaining similar dense overlap.
+- The rejected v4.2 multi-seed campaign and v4 cascade remain documented negative experiments.
+- V4.3’s strict MARS result improves FPR/AP/AUROC point estimates but not recall or segmentation;
+  only the FPR improvement is bootstrap-conclusive.
+- V4.3 and released MARS-S2L collapse under the MethaneS2CM product/domain shift at their fixed
+  rules. This cannot be presented as proof that their architectures are intrinsically inferior.
 
-Secondary analyses should include plume-size strata, geography, cloud/observable fraction,
-target-reference interval, wind speed, and score calibration. Sparse strata are descriptive and must
-not be presented as powered subgroup claims.
+## V5.2 preregistration requirements
+
+1. Define new spatial calibration groups before training and fit risk control only there.
+2. Specify whether the primary endpoint is a fixed target-FPR rule, a coverage-risk curve, or both.
+3. Add product-aware L1C/L2A harmonization and missing-temporal-frame handling to the development
+   comparison, with identical folds and compute budgets.
+4. Freeze mask-quality weighting, plume-scale sampling, negative sampling, and architecture choice
+   from development evidence only.
+5. Acquire a new prevalence-aware, geographically isolated confirmation cohort with defensible
+   positive and negative labels.
+6. Commit acquisition/evaluator code and all identities before opening the cohort once.
 
 ## Reproducibility and release bundle
 
-Release code, configs, cohort builders, compact manifests, aggregate metrics, environment pins,
-report HTML, and cryptographic artifact receipts. Do not release or commit bulk imagery, protected
-Earthdata URLs with temporary signatures, credentials, checkpoints without a deliberate model-card
-decision, or third-party data that the licenses do not permit redistributing.
+Release code, configs, compact protocols, result JSON, checksums, test commands, HTML dossier, and
+paper documents. Keep third-party bulk imagery, HDF5 packs, model checkpoints, prediction caches,
+credentials, Earthdata cookies, and temporary signed URLs out of Git. MethaneS2CM is
+CC-BY-NC-4.0; redistribution and publication use must respect its license and attribution terms.
 
-The training runs fix Python/NumPy/PyTorch seeds but do not currently request deterministic CUDA
-algorithms. The manuscript must describe the five seeds as stochastic replicates, not promise bitwise
-reproduction. A later confirmatory rerun should enable deterministic kernels where supported and
-record any operations that cannot be made deterministic.
+The current runs fix Python/NumPy/PyTorch seeds but do not promise bitwise CUDA determinism. The
+paper should describe the three seeds as stochastic replicates and disclose the runtime versions
+recorded in the primary JSON.
 
 ## Candidate venues
 
-The method/data-evaluation emphasis is suitable for *Remote Sensing of Environment*, *Atmospheric
-Measurement Techniques*, or *IEEE Transactions on Geoscience and Remote Sensing*. Venue choice
-should follow the final evidence: a strong paired and external result supports a methods paper; a
-failed promotion gate is better framed as a rigorous benchmark/evaluation study.
-
-Given the frozen negative promotion result, the present manuscript should target the benchmark,
-evaluation, or methods-validation framing. A later superiority manuscript requires a genuinely new
-v4 development cycle and untouched confirmation cohort rather than reinterpretation of v3.
+The present evidence best fits a remote-sensing methods/benchmark paper emphasizing spatial
+transfer and calibrated operating policies: *Remote Sensing of Environment*, *Atmospheric
+Measurement Techniques*, or *IEEE Transactions on Geoscience and Remote Sensing*. A categorical
+superiority paper requires the v5.2 preregistered confirmation cycle, not reinterpretation of this
+test.
