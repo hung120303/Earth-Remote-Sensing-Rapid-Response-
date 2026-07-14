@@ -6,6 +6,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import numpy as np
+
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_ROOT = ROOT / "EarthRemoteSensingRapidResponse"
 if str(MODEL_ROOT) not in sys.path:
@@ -14,6 +16,7 @@ if str(MODEL_ROOT) not in sys.path:
 from mars_s2l_adapter import (  # noqa: E402
     iter_development_manifest,
     validate_image_band_order,
+    validate_positive_mask,
 )
 
 
@@ -76,6 +79,20 @@ class MarsMixedAdapterTests(unittest.TestCase):
             validate_image_band_order({"band_order": list(native)}, native),
             "embedded_descriptions",
         )
+
+    def test_empty_positive_mask_requires_explicit_source_policy(self) -> None:
+        mask = np.zeros((4, 4), dtype=np.uint8)
+        with self.assertRaisesRegex(ValueError, "empty plume mask"):
+            validate_positive_mask(mask, "sample", allow_empty=False)
+        accepted = validate_positive_mask(mask, "sample", allow_empty=True)
+        self.assertEqual(accepted.dtype, np.bool_)
+        self.assertFalse(np.any(accepted))
+
+    def test_nonbinary_positive_mask_is_always_rejected(self) -> None:
+        with self.assertRaisesRegex(ValueError, "not binary"):
+            validate_positive_mask(
+                np.asarray([[0, 2]], dtype=np.uint8), "sample", allow_empty=True
+            )
 
 
 if __name__ == "__main__":

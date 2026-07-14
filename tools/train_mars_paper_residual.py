@@ -164,7 +164,16 @@ class MarsPaperDataset(Dataset[dict[str, Any]]):
 
     def __getitem__(self, index: int) -> dict[str, Any]:
         record = self.records[index]
-        sample = load_sample(self.metadata_dir, record, require_enhancement=False)
+        # The pinned public training split contains six isplume=1 rows from one
+        # bad-retrieval site whose producer masks are empty. Upstream retains
+        # their positive scene labels and zero pixel targets; match that
+        # behavior explicitly rather than silently relabeling or dropping them.
+        sample = load_sample(
+            self.metadata_dir,
+            record,
+            require_enhancement=False,
+            allow_empty_positive_mask=True,
+        )
         spectral = sample.reflectance_pair.copy()
         cloud = (sample.cloud_classes > 0).astype(np.float32)
         clear = sample.clear_mask.astype(np.float32)

@@ -251,8 +251,25 @@ def _read_single_band(path: Path, image_grid: tuple[Any, ...]) -> tuple[np.ndarr
         return source.read(1), source.descriptions[0]
 
 
+def validate_positive_mask(
+    mask: np.ndarray, identifier: str, *, allow_empty: bool
+) -> np.ndarray:
+    """Validate a public positive mask while making empty-label policy explicit."""
+    unique = set(int(value) for value in np.unique(mask))
+    if not unique.issubset({0, 1}):
+        raise ValueError(f"Plume mask is not binary for {identifier}")
+    result = mask.astype(bool)
+    if not np.any(result) and not allow_empty:
+        raise ValueError(f"Positive sample has an empty plume mask: {identifier}")
+    return result
+
+
 def load_sample(
-    base_dir: Path, record: dict[str, Any], *, require_enhancement: bool = True
+    base_dir: Path,
+    record: dict[str, Any],
+    *,
+    require_enhancement: bool = True,
+    allow_empty_positive_mask: bool = False,
 ) -> MarsS2Sample:
     """Load and validate one pinned MARS-S2L sample.
 
@@ -312,11 +329,9 @@ def load_sample(
         plume, _ = _read_single_band(
             safe_asset_path(base_dir, paths["plume_mask"]), image_grid
         )
-        if not set(int(value) for value in np.unique(plume)).issubset({0, 1}):
-            raise ValueError(f"Plume mask is not binary for {identifier}")
-        plume_mask = plume.astype(bool)
-        if not np.any(plume_mask):
-            raise ValueError(f"Positive sample has an empty plume mask: {identifier}")
+        plume_mask = validate_positive_mask(
+            plume, identifier, allow_empty=allow_empty_positive_mask
+        )
         if "methane_enhancement" in paths:
             enhancement, _ = _read_single_band(
                 safe_asset_path(base_dir, paths["methane_enhancement"]), image_grid
