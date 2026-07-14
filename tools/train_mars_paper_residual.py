@@ -310,8 +310,11 @@ def validation_summary(
     baseline_scores: list[float] = []
     candidate_predictions: list[bool] = []
     baseline_predictions: list[bool] = []
+    sensor_indices: list[int] = []
     candidate_pixels = pixel_accumulator()
     baseline_pixels = pixel_accumulator()
+    candidate_pixels_by_sensor = {name: pixel_accumulator() for name in SENSOR_NAMES}
+    baseline_pixels_by_sensor = {name: pixel_accumulator() for name in SENSOR_NAMES}
     for batch in loader:
         batch = move_batch(batch, device)
         with torch.amp.autocast(
@@ -338,19 +341,37 @@ def validation_summary(
             baseline_scores.append(connected_scene_score(baseline))
             candidate_predictions.append(bool(np.any(candidate_component)))
             baseline_predictions.append(bool(np.any(baseline_component)))
+            local_sensor_index = int(batch["sensor_index"][index].item())
+            sensor_indices.append(local_sensor_index)
             add_pixels(candidate_pixels, candidate, truth, observable)
             add_pixels(baseline_pixels, baseline, truth, observable)
+            sensor_name = SENSOR_NAMES[local_sensor_index]
+            add_pixels(
+                candidate_pixels_by_sensor[sensor_name], candidate, truth, observable
+            )
+            add_pixels(
+                baseline_pixels_by_sensor[sensor_name], baseline, truth, observable
+            )
     y = np.asarray(labels, dtype=np.uint8)
     group_array = np.asarray(groups)
+    sensor_array = np.asarray(sensor_indices, dtype=np.uint8)
 
     def summarize(
-        scores: list[float], predictions: list[bool], pixels: dict[str, float]
+        scores: list[float],
+        predictions: list[bool],
+        pixels: dict[str, float],
+        selection: np.ndarray | None = None,
     ) -> dict[str, Any]:
         score_array = np.asarray(scores, dtype=np.float32)
         prediction_array = np.asarray(predictions, dtype=bool)
-        result = scene_metrics(y, prediction_array, score_array)
+        local_y = y if selection is None else y[selection]
+        local_scores = score_array if selection is None else score_array[selection]
+        local_predictions = (
+            prediction_array if selection is None else prediction_array[selection]
+        )
+        result = scene_metrics(local_y, local_predictions, local_scores)
         result["operating_points"] = {
-            str(target): choose_threshold_at_fpr(y, score_array, target)
+            str(target): choose_threshold_at_fpr(local_y, local_scores, target)
             for target in TARGET_FPRS
         }
         result["pixel_fixed_0_5"] = finish_pixels(pixels)
@@ -358,6 +379,45 @@ def validation_summary(
 
     candidate = summarize(candidate_scores, candidate_predictions, candidate_pixels)
     baseline = summarize(baseline_scores, baseline_predictions, baseline_pixels)
+    sensor_strata: dict[str, Any] = {}
+    for sensor_index, sensor_name in enumerate(SENSOR_NAMES):
+        selection = sensor_array == sensor_index
+        local_y = y[selection]
+        if local_y.size == 0 or np.unique(local_y).size < 2:
+            sensor_strata[sensor_name] = {
+                "rows": int(local_y.size),
+                "positive": int(np.count_nonzero(local_y == 1)),
+                "eligible_for_promotion": False,
+                "reason": "A sensor stratum needs both plume and no-plume scenes.",
+            }
+            continue
+        local_candidate = summarize(
+            candidate_scores,
+            candidate_predictions,
+            candidate_pixels_by_sensor[sensor_name],
+            selection,
+        )
+        local_baseline = summarize(
+            baseline_scores,
+            baseline_predictions,
+            baseline_pixels_by_sensor[sensor_name],
+            selection,
+        )
+        sensor_strata[sensor_name] = {
+            "rows": int(np.count_nonzero(selection)),
+            "positive": int(np.count_nonzero(y[selection] == 1)),
+            "eligible_for_promotion": True,
+            "candidate": local_candidate,
+            "released_baseline": local_baseline,
+            "delta": {
+                "average_precision": local_candidate["average_precision"]
+                - local_baseline["average_precision"],
+                "pixel_iou": local_candidate["pixel_fixed_0_5"][
+                    "intersection_over_union"
+                ]
+                - local_baseline["pixel_fixed_0_5"]["intersection_over_union"],
+            },
+        }
     return {
         "rows": int(y.size),
         "positive": int(np.count_nonzero(y == 1)),
@@ -365,6 +425,7 @@ def validation_summary(
         "sites": int(np.unique(group_array).size),
         "candidate": candidate,
         "released_baseline": baseline,
+        "sensor_strata": sensor_strata,
         "delta": {
             "average_precision": candidate["average_precision"] - baseline["average_precision"],
             "pixel_iou": candidate["pixel_fixed_0_5"]["intersection_over_union"]
@@ -444,9 +505,13 @@ def train(
             parts.append(values)
         scheduler.step()
         validation = validation_summary(model, validation_loader, device)
-        rank = (
+        primary_deltas = (
             float(validation["delta"]["average_precision"]),
             float(validation["delta"]["pixel_iou"]),
+        )
+        rank = (
+            min(primary_deltas),
+            sum(primary_deltas),
             float(validation["delta"]["recall_at_fpr_0_0713"]),
         )
         record = {
@@ -628,6 +693,12 @@ def main() -> int:
         "ap_higher": best["delta"]["average_precision"] > 0,
         "pixel_iou_higher": best["delta"]["pixel_iou"] > 0,
         "recall_at_fpr_0_0713_higher": best["delta"]["recall_at_fpr_0_0713"] > 0,
+        "no_material_sensor_regression": all(
+            stratum["eligible_for_promotion"]
+            and stratum["delta"]["average_precision"] >= -0.01
+            and stratum["delta"]["pixel_iou"] >= -0.01
+            for stratum in best["sensor_strata"].values()
+        ),
     }
     decision = (
         "Advance this architecture from the primary fold to the independent confirmation fold."
