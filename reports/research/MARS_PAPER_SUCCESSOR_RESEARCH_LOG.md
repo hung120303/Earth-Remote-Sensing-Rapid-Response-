@@ -66,6 +66,7 @@ Implementation audit: the earlier `mars_v4_simulation.py` wrapper admitted only 
 | 2026-07-14 | Source-aligned residual smoke | 128 sampled crops, 27.34% simulated overall; CH₄-weighted BCE and complete mixed-sensor validation executed. Tiny-cohort AP Δ −0.00095, recall Δ 0, IoU Δ +0.00553. Twenty-four focused tests pass. | Pipeline-only pass; freeze a full fold-0 configuration before reading full results. |
 | 2026-07-14 | Preregistered source-aligned residual fold 0, seed 707 | Selected epoch 4: AP 0.88651 (Δ +0.00006), recall 0.95570 (Δ −0.00134), IoU 0.49576 (Δ −0.01286). Epoch 3 was complementary rather than promotable: AP 0.88710 (Δ +0.00065), recall 0.95839 (Δ +0.00134; one additional true positive), IoU 0.49005 (Δ −0.01857). | Rejected; fold 1 remains unread. Preserve the endpoint result and recover the deterministic epoch-3 checkpoint solely for a preregistered interpolation with the already frozen alpha-0.5 correction model. |
 | 2026-07-14 | Retained endpoint interpolation, primary alpha 0.5 to source epoch 4 | Exact endpoint assertions passed. Selected beta 1/32: AP Δ +0.00256, recall Δ 0, IoU Δ +0.01010; Sentinel-2 AP/IoU Δ +0.00379/+0.01057 and Landsat +0.00035/+0.00499. No interior beta raised recall. | Rejected on the strict recall gate; fold 1 remains unread. Stop spending experiments on this segmentation-only direction and introduce a separately trained scene-ranking head while retaining the stronger alpha-0.5 mask endpoint. |
+| 2026-07-14 | Scene-ranking head inner selection, train folds 3-4 / validate fold 2 | Weighted logistic C=0.1 at head blend 0.25: AP 0.88733 vs 0.88060 (Δ +0.00673), recall 0.92723 vs 0.92597 (Δ +0.00125) at identical FPR 0.07118. Sentinel-2/Landsat AP Δ +0.00598/+0.00112. | Passed all inner gates. Refit on folds 2-4 and freeze ignored artifact `98ce79c6…a336c`; authorize one fold-0 extraction/evaluation after its evaluator is committed. |
 
 ## Frozen primary correction run
 
@@ -225,6 +226,14 @@ of the alpha-0.5 endpoint. Passing candidates outrank all failing candidates;
 balanced AP/recall delta breaks ties. Only an inner pass authorizes refitting
 the chosen specification on folds 2-4 and one fold-0 extraction/evaluation.
 Fold 1 and the paper test remain unread.
+
+Inner selection passed with weighted logistic regression at C=0.1 and scene-head
+blend weight 0.25. The refit folds-2/3/4 artifact is 5,018 bytes with SHA-256
+`98ce79c62b6af0c97155acdf4255ee4a721f5ef3d5412203bf6a04d2512a336c`.
+The authoritative inner report SHA-256 is
+`20c82ea36024dbaa5f1fd56673a139a63945b07c1ade4a706acbd3cda2f5fcec`.
+The fold-0 evaluator and its exact artifact/report/cache contracts must be
+committed before extracting or evaluating fold-0 scene-head features.
 
 ## Predeclared next experiments
 
