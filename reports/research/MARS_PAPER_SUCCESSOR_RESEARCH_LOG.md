@@ -288,6 +288,14 @@ the authoritative inner report SHA-256 is
 `c247c1326bbd621d0148d4fffb2045f1fe4f132c134b449f9c9238f4bec23bfa`.
 Its fold-0 evaluator must be committed before loading the existing fold-0 cache.
 
+The site-context fold-0 evaluation is frozen to cache SHA-256
+`372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7`,
+artifact/report hashes above, the exact HGB and 0.5 blend selected on fold 2,
+and the prior primary endpoint. It inherits the unchanged alpha-0.5 masks and
+uses the same strict AP/recall/FPR/IoU and sensor non-regression gates as the
+first scene-head evaluation. No context statistic uses labels; all are computed
+within the evaluation site's own image sequence. This is a one-shot result.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
