@@ -326,6 +326,16 @@ primary endpoint. The evaluator requires the complete OOF stability record and
 uses the same strict released-model AP/recall/FPR/IoU and sensor gates. It is a
 one-shot evaluation; fold 1 remains unread unless every gate passes.
 
+## Frozen minimum-intervention OOF context trust region
+
+The HGB family and all fitting data remain fixed. OOF predictions are recomputed
+for blends 1/64, 1/32, 3/64, 1/16, 3/32, 1/8, 5/32, 3/16, 7/32, and 1/4.
+The selection rule is the smallest blend satisfying every previously frozen
+three-fold stability gate, including at least six pooled extra true positives.
+This directly addresses the observed failure of the maximum-ranked 0.625 blend
+without inspecting another fold-0 score. Only a full OOF pass authorizes a new
+fold-0 evaluator; fold 1 and the paper test remain unread.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
