@@ -17,6 +17,7 @@ from evaluate_methanes2cm_v5_1_test import (  # noqa: E402
     model_metrics,
 )
 from acquire_methanes2cm_v5_test import verified_freeze  # noqa: E402
+from analyze_methanes2cm_v5_1_test_posthoc import frozen_operating_points  # noqa: E402
 
 
 class MethaneS2CMV51LocationTestEvaluatorTests(unittest.TestCase):
@@ -57,6 +58,24 @@ class MethaneS2CMV51LocationTestEvaluatorTests(unittest.TestCase):
         self.assertEqual(metrics["pixel"]["dice"], 1.0)
         self.assertEqual(metrics["pixel"]["intersection_over_union"], 1.0)
         np.testing.assert_array_equal(per_scene["pixel_truth"], [1, 0])
+
+    def test_posthoc_uses_only_already_frozen_thresholds(self) -> None:
+        result = frozen_operating_points(
+            np.asarray([1, 1, 0, 0], dtype=np.uint8),
+            np.asarray([0.9, 0.6, 0.4, 0.1]),
+            np.asarray([0.05]),
+            np.asarray([0.5]),
+            {
+                "0.05": {
+                    "recall": 0.75,
+                    "false_positive_rate": 0.05,
+                    "precision": 0.8,
+                }
+            },
+        )
+        self.assertEqual(result["0.05"]["threshold_frozen_on_development"], 0.5)
+        self.assertEqual(result["0.05"]["location_test"]["recall"], 1.0)
+        self.assertEqual(result["0.05"]["location_test"]["false_positive_rate"], 0.0)
 
 
 if __name__ == "__main__":
