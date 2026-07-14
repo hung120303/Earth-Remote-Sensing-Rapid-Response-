@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -317,10 +318,14 @@ def validation_summary(
     model: MarsPaperResidualModel,
     loader: DataLoader[dict[str, Any]],
     device: torch.device,
+    baseline_reference: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    if baseline_reference is not None and getattr(model, "backbone_trainable", False):
+        raise ValueError("Released-baseline caching requires a frozen backbone")
     model.eval()
     labels: list[int] = []
     groups: list[str] = []
+    sample_ids: list[str] = []
     candidate_scores: list[float] = []
     baseline_scores: list[float] = []
     candidate_predictions: list[bool] = []
@@ -339,37 +344,59 @@ def validation_summary(
                 batch["inputs"], batch["observable"], batch["sensor_index"]
             )
         candidate_probability = torch.sigmoid(output["segmentation_logits"]).float()
-        baseline_probability = torch.sigmoid(output["baseline_logits"]).float()
+        baseline_probability = (
+            None
+            if baseline_reference is not None
+            else torch.sigmoid(output["baseline_logits"]).float()
+        )
         clear = batch["clear"] > 0.5
         candidate_probability = candidate_probability.masked_fill(~clear, 0.0)
-        baseline_probability = baseline_probability.masked_fill(~clear, 0.0)
+        if baseline_probability is not None:
+            baseline_probability = baseline_probability.masked_fill(~clear, 0.0)
         for index in range(candidate_probability.shape[0]):
             candidate = candidate_probability[index, 0].cpu().numpy()
-            baseline = baseline_probability[index, 0].cpu().numpy()
+            baseline = (
+                None
+                if baseline_probability is None
+                else baseline_probability[index, 0].cpu().numpy()
+            )
             observable = batch["observable"][index, 0].cpu().numpy() > 0.5
             truth = (batch["mask"][index, 0].cpu().numpy() > 0.5) & observable
             candidate_component = component_mask(candidate)
-            baseline_component = component_mask(baseline)
             labels.append(int(batch["presence"][index].item()))
             groups.append(str(batch["group_id"][index]))
+            sample_ids.append(str(batch["sample_id"][index]))
             candidate_scores.append(connected_scene_score(candidate))
-            baseline_scores.append(connected_scene_score(baseline))
             candidate_predictions.append(bool(np.any(candidate_component)))
-            baseline_predictions.append(bool(np.any(baseline_component)))
             local_sensor_index = int(batch["sensor_index"][index].item())
             sensor_indices.append(local_sensor_index)
             add_pixels(candidate_pixels, candidate, truth, observable)
-            add_pixels(baseline_pixels, baseline, truth, observable)
             sensor_name = SENSOR_NAMES[local_sensor_index]
             add_pixels(
                 candidate_pixels_by_sensor[sensor_name], candidate, truth, observable
             )
-            add_pixels(
-                baseline_pixels_by_sensor[sensor_name], baseline, truth, observable
-            )
+            if baseline is not None:
+                baseline_component = component_mask(baseline)
+                baseline_scores.append(connected_scene_score(baseline))
+                baseline_predictions.append(bool(np.any(baseline_component)))
+                add_pixels(baseline_pixels, baseline, truth, observable)
+                add_pixels(
+                    baseline_pixels_by_sensor[sensor_name], baseline, truth, observable
+                )
     y = np.asarray(labels, dtype=np.uint8)
     group_array = np.asarray(groups)
     sensor_array = np.asarray(sensor_indices, dtype=np.uint8)
+    cohort_fingerprint = hashlib.sha256(
+        json.dumps(
+            list(zip(sample_ids, groups, labels, sensor_indices)),
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    if (
+        baseline_reference is not None
+        and baseline_reference.get("cohort_fingerprint") != cohort_fingerprint
+    ):
+        raise ValueError("Cached released baseline covers a different validation cohort")
 
     def summarize(
         scores: list[float],
@@ -393,7 +420,11 @@ def validation_summary(
         return result
 
     candidate = summarize(candidate_scores, candidate_predictions, candidate_pixels)
-    baseline = summarize(baseline_scores, baseline_predictions, baseline_pixels)
+    baseline = (
+        summarize(baseline_scores, baseline_predictions, baseline_pixels)
+        if baseline_reference is None
+        else baseline_reference["released_baseline"]
+    )
     sensor_strata: dict[str, Any] = {}
     for sensor_index, sensor_name in enumerate(SENSOR_NAMES):
         selection = sensor_array == sensor_index
@@ -412,11 +443,17 @@ def validation_summary(
             candidate_pixels_by_sensor[sensor_name],
             selection,
         )
-        local_baseline = summarize(
-            baseline_scores,
-            baseline_predictions,
-            baseline_pixels_by_sensor[sensor_name],
-            selection,
+        local_baseline = (
+            summarize(
+                baseline_scores,
+                baseline_predictions,
+                baseline_pixels_by_sensor[sensor_name],
+                selection,
+            )
+            if baseline_reference is None
+            else baseline_reference["sensor_strata"][sensor_name][
+                "released_baseline"
+            ]
         )
         sensor_strata[sensor_name] = {
             "rows": int(np.count_nonzero(selection)),
@@ -438,6 +475,7 @@ def validation_summary(
         "positive": int(np.count_nonzero(y == 1)),
         "negative": int(np.count_nonzero(y == 0)),
         "sites": int(np.unique(group_array).size),
+        "cohort_fingerprint": cohort_fingerprint,
         "candidate": candidate,
         "released_baseline": baseline,
         "sensor_strata": sensor_strata,
@@ -500,6 +538,7 @@ def train(
     best_rank = (-math.inf, -math.inf, -math.inf)
     best_epoch = -1
     stale = 0
+    baseline_reference: dict[str, Any] | None = None
     artifact.parent.mkdir(parents=True, exist_ok=True)
     for epoch in range(1, epochs + 1):
         model.train()
@@ -522,7 +561,14 @@ def train(
             scaler.update()
             parts.append(values)
         scheduler.step()
-        validation = validation_summary(model, validation_loader, device)
+        validation = validation_summary(
+            model,
+            validation_loader,
+            device,
+            baseline_reference=baseline_reference,
+        )
+        if baseline_reference is None:
+            baseline_reference = validation
         primary_deltas = (
             float(validation["delta"]["average_precision"]),
             float(validation["delta"]["pixel_iou"]),
