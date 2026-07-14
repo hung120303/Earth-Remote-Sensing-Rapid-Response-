@@ -61,6 +61,7 @@ Implementation audit: the earlier `mars_v4_simulation.py` wrapper admitted only 
 | 2026-07-14 | Full mixed-sensor development acquisition | 96,348/96,348 selected assets and 45,540,221,188 bytes independently hash-verified; zero missing or partial assets; receipt bound to manifest `31ba92e…e8e` | Passed; full fold evaluation and training are authorized, while the paper test remains sealed. |
 
 | 2026-07-14 | Released-checkpoint reproduction on frozen development folds | Fold 0: 8,987 scenes, AP 0.88645, recall 0.95705 at FPR 0.07122, IoU 0.50863. Fold 1: 8,798 scenes, AP 0.85975, recall 0.93691 at FPR 0.07128, IoU 0.46937. Overall and Sentinel-2/Landsat wrapper deltas were exactly zero. | Passed; the exact connected-component evaluator and mixed-sensor wrapper are authorized for the preregistered fold-0 run. |
+| 2026-07-14 | Complete development label audit | 6/3,811 positive scenes have producer-supplied raw empty masks; all six are `bad_retrieval` rows from one fold-4 site (4 Sentinel-2, 2 Landsat). No additional positive mask becomes empty only after observability filtering. | Preserve upstream semantics explicitly: scene label remains positive and pixel target remains empty; do not relabel or drop rows. |
 
 ## Frozen primary correction run
 
@@ -96,6 +97,19 @@ The corrected model SHA-256 is
 `f9cc65b3bb764ed83a4aa67209cccdbad2b6c80826b0915711392ca8b10a0486`.
 This amendment was recorded before rerunning the complete fold audit and before
 starting the primary fold-0 training run.
+
+The first primary launch then stopped in its data loader before the first
+optimizer update when it sampled one of the public split's empty-mask positive
+rows. A complete development-only audit found 6/3,811 such positives, all at
+one fold-4 site and all marked `bad_retrieval`; upstream MARS-S2L loads these as
+`isplume=1` with an all-zero pixel target. Commit
+`0d5bb400220cdbbabaa5c9cd58bb672f412793d4` preserves that source behavior only
+when the paper-cohort dataset opts in, while the general adapter remains strict
+by default. No row was dropped or relabeled and no metric was observed. The
+amended training-script SHA-256 is
+`951fb2e0812c579496816b5031ce4a0c520f233c79a1d853c1883b7e1ad36b22`; the
+adapter SHA-256 is
+`60087bc668109e5146a42f96f996a14e34ccbff3164124cfeb3ff367b93625a3`.
 
 ## Predeclared next experiments
 
