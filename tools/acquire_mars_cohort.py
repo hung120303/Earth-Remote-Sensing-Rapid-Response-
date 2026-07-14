@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import shutil
+import stat
 import sys
 import time
 import urllib.error
@@ -152,7 +153,12 @@ def incomplete_items(
     result: list[dict[str, Any]] = []
     for item in items:
         destination = safe_asset_path(metadata_dir, item["path"])
-        if not destination.is_file() or destination.stat().st_size != int(item["size"]):
+        try:
+            local = destination.stat()
+        except FileNotFoundError:
+            result.append(item)
+            continue
+        if not stat.S_ISREG(local.st_mode) or local.st_size != int(item["size"]):
             result.append(item)
     return result
 
