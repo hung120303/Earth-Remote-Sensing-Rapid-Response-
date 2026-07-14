@@ -127,6 +127,35 @@ def pixel_summary(tp: np.ndarray, fp: np.ndarray, fn: np.ndarray) -> dict[str, i
     return values
 
 
+def candidate_pixel_counts(
+    prediction: np.ndarray,
+    truth: np.ndarray,
+    observable: np.ndarray,
+    *,
+    truth_available: bool,
+) -> dict[str, int | bool]:
+    """Return mutually exclusive pixel confusion counts.
+
+    When truth is unavailable, every predicted observable pixel remains an
+    adversarial false positive; the caller supplies archived truth pixels as
+    false negatives. With truth available, an intersection pixel is a true
+    positive and must never also be counted as a false positive.
+    """
+    if truth_available:
+        return {
+            "truth_available": True,
+            "tp": int(np.count_nonzero(prediction & truth)),
+            "fp": int(np.count_nonzero(prediction & observable & ~truth)),
+            "fn": int(np.count_nonzero(truth & ~prediction)),
+        }
+    return {
+        "truth_available": False,
+        "tp": 0,
+        "fp": int(np.count_nonzero(prediction & observable)),
+        "fn": 0,
+    }
+
+
 def view_metrics(
     labels: np.ndarray,
     baseline_scores: np.ndarray,
@@ -451,12 +480,12 @@ def main() -> int:
                 architecture["mask_minimum_connected_pixels"],
             )
             truth_available = bool(batch["pixel_truth_available"][index].item())
-            pixel_outputs[sample_id] = {
-                "truth_available": truth_available,
-                "tp": int(np.count_nonzero(prediction & truth)) if truth_available else 0,
-                "fp": int(np.count_nonzero(prediction & observable)),
-                "fn": int(np.count_nonzero(truth & ~prediction)) if truth_available else 0,
-            }
+            pixel_outputs[sample_id] = candidate_pixel_counts(
+                prediction,
+                truth,
+                observable,
+                truth_available=truth_available,
+            )
 
     base_names = np.asarray(["primary_connected_score", "released_connected_score", *tensor_feature_names()])
     base_features = np.stack(feature_rows).astype(np.float64)
@@ -576,7 +605,7 @@ def main() -> int:
     passed = all(all(view["checks"].values()) for view in views.values())
     report = {
         "schema_version": 1,
-        "scope": "single one-shot official MARS-S2L paper-v3 test evaluation",
+        "scope": "deterministic metric correction of the frozen official MARS-S2L paper-v3 test evaluation",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "architecture": architecture,
         "views": views,
@@ -588,6 +617,13 @@ def main() -> int:
             else "Frozen ERSRR successor does not pass every preregistered paper-superiority gate."
         ),
         "passed": passed,
+        "metric_correction": {
+            "status": "post_result_evaluator_bug_correction",
+            "superseded_result_sha256": "589210e313fd1c6e93daf83e22db2582223ad065162e98cb93be5627f3934119",
+            "architecture_changed": False,
+            "predictions_changed": False,
+            "reason": "The frozen evaluator counted prediction & observable as FP even when those pixels were already TP. Correct FP is prediction & observable & ~truth when pixel truth is available.",
+        },
         "provenance": {
             "spec_sha256": sha256(spec_path),
             "manifest_sha256": sha256(manifest_path),

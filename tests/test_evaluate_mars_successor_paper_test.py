@@ -13,12 +13,33 @@ if str(ROOT / "tools") not in sys.path:
 
 from evaluate_mars_successor_paper_test import (
     average_precision_from_cumulative,
+    candidate_pixel_counts,
     plan_cumulative,
     score_plan,
 )
 
 
 class MarsPaperSuccessorTests(unittest.TestCase):
+    def test_candidate_pixel_counts_are_mutually_exclusive(self) -> None:
+        observable = np.asarray([[True, True], [True, False]])
+        truth = np.asarray([[True, False], [False, False]])
+        prediction = np.asarray([[True, True], [False, True]])
+        result = candidate_pixel_counts(
+            prediction, truth, observable, truth_available=True
+        )
+        self.assertEqual(result, {"truth_available": True, "tp": 1, "fp": 1, "fn": 0})
+
+    def test_missing_truth_keeps_all_observable_predictions_adversarial(self) -> None:
+        observable = np.asarray([[True, True], [True, False]])
+        prediction = np.asarray([[True, True], [False, True]])
+        result = candidate_pixel_counts(
+            prediction,
+            np.zeros_like(prediction),
+            observable,
+            truth_available=False,
+        )
+        self.assertEqual(result, {"truth_available": False, "tp": 0, "fp": 2, "fn": 0})
+
     def test_weighted_ap_matches_sklearn_with_ties(self) -> None:
         labels = np.asarray([1, 0, 1, 0, 1], dtype=np.uint8)
         scores = np.asarray([0.9, 0.8, 0.8, 0.2, 0.1])

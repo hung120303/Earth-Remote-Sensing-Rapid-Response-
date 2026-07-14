@@ -577,6 +577,27 @@ diagnosis and post-test comparison.
 
 ## Post-test diagnosis: the paper's offshore specialization is necessary, not sufficient
 
+### Pre-rerun metric correction amendment
+
+Before any architecture or threshold experiment, audit of the failed result
+found that the frozen evaluator's candidate pixel counts were not mutually
+exclusive. For rows with available truth it computed false positives as every
+predicted observable pixel, including the intersection pixels already counted
+as true positives. The correct definition is predicted, observable, and not
+truth. This is a deterministic evaluator defect: the model, logits, masks,
+thresholds, scene scores, cohort, and bootstrap design are unchanged.
+
+From the already stored aggregate counts alone, subtracting candidate TP from
+the erroneous FP changes the full candidate IoU from 0.24943580 to 0.33233106
+(delta versus comparator +0.00796591), and the test-only candidate IoU from
+0.16869549 to 0.20292864 (delta +0.03136670). Site-block confidence intervals
+cannot be repaired from aggregates, so the unchanged frozen model will be run
+again after committing the corrected count definition and regression tests.
+The original result JSON SHA-256
+`589210e313fd1c6e93daf83e22db2582223ad065162e98cb93be5627f3934119`
+remains the immutable superseded-result identity. The correction is post-result
+and will be reported as such; it is not a new independently sealed one-shot.
+
 The two author-released prediction archives permit an exact controlled
 comparison of the general checkpoint and the unpublished offshore fine-tuned
 checkpoint on identical paper-v3 scenes. This analysis is explicitly post-test
