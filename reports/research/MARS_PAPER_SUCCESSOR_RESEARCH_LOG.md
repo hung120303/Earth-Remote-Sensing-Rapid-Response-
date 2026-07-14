@@ -235,6 +235,17 @@ The authoritative inner report SHA-256 is
 The fold-0 evaluator and its exact artifact/report/cache contracts must be
 committed before extracting or evaluating fold-0 scene-head features.
 
+The fold-0 decision is frozen as a single evaluation of that artifact. The new
+feature cache must contain fold 0 only, reproduce the stored alpha-0.5 overall
+AP/recall/FPR and both sensor AP values exactly, match the fitting cache's
+artifact/manifest/protocol provenance, and use the identical 108-column schema.
+The scene head is compared directly with the released model. Promotion requires
+strictly higher AP, recall at no more than 7.13% FPR, and pixel IoU; candidate
+FPR must be no worse than the released operating point; and neither sensor may
+regress more than 0.01 AP or IoU. Pixel masks are definitionally unchanged from
+the frozen alpha-0.5 endpoint, whose exact stored pixel counts and IoU are
+inherited rather than recomputed. Only a complete pass authorizes fold 1.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
