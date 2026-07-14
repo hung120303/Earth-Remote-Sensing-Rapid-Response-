@@ -1,4 +1,4 @@
-"""Native, validity-aware adapter for the pinned MARS-S2L Sentinel-2 contract.
+"""Native, validity-aware adapter for the pinned mixed-sensor MARS-S2L contract.
 
 This module deliberately does not depend on the legacy ERSRR five-band model.
 MARS-S2L stores six target bands followed by the corresponding six background
@@ -20,6 +20,10 @@ import rasterio
 MARS_BANDS = ("B02", "B03", "B04", "B08", "B11", "B12")
 MARS_BACKGROUND_BANDS = tuple(f"{band}_bg" for band in MARS_BANDS)
 MARS_IMAGE_BANDS = MARS_BANDS + MARS_BACKGROUND_BANDS
+DEVELOPMENT_RESEARCH_ROLES = frozenset(
+    {"development_training", "development_validation"}
+)
+SEALED_RESEARCH_ROLES = frozenset({"sealed_paper_test"})
 REFLECTANCE_DIVISOR = 5000.0
 REFLECTANCE_MAX = 2.0
 MBMP_NEUTRAL = 1.0
@@ -44,6 +48,8 @@ class MarsS2Sample:
 
     sample_id: str
     split: str
+    sensor_family: str
+    satellite: str
     label_state: str
     location_id: str
     target_scene_id: str
@@ -145,6 +151,26 @@ def iter_manifest(path: Path) -> Iterator[dict[str, Any]]:
     if not isinstance(samples, list):
         raise ValueError(f"JSON manifest does not contain a samples list: {path}")
     yield from samples
+
+
+def iter_development_manifest(path: Path) -> Iterator[dict[str, Any]]:
+    """Yield only successor-development rows and reject any sealed-test row.
+
+    The paper-v3 cohort builder writes a physically separate development
+    manifest. This validation is a second line of defense against accidentally
+    passing the combined acquisition or sealed-test manifest to training code.
+    """
+    for record in iter_manifest(path):
+        role = str(record.get("research_role") or "")
+        if role in SEALED_RESEARCH_ROLES:
+            raise ValueError(
+                f"Development loader refuses sealed role {role!r} in {path}"
+            )
+        if role not in DEVELOPMENT_RESEARCH_ROLES:
+            raise ValueError(
+                f"Unsupported development role {role!r} in {path}"
+            )
+        yield record
 
 
 def _normalized_ratio(
@@ -296,6 +322,11 @@ def load_sample(
     return MarsS2Sample(
         sample_id=identifier,
         split=str(record["split"]),
+        sensor_family=str(
+            record.get("sensor_family")
+            or ("Sentinel-2" if str(record.get("satellite") or "").startswith("S2") else "Landsat")
+        ),
+        satellite=str(record.get("satellite") or ""),
         label_state=state,
         location_id=str(record.get("physical_location_id") or record.get("id_location") or ""),
         target_scene_id=str(record.get("target_scene_id") or record.get("scene_id") or ""),

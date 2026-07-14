@@ -44,6 +44,8 @@ from audit_mars_paper_benchmark import (
 from build_mars_cohort import asset_owners, resolve_catalog, write_cohort_manifest
 
 MANIFEST_NAME = "paper_v3_mixed_samples.jsonl"
+DEVELOPMENT_MANIFEST_NAME = "paper_v3_development_samples.jsonl"
+SEALED_TEST_MANIFEST_NAME = "paper_v3_sealed_test_samples.jsonl"
 CATALOG_NAME = "paper_v3_mixed_remote_catalog.jsonl"
 PAPER_TABLE_S3_COUNTS = {
     "training_rows": 38_366,
@@ -51,6 +53,7 @@ PAPER_TABLE_S3_COUNTS = {
     "validation_rows": 6_034,
     "validation_positive": 288,
 }
+CANONICAL_STORED_BANDS = ["B02", "B03", "B04", "B08", "B11", "B12"]
 DEFAULT_JSON = Path("reports/acquisition/mars_s2l_paper_v3_mixed_cohort.json")
 DEFAULT_MARKDOWN = Path("reports/acquisition/MARS_S2L_PAPER_V3_MIXED_COHORT.md")
 DEFAULT_ASSET_METADATA = DEFAULT_OUTPUT / "validated_images_all.csv"
@@ -131,6 +134,8 @@ def common_row(
             if sentinel
             else ["B02", "B03", "B04", "B05", "B06", "B07"]
         ),
+        "band_order": CANONICAL_STORED_BANDS
+        + [f"{band}_bg" for band in CANONICAL_STORED_BANDS],
         "model_band_order": ["blue", "green", "red", "nir", "swir1", "swir2"],
         "input_contract": "MBMP + current/reference six-band TOA + wind_u/v + cloud mask = 16 channels",
         "crs": meta["crs"],
@@ -308,6 +313,8 @@ def build_report(
     summary: dict[str, Any],
     catalog: dict[str, dict[str, Any]],
     manifest_path: Path,
+    development_manifest_path: Path,
+    sealed_test_manifest_path: Path,
     catalog_path: Path,
 ) -> dict[str, Any]:
     owners = asset_owners(rows)
@@ -349,9 +356,15 @@ def build_report(
             "bytes_by_research_role_nonexclusive": dict(sorted(bytes_by_research_role.items())),
         },
         "local_ignored_artifacts": {
-            "manifest": manifest_path.relative_to(root).as_posix(),
-            "manifest_sha256": sha256(manifest_path),
-            "manifest_bytes": manifest_path.stat().st_size,
+            "acquisition_manifest": manifest_path.relative_to(root).as_posix(),
+            "acquisition_manifest_sha256": sha256(manifest_path),
+            "acquisition_manifest_bytes": manifest_path.stat().st_size,
+            "development_manifest": development_manifest_path.relative_to(root).as_posix(),
+            "development_manifest_sha256": sha256(development_manifest_path),
+            "development_manifest_bytes": development_manifest_path.stat().st_size,
+            "sealed_test_manifest": sealed_test_manifest_path.relative_to(root).as_posix(),
+            "sealed_test_manifest_sha256": sha256(sealed_test_manifest_path),
+            "sealed_test_manifest_bytes": sealed_test_manifest_path.stat().st_size,
             "remote_catalog": catalog_path.relative_to(root).as_posix(),
             "remote_catalog_sha256": sha256(catalog_path),
             "remote_catalog_bytes": catalog_path.stat().st_size,
@@ -389,7 +402,9 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         "# MARS-S2L paper-v3 mixed-sensor cohort",
         "",
         f"- Remote assets: {report['remote_assets']['unique_asset_count']:,} / {report['remote_assets']['binary_gib']:.3f} GiB",
-        f"- Manifest SHA-256: `{report['local_ignored_artifacts']['manifest_sha256']}`",
+        f"- Acquisition manifest SHA-256: `{report['local_ignored_artifacts']['acquisition_manifest_sha256']}`",
+        f"- Development-only manifest SHA-256: `{report['local_ignored_artifacts']['development_manifest_sha256']}`",
+        f"- Sealed-test manifest SHA-256: `{report['local_ignored_artifacts']['sealed_test_manifest_sha256']}`",
         f"- Catalog SHA-256: `{report['local_ignored_artifacts']['remote_catalog_sha256']}`",
         "",
         "| Research role | Rows | Plume | No plume | Sites | Sentinel-2 | Landsat |",
@@ -404,7 +419,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
             "",
             f"The exact paper archive covers 43,529 test scenes. Current released raster paths remain available for {report['cohort']['paper_test_public_rows']:,}; the {report['cohort']['paper_test_unavailable_rows']} unavailable historical scenes are preserved in the benchmark lock and scored adversarially for the candidate. Paper-era targets override later public labels on sealed test scenes.",
             "",
-            "Development code may read only training and validation roles. The sealed paper-test role is downloaded for eventual one-shot inference but cannot be used for architecture, checkpoint, calibration, threshold, or postprocessing selection.",
+            "Development code reads only the physically separate development manifest. The sealed paper-test manifest is downloaded for eventual one-shot inference but cannot be opened for architecture, checkpoint, calibration, threshold, or postprocessing selection.",
             "",
             f"The released checkpoint config names an internal `{report['cohort']['released_checkpoint_internal_counts']['source']}` snapshot ({report['cohort']['released_checkpoint_internal_counts']['training_rows']:,} training / {report['cohort']['released_checkpoint_internal_counts']['validation_rows']:,} validation rows), while paper Table S3 reports {report['cohort']['paper_table_s3_counts']['training_rows']:,} / {report['cohort']['paper_table_s3_counts']['validation_rows']:,}. The private snapshot is not in the public release, whose pinned files contain {report['cohort']['role_counts']['development_training']['rows']:,} / {report['cohort']['role_counts']['development_validation']['rows']:,}. Successor development uses those complete public splits, and the exact archived paper test remains the comparison target.",
             "",
@@ -448,6 +463,8 @@ def main() -> int:
     ]
     rows, summary = build_rows(*source_paths)
     manifest_path = metadata_dir / MANIFEST_NAME
+    development_manifest_path = metadata_dir / DEVELOPMENT_MANIFEST_NAME
+    sealed_test_manifest_path = metadata_dir / SEALED_TEST_MANIFEST_NAME
     catalog_path = metadata_dir / CATALOG_NAME
     owners = asset_owners(rows)
     catalog = resolve_catalog(
@@ -459,25 +476,54 @@ def main() -> int:
         revision=ASSET_REVISION,
     )
     if args.verify_only:
-        if not manifest_path.is_file():
-            raise FileNotFoundError(f"Missing frozen manifest: {manifest_path}")
-        expected = metadata_dir / (MANIFEST_NAME + ".verify.tmp")
-        try:
-            write_manifest(expected, rows, catalog)
-            if sha256(expected) != sha256(manifest_path):
-                raise ValueError("Frozen mixed paper manifest identity changed")
-        finally:
-            expected.unlink(missing_ok=True)
-        print(json.dumps({"ok": True, "rows": len(rows), "manifest_sha256": sha256(manifest_path), "catalog_sha256": sha256(catalog_path)}, sort_keys=True))
+        partitions = {
+            manifest_path: rows,
+            development_manifest_path: [
+                row for row in rows if row["research_role"] != "sealed_paper_test"
+            ],
+            sealed_test_manifest_path: [
+                row for row in rows if row["research_role"] == "sealed_paper_test"
+            ],
+        }
+        for frozen, partition_rows in partitions.items():
+            if not frozen.is_file():
+                raise FileNotFoundError(f"Missing frozen manifest: {frozen}")
+            expected = frozen.with_name(frozen.name + ".verify.tmp")
+            try:
+                write_manifest(expected, partition_rows, catalog)
+                if sha256(expected) != sha256(frozen):
+                    raise ValueError(f"Frozen manifest identity changed: {frozen.name}")
+            finally:
+                expected.unlink(missing_ok=True)
+        print(json.dumps({"ok": True, "rows": len(rows), "acquisition_manifest_sha256": sha256(manifest_path), "development_manifest_sha256": sha256(development_manifest_path), "sealed_test_manifest_sha256": sha256(sealed_test_manifest_path), "catalog_sha256": sha256(catalog_path)}, sort_keys=True))
         return 0
 
     write_manifest(manifest_path, rows, catalog)
-    report = build_report(root, rows, summary, catalog, manifest_path, catalog_path)
+    write_manifest(
+        development_manifest_path,
+        [row for row in rows if row["research_role"] != "sealed_paper_test"],
+        catalog,
+    )
+    write_manifest(
+        sealed_test_manifest_path,
+        [row for row in rows if row["research_role"] == "sealed_paper_test"],
+        catalog,
+    )
+    report = build_report(
+        root,
+        rows,
+        summary,
+        catalog,
+        manifest_path,
+        development_manifest_path,
+        sealed_test_manifest_path,
+        catalog_path,
+    )
     output_json = (root / args.output_json).resolve()
     output_markdown = (root / args.output_markdown).resolve()
     write_json(output_json, report)
     write_markdown(output_markdown, report)
-    print(json.dumps({"ok": True, "rows": len(rows), "role_counts": summary["role_counts"], "remote_assets": report["remote_assets"], "manifest_sha256": report["local_ignored_artifacts"]["manifest_sha256"]}, indent=2, sort_keys=True))
+    print(json.dumps({"ok": True, "rows": len(rows), "role_counts": summary["role_counts"], "remote_assets": report["remote_assets"], "acquisition_manifest_sha256": report["local_ignored_artifacts"]["acquisition_manifest_sha256"], "development_manifest_sha256": report["local_ignored_artifacts"]["development_manifest_sha256"], "sealed_test_manifest_sha256": report["local_ignored_artifacts"]["sealed_test_manifest_sha256"]}, indent=2, sort_keys=True))
     return 0
 
 
