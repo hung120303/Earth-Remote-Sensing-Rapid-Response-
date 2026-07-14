@@ -528,6 +528,53 @@ SHA-256 is
 The compact resumable-transfer receipt SHA-256 is
 `8ecaa5094048db32cf025b829d0eadb0d94f6b1978b2415588b0fe7a0134b20d`.
 
+## Frozen official paper-test result: retrieval improves, joint superiority fails
+
+The one-shot evaluator was executed exactly once from freeze commit
+`9c4ca8a3`, after complete byte verification, without changing any model,
+threshold, configuration, hash, or promotion gate. The authoritative JSON has
+SHA-256
+`589210e313fd1c6e93daf83e22db2582223ad065162e98cb93be5627f3934119`.
+This evaluation ends the independently sealed status of the public 2024 paper
+test. Every later analysis using its labels is post-test development and must
+not be described as a fresh one-shot confirmation.
+
+On the full 43,529-image view, average precision increased from 0.64101960 to
+0.64693347 (delta +0.00591387), and recall at the exact comparator FPR of
+0.07069230 increased from 0.79150579 to 0.81687810 (delta +0.02537231).
+The paired physical-site bootstrap lower 95% bound for the recall delta was
++0.01603202, but the AP-delta interval was [-0.00898100, +0.01991029]. The
+fixed operational threshold reduced FPR to 0.03317672, but also reduced recall
+to 0.74296746. Pixel IoU fell from 0.32436515 to 0.24943580 (delta
+-0.07492935; paired 95% interval [-0.09977347, -0.04798498]).
+
+On the 15,655-image test-only-site view, average precision increased from
+0.45027380 to 0.46710370 (delta +0.01682990), and matched-FPR recall increased
+from 0.77533040 to 0.80176211 (delta +0.02643172) at FPR 0.07551206. The
+recall-delta lower 95% bound was +0.00621022, while the AP-delta interval was
+[-0.00984156, +0.04321676]. Fixed-threshold FPR fell to 0.03415867. Pixel IoU
+was nearly tied but lower, 0.17156194 versus 0.16869549 (delta -0.00286645;
+paired 95% interval [-0.01793803, +0.01039576]).
+
+The point AP and matched-FPR recall estimates exceed the exact reconstructed
+paper model in both official views, with statistically supported recall gains
+and much lower operational false-positive rates. They do not establish AP
+superiority because both AP confidence intervals cross zero. More decisively,
+the candidate fails the segmentation requirement, especially on the portion
+outside the test-only-site view. There, relative to the hybrid paper
+comparator, it loses approximately 181,414 true-positive pixels and adds
+962,692 false-positive pixels. This is consistent with a failure to match the
+paper's specialized offshore/training-site mask branch, not with a globally
+transferable benefit from the development-selected 0.70 probability threshold.
+
+The frozen candidate therefore fails the preregistered joint superiority gate.
+It must never be reported as unambiguously outperforming MARS-S2L. The scene
+retrieval path remains promising, while segmentation requires a separately
+cross-fitted offshore/domain-specialized architecture. A future confirmatory
+paper claim also requires a genuinely independent external or future holdout;
+the now-open public paper test may be used only for transparently labeled
+diagnosis and post-test comparison.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
