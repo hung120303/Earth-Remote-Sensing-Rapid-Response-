@@ -247,6 +247,23 @@ regress more than 0.01 AP or IoU. Pixel masks are definitionally unchanged from
 the frozen alpha-0.5 endpoint, whose exact stored pixel counts and IoU are
 inherited rather than recomputed. Only a complete pass authorizes fold 1.
 
+## Frozen hard-example scene-head inner search
+
+The broad scene-head AP gain with a one-TP fold-0 recall loss motivates a
+recall-focused inner experiment, not fold-0 threshold tuning. On folds 3-4,
+primary positives below the primary 7.13%-FPR threshold and primary negatives
+above it are identified as hard examples. Site/label/sensor-balanced weights
+are multiplied by 2, 4, 8, or 16 for hard positives and by 1 or 2 for hard
+negatives. Weighted logistic C is 0.03, 0.1, or 0.3; frozen-head blend weights
+are 1/8, 1/4, 3/8, 1/2, or 5/8. Selection remains on fold 2 only.
+
+Unlike the first inner search, authorization now requires at least three extra
+fold-2 true positives at no more than 7.13% FPR, in addition to higher AP,
+higher recall, and both sensor AP deltas above -0.01. This robustness margin is
+intended to prevent another one-example sign reversal. Only an inner robust
+pass permits a folds-2/3/4 refit and a separately preregistered evaluation of
+the already extracted fold-0 cache. Fold 1 and the paper test remain unread.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
