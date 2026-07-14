@@ -378,6 +378,14 @@ After training, a confirmation-specific feature extractor/evaluator must pin the
 artifact hash, apply alpha 0.5 with the exact float32-logit arithmetic, keep the
 scene head and blend 0.25 unchanged, and consume fold-1 labels only once.
 
+Training completed all seven fixed epochs. The compact report contains seven
+training-only history rows, zero validation-bearing rows, and
+`validation_reads=0`. The ignored 5,135,391-byte artifact has SHA-256
+`f6054d0fc8f17d661bce2a17b3947de0e6e566976730aa88f5bc1b6bed347e12`
+and embeds fold 1, seed 606, epoch 7, protocol
+`6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873`,
+and the deferred-confirmation marker. Fold-1 outcomes remain sealed.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
