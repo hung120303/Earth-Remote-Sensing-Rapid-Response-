@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 
-from acquire_mars_cohort import load_manifest_asset_paths  # noqa: E402
+from acquire_mars_cohort import incomplete_items, load_manifest_asset_paths  # noqa: E402
 
 
 class AcquireMarsCohortTests(unittest.TestCase):
@@ -39,6 +39,20 @@ class AcquireMarsCohortTests(unittest.TestCase):
         path = self.write([{"assets": []}])
         with self.assertRaisesRegex(ValueError, "no asset list"):
             load_manifest_asset_paths(path)
+
+    def test_incomplete_items_skips_matching_files(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            complete = root / "complete.bin"
+            complete.write_bytes(b"1234")
+            items = [
+                {"path": "complete.bin", "size": 4},
+                {"path": "missing.bin", "size": 4},
+            ]
+            self.assertEqual(
+                [item["path"] for item in incomplete_items(root, items)],
+                ["missing.bin"],
+            )
 
 
 if __name__ == "__main__":

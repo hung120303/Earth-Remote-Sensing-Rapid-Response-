@@ -145,6 +145,18 @@ def inventory(metadata_dir: Path, items: list[dict[str, Any]]) -> dict[str, Any]
     }
 
 
+def incomplete_items(
+    metadata_dir: Path, items: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Select missing, partial, or wrong-size assets without hashing complete files."""
+    result: list[dict[str, Any]] = []
+    for item in items:
+        destination = safe_asset_path(metadata_dir, item["path"])
+        if not destination.is_file() or destination.stat().st_size != int(item["size"]):
+            result.append(item)
+    return result
+
+
 def verify_one(metadata_dir: Path, item: dict[str, Any]) -> dict[str, Any]:
     destination = safe_asset_path(metadata_dir, item["path"])
     if not destination.is_file():
@@ -346,6 +358,11 @@ def main() -> int:
     )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--verify-only", action="store_true")
+    parser.add_argument(
+        "--missing-only",
+        action="store_true",
+        help="Download and hash-verify only missing/partial assets; run a full --verify-only pass afterward",
+    )
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--receipt", help="Write a compact verification receipt beneath the repository root")
     parser.add_argument("--compact", action="store_true")
@@ -358,6 +375,10 @@ def main() -> int:
         parser.error("--start-asset must be non-negative")
     if args.dry_run and args.verify_only:
         parser.error("--dry-run and --verify-only are mutually exclusive")
+    if args.missing_only and args.verify_only:
+        parser.error("--missing-only and --verify-only are mutually exclusive")
+    if args.missing_only and (args.start_asset or args.max_assets is not None):
+        parser.error("--missing-only cannot be combined with catalog offsets")
     root = repo_root()
     try:
         metadata_dir = checked_output_dir(root, args.metadata_dir)
@@ -377,6 +398,8 @@ def main() -> int:
                 )
             catalog = [by_path[path] for path in sorted(selected_paths)]
         catalog_total = len(catalog)
+        if args.missing_only:
+            catalog = incomplete_items(metadata_dir, catalog)
         if args.start_asset >= catalog_total:
             raise ValueError(
                 f"--start-asset {args.start_asset:,} is outside the {catalog_total:,}-asset catalog"
@@ -388,8 +411,11 @@ def main() -> int:
         state["catalog_asset_count"] = catalog_total
         state["catalog_start_asset"] = args.start_asset
         state["partial_scope"] = (
-            len(catalog) != catalog_total or catalog_total != full_catalog_total
+            len(catalog) != catalog_total
+            or catalog_total != full_catalog_total
+            or args.missing_only
         )
+        state["missing_only"] = bool(args.missing_only)
         state["source_catalog_asset_count"] = full_catalog_total
         state["metadata_dir"] = metadata_dir.relative_to(root).as_posix()
         state["remote_catalog"] = catalog_path.relative_to(root).as_posix()
@@ -441,8 +467,11 @@ def main() -> int:
         final_state["catalog_asset_count"] = catalog_total
         final_state["catalog_start_asset"] = args.start_asset
         final_state["partial_scope"] = (
-            len(catalog) != catalog_total or catalog_total != full_catalog_total
+            len(catalog) != catalog_total
+            or catalog_total != full_catalog_total
+            or args.missing_only
         )
+        final_state["missing_only"] = bool(args.missing_only)
         final_state["source_catalog_asset_count"] = full_catalog_total
         final_state["metadata_dir"] = metadata_dir.relative_to(root).as_posix()
         final_state["remote_catalog"] = catalog_path.relative_to(root).as_posix()
