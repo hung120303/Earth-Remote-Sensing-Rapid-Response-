@@ -312,11 +312,18 @@ new preregistered fold-0 evaluation. Fold 1 and the paper test remain unread.
 
 The OOF-stability gate passed on all three held-out folds. The refit artifact
 SHA-256 is
-`2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ecc27c370`;
+`2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ec27c370`;
 the authoritative OOF report SHA-256 is
 `a125830c41d1d592a7d3a52ee2343ad5faa883061869e4638113c9df09f421e0`.
 A new evaluator must pin these hashes and the unchanged fold-0 cache before it
 may read predictions.
+
+The new fold-0 run is frozen to the unchanged cache SHA-256
+`372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7`,
+the OOF artifact/report hashes above, HGB specification, 0.625 blend, and prior
+primary endpoint. The evaluator requires the complete OOF stability record and
+uses the same strict released-model AP/recall/FPR/IoU and sensor gates. It is a
+one-shot evaluation; fold 1 remains unread unless every gate passes.
 
 ## Predeclared next experiments
 
