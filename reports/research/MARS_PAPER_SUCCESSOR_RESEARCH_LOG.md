@@ -204,6 +204,28 @@ in float32 and cast back to the released-logit dtype. The evaluator now uses
 that original arithmetic directly. Artifacts, rows, beta grid, metrics,
 selection, and promotion gates are unchanged.
 
+## Frozen scene-ranking head inner search
+
+The next architecture preserves the alpha-0.5 segmentation logits exactly and
+adds a separate scene-ranking head. This makes the already positive mask-IoU
+delta invariant while allowing the retrieval objective to use scene-level
+spectral, temporal, morphology, wind, cloud, and sensor evidence. The compact
+feature cache contains folds 2-4 only: 26,578 rows by 108 float features,
+9,383,939 bytes, SHA-256
+`01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89`.
+
+Inner selection trains on folds 3-4 and validates on fold 2. It compares five
+weighted logistic models (C 0.01, 0.03, 0.1, 0.3, 1.0) and eight deterministic
+histogram-gradient-boosting models: 15 or 31 leaves, 20 or 50 minimum samples
+per leaf, and L2 1 or 10. Site/label/sensor cells receive equal total fitting
+weight. Each head is logit-blended with the frozen connected-component score at
+weights 1/8 through 1 in eighth-step increments. A candidate must improve fold-2
+AP and recall at no more than 7.13% FPR while keeping each sensor AP within 0.01
+of the alpha-0.5 endpoint. Passing candidates outrank all failing candidates;
+balanced AP/recall delta breaks ties. Only an inner pass authorizes refitting
+the chosen specification on folds 2-4 and one fold-0 extraction/evaluation.
+Fold 1 and the paper test remain unread.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
