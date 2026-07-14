@@ -24,6 +24,7 @@ from acquire_mars_metadata import DEFAULT_OUTPUT, checked_output_dir, repo_root,
 from acquire_mars_pilot import safe_asset_path
 from acquire_mars_cohort import (
     FREE_SPACE_RESERVE_BYTES,
+    acquire_one,
     incomplete_items,
     load_catalog,
     load_manifest_asset_paths,
@@ -139,6 +140,16 @@ def download_verified(
     raise last_error
 
 
+def download_http_verified(
+    metadata_dir: Path, item: dict[str, Any]
+) -> dict[str, Any]:
+    result = acquire_one(metadata_dir, item, force=False)
+    if result["status"] not in {"reused_verified", "downloaded_verified"}:
+        raise ValueError(f"HTTP fallback did not verify {item['path']}")
+    result["status"] = "downloaded_http_verified"
+    return result
+
+
 def seed_tree_cache(metadata_dir: Path, revision: str) -> None:
     """Cache one immutable repo tree without selecting any payload files."""
     from huggingface_hub import snapshot_download
@@ -159,6 +170,12 @@ def main() -> int:
     parser.add_argument("--catalog-file", default=REMOTE_CATALOG)
     parser.add_argument("--manifest-file", default=DEFAULT_MANIFEST)
     parser.add_argument("--workers", type=int, default=12)
+    parser.add_argument(
+        "--transport",
+        choices=("xet", "http"),
+        default="xet",
+        help="Use Xet normally; use verified HTTP only to recover stalled paths",
+    )
     parser.add_argument(
         "--batch-assets",
         type=int,
@@ -232,6 +249,7 @@ def main() -> int:
             "dry_run": bool(args.dry_run),
             "repository": REPO_ID,
             "revision": revision,
+            "transport": args.transport,
             "catalog": {
                 "path": catalog_path.relative_to(root).as_posix(),
                 "sha256": catalog_hash,
@@ -266,15 +284,21 @@ def main() -> int:
                 f"Insufficient free space: need {missing_bytes + FREE_SPACE_RESERVE_BYTES:,} "
                 f"bytes including reserve, have {disk.free:,}"
             )
-        seed_tree_cache(metadata_dir, revision)
+        if args.transport == "xet":
+            seed_tree_cache(metadata_dir, revision)
+            transfer = lambda item: download_verified(  # noqa: E731
+                metadata_dir, item, revision=revision
+            )
+        else:
+            transfer = lambda item: download_http_verified(  # noqa: E731
+                metadata_dir, item
+            )
         remaining_candidates = list(candidates)
         downloaded_count = 0
         for start in range(0, len(missing), args.batch_assets):
             batch = missing[start : start + args.batch_assets]
             results = parallel_map(
-                lambda item: download_verified(
-                    metadata_dir, item, revision=revision
-                ),
+                transfer,
                 batch,
                 workers=args.workers,
                 progress_label="Xet acquired and catalog-verified",
