@@ -87,16 +87,22 @@ class MarsTransmittanceLut:
         self.amf = np.asarray(data["amf_arr"], dtype=np.float64)
         self.methane = np.asarray(data["mr_ch4_arr"], dtype=np.float64)
         self.background = float(data.get("background_concentration", DEFAULT_BACKGROUND_CH4_PPB))
+        required_band_keys = {
+            "transmittance_b12",
+            "transmittance_b11",
+            "transmittance_b12_bg",
+            "transmittance_b11_bg",
+        }
         self.satellites = {
             key: {
                 name: np.asarray(value, dtype=np.float64)
                 for name, value in payload.items()
             }
             for key, payload in data.items()
-            if key.startswith("S2") and isinstance(payload, dict)
+            if isinstance(payload, dict) and required_band_keys.issubset(payload)
         }
         if not self.satellites:
-            raise ValueError("Transmittance LUT contains no Sentinel-2 entries")
+            raise ValueError("Transmittance LUT contains no supported sensor entries")
 
     def transmittance(
         self,
@@ -106,7 +112,7 @@ class MarsTransmittanceLut:
         delta_ch4_ppb: np.ndarray,
     ) -> tuple[np.ndarray, np.ndarray]:
         if satellite not in self.satellites:
-            raise ValueError(f"Unsupported Sentinel-2 platform: {satellite}")
+            raise ValueError(f"Unsupported satellite platform: {satellite}")
         amf = min(
             air_mass_factor(solar_zenith_degrees, view_zenith_degrees),
             float(np.max(self.amf)),
@@ -148,7 +154,7 @@ class MarsTransmittanceLut:
 
 
 class MarsPlumeSimulator:
-    """Inject a real enhancement field into a no-plume Sentinel-2 target."""
+    """Inject a real enhancement field into a no-plume S2/Landsat target."""
 
     def __init__(self, lut_path: Path, padding: int = 20) -> None:
         self.lut = MarsTransmittanceLut(lut_path)
@@ -171,7 +177,7 @@ class MarsPlumeSimulator:
         enhancement = np.asarray(ch4, dtype=np.float32)
         mask = np.asarray(plume_mask, dtype=bool)
         if target.ndim != 3 or target.shape[0] != 6 or target.dtype != np.uint16:
-            raise ValueError("Target must be a six-band uint16 Sentinel-2 array")
+            raise ValueError("Target must be a six-band uint16 S2/Landsat array")
         if enhancement.shape != mask.shape or enhancement.ndim != 2 or not np.any(mask):
             raise ValueError("CH4 enhancement and non-empty mask must be matching 2D arrays")
 

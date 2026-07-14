@@ -70,6 +70,17 @@ class MarsV4ModelTests(unittest.TestCase):
             atol=2e-7,
         )
 
+    def test_released_lut_supports_landsat_platforms(self) -> None:
+        lut = MarsTransmittanceLut(LUT)
+        enhancement = np.asarray([[0.0, 500.0, 2000.0]], dtype=np.float32)
+        b7, b6 = lut.transmittance("LC08", 30.0, 5.0, enhancement)
+        self.assertEqual(b7.shape, enhancement.shape)
+        self.assertEqual(b6.shape, enhancement.shape)
+        self.assertAlmostEqual(float(b7[0, 0]), 1.0, places=6)
+        self.assertAlmostEqual(float(b6[0, 0]), 1.0, places=6)
+        self.assertLess(float(b7[0, -1]), float(b7[0, 0]))
+        self.assertLess(float(b6[0, -1]), float(b6[0, 0]))
+
     def test_simulation_attenuates_b12_more_than_b11(self) -> None:
         simulator = MarsPlumeSimulator(LUT, padding=4)
         target = np.full((6, 32, 32), 5000, dtype=np.uint16)

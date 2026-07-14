@@ -48,7 +48,7 @@ The [paper-v3 Methods](https://arxiv.org/html/2511.21777v3) establish several co
 
 The frozen primary ERSRR run learns only a 1.28 M-parameter correction over a frozen released teacher, so its smaller 393,216-sample budget is a deliberate efficient first test rather than a compute-matched retraining claim. If its fold-0 gate fails, the first source-aligned follow-up is enhancement-weighted residual fitting plus wind-consistent physics simulation using fitting-fold plume fields and fitting-fold no-plume backgrounds. That experiment must remain fold-0-only until its configuration is frozen.
 
-Implementation audit: the existing `mars_v4_simulation.py` wrapper currently admits only LUT keys beginning with `S2`, even though the pinned integrated-transmittance LUT also contains `LC08`, `LC09`, `LE07`, `LT04`, and `LT05` entries with the same band-key schema. Reusing that simulator unchanged would silently make the follow-up Sentinel-2-only. A mixed-sensor simulation experiment therefore requires an explicit Landsat extension, platform tests, and sensor-stratified reporting before it is admissible.
+Implementation audit: the earlier `mars_v4_simulation.py` wrapper admitted only LUT keys beginning with `S2`, even though the pinned integrated-transmittance LUT also contains `LC08`, `LC09`, `LE07`, `LT04`, and `LT05` entries with the same band-key schema. That silent Sentinel-2-only limitation is now removed and an `LC08` attenuation test passes. No simulation result is claimed yet; a mixed-sensor experiment still requires a frozen configuration and sensor-stratified reporting.
 
 ## Experiment ledger
 
