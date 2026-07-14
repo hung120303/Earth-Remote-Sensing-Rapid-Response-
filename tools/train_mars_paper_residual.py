@@ -598,6 +598,7 @@ def train(
                         protocol_hash=protocol_hash,
                         validation={
                             "deferred_confirmation": True,
+                            "deferred_evaluation": True,
                             "validation_reads_during_training": 0,
                         },
                         loss_weights=loss_weights,
@@ -608,7 +609,7 @@ def train(
                 json.dumps(
                     {
                         "epoch": epoch,
-                        "validation": "sealed for fixed confirmation",
+                        "validation": "deferred for fixed-fold training",
                         "artifact_saved": epoch == fixed_final_epoch,
                         "seconds": record["seconds"],
                     }
@@ -672,7 +673,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
     best = report["best_validation"]
     if best.get("deferred_confirmation"):
         lines = [
-            f"# MARS residual fold {report['experiment']['held_out_fold']} fixed confirmation training",
+            f"# MARS residual fold {report['experiment']['held_out_fold']} fixed-epoch training",
             "",
             f"- Fixed epoch: {report['training']['best_epoch']}",
             "- Fold-label validation reads during training: 0",
@@ -730,19 +731,21 @@ def main() -> int:
     parser.add_argument("--correction-l2-weight", type=float, default=0.002)
     parser.add_argument("--patience", type=int, default=4)
     parser.add_argument(
+        "--fixed-final-epoch",
         "--fixed-confirmation-epoch",
+        dest="fixed_final_epoch",
         type=int,
         default=0,
-        help="Train through this fixed epoch and read validation only once there; fold 1 only.",
+        help="Train through this fixed epoch without iterating the held-out fold.",
     )
     parser.add_argument("--smoke", action="store_true")
     args = parser.parse_args()
     if args.epochs <= 0 or args.samples_per_epoch <= 0 or args.batch_size <= 0:
         parser.error("epochs, samples-per-epoch, and batch-size must be positive")
-    if args.fixed_confirmation_epoch < 0 or args.fixed_confirmation_epoch > args.epochs:
-        parser.error("fixed confirmation epoch must be in [0, epochs]")
-    if args.fixed_confirmation_epoch and (args.fold != 1 or args.smoke):
-        parser.error("fixed confirmation mode is reserved for non-smoke fold 1")
+    if args.fixed_final_epoch < 0 or args.fixed_final_epoch > args.epochs:
+        parser.error("fixed final epoch must be in [0, epochs]")
+    if args.fixed_final_epoch and args.smoke:
+        parser.error("fixed final epoch is reserved for non-smoke training")
     loss_weights = {
         "scene_weight": args.scene_weight,
         "negative_upward_weight": args.negative_upward_weight,
@@ -832,19 +835,20 @@ def main() -> int:
         patience=args.patience,
         protocol_hash=sha256(protocol_path),
         loss_weights=loss_weights,
-        fixed_final_epoch=args.fixed_confirmation_epoch or None,
+        fixed_final_epoch=args.fixed_final_epoch or None,
     )
     if best_epoch < 1:
         raise RuntimeError("Training did not produce a checkpoint")
-    if args.fixed_confirmation_epoch:
+    if args.fixed_final_epoch:
         best = {
             "deferred_confirmation": True,
+            "deferred_evaluation": True,
             "validation_reads_during_training": 0,
         }
         checks = {"confirmation_evaluation_deferred": True}
         decision = (
-            "Fixed epoch-7 fold-1 residual trained without reading fold-1 labels; "
-            "the frozen end-to-end confirmation remains sealed."
+            f"Fixed epoch-{args.fixed_final_epoch} fold-{args.fold} residual trained "
+            f"without reading fold-{args.fold} labels."
         )
     else:
         best = next(item["validation"] for item in history if item["epoch"] == best_epoch)
@@ -895,8 +899,8 @@ def main() -> int:
             "learning_rate": args.learning_rate,
             "patience": args.patience,
             "best_epoch": best_epoch,
-            "fixed_confirmation_epoch": args.fixed_confirmation_epoch or None,
-            "validation_reads": 0 if args.fixed_confirmation_epoch else len(history),
+            "fixed_final_epoch": args.fixed_final_epoch or None,
+            "validation_reads": 0 if args.fixed_final_epoch else len(history),
             "history": history,
         },
         "best_validation": best,
