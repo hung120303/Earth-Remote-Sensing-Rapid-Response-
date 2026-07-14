@@ -81,6 +81,36 @@ def load_catalog(path: Path) -> list[dict[str, Any]]:
     return items
 
 
+def load_manifest_asset_paths(path: Path) -> set[str]:
+    """Return the exact asset set named by a frozen JSONL cohort manifest."""
+    selected: set[str] = set()
+    with path.open("r", encoding="utf-8") as source:
+        for line_number, line in enumerate(source, start=1):
+            if not line.strip():
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(
+                    f"Invalid cohort manifest JSONL at line {line_number}"
+                ) from exc
+            assets = record.get("assets")
+            if not isinstance(assets, list) or not assets:
+                raise ValueError(
+                    f"Cohort manifest row {line_number} has no asset list"
+                )
+            for asset in assets:
+                value = str(asset.get("path") or "")
+                if not value:
+                    raise ValueError(
+                        f"Cohort manifest row {line_number} has an empty asset path"
+                    )
+                selected.add(value)
+    if not selected:
+        raise ValueError("Cohort manifest selects no assets")
+    return selected
+
+
 def partial_bytes(metadata_dir: Path, item: dict[str, Any]) -> int:
     destination = safe_asset_path(metadata_dir, item["path"])
     partial = destination.with_name(destination.name + ".part")
@@ -298,6 +328,10 @@ def main() -> int:
         default=REMOTE_CATALOG,
         help="Catalog path relative to the ignored MARS directory",
     )
+    parser.add_argument(
+        "--manifest-file",
+        help="Optional cohort JSONL path relative to the ignored MARS directory; acquire only assets named by it",
+    )
     parser.add_argument("--workers", type=int, default=DEFAULT_WORKERS)
     parser.add_argument(
         "--max-assets",
@@ -330,6 +364,18 @@ def main() -> int:
         verify_files(metadata_dir)
         catalog_path = safe_asset_path(metadata_dir, args.catalog_file)
         catalog = load_catalog(catalog_path)
+        full_catalog_total = len(catalog)
+        manifest_path: Path | None = None
+        if args.manifest_file:
+            manifest_path = safe_asset_path(metadata_dir, args.manifest_file)
+            selected_paths = load_manifest_asset_paths(manifest_path)
+            by_path = {str(item["path"]): item for item in catalog}
+            missing = selected_paths - set(by_path)
+            if missing:
+                raise ValueError(
+                    f"Cohort manifest names {len(missing)} assets absent from the remote catalog"
+                )
+            catalog = [by_path[path] for path in sorted(selected_paths)]
         catalog_total = len(catalog)
         if args.start_asset >= catalog_total:
             raise ValueError(
@@ -341,9 +387,17 @@ def main() -> int:
         state = inventory(metadata_dir, catalog)
         state["catalog_asset_count"] = catalog_total
         state["catalog_start_asset"] = args.start_asset
-        state["partial_scope"] = len(catalog) != catalog_total
+        state["partial_scope"] = (
+            len(catalog) != catalog_total or catalog_total != full_catalog_total
+        )
+        state["source_catalog_asset_count"] = full_catalog_total
         state["metadata_dir"] = metadata_dir.relative_to(root).as_posix()
         state["remote_catalog"] = catalog_path.relative_to(root).as_posix()
+        if manifest_path is not None:
+            state["manifest_filter"] = {
+                "path": manifest_path.relative_to(root).as_posix(),
+                "sha256": sha256(manifest_path),
+            }
         if args.dry_run:
             print(json.dumps({"ok": True, "dry_run": True, **state}, indent=None if args.compact else 2, sort_keys=True))
             return 0
@@ -386,9 +440,17 @@ def main() -> int:
         final_state = inventory(metadata_dir, catalog)
         final_state["catalog_asset_count"] = catalog_total
         final_state["catalog_start_asset"] = args.start_asset
-        final_state["partial_scope"] = len(catalog) != catalog_total
+        final_state["partial_scope"] = (
+            len(catalog) != catalog_total or catalog_total != full_catalog_total
+        )
+        final_state["source_catalog_asset_count"] = full_catalog_total
         final_state["metadata_dir"] = metadata_dir.relative_to(root).as_posix()
         final_state["remote_catalog"] = catalog_path.relative_to(root).as_posix()
+        if manifest_path is not None:
+            final_state["manifest_filter"] = {
+                "path": manifest_path.relative_to(root).as_posix(),
+                "sha256": sha256(manifest_path),
+            }
         payload = {
             "ok": verified_count == len(catalog),
             "dry_run": False,
