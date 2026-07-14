@@ -402,6 +402,13 @@ features, and uses the fixed HGB head at blend 0.25. Promotion requires strict
 AP, recall, and IoU gains, no worse FPR, and sensor AP/IoU protection. A failure
 forbids paper-test access; a pass authorizes final protocol freeze only.
 
+Pre-result identity amendment: the first confirmation execution completed
+inference but aborted at the released-baseline identity assertion before writing
+a report or revealing successor metrics. The evaluator now reports labeled
+actual/expected values only for failed released-identity fields; it still aborts
+before scoring the scene head or emitting candidate results. No model, hash,
+row, feature, threshold, metric definition, or promotion gate changed.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.

@@ -85,8 +85,28 @@ def assert_released_identity(
     pixels_by_sensor: dict[str, dict[str, Any]],
     report: dict[str, Any],
 ) -> None:
-    if baseline_identity_values(metrics, pixels, pixels_by_sensor) != report_identity_values(report):
-        raise RuntimeError("Fold-1 released outputs do not reproduce the frozen baseline")
+    actual = baseline_identity_values(metrics, pixels, pixels_by_sensor)
+    expected = report_identity_values(report)
+    if actual != expected:
+        labels = [
+            "overall_ap",
+            "overall_recall",
+            "overall_fpr",
+            "overall_iou",
+            "sentinel2_ap",
+            "sentinel2_iou",
+            "landsat_ap",
+            "landsat_iou",
+        ]
+        differences = {
+            label: {"actual": observed, "expected": reference}
+            for label, observed, reference in zip(labels, actual, expected)
+            if observed != reference
+        }
+        raise RuntimeError(
+            "Fold-1 released outputs do not reproduce the frozen baseline: "
+            + json.dumps(differences, sort_keys=True)
+        )
 
 
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
