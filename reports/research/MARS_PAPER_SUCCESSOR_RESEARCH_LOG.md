@@ -184,6 +184,17 @@ metric is read, an interpolation grid between the frozen alpha-0.5 correction
 endpoint and recovered source-aligned epoch 3 must be committed. Endpoint
 identity checks must reproduce both previously observed metrics exactly.
 
+The replay was stopped after epoch 1 because its balanced rank differed from
+the archived run by approximately 7e-6, violating the exact-recovery rule.
+No recovery checkpoint was accepted. The next experiment therefore uses only
+the retained alpha-0.5 primary artifact and retained source-aligned epoch-4
+artifact. Before evaluation, beta is frozen to 0, 1/64, 1/32, 3/64, 1/16,
+3/32, 1/8, 3/16, 1/4, 3/8, 1/2, 5/8, 3/4, 7/8, and 1. Endpoints must exactly
+reproduce their archived metrics and are excluded from selection. If any
+interior beta passes every promotion gate, selection maximizes balanced rank
+among passing values; otherwise it maximizes balanced rank among all interior
+values and the experiment is rejected.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
