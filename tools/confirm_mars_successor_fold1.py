@@ -246,8 +246,13 @@ def main() -> int:
     y = np.asarray(labels, dtype=np.uint8)
     sensor_array = np.asarray(sensors, dtype=np.uint8)
     base_names = np.asarray(["primary_connected_score", "released_connected_score", *tensor_feature_names()])
+    # The frozen feature contract stores connected scores as float32 before
+    # scene metrics.  Use those schema columns for both identity and successor
+    # scoring; raw Python floats can break AP ties differently at float64.
     base_features = np.stack(feature_rows).astype(np.float64)
-    released_metrics = metric_summary(y, np.asarray(released_scores), sensor_array)
+    primary_score_array = base_features[:, 0]
+    released_score_array = base_features[:, 1]
+    released_metrics = metric_summary(y, released_score_array, sensor_array)
     released_pixel_summary = finish_pixels(released_pixels)
     released_pixel_sensor = {name: finish_pixels(value) for name, value in released_pixels_by_sensor.items()}
     assert_released_identity(released_metrics, released_pixel_summary, released_pixel_sensor, baseline_report)
@@ -255,7 +260,7 @@ def main() -> int:
     if base_names.tolist() != head_payload["feature_names"] or augmented_names != head_payload["augmented_feature_names"]:
         raise ValueError("Fold-1 feature schema differs from the frozen scene head")
     head_probability = predict_model(head_payload["fitted"], context_features)
-    final_scores = blend_scores(np.asarray(primary_scores), head_probability, 0.25)
+    final_scores = blend_scores(primary_score_array, head_probability, 0.25)
     candidate_metrics = metric_summary(y, final_scores, sensor_array)
     candidate_pixels = finish_pixels(primary_pixels)
     candidate_pixel_sensor = {name: finish_pixels(value) for name, value in primary_pixels_by_sensor.items()}

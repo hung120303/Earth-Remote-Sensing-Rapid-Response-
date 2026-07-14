@@ -409,6 +409,15 @@ actual/expected values only for failed released-identity fields; it still aborts
 before scoring the scene head or emitting candidate results. No model, hash,
 row, feature, threshold, metric definition, or promotion gate changed.
 
+The diagnostic rerun showed exact released recall, FPR, overall IoU, and both
+sensor IoUs; only overall and sensor AP differed. Cause: the confirmation path
+passed raw Python float64 connected scores to AP, whereas the frozen 108-column
+feature contract stores the two connected scores as float32 before all scene
+metrics. The evaluator now uses those already-produced float32 schema columns
+for released identity, primary score, and final blend. This is a pre-result
+dtype amendment; no successor metric was revealed and no scientific choice
+changed.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
