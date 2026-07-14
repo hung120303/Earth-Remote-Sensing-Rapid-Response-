@@ -273,8 +273,17 @@ class MarsPaperResidualModel(nn.Module):
             raise ValueError("Sensor index is outside the frozen mixed-sensor contract")
 
         baseline_logits = self.backbone(inputs)
-        scale = self.sensor_log_scale[sensor_index].exp()[:, None, None, None]
-        bias = self.sensor_bias[sensor_index, None, None, None]
+        # Keep the calibration path in the released logit's dtype.  Under CUDA
+        # autocast the backbone emits float16 logits while these parameters are
+        # stored as float32.  Allowing ordinary type promotion here would make
+        # the mathematically identity initialization numerically different from
+        # the released model after sigmoid/thresholding.
+        scale = self.sensor_log_scale[sensor_index].exp().to(
+            baseline_logits.dtype
+        )[:, None, None, None]
+        bias = self.sensor_bias[sensor_index].to(baseline_logits.dtype)[
+            :, None, None, None
+        ]
         correction, dense = self.correction(
             inputs, baseline_logits.detach(), sensor_index
         )

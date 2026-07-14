@@ -33,6 +33,22 @@ class MarsPaperResidualModelTests(unittest.TestCase):
         )
         self.assertEqual(tuple(output["scene_logit"].shape), (2,))
 
+    @unittest.skipUnless(torch.cuda.is_available(), "CUDA autocast is unavailable")
+    def test_zero_initialized_correction_preserves_cuda_autocast_logits(self) -> None:
+        model = MarsPaperResidualModel().cuda().eval()
+        values, observable, sensors = self.inputs()
+        with torch.no_grad(), torch.amp.autocast("cuda", dtype=torch.float16):
+            output = model(values.cuda(), observable.cuda(), sensors.cuda())
+        self.assertEqual(
+            output["segmentation_logits"].dtype,
+            output["baseline_logits"].dtype,
+        )
+        self.assertTrue(
+            torch.equal(
+                output["segmentation_logits"], output["baseline_logits"]
+            )
+        )
+
     def test_backbone_is_frozen_and_correction_receives_gradients(self) -> None:
         model = MarsPaperResidualModel().train()
         values, observable, sensors = self.inputs()
