@@ -71,6 +71,7 @@ Implementation audit: the earlier `mars_v4_simulation.py` wrapper admitted only 
 | 2026-07-14 | Hard-example scene-head inner search | Best robust-ranked candidate (C=0.1, hard-positive ×2, hard-negative ×2, blend 0.25) retained AP Δ +0.00650 and sensor AP gains but improved fold-2 recall by only one TP (Δ +0.00125). No grid point achieved the required three-TP margin. | Rejected before fold 0; no model artifact created. Hard-example reweighting changes calibration more than ordering, so add label-free site-sequence context before further evaluation. |
 | 2026-07-14 | Site-context scene-head inner search | HGB (31 leaves, min leaf 50, L2 10), blend 0.5: AP 0.89357 vs 0.88060 (Δ +0.01297); recall 0.93977 vs 0.92597 at identical FPR 0.07118 (Δ +0.01380; 11 extra TPs). Sentinel-2/Landsat AP Δ +0.01727/+0.00007. | Passed every gate and the three-TP robustness margin. Freeze folds-2/3/4 artifact `8334c7b5…fb284` and preregister evaluation on the existing fold-0 cache. |
 | 2026-07-14 | Frozen site-context scene head, one-shot fold 0 | AP 0.90343 vs 0.88645 (Δ +0.01698), recall 0.95436 vs 0.95705 (Δ −0.00268; two fewer TPs), FPR unchanged at 0.07122, IoU Δ +0.01034. Sentinel-2/Landsat AP Δ +0.02287/+0.00604. | Rejected only on recall; fold 1 remains unread. The 11-TP fold-2 gain did not transfer, so replace single-inner-fold selection with three-fold out-of-fold recall stability. |
+| 2026-07-14 | Three-fold OOF site-context selection on folds 2/3/4 | HGB (31 leaves, min leaf 20, L2 10), blend 0.625: pooled AP Δ +0.01437, recall Δ +0.00732 (17 extra TPs), Sentinel-2/Landsat AP Δ +0.01516/+0.00780. Recall Δ by held-out fold: +0.01129/+0.00923/+0.00261; AP Δ +0.01177/+0.01880/+0.02235. | Passed every OOF stability gate. Freeze refit artifact `2d014f54…c370` and preregister a new fold-0 evaluation on the unchanged cache. |
 
 ## Frozen primary correction run
 
@@ -308,6 +309,14 @@ pooled true positives, no recall regression on any inner fold, recall gains on
 at least two of three folds, no fold AP loss beyond 0.005, and pooled sensor AP
 protection. Only a stable pass may be refit on all three folds and receive a
 new preregistered fold-0 evaluation. Fold 1 and the paper test remain unread.
+
+The OOF-stability gate passed on all three held-out folds. The refit artifact
+SHA-256 is
+`2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ecc27c370`;
+the authoritative OOF report SHA-256 is
+`a125830c41d1d592a7d3a52ee2343ad5faa883061869e4638113c9df09f421e0`.
+A new evaluator must pin these hashes and the unchanged fold-0 cache before it
+may read predictions.
 
 ## Predeclared next experiments
 
