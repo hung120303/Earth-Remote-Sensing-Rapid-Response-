@@ -64,6 +64,7 @@ Implementation audit: the earlier `mars_v4_simulation.py` wrapper admitted only 
 | 2026-07-14 | Preregistered correction-only fold 0, seed 606 | Best epoch 7: AP 0.88599 vs 0.88645 (Δ −0.00046), recall 0.95570 vs 0.95705 (Δ −0.00134), IoU 0.49884 vs 0.50863 (Δ −0.00979). Landsat AP/IoU Δ −0.00118/−0.01385; Sentinel-2 +0.00002/−0.00943. | Rejected all promotion checks; do not access fold 1 with this architecture. Preserve artifact `b94880d8…c7d49` for fold-0 trust-region analysis. |
 | 2026-07-14 | Frozen fold-0 correction trust region | Selected α=0.5: AP 0.88891 (Δ +0.00246), recall 0.95705 (Δ 0), IoU 0.51897 (Δ +0.01034). Landsat AP/IoU Δ +0.00031/+0.00526; Sentinel-2 +0.00361/+0.01073. Alpha zero reproduced the stored baseline exactly. | Rejected because recall was equal rather than strictly higher; do not access fold 1. Proceed to source-aligned fitting. |
 | 2026-07-14 | Source-aligned residual smoke | 128 sampled crops, 27.34% simulated overall; CH₄-weighted BCE and complete mixed-sensor validation executed. Tiny-cohort AP Δ −0.00095, recall Δ 0, IoU Δ +0.00553. Twenty-four focused tests pass. | Pipeline-only pass; freeze a full fold-0 configuration before reading full results. |
+| 2026-07-14 | Preregistered source-aligned residual fold 0, seed 707 | Selected epoch 4: AP 0.88651 (Δ +0.00006), recall 0.95570 (Δ −0.00134), IoU 0.49576 (Δ −0.01286). Epoch 3 was complementary rather than promotable: AP 0.88710 (Δ +0.00065), recall 0.95839 (Δ +0.00134; one additional true positive), IoU 0.49005 (Δ −0.01857). | Rejected; fold 1 remains unread. Preserve the endpoint result and recover the deterministic epoch-3 checkpoint solely for a preregistered interpolation with the already frozen alpha-0.5 correction model. |
 
 ## Frozen primary correction run
 
@@ -163,6 +164,25 @@ The frozen command is:
 ```text
 python tools/train_mars_source_aligned_residual.py
 ```
+
+### Fold-0 result and checkpoint-recovery amendment
+
+The preregistered run selected epoch 4 by its frozen balanced rank, but failed
+the IoU, recall, and sensor-protection gates. Its ignored artifact has SHA-256
+`8da4abe2bdbbbe3f3b8ca9ab189c59c701f57a8186c4d89bdf2337c11e551629`.
+Epoch 3 was not selected and was therefore not retained by the original saver,
+yet its stored validation record showed the complementary error profile needed
+for the next conservative experiment: AP and recall improved while IoU
+regressed. No fold-1 or sealed-test data were read.
+
+The next code change may add optional epoch snapshots without changing the
+optimizer, schedule, data order, losses, evaluator, selection rule, or original
+result. The exact seed-707 command will be replayed through epoch 3. Recovery is
+valid only if epochs 1-3 reproduce their stored validation metrics exactly; the
+recovered checkpoint is not itself a promoted model. Before any new fold-0
+metric is read, an interpolation grid between the frozen alpha-0.5 correction
+endpoint and recovered source-aligned epoch 3 must be committed. Endpoint
+identity checks must reproduce both previously observed metrics exactly.
 
 ## Predeclared next experiments
 
