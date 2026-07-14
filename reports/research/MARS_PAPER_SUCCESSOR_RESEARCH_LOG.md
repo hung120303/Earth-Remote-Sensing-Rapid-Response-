@@ -357,6 +357,27 @@ sites with the already frozen primary recipe, alpha 0.5, and epoch 7 inherited
 from fold 0. Fold-1 labels may be read once after training, not used for epoch
 selection or early stopping. The scene-head spec and blend remain unchanged.
 
+## Frozen fold-1 residual confirmation training
+
+The independent residual uses the primary fold-0 recipe without architecture or
+hyperparameter selection: fold 1, seed 606, 32,768 samples per epoch, batch 16,
+AdamW learning rate 0.0002 and weight decay 0.0001, original 12-epoch cosine
+schedule, and exactly seven executed optimizer epochs because epoch 7 was fixed
+by fold 0. Loss weights remain scene 0.25, no-plume upward 0.25, plume-pixel
+downward 0.10, and correction L2 0.002.
+
+Confirmation mode never iterates the fold-1 validation loader. It saves raw
+epoch-7 correction weights with a machine-readable deferred-validation marker;
+all seven history rows contain training losses only. The command is:
+
+```text
+python tools/train_mars_paper_residual.py --fold 1 --seed 606 --epochs 12 --fixed-confirmation-epoch 7 --samples-per-epoch 32768 --batch-size 16 --workers 8 --learning-rate 0.0002 --patience 4 --artifact EarthRemoteSensingRapidResponse/artifacts/mars_paper_residual_fold1_seed606_epoch7.pt --output-json reports/experiments/mars_paper_residual_fold1_seed606_epoch7_training.json --output-markdown reports/experiments/MARS_PAPER_RESIDUAL_FOLD1_SEED606_EPOCH7_TRAINING.md
+```
+
+After training, a confirmation-specific feature extractor/evaluator must pin the
+artifact hash, apply alpha 0.5 with the exact float32-logit arithmetic, keep the
+scene head and blend 0.25 unchanged, and consume fold-1 labels only once.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.

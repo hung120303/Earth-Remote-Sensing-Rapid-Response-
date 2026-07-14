@@ -524,6 +524,11 @@ def artifact_payload(
     }
 
 
+def validation_due(epoch: int, fixed_final_epoch: int | None) -> bool:
+    del epoch
+    return fixed_final_epoch is None
+
+
 def train(
     model: MarsPaperResidualModel,
     train_loader: DataLoader[dict[str, Any]],
@@ -538,6 +543,7 @@ def train(
     patience: int,
     protocol_hash: str,
     loss_weights: dict[str, float],
+    fixed_final_epoch: int | None = None,
 ) -> tuple[list[dict[str, Any]], int]:
     parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
     optimizer = torch.optim.AdamW(parameters, lr=learning_rate, weight_decay=1e-4)
@@ -549,7 +555,8 @@ def train(
     stale = 0
     baseline_reference: dict[str, Any] | None = None
     artifact.parent.mkdir(parents=True, exist_ok=True)
-    for epoch in range(1, epochs + 1):
+    executed_epochs = epochs if fixed_final_epoch is None else fixed_final_epoch
+    for epoch in range(1, executed_epochs + 1):
         model.train()
         started = time.perf_counter()
         parts: list[dict[str, float]] = []
@@ -570,6 +577,45 @@ def train(
             scaler.update()
             parts.append(values)
         scheduler.step()
+        record = {
+            "epoch": epoch,
+            "seconds": round(time.perf_counter() - started, 3),
+            "learning_rate": float(optimizer.param_groups[0]["lr"]),
+            "loss": {
+                key: float(np.mean([part[key] for part in parts])) for key in parts[0]
+            },
+        }
+        if fixed_final_epoch is not None:
+            history.append(record)
+            if epoch == fixed_final_epoch:
+                best_epoch = epoch
+                torch.save(
+                    artifact_payload(
+                        model,
+                        fold=fold,
+                        seed=seed,
+                        epoch=epoch,
+                        protocol_hash=protocol_hash,
+                        validation={
+                            "deferred_confirmation": True,
+                            "validation_reads_during_training": 0,
+                        },
+                        loss_weights=loss_weights,
+                    ),
+                    artifact,
+                )
+            print(
+                json.dumps(
+                    {
+                        "epoch": epoch,
+                        "validation": "sealed for fixed confirmation",
+                        "artifact_saved": epoch == fixed_final_epoch,
+                        "seconds": record["seconds"],
+                    }
+                ),
+                flush=True,
+            )
+            continue
         validation = validation_summary(
             model,
             validation_loader,
@@ -587,17 +633,9 @@ def train(
             sum(primary_deltas),
             float(validation["delta"]["recall_at_fpr_0_0713"]),
         )
-        record = {
-            "epoch": epoch,
-            "seconds": round(time.perf_counter() - started, 3),
-            "learning_rate": float(optimizer.param_groups[0]["lr"]),
-            "loss": {
-                key: float(np.mean([part[key] for part in parts])) for key in parts[0]
-            },
-            "validation": validation,
-        }
+        record["validation"] = validation
         history.append(record)
-        print(json.dumps({"epoch": epoch, "rank": rank, "seconds": record["seconds"]}))
+        print(json.dumps({"epoch": epoch, "rank": rank, "seconds": record["seconds"]}), flush=True)
         if rank > best_rank:
             best_rank = rank
             best_epoch = epoch
@@ -632,6 +670,18 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
 
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
     best = report["best_validation"]
+    if best.get("deferred_confirmation"):
+        lines = [
+            f"# MARS residual fold {report['experiment']['held_out_fold']} fixed confirmation training",
+            "",
+            f"- Fixed epoch: {report['training']['best_epoch']}",
+            "- Fold-label validation reads during training: 0",
+            "",
+            report["decision"],
+        ]
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        return
     candidate = best["candidate"]
     baseline = best["released_baseline"]
     delta = best["delta"]
@@ -679,10 +729,20 @@ def main() -> int:
     parser.add_argument("--positive-downward-weight", type=float, default=0.10)
     parser.add_argument("--correction-l2-weight", type=float, default=0.002)
     parser.add_argument("--patience", type=int, default=4)
+    parser.add_argument(
+        "--fixed-confirmation-epoch",
+        type=int,
+        default=0,
+        help="Train through this fixed epoch and read validation only once there; fold 1 only.",
+    )
     parser.add_argument("--smoke", action="store_true")
     args = parser.parse_args()
     if args.epochs <= 0 or args.samples_per_epoch <= 0 or args.batch_size <= 0:
         parser.error("epochs, samples-per-epoch, and batch-size must be positive")
+    if args.fixed_confirmation_epoch < 0 or args.fixed_confirmation_epoch > args.epochs:
+        parser.error("fixed confirmation epoch must be in [0, epochs]")
+    if args.fixed_confirmation_epoch and (args.fold != 1 or args.smoke):
+        parser.error("fixed confirmation mode is reserved for non-smoke fold 1")
     loss_weights = {
         "scene_weight": args.scene_weight,
         "negative_upward_weight": args.negative_upward_weight,
@@ -772,30 +832,42 @@ def main() -> int:
         patience=args.patience,
         protocol_hash=sha256(protocol_path),
         loss_weights=loss_weights,
+        fixed_final_epoch=args.fixed_confirmation_epoch or None,
     )
     if best_epoch < 1:
         raise RuntimeError("Training did not produce a checkpoint")
-    best = next(item["validation"] for item in history if item["epoch"] == best_epoch)
-    checks = {
-        "ap_higher": best["delta"]["average_precision"] > 0,
-        "pixel_iou_higher": best["delta"]["pixel_iou"] > 0,
-        "recall_at_fpr_0_0713_higher": best["delta"]["recall_at_fpr_0_0713"] > 0,
-        "no_material_sensor_regression": all(
-            stratum["eligible_for_promotion"]
-            and stratum["delta"]["average_precision"] >= -0.01
-            and stratum["delta"]["pixel_iou"] >= -0.01
-            for stratum in best["sensor_strata"].values()
-        ),
-    }
-    decision = (
-        "Advance this architecture from the primary fold to the independent confirmation fold."
-        if not args.smoke and all(checks.values())
-        else (
-            "Smoke execution only; this result cannot promote an architecture."
-            if args.smoke
-            else "Do not advance: at least one predeclared primary-fold point gate failed."
+    if args.fixed_confirmation_epoch:
+        best = {
+            "deferred_confirmation": True,
+            "validation_reads_during_training": 0,
+        }
+        checks = {"confirmation_evaluation_deferred": True}
+        decision = (
+            "Fixed epoch-7 fold-1 residual trained without reading fold-1 labels; "
+            "the frozen end-to-end confirmation remains sealed."
         )
-    )
+    else:
+        best = next(item["validation"] for item in history if item["epoch"] == best_epoch)
+        checks = {
+            "ap_higher": best["delta"]["average_precision"] > 0,
+            "pixel_iou_higher": best["delta"]["pixel_iou"] > 0,
+            "recall_at_fpr_0_0713_higher": best["delta"]["recall_at_fpr_0_0713"] > 0,
+            "no_material_sensor_regression": all(
+                stratum["eligible_for_promotion"]
+                and stratum["delta"]["average_precision"] >= -0.01
+                and stratum["delta"]["pixel_iou"] >= -0.01
+                for stratum in best["sensor_strata"].values()
+            ),
+        }
+        decision = (
+            "Advance this architecture from the primary fold to the independent confirmation fold."
+            if not args.smoke and all(checks.values())
+            else (
+                "Smoke execution only; this result cannot promote an architecture."
+                if args.smoke
+                else "Do not advance: at least one predeclared primary-fold point gate failed."
+            )
+        )
     report = {
         "schema_version": 1,
         "scope": "site-held architecture development; sealed paper test not loaded",
@@ -823,6 +895,8 @@ def main() -> int:
             "learning_rate": args.learning_rate,
             "patience": args.patience,
             "best_epoch": best_epoch,
+            "fixed_confirmation_epoch": args.fixed_confirmation_epoch or None,
+            "validation_reads": 0 if args.fixed_confirmation_epoch else len(history),
             "history": history,
         },
         "best_validation": best,

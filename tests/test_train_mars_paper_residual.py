@@ -15,12 +15,19 @@ from train_mars_paper_residual import (  # noqa: E402
     sampling_weights,
     smoke_subset,
     successor_loss,
+    validation_due,
     validation_summary,
     verify_acquisition_receipt,
 )
 
 
 class MarsPaperResidualTrainingTests(unittest.TestCase):
+    def test_fixed_confirmation_defers_all_intermediate_validation(self) -> None:
+        self.assertFalse(validation_due(1, 7))
+        self.assertFalse(validation_due(6, 7))
+        self.assertFalse(validation_due(7, 7))
+        self.assertTrue(validation_due(1, None))
+
     class IdentityModel:
         backbone_trainable = False
 
