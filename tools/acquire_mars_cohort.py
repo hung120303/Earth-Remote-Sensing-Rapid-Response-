@@ -198,7 +198,7 @@ def download_response(url: str, resume_at: int) -> Any:
     )
     if resume_at:
         request.add_header("Range", f"bytes={resume_at}-")
-    for attempt in range(5):
+    for attempt in range(7):
         try:
             return urllib.request.urlopen(request, timeout=120)
         except (TimeoutError, urllib.error.HTTPError, urllib.error.URLError) as exc:
@@ -210,9 +210,18 @@ def download_response(url: str, resume_at: int) -> Any:
                 504,
             ):
                 raise
-            if attempt == 4:
+            if attempt == 6:
                 raise
-            time.sleep(2**attempt)
+            delay = float(2**attempt)
+            if isinstance(exc, urllib.error.HTTPError) and exc.code == 429:
+                retry_after = exc.headers.get("Retry-After") if exc.headers else None
+                try:
+                    server_delay = float(retry_after) if retry_after else 0.0
+                except ValueError:
+                    server_delay = 0.0
+                delay = max(delay, server_delay, 30.0)
+            jitter_byte = hashlib.sha256(f"{url}:{attempt}".encode("utf-8")).digest()[0]
+            time.sleep(delay + 3.0 * jitter_byte / 255.0)
     raise RuntimeError("Unreachable download retry state")
 
 
