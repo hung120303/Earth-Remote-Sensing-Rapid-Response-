@@ -265,6 +265,21 @@ intended to prevent another one-example sign reversal. Only an inner robust
 pass permits a folds-2/3/4 refit and a separately preregistered evaluation of
 the already extracted fold-0 cache. Fold 1 and the paper test remain unread.
 
+## Frozen site-context scene-head inner search
+
+The next representation adds label-free context from other observations of the
+same physical site. Ten primary/released, MBMP, coverage, and residual summary
+features each receive group mean, standard deviation, maximum, 90th percentile,
+leave-one-out maximum, and within-site rank, plus log site sequence length.
+Because the protocol assigns whole sites to folds, these 61 context values are
+computed independently inside folds 3-4 and fold 2 without site leakage.
+
+Four logistic models (C 0.01, 0.03, 0.1, 0.3) and four deterministic histogram
+gradient boosters (15/31 leaves, 20/50 minimum leaf size, L2 10) are blended at
+1/8, 1/4, 3/8, 1/2, or 5/8. Site/label/sensor-balanced fitting weights and the
+three-extra-TP fold-2 authorization margin are unchanged. Only an all-gate
+inner pass may produce a folds-2/3/4 artifact and a preregistered fold-0 run.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
