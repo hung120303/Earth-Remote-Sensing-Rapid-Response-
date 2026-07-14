@@ -1,0 +1,144 @@
+{
+  "frozen_operating_points": {
+    "0.02": {
+      "development": {
+        "false_positive_rate": 0.019984326018808778,
+        "precision": 0.9332169358358795,
+        "recall": 0.2740322994104076
+      },
+      "location_test": {
+        "false_negative": 7907,
+        "false_positive": 252,
+        "false_positive_rate": 0.024380804953560372,
+        "precision": 0.9099356683345247,
+        "recall": 0.2435664402563857,
+        "true_negative": 10084,
+        "true_positive": 2546
+      },
+      "threshold_frozen_on_development": 0.8273817225169275,
+      "transfer_delta_test_minus_development": {
+        "false_positive_rate": 0.004396478934751594,
+        "precision": -0.02328126750135484,
+        "recall": -0.030465859154021863
+      }
+    },
+    "0.05": {
+      "development": {
+        "false_positive_rate": 0.049895506792058515,
+        "precision": 0.905116741182315,
+        "recall": 0.46705972827480136
+      },
+      "location_test": {
+        "false_negative": 6504,
+        "false_positive": 627,
+        "false_positive_rate": 0.06066176470588235,
+        "precision": 0.8629807692307693,
+        "recall": 0.37778628145030135,
+        "true_negative": 9709,
+        "true_positive": 3949
+      },
+      "threshold_frozen_on_development": 0.7335791607366197,
+      "transfer_delta_test_minus_development": {
+        "false_positive_rate": 0.010766257913823837,
+        "precision": -0.042135971951545725,
+        "recall": -0.0892734468245
+      }
+    },
+    "0.08": {
+      "development": {
+        "false_positive_rate": 0.07993730407523511,
+        "precision": 0.8836501901140684,
+        "recall": 0.5957446808510638
+      },
+      "location_test": {
+        "false_negative": 5319,
+        "false_positive": 1070,
+        "false_positive_rate": 0.10352167182662539,
+        "precision": 0.8275306254029658,
+        "recall": 0.4911508657801588,
+        "true_negative": 9266,
+        "true_positive": 5134
+      },
+      "threshold_frozen_on_development": 0.6632380213050416,
+      "transfer_delta_test_minus_development": {
+        "false_positive_rate": 0.02358436775139028,
+        "precision": -0.056119564711102576,
+        "recall": -0.10459381507090498
+      }
+    },
+    "0.095": {
+      "development": {
+        "false_positive_rate": 0.09495820271682341,
+        "precision": 0.8725455820476858,
+        "recall": 0.6379133555498591
+      },
+      "location_test": {
+        "false_negative": 4866,
+        "false_positive": 1284,
+        "false_positive_rate": 0.12422600619195047,
+        "precision": 0.8131276378984136,
+        "recall": 0.5344877068784081,
+        "true_negative": 9052,
+        "true_positive": 5587
+      },
+      "threshold_frozen_on_development": 0.6363910812092982,
+      "transfer_delta_test_minus_development": {
+        "false_positive_rate": 0.029267803475127058,
+        "precision": -0.05941794414927226,
+        "recall": -0.10342564867145099
+      }
+    }
+  },
+  "generated_at_utc": "2026-07-14T00:11:06.692685+00:00",
+  "interpretation": "Every predeclared development threshold produced higher FPR on the location test, while recall also fell relative to development. The primary 5% target moved from 4.99% development FPR / 46.71% recall to 6.07% test FPR / 37.78% recall. This supports calibration/domain-transfer risk as a future hypothesis, not a test-driven threshold adjustment.",
+  "provenance": {
+    "git_commit": "d3d0d5e2a9a66027fef595e3aaf0e0a24b985dbc",
+    "script": "tools/analyze_methanes2cm_v5_1_test_posthoc.py",
+    "script_sha256": "7763f66c4486439c317db05be31361dd2d5b1698430c3d5b581170b6db5d44ae",
+    "tracked_worktree_dirty_at_start": false
+  },
+  "schema_version": 1,
+  "scope": "methanes2cm_v5_1_frozen_location_test_posthoc_calibration_transfer",
+  "score_quantiles": {
+    "no_plume": [
+      0.3517272472381592,
+      0.667928159236908,
+      0.7563020288944244,
+      0.8255245536565781,
+      0.8898962825536727
+    ],
+    "plume": [
+      0.6573942303657532,
+      0.9209901928901674,
+      0.9605770587921142,
+      0.9817872107028961,
+      0.9934764957427978
+    ],
+    "probabilities": [
+      0.5,
+      0.9,
+      0.95,
+      0.975,
+      0.99
+    ]
+  },
+  "sources": {
+    "calibration_cache_sha256": "6e6ad2334b046292ca2c88d9364215f8964f0b49a28478e5d04cbc72a7ea7510",
+    "ensemble": {
+      "path": "reports/experiments/methanes2cm_v5_1_ensemble_validation.json",
+      "sha256": "03691437f3ce2c384aece9f00c7dc4462eebe5e0b580ca340a7db043dc0cdeca"
+    },
+    "prediction_cache_sha256": "3f371aa0a349dc8e0f291ce3efdb2aebc105f31aabfa0786d7dd17c114adaab9",
+    "primary": {
+      "path": "reports/experiments/methanes2cm_v5_1_location_test.json",
+      "sha256": "415b71ec53353d791381ed8d9f4e60f80f3120771d721d071cea1b347abcd543"
+    }
+  },
+  "status": {
+    "deployment_rule_changed": false,
+    "model_changed": false,
+    "posthoc": true,
+    "retuning_authorized": false,
+    "threshold_selected_from_test": false
+  }
+}
