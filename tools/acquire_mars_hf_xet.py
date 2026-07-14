@@ -301,7 +301,7 @@ def main() -> int:
                 transfer,
                 batch,
                 workers=args.workers,
-                progress_label="Xet acquired and catalog-verified",
+                progress_label=f"{args.transport.upper()} acquired and catalog-verified",
             )
             completed_paths = {str(result["path"]) for result in results}
             remaining_candidates = [
