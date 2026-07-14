@@ -1,0 +1,74 @@
+{
+  "generated_at_utc": "2026-07-14T02:13:43.483688+00:00",
+  "model": {
+    "initial_equivalence": "exact released U-Net logits before correction training",
+    "input_channels": [
+      "mbmp_release",
+      "target_B02",
+      "target_B03",
+      "target_B04",
+      "target_B08",
+      "target_B11",
+      "target_B12",
+      "reference_B02",
+      "reference_B03",
+      "reference_B04",
+      "reference_B08",
+      "reference_B11",
+      "reference_B12",
+      "wind_u_div8",
+      "wind_v_div8",
+      "cloud_binary"
+    ],
+    "model_name": "ersrr_mars_paper_residual_v1",
+    "parameter_count": 14865638,
+    "physics_features": [
+      "centered MBMP",
+      "target-reference reflectance",
+      "normalized temporal difference",
+      "log temporal ratio",
+      "wind",
+      "cloud",
+      "sensor identity",
+      "released baseline logit"
+    ],
+    "released_checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "scene_topk_fraction": 0.01,
+    "schema_version": 1,
+    "sensor_names": [
+      "Sentinel-2",
+      "Landsat"
+    ],
+    "trainable_parameter_count_correction_only": 1278053
+  },
+  "provenance": {
+    "git_commit": "0b5e389c3c7cf89000ffdebfcb0d54a2610ba7eb",
+    "numpy": "2.4.4",
+    "script": "tools/audit_mars_paper_model_initialization.py",
+    "script_sha256": "cde00fa3eace86221533620d002d5a401943ebed40d8977d0105f7652bf6f207",
+    "torch": "2.11.0+cu128"
+  },
+  "result": {
+    "batch_sensors": [
+      "Sentinel-2",
+      "Landsat"
+    ],
+    "exact": true,
+    "input_shape": [
+      2,
+      16,
+      64,
+      64
+    ],
+    "maximum_absolute_delta_vs_independent_reimplementation": 0.0,
+    "maximum_absolute_delta_vs_internal_backbone": 0.0,
+    "maximum_absolute_zero_initialized_correction": 0.0
+  },
+  "schema_version": 1,
+  "scope": "independent released-checkpoint equivalence before successor training",
+  "source": {
+    "checkpoint": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+    "checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "independent_implementation": "tools/evaluate_released_marss2l.py::ReleasedUNet"
+  }
+}
