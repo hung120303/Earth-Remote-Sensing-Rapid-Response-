@@ -16,12 +16,21 @@ if str(ROOT / "EarthRemoteSensingRapidResponse") not in sys.path:
 from mars_paper_model import MarsPaperResidualModel  # noqa: E402
 from train_mars_source_aligned_residual import (  # noqa: E402
     contract_residual_strength,
+    epoch_snapshot_path,
     source_aligned_loss,
     source_aligned_sampling_weights,
 )
 
 
 class MarsSourceAlignedResidualTests(unittest.TestCase):
+    def test_epoch_snapshot_path_preserves_artifact_suffix(self) -> None:
+        self.assertEqual(
+            epoch_snapshot_path(Path("artifacts/model.pt"), 3),
+            Path("artifacts/model_epoch3.pt"),
+        )
+        with self.assertRaises(ValueError):
+            epoch_snapshot_path(Path("artifacts/model.pt"), 0)
+
     def test_sampling_balances_site_label_sensor_cells(self) -> None:
         records = [
             {"group_id": "a", "label_state": "PLUME", "sensor_family": "Sentinel-2"},

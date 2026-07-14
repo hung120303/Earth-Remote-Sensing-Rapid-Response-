@@ -429,6 +429,12 @@ def artifact_payload(
     }
 
 
+def epoch_snapshot_path(artifact: Path, epoch: int) -> Path:
+    if epoch <= 0:
+        raise ValueError("snapshot epoch must be positive")
+    return artifact.with_name(f"{artifact.stem}_epoch{epoch}{artifact.suffix}")
+
+
 def train(
     model: MarsPaperResidualModel,
     train_loader: DataLoader[dict[str, Any]],
@@ -443,6 +449,7 @@ def train(
     patience: int,
     protocol_hash: str,
     configuration: dict[str, Any],
+    snapshot_epochs: frozenset[int] = frozenset(),
 ) -> tuple[list[dict[str, Any]], int]:
     parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
     optimizer = torch.optim.AdamW(parameters, lr=learning_rate, weight_decay=1e-6)
@@ -501,20 +508,25 @@ def train(
         }
         history.append(record)
         print(json.dumps({"epoch": epoch, "rank": rank, "seconds": record["seconds"]}), flush=True)
+        payload = artifact_payload(
+            model,
+            fold=fold,
+            seed=seed,
+            epoch=epoch,
+            protocol_hash=protocol_hash,
+            validation=validation,
+            configuration=configuration,
+        )
+        if epoch in snapshot_epochs:
+            snapshot = epoch_snapshot_path(artifact, epoch)
+            torch.save(payload, snapshot)
+            print(json.dumps({"snapshot": snapshot.as_posix(), "epoch": epoch}), flush=True)
         if rank > best_rank:
             best_rank = rank
             best_epoch = epoch
             stale = 0
             torch.save(
-                artifact_payload(
-                    model,
-                    fold=fold,
-                    seed=seed,
-                    epoch=epoch,
-                    protocol_hash=protocol_hash,
-                    validation=validation,
-                    configuration=configuration,
-                ),
+                payload,
                 artifact,
             )
         else:
@@ -577,12 +589,21 @@ def main() -> int:
     parser.add_argument("--negative-upward-weight", type=float, default=0.10)
     parser.add_argument("--positive-downward-weight", type=float, default=0.10)
     parser.add_argument("--correction-l2-weight", type=float, default=0.001)
+    parser.add_argument(
+        "--snapshot-epoch",
+        type=int,
+        action="append",
+        default=[],
+        help="Also save an ignored checkpoint after this epoch; may be repeated.",
+    )
     parser.add_argument("--smoke", action="store_true")
     args = parser.parse_args()
     if args.epochs <= 0 or args.samples_per_epoch <= 0 or args.batch_size <= 0:
         parser.error("epochs, samples-per-epoch, and batch-size must be positive")
     if not 0.0 <= args.simulation_fraction <= 1.0:
         parser.error("simulation fraction must be in [0,1]")
+    if any(epoch <= 0 or epoch > args.epochs for epoch in args.snapshot_epoch):
+        parser.error("snapshot epochs must be within the requested training range")
     root = repo_root()
     seed_everything(args.seed)
     metadata_dir = (root / args.metadata_dir).resolve()
@@ -679,6 +700,7 @@ def main() -> int:
         patience=args.patience,
         protocol_hash=sha256(protocol_path),
         configuration=configuration,
+        snapshot_epochs=frozenset(args.snapshot_epoch),
     )
     best = next(item["validation"] for item in history if item["epoch"] == best_epoch)
     checks = {
