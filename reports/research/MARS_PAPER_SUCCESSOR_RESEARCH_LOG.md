@@ -457,6 +457,18 @@ delta. Only a threshold that improves every selection fold and both sensors may
 advance to folds 0--1. This changes no scene score and cannot leak labels into
 inference.
 
+The seven-point folds-2--4 search selected threshold 0.70. Pooled IoU rose from
+0.52726015 to 0.56413023 (delta +0.03687008). Fold deltas were +0.02664675,
++0.03909668, and +0.04452736; pooled Sentinel-2 and Landsat deltas were
++0.04106910 and +0.01228303. Thresholds 0.75 and 0.80 had marginally higher
+pooled IoU but smaller worst-fold gains, so the preregistered robustness rank
+correctly preferred 0.70. The authoritative selection JSON SHA-256 is
+`9d4dd8140908489e48be849c0e89100a8f663c3368db9354c1b30ed8670865be`.
+The confirmation run is restricted to thresholds 0.50 and 0.70 on folds 0 and
+1, with the same 100-pixel connected-component rule. It must improve both folds
+and both pooled sensor strata; no threshold refinement is permitted from the
+confirmation result.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
