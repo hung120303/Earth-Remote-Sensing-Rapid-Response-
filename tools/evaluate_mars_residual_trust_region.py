@@ -425,9 +425,9 @@ def main() -> int:
     checks = selected["promotion_checks"]
     passed = all(checks.values())
     decision = (
-        "Advance the frozen trust-region alpha to the independent fold-1 confirmation."
+        "Advance this trust-region alpha under the current development protocol."
         if passed
-        else "Reject the trust-region blend on fold 0; proceed to source-aligned fitting."
+        else f"Reject the trust-region blend on development fold {args.fold}."
     )
     report = {
         "schema_version": 1,

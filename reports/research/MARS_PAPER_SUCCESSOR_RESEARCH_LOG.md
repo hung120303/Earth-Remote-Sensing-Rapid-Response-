@@ -439,6 +439,24 @@ development evidence; it cannot be described as an independent confirmation
 again. The authoritative result JSON SHA-256 is
 `eff232d7aaf08b87ea54c6d7e0929c9ed6f3e5bc6a7c9e10d0dcb4e51e99ab5d0`.
 
+Fold 1 is now development data, so a dense post-hoc alpha sweep tested whether
+the segmentation failure was merely excessive correction strength. It was not.
+The smallest nonzero alpha, 1/256, already reduced overall IoU by 0.00004164;
+alpha 1/128 reduced it by 0.00002378, alpha 0.5 by 0.00911346, and alpha 1.0
+by 0.05097897. Tiny corrections occasionally helped Landsat but consistently
+hurt Sentinel-2, which dominates the cohort. The learned residual direction is
+therefore rejected for dense masks at every nonzero trust strength. Its scene
+features remain eligible because the separately trained label-free context head
+already generalized. The authoritative sweep JSON SHA-256 is
+`6d06fde3790cc5e0cc1f0039f256ec5dd2acaeca86ae990bee5679b701f6efeb`.
+
+The next mask path is a lower-variance calibration of the released logits:
+select a single connected-mask probability threshold on folds 2--4, ranking
+rules first by their worst fold IoU delta, then worst sensor delta, then pooled
+delta. Only a threshold that improves every selection fold and both sensors may
+advance to folds 0--1. This changes no scene score and cannot leak labels into
+inference.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
