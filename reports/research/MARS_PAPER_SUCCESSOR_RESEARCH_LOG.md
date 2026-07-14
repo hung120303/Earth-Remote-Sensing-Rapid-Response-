@@ -81,6 +81,20 @@ The frozen command is:
 python tools/train_mars_paper_residual.py --fold 0 --seed 606 --epochs 12 --samples-per-epoch 32768 --batch-size 16 --workers 8 --learning-rate 0.0002 --patience 4 --artifact EarthRemoteSensingRapidResponse/artifacts/mars_paper_residual_fold0_seed606.pt --output-json reports/experiments/mars_paper_residual_fold0_seed606.json --output-markdown reports/experiments/MARS_PAPER_RESIDUAL_FOLD0_SEED606.md
 ```
 
+### Pre-result benchmark-integrity amendment
+
+The first complete fold-0 equivalence audit stopped before emitting any fold
+metric because the zero-initialized wrapper was not bitwise identical under
+CUDA autocast. The released backbone emitted float16 logits, while float32
+identity calibration parameters promoted the successor logits before sigmoid.
+Commit `feb0c176b0fdb7ca6b1b1e7d6a2d595d7b511ac0` casts learned calibration to
+the released-logit dtype and adds a CUDA autocast bitwise-equivalence test. No
+metric, label, split, loss, selection rule, or training hyperparameter changed.
+The corrected model SHA-256 is
+`f9cc65b3bb764ed83a4aa67209cccdbad2b6c80826b0915711392ca8b10a0486`.
+This amendment was recorded before rerunning the complete fold audit and before
+starting the primary fold-0 training run.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
