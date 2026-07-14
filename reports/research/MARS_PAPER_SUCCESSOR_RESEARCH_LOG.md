@@ -515,6 +515,11 @@ published paper metrics that exist for the view. No test manifest row has been
 loaded by the evaluator; test assets may now be acquired byte-for-byte, after
 which this exact code is the only authorized result-producing path.
 
+The architecture/evaluator freeze commit is `9c4ca8a3`. Any subsequent code,
+configuration, model, threshold, or gate change invalidates the one-shot
+authorization and must be documented as post-test work rather than silently
+rerun. Byte acquisition and a verification receipt do not change the model.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
