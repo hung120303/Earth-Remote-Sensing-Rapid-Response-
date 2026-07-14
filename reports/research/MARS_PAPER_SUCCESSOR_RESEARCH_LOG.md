@@ -69,6 +69,7 @@ Implementation audit: the earlier `mars_v4_simulation.py` wrapper admitted only 
 | 2026-07-14 | Scene-ranking head inner selection, train folds 3-4 / validate fold 2 | Weighted logistic C=0.1 at head blend 0.25: AP 0.88733 vs 0.88060 (Δ +0.00673), recall 0.92723 vs 0.92597 (Δ +0.00125) at identical FPR 0.07118. Sentinel-2/Landsat AP Δ +0.00598/+0.00112. | Passed all inner gates. Refit on folds 2-4 and freeze ignored artifact `98ce79c6…a336c`; authorize one fold-0 extraction/evaluation after its evaluator is committed. |
 | 2026-07-14 | Frozen scene-ranking head, one-shot fold 0 | Cache identity passed. AP 0.89752 vs 0.88645 (Δ +0.01107), recall 0.95570 vs 0.95705 (Δ −0.00134; one fewer true positive), FPR unchanged at 0.07122, IoU unchanged from the stronger mask endpoint at 0.51897 (Δ +0.01034). Sentinel-2/Landsat AP Δ +0.01445/+0.00249. | Rejected only on recall; fold 1 remains unread. The broad AP gain validates decoupling, but the next inner search must explicitly optimize hard-positive ordering and require a multi-TP recall margin before another fold-0 evaluation. |
 | 2026-07-14 | Hard-example scene-head inner search | Best robust-ranked candidate (C=0.1, hard-positive ×2, hard-negative ×2, blend 0.25) retained AP Δ +0.00650 and sensor AP gains but improved fold-2 recall by only one TP (Δ +0.00125). No grid point achieved the required three-TP margin. | Rejected before fold 0; no model artifact created. Hard-example reweighting changes calibration more than ordering, so add label-free site-sequence context before further evaluation. |
+| 2026-07-14 | Site-context scene-head inner search | HGB (31 leaves, min leaf 50, L2 10), blend 0.5: AP 0.89357 vs 0.88060 (Δ +0.01297); recall 0.93977 vs 0.92597 at identical FPR 0.07118 (Δ +0.01380; 11 extra TPs). Sentinel-2/Landsat AP Δ +0.01727/+0.00007. | Passed every gate and the three-TP robustness margin. Freeze folds-2/3/4 artifact `8334c7b5…fb284` and preregister evaluation on the existing fold-0 cache. |
 
 ## Frozen primary correction run
 
@@ -279,6 +280,13 @@ gradient boosters (15/31 leaves, 20/50 minimum leaf size, L2 10) are blended at
 1/8, 1/4, 3/8, 1/2, or 5/8. Site/label/sensor-balanced fitting weights and the
 three-extra-TP fold-2 authorization margin are unchanged. Only an all-gate
 inner pass may produce a folds-2/3/4 artifact and a preregistered fold-0 run.
+
+The site-context inner gate passed with 11 additional fold-2 true positives.
+The refit artifact is 539,595 bytes with SHA-256
+`8334c7b5da880c794dad949dc886b81322579e151933a546b0a63018c93fb284`;
+the authoritative inner report SHA-256 is
+`c247c1326bbd621d0148d4fffb2045f1fe4f132c134b449f9c9238f4bec23bfa`.
+Its fold-0 evaluator must be committed before loading the existing fold-0 cache.
 
 ## Predeclared next experiments
 
