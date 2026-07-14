@@ -1,0 +1,154 @@
+{
+  "artifacts": {
+    "assignment_path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L-paper-source/paper_v3_benchmark_assignments.jsonl",
+    "assignment_rows": 43529,
+    "assignment_sha256": "e3e7296c9837123b6d43870f7c5323cea5cc9b667f4c2b00fbc6e4ec8a87d797",
+    "assignment_tracked": false
+  },
+  "generated_at_utc": "2026-07-14T01:12:43.240469+00:00",
+  "paper": {
+    "revision": "v3",
+    "revision_date": "2026-04-24",
+    "url": "https://arxiv.org/html/2511.21777v3"
+  },
+  "provenance": {
+    "git_commit": "3c7b778c6bc83f217991b361d755e0a731de9153",
+    "script": "tools/audit_mars_paper_benchmark.py",
+    "script_sha256": "7118dfbfd3da6bec4a834bb3f9fed8e50655436f8f9b25a7b8838d33e3adfe36"
+  },
+  "reconstruction": {
+    "delta_vs_published": {
+      "full": {
+        "average_precision": 0.00021960241042173756,
+        "false_positive_rate": -0.0006076996835746445,
+        "pixel_iou": 0.001965148584935461,
+        "precision": 0.0020266423357664376,
+        "recall": 5.791505791497009e-06
+      },
+      "test_only_sites": {
+        "average_precision": 0.0006738001490847467,
+        "false_positive_rate": -0.0007879439979258523,
+        "precision": 0.0011453392990305733,
+        "recall": 3.039647577096627e-05
+      }
+    },
+    "full": {
+      "accuracy": 0.9235681959153668,
+      "average_precision": 0.6410196024104218,
+      "false_positive_rate": 0.07069230031642536,
+      "fn": 378,
+      "fp": 2949,
+      "negative": 41716,
+      "pixel_fn": 1073087,
+      "pixel_fp": 2668518,
+      "pixel_iou": 0.3243651485849355,
+      "pixel_tp": 1796305,
+      "positive": 1813,
+      "precision": 0.3273266423357664,
+      "recall": 0.7915057915057915,
+      "rows": 43529,
+      "sites": 1289,
+      "tn": 38767,
+      "tp": 1435
+    },
+    "identity_checks": {
+      "full_positive": true,
+      "full_recall_rounds_to_paper": true,
+      "full_rows": true,
+      "full_sites": true,
+      "test_only_positive": true,
+      "test_only_recall_rounds_to_paper": true,
+      "test_only_rows": true,
+      "test_only_sites": true
+    },
+    "missing_public_metadata_ids": [
+      "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
+      "689601b8-e36b-4252-8cb3-27b0ff280c03"
+    ],
+    "missing_public_metadata_rows": 2,
+    "offshore_replacements": 2185,
+    "paper_target_vs_public_metadata_label_disagreements": 23,
+    "public_metadata_rows": 43527,
+    "published": {
+      "full": {
+        "average_precision": 0.6408,
+        "false_positive_rate": 0.0713,
+        "negative": 41716,
+        "pixel_iou": 0.3224,
+        "positive": 1813,
+        "precision": 0.3253,
+        "recall": 0.7915,
+        "rows": 43529,
+        "sites": 1289
+      },
+      "test_only_sites": {
+        "average_precision": 0.4496,
+        "false_positive_rate": 0.0763,
+        "negative": 15428,
+        "positive": 227,
+        "precision": 0.1301,
+        "recall": 0.7753,
+        "rows": 15655,
+        "sites": 697
+      }
+    },
+    "test_only_sites": {
+      "accuracy": 0.9223251357393804,
+      "average_precision": 0.45027380014908475,
+      "false_positive_rate": 0.07551205600207415,
+      "fn": 51,
+      "fp": 1165,
+      "negative": 15428,
+      "pixel_fn": 140494,
+      "pixel_fp": 875886,
+      "pixel_iou": 0.17156194293902416,
+      "pixel_tp": 210483,
+      "positive": 227,
+      "precision": 0.13124533929903057,
+      "recall": 0.775330396475771,
+      "rows": 15655,
+      "sites": 697,
+      "tn": 14263,
+      "tp": 176
+    },
+    "training_site_count_from_released_config": 618
+  },
+  "runtime": {
+    "numpy": "2.4.4",
+    "python": "3.11.14",
+    "sklearn": "1.9.0"
+  },
+  "schema_version": 1,
+  "source": {
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "hashes": {
+      "metadata": "1ab3beb83d9c062fa5b6e5c07fb2cd9ceac54b353149428e71ec43457539891f",
+      "offshore_predictions": "42b6fa72fa5825c00355baeb129c2a74dd15f40a5b11cb5e8e1b31a7bf042525",
+      "onshore_predictions": "396c6af6d7ae4afa122eac271347889e6137d11e09ff434a426d435c23874c7e",
+      "released_config": "abeb92d01313fbb2939e6c5fc1c6281846b8102ea5edd7081668fe0db05bf79f"
+    },
+    "prediction_archive_revision": "1a722445d7e344a1581ade9741aa41fb707c6d0e",
+    "public_metadata_revision": "8ebb807c5b055ee98ff1039cd9e8f4b3e92c6e73",
+    "upstream_code_revision": "f7d264c2c845dfba1cb27f76ef6026275f8d8758"
+  },
+  "status": "frozen_before_exact_mixed_sensor_training",
+  "superiority_gate": {
+    "missing_raster_policy": "candidate adversarial: positive miss, negative false alarm, worst-case pixel error",
+    "must_exceed": [
+      "paper_published_table",
+      "paired_reconstructed_archive"
+    ],
+    "operating_point": "recall higher and false_positive_rate no worse",
+    "primary": [
+      "average_precision",
+      "pixel_iou"
+    ],
+    "selection_data": "training and development/validation only",
+    "test_tuning": "prohibited; one-shot after model, ensemble, calibration, threshold, and postprocessing hashes are frozen",
+    "uncertainty": "paired site-block bootstrap, 10000 replicates, two-sided 95% intervals",
+    "views": [
+      "full_43529",
+      "test_only_sites_15655"
+    ]
+  }
+}
