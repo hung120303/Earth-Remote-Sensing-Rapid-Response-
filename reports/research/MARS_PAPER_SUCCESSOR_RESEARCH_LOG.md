@@ -520,6 +520,14 @@ configuration, model, threshold, or gate change invalidates the one-shot
 authorization and must be documented as post-test work rather than silently
 rerun. Byte acquisition and a verification receipt do not change the model.
 
+The sealed test acquisition is complete. All 90,666 selected assets totaling
+43,483,074,992 bytes passed their pinned Git-blob or LFS hash and exact-size
+checks; no partial or missing bytes remain. The full verification receipt
+SHA-256 is
+`eefc7b9cdbb7b950bf109bd7fa79c8d88f94c716eeca7d97a247395e95fc5895`.
+The compact resumable-transfer receipt SHA-256 is
+`8ecaa5094048db32cf025b829d0eadb0d94f6b1978b2415588b0fe7a0134b20d`.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
