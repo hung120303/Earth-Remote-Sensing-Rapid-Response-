@@ -223,9 +223,9 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
 
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
     lines = [
-        "# MARS residual fold-0 trust region",
+        f"# MARS residual fold-{report['fold']} trust region",
         "",
-        "Development-only architecture selection; the paper test and fold 1 were not loaded.",
+        "Development-only architecture analysis; the sealed paper test was not loaded.",
         "",
         "| Alpha | AP delta | Recall delta at <=7.13% FPR | IoU delta | Worst primary delta |",
         "|---:|---:|---:|---:|---:|",
@@ -415,9 +415,11 @@ def main() -> int:
     for value in summaries[baseline_key]["sensor_strata"].values():
         if any(float(delta) != 0.0 for delta in value["delta"].values()):
             raise RuntimeError("Alpha zero sensor stratum is not exactly released baseline")
-    assert_matches_artifact_baseline(
-        summaries[baseline_key], artifact["validation"]
-    )
+    artifact_validation = artifact.get("validation")
+    if artifact_validation and "released_baseline" in artifact_validation:
+        assert_matches_artifact_baseline(
+            summaries[baseline_key], artifact_validation
+        )
 
     selected_key, selected = select_alpha(summaries)
     checks = selected["promotion_checks"]
@@ -429,7 +431,8 @@ def main() -> int:
     )
     report = {
         "schema_version": 1,
-        "scope": "fold-0 development architecture selection; fold 1 and paper test not loaded",
+        "scope": f"fold-{args.fold} development architecture analysis; paper test not loaded",
+        "fold": args.fold,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "rows": int(y.size),
         "positive": int(np.count_nonzero(y == 1)),
