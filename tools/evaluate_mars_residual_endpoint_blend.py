@@ -41,7 +41,6 @@ from train_mars_paper_residual import (
     pixel_accumulator,
     verify_acquisition_receipt,
 )
-from train_mars_source_aligned_residual import contract_residual_strength
 
 DEFAULT_PRIMARY_ARTIFACT = Path(
     "EarthRemoteSensingRapidResponse/artifacts/mars_paper_residual_fold0_seed606.pt"
@@ -131,6 +130,21 @@ def load_residual_model(
     model.sensor_log_scale.copy_(artifact["sensor_log_scale"].to(device))
     model.sensor_bias.copy_(artifact["sensor_bias"].to(device))
     return model.eval()
+
+
+def trust_region_logits(
+    baseline_logits: torch.Tensor,
+    trained_logits: torch.Tensor,
+    alpha: float,
+) -> torch.Tensor:
+    if alpha == 0.0:
+        return baseline_logits
+    if alpha == 1.0:
+        return trained_logits
+    return (
+        baseline_logits.float()
+        + alpha * (trained_logits.float() - baseline_logits.float())
+    ).to(baseline_logits.dtype)
 
 
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
@@ -238,7 +252,6 @@ def main() -> int:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     checkpoint = (root / args.released_checkpoint).resolve()
     primary_model = load_residual_model(checkpoint, primary_artifact, device)
-    contract_residual_strength(primary_model, 0.5)
     source_model = load_residual_model(checkpoint, source_artifact, device)
 
     labels: list[int] = []
@@ -266,7 +279,9 @@ def main() -> int:
                 batch["inputs"], batch["observable"], batch["sensor_index"]
             )
         baseline_logits = primary_output["baseline_logits"]
-        primary_logits = primary_output["segmentation_logits"]
+        primary_logits = trust_region_logits(
+            baseline_logits, primary_output["segmentation_logits"], 0.5
+        )
         source_logits = source_output["segmentation_logits"]
         primary_float = primary_logits.float()
         endpoint_delta = source_logits.float() - primary_float

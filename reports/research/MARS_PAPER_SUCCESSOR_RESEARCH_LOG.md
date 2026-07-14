@@ -195,6 +195,14 @@ interior beta passes every promotion gate, selection maximizes balanced rank
 among passing values; otherwise it maximizes balanced rank among all interior
 values and the experiment is rejected.
 
+Pre-result arithmetic amendment: the first endpoint-blend execution aborted at
+the primary identity assertion and wrote no report. Contracting correction
+parameters by 0.5 is numerically close to, but not bitwise identical with, the
+frozen trust-region definition `baseline + 0.5 * (trained - baseline)` computed
+in float32 and cast back to the released-logit dtype. The evaluator now uses
+that original arithmetic directly. Artifacts, rows, beta grid, metrics,
+selection, and promotion gates are unchanged.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.

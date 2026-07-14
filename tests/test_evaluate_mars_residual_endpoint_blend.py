@@ -4,6 +4,8 @@ import sys
 import unittest
 from pathlib import Path
 
+import torch
+
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
@@ -11,6 +13,7 @@ if str(ROOT / "tools") not in sys.path:
 from evaluate_mars_residual_endpoint_blend import (  # noqa: E402
     assert_endpoint_identity,
     select_beta,
+    trust_region_logits,
 )
 
 
@@ -26,6 +29,16 @@ def summary(rank: tuple[float, float, float], passes: bool) -> dict:
 
 
 class EndpointBlendTests(unittest.TestCase):
+    def test_primary_endpoint_uses_frozen_trust_region_arithmetic(self) -> None:
+        baseline = torch.tensor([0.3333, -1.777], dtype=torch.float16)
+        trained = torch.tensor([0.7777, 2.125], dtype=torch.float16)
+        expected = (
+            baseline.float() + 0.5 * (trained.float() - baseline.float())
+        ).to(torch.float16)
+        self.assertTrue(torch.equal(trust_region_logits(baseline, trained, 0.5), expected))
+        self.assertIs(trust_region_logits(baseline, trained, 0.0), baseline)
+        self.assertIs(trust_region_logits(baseline, trained, 1.0), trained)
+
     def test_selection_prefers_any_fully_passing_interior_candidate(self) -> None:
         values = {
             "0": summary((0.0, 0.0, 0.0), False),
