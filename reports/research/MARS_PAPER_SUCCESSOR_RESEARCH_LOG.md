@@ -63,6 +63,7 @@ Implementation audit: the earlier `mars_v4_simulation.py` wrapper admitted only 
 | 2026-07-14 | Complete development label audit | 6/3,811 positive scenes have producer-supplied raw empty masks; all six are `bad_retrieval` rows from one fold-4 site (4 Sentinel-2, 2 Landsat). No additional positive mask becomes empty only after observability filtering. | Preserve upstream semantics explicitly: scene label remains positive and pixel target remains empty; do not relabel or drop rows. |
 | 2026-07-14 | Preregistered correction-only fold 0, seed 606 | Best epoch 7: AP 0.88599 vs 0.88645 (Δ −0.00046), recall 0.95570 vs 0.95705 (Δ −0.00134), IoU 0.49884 vs 0.50863 (Δ −0.00979). Landsat AP/IoU Δ −0.00118/−0.01385; Sentinel-2 +0.00002/−0.00943. | Rejected all promotion checks; do not access fold 1 with this architecture. Preserve artifact `b94880d8…c7d49` for fold-0 trust-region analysis. |
 | 2026-07-14 | Frozen fold-0 correction trust region | Selected α=0.5: AP 0.88891 (Δ +0.00246), recall 0.95705 (Δ 0), IoU 0.51897 (Δ +0.01034). Landsat AP/IoU Δ +0.00031/+0.00526; Sentinel-2 +0.00361/+0.01073. Alpha zero reproduced the stored baseline exactly. | Rejected because recall was equal rather than strictly higher; do not access fold 1. Proceed to source-aligned fitting. |
+| 2026-07-14 | Source-aligned residual smoke | 128 sampled crops, 27.34% simulated overall; CH₄-weighted BCE and complete mixed-sensor validation executed. Tiny-cohort AP Δ −0.00095, recall Δ 0, IoU Δ +0.00553. Twenty-four focused tests pass. | Pipeline-only pass; freeze a full fold-0 configuration before reading full results. |
 
 ## Frozen primary correction run
 
@@ -131,6 +132,36 @@ The frozen command is:
 
 ```text
 python tools/evaluate_mars_residual_trust_region.py
+```
+
+## Frozen source-aligned residual run
+
+The first source-aligned follow-up starts from the fold-0 trust-region model at
+alpha 0.5 and keeps the released backbone frozen. It changes the fitting signal,
+not the held-out evaluator: real and simulated plume pixels use the authors'
+CH₄-weighted BCE contract (positive weight 10; enhancement clamped to 100–2,000
+ppb and divided by 1,000), and simulation rotates real fit-fold enhancement
+fields onto clear, onshore fit-fold no-plume targets with source/target wind
+speeds within 1.5 m/s and target speed no more than 9 m/s. Training crops are
+192 pixels, as in the released recipe. The asymmetric released-teacher terms
+remain at lower weights to protect no-plume precision and annotated plume
+support.
+
+- Code commit: `fb289435c238faa63d44ab02984a5a9dfa322312`
+- Script SHA-256: `a0a10e4c911b153731aefa34cf79f9af3c9557f73770317c2dce744f97c95a82`
+- Parent artifact SHA-256: `b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49`
+- Fold / seed: 0 / 707
+- Epochs / samples per epoch / batch: 8 / 32,768 / 16
+- Learning rate / weight decay / patience: 0.00005 / 0.000001 / 3
+- Initial residual strength / simulation fraction on positive requests: 0.5 / 0.5
+- Loss weights: scene 0.05, no-plume upward 0.10, plume-pixel downward 0.10, correction L2 0.001
+- Site/label/sensor cells receive equal sampling mass; rows are sampled within cells with replacement.
+- Selection and promotion gates are unchanged. Fold 1 remains unread unless every fold-0 gate passes.
+
+The frozen command is:
+
+```text
+python tools/train_mars_source_aligned_residual.py
 ```
 
 ## Predeclared next experiments
