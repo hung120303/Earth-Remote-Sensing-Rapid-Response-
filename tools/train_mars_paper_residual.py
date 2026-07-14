@@ -233,7 +233,13 @@ def move_batch(batch: dict[str, Any], device: torch.device) -> dict[str, Any]:
 
 
 def successor_loss(
-    output: dict[str, torch.Tensor], batch: dict[str, torch.Tensor]
+    output: dict[str, torch.Tensor],
+    batch: dict[str, torch.Tensor],
+    *,
+    scene_weight: float = 0.25,
+    negative_upward_weight: float = 0.25,
+    positive_downward_weight: float = 0.10,
+    correction_l2_weight: float = 0.002,
 ) -> tuple[torch.Tensor, dict[str, float]]:
     segmentation, segmentation_parts = hard_negative_segmentation_loss(
         output["segmentation_logits"], batch["mask"], batch["observable"]
@@ -247,12 +253,20 @@ def successor_loss(
         output["segmentation_logits"] - output["baseline_logits"].detach()
     )
     upward_penalty = (upward * valid_negative).sum() / valid_negative.sum().clamp_min(1)
+    valid_positive = (batch["mask"] > 0.5) & (batch["observable"] > 0.5)
+    downward = F.relu(
+        output["baseline_logits"].detach() - output["segmentation_logits"]
+    )
+    downward_penalty = (downward * valid_positive).sum() / valid_positive.sum().clamp_min(
+        1
+    )
     correction_penalty = output["correction_logits"].square().mean()
     total = (
         segmentation
-        + 0.25 * scene
-        + 0.25 * upward_penalty
-        + 0.002 * correction_penalty
+        + scene_weight * scene
+        + negative_upward_weight * upward_penalty
+        + positive_downward_weight * downward_penalty
+        + correction_l2_weight * correction_penalty
     )
     return total, {
         "total": float(total.detach()),
@@ -265,6 +279,7 @@ def successor_loss(
         ),
         "scene_bce": float(scene.detach()),
         "negative_upward_penalty": float(upward_penalty.detach()),
+        "positive_downward_penalty": float(downward_penalty.detach()),
         "correction_l2": float(correction_penalty.detach()),
     }
 
@@ -444,6 +459,7 @@ def artifact_payload(
     epoch: int,
     protocol_hash: str,
     validation: dict[str, Any],
+    loss_weights: dict[str, float],
 ) -> dict[str, Any]:
     return {
         "schema_version": 1,
@@ -457,6 +473,7 @@ def artifact_payload(
         "sensor_log_scale": model.sensor_log_scale.detach().cpu(),
         "sensor_bias": model.sensor_bias.detach().cpu(),
         "validation": validation,
+        "loss_weights": loss_weights,
     }
 
 
@@ -473,6 +490,7 @@ def train(
     learning_rate: float,
     patience: int,
     protocol_hash: str,
+    loss_weights: dict[str, float],
 ) -> tuple[list[dict[str, Any]], int]:
     parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
     optimizer = torch.optim.AdamW(parameters, lr=learning_rate, weight_decay=1e-4)
@@ -496,7 +514,7 @@ def train(
                 output = model(
                     batch["inputs"], batch["observable"], batch["sensor_index"]
                 )
-                loss, values = successor_loss(output, batch)
+                loss, values = successor_loss(output, batch, **loss_weights)
             scaler.scale(loss).backward()
             scaler.unscale_(optimizer)
             torch.nn.utils.clip_grad_norm_(parameters, 5.0)
@@ -537,6 +555,7 @@ def train(
                     epoch=epoch,
                     protocol_hash=protocol_hash,
                     validation=validation,
+                    loss_weights=loss_weights,
                 ),
                 artifact,
             )
@@ -600,11 +619,23 @@ def main() -> int:
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--learning-rate", type=float, default=2e-4)
+    parser.add_argument("--scene-weight", type=float, default=0.25)
+    parser.add_argument("--negative-upward-weight", type=float, default=0.25)
+    parser.add_argument("--positive-downward-weight", type=float, default=0.10)
+    parser.add_argument("--correction-l2-weight", type=float, default=0.002)
     parser.add_argument("--patience", type=int, default=4)
     parser.add_argument("--smoke", action="store_true")
     args = parser.parse_args()
     if args.epochs <= 0 or args.samples_per_epoch <= 0 or args.batch_size <= 0:
         parser.error("epochs, samples-per-epoch, and batch-size must be positive")
+    loss_weights = {
+        "scene_weight": args.scene_weight,
+        "negative_upward_weight": args.negative_upward_weight,
+        "positive_downward_weight": args.positive_downward_weight,
+        "correction_l2_weight": args.correction_l2_weight,
+    }
+    if any(not math.isfinite(value) or value < 0 for value in loss_weights.values()):
+        parser.error("loss weights must be non-negative")
     root = repo_root()
     seed_everything(args.seed)
     metadata_dir = (root / args.metadata_dir).resolve()
@@ -685,6 +716,7 @@ def main() -> int:
         learning_rate=args.learning_rate,
         patience=args.patience,
         protocol_hash=sha256(protocol_path),
+        loss_weights=loss_weights,
     )
     if best_epoch < 1:
         raise RuntimeError("Training did not produce a checkpoint")
@@ -717,6 +749,7 @@ def main() -> int:
             "held_out_fold": args.fold,
             "seed": args.seed,
             "smoke": args.smoke,
+            "loss_weights": loss_weights,
         },
         "cohort": {
             "fit_rows": len(fit_records),

@@ -53,6 +53,24 @@ class MarsPaperResidualTrainingTests(unittest.TestCase):
         loss.backward()
         self.assertIsNotNone(logits.grad)
 
+    def test_positive_downward_change_is_penalized(self) -> None:
+        logits = torch.zeros(1, 1, 4, 4, requires_grad=True)
+        output = {
+            "segmentation_logits": logits,
+            "baseline_logits": torch.ones_like(logits),
+            "correction_logits": logits,
+            "scene_logit": torch.zeros(1, requires_grad=True),
+        }
+        batch = {
+            "mask": torch.ones_like(logits),
+            "observable": torch.ones_like(logits),
+            "presence": torch.ones(1),
+        }
+        loss, parts = successor_loss(output, batch)
+        self.assertGreater(parts["positive_downward_penalty"], 0.0)
+        loss.backward()
+        self.assertIsNotNone(logits.grad)
+
     def test_receipt_must_match_development_manifest(self) -> None:
         import json
         import tempfile
