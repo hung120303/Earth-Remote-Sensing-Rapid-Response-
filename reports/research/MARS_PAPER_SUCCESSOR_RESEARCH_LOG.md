@@ -297,6 +297,18 @@ uses the same strict AP/recall/FPR/IoU and sensor non-regression gates as the
 first scene-head evaluation. No context statistic uses labels; all are computed
 within the evaluation site's own image sequence. This is a one-shot result.
 
+## Frozen three-fold OOF context-head search
+
+Single-fold inner recall did not transfer to fold 0, so the same eight context
+model specifications and five blend weights are now selected by complete
+out-of-fold predictions across folds 2, 3, and 4. For each held-out fold the
+model is trained only on the other two, while label-free context remains within
+site. Authorization requires pooled AP and recall gains, at least six extra
+pooled true positives, no recall regression on any inner fold, recall gains on
+at least two of three folds, no fold AP loss beyond 0.005, and pooled sensor AP
+protection. Only a stable pass may be refit on all three folds and receive a
+new preregistered fold-0 evaluation. Fold 1 and the paper test remain unread.
+
 ## Predeclared next experiments
 
 1. Reproduce the released model on complete held-out folds 0 and 1 under the exact connected-component evaluator.
