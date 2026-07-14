@@ -74,6 +74,7 @@ Implementation audit: the earlier `mars_v4_simulation.py` wrapper admitted only 
 | 2026-07-14 | Three-fold OOF site-context selection on folds 2/3/4 | HGB (31 leaves, min leaf 20, L2 10), blend 0.625: pooled AP Δ +0.01437, recall Δ +0.00732 (17 extra TPs), Sentinel-2/Landsat AP Δ +0.01516/+0.00780. Recall Δ by held-out fold: +0.01129/+0.00923/+0.00261; AP Δ +0.01177/+0.01880/+0.02235. | Passed every OOF stability gate. Freeze refit artifact `2d014f54…c370` and preregister a new fold-0 evaluation on the unchanged cache. |
 | 2026-07-14 | OOF-stable context head at selected blend 0.625, fold 0 | AP 0.90272 vs 0.88645 (Δ +0.01627), recall 0.95570 vs 0.95705 (Δ −0.00134; one fewer TP), FPR unchanged, IoU Δ +0.01034. Sentinel-2/Landsat AP Δ +0.02260/+0.00456. | Rejected only on recall. The model family transfers AP but the maximum-ranked blend over-intervenes at the discrete cutoff; freeze a minimum-intervention OOF trust region that selects the smallest blend satisfying stability. |
 | 2026-07-14 | Minimum-intervention OOF context trust region | Smallest fully stable blend is 0.25: pooled AP Δ +0.01373, recall Δ +0.00302 (7 extra TPs), Sentinel-2/Landsat AP Δ +0.01448/+0.00783. Fold-2/3/4 recall Δ +0.00753/+0.00528/+0.00392 and AP Δ +0.01231/+0.01423/+0.02146. | Passed every OOF gate. Freeze blend 0.25 with the unchanged HGB artifact for one fold-0 evaluation. |
+| 2026-07-14 | Minimum-intervention OOF context head, one-shot fold 0 | AP 0.90092 vs 0.88645 (Δ +0.01447), recall 0.95973 vs 0.95705 (Δ +0.00268; two extra TPs), FPR unchanged at 0.07122, IoU 0.51897 vs 0.50863 (Δ +0.01034). Sentinel-2 AP/IoU Δ +0.01905/+0.01073; Landsat +0.00516/+0.00526. | Passed every fold-0 gate. Freeze the architecture; authorize an untouched fold-1 confirmation using a fold-1 residual trained without fold-1 labels and a fixed epoch inherited from fold 0. |
 
 ## Frozen primary correction run
 
@@ -347,6 +348,14 @@ The fold-0 minimum-intervention run is frozen to blend 0.25, selection SHA-256
 the unchanged HGB artifact/cache/primary hashes, and the same strict promotion
 gates. The evaluator rejects any selection other than the exact OOF-stable 0.25
 value. It is a one-shot result; fold 1 remains unread unless all gates pass.
+
+Fold 0 passed every strict gate. The authoritative result SHA-256 is
+`4eec74a60109e6ed48d10358bde3c077755cfb15fa166dbec20d655ec2c492ce`.
+Independent confirmation must not reuse the fold-0 residual because that model
+fit fold-1 scenes. A fold-1 residual must train on all non-fold-1 development
+sites with the already frozen primary recipe, alpha 0.5, and epoch 7 inherited
+from fold 0. Fold-1 labels may be read once after training, not used for epoch
+selection or early stopping. The scene-head spec and blend remain unchanged.
 
 ## Predeclared next experiments
 

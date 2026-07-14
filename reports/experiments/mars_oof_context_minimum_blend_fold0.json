@@ -1,0 +1,125 @@
+{
+  "architecture": {
+    "blend_lambda": 0.25,
+    "scene_head": "oof_stable_context_scene_ranker_v1",
+    "segmentation": "frozen primary residual at exact alpha 0.5",
+    "selection_rule": "smallest blend passing every prior OOF stability gate",
+    "spec": {
+      "family": "hist_gradient_boosting",
+      "l2_regularization": 10.0,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 20
+    }
+  },
+  "decision": "Advance the minimum-intervention OOF context architecture to fold-1 confirmation.",
+  "generated_at_utc": "2026-07-14T17:18:29.696849+00:00",
+  "positive": 745,
+  "primary_endpoint_identity": {
+    "accuracy": 0.9311227328363191,
+    "auroc": 0.9793368879971467,
+    "average_precision": 0.8889106066831371,
+    "false_positive_rate": 0.0712205775297258,
+    "fn": 32.0,
+    "fp": 587.0,
+    "negative_predictive_value": 0.9958371276180564,
+    "operating_point": {
+      "false_positive_rate": 0.0712205775297258,
+      "precision": 0.5484615384615384,
+      "recall": 0.9570469798657718,
+      "target_fpr": 0.0713,
+      "threshold": 0.548018753528595
+    },
+    "precision": 0.5484615384615384,
+    "recall": 0.9570469798657718,
+    "sensor_average_precision": {
+      "Landsat": 0.9749018979140949,
+      "Sentinel-2": 0.8482014323168472
+    },
+    "specificity": 0.9287794224702742,
+    "tn": 7655.0,
+    "tp": 713.0
+  },
+  "provenance": {
+    "artifact_sha256": "2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ec27c370",
+    "cache_sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7",
+    "git_commit": "870f80c7817126c0faca1c2c05fd0b256bdec70a",
+    "joblib": "1.5.3",
+    "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "numpy": "2.4.4",
+    "primary_report_sha256": "bb9763a9bdbf0ddd14c3e1c718af9bceff47e0a1c6f04a4749833968368b79b5",
+    "protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "scipy": "1.17.1",
+    "script_sha256": "51b816c8012bd2826f669888a6d23ec4d34971fc79d4da6fa1ef0463dd41f737",
+    "selection_sha256": "8fc190bf4cac9d3abb24979cd20678930f09143302a69ddbfb944a7959951b0b",
+    "sklearn": "1.9.0"
+  },
+  "result": {
+    "checks": {
+      "ap_higher": true,
+      "fpr_no_worse": true,
+      "no_material_sensor_regression": true,
+      "pixel_iou_higher": true,
+      "recall_at_fpr_0_0713_higher": true
+    },
+    "delta": {
+      "average_precision": 0.014470383620190042,
+      "false_positive_rate_at_target": 0.0,
+      "pixel_iou": 0.010340405464818847,
+      "recall_at_fpr_0_0713": 0.0026845637583892135
+    },
+    "pixel_iou": 0.5189667495013471,
+    "released_baseline": {
+      "average_precision": 0.8864523081045828,
+      "false_positive_rate_at_target": 0.0712205775297258,
+      "pixel_iou": 0.5086263440365283,
+      "recall_at_fpr_0_0713": 0.9570469798657718
+    },
+    "scene": {
+      "accuracy": 0.9313452765105152,
+      "auroc": 0.9807968353286247,
+      "average_precision": 0.9009226917247728,
+      "false_positive_rate": 0.0712205775297258,
+      "fn": 30.0,
+      "fp": 587.0,
+      "negative_predictive_value": 0.996096291476903,
+      "operating_point": {
+        "false_positive_rate": 0.0712205775297258,
+        "precision": 0.5491551459293394,
+        "recall": 0.959731543624161,
+        "target_fpr": 0.0713,
+        "threshold": 0.34877820153534494
+      },
+      "precision": 0.5491551459293394,
+      "recall": 0.959731543624161,
+      "sensor_average_precision": {
+        "Landsat": 0.9797552603543213,
+        "Sentinel-2": 0.8636361189061526
+      },
+      "specificity": 0.9287794224702742,
+      "tn": 7655.0,
+      "tp": 715.0
+    },
+    "sensor_strata": {
+      "Landsat": {
+        "average_precision": 0.9797552603543213,
+        "delta": {
+          "average_precision": 0.00516359582858672,
+          "pixel_iou": 0.005263845385902188
+        },
+        "pixel_iou": 0.7017323346330119
+      },
+      "Sentinel-2": {
+        "average_precision": 0.8636361189061526,
+        "delta": {
+          "average_precision": 0.019045475015079583,
+          "pixel_iou": 0.010733628303951137
+        },
+        "pixel_iou": 0.4479657398249622
+      }
+    }
+  },
+  "rows": 8987,
+  "schema_version": 1,
+  "scope": "one-shot minimum-intervention OOF-context fold-0 evaluation",
+  "sites": 107
+}
