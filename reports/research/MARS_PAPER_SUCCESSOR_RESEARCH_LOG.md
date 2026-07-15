@@ -1027,3 +1027,51 @@ SHA-256 is
 `3d2561b6835abaf99141710dda166f1ebff85ec214f52fc1374d14dae5758030`;
 result JSON SHA-256 is
 `bc05836a18b1f1cd795a7bd3223849290d0b20a3d3f0fad7b1e30a53731fd5d0`.
+
+## All-development ExtraTrees refit: negative post-test diagnostic
+
+After the v2 ExtraTrees scene-head specification and 0.625 logit blend passed
+the original development selection and confirmation checks, that fixed
+specification was refit once on all 44,363 authorized development scenes
+(3,811 positives across 618 physical groups). No architecture or
+hyperparameter changed. The resulting in-sample AP of 0.97492 is recorded only
+as a fit audit and is not evidence of generalization. Artifact SHA-256 is
+`7dd81a2f1d9b30b88500eeceb086664c4a3fb1cad21810a10783b2ce72c4ab1a`.
+
+A transparent paper-cache replay did not justify promotion. Full-view AP was
+0.67295 versus the released comparator's 0.64102, delta +0.03193 with paired
+site-bootstrap lower bound +0.01425; matched-FPR recall lower bound was
++0.01834. Test-only-site AP was only 0.46006 versus 0.45027, delta +0.00979
+with lower bound -0.02298; matched-FPR recall lower bound was -0.01550. This is
+worse than both the cross-fitted v3 head (0.46550) and the ordinary spatial
+complement (0.46774) on the site-novel view. The refit is rejected. Fitting
+every development row improves apparent training separation while removing
+the cross-fitted diversity that mattered for new-site ranking; it is not the
+final deployment head. Exact replay script SHA-256 is
+`ccc734acbf2c2fc0bbad82c38dbb56e4ac93b5189c0d937206be239fad80e1da`;
+result JSON SHA-256 is
+`d101752cd3764da055746e5738ed58a9bfa28366575690bc5a66a8d8cd648b71`.
+
+## MethaneS2CM v5.1 frozen context transfer: negative experiment
+
+The independently trained MethaneS2CM v5.1 checkpoint (seed 1101, checkpoint
+SHA-256
+`7b648548cc62ca3f6d428df2cf427e373fba5a7bdcf03aabada68bf6f1cfc446`)
+was tested as a frozen methane-specific representation. Its context branch,
+direct mask statistics, and intermediate pooled features produced 401
+features for all 44,363 development scenes. The ignored float16 cache has
+SHA-256
+`6f4a9adedbcf9c389fb4a49d5304f2ed4de92fef61538988e14905063f076b96`.
+
+Zero-shot scores transferred poorly. On inner folds 2/3/4, direct mask,
+context, and fused AP were 0.113, 0.079, and 0.093; fold-0 values were 0.148,
+0.077, and 0.099; fold-1 values were 0.120, 0.064, and 0.079. A fixed
+200-tree ExtraTrees probe over the 401 features plus the established scene
+features also regressed: raw AP was 0.86436 versus the current head's 0.90331
+on inner folds, 0.88919 versus 0.91429 on fold 0, and 0.87692 versus 0.89661
+on fold 1. Logit blends did not recover the inner or fold-0 loss; fold 1 gained
+only +0.00029 at a 0.10 blend. The branch is rejected before paper-feature
+extraction. Methane-task specificity alone did not compensate for its domain
+and input-contract mismatch with mixed MARS Sentinel-2/Landsat pairs. Feature
+extractor SHA-256 is
+`fed0c05b75ed7b721ba59b2463a944094a770f9196774b77fbc6605a5aea3fe2`.
