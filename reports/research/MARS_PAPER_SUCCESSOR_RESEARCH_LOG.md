@@ -859,3 +859,30 @@ all-fold delta was -0.00136 with lower bound -0.00404. The rule is rejected.
 This is convergent evidence with the scene-routing failure: hard offshore
 suppression exploits the paper test's domain mix but is unsafe for real
 offshore plume detection.
+
+## Frozen multi-scale encoder probe: negative experiment
+
+Recent spatial-spectral and scale-aware remote-sensing representation work,
+together with methane-specific attention models, motivated testing richer
+internal representations before attempting another end-to-end detector. The
+released MARS U-Net was frozen and used to extract masked mean, standard
+deviation, and maximum activations from encoder levels 3, 4, and 5. This
+produced 3,840 deterministic features for every one of 44,363 development
+scenes. The 316 MB compressed feature cache is ignored by Git; SHA-256 is
+`397501c6230436cb677047abb8b2895f3bafb9916150087370c9586a47559e1f`.
+
+Seven low-capacity probes were cross-fitted on folds 2/3/4: linear probes over
+all three scales and 64-unit MLPs over the deepest scale, with the established
+108 scalar scene features appended. Uniform, physical-group, and
+site/label/sensor-cell weighting were compared, plus one all-scale MLP. Every
+standalone probe was worse than the existing primary score. The least-bad
+site-cell-weighted level-5 MLP had inner AP delta -0.03136 versus primary and
+-0.06093 versus the stronger ExtraTrees head. Held-fold degradation was larger:
+-0.07970 AP on fold 0 and -0.08566 on fold 1 versus primary.
+
+The probe is rejected before any paper-test feature extraction. Global channel
+moments discard the spatial plume morphology needed to distinguish compact
+methane structure from high-response background artifacts. If deep spatial
+features are revisited, the next justified design is an explicitly spatial,
+physics-guided morphology classifier over released logits and temporal SWIR
+contrast maps, not a larger classifier over pooled moments.
