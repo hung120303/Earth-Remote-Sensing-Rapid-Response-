@@ -1434,3 +1434,20 @@ feature cache; only then could one all-development ExtraTrees model be fitted
 with paper-feature density weights. Frozen script SHA-256 is
 `3e95b711e64a00aeb5389b15a089d51f551cf81bbf4e38457cdf5fcc700564ce`;
 the synthetic density-direction/normalization test passes.
+
+The frozen target-density experiment is rejected before paper adaptation.
+The selected conservative contract uses square-root density odds clipped to
+[0.25, 4] and a 0.30 target-weighted-head blend. It improves pooled AP by
++0.004408 versus current, with paired physical-site interval
+[+0.002488, +0.006234], and improves pooled matched-FPR recall by +0.001050.
+All five folds improve AP (+0.002050 / +0.003398 / +0.004511 / +0.008843 /
++0.004198), while Landsat and Sentinel-2 improve +0.000745 and +0.006103 AP.
+
+The frozen every-fold recall gate nevertheless fails: fold 4 changes
+-0.001305 (one positive at its fold size), while fold 0 ties and folds 1--3
+improve. The highly separable fold-1 domain audit (AUC 0.998313) also confirms
+that the experiment is addressing a substantial feature-distribution shift,
+not merely tree randomness. Because the sole failure is a predeclared
+stability condition, no paper feature is loaded and the result remains a
+development-only negative. Result JSON SHA-256 is
+`1926e16e912e8e3aecc9df5fc1fc6b29d3b2b6af4e0d1d3e9ccd6252999af6a3`.
