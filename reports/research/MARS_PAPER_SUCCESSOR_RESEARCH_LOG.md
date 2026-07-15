@@ -1352,3 +1352,17 @@ its models were fitted independently of paper data and remain eligible as
 fixed components of a separately preregistered development-only trust-region
 experiment. Result JSON SHA-256 is
 `d9d8da26df1912ac62ae71c32ba8bab108d28f5367feed59656fb8a0d118760e`.
+
+The follow-up trust region is frozen before its rerun. It reuses the identical
+nested OOF member construction and hash-pinned five-member final artifact, but
+blends each probability/logit-mean or probability-median bag score around the
+current v3 stronger head rather than around primary. Bag weights are fixed at
+0.05 / 0.10 / 0.20 / 0.30 / 0.40 / 0.50 / 0.625 / 0.75 / 0.875 / 1.00.
+Authorization requires at least +0.002 pooled AP versus current, positive
+pooled recall, strictly positive AP on every fold, nonnegative recall on every
+fold, no sensor AP regression, and positive paired-site AP lower bounds versus
+both current and primary. Ranking prioritizes worst-fold recall and AP before
+pooled AP, implementing a minimum-risk recall repair rather than maximizing
+the already observed pooled gain. Paper data remains excluded. Frozen script
+SHA-256 is
+`a9f6297cea26dbaba57bcd0ae20d6ce24bfc68fea77f32deb5f422913793b1e7`.
