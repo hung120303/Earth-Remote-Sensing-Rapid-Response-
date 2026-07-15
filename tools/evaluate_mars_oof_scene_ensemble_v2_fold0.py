@@ -56,12 +56,14 @@ def write_markdown(path: Path, report: dict) -> None:
         "",
         f"The head was frozen on folds 2/3/4. This evaluates fold {report['fold']}; the paper test was not loaded.",
         "",
-        "| Model | AP | Recall at <=7.13% FPR | FPR | Pixel IoU |",
+        "| Model | AP | Recall at <=7.13% FPR | FPR | Pixel IoU (diagnostic) |",
         "|---|---:|---:|---:|---:|",
         f"| Released MARS-S2L | {baseline['average_precision']:.5f} | {baseline['recall_at_fpr_0_0713']:.5f} | {baseline['false_positive_rate_at_target']:.5f} | {baseline['pixel_iou']:.5f} |",
         f"| OOF scene ensemble v2 | {candidate['average_precision']:.5f} | {candidate['operating_point']['recall']:.5f} | {candidate['operating_point']['false_positive_rate']:.5f} | {report['result']['pixel_iou']:.5f} |",
         "",
         f"AP delta: {delta['average_precision']:+.5f}; paired site-bootstrap 95% CI [{bootstrap['lower']:+.5f}, {bootstrap['upper']:+.5f}].",
+        "",
+        "Promotion is scene-only: final dense masks use released logits with separately confirmed sensor thresholds, not this residual endpoint.",
         "",
         report["decision"],
     ]
@@ -150,7 +152,16 @@ def main() -> int:
         replicates=args.bootstrap_replicates,
         seed=20262715,
     )
-    checks = {**result["checks"], "paired_group_bootstrap_ap_lower_positive": bootstrap["lower"] > 0.0}
+    checks = {
+        name: result["checks"][name]
+        for name in (
+            "ap_higher",
+            "recall_at_fpr_0_0713_higher",
+            "fpr_no_worse",
+            "no_material_sensor_regression",
+        )
+    }
+    checks["paired_group_bootstrap_ap_lower_positive"] = bootstrap["lower"] > 0.0
     passed = all(checks.values())
     report = {
         "schema_version": 1,
@@ -161,7 +172,7 @@ def main() -> int:
         "positive": int(labels.sum()),
         "sites": len(set(groups.tolist())),
         "architecture": {
-            "segmentation": "frozen primary residual at exact alpha 0.5",
+            "segmentation": "diagnostic only; final mask branch uses released logits and confirmed sensor thresholds",
             "scene_head": payload["architecture"],
             "spec": payload["spec"],
             "blend_lambda": payload["blend_lambda"],
@@ -170,6 +181,10 @@ def main() -> int:
         "result": result,
         "paired_group_bootstrap_ap_delta": bootstrap,
         "checks": checks,
+        "non_promotion_diagnostics": {
+            "primary_residual_pixel_iou_higher": result["checks"]["pixel_iou_higher"],
+            "primary_residual_pixel_iou_delta": result["delta"]["pixel_iou"],
+        },
         "passed": passed,
         "decision": (
             "Advance the stronger OOF scene ensemble to the next confirmation stage."

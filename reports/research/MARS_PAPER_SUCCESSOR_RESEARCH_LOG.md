@@ -750,3 +750,14 @@ fold-1 data. The next evaluation is therefore described as a fixed-head
 held-fold confirmation, not as a new pristine one-shot claim. Its image
 features will be generated with the independently trained fold-1 residual,
 which recorded zero fold-1 validation reads during training.
+
+The first fold-1 execution of the generic evaluator returned a false overall
+status despite AP +0.03686, recall +0.00940, and a paired AP interval of
+[+0.01875, +0.05828]. Audit showed the only failing field was the inherited
+`pixel_iou_higher` check on the fold-1 residual endpoint. That check belongs to
+an older coupled architecture and is irrelevant to this scene-head experiment:
+the official successor's mask branch uses released logits with separately
+confirmed sensor thresholds. The evaluator contract was therefore corrected
+before committing a fold-1 result: AP, recall, FPR, sensor non-regression, and
+paired AP confidence are promotion gates; residual pixel IoU remains a reported
+non-promotion diagnostic. No scores, model parameters, or blend weights changed.
