@@ -769,4 +769,24 @@ bootstrap interval [+0.00966, +0.04546]. Fold 1 reaches AP 0.89661 versus
 [+0.01875, +0.05828]. The fold-0/fold-1 operating thresholds are 0.15312 and
 0.28188; the conservative fixed operational threshold for a post-test v3
 architecture is therefore 0.28187603894788654. Result hashes are
-`4827c6a3…bd06` (fold 0) and `8380d079…0d1c` (fold 1).
+`4827c6a380010bb6a234d85298427e35ce2583051869300cbcabda3f4cb3bd06`
+(fold 0) and
+`8380d079039ca6c9513ca125934665351c49988429336c63287e28e4cd7d0d1c`
+(fold 1).
+
+The v3 architecture was committed at `d85d1c48` before its exact-paper run.
+On the full 43,529-scene view, AP reached 0.67380 versus the exact comparator's
+0.64102 (delta +0.03278), with paired site-bootstrap interval
+[+0.01424, +0.04684]. This is the first statistically positive full-view AP
+result. Matched-FPR recall also increased by +0.03199 with lower bound
++0.01892, while fixed-threshold FPR was 0.03303.
+
+On the 15,655-scene test-only-site view, AP was 0.46550 versus 0.45027 (delta
++0.01523), but its interval [-0.01874, +0.04639] still crossed zero.
+Matched-FPR recall increased by +0.02203, but its lower bound was -0.00901, so
+that confidence gate also regressed from v2. The v2 dense masks reproduced
+exactly: full IoU 0.33747 retained interval [-0.00326, +0.02968], while
+test-only IoU 0.21809 retained [+0.03049, +0.06281]. V3 therefore clears the
+full AP gate but still fails full IoU confidence plus test-only AP and recall
+confidence. Result JSON SHA-256 is
+`6086f09d9948fde846b83a01c4ce6bdba2080d43a2f4cb409fa2e1de470a065a`.

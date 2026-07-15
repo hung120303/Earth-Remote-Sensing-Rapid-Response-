@@ -1,0 +1,398 @@
+{
+  "architecture": {
+    "mask_minimum_connected_pixels": 100,
+    "mask_probability_threshold_by_sensor": {
+      "Landsat": 0.7,
+      "Sentinel-2": 0.8
+    },
+    "mask_threshold_rule": "unchanged from v2: development-selected and folds-0/1-confirmed sensor routing",
+    "name": "ersrr_mars_successor_v3_posttest_scene_ensemble",
+    "operational_scene_threshold": 0.28187603894788654,
+    "operational_threshold_rule": "maximum target-FPR threshold across fixed-head held folds 0 and 1; conservative no-plume control",
+    "scene_head_blend": 0.625,
+    "scene_residual_alpha": 0.5
+  },
+  "comparator_identity": {
+    "current_released_raster_rows": 43524,
+    "delta_vs_published": {
+      "full": {
+        "average_precision": 0.00021960241042173756,
+        "false_positive_rate": -0.0006076996835746445,
+        "pixel_iou": 0.001965148584935461,
+        "precision": 0.0020266423357664376,
+        "recall": 5.791505791497009e-06
+      },
+      "test_only_sites": {
+        "average_precision": 0.0006738001490847467,
+        "false_positive_rate": -0.0007879439979258523,
+        "precision": 0.0011453392990305733,
+        "recall": 3.039647577096627e-05
+      }
+    },
+    "full": {
+      "accuracy": 0.9235681959153668,
+      "average_precision": 0.6410196024104218,
+      "false_positive_rate": 0.07069230031642536,
+      "fn": 378,
+      "fp": 2949,
+      "negative": 41716,
+      "pixel_fn": 1073087,
+      "pixel_fp": 2668518,
+      "pixel_iou": 0.3243651485849355,
+      "pixel_tp": 1796305,
+      "positive": 1813,
+      "precision": 0.3273266423357664,
+      "recall": 0.7915057915057915,
+      "rows": 43529,
+      "sites": 1289,
+      "tn": 38767,
+      "tp": 1435
+    },
+    "identity_checks": {
+      "full_positive": true,
+      "full_recall_rounds_to_paper": true,
+      "full_rows": true,
+      "full_sites": true,
+      "test_only_positive": true,
+      "test_only_recall_rounds_to_paper": true,
+      "test_only_rows": true,
+      "test_only_sites": true
+    },
+    "missing_current_released_raster_ids": [
+      "3a42905f-bb33-4585-83c3-077e39b1a7be",
+      "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
+      "689601b8-e36b-4252-8cb3-27b0ff280c03",
+      "78ed244b-208a-460f-a6b5-6a8cb1ffe8ea",
+      "b25c9cf2-7082-40d5-ae42-1bc3e1412e5a"
+    ],
+    "missing_current_released_raster_rows": 5,
+    "missing_public_metadata_ids": [
+      "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
+      "689601b8-e36b-4252-8cb3-27b0ff280c03"
+    ],
+    "missing_public_metadata_rows": 2,
+    "offshore_replacements": 2185,
+    "paper_target_vs_public_metadata_label_disagreements": 23,
+    "positive_ids_without_current_pixel_truth": [
+      "3a42905f-bb33-4585-83c3-077e39b1a7be",
+      "4e7d0fbd-f197-4ee3-813d-e383695c7ece",
+      "689601b8-e36b-4252-8cb3-27b0ff280c03",
+      "f23e3c5b-8349-491e-9aa5-a627cefb6213"
+    ],
+    "positive_rows_without_current_pixel_truth": 4,
+    "public_metadata_rows": 43527,
+    "published": {
+      "full": {
+        "average_precision": 0.6408,
+        "false_positive_rate": 0.0713,
+        "negative": 41716,
+        "pixel_iou": 0.3224,
+        "positive": 1813,
+        "precision": 0.3253,
+        "recall": 0.7915,
+        "rows": 43529,
+        "sites": 1289
+      },
+      "test_only_sites": {
+        "average_precision": 0.4496,
+        "false_positive_rate": 0.0763,
+        "negative": 15428,
+        "positive": 227,
+        "precision": 0.1301,
+        "recall": 0.7753,
+        "rows": 15655,
+        "sites": 697
+      }
+    },
+    "test_only_sites": {
+      "accuracy": 0.9223251357393804,
+      "average_precision": 0.45027380014908475,
+      "false_positive_rate": 0.07551205600207415,
+      "fn": 51,
+      "fp": 1165,
+      "negative": 15428,
+      "pixel_fn": 140494,
+      "pixel_fp": 875886,
+      "pixel_iou": 0.17156194293902416,
+      "pixel_tp": 210483,
+      "positive": 227,
+      "precision": 0.13124533929903057,
+      "recall": 0.775330396475771,
+      "rows": 15655,
+      "sites": 697,
+      "tn": 14263,
+      "tp": 176
+    },
+    "training_site_count_from_released_config": 618
+  },
+  "decision": "Frozen ERSRR successor does not pass every preregistered paper-superiority gate.",
+  "evaluation_audit": {
+    "architecture_changed": true,
+    "dense_mask_predictions_changed": false,
+    "predecessor_result_sha256": "1986ad46fa3de4630d7676769df81e982d5a9b1e7a7cec83589ca5f9b314b9c0",
+    "reason": "A stronger uniform-weight ExtraTrees scene head was selected by three-fold OOF AP stability and paired site bootstrap, then confirmed with positive paired AP lower bounds on held folds 0 and 1. The v2 sensor-specific dense-mask rule is unchanged.",
+    "scene_predictions_changed": true,
+    "status": "post_test_architecture_evaluation"
+  },
+  "generated_at_utc": "2026-07-15T06:37:41.946283+00:00",
+  "missing_scene_ids": [
+    "3a42905f-bb33-4585-83c3-077e39b1a7be",
+    "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
+    "689601b8-e36b-4252-8cb3-27b0ff280c03",
+    "78ed244b-208a-460f-a6b5-6a8cb1ffe8ea",
+    "b25c9cf2-7082-40d5-ae42-1bc3e1412e5a"
+  ],
+  "passed": false,
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "d85d1c4887b6b4cd02cb6beee35cdf1d649b4ac8",
+    "joblib": "1.5.3",
+    "manifest_sha256": "685937eb599ce4612116dc5c16edc74c4c0c6273f2fa864e651cfee73d1f4f6d",
+    "mask_confirmation_sha256": "b3d77820ce1fc2a81c95e479f4412f545310ae8146cbd25f97f5c398b33fc7fe",
+    "mask_selection_sha256": "9d4dd8140908489e48be849c0e89100a8f663c3368db9354c1b30ed8670865be",
+    "mixed_cohort_sha256": "df0c592522b42fc66bf698456cd52b859b95cc44a2670e046ac5464745adbf8f",
+    "numpy": "2.4.4",
+    "paper_benchmark_sha256": "ebb39ab22720988b2657d0e4d6b9a5669c24fbca1083575797622a7f1e788eb0",
+    "rasterio": "1.4.4",
+    "receipt_sha256": "eefc7b9cdbb7b950bf109bd7fa79c8d88f94c716eeca7d97a247395e95fc5895",
+    "residual_sha256": "b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49",
+    "scene_fold0_result_sha256": "4827c6a380010bb6a234d85298427e35ce2583051869300cbcabda3f4cb3bd06",
+    "scene_fold1_result_sha256": "8380d079039ca6c9513ca125934665351c49988429336c63287e28e4cd7d0d1c",
+    "scene_head_sha256": "9e6fa18b83ef065ac24c94a06a510057a0c382cecf1efa3b54e818566a45c9ac",
+    "scene_selection_sha256": "b12f62e05d864739f8a278b414a415febaba0185c649b5dea901eaf4135ef157",
+    "scipy": "1.17.1",
+    "script_sha256": "79850e30fccbdf35f722856d2c577e90ace791c117c97d9dc6ede6e1b0df7de3",
+    "sensor_mask_confirmation_sha256": "a93a38d43eb37af661744ddebd38b5b7f62fa31d297fbea14e8606a84b1b8781",
+    "sklearn": "1.9.0",
+    "spec_sha256": "f61eec553b6614aa3a6dc30fcd128782fe67680a10c94555ff9d5b6363d492cd",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "transparent post-test architecture evaluation on the official MARS-S2L paper-v3 cohort",
+  "views": {
+    "full": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": 0.014241590525197051,
+            "mean": 0.031893520206219404,
+            "upper": 0.04683749572093667
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.04026111213423884,
+            "mean": -0.037660026980891576,
+            "upper": -0.03508860320852381
+          },
+          "fixed_recall": {
+            "lower": -0.06752818535256014,
+            "mean": -0.04804409655681222,
+            "upper": -0.030983327755824207
+          },
+          "matched_fpr_recall": {
+            "lower": 0.018920316239403778,
+            "mean": 0.03183476023535002,
+            "upper": 0.046119320614573404
+          },
+          "pixel_iou": {
+            "lower": -0.003258736568335072,
+            "mean": 0.013325470291753398,
+            "upper": 0.02968196530498075
+          }
+        },
+        "replicates": 10000,
+        "sites": 1289
+      },
+      "checks": {
+        "ap_lower_95_above_zero": true,
+        "ap_point_beats_published": true,
+        "ap_point_beats_reconstructed": true,
+        "iou_lower_95_above_zero": false,
+        "iou_point_beats_published": true,
+        "iou_point_beats_reconstructed": true,
+        "matched_fpr_no_worse": true,
+        "matched_recall_lower_95_above_zero": true,
+        "matched_recall_point_higher": true,
+        "operational_fpr_upper_95_no_worse": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.6410196024104218,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "fn": 378,
+            "fp": 2949,
+            "precision": 0.3273266423357664,
+            "recall": 0.7915057915057915,
+            "tn": 38767,
+            "tp": 1435
+          },
+          "pixels": {
+            "fn": 1073087,
+            "fp": 2668518,
+            "intersection_over_union": 0.3243651485849355,
+            "tp": 1796305
+          }
+        },
+        "candidate": {
+          "average_precision": 0.6737996336784225,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.033032889059353726,
+            "fn": 464,
+            "fp": 1378,
+            "precision": 0.4946828016134947,
+            "recall": 0.7440706012134584,
+            "threshold": 0.28187603894788654,
+            "tn": 40338,
+            "tp": 1349
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "precision": 0.33610986042323276,
+            "recall": 0.8234969663541092,
+            "target_fpr": 0.07069230031642536,
+            "threshold": 0.08387768749921498
+          },
+          "pixels": {
+            "fn": 1353542,
+            "fp": 1621048,
+            "intersection_over_union": 0.33747444748889366,
+            "tp": 1515184
+          }
+        },
+        "delta": {
+          "average_precision": 0.032780031268000775,
+          "fixed_false_positive_rate": -0.03765941125707163,
+          "fixed_recall": -0.04743519029233312,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.031991174848317705,
+          "pixel_iou": 0.013109298903958178
+        },
+        "positive": 1813,
+        "rows": 43529
+      },
+      "published": {
+        "average_precision": 0.6408,
+        "false_positive_rate": 0.0713,
+        "negative": 41716,
+        "pixel_iou": 0.3224,
+        "positive": 1813,
+        "precision": 0.3253,
+        "recall": 0.7915,
+        "rows": 43529,
+        "sites": 1289
+      }
+    },
+    "test_only_sites": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": -0.01874315547947962,
+            "mean": 0.014283632656291855,
+            "upper": 0.04639423131782686
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.04646584500015926,
+            "mean": -0.04225973505968102,
+            "upper": -0.03802520208163467
+          },
+          "fixed_recall": {
+            "lower": -0.12307835820895521,
+            "mean": -0.0702773944105694,
+            "upper": -0.026084133258046413
+          },
+          "matched_fpr_recall": {
+            "lower": -0.00900900900900892,
+            "mean": 0.021011363569996222,
+            "upper": 0.04977422504271422
+          },
+          "pixel_iou": {
+            "lower": 0.030494699500328834,
+            "mean": 0.04616674903584216,
+            "upper": 0.06280854458231287
+          }
+        },
+        "replicates": 10000,
+        "sites": 697
+      },
+      "checks": {
+        "ap_lower_95_above_zero": false,
+        "ap_point_beats_published": true,
+        "ap_point_beats_reconstructed": true,
+        "iou_lower_95_above_zero": true,
+        "iou_point_beats_reconstructed": true,
+        "matched_fpr_no_worse": true,
+        "matched_recall_lower_95_above_zero": false,
+        "matched_recall_point_higher": true,
+        "operational_fpr_upper_95_no_worse": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.45027380014908475,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "fn": 51,
+            "fp": 1165,
+            "precision": 0.13124533929903057,
+            "recall": 0.775330396475771,
+            "tn": 14263,
+            "tp": 176
+          },
+          "pixels": {
+            "fn": 140494,
+            "fp": 875886,
+            "intersection_over_union": 0.17156194293902416,
+            "tp": 210483
+          }
+        },
+        "candidate": {
+          "average_precision": 0.46550118467162094,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.0332512315270936,
+            "fn": 67,
+            "fp": 513,
+            "precision": 0.237741456166419,
+            "recall": 0.7048458149779736,
+            "threshold": 0.28187603894788654,
+            "tn": 14915,
+            "tp": 160
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "precision": 0.13447251114413075,
+            "recall": 0.7973568281938326,
+            "target_fpr": 0.07551205600207415,
+            "threshold": 0.07319038466074072
+          },
+          "pixels": {
+            "fn": 174400,
+            "fp": 460825,
+            "intersection_over_union": 0.21808741763591535,
+            "tp": 177174
+          }
+        },
+        "delta": {
+          "average_precision": 0.015227384522536191,
+          "fixed_false_positive_rate": -0.04226082447498056,
+          "fixed_recall": -0.07048458149779735,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.022026431718061623,
+          "pixel_iou": 0.046525474696891195
+        },
+        "positive": 227,
+        "rows": 15655
+      },
+      "published": {
+        "average_precision": 0.4496,
+        "false_positive_rate": 0.0763,
+        "negative": 15428,
+        "positive": 227,
+        "precision": 0.1301,
+        "recall": 0.7753,
+        "rows": 15655,
+        "sites": 697
+      }
+    }
+  }
+}
