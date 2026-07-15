@@ -1334,3 +1334,21 @@ the OOF-selected values. No paper feature, score, image, or label is loaded by
 this experiment. Frozen script SHA-256 is
 `ac3e58d54477b67219c66200180a715591e75f25baebe7350edc61b7af3253b3`;
 two focused split-exclusion and aggregation tests pass.
+
+The first crossfold-bagging protocol is rejected before paper scoring despite
+a materially larger AP signal. The worst-fold-first selector chose median
+probability aggregation blended 0.875 with primary. OOF AP improves +0.008198
+versus the current head, with paired physical-site interval
+[+0.004470, +0.011569]; recall improves +0.002362 overall. AP improves on all
+five folds (+0.004181 / +0.006145 / +0.009181 / +0.015603 / +0.006564), and
+both sensor strata improve.
+
+The predeclared per-fold recall floor fails: fold 0 loses -0.004027 recall
+(three positives) and fold 4 loses -0.002611 (two positives), exceeding the
+-0.002 allowance. The other three folds improve. The 51.19 MB ignored final
+five-member artifact SHA-256 is
+`c9efecc2315305bb306b6deb84037f60096bdfae94164e3e9e646a2612fdcafb`;
+its models were fitted independently of paper data and remain eligible as
+fixed components of a separately preregistered development-only trust-region
+experiment. Result JSON SHA-256 is
+`d9d8da26df1912ac62ae71c32ba8bab108d28f5367feed59656fb8a0d118760e`.
