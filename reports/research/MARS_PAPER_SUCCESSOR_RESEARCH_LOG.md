@@ -1516,3 +1516,16 @@ features. The ignored label-free cache SHA-256 is
 `8a35e60e7c396e58639f940239020adb36def885124841e0b20901e10db52f33`;
 its committed receipt enumerates the five allowed arrays and their forbidden
 outcome-name audit.
+
+The exact evaluator is frozen to the XGBoost artifact, development report,
+label-free cache and receipt, exact diagnostic comparator, and confirmed
+scene-gated-mask report by SHA-256. Available rows receive the fixed 0.10
+current/XGBoost logit blend; five missing rasters fall back to v3. Its fixed
+operational threshold is the conservative maximum of the candidate thresholds
+across all five development OOF folds. Dense masks remain the released model's
+sensor-thresholded masks gated at 0.75 by the unchanged v3 score. Both exact
+paper views must independently clear paired-site AP, matched-FPR recall,
+fixed-FPR, and pixel-IoU point and confidence gates.
+Frozen evaluator SHA-256 is
+`b4abd3e37c9798877af9014dec988e9d31d55d1bfa3e949308d241b25d676db5`;
+its conservative-threshold contract tests pass.
