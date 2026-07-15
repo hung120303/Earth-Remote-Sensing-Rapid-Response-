@@ -1629,3 +1629,11 @@ outcomes. The 1.48 MB ignored score cache SHA-256 is
 `37aa4eb2e14bd7265df95a0cf55fc805e2a6e1ee8a2af7aa3e84a23165fe0059`;
 the committed receipt SHA-256 is
 `1b76927c30b3614c0c08c4139f25fb4e66f92b517ac4a5fc76d3e4cc06cb5f9f`.
+
+The exact evaluator is frozen to the label-free score cache and receipt,
+development report, exact diagnostic comparator, and confirmed mask gate. It
+uses the conservative maximum development OOF threshold, v3 fallback for five
+missing rows, and unchanged v3-driven dense masks. Both paper views retain all
+seven AP/recall/FPR/IoU point and paired-site confidence gates. Frozen
+evaluator SHA-256 is
+`7850a1c53a646000faaf56e977461863c097b55f76334dbad5d915bfeb978cd9`.
