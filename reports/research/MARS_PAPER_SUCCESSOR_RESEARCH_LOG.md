@@ -1307,3 +1307,30 @@ site residuals therefore improve development and the mixed full cohort without
 solving new-site transfer. No site-context rule will be tuned to this paper
 outcome. Exact result JSON SHA-256 is
 `7d99569bb915baa456741055a1309aceb550313662a747612c1c65ce28b3d19e`.
+
+## Crossfold-bagged scene head: frozen protocol
+
+The stronger ExtraTrees scene head used for v3 was selected by cross-fitting
+folds 2/3/4, then fitted once on those three folds. A later single refit on all
+five development folds degraded new-site paper AP, suggesting that its useful
+generalization came partly from fold/subset diversity rather than merely more
+training rows. Crossfold bagging tests that hypothesis without changing the
+proven tree family or fitting hyperparameters.
+
+For each held development fold, four 400-tree uniform-weight ExtraTrees
+members are trained on distinct three-fold subsets of the other four folds.
+Thus every OOF member excludes the held labels and one additional complete
+physical-site fold. The fixed aggregations are probability mean, logit mean,
+and probability median; each is tested at primary/head logit blends 0.25 /
+0.50 / 0.625 / 0.75 / 0.875 / 1.00. Selection prioritizes all-fold stability
+before pooled AP. Promotion requires positive pooled AP and recall versus the
+current head, nonnegative AP on every fold, bounded per-fold recall and sensor
+regressions, and a positive 10,000-site-bootstrap AP lower bound versus both
+primary and current heads.
+
+If promoted, the deployable artifact contains five members, each fitted on
+four of five complete development folds; their aggregation and blend remain
+the OOF-selected values. No paper feature, score, image, or label is loaded by
+this experiment. Frozen script SHA-256 is
+`ac3e58d54477b67219c66200180a715591e75f25baebe7350edc61b7af3253b3`;
+two focused split-exclusion and aggregation tests pass.
