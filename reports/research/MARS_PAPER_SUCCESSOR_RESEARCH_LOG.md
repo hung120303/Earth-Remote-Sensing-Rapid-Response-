@@ -1291,3 +1291,19 @@ remain driven by the unchanged v3 controller, not the new blended score. All
 metric and paired 10,000-site-bootstrap gates are identical to the prior exact
 replays. Evaluator SHA-256 is
 `1203950a85ed11dde2885c79b9a534bd9cd8f59ba99a6a0be31d3f0fe7939c6c`.
+
+The frozen replay rejects the site-relative model as the final successor.
+Full-view AP reaches 0.675110 versus 0.641020 (delta +0.034091, paired-site
+lower bound +0.015764), matched-FPR recall improves +0.030336 (lower
++0.018433), FPR improves -0.038067, and gated-mask IoU retains its confirmed
++0.055598 gain (lower +0.035020). Every full-view gate passes.
+
+Test-only-site AP is 0.467125 versus 0.450274 (delta +0.016851), with lower
+bound -0.017692. Matched-FPR recall improves +0.017621 at the point estimate
+but has lower bound -0.011050. FPR and IoU remain decisively better, yet the AP
+and recall confidence gates fail. The score is below both the ordinary spatial
+model (0.467740) and Prithvi complement (0.467791) on this view. Label-free
+site residuals therefore improve development and the mixed full cohort without
+solving new-site transfer. No site-context rule will be tuned to this paper
+outcome. Exact result JSON SHA-256 is
+`7d99569bb915baa456741055a1309aceb550313662a747612c1c65ce28b3d19e`.

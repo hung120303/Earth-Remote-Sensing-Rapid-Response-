@@ -1,0 +1,230 @@
+{
+  "all_exact_paper_gates_pass": false,
+  "architecture": {
+    "mask_gate_cutoff": 0.75,
+    "mask_gate_score": "unchanged frozen v3 stronger scene score",
+    "mask_probability": "released MARS-S2L probability with sensor thresholds",
+    "scene_ranking": "current v3 stronger head plus frozen 0.10 site-relative spatial CNN",
+    "scene_threshold": 0.30299312593404687,
+    "singleton_policy": "template equals scene and residual is zero",
+    "site_context": "label-free leave-one-out pixelwise mean over same-site observations"
+  },
+  "available_spatial_rows": 43524,
+  "decision": "Reject the site-relative spatial model as the final successor; at least one exact paper gate fails.",
+  "generated_at_utc": "2026-07-15T21:38:23.223485+00:00",
+  "missing_rows_fallback_to_v3": 5,
+  "provenance": {
+    "artifact_sha256": "9401678aa4f38fb3b54a914318dc5c2a553b39fa8b309d1a127b9d21abbfc496",
+    "development_report_sha256": "c2b6695dbe24f0b5bc097d89c6fa6332c2af93441079cd55bec99e77aeeb820f",
+    "diagnostic_sha256": "1624fddc0222f8ffc5137f557c7fc3e465d53b335c82cc8014711baa35bb94a1",
+    "gate_report_sha256": "c1e5a1497abebba80d42898a8165b30fd255ff252478a0ee1fd90fd32456a51c",
+    "images_sha256": "7cce444a552c6c873c05ae3a972f62a8081fde89d31ac63d94303dbfac3b1b94",
+    "metadata_sha256": "b2b58eabf4478b46912d3c3437c1ee0b039841ee283bd7fe0164775b9d448022",
+    "script_sha256": "1203950a85ed11dde2885c79b9a534bd9cd8f59ba99a6a0be31d3f0fe7939c6c"
+  },
+  "schema_version": 1,
+  "scope": "transparent post-test site-relative spatial replay on exact paper comparator",
+  "site_template_count": 1289,
+  "views": {
+    "full": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": 0.015764054187274272,
+            "mean": 0.03331933091185146,
+            "upper": 0.04860364515641187
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.040641230595127344,
+            "mean": -0.038043929750870134,
+            "upper": -0.03545669587344014
+          },
+          "fixed_recall": {
+            "lower": -0.06277726225006121,
+            "mean": -0.04523996181882959,
+            "upper": -0.029671915134342367
+          },
+          "matched_fpr_recall": {
+            "lower": 0.01843307862005936,
+            "mean": 0.03124841521623823,
+            "upper": 0.045557208181008696
+          },
+          "pixel_iou": {
+            "lower": 0.03501955414938976,
+            "mean": 0.0556068448020493,
+            "upper": 0.07782720408631498
+          }
+        },
+        "replicates": 10000,
+        "sites": 1289
+      },
+      "checks": {
+        "ap_lower_positive": true,
+        "ap_point_higher": true,
+        "fixed_fpr_upper_nonpositive": true,
+        "matched_recall_lower_positive": true,
+        "matched_recall_point_higher": true,
+        "pixel_iou_lower_positive": true,
+        "pixel_iou_point_higher": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.6410196024104218,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "fn": 378,
+            "fp": 2949,
+            "precision": 0.3273266423357664,
+            "recall": 0.7915057915057915,
+            "tn": 38767,
+            "tp": 1435
+          },
+          "pixels": {
+            "fn": 1073087,
+            "fp": 2668518,
+            "intersection_over_union": 0.3243651485849355,
+            "tp": 1796305
+          }
+        },
+        "candidate": {
+          "average_precision": 0.6751102295679282,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.03262537156007287,
+            "fn": 459,
+            "fp": 1361,
+            "precision": 0.4987108655616943,
+            "recall": 0.7468284611141754,
+            "threshold": 0.30299312593404687,
+            "tn": 40355,
+            "tp": 1354
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "precision": 0.33566118495156566,
+            "recall": 0.821842250413679,
+            "target_fpr": 0.07069230031642536,
+            "threshold": 0.08010126272757097
+          },
+          "pixels": {
+            "fn": 1431545,
+            "fp": 913692,
+            "intersection_over_union": 0.37996355770303547,
+            "tp": 1437181
+          }
+        },
+        "delta": {
+          "average_precision": 0.03409062715750644,
+          "fixed_false_positive_rate": -0.03806692875635249,
+          "fixed_recall": -0.04467733039161603,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.030336458907887498,
+          "pixel_iou": 0.05559840911809999
+        },
+        "positive": 1813,
+        "rows": 43529
+      },
+      "passed": true
+    },
+    "test_only_sites": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": -0.017692040553230284,
+            "mean": 0.01576535171267103,
+            "upper": 0.04793783929769958
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.04678745059474068,
+            "mean": -0.04246692962969807,
+            "upper": -0.038247986488204884
+          },
+          "fixed_recall": {
+            "lower": -0.12429589341428446,
+            "mean": -0.07014991017130259,
+            "upper": -0.02564102564102566
+          },
+          "matched_fpr_recall": {
+            "lower": -0.011049723756906049,
+            "mean": 0.017432383666127052,
+            "upper": 0.045454545454545525
+          },
+          "pixel_iou": {
+            "lower": 0.08600748050415195,
+            "mean": 0.1204613725311928,
+            "upper": 0.1552574544433016
+          }
+        },
+        "replicates": 10000,
+        "sites": 697
+      },
+      "checks": {
+        "ap_lower_positive": false,
+        "ap_point_higher": true,
+        "fixed_fpr_upper_nonpositive": true,
+        "matched_recall_lower_positive": false,
+        "matched_recall_point_higher": true,
+        "pixel_iou_lower_positive": true,
+        "pixel_iou_point_higher": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.45027380014908475,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "fn": 51,
+            "fp": 1165,
+            "precision": 0.13124533929903057,
+            "recall": 0.775330396475771,
+            "tn": 14263,
+            "tp": 176
+          },
+          "pixels": {
+            "fn": 140494,
+            "fp": 875886,
+            "intersection_over_union": 0.17156194293902416,
+            "tp": 210483
+          }
+        },
+        "candidate": {
+          "average_precision": 0.4671246842633502,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.033056779880736326,
+            "fn": 67,
+            "fp": 510,
+            "precision": 0.23880597014925373,
+            "recall": 0.7048458149779736,
+            "threshold": 0.30299312593404687,
+            "tn": 14918,
+            "tp": 160
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "precision": 0.13382899628252787,
+            "recall": 0.7929515418502202,
+            "target_fpr": 0.07551205600207415,
+            "threshold": 0.06786139656603325
+          },
+          "pixels": {
+            "fn": 185139,
+            "fp": 217508,
+            "intersection_over_union": 0.2924622462140781,
+            "tp": 166435
+          }
+        },
+        "delta": {
+          "average_precision": 0.01685088411426544,
+          "fixed_false_positive_rate": -0.04245527612133783,
+          "fixed_recall": -0.07048458149779735,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.017621145374449254,
+          "pixel_iou": 0.12090030327505397
+        },
+        "positive": 227,
+        "rows": 15655
+      },
+      "passed": false
+    }
+  }
+}
