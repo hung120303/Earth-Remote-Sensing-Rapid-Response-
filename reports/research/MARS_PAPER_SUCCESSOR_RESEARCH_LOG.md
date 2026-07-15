@@ -1366,3 +1366,14 @@ pooled AP, implementing a minimum-risk recall repair rather than maximizing
 the already observed pooled gain. Paper data remains excluded. Frozen script
 SHA-256 is
 `a9f6297cea26dbaba57bcd0ae20d6ce24bfc68fea77f32deb5f422913793b1e7`.
+
+The frozen trust region is also rejected before paper scoring. Mean-logit
+aggregation at bag weight 0.10 preserves matched-FPR recall exactly on four
+folds and improves it by one positive on fold 3. AP improves on every fold and
+by +0.001520 pooled, with paired-site interval [+0.001008, +0.002007], but
+misses the preregistered +0.002 pooled materiality floor; Landsat AP also
+changes by -0.000332 on fold 4. Raising bag weight to 0.20 yields +0.002896 AP
+and positive pooled recall but loses one positive on one fold. The continuous
+score trust region therefore cannot simultaneously clear the strict AP,
+all-fold recall, and sensor gates. Result JSON SHA-256 is
+`e52b74527eba291c9ac0e94be7a4efe483d5c4714738dce062bc8a41627e12d2`.
