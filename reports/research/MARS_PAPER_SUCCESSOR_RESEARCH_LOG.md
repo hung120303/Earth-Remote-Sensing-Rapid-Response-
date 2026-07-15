@@ -1008,3 +1008,22 @@ SHA-256 is
 `da451898021b66580a907cb74e481cff0cfbe46773149f36cc35ad7cb357ff3d`;
 selection report SHA-256 is
 `c1e5a1497abebba80d42898a8165b30fd255ff252478a0ee1fd90fd32456a51c`.
+
+The frozen paper-cache replay makes segmentation superiority unambiguous. On
+the full 43,529-scene view, gated-mask IoU is 0.37996 versus 0.32437, delta
++0.05560 with paired site-bootstrap interval [+0.03492, +0.07788]. It retains
+94.85% of ungated true-positive pixels and removes 43.64% of false-positive
+pixels. Combined with the ordinary spatial scene classifier, the full view now
+passes every AP, matched-FPR recall, FPR, and IoU gate.
+
+On the 15,655-scene test-only-site view, IoU is 0.29246 versus 0.17156, delta
++0.12090 with interval [+0.08591, +0.15621]. The gate retains 93.94% of
+true-positive pixels and removes 52.80% of false-positive pixels. Test-only
+segmentation therefore passes decisively, but overall promotion remains
+blocked by scene AP delta +0.01747 (lower -0.01431) and matched-FPR recall
+delta +0.01762 (lower -0.01117). Future work should target only site-novel
+scene ranking; further mask tuning is not justified. Exact replay script
+SHA-256 is
+`3d2561b6835abaf99141710dda166f1ebff85ec214f52fc1374d14dae5758030`;
+result JSON SHA-256 is
+`bc05836a18b1f1cd795a7bd3223849290d0b20a3d3f0fad7b1e30a53731fd5d0`.
