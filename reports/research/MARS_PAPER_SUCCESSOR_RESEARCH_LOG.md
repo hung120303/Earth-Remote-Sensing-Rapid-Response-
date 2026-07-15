@@ -1157,6 +1157,8 @@ current head, it authorizes one transparent exact-paper replay. The tiny,
 mixed incremental effect makes a large test-only-site improvement unlikely;
 paper feature extraction must not be interpreted as a new untouched test.
 Probe script SHA-256 is
-`6c5d4aa99c3882ca89a2892d98485fac595f8d52bb65b9dc54eba8e98176f419`;
+`e7e302e7d32aa5fc4b1cc4cdf812f7fdc4ba45bd11c1835e51de52a3fcef60fb`;
 result JSON SHA-256 is
-`3a8d5e47a254722450993834a2cdeaddd093b68ac2801970904bb63ed73d70f2`.
+`7b8c935bba06feaefd38559175f4e25474687490547eaa3340ec04b502d2750d`.
+The reporting-only deterministic rerun retained the identical artifact and
+metrics while reducing the tracked JSON from 1.37 MB to 43.7 KB.
