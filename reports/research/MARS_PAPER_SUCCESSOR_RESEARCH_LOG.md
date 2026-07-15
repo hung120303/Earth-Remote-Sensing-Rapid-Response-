@@ -925,3 +925,21 @@ conservative operational threshold is 0.30274470404433573. Artifact SHA-256 is
 selection report SHA-256 is
 `dfeba0d4e8dde28ae880077c0db2010ccda5c57f58d293f4d3f834b541605c22`.
 The candidate is frozen before any paper-test spatial features are extracted.
+
+The label-independent sealed-cohort spatial cache contains 43,524 available
+scenes (the exact five missing scenes retain v3 scores). Image SHA-256 is
+`7cce444a552c6c873c05ae3a972f62a8081fde89d31ac63d94303dbfac3b1b94`;
+metadata SHA-256 is
+`b2b58eabf4478b46912d3c3437c1ee0b039841ee283bd7fe0164775b9d448022`.
+The frozen exact evaluator was committed before scoring.
+
+On the exact paper rows, the spatial complement preserves statistically
+positive full-view performance: AP 0.67210, delta +0.03108, interval lower
++0.01254; matched-FPR recall delta +0.03034, lower +0.01893. Test-only AP rises
+from v3's 0.46550 to 0.46774, but its delta +0.01747 retains lower bound
+-0.01431. Test-only matched-recall delta is +0.01762 with lower bound -0.01117.
+The unchanged v2 masks retain the full-view IoU lower bound near -0.00331 and
+the positive test-only IoU result. Thus the ordinary-BCE morphology model is a
+real but insufficient complement: it does not clear site-novel scene
+confidence or full-view segmentation confidence. Result JSON SHA-256 is
+`77d6f3592571341c6b18b8f0a266c7696f5f6d0dbd5faedb7ce41a7b3430edf3`.
