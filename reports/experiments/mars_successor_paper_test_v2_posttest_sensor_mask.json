@@ -1,0 +1,397 @@
+{
+  "architecture": {
+    "mask_minimum_connected_pixels": 100,
+    "mask_probability_threshold_by_sensor": {
+      "Landsat": 0.7,
+      "Sentinel-2": 0.8
+    },
+    "mask_threshold_rule": "development-selected and folds-0/1-confirmed sensor routing; paper test not loaded during selection or confirmation",
+    "name": "ersrr_mars_successor_v2_posttest_sensor_mask",
+    "operational_scene_threshold": 0.524068342606931,
+    "operational_threshold_rule": "unchanged from the frozen v1 one-shot architecture",
+    "scene_head_blend": 0.25,
+    "scene_residual_alpha": 0.5
+  },
+  "comparator_identity": {
+    "current_released_raster_rows": 43524,
+    "delta_vs_published": {
+      "full": {
+        "average_precision": 0.00021960241042173756,
+        "false_positive_rate": -0.0006076996835746445,
+        "pixel_iou": 0.001965148584935461,
+        "precision": 0.0020266423357664376,
+        "recall": 5.791505791497009e-06
+      },
+      "test_only_sites": {
+        "average_precision": 0.0006738001490847467,
+        "false_positive_rate": -0.0007879439979258523,
+        "precision": 0.0011453392990305733,
+        "recall": 3.039647577096627e-05
+      }
+    },
+    "full": {
+      "accuracy": 0.9235681959153668,
+      "average_precision": 0.6410196024104218,
+      "false_positive_rate": 0.07069230031642536,
+      "fn": 378,
+      "fp": 2949,
+      "negative": 41716,
+      "pixel_fn": 1073087,
+      "pixel_fp": 2668518,
+      "pixel_iou": 0.3243651485849355,
+      "pixel_tp": 1796305,
+      "positive": 1813,
+      "precision": 0.3273266423357664,
+      "recall": 0.7915057915057915,
+      "rows": 43529,
+      "sites": 1289,
+      "tn": 38767,
+      "tp": 1435
+    },
+    "identity_checks": {
+      "full_positive": true,
+      "full_recall_rounds_to_paper": true,
+      "full_rows": true,
+      "full_sites": true,
+      "test_only_positive": true,
+      "test_only_recall_rounds_to_paper": true,
+      "test_only_rows": true,
+      "test_only_sites": true
+    },
+    "missing_current_released_raster_ids": [
+      "3a42905f-bb33-4585-83c3-077e39b1a7be",
+      "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
+      "689601b8-e36b-4252-8cb3-27b0ff280c03",
+      "78ed244b-208a-460f-a6b5-6a8cb1ffe8ea",
+      "b25c9cf2-7082-40d5-ae42-1bc3e1412e5a"
+    ],
+    "missing_current_released_raster_rows": 5,
+    "missing_public_metadata_ids": [
+      "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
+      "689601b8-e36b-4252-8cb3-27b0ff280c03"
+    ],
+    "missing_public_metadata_rows": 2,
+    "offshore_replacements": 2185,
+    "paper_target_vs_public_metadata_label_disagreements": 23,
+    "positive_ids_without_current_pixel_truth": [
+      "3a42905f-bb33-4585-83c3-077e39b1a7be",
+      "4e7d0fbd-f197-4ee3-813d-e383695c7ece",
+      "689601b8-e36b-4252-8cb3-27b0ff280c03",
+      "f23e3c5b-8349-491e-9aa5-a627cefb6213"
+    ],
+    "positive_rows_without_current_pixel_truth": 4,
+    "public_metadata_rows": 43527,
+    "published": {
+      "full": {
+        "average_precision": 0.6408,
+        "false_positive_rate": 0.0713,
+        "negative": 41716,
+        "pixel_iou": 0.3224,
+        "positive": 1813,
+        "precision": 0.3253,
+        "recall": 0.7915,
+        "rows": 43529,
+        "sites": 1289
+      },
+      "test_only_sites": {
+        "average_precision": 0.4496,
+        "false_positive_rate": 0.0763,
+        "negative": 15428,
+        "positive": 227,
+        "precision": 0.1301,
+        "recall": 0.7753,
+        "rows": 15655,
+        "sites": 697
+      }
+    },
+    "test_only_sites": {
+      "accuracy": 0.9223251357393804,
+      "average_precision": 0.45027380014908475,
+      "false_positive_rate": 0.07551205600207415,
+      "fn": 51,
+      "fp": 1165,
+      "negative": 15428,
+      "pixel_fn": 140494,
+      "pixel_fp": 875886,
+      "pixel_iou": 0.17156194293902416,
+      "pixel_tp": 210483,
+      "positive": 227,
+      "precision": 0.13124533929903057,
+      "recall": 0.775330396475771,
+      "rows": 15655,
+      "sites": 697,
+      "tn": 14263,
+      "tp": 176
+    },
+    "training_site_count_from_released_config": 618
+  },
+  "decision": "Frozen ERSRR successor does not pass every preregistered paper-superiority gate.",
+  "evaluation_audit": {
+    "architecture_changed": true,
+    "dense_mask_predictions_changed": true,
+    "predecessor_result_sha256": "7e3bc6f45af2b116d654f6e3bbec82a78c3d54b1f1d9d1219e6d6201ac094a01",
+    "reason": "A sensor-specific dense-mask threshold was selected and independently confirmed on development folds after the official paper test had been opened.",
+    "scene_predictions_changed": false,
+    "status": "post_test_architecture_evaluation"
+  },
+  "generated_at_utc": "2026-07-15T05:47:54.553596+00:00",
+  "missing_scene_ids": [
+    "3a42905f-bb33-4585-83c3-077e39b1a7be",
+    "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
+    "689601b8-e36b-4252-8cb3-27b0ff280c03",
+    "78ed244b-208a-460f-a6b5-6a8cb1ffe8ea",
+    "b25c9cf2-7082-40d5-ae42-1bc3e1412e5a"
+  ],
+  "passed": false,
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "905606b92f3d81f157e8e006c5a0a3a6d9884c0d",
+    "joblib": "1.5.3",
+    "manifest_sha256": "685937eb599ce4612116dc5c16edc74c4c0c6273f2fa864e651cfee73d1f4f6d",
+    "mask_confirmation_sha256": "b3d77820ce1fc2a81c95e479f4412f545310ae8146cbd25f97f5c398b33fc7fe",
+    "mask_selection_sha256": "9d4dd8140908489e48be849c0e89100a8f663c3368db9354c1b30ed8670865be",
+    "mixed_cohort_sha256": "df0c592522b42fc66bf698456cd52b859b95cc44a2670e046ac5464745adbf8f",
+    "numpy": "2.4.4",
+    "paper_benchmark_sha256": "ebb39ab22720988b2657d0e4d6b9a5669c24fbca1083575797622a7f1e788eb0",
+    "rasterio": "1.4.4",
+    "receipt_sha256": "eefc7b9cdbb7b950bf109bd7fa79c8d88f94c716eeca7d97a247395e95fc5895",
+    "residual_sha256": "b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49",
+    "scene_fold0_result_sha256": "4eec74a60109e6ed48d10358bde3c077755cfb15fa166dbec20d655ec2c492ce",
+    "scene_head_sha256": "2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ec27c370",
+    "scene_selection_sha256": "8fc190bf4cac9d3abb24979cd20678930f09143302a69ddbfb944a7959951b0b",
+    "scipy": "1.17.1",
+    "script_sha256": "b5bc6580ea6d9afc70a437d138148cd8e3afe280dd96d1c366aec856ccae5e93",
+    "sensor_mask_confirmation_sha256": "a93a38d43eb37af661744ddebd38b5b7f62fa31d297fbea14e8606a84b1b8781",
+    "sklearn": "1.9.0",
+    "spec_sha256": "b612e75023a46939818419bdc45db37474c3df31015a3b961c8455499448d383",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "transparent post-test architecture evaluation on the official MARS-S2L paper-v3 cohort",
+  "views": {
+    "full": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": -0.008980998835568061,
+            "mean": 0.006267224333982174,
+            "upper": 0.01991029055673293
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.039966508128775814,
+            "mean": -0.03751783217800712,
+            "upper": -0.03513809749575881
+          },
+          "fixed_recall": {
+            "lower": -0.06307819661306614,
+            "mean": -0.04892875506305701,
+            "upper": -0.03641974631498546
+          },
+          "matched_fpr_recall": {
+            "lower": 0.01603201688620052,
+            "mean": 0.02566594208624938,
+            "upper": 0.03678005376215425
+          },
+          "pixel_iou": {
+            "lower": -0.003258736568335072,
+            "mean": 0.013325470291753398,
+            "upper": 0.02968196530498075
+          }
+        },
+        "replicates": 10000,
+        "sites": 1289
+      },
+      "checks": {
+        "ap_lower_95_above_zero": false,
+        "ap_point_beats_published": true,
+        "ap_point_beats_reconstructed": true,
+        "iou_lower_95_above_zero": false,
+        "iou_point_beats_published": true,
+        "iou_point_beats_reconstructed": true,
+        "matched_fpr_no_worse": true,
+        "matched_recall_lower_95_above_zero": true,
+        "matched_recall_point_higher": true,
+        "operational_fpr_upper_95_no_worse": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.6410196024104218,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "fn": 378,
+            "fp": 2949,
+            "precision": 0.3273266423357664,
+            "recall": 0.7915057915057915,
+            "tn": 38767,
+            "tp": 1435
+          },
+          "pixels": {
+            "fn": 1073087,
+            "fp": 2668518,
+            "intersection_over_union": 0.3243651485849355,
+            "tp": 1796305
+          }
+        },
+        "candidate": {
+          "average_precision": 0.6469334718895886,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.03317671876498226,
+            "fn": 466,
+            "fp": 1384,
+            "precision": 0.49322592456975467,
+            "recall": 0.7429674572531716,
+            "threshold": 0.524068342606931,
+            "tn": 40332,
+            "tp": 1347
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "precision": 0.3343115124153499,
+            "recall": 0.8168781025923884,
+            "target_fpr": 0.07069230031642536,
+            "threshold": 0.17012724819473182
+          },
+          "pixels": {
+            "fn": 1353542,
+            "fp": 1621048,
+            "intersection_over_union": 0.33747444748889366,
+            "tp": 1515184
+          }
+        },
+        "delta": {
+          "average_precision": 0.005913869479166833,
+          "fixed_false_positive_rate": -0.0375155815514431,
+          "fixed_recall": -0.048538334252619886,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.025372311086596877,
+          "pixel_iou": 0.013109298903958178
+        },
+        "positive": 1813,
+        "rows": 43529
+      },
+      "published": {
+        "average_precision": 0.6408,
+        "false_positive_rate": 0.0713,
+        "negative": 41716,
+        "pixel_iou": 0.3224,
+        "positive": 1813,
+        "precision": 0.3253,
+        "recall": 0.7915,
+        "rows": 43529,
+        "sites": 1289
+      }
+    },
+    "test_only_sites": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": -0.009841561000289515,
+            "mean": 0.016355273513846105,
+            "upper": 0.043216757776320926
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.04542778688287427,
+            "mean": -0.04136349065059097,
+            "upper": -0.0373843812886579
+          },
+          "fixed_recall": {
+            "lower": -0.09473684210526312,
+            "mean": -0.06092474226215667,
+            "upper": -0.02714888280893755
+          },
+          "matched_fpr_recall": {
+            "lower": 0.006210221608772245,
+            "mean": 0.026092850288867247,
+            "upper": 0.04661016949152541
+          },
+          "pixel_iou": {
+            "lower": 0.030494699500328834,
+            "mean": 0.04616674903584216,
+            "upper": 0.06280854458231287
+          }
+        },
+        "replicates": 10000,
+        "sites": 697
+      },
+      "checks": {
+        "ap_lower_95_above_zero": false,
+        "ap_point_beats_published": true,
+        "ap_point_beats_reconstructed": true,
+        "iou_lower_95_above_zero": true,
+        "iou_point_beats_reconstructed": true,
+        "matched_fpr_no_worse": true,
+        "matched_recall_lower_95_above_zero": true,
+        "matched_recall_point_higher": true,
+        "operational_fpr_upper_95_no_worse": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.45027380014908475,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "fn": 51,
+            "fp": 1165,
+            "precision": 0.13124533929903057,
+            "recall": 0.775330396475771,
+            "tn": 14263,
+            "tp": 176
+          },
+          "pixels": {
+            "fn": 140494,
+            "fp": 875886,
+            "intersection_over_union": 0.17156194293902416,
+            "tp": 210483
+          }
+        },
+        "candidate": {
+          "average_precision": 0.4671036984353158,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.03415867254342753,
+            "fn": 65,
+            "fp": 527,
+            "precision": 0.2351233671988389,
+            "recall": 0.7136563876651982,
+            "threshold": 0.524068342606931,
+            "tn": 14901,
+            "tp": 162
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "precision": 0.13511507052709726,
+            "recall": 0.801762114537445,
+            "target_fpr": 0.07551205600207415,
+            "threshold": 0.1477140256845326
+          },
+          "pixels": {
+            "fn": 174400,
+            "fp": 460825,
+            "intersection_over_union": 0.21808741763591535,
+            "tp": 177174
+          }
+        },
+        "delta": {
+          "average_precision": 0.01682989828623105,
+          "fixed_false_positive_rate": -0.04135338345864662,
+          "fixed_recall": -0.06167400881057272,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.026431718061673992,
+          "pixel_iou": 0.046525474696891195
+        },
+        "positive": 227,
+        "rows": 15655
+      },
+      "published": {
+        "average_precision": 0.4496,
+        "false_positive_rate": 0.0763,
+        "negative": 15428,
+        "positive": 227,
+        "precision": 0.1301,
+        "recall": 0.7753,
+        "rows": 15655,
+        "sites": 697
+      }
+    }
+  }
+}

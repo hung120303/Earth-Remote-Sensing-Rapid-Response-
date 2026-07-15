@@ -693,3 +693,22 @@ reported only as transparent post-test development, never as a replacement for
 the original one-shot result. Configuration
 `configs/mars_successor_paper_test_v2_posttest_sensor_mask.json` preserves all
 scene scores and thresholds from v1 and changes only dense-mask calibration.
+
+The versioned post-test run was committed before evaluation at `905606b9` and
+produced JSON SHA-256
+`1986ad46fa3de4630d7676769df81e982d5a9b1e7a7cec83589ca5f9b314b9c0`.
+Full-view candidate IoU rose from 0.33233 to 0.33747, a +0.00514 gain over v1
+and +0.01311 over the exact hybrid paper comparator. Its paired site-bootstrap
+95% interval versus the comparator narrowed to [-0.00326, +0.02968], so the
+full-view segmentation confidence gate still fails. Test-only IoU rose from
+0.20293 to 0.21809, +0.04653 over the comparator, with interval
+[+0.03049, +0.06281].
+
+As required, all scene metrics are unchanged: full/test-only AP remain
+0.64693/0.46710 with deltas +0.00591/+0.01683 and lower confidence bounds
+-0.00898/-0.00984. Matched-FPR recall and operational FPR gates remain passed.
+The sensor rule is a confirmed improvement, but the overall superiority claim
+still fails both AP-confidence gates and the full-view IoU-confidence gate.
+Further threshold-only work is unlikely to solve the dominant scene-ranking
+uncertainty; the next research stage prioritizes stronger cross-fitted scene
+ensembles and domain-specialized segmentation.
