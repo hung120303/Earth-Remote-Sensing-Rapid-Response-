@@ -14,6 +14,7 @@ if str(ROOT / "tools") not in sys.path:
 from evaluate_mars_successor_paper_test import (  # noqa: E402
     average_precision_from_cumulative,
     candidate_pixel_counts,
+    diagnostic_pixel_counts,
     mask_threshold_for_sensor,
     plan_cumulative,
     predict_scene_head,
@@ -58,6 +59,16 @@ class MarsPaperSuccessorTests(unittest.TestCase):
             truth_available=False,
         )
         self.assertEqual(result, {"truth_available": False, "tp": 0, "fp": 2, "fn": 0})
+
+    def test_diagnostic_counts_apply_missing_truth_policy(self) -> None:
+        raw = np.asarray([[[3, 2, 1], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]])
+        result = diagnostic_pixel_counts(
+            raw,
+            np.asarray([True, False]),
+            np.asarray([4, 20]),
+        )
+        np.testing.assert_array_equal(result[:, 0], raw[:, 0])
+        np.testing.assert_array_equal(result[:, 1], [[0, 5, 20], [0, 11, 20]])
 
     def test_weighted_ap_matches_sklearn_with_ties(self) -> None:
         labels = np.asarray([1, 0, 1, 0, 1], dtype=np.uint8)

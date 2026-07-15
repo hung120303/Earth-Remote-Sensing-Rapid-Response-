@@ -182,6 +182,23 @@ def predict_scene_head(fitted: Any, features: np.ndarray) -> np.ndarray:
     return fitted.predict_proba(features)[:, 1]
 
 
+def diagnostic_pixel_counts(
+    raw_counts: np.ndarray,
+    truth_available: np.ndarray,
+    truth_pixels: np.ndarray,
+) -> np.ndarray:
+    """Resolve available-scene threshold counts under the adversarial policy."""
+    if raw_counts.ndim != 3 or raw_counts.shape[2] != 3:
+        raise ValueError("raw diagnostic counts must be thresholds x rows x 3")
+    if truth_available.shape != (raw_counts.shape[1],) or truth_pixels.shape != truth_available.shape:
+        raise ValueError("truth metadata must align with diagnostic rows")
+    resolved = raw_counts.copy()
+    unavailable = ~truth_available
+    resolved[:, unavailable, 0] = 0
+    resolved[:, unavailable, 2] = truth_pixels[unavailable][None, :]
+    return resolved
+
+
 def view_metrics(
     labels: np.ndarray,
     baseline_scores: np.ndarray,
@@ -406,6 +423,13 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--output-json", default=DEFAULT_JSON.as_posix())
     parser.add_argument("--output-markdown", default=DEFAULT_MARKDOWN.as_posix())
+    parser.add_argument("--output-diagnostic-cache", default="")
+    parser.add_argument(
+        "--diagnostic-mask-thresholds",
+        type=float,
+        nargs="+",
+        default=[0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9],
+    )
     args = parser.parse_args()
     root = repo_root()
     spec_path = (root / args.spec).resolve()
@@ -479,6 +503,13 @@ def main() -> int:
     available_ids: list[str] = []
     available_groups: list[str] = []
     pixel_outputs: dict[str, dict[str, int | bool]] = {}
+    diagnostic_thresholds = tuple(args.diagnostic_mask_thresholds)
+    if len(set(diagnostic_thresholds)) != len(diagnostic_thresholds) or any(
+        not 0.0 < value < 1.0 for value in diagnostic_thresholds
+    ):
+        parser.error("diagnostic mask thresholds must be unique values in (0,1)")
+    capture_diagnostics = bool(args.output_diagnostic_cache)
+    diagnostic_available_counts: list[np.ndarray] = []
     for batch in loader:
         batch = move_batch(batch, device)
         with torch.amp.autocast("cuda", dtype=torch.float16, enabled=device.type == "cuda"):
@@ -524,6 +555,22 @@ def main() -> int:
                 observable,
                 truth_available=truth_available,
             )
+            if capture_diagnostics:
+                threshold_rows = []
+                for threshold in diagnostic_thresholds:
+                    local_prediction = component_mask_at(
+                        released_probability[index, 0],
+                        threshold,
+                        architecture["mask_minimum_connected_pixels"],
+                    )
+                    counts = candidate_pixel_counts(
+                        local_prediction,
+                        truth,
+                        observable,
+                        truth_available=True,
+                    )
+                    threshold_rows.append([counts["tp"], counts["fp"], counts["fn"]])
+                diagnostic_available_counts.append(np.asarray(threshold_rows, dtype=np.int64))
 
     base_names = np.asarray(["primary_connected_score", "released_connected_score", *tensor_feature_names()])
     base_features = np.stack(feature_rows).astype(np.float64)
@@ -537,6 +584,9 @@ def main() -> int:
         base_features[:, 0], head_probability, architecture["scene_head_blend"]
     )
     score_by_id = dict(zip(available_ids, available_scores, strict=True))
+    diagnostic_available_array = (
+        np.stack(diagnostic_available_counts) if capture_diagnostics else None
+    )
 
     labels: list[int] = []
     sites: list[str] = []
@@ -549,6 +599,17 @@ def main() -> int:
     candidate_tp: list[int] = []
     candidate_fp: list[int] = []
     candidate_fn: list[int] = []
+    aligned_sample_ids: list[str] = []
+    aligned_sensors: list[int] = []
+    aligned_offshore: list[bool] = []
+    aligned_truth_available: list[bool] = []
+    aligned_truth_pixels: list[int] = []
+    available_row_index = {sample_id: index for index, sample_id in enumerate(available_ids)}
+    diagnostic_aligned = (
+        np.zeros((len(diagnostic_thresholds), len(comparator_rows), 3), dtype=np.int64)
+        if capture_diagnostics
+        else None
+    )
     for row in comparator_rows:
         sample_id = str(row["id_loc_image"])
         label = int(row["target"])
@@ -560,12 +621,17 @@ def main() -> int:
         baseline_tp.append(int(float(row["TP"])))
         baseline_fp.append(int(float(row["FP"])))
         baseline_fn.append(int(float(row["FN"])))
+        aligned_sample_ids.append(sample_id)
+        aligned_offshore.append(bool(row["is_offshore"]))
+        aligned_truth_pixels.append(truth_pixels)
         if sample_id in score_by_id:
             record = record_by_id[sample_id]
             if int(record["label_state"] == "PLUME") != label:
                 raise ValueError(f"Paper label mismatch for {sample_id}")
             candidate_scores.append(float(score_by_id[sample_id]))
             pixels = pixel_outputs[sample_id]
+            aligned_sensors.append(SENSOR_NAMES.index(str(record["sensor_family"])))
+            aligned_truth_available.append(bool(pixels["truth_available"]))
             if pixels["truth_available"]:
                 candidate_tp.append(int(pixels["tp"]))
                 candidate_fp.append(int(pixels["fp"]))
@@ -574,11 +640,25 @@ def main() -> int:
                 candidate_tp.append(0)
                 candidate_fp.append(int(pixels["fp"]))
                 candidate_fn.append(truth_pixels)
+            if diagnostic_aligned is not None:
+                raw = diagnostic_available_array[available_row_index[sample_id]]
+                diagnostic_aligned[:, len(labels) - 1, :] = diagnostic_pixel_counts(
+                    raw[:, None, :],
+                    np.asarray([bool(pixels["truth_available"])]),
+                    np.asarray([truth_pixels]),
+                )[:, 0, :]
         else:
             candidate_scores.append(0.0 if label else 1.0)
             candidate_tp.append(0)
             candidate_fp.append(int(spec["missing_data_policy"]["missing_raster_grid_pixels"]))
             candidate_fn.append(truth_pixels)
+            aligned_sensors.append(-1)
+            aligned_truth_available.append(False)
+            if diagnostic_aligned is not None:
+                diagnostic_aligned[:, len(labels) - 1, 1] = int(
+                    spec["missing_data_policy"]["missing_raster_grid_pixels"]
+                )
+                diagnostic_aligned[:, len(labels) - 1, 2] = truth_pixels
 
     arrays = {
         "labels": np.asarray(labels, dtype=np.uint8),
@@ -704,6 +784,39 @@ def main() -> int:
     }
     write_json((root / args.output_json).resolve(), report)
     write_markdown((root / args.output_markdown).resolve(), report)
+    if capture_diagnostics:
+        diagnostic_path = (root / args.output_diagnostic_cache).resolve()
+        diagnostic_path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = diagnostic_path.with_suffix(".tmp.npz")
+        np.savez_compressed(
+            temporary,
+            aligned_sample_ids=np.asarray(aligned_sample_ids),
+            labels=arrays["labels"],
+            sites=arrays["sites"],
+            test_only=arrays["test_only"],
+            sensors=np.asarray(aligned_sensors, dtype=np.int8),
+            offshore=np.asarray(aligned_offshore, dtype=bool),
+            truth_available=np.asarray(aligned_truth_available, dtype=bool),
+            truth_pixels=np.asarray(aligned_truth_pixels, dtype=np.int64),
+            baseline_scores=arrays["baseline_scores"],
+            candidate_scores=arrays["candidate_scores"],
+            baseline_pixels=np.column_stack(
+                (arrays["baseline_tp"], arrays["baseline_fp"], arrays["baseline_fn"])
+            ),
+            candidate_pixels=np.column_stack(
+                (arrays["candidate_tp"], arrays["candidate_fp"], arrays["candidate_fn"])
+            ),
+            diagnostic_mask_thresholds=np.asarray(diagnostic_thresholds, dtype=np.float64),
+            diagnostic_candidate_pixels=diagnostic_aligned,
+            available_ids=np.asarray(available_ids),
+            available_groups=np.asarray(available_groups),
+            available_base_features=base_features.astype(np.float32),
+            base_feature_names=base_names,
+            spec_sha256=np.asarray(sha256(spec_path)),
+            head_sha256=np.asarray(sha256(paths["scene_head"])),
+            manifest_sha256=np.asarray(sha256(manifest_path)),
+        )
+        os.replace(temporary, diagnostic_path)
     print(json.dumps({"ok": passed, "decision": report["decision"], "checks": {name: value["checks"] for name, value in views.items()}}, indent=2))
     return 0 if passed else 2
 
