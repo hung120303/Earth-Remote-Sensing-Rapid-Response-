@@ -1510,3 +1510,9 @@ that the new model score is computed without outcome arrays in its input
 container. Frozen extractor SHA-256 is
 `cb79752666b6f02d3c88cc9fc91c97dff16bcd0d4d2932a2649817aa3d5fd2de`;
 its synthetic alignment/schema test passes.
+
+The extractor sealed 43,524 available scenes from 1,289 sites with 108 base
+features. The ignored label-free cache SHA-256 is
+`8a35e60e7c396e58639f940239020adb36def885124841e0b20901e10db52f33`;
+its committed receipt enumerates the five allowed arrays and their forbidden
+outcome-name audit.
