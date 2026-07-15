@@ -63,6 +63,9 @@ DEFAULT_SELECTION = Path("reports/experiments/mars_oof_context_minimum_blend.jso
 DEFAULT_SCENE_FOLD0 = Path("reports/experiments/mars_oof_context_minimum_blend_fold0.json")
 DEFAULT_MASK_SELECTION = Path("reports/experiments/mars_mask_threshold_folds234.json")
 DEFAULT_MASK_CONFIRMATION = Path("reports/experiments/mars_mask_threshold_folds01_confirmation.json")
+DEFAULT_SENSOR_MASK_CONFIRMATION = Path(
+    "reports/experiments/mars_sensor_mask_thresholds_confirmation.json"
+)
 DEFAULT_PAPER_BENCHMARK = Path("reports/acquisition/mars_s2l_paper_v3_benchmark.json")
 DEFAULT_MIXED_COHORT = Path("reports/acquisition/mars_s2l_paper_v3_mixed_cohort.json")
 DEFAULT_JSON = Path("reports/experiments/mars_successor_paper_test.json")
@@ -154,6 +157,21 @@ def candidate_pixel_counts(
         "fp": int(np.count_nonzero(prediction & observable)),
         "fn": 0,
     }
+
+
+def mask_threshold_for_sensor(architecture: dict[str, Any], sensor_index: int) -> float:
+    """Resolve a scalar v1 or sensor-specific post-test mask threshold."""
+    name = SENSOR_NAMES[sensor_index]
+    if "mask_probability_threshold_by_sensor" in architecture:
+        thresholds = architecture["mask_probability_threshold_by_sensor"]
+        if set(thresholds) != set(SENSOR_NAMES):
+            raise ValueError("Sensor-specific mask thresholds do not cover the model sensors")
+        threshold = float(thresholds[name])
+    else:
+        threshold = float(architecture["mask_probability_threshold"])
+    if not 0.0 < threshold < 1.0:
+        raise ValueError("Mask probability threshold must be in (0,1)")
+    return threshold
 
 
 def view_metrics(
@@ -370,6 +388,9 @@ def main() -> int:
     parser.add_argument("--scene-fold0", default=DEFAULT_SCENE_FOLD0.as_posix())
     parser.add_argument("--mask-selection", default=DEFAULT_MASK_SELECTION.as_posix())
     parser.add_argument("--mask-confirmation", default=DEFAULT_MASK_CONFIRMATION.as_posix())
+    parser.add_argument(
+        "--sensor-mask-confirmation", default=DEFAULT_SENSOR_MASK_CONFIRMATION.as_posix()
+    )
     parser.add_argument("--paper-benchmark", default=DEFAULT_PAPER_BENCHMARK.as_posix())
     parser.add_argument("--mixed-cohort", default=DEFAULT_MIXED_COHORT.as_posix())
     parser.add_argument("--batch-size", type=int, default=16)
@@ -391,6 +412,10 @@ def main() -> int:
         "paper_benchmark": (root / args.paper_benchmark).resolve(),
         "mixed_cohort": (root / args.mixed_cohort).resolve(),
     }
+    if "sensor_mask_confirmation_sha256" in expected:
+        paths["sensor_mask_confirmation"] = (
+            root / args.sensor_mask_confirmation
+        ).resolve()
     for name, path in paths.items():
         if sha256(path) != expected[f"{name}_sha256"]:
             raise ValueError(f"Frozen {name} hash mismatch")
@@ -476,7 +501,9 @@ def main() -> int:
             truth = (batch["mask"][index, 0].cpu().numpy() > 0.5) & observable
             prediction = component_mask_at(
                 released_probability[index, 0],
-                architecture["mask_probability_threshold"],
+                mask_threshold_for_sensor(
+                    architecture, int(batch["sensor_index"][index].item())
+                ),
                 architecture["mask_minimum_connected_pixels"],
             )
             truth_available = bool(batch["pixel_truth_available"][index].item())
@@ -603,9 +630,32 @@ def main() -> int:
         views[name] = {"metrics": metrics, "bootstrap": bootstrap, "published": published, "checks": checks}
 
     passed = all(all(view["checks"].values()) for view in views.values())
+    post_test = spec.get("evaluation_phase") == "transparent_post_test_architecture_evaluation"
+    audit_status = (
+        {
+            "status": "post_test_architecture_evaluation",
+            "predecessor_result_sha256": spec["predecessor_result_sha256"],
+            "architecture_changed": True,
+            "scene_predictions_changed": False,
+            "dense_mask_predictions_changed": True,
+            "reason": "A sensor-specific dense-mask threshold was selected and independently confirmed on development folds after the official paper test had been opened.",
+        }
+        if post_test
+        else {
+            "status": "post_result_evaluator_bug_correction",
+            "superseded_result_sha256": "589210e313fd1c6e93daf83e22db2582223ad065162e98cb93be5627f3934119",
+            "architecture_changed": False,
+            "predictions_changed": False,
+            "reason": "The frozen evaluator counted prediction & observable as FP even when those pixels were already TP. Correct FP is prediction & observable & ~truth when pixel truth is available.",
+        }
+    )
     report = {
         "schema_version": 1,
-        "scope": "deterministic metric correction of the frozen official MARS-S2L paper-v3 test evaluation",
+        "scope": (
+            "transparent post-test architecture evaluation on the official MARS-S2L paper-v3 cohort"
+            if post_test
+            else "deterministic metric correction of the frozen official MARS-S2L paper-v3 test evaluation"
+        ),
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "architecture": architecture,
         "views": views,
@@ -617,13 +667,11 @@ def main() -> int:
             else "Frozen ERSRR successor does not pass every preregistered paper-superiority gate."
         ),
         "passed": passed,
-        "metric_correction": {
-            "status": "post_result_evaluator_bug_correction",
-            "superseded_result_sha256": "589210e313fd1c6e93daf83e22db2582223ad065162e98cb93be5627f3934119",
-            "architecture_changed": False,
-            "predictions_changed": False,
-            "reason": "The frozen evaluator counted prediction & observable as FP even when those pixels were already TP. Correct FP is prediction & observable & ~truth when pixel truth is available.",
-        },
+        **(
+            {"evaluation_audit": audit_status}
+            if post_test
+            else {"metric_correction": audit_status}
+        ),
         "provenance": {
             "spec_sha256": sha256(spec_path),
             "manifest_sha256": sha256(manifest_path),

@@ -1,0 +1,180 @@
+{
+  "all_selection_confirmation_and_domain_gates_pass": true,
+  "baseline_threshold": 0.7,
+  "decision": "Advance the frozen sensor-specific mask rule to a transparent post-test benchmark evaluation.",
+  "generated_at_utc": "2026-07-15T05:36:21.446944+00:00",
+  "minimum_connected_pixels": 100,
+  "partitions": {
+    "all_five_folds": {
+      "baseline_iou": 0.5533799162133012,
+      "candidate_iou": 0.5640416220947194,
+      "checks": {
+        "all_fold_deltas_positive": true,
+        "bootstrap_lower_positive": true,
+        "no_sensor_regression": true,
+        "point_delta_positive": true,
+        "sentinel_delta_positive": true
+      },
+      "delta": 0.010661705881418237,
+      "folds": {
+        "0": {
+          "baseline_iou": 0.5577936240228099,
+          "candidate_iou": 0.5716381107345033,
+          "delta": 0.013844486711693471
+        },
+        "1": {
+          "baseline_iou": 0.5167447673021656,
+          "candidate_iou": 0.5314133484318914,
+          "delta": 0.0146685811297258
+        },
+        "2": {
+          "baseline_iou": 0.5823820163256571,
+          "candidate_iou": 0.5842765385962864,
+          "delta": 0.0018945222706292508
+        },
+        "3": {
+          "baseline_iou": 0.5644408014954019,
+          "candidate_iou": 0.5709976041013662,
+          "delta": 0.0065568026059643625
+        },
+        "4": {
+          "baseline_iou": 0.5465383417932441,
+          "candidate_iou": 0.5616151913985389,
+          "delta": 0.015076849605294762
+        }
+      },
+      "paired_group_bootstrap_delta": {
+        "confidence": 0.95,
+        "groups": 618,
+        "lower": 0.004789931297339482,
+        "mean": 0.010860411933259543,
+        "replicates": 10000,
+        "upper": 0.01753541944057339
+      },
+      "rows": 44363,
+      "sensors": {
+        "Landsat": {
+          "baseline_iou": 0.6979395822569662,
+          "candidate_iou": 0.6979395822569662,
+          "delta": 0.0
+        },
+        "Sentinel-2": {
+          "baseline_iou": 0.49287425242356414,
+          "candidate_iou": 0.5022792569199285,
+          "delta": 0.009405004496364333
+        }
+      }
+    },
+    "confirmation_folds_0_1": {
+      "baseline_iou": 0.5370341330824316,
+      "candidate_iou": 0.5513467236730132,
+      "checks": {
+        "all_fold_deltas_positive": true,
+        "bootstrap_lower_positive": true,
+        "no_sensor_regression": true,
+        "point_delta_positive": true,
+        "sentinel_delta_positive": true
+      },
+      "delta": 0.014312590590581542,
+      "folds": {
+        "0": {
+          "baseline_iou": 0.5577936240228099,
+          "candidate_iou": 0.5716381107345033,
+          "delta": 0.013844486711693471
+        },
+        "1": {
+          "baseline_iou": 0.5167447673021656,
+          "candidate_iou": 0.5314133484318914,
+          "delta": 0.0146685811297258
+        }
+      },
+      "paired_group_bootstrap_delta": {
+        "confidence": 0.95,
+        "groups": 215,
+        "lower": 0.006910414616747475,
+        "mean": 0.014610991738688428,
+        "replicates": 10000,
+        "upper": 0.02344435070753559
+      },
+      "rows": 17785,
+      "sensors": {
+        "Landsat": {
+          "baseline_iou": 0.6951527100492312,
+          "candidate_iou": 0.6951527100492312,
+          "delta": 0.0
+        },
+        "Sentinel-2": {
+          "baseline_iou": 0.47215310335979904,
+          "candidate_iou": 0.4855599270764843,
+          "delta": 0.013406823716685279
+        }
+      }
+    },
+    "selection_folds_2_3_4": {
+      "baseline_iou": 0.5641303539812934,
+      "candidate_iou": 0.5722762945592041,
+      "checks": {
+        "all_fold_deltas_positive": true,
+        "bootstrap_lower_positive": true,
+        "no_sensor_regression": true,
+        "point_delta_positive": true,
+        "sentinel_delta_positive": true
+      },
+      "delta": 0.008145940577910737,
+      "folds": {
+        "2": {
+          "baseline_iou": 0.5823820163256571,
+          "candidate_iou": 0.5842765385962864,
+          "delta": 0.0018945222706292508
+        },
+        "3": {
+          "baseline_iou": 0.5644408014954019,
+          "candidate_iou": 0.5709976041013662,
+          "delta": 0.0065568026059643625
+        },
+        "4": {
+          "baseline_iou": 0.5465383417932441,
+          "candidate_iou": 0.5616151913985389,
+          "delta": 0.015076849605294762
+        }
+      },
+      "paired_group_bootstrap_delta": {
+        "confidence": 0.95,
+        "groups": 403,
+        "lower": 0.0007040783656232951,
+        "mean": 0.008694407478959755,
+        "replicates": 10000,
+        "upper": 0.018570986420213088
+      },
+      "rows": 26578,
+      "sensors": {
+        "Landsat": {
+          "baseline_iou": 0.6997305507740105,
+          "candidate_iou": 0.6997305507740105,
+          "delta": 0.0
+        },
+        "Sentinel-2": {
+          "baseline_iou": 0.5066344963291801,
+          "candidate_iou": 0.5131710559756406,
+          "delta": 0.006536559646460494
+        }
+      }
+    }
+  },
+  "provenance": {
+    "checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "ecbb92abef0b8aa0a3e409be0de11ae5b153ef30",
+    "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "numpy": "2.4.4",
+    "protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "script_sha256": "b42c01f676837a0113e70c602f18855764623f4634f2033dccd8cb12c323adf9",
+    "torch": "2.11.0+cu128"
+  },
+  "rule": {
+    "Landsat": 0.7,
+    "Sentinel-2": 0.8
+  },
+  "schema_version": 1,
+  "scope": "all development folds; paper test not loaded"
+}

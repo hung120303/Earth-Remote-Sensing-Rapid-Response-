@@ -11,15 +11,24 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 
-from evaluate_mars_successor_paper_test import (
+from evaluate_mars_successor_paper_test import (  # noqa: E402
     average_precision_from_cumulative,
     candidate_pixel_counts,
+    mask_threshold_for_sensor,
     plan_cumulative,
     score_plan,
 )
 
 
 class MarsPaperSuccessorTests(unittest.TestCase):
+    def test_mask_threshold_supports_scalar_and_sensor_specific_configs(self) -> None:
+        self.assertEqual(mask_threshold_for_sensor({"mask_probability_threshold": 0.7}, 0), 0.7)
+        architecture = {
+            "mask_probability_threshold_by_sensor": {"Sentinel-2": 0.8, "Landsat": 0.7}
+        }
+        self.assertEqual(mask_threshold_for_sensor(architecture, 0), 0.8)
+        self.assertEqual(mask_threshold_for_sensor(architecture, 1), 0.7)
+
     def test_candidate_pixel_counts_are_mutually_exclusive(self) -> None:
         observable = np.asarray([[True, True], [True, False]])
         truth = np.asarray([[True, False], [False, False]])
