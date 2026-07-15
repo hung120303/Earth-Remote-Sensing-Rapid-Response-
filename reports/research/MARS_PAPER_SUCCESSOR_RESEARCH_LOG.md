@@ -1614,3 +1614,12 @@ The ignored control artifact SHA-256 is
 compact result JSON SHA-256 is
 `3a0478d9abdb94a76815744cefcf7ac181765c20e2969a7a40f310f272a03a8b`.
 This authorizes label-free paper alignment but is not paper-view evidence.
+
+The authorized adaptation step is separated from evaluation. It hash-pins the
+development/control artifacts, combines the sealed paper Prithvi CLS cache
+with the separate label-free 108-feature paper cache, reconstructs the same
+169 label-free site-context schema, estimates independent source/target
+moments, fits only development labels, and writes only paper IDs and scores.
+The outcome-bearing diagnostic archive is not an input to this step. Frozen
+adaptation script SHA-256 is
+`d95b77cb1246acd04125f1e982430e2605e290b30262787a35d78cd1ac2c442d`.
