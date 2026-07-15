@@ -1,0 +1,2009 @@
+{
+  "all_folds": {
+    "baseline": {
+      "fn": 1454691,
+      "fp": 1571307,
+      "iou": 0.5640416220947194,
+      "precision": 0.7135961828062236,
+      "recall": 0.7290935948591714,
+      "tp": 3915027
+    },
+    "candidate": {
+      "fn": 1561894,
+      "fp": 1125471,
+      "iou": 0.5862529943316507,
+      "precision": 0.7718622137942288,
+      "recall": 0.7091292317399164,
+      "tp": 3807824
+    },
+    "checks": {
+      "all_fold_deltas_positive": true,
+      "bootstrap_lower_positive": true,
+      "iou_higher": true,
+      "no_sensor_regression": true,
+      "retain_at_least_95pct_true_positive_pixels": true
+    },
+    "cutoff": 0.75,
+    "delta": 0.02221137223693126,
+    "folds": {
+      "0": {
+        "baseline_iou": 0.5716381107345033,
+        "candidate_iou": 0.5862433270516756,
+        "delta": 0.014605216317172265
+      },
+      "1": {
+        "baseline_iou": 0.5314133484318914,
+        "candidate_iou": 0.5590950946964983,
+        "delta": 0.027681746264606955
+      },
+      "2": {
+        "baseline_iou": 0.5842765385962864,
+        "candidate_iou": 0.5950818050806748,
+        "delta": 0.010805266484388398
+      },
+      "3": {
+        "baseline_iou": 0.5709976041013662,
+        "candidate_iou": 0.5971453738623873,
+        "delta": 0.026147769761021067
+      },
+      "4": {
+        "baseline_iou": 0.5616151913985389,
+        "candidate_iou": 0.593637728128132,
+        "delta": 0.0320225367295931
+      }
+    },
+    "paired_group_bootstrap_delta": {
+      "confidence": 0.95,
+      "groups": 618,
+      "lower": 0.014896238095854029,
+      "mean": 0.02251202566121133,
+      "replicates": 10000,
+      "upper": 0.032235410154316566
+    },
+    "positive_scenes": 3811,
+    "removed_false_positive_pixel_fraction": 0.2837357690126754,
+    "retained_positive_scene_fraction": 0.8336394647074259,
+    "retained_scene_fraction": 0.08579221423258121,
+    "retained_true_positive_pixel_fraction": 0.9726175579376591,
+    "rows": 44363,
+    "sensors": {
+      "Landsat": {
+        "baseline_iou": 0.6979395822569662,
+        "candidate_iou": 0.7062628454385395,
+        "delta": 0.008323263181573282
+      },
+      "Sentinel-2": {
+        "baseline_iou": 0.5022792569199285,
+        "candidate_iou": 0.5273495312138495,
+        "delta": 0.025070274293921058
+      }
+    }
+  },
+  "all_selection_and_confirmation_gates_pass": true,
+  "architecture": {
+    "dense_mask": {
+      "Landsat": 0.7,
+      "Sentinel-2": 0.8
+    },
+    "gate": "set the dense prediction to empty when scene probability is below cutoff",
+    "minimum_connected_pixels": 100,
+    "scene_score": "frozen v3 stronger head, cross-fitted within folds 2/3/4 and fixed on held folds 0/1"
+  },
+  "confirmation": {
+    "baseline": {
+      "fn": 550325,
+      "fp": 674913,
+      "iou": 0.5513467236730132,
+      "precision": 0.6904919244666259,
+      "recall": 0.7323336305107317,
+      "tp": 1505686
+    },
+    "candidate": {
+      "fn": 593010,
+      "fp": 499085,
+      "iou": 0.5725816172856127,
+      "precision": 0.7456355124087324,
+      "recall": 0.7115725548160978,
+      "tp": 1463001
+    },
+    "checks": {
+      "all_fold_deltas_positive": true,
+      "bootstrap_lower_positive": true,
+      "iou_higher": true,
+      "no_sensor_regression": true,
+      "retain_at_least_95pct_true_positive_pixels": true
+    },
+    "cutoff": 0.75,
+    "delta": 0.02123489361259956,
+    "folds": {
+      "0": {
+        "baseline_iou": 0.5716381107345033,
+        "candidate_iou": 0.5862433270516756,
+        "delta": 0.014605216317172265
+      },
+      "1": {
+        "baseline_iou": 0.5314133484318914,
+        "candidate_iou": 0.5590950946964983,
+        "delta": 0.027681746264606955
+      }
+    },
+    "paired_group_bootstrap_delta": {
+      "confidence": 0.95,
+      "groups": 215,
+      "lower": 0.012755150905921862,
+      "mean": 0.021774912780724433,
+      "replicates": 10000,
+      "upper": 0.034271899215763776
+    },
+    "positive_scenes": 1490,
+    "removed_false_positive_pixel_fraction": 0.26051950399532975,
+    "retained_positive_scene_fraction": 0.8449664429530201,
+    "retained_scene_fraction": 0.08709586730390778,
+    "retained_true_positive_pixel_fraction": 0.9716507957170353,
+    "rows": 17785,
+    "sensors": {
+      "Landsat": {
+        "baseline_iou": 0.6951527100492312,
+        "candidate_iou": 0.7013848858145277,
+        "delta": 0.006232175765296555
+      },
+      "Sentinel-2": {
+        "baseline_iou": 0.4855599270764843,
+        "candidate_iou": 0.5091501488907088,
+        "delta": 0.023590221814224432
+      }
+    }
+  },
+  "decision": "Freeze the scene-gated mask rule for one transparent post-test paper-cache replay.",
+  "generated_at_utc": "2026-07-15T17:06:37.166674+00:00",
+  "provenance": {
+    "domain_report_sha256": "fd4548ce5691b505c7f67126ab60eb39f256ece669fbb1b224e785ff8cce2e14",
+    "feature_cache_sha256": [
+      "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89",
+      "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7",
+      "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"
+    ],
+    "git_commit": "778ebd2d0004f74f02197a0d350c6e0794e3b506",
+    "mask_report_sha256": "a983069ced97114d31b3fe5714d20ca3e62e1b2ba3f86e9725f9014ceea85a62",
+    "metadata_cache_sha256": "0160ed93371396a487b819dd170a682f55756d285f0ba94d0f0d093ba51a8d01",
+    "numpy": "2.4.4",
+    "pixel_cache_sha256": "3935ef9d911747438ac9965744293b0b7ce98649770c72246c044312519a3703",
+    "score_cache_sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7",
+    "script_sha256": "da451898021b66580a907cb74e481cff0cfbe46773149f36cc35ad7cb357ff3d",
+    "spatial_report_sha256": "dfeba0d4e8dde28ae880077c0db2010ccda5c57f58d293f4d3f834b541605c22"
+  },
+  "schema_version": 1,
+  "scope": "development-only cross-fitted scene-gated masks; paper test not loaded",
+  "selection": {
+    "candidate_count": 25,
+    "candidates": {
+      "0.3": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 908271,
+          "fp": 824758,
+          "iou": 0.5812386959899383,
+          "precision": 0.7446723014159521,
+          "recall": 0.725904855196914,
+          "tp": 2405436
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.3,
+        "delta": 0.008962401430734124,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5933785905041485,
+            "delta": 0.009102051907862174
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5825193014253901,
+            "delta": 0.01152169732402386
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5685933961084982,
+            "delta": 0.006978204709959357
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.005262223973616867,
+          "mean": 0.009270322195926243,
+          "replicates": 10000,
+          "upper": 0.015099798959670646
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.07991575133256135,
+        "retained_positive_scene_fraction": 0.9246014648858251,
+        "retained_scene_fraction": 0.11731507261644969,
+        "retained_true_positive_pixel_fraction": 0.9983792248585817,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7037731305153317,
+            "delta": 0.004042579741321273
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5235565923275555,
+            "delta": 0.010385536351914859
+          }
+        }
+      },
+      "0.325": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 908686,
+          "fp": 818809,
+          "iou": 0.581975000217785,
+          "precision": 0.746013592528142,
+          "recall": 0.7257796178117136,
+          "tp": 2405021
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.325,
+        "delta": 0.009698705658580886,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5942439570804527,
+            "delta": 0.00996741848416638
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5829801154450898,
+            "delta": 0.011982511343723523
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5694109397374018,
+            "delta": 0.0077957483388628734
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.005765950078620108,
+          "mean": 0.0100519206655116,
+          "replicates": 10000,
+          "upper": 0.016377861206328077
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.08655234193892414,
+        "retained_positive_scene_fraction": 0.9207238259370961,
+        "retained_scene_fraction": 0.11490706599443148,
+        "retained_true_positive_pixel_fraction": 0.9982069785887511,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7040096423538581,
+            "delta": 0.004279091579847627
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.524434918909911,
+            "delta": 0.011263862934270397
+          }
+        }
+      },
+      "0.35": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 910088,
+          "fp": 811841,
+          "iou": 0.5826181152176632,
+          "precision": 0.747519483992959,
+          "recall": 0.7253565266935188,
+          "tp": 2403619
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.35000000000000003,
+        "delta": 0.010341820658459011,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5946576793557184,
+            "delta": 0.010381140759432084
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5836571011009425,
+            "delta": 0.012659496999576247
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5702589069830327,
+            "delta": 0.008643715584493838
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.006181384970264276,
+          "mean": 0.010716335338161392,
+          "replicates": 10000,
+          "upper": 0.017606232952401383
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.09432570945365537,
+        "retained_positive_scene_fraction": 0.9172770357604481,
+        "retained_scene_fraction": 0.11280006020016554,
+        "retained_true_positive_pixel_fraction": 0.9976250767326004,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7034521681447354,
+            "delta": 0.003721617370724961
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5255394946562674,
+            "delta": 0.012368438680626759
+          }
+        }
+      },
+      "0.375": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 910513,
+          "fp": 799365,
+          "iou": 0.5842820159724896,
+          "precision": 0.7503980410665346,
+          "recall": 0.7252282715400004,
+          "tp": 2403194
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.37500000000000006,
+        "delta": 0.012005721413285486,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5955409420173472,
+            "delta": 0.011264403421060831
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5858119040318398,
+            "delta": 0.014814299930473562
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5722909500957039,
+            "delta": 0.010675758697164972
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.0073745767751549765,
+          "mean": 0.012472813446971872,
+          "replicates": 10000,
+          "upper": 0.019957922493321394
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.10824369641028386,
+        "retained_positive_scene_fraction": 0.9138302455838001,
+        "retained_scene_fraction": 0.1101286778538641,
+        "retained_true_positive_pixel_fraction": 0.9974486799502437,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7043024986837885,
+            "delta": 0.004571947909777996
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.527435459045479,
+            "delta": 0.014264403069838338
+          }
+        }
+      },
+      "0.4": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 910842,
+          "fp": 791652,
+          "iou": 0.585299604736151,
+          "precision": 0.7521841330003879,
+          "recall": 0.7251289869623355,
+          "tp": 2402865
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.4000000000000001,
+        "delta": 0.0130233101769468,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5961035656089282,
+            "delta": 0.011827027012641822
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5867868788001693,
+            "delta": 0.01578927469880309
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5737614200292538,
+            "delta": 0.012146228630714906
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.008071377362133243,
+          "mean": 0.013452159932785639,
+          "replicates": 10000,
+          "upper": 0.021294369649383714
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.11684817167450923,
+        "retained_positive_scene_fraction": 0.910383455407152,
+        "retained_scene_fraction": 0.10809692226653624,
+        "retained_true_positive_pixel_fraction": 0.997312128088137,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7051842617298949,
+            "delta": 0.005453710955884428
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5284649821402667,
+            "delta": 0.015293926164626104
+          }
+        }
+      },
+      "0.425": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 911655,
+          "fp": 781403,
+          "iou": 0.5865659286319537,
+          "precision": 0.7545424703663158,
+          "recall": 0.7248836423980757,
+          "tp": 2402052
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.4250000000000001,
+        "delta": 0.014289634072749524,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5973109863670616,
+            "delta": 0.013034447770775226
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5885947915740823,
+            "delta": 0.017597187472716103
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5746882188366036,
+            "delta": 0.01307302743806471
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.008797629945534659,
+          "mean": 0.014783482529063542,
+          "replicates": 10000,
+          "upper": 0.023403081541619467
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.12828176002962988,
+        "retained_positive_scene_fraction": 0.9073675140025851,
+        "retained_scene_fraction": 0.10617804198961547,
+        "retained_true_positive_pixel_fraction": 0.99697469141977,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7052426625452672,
+            "delta": 0.005512111771256767
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.530120316953556,
+            "delta": 0.01694926097791538
+          }
+        }
+      },
+      "0.45": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 912969,
+          "fp": 770006,
+          "iou": 0.5878811757829211,
+          "precision": 0.7571528953456981,
+          "recall": 0.7244871076410799,
+          "tp": 2400738
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.4500000000000001,
+        "delta": 0.015604881223716949,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5982065911349413,
+            "delta": 0.01393005253865498
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5897956855867802,
+            "delta": 0.018798081485413953
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5764812485271323,
+            "delta": 0.014866057128593457
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.009637795396772597,
+          "mean": 0.01613725645860291,
+          "replicates": 10000,
+          "upper": 0.026074298275530983
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.14099603522558157,
+        "retained_positive_scene_fraction": 0.9030590262817751,
+        "retained_scene_fraction": 0.10429678681616375,
+        "retained_true_positive_pixel_fraction": 0.9964293140738484,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7063236008255432,
+            "delta": 0.006593050051532767
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5314425193787098,
+            "delta": 0.018271463403069177
+          }
+        }
+      },
+      "0.475": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 913590,
+          "fp": 757973,
+          "iou": 0.5894660189405847,
+          "precision": 0.7599900572814581,
+          "recall": 0.7242997042285272,
+          "tp": 2400117
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.47500000000000014,
+        "delta": 0.017189724381380556,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5990362673256763,
+            "delta": 0.01475972872938991
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5914215852747402,
+            "delta": 0.020423981173373962
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5787391995050821,
+            "delta": 0.017124008106543243
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.010749086760305402,
+          "mean": 0.01788173518529486,
+          "replicates": 10000,
+          "upper": 0.0283397610973536
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.15441981985600084,
+        "retained_positive_scene_fraction": 0.8996122361051271,
+        "retained_scene_fraction": 0.10249078184965009,
+        "retained_true_positive_pixel_fraction": 0.9961715672459813,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.707853368103007,
+            "delta": 0.008122817328996557
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5329963895774031,
+            "delta": 0.01982533360176253
+          }
+        }
+      },
+      "0.5": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 916996,
+          "fp": 748212,
+          "iou": 0.5900440161411392,
+          "precision": 0.7620889287273488,
+          "recall": 0.7232718523393891,
+          "tp": 2396711
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.5000000000000002,
+        "delta": 0.01776772158193507,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5982585288556195,
+            "delta": 0.01398199025933311
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5920703001282966,
+            "delta": 0.021072696026930404
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5805617221256535,
+            "delta": 0.018946530727114608
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.010932950409702389,
+          "mean": 0.01835956637908351,
+          "replicates": 10000,
+          "upper": 0.029399502220363163
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.165309004745681,
+        "retained_positive_scene_fraction": 0.8961654459284791,
+        "retained_scene_fraction": 0.10113627812476485,
+        "retained_true_positive_pixel_fraction": 0.9947579026796124,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7085279826929854,
+            "delta": 0.008797431918974974
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5334072960361426,
+            "delta": 0.020236240060501953
+          }
+        }
+      },
+      "0.525": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 919964,
+          "fp": 738951,
+          "iou": 0.5906600063464521,
+          "precision": 0.7641164441851007,
+          "recall": 0.722376178702583,
+          "tp": 2393743
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.5250000000000001,
+        "delta": 0.01838371178724796,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5975789651872605,
+            "delta": 0.013302426590974137
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5927005166411513,
+            "delta": 0.02170291253978507
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5824095859835199,
+            "delta": 0.020794394584981002
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.011350774912536808,
+          "mean": 0.019092716140189203,
+          "replicates": 10000,
+          "upper": 0.030400909947301605
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.17564039919945917,
+        "retained_positive_scene_fraction": 0.8901335631193451,
+        "retained_scene_fraction": 0.09929264805478215,
+        "retained_true_positive_pixel_fraction": 0.9935260305618839,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7080283801552092,
+            "delta": 0.008297829381198718
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5343816910380932,
+            "delta": 0.021210635062452576
+          }
+        }
+      },
+      "0.55": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 923657,
+          "fp": 731352,
+          "iou": 0.5908566475791824,
+          "precision": 0.7656975935813458,
+          "recall": 0.721261716862716,
+          "tp": 2390050
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.5500000000000003,
+        "delta": 0.01858035301997829,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5965002331240982,
+            "delta": 0.012223694527811801
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5941880265079187,
+            "delta": 0.023190422406552447
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5828749053209937,
+            "delta": 0.021259713922454848
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.011204599880538438,
+          "mean": 0.01927322153362679,
+          "replicates": 10000,
+          "upper": 0.030814050958721285
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.1841176982442988,
+        "retained_positive_scene_fraction": 0.8858250753985352,
+        "retained_scene_fraction": 0.09805101964030401,
+        "retained_true_positive_pixel_fraction": 0.9919932462860176,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7068537548684379,
+            "delta": 0.00712320409442746
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5351387710185788,
+            "delta": 0.021967715042938152
+          }
+        }
+      },
+      "0.575": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 927475,
+          "fp": 722746,
+          "iou": 0.5911705153014293,
+          "precision": 0.7675293939037201,
+          "recall": 0.720109532918873,
+          "tp": 2386232
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.5750000000000002,
+        "delta": 0.018894220742225132,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5959997838544842,
+            "delta": 0.01172324525819779
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5946646231518211,
+            "delta": 0.023667019050454874
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5838604214503353,
+            "delta": 0.02224523005179646
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.011387197839823147,
+          "mean": 0.019654828822991757,
+          "replicates": 10000,
+          "upper": 0.03179298355037175
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.19371838722704526,
+        "retained_positive_scene_fraction": 0.8797931925894011,
+        "retained_scene_fraction": 0.09665889081194973,
+        "retained_true_positive_pixel_fraction": 0.9904085806035758,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7068446811737921,
+            "delta": 0.007114130399781593
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5354688933749312,
+            "delta": 0.022297837399290588
+          }
+        }
+      },
+      "0.6": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 931292,
+          "fp": 711212,
+          "iou": 0.5919162596812507,
+          "precision": 0.7701041528277326,
+          "recall": 0.7189576507518619,
+          "tp": 2382415
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.6000000000000003,
+        "delta": 0.019639965122046577,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5965724075265705,
+            "delta": 0.012295868930284115
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5952133891213389,
+            "delta": 0.02421578501997268
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5849165044447344,
+            "delta": 0.023301313046195538
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.011673328172075849,
+          "mean": 0.02034217392194089,
+          "replicates": 10000,
+          "upper": 0.03286392335006997
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.20658549700243423,
+        "retained_positive_scene_fraction": 0.8733304610081861,
+        "retained_scene_fraction": 0.09496576115584318,
+        "retained_true_positive_pixel_fraction": 0.9888243299723867,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7060018794010324,
+            "delta": 0.006271328627021955
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.536801968264426,
+            "delta": 0.023630912288785444
+          }
+        }
+      },
+      "0.625": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 934347,
+          "fp": 699847,
+          "iou": 0.5928311915075766,
+          "precision": 0.7727184304270548,
+          "recall": 0.7180357225306885,
+          "tp": 2379360
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.6250000000000002,
+        "delta": 0.020554896948372425,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5961970375665268,
+            "delta": 0.01192049897024039
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.595822907670237,
+            "delta": 0.024825303568870805
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5872999697683029,
+            "delta": 0.025684778369764016
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.011984134091017134,
+          "mean": 0.02130147777271367,
+          "replicates": 10000,
+          "upper": 0.03466356182678962
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.21926407361048827,
+        "retained_positive_scene_fraction": 0.8685911245152951,
+        "retained_scene_fraction": 0.09361125743095794,
+        "retained_true_positive_pixel_fraction": 0.9875563483956816,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7062437481258684,
+            "delta": 0.006513197351857958
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5378396246763255,
+            "delta": 0.0246685687006849
+          }
+        }
+      },
+      "0.65": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 941104,
+          "fp": 687094,
+          "iou": 0.5930319953429326,
+          "precision": 0.7754372410078514,
+          "recall": 0.7159966164781618,
+          "tp": 2372603
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.6500000000000004,
+        "delta": 0.02075570078372846,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5952112154528472,
+            "delta": 0.010934676856560799
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5961105941100733,
+            "delta": 0.025112990008707037
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5885895944687571,
+            "delta": 0.026974403070218256
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.01211740437275942,
+          "mean": 0.021490431563462004,
+          "replicates": 10000,
+          "upper": 0.035333770953324455
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.23349107646860645,
+        "retained_positive_scene_fraction": 0.8591124515295131,
+        "retained_scene_fraction": 0.09184287756791332,
+        "retained_true_positive_pixel_fraction": 0.9847518470818369,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7069957916371021,
+            "delta": 0.00726524086309166
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.537683318052574,
+            "delta": 0.024512262076933355
+          }
+        }
+      },
+      "0.675": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 945963,
+          "fp": 676950,
+          "iou": 0.5933218515146754,
+          "precision": 0.7776623857766988,
+          "recall": 0.7145302828524067,
+          "tp": 2367744
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.6750000000000003,
+        "delta": 0.02104555695547128,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5950342029446855,
+            "delta": 0.010757664348399087
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5965728204889423,
+            "delta": 0.025575216387576094
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5892109715457575,
+            "delta": 0.02759578014721864
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.012183815922744725,
+          "mean": 0.02174813022305492,
+          "replicates": 10000,
+          "upper": 0.03533961501166259
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.2448075288321876,
+        "retained_positive_scene_fraction": 0.8517880224041362,
+        "retained_scene_fraction": 0.09045074873955904,
+        "retained_true_positive_pixel_fraction": 0.9827351130454344,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7084894040532016,
+            "delta": 0.008758853279191126
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5373795588914205,
+            "delta": 0.024208502915779917
+          }
+        }
+      },
+      "0.7": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 949893,
+          "fp": 664500,
+          "iou": 0.594190800026243,
+          "precision": 0.7805709711740593,
+          "recall": 0.7133442999034012,
+          "tp": 2363814
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.7000000000000004,
+        "delta": 0.02191450546703888,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5950898724951662,
+            "delta": 0.01081333389887984
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.597647836202031,
+            "delta": 0.02665023210066475
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5907234977416639,
+            "delta": 0.029108306343125
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.012790582697160725,
+          "mean": 0.022702422257684745,
+          "replicates": 10000,
+          "upper": 0.03699633232818061
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.2586965106861492,
+        "retained_positive_scene_fraction": 0.8457561395950022,
+        "retained_scene_fraction": 0.08894574460079765,
+        "retained_true_positive_pixel_fraction": 0.981103961622701,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7089280645631477,
+            "delta": 0.009197513789137246
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5382724717788353,
+            "delta": 0.025101415803194693
+          }
+        }
+      },
+      "0.725": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 957575,
+          "fp": 648047,
+          "iou": 0.5947194096352272,
+          "precision": 0.7842848245727035,
+          "recall": 0.7110260502814522,
+          "tp": 2356132
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.7250000000000003,
+        "delta": 0.022443115076023035,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5953034703915813,
+            "delta": 0.011026931795294903
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5979133720999763,
+            "delta": 0.026915767998610063
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5917555554637164,
+            "delta": 0.030140364065177505
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.012858685541557065,
+          "mean": 0.023243526425290765,
+          "replicates": 10000,
+          "upper": 0.03838423556872166
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.2770511627699427,
+        "retained_positive_scene_fraction": 0.8371391641533822,
+        "retained_scene_fraction": 0.08706448942734593,
+        "retained_true_positive_pixel_fraction": 0.9779155379001976,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7095512610446216,
+            "delta": 0.009820710270611155
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.538638515290405,
+            "delta": 0.02546745931476435
+          }
+        }
+      },
+      "0.75": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 968884,
+          "fp": 626386,
+          "iou": 0.5951186938988496,
+          "precision": 0.7891814409555168,
+          "recall": 0.7076132560905355,
+          "tp": 2344823
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.7500000000000004,
+        "delta": 0.02284239933964549,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5950818050806748,
+            "delta": 0.010805266484388398
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5971453738623873,
+            "delta": 0.026147769761021067
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.593637728128132,
+            "delta": 0.0320225367295931
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.012481901863028803,
+          "mean": 0.023667155119037542,
+          "replicates": 10000,
+          "upper": 0.03936681557744552
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.3012157600340921,
+        "retained_positive_scene_fraction": 0.8263679448513572,
+        "retained_scene_fraction": 0.08491985852961095,
+        "retained_true_positive_pixel_fraction": 0.9732217232844997,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7094378689773744,
+            "delta": 0.009707318203363902
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5391301388768106,
+            "delta": 0.025959082901169994
+          }
+        }
+      },
+      "0.775": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 983509,
+          "fp": 608522,
+          "iou": 0.5941004464553191,
+          "precision": 0.792929574780857,
+          "recall": 0.7031997699253434,
+          "tp": 2330198
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.7750000000000004,
+        "delta": 0.021824151896114974,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5903852654000931,
+            "delta": 0.006108726803806697
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5974513230942966,
+            "delta": 0.026453718992930364
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5952402201605604,
+            "delta": 0.03362502876202156
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.011031605342520723,
+          "mean": 0.022724225170900444,
+          "replicates": 10000,
+          "upper": 0.03939007340381526
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.32114449672800127,
+        "retained_positive_scene_fraction": 0.8099956915122792,
+        "retained_scene_fraction": 0.08243660170065467,
+        "retained_true_positive_pixel_fraction": 0.9671515987151673,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7094437679764702,
+            "delta": 0.009713217202459767
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5373991231255945,
+            "delta": 0.024228067149953847
+          }
+        }
+      },
+      "0.8": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 1000457,
+          "fp": 592669,
+          "iou": 0.592172898870974,
+          "precision": 0.7960476530832414,
+          "recall": 0.6980852561798614,
+          "tp": 2313250
+        },
+        "checks": {
+          "all_fold_deltas_positive": true,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": true
+        },
+        "cutoff": 0.8000000000000005,
+        "delta": 0.019896604311769872,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5861513596159047,
+            "delta": 0.0018748210196183335
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5941541579994088,
+            "delta": 0.02315655389804261
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5966347516834662,
+            "delta": 0.035019560284927365
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.0084760255530066,
+          "mean": 0.020723532273833143,
+          "replicates": 10000,
+          "upper": 0.038023859603584384
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.33882980028871235,
+        "retained_positive_scene_fraction": 0.7919000430848772,
+        "retained_scene_fraction": 0.0799533448716984,
+        "retained_true_positive_pixel_fraction": 0.960117310086036,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7094437679764702,
+            "delta": 0.009713217202459767
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5341743587860034,
+            "delta": 0.02100330281036278
+          }
+        }
+      },
+      "0.825": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 1031408,
+          "fp": 566369,
+          "iou": 0.5882098701159462,
+          "precision": 0.8011811134186223,
+          "recall": 0.6887449614585719,
+          "tp": 2282299
+        },
+        "checks": {
+          "all_fold_deltas_positive": false,
+          "bootstrap_lower_positive": true,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": false
+        },
+        "cutoff": 0.8250000000000004,
+        "delta": 0.01593357555674202,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.578997517901466,
+            "delta": -0.0052790206948203355
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.588642012291303,
+            "delta": 0.017644408189936733
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5970183083347972,
+            "delta": 0.035403116936258305
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": 0.00256441597529581,
+          "mean": 0.01666161623341561,
+          "replicates": 10000,
+          "upper": 0.03543569170478279
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.36816957721716126,
+        "retained_positive_scene_fraction": 0.7643257216716932,
+        "retained_scene_fraction": 0.07619083452479494,
+        "retained_true_positive_pixel_fraction": 0.9472710587666918,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7062654188586677,
+            "delta": 0.006534868084657197
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5293134845428368,
+            "delta": 0.016142428567196165
+          }
+        }
+      },
+      "0.85": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 1057674,
+          "fp": 531696,
+          "iou": 0.5866831122771787,
+          "precision": 0.8092727090760974,
+          "recall": 0.6808184911943029,
+          "tp": 2256033
+        },
+        "checks": {
+          "all_fold_deltas_positive": false,
+          "bootstrap_lower_positive": false,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": false
+        },
+        "cutoff": 0.8500000000000005,
+        "delta": 0.014406817717974585,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5775335493827605,
+            "delta": -0.006742989213525896
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5849280534783594,
+            "delta": 0.01393044937699317
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5970941030329772,
+            "delta": 0.03547891163443828
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": -0.0006016822363888467,
+          "mean": 0.015184004494583979,
+          "replicates": 10000,
+          "upper": 0.03568658299202916
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.4068501127852261,
+        "retained_positive_scene_fraction": 0.7401981904351572,
+        "retained_scene_fraction": 0.07261644969523666,
+        "retained_true_positive_pixel_fraction": 0.9363693225657971,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7078602267181813,
+            "delta": 0.0081296759441708
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5257334418857159,
+            "delta": 0.012562385910075302
+          }
+        }
+      },
+      "0.875": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 1097548,
+          "fp": 500218,
+          "iou": 0.581070419580878,
+          "precision": 0.8158510398225283,
+          "recall": 0.6687854418027906,
+          "tp": 2216159
+        },
+        "checks": {
+          "all_fold_deltas_positive": false,
+          "bootstrap_lower_positive": false,
+          "iou_higher": true,
+          "no_sensor_regression": true,
+          "retain_at_least_95pct_true_positive_pixels": false
+        },
+        "cutoff": 0.8750000000000004,
+        "delta": 0.008794125021673871,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5696902004585268,
+            "delta": -0.014586338137759558
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5768945209451334,
+            "delta": 0.0058969168437671415
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.595573068500613,
+            "delta": 0.0339578771020741
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": -0.008907020137367879,
+          "mean": 0.009348646077255884,
+          "replicates": 10000,
+          "upper": 0.031018189896711273
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.4419663674678769,
+        "retained_positive_scene_fraction": 0.7109004739336493,
+        "retained_scene_fraction": 0.0685153134171119,
+        "retained_true_positive_pixel_fraction": 0.919819568919468,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.7028183502298334,
+            "delta": 0.003087799455822937
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5192664525203045,
+            "delta": 0.006095396544663845
+          }
+        }
+      },
+      "0.9": {
+        "baseline": {
+          "fn": 904366,
+          "fp": 896394,
+          "iou": 0.5722762945592041,
+          "precision": 0.7288367034865166,
+          "recall": 0.7270832937251241,
+          "tp": 2409341
+        },
+        "candidate": {
+          "fn": 1152279,
+          "fp": 467244,
+          "iou": 0.5716625261739705,
+          "precision": 0.8222509312687166,
+          "recall": 0.6522688940211069,
+          "tp": 2161428
+        },
+        "checks": {
+          "all_fold_deltas_positive": false,
+          "bootstrap_lower_positive": false,
+          "iou_higher": false,
+          "no_sensor_regression": false,
+          "retain_at_least_95pct_true_positive_pixels": false
+        },
+        "cutoff": 0.9000000000000006,
+        "delta": -0.0006137683852336373,
+        "folds": {
+          "2": {
+            "baseline_iou": 0.5842765385962864,
+            "candidate_iou": 0.5599495908825248,
+            "delta": -0.024326947713761538
+          },
+          "3": {
+            "baseline_iou": 0.5709976041013662,
+            "candidate_iou": 0.5645663339359467,
+            "delta": -0.006431270165419556
+          },
+          "4": {
+            "baseline_iou": 0.5616151913985389,
+            "candidate_iou": 0.5887921634886624,
+            "delta": 0.027176972090123486
+          }
+        },
+        "paired_group_bootstrap_delta": {
+          "confidence": 0.95,
+          "groups": 403,
+          "lower": -0.021500569552546183,
+          "mean": -0.0001794061009202059,
+          "replicates": 10000,
+          "upper": 0.023804121062059973
+        },
+        "positive_scenes": 2321,
+        "removed_false_positive_pixel_fraction": 0.47875153113474656,
+        "retained_positive_scene_fraction": 0.6699698405859543,
+        "retained_scene_fraction": 0.06362404996613741,
+        "retained_true_positive_pixel_fraction": 0.8971033988132024,
+        "rows": 26578,
+        "sensors": {
+          "Landsat": {
+            "baseline_iou": 0.6997305507740105,
+            "candidate_iou": 0.6958558935402759,
+            "delta": -0.003874657233734591
+          },
+          "Sentinel-2": {
+            "baseline_iou": 0.5131710559756406,
+            "candidate_iou": 0.5079955912328745,
+            "delta": -0.005175464742766089
+          }
+        }
+      }
+    },
+    "eligible_candidate_count": 21,
+    "folds": [
+      2,
+      3,
+      4
+    ],
+    "selected": {
+      "baseline": {
+        "fn": 904366,
+        "fp": 896394,
+        "iou": 0.5722762945592041,
+        "precision": 0.7288367034865166,
+        "recall": 0.7270832937251241,
+        "tp": 2409341
+      },
+      "candidate": {
+        "fn": 968884,
+        "fp": 626386,
+        "iou": 0.5951186938988496,
+        "precision": 0.7891814409555168,
+        "recall": 0.7076132560905355,
+        "tp": 2344823
+      },
+      "checks": {
+        "all_fold_deltas_positive": true,
+        "bootstrap_lower_positive": true,
+        "iou_higher": true,
+        "no_sensor_regression": true,
+        "retain_at_least_95pct_true_positive_pixels": true
+      },
+      "cutoff": 0.7500000000000004,
+      "delta": 0.02284239933964549,
+      "folds": {
+        "2": {
+          "baseline_iou": 0.5842765385962864,
+          "candidate_iou": 0.5950818050806748,
+          "delta": 0.010805266484388398
+        },
+        "3": {
+          "baseline_iou": 0.5709976041013662,
+          "candidate_iou": 0.5971453738623873,
+          "delta": 0.026147769761021067
+        },
+        "4": {
+          "baseline_iou": 0.5616151913985389,
+          "candidate_iou": 0.593637728128132,
+          "delta": 0.0320225367295931
+        }
+      },
+      "paired_group_bootstrap_delta": {
+        "confidence": 0.95,
+        "groups": 403,
+        "lower": 0.012481901863028803,
+        "mean": 0.023667155119037542,
+        "replicates": 10000,
+        "upper": 0.03936681557744552
+      },
+      "positive_scenes": 2321,
+      "removed_false_positive_pixel_fraction": 0.3012157600340921,
+      "retained_positive_scene_fraction": 0.8263679448513572,
+      "retained_scene_fraction": 0.08491985852961095,
+      "retained_true_positive_pixel_fraction": 0.9732217232844997,
+      "rows": 26578,
+      "sensors": {
+        "Landsat": {
+          "baseline_iou": 0.6997305507740105,
+          "candidate_iou": 0.7094378689773744,
+          "delta": 0.009707318203363902
+        },
+        "Sentinel-2": {
+          "baseline_iou": 0.5131710559756406,
+          "candidate_iou": 0.5391301388768106,
+          "delta": 0.025959082901169994
+        }
+      }
+    },
+    "selected_cutoff": 0.75
+  }
+}

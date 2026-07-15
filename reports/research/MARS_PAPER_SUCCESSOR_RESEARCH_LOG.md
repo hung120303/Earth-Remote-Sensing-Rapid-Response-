@@ -981,3 +981,30 @@ Test-only IoU remains a confirmed improvement. The pairwise loss therefore
 improves development ranking without improving site-novel transfer, and must
 not replace the ordinary spatial model. Result JSON SHA-256 is
 `f9cbe235c7f05fa830001df264e8d1942c61ecc57aea2ace661855139aa9b577`.
+
+## Scene-conditioned dense-mask suppression
+
+The released dense mask and the stronger scene head were next coupled without
+retraining either model. Sentinel-2 retains its confirmed 0.80 mask threshold,
+Landsat retains 0.70, and the mask is set to empty when the cross-fitted v3
+scene probability is below a cutoff. This addresses the paper contract's
+pixel false positives on all no-plume scenes while leaving scene AP, recall,
+and FPR unchanged.
+
+A fixed 0.025-spaced cutoff grid was selected only on folds 2/3/4. The chosen
+0.75 cutoff raises IoU from 0.57228 to 0.59512, delta +0.02284 with paired
+physical-group interval [+0.01248, +0.03937]. It retains 97.32% of baseline
+true-positive pixels while removing 30.12% of false-positive pixels; every
+selection fold and both sensors improve. On untouched confirmation folds 0/1,
+IoU rises from 0.55135 to 0.57258, delta +0.02123 with interval
+[+0.01276, +0.03427]. Fold-0 and fold-1 deltas are +0.01461 and +0.02768;
+Landsat and Sentinel-2 deltas are +0.00623 and +0.02359. Across all five
+folds, the gain is +0.02221 with lower bound +0.01490, retaining 97.26% of
+true-positive pixels and removing 28.37% of false-positive pixels.
+
+The rule therefore passes selection, held-fold, sensor-domain, bootstrap, and
+true-positive-retention gates before paper-cache replay. Analysis script
+SHA-256 is
+`da451898021b66580a907cb74e481cff0cfbe46773149f36cc35ad7cb357ff3d`;
+selection report SHA-256 is
+`c1e5a1497abebba80d42898a8165b30fd255ff252478a0ee1fd90fd32456a51c`.
