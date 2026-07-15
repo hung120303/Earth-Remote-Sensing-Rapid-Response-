@@ -761,3 +761,12 @@ confirmed sensor thresholds. The evaluator contract was therefore corrected
 before committing a fold-1 result: AP, recall, FPR, sensor non-regression, and
 paired AP confidence are promotion gates; residual pixel IoU remains a reported
 non-promotion diagnostic. No scores, model parameters, or blend weights changed.
+
+Under the corrected, architecture-aligned contract, both fixed-head held folds
+pass. Fold 0 remains AP 0.91429 (delta +0.02784), recall delta +0.00403,
+bootstrap interval [+0.00966, +0.04546]. Fold 1 reaches AP 0.89661 versus
+0.85975 (delta +0.03686), recall delta +0.00940, and interval
+[+0.01875, +0.05828]. The fold-0/fold-1 operating thresholds are 0.15312 and
+0.28188; the conservative fixed operational threshold for a post-test v3
+architecture is therefore 0.28187603894788654. Result hashes are
+`4827c6a3…bd06` (fold 0) and `8380d079…0d1c` (fold 1).

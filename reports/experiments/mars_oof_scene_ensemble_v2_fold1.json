@@ -1,0 +1,145 @@
+{
+  "architecture": {
+    "blend_lambda": 0.625,
+    "scene_head": "mars_oof_scene_ensemble_v2",
+    "segmentation": "diagnostic only; final mask branch uses released logits and confirmed sensor thresholds",
+    "spec": {
+      "family": "extra_trees",
+      "max_features": 0.5,
+      "min_samples_leaf": 5,
+      "n_estimators": 400,
+      "weighting": "uniform"
+    }
+  },
+  "checks": {
+    "ap_higher": true,
+    "fpr_no_worse": true,
+    "no_material_sensor_regression": true,
+    "paired_group_bootstrap_ap_lower_positive": true,
+    "recall_at_fpr_0_0713_higher": true
+  },
+  "decision": "Advance the stronger OOF scene ensemble to the next confirmation stage.",
+  "fold": 1,
+  "generated_at_utc": "2026-07-15T06:26:12.785912+00:00",
+  "non_promotion_diagnostics": {
+    "primary_residual_pixel_iou_delta": -0.009113455065158593,
+    "primary_residual_pixel_iou_higher": false
+  },
+  "paired_group_bootstrap_ap_delta": {
+    "confidence": 0.95,
+    "groups": 108,
+    "lower": 0.018753052203234206,
+    "mean": 0.03601732866467678,
+    "replicates": 10000,
+    "upper": 0.05827598985706486
+  },
+  "passed": true,
+  "positive": 745,
+  "primary_endpoint_identity": {
+    "accuracy": 0.9297567629006592,
+    "auroc": 0.9800648722348668,
+    "average_precision": 0.8602686911878731,
+    "false_positive_rate": 0.07127778467651807,
+    "fn": 44.0,
+    "fp": 574.0,
+    "negative_predictive_value": 0.9941512694403828,
+    "operating_point": {
+      "false_positive_rate": 0.07127778467651807,
+      "precision": 0.5498039215686275,
+      "recall": 0.9409395973154362,
+      "target_fpr": 0.0713,
+      "threshold": 0.7230783104896545
+    },
+    "precision": 0.5498039215686275,
+    "recall": 0.9409395973154362,
+    "sensor_average_precision": {
+      "Landsat": 0.9687833481886787,
+      "Sentinel-2": 0.8123965558857893
+    },
+    "specificity": 0.928722215323482,
+    "tn": 7479.0,
+    "tp": 701.0
+  },
+  "provenance": {
+    "artifact_sha256": "9e6fa18b83ef065ac24c94a06a510057a0c382cecf1efa3b54e818566a45c9ac",
+    "cache_sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108",
+    "git_commit": "cc669cabe666c0d318cab541c9fde2e206ed45e5",
+    "joblib": "1.5.3",
+    "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "numpy": "2.4.4",
+    "oof_report_sha256": "b12f62e05d864739f8a278b414a415febaba0185c649b5dea901eaf4135ef157",
+    "primary_report_sha256": "6d06fde3790cc5e0cc1f0039f256ec5dd2acaeca86ae990bee5679b701f6efeb",
+    "protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "script_sha256": "e1c13b63906778a529347a5af13d99e7502d6a7df4858d823f140db86668423f",
+    "sklearn": "1.9.0"
+  },
+  "result": {
+    "checks": {
+      "ap_higher": true,
+      "fpr_no_worse": true,
+      "no_material_sensor_regression": true,
+      "pixel_iou_higher": false,
+      "recall_at_fpr_0_0713_higher": true
+    },
+    "delta": {
+      "average_precision": 0.03686420368642995,
+      "false_positive_rate_at_target": 0.0,
+      "pixel_iou": -0.009113455065158593,
+      "recall_at_fpr_0_0713": 0.009395973154362358
+    },
+    "pixel_iou": 0.4602609668472599,
+    "released_baseline": {
+      "average_precision": 0.8597483469941496,
+      "false_positive_rate_at_target": 0.07127778467651807,
+      "pixel_iou": 0.4693744219124185,
+      "recall_at_fpr_0_0713": 0.9369127516778524
+    },
+    "scene": {
+      "accuracy": 0.9302114116844737,
+      "auroc": 0.9850702185270902,
+      "average_precision": 0.8966125506805795,
+      "false_positive_rate": 0.07127778467651807,
+      "fn": 40.0,
+      "fp": 574.0,
+      "negative_predictive_value": 0.9946801436361218,
+      "operating_point": {
+        "false_positive_rate": 0.07127778467651807,
+        "precision": 0.5512118842845973,
+        "recall": 0.9463087248322147,
+        "target_fpr": 0.0713,
+        "threshold": 0.28187603894788654
+      },
+      "precision": 0.5512118842845973,
+      "recall": 0.9463087248322147,
+      "sensor_average_precision": {
+        "Landsat": 0.9834344004670298,
+        "Sentinel-2": 0.8563091939573939
+      },
+      "specificity": 0.928722215323482,
+      "tn": 7479.0,
+      "tp": 705.0
+    },
+    "sensor_strata": {
+      "Landsat": {
+        "average_precision": 0.9834344004670298,
+        "delta": {
+          "average_precision": 0.00927774588072916,
+          "pixel_iou": -0.002392788018034664
+        },
+        "pixel_iou": 0.6726288999234699
+      },
+      "Sentinel-2": {
+        "average_precision": 0.8563091939573939,
+        "delta": {
+          "average_precision": 0.045871992198371236,
+          "pixel_iou": -0.00933680144533855
+        },
+        "pixel_iou": 0.39055822196130147
+      }
+    }
+  },
+  "rows": 8798,
+  "schema_version": 1,
+  "scope": "frozen stronger OOF scene-head fold-1 evaluation; paper test not loaded",
+  "sites": 108
+}
