@@ -1498,3 +1498,15 @@ Compact result JSON SHA-256 is
 `f79fb3c8b0a0ff2832d6d7c9d1ae945b6bf6fc6d795e661e49bcaba0910da1db`.
 This authorizes freezing one exact-paper evaluator, but is not itself evidence
 about either paper view.
+
+Before exact scoring, a dedicated extractor will copy only paper sample IDs,
+site groups, 108 base scene features, feature names, and aligned frozen-v3
+scores from the hash-pinned diagnostic archive. NumPy NPZ members are lazy, so
+the extractor does not access label, test-only-site, baseline, or pixel-truth
+members. The ignored output is schema-checked against forbidden outcome names
+and receives a compact acquisition receipt. This additional boundary does not
+restore pristineness to the historically opened paper test; it ensures only
+that the new model score is computed without outcome arrays in its input
+container. Frozen extractor SHA-256 is
+`cb79752666b6f02d3c88cc9fc91c97dff16bcd0d4d2932a2649817aa3d5fd2de`;
+its synthetic alignment/schema test passes.
