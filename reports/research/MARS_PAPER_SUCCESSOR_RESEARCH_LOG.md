@@ -1276,3 +1276,18 @@ the compact development result SHA-256 is
 This statistically positive incremental evidence authorizes exactly one
 transparent paper-cache replay after its label-independent extraction and
 evaluator are frozen and committed.
+
+The exact-paper evaluator is frozen to the existing label-independent
+43,524-by-9-by-64-by-64 paper spatial cache (image SHA-256
+`7cce444a552c6c873c05ae3a972f62a8081fde89d31ac63d94303dbfac3b1b94`;
+metadata SHA-256
+`b2b58eabf4478b46912d3c3437c1ee0b039841ee283bd7fe0164775b9d448022`),
+the development artifact/report hashes above, the exact v3 diagnostic cache,
+and the confirmed 0.75 dense-mask gate report. It verifies that paper spatial
+metadata contains no labels, computes every site template and raw CNN score
+before opening the diagnostic cache containing paper labels/comparator scores,
+and leaves the exact five unavailable scenes at their v3 score. Dense masks
+remain driven by the unchanged v3 controller, not the new blended score. All
+metric and paired 10,000-site-bootstrap gates are identical to the prior exact
+replays. Evaluator SHA-256 is
+`1203950a85ed11dde2885c79b9a534bd9cd8f59ba99a6a0be31d3f0fe7939c6c`.
