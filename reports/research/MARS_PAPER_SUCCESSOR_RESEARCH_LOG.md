@@ -943,3 +943,29 @@ the positive test-only IoU result. Thus the ordinary-BCE morphology model is a
 real but insufficient complement: it does not clear site-novel scene
 confidence or full-view segmentation confidence. Result JSON SHA-256 is
 `77d6f3592571341c6b18b8f0a266c7696f5f6d0dbd5faedb7ce41a7b3430edf3`.
+
+## Hard-negative pairwise spatial ranking
+
+Ordinary scene BCE was redirected toward the actual retrieval boundary using
+balanced positive/negative batches, stronger-head-weighted hard-negative
+sampling, and a paired softplus ranking loss. Five fixed variants compared
+site-cell versus group loss weighting, 75% versus 100% hard-negative sampling,
+and pairwise weights 0.25, 0.50, and 1.00. Each used the same frozen spatial
+cache, CNN, augmentations, and 0.10-to-1.00 blend grid as the BCE experiment.
+
+The strongest pooled configuration was group-weighted (AP +0.00132 versus the
+stronger head), but selection prioritizes worst-fold stability. The frozen
+choice therefore uses site-cell weighting, 100% hard-negative sampling, and
+pairwise weight 0.50. It improves inner AP by +0.02984 versus primary and
++0.00027 versus the stronger head; recall improves by +0.01293 versus primary.
+The paired AP lower bounds are +0.01977 versus primary and -0.00137 versus the
+stronger head, satisfying the predeclared no-material-regression interval.
+
+Both held folds pass unchanged gates. Fold-0 AP improves +0.02574 versus
+primary and +0.00036 versus the stronger head, with recall +0.00537 and paired
+AP lower bound +0.01051. Fold-1 AP improves +0.03748/+0.00114, recall +0.00805,
+and lower bound +0.02079. The frozen operational threshold is
+0.2965460234436805. Artifact SHA-256 is
+`3d362b8dc6b9244abeb949d5f2dc34c2f3101e2ef3849d62ab5ef3c85d4fcb85`;
+selection report SHA-256 is
+`55726830efa06f98339ecc5df662a124f7bc8a504c34d974589734b54842435e`.
