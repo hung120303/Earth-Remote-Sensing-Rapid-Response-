@@ -1178,7 +1178,14 @@ merger, and exact evaluator SHA-256 values are respectively
 `f3d0fc1c65c6312384e53523c231e33f133c975a7ac1ffc49755a54fa00345b7`,
 `0a118513123df51ef6bb7be6392bbf81b5d3c35118a4991a5b9232ce80fb57e4`,
 and
-`f41beaaf7be903dfa27114f9b0feea576f62a602b93e2613a42a7daa863267dc`.
+`4b9e0feb69c718d3e5d2fd273adab3ff2f91c5a4503a92a16593a6be5c3d951b`.
+
+The first evaluator launch stopped before metric computation because PyTorch
+2.6's weights-only loader does not allow the NumPy arrays in the locally
+generated fitted-probe payload. The evaluator now loads that payload only
+after verifying its frozen SHA-256 identity, using the trusted-pickle path.
+This compatibility correction changes no cache, model, score, threshold,
+bootstrap seed, or promotion gate and was committed before metric replay.
 
 The exact-paper Prithvi extraction completed without retries across all five
 predeclared contiguous shards. Their row counts are 8,704 / 8,705 / 8,705 /

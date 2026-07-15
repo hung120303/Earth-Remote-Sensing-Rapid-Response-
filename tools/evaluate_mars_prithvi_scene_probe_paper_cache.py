@@ -111,7 +111,10 @@ def main() -> int:
     if gate_report.get("all_selection_and_confirmation_gates_pass") is not True:
         raise ValueError("Development dense-mask gate was not promoted")
     cutoff = float(gate_report["selection"]["selected_cutoff"])
-    artifact = torch.load(paths["artifact"], map_location="cpu", weights_only=True)
+    # This locally generated artifact is hash-verified above, but its fitted
+    # probe contains NumPy arrays that PyTorch 2.6's weights-only unpickler
+    # rejects. Never use this trusted-artifact path before identity checking.
+    artifact = torch.load(paths["artifact"], map_location="cpu", weights_only=False)
     if (
         float(artifact["blend_weight"]) != float(development["selected"]["blend_weight"])
         or artifact["spec"] != development["selected"]["spec"]
