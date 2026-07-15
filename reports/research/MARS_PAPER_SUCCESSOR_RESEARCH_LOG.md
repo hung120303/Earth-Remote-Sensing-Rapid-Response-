@@ -1599,3 +1599,18 @@ gates. A pass would authorize a separately frozen label-free paper alignment;
 otherwise the paper cache remains unused. Frozen script SHA-256 is
 `658e56607d9df031c935b9fc00da2b9e1fcb843d7f62b36d67b4271a94085af3`;
 the independent-moment test passes.
+
+The adaptive Prithvi protocol passes every frozen development gate. It selects
+CLS plus 169 scene/context features, C=0.01, and a 0.10 blend. AP improves
++0.004342 versus current with paired-site interval [+0.002495, +0.006361];
+matched-FPR recall improves +0.001312. Fold AP deltas are +0.002288 /
++0.001244 / +0.003090 / +0.004702 / +0.001855, and every fold gains one or
+two matched-FPR positives (+0.001342 / +0.001342 / +0.001255 / +0.002639 /
++0.002611). Pooled Landsat and Sentinel-2 AP improve +0.001097 and +0.005594;
+fold-1 Landsat changes -0.000228 but the predeclared pooled sensor gate passes.
+
+The ignored control artifact SHA-256 is
+`a38be1acc8ca425ef5307c0ad2b253274fd36d4c3e6b5ed63ce1bf205f6fb0d5`;
+compact result JSON SHA-256 is
+`3a0478d9abdb94a76815744cefcf7ac181765c20e2969a7a40f310f272a03a8b`.
+This authorizes label-free paper alignment but is not paper-view evidence.
