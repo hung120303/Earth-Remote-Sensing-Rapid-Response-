@@ -1392,3 +1392,15 @@ members, each omitting one physical-site fold. Paper data remains excluded.
 Frozen script SHA-256 is
 `1e7d21727a99d0d1c43de289035eb04d90245baa53e71a46a280d8ce47703c42`;
 the focused hard-positive weighting test passes.
+
+Hard-positive weighting is rejected before paper scoring. The safest result
+uses multiplier 2, mean-logit aggregation, and bag weight 0.10. It improves AP
+by +0.001521 versus current with paired-site interval
+[+0.001024, +0.002009], improves one pooled positive (+0.000262 recall), and
+has nonnegative recall plus positive AP on every fold. It nevertheless misses
+the frozen +0.002 pooled AP floor, and fold-4 Landsat AP changes -0.000268.
+Weights 4 and 8 do not improve the stability frontier; at bag weights large
+enough to exceed the AP floor, at least one fold again loses two positives.
+Recall-focused sample weighting therefore does not resolve the crossfold
+bag's AP/recall tradeoff. Result JSON SHA-256 is
+`f3a67223b3d0012f3be14ab8ba21df1910662822313c64a876e09f9c5e8535f7`.
