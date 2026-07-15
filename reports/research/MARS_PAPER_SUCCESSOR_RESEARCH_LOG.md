@@ -1579,3 +1579,23 @@ boundary failure despite an independent recall-safe component and closes the
 continuous scalar-ensemble path. No paper feature was loaded. Result JSON
 SHA-256 is
 `bdd8c1f0ccb7472b0ab3c7f54ab48d720cd39ece212e475438849c981f3a6212`.
+
+## Adaptive Prithvi moment alignment: frozen protocol
+
+The next branch changes representation geometry rather than scalar weights.
+AdaBN (<https://arxiv.org/abs/1603.04779>) and CORAL
+(<https://arxiv.org/abs/1612.01939>) motivate estimating feature moments from
+unlabeled targets. For each held physical-site fold, source and target receive
+independent per-feature mean/variance normalization; only source labels fit a
+regularized logistic probe. The target labels never enter normalization,
+fitting, or selection inputs.
+
+The fixed search compares 768 four-block Prithvi CLS features alone or with
+the established 169 scene/context features, C 0.001 / 0.01 / 0.1, and current
+logit blends 0.05 / 0.10 / 0.20 / 0.30 / 0.40 / 0.50. Positive source rows
+receive the square-root imbalance weight. Promotion retains the +0.002 AP,
+positive pooled recall, all-fold AP/recall, sensor, and paired-site confidence
+gates. A pass would authorize a separately frozen label-free paper alignment;
+otherwise the paper cache remains unused. Frozen script SHA-256 is
+`658e56607d9df031c935b9fc00da2b9e1fcb843d7f62b36d67b4271a94085af3`;
+the independent-moment test passes.
