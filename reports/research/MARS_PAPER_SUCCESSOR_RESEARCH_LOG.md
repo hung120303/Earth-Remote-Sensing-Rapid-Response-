@@ -1075,3 +1075,49 @@ extraction. Methane-task specificity alone did not compensate for its domain
 and input-contract mismatch with mixed MARS Sentinel-2/Landsat pairs. Feature
 extractor SHA-256 is
 `fed0c05b75ed7b721ba59b2463a944094a770f9196774b77fbc6605a5aea3fe2`.
+
+## Prithvi-EO-2.0 tiny temporal transfer: frozen protocol
+
+The next site-novel representation experiment uses the official
+IBM/NASA Prithvi-EO-2.0 tiny temporal/location encoder from
+`ibm-nasa-geospatial/Prithvi-EO-2.0-tiny-TL`, pinned at repository revision
+`335eadc2c45ad5abe7bd307223e1c48c5b60c41b`. The Apache-2.0 checkpoint SHA-256
+is `d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70`.
+Official model and paper sources are
+<https://huggingface.co/ibm-nasa-geospatial/Prithvi-EO-2.0-tiny-TL>,
+<https://github.com/NASA-IMPACT/Prithvi-EO-2.0>, and
+<https://arxiv.org/abs/2412.02732>.
+
+Prithvi was pretrained on 4.2 million global HLS V2 time-series samples at
+30 m using blue, green, red, Narrow NIR, SWIR1, and SWIR2 plus temporal and
+location coordinates. Five spectral channels closely correspond to MARS.
+The HLS Narrow NIR slot receives broad Sentinel-2 B08 or Landsat B05 in this
+transfer experiment; that declared spectral-response mismatch prevents any
+claim of an exact band contract. MARS's 4 km Sentinel-2 crop is resized to
+128x128, placing a 16-pixel token near the HLS pretraining footprint. Landsat
+remains a separately reported sensor stratum.
+
+For every chronological reference/target pair, the frozen 5M-parameter
+encoder emits CLS tokens from blocks 3, 6, 9, and 12 plus last-layer token
+mean, standard deviation, and maximum for reference, target, signed temporal
+difference, and absolute temporal difference: 3,072 float16 features. MARS
+omits the reference product ID for 871 of 44,363 development rows and its
+GeoTIFF metadata contains no replacement timestamp. Those rows use the target
+time coordinate for both frames, a neutral zero-separation encoding recorded
+in the cache. Feature values never use labels; labels and physical groups are
+stored only for verified downstream alignment. Per-fold caches and the 129 MB
+foundation checkpoint remain ignored by Git.
+
+Before any Prithvi scene score was computed, the probe search was frozen to
+three views: four-block CLS plus the established 108 scene features;
+signed/absolute temporal-change statistics plus those scene features; and all
+3,072 Prithvi features plus the scene features. Linear probes use uniform,
+physical-group, or site/label/sensor-cell weighting at weight decay 0.001;
+uniform linear probes also test weight decay 0.01. Two bounded nonlinear
+ablations use 64 hidden units on temporal-change features or 128 on all
+features. Each is cross-fitted on folds 2/3/4 and tested at seven predeclared
+logit blends from 0.05 to 1.00 with the current stronger head. Ranking favors
+worst-fold stability before pooled AP. The single selected probe must pass
+paired physical-group AP, recall, per-fold, and sensor gates on selection and
+then independently on both folds 0 and 1 before any paper-test Prithvi feature
+is extracted.

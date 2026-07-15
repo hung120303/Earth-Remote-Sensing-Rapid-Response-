@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "scope": "external foundation-model acquisition for development-only MARS transfer research",
+  "generated_at_utc": "2026-07-15T19:00:00+00:00",
+  "source": {
+    "provider": "IBM-NASA Geospatial",
+    "repository": "ibm-nasa-geospatial/Prithvi-EO-2.0-tiny-TL",
+    "repository_url": "https://huggingface.co/ibm-nasa-geospatial/Prithvi-EO-2.0-tiny-TL",
+    "revision": "335eadc2c45ad5abe7bd307223e1c48c5b60c41b",
+    "license": "Apache-2.0",
+    "paper": "https://arxiv.org/abs/2412.02732",
+    "pretraining": "4.2M global HLS V2 time-series samples; six bands; 30 m granularity"
+  },
+  "selection_rationale": "The 5M-parameter temporal/location model is a lightweight public encoder pretrained on harmonized Sentinel-2 and Landsat time series. Blue, green, red, SWIR1, and SWIR2 closely correspond to MARS-S2L. Its HLS Narrow NIR slot receives MARS broad Sentinel-2 B08 or Landsat B05, an explicit spectral-response transfer mismatch rather than an exact band match.",
+  "files": [
+    {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/config.json",
+      "bytes": 768,
+      "sha256": "d7f9e36d2253cb82d296bfd95a9a651f2af455c0cfe8a5ea775b2e3d196ad170",
+      "tracked": false
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/inference.py",
+      "bytes": 16455,
+      "sha256": "95d47f6d4b34b7c4f3195c4d40c89b295c22ddafbd4ed0571371403ab54be295",
+      "tracked": false
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/Prithvi_EO_V2_tiny_TL.pt",
+      "bytes": 129258736,
+      "sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70",
+      "tracked": false
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/prithvi_mae.py",
+      "bytes": 30027,
+      "sha256": "9cee9a8cb17c3859d6365a7e58f723e0f4c08e3e29aa4b8e6523506db70321da",
+      "tracked": false
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/README.md",
+      "bytes": 8092,
+      "sha256": "543b6cd0d3ea1e85ec7d4a5dc84e0a8370adca73e76778d784fdbcbd2c0da5c3",
+      "tracked": false
+    }
+  ],
+  "transport": "huggingface_hub snapshot_download with allow_patterns; no dataset or unrelated model files downloaded"
+}
