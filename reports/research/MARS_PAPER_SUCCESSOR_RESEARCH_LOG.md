@@ -1179,3 +1179,15 @@ merger, and exact evaluator SHA-256 values are respectively
 `0a118513123df51ef6bb7be6392bbf81b5d3c35118a4991a5b9232ce80fb57e4`,
 and
 `f41beaaf7be903dfa27114f9b0feea576f62a602b93e2613a42a7daa863267dc`.
+
+The exact-paper Prithvi extraction completed without retries across all five
+predeclared contiguous shards. Their row counts are 8,704 / 8,705 / 8,705 /
+8,705 / 8,705 and their missing-reference-time fallback counts are 428 / 409 /
+423 / 405 / 412, totaling the expected 2,077. The merged ignored cache is a
+63,339,053-byte, 43,524-by-768 finite float16 array with 43,524 unique sample
+IDs, no `labels` field, and SHA-256
+`d3d9bfb6423fe9ac6bf53185ea408a476491ca8fa31e941e1782a8c85a016795`.
+Its compact tracked receipt binds the sealed manifest, acquisition receipt,
+foundation revision/checkpoint, input and NIR-transfer contracts, shard
+ranges, and every shard hash. This provenance checkpoint was committed before
+the frozen evaluator was allowed to inspect any paper-cohort labels or scores.

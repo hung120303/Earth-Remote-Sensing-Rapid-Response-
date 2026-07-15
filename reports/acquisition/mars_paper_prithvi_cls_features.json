@@ -1,0 +1,65 @@
+{
+  "features": 768,
+  "generated_at_utc": "2026-07-15T21:01:22.585218+00:00",
+  "label_independent_output": true,
+  "missing_reference_datetime_rows": 2077,
+  "output": "outputs/mars_paper_prithvi_cls_features.npz",
+  "provenance": {
+    "checkpoint_sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70",
+    "foundation_receipt_sha256": "ddc2dec982320ab23f9963b5221b8ce8752c04f01b0b84a018bb70ba84d518f3",
+    "foundation_revision": "335eadc2c45ad5abe7bd307223e1c48c5b60c41b",
+    "input_contract": "reference then target; 128x128 bilinear; HLS means/std; temporal and location coordinates",
+    "missing_reference_datetime_policy": "use target time coordinate for reference frame when reference_scene_id is blank",
+    "nir_transfer_contract": "Prithvi HLS Narrow NIR slot receives MARS Sentinel-2 B08 broad NIR or Landsat B05",
+    "sealed_manifest_sha256": "685937eb599ce4612116dc5c16edc74c4c0c6273f2fa864e651cfee73d1f4f6d",
+    "shard_count": 5,
+    "test_acquisition_receipt_sha256": "eefc7b9cdbb7b950bf109bd7fa79c8d88f94c716eeca7d97a247395e95fc5895",
+    "total_available_rows": 43524
+  },
+  "rows": 43524,
+  "schema_version": 1,
+  "scope": "ignored label-independent Prithvi CLS cache for exact available paper rows",
+  "sha256": "d3d9bfb6423fe9ac6bf53185ea408a476491ca8fa31e941e1782a8c85a016795",
+  "shards": [
+    {
+      "end": 8704,
+      "index": 0,
+      "path": "outputs/mars_paper_prithvi_cls_shard0of5.npz",
+      "rows": 8704,
+      "sha256": "bcc6a20e0bfffd3dde19ed8aa4154b1bae2838ad318cce5615b90e4eb19147e2",
+      "start": 0
+    },
+    {
+      "end": 17409,
+      "index": 1,
+      "path": "outputs/mars_paper_prithvi_cls_shard1of5.npz",
+      "rows": 8705,
+      "sha256": "989b9a949e8b559b8ac05ee99d670c76ff7717d662e2198fd4ae0bcebd24508b",
+      "start": 8704
+    },
+    {
+      "end": 26114,
+      "index": 2,
+      "path": "outputs/mars_paper_prithvi_cls_shard2of5.npz",
+      "rows": 8705,
+      "sha256": "fc88d313c01721a8c855819d2c8fc646de9c4d8b96104cbce22087e3f231e90b",
+      "start": 17409
+    },
+    {
+      "end": 34819,
+      "index": 3,
+      "path": "outputs/mars_paper_prithvi_cls_shard3of5.npz",
+      "rows": 8705,
+      "sha256": "85de2cb30570189c8d9f664d5e5cb84f0e153e99c4380f38b7c2fe1f995129da",
+      "start": 26114
+    },
+    {
+      "end": 43524,
+      "index": 4,
+      "path": "outputs/mars_paper_prithvi_cls_shard4of5.npz",
+      "rows": 8705,
+      "sha256": "b7c5e1090a151c82c47e929e9f59c186bcd88899e18fab564ef0f2b7745a09ab",
+      "start": 34819
+    }
+  ]
+}
