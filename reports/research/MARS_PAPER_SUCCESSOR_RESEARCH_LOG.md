@@ -969,3 +969,15 @@ and lower bound +0.02079. The frozen operational threshold is
 `3d362b8dc6b9244abeb949d5f2dc34c2f3101e2ef3849d62ab5ef3c85d4fcb85`;
 selection report SHA-256 is
 `55726830efa06f98339ecc5df662a124f7bc8a504c34d974589734b54842435e`.
+
+The exact paper evaluation rejects this objective as the next successor. On
+the full view it reaches AP 0.67286 (delta +0.03184, paired site-bootstrap
+lower bound +0.01319) and matched-FPR recall delta +0.03751 (lower bound
++0.02336), but the unchanged sensor-conditioned masks retain IoU delta
++0.01311 with lower bound -0.00331. On test-only sites it reaches AP 0.46598
+(delta +0.01570, lower bound -0.01701) and recall delta +0.02203 (lower bound
+-0.00830); both are slightly worse than the ordinary-BCE spatial classifier.
+Test-only IoU remains a confirmed improvement. The pairwise loss therefore
+improves development ranking without improving site-novel transfer, and must
+not replace the ordinary spatial model. Result JSON SHA-256 is
+`f9cbe235c7f05fa830001df264e8d1942c61ecc57aea2ace661855139aa9b577`.
