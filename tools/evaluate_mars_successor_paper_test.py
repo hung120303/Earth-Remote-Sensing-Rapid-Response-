@@ -61,6 +61,7 @@ DEFAULT_RESIDUAL = Path("EarthRemoteSensingRapidResponse/artifacts/mars_paper_re
 DEFAULT_HEAD = Path("EarthRemoteSensingRapidResponse/artifacts/mars_oof_context_ranker_folds234.joblib")
 DEFAULT_SELECTION = Path("reports/experiments/mars_oof_context_minimum_blend.json")
 DEFAULT_SCENE_FOLD0 = Path("reports/experiments/mars_oof_context_minimum_blend_fold0.json")
+DEFAULT_SCENE_FOLD1 = Path("reports/experiments/mars_oof_scene_ensemble_v2_fold1.json")
 DEFAULT_MASK_SELECTION = Path("reports/experiments/mars_mask_threshold_folds234.json")
 DEFAULT_MASK_CONFIRMATION = Path("reports/experiments/mars_mask_threshold_folds01_confirmation.json")
 DEFAULT_SENSOR_MASK_CONFIRMATION = Path(
@@ -172,6 +173,13 @@ def mask_threshold_for_sensor(architecture: dict[str, Any], sensor_index: int) -
     if not 0.0 < threshold < 1.0:
         raise ValueError("Mask probability threshold must be in (0,1)")
     return threshold
+
+
+def predict_scene_head(fitted: Any, features: np.ndarray) -> np.ndarray:
+    """Predict with legacy scaler/model payloads or direct sklearn estimators."""
+    if isinstance(fitted, dict):
+        return predict_model(fitted, features)
+    return fitted.predict_proba(features)[:, 1]
 
 
 def view_metrics(
@@ -386,6 +394,7 @@ def main() -> int:
     parser.add_argument("--head", default=DEFAULT_HEAD.as_posix())
     parser.add_argument("--selection", default=DEFAULT_SELECTION.as_posix())
     parser.add_argument("--scene-fold0", default=DEFAULT_SCENE_FOLD0.as_posix())
+    parser.add_argument("--scene-fold1", default=DEFAULT_SCENE_FOLD1.as_posix())
     parser.add_argument("--mask-selection", default=DEFAULT_MASK_SELECTION.as_posix())
     parser.add_argument("--mask-confirmation", default=DEFAULT_MASK_CONFIRMATION.as_posix())
     parser.add_argument(
@@ -416,6 +425,8 @@ def main() -> int:
         paths["sensor_mask_confirmation"] = (
             root / args.sensor_mask_confirmation
         ).resolve()
+    if "scene_fold1_result_sha256" in expected:
+        paths["scene_fold1_result"] = (root / args.scene_fold1).resolve()
     for name, path in paths.items():
         if sha256(path) != expected[f"{name}_sha256"]:
             raise ValueError(f"Frozen {name} hash mismatch")
@@ -521,7 +532,7 @@ def main() -> int:
     )
     if base_names.tolist() != head_payload["feature_names"] or augmented_names != head_payload["augmented_feature_names"]:
         raise ValueError("Paper-test scene feature schema differs from the frozen head")
-    head_probability = predict_model(head_payload["fitted"], context_features)
+    head_probability = predict_scene_head(head_payload["fitted"], context_features)
     available_scores = blend_scores(
         base_features[:, 0], head_probability, architecture["scene_head_blend"]
     )
@@ -636,9 +647,12 @@ def main() -> int:
             "status": "post_test_architecture_evaluation",
             "predecessor_result_sha256": spec["predecessor_result_sha256"],
             "architecture_changed": True,
-            "scene_predictions_changed": False,
-            "dense_mask_predictions_changed": True,
-            "reason": "A sensor-specific dense-mask threshold was selected and independently confirmed on development folds after the official paper test had been opened.",
+            "scene_predictions_changed": spec.get("post_test_changes", {}).get("scene_predictions_changed", False),
+            "dense_mask_predictions_changed": spec.get("post_test_changes", {}).get("dense_mask_predictions_changed", True),
+            "reason": spec.get("post_test_changes", {}).get(
+                "reason",
+                "A sensor-specific dense-mask threshold was selected and independently confirmed on development folds after the official paper test had been opened.",
+            ),
         }
         if post_test
         else {

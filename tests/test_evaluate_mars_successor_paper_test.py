@@ -16,6 +16,7 @@ from evaluate_mars_successor_paper_test import (  # noqa: E402
     candidate_pixel_counts,
     mask_threshold_for_sensor,
     plan_cumulative,
+    predict_scene_head,
     score_plan,
 )
 
@@ -28,6 +29,15 @@ class MarsPaperSuccessorTests(unittest.TestCase):
         }
         self.assertEqual(mask_threshold_for_sensor(architecture, 0), 0.8)
         self.assertEqual(mask_threshold_for_sensor(architecture, 1), 0.7)
+
+    def test_scene_head_supports_direct_estimators(self) -> None:
+        class DirectEstimator:
+            def predict_proba(self, features: np.ndarray) -> np.ndarray:
+                return np.column_stack((1.0 - features[:, 0], features[:, 0]))
+
+        features = np.asarray([[0.2], [0.8]])
+        np.testing.assert_allclose(predict_scene_head(DirectEstimator(), features), [0.2, 0.8])
+
 
     def test_candidate_pixel_counts_are_mutually_exclusive(self) -> None:
         observable = np.asarray([[True, True], [True, False]])

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "evaluation_phase": "transparent_post_test_architecture_evaluation",
+  "predecessor_result_sha256": "1986ad46fa3de4630d7676769df81e982d5a9b1e7a7cec83589ca5f9b314b9c0",
+  "post_test_changes": {
+    "scene_predictions_changed": true,
+    "dense_mask_predictions_changed": false,
+    "reason": "A stronger uniform-weight ExtraTrees scene head was selected by three-fold OOF AP stability and paired site bootstrap, then confirmed with positive paired AP lower bounds on held folds 0 and 1. The v2 sensor-specific dense-mask rule is unchanged."
+  },
+  "architecture": {
+    "name": "ersrr_mars_successor_v3_posttest_scene_ensemble",
+    "scene_residual_alpha": 0.5,
+    "scene_head_blend": 0.625,
+    "operational_scene_threshold": 0.28187603894788654,
+    "operational_threshold_rule": "maximum target-FPR threshold across fixed-head held folds 0 and 1; conservative no-plume control",
+    "mask_probability_threshold_by_sensor": {
+      "Sentinel-2": 0.8,
+      "Landsat": 0.7
+    },
+    "mask_threshold_rule": "unchanged from v2: development-selected and folds-0/1-confirmed sensor routing",
+    "mask_minimum_connected_pixels": 100
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20260714,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "expected": {
+    "sealed_manifest_sha256": "685937eb599ce4612116dc5c16edc74c4c0c6273f2fa864e651cfee73d1f4f6d",
+    "residual_sha256": "b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49",
+    "scene_head_sha256": "9e6fa18b83ef065ac24c94a06a510057a0c382cecf1efa3b54e818566a45c9ac",
+    "scene_selection_sha256": "b12f62e05d864739f8a278b414a415febaba0185c649b5dea901eaf4135ef157",
+    "scene_fold0_result_sha256": "4827c6a380010bb6a234d85298427e35ce2583051869300cbcabda3f4cb3bd06",
+    "scene_fold1_result_sha256": "8380d079039ca6c9513ca125934665351c49988429336c63287e28e4cd7d0d1c",
+    "mask_selection_sha256": "9d4dd8140908489e48be849c0e89100a8f663c3368db9354c1b30ed8670865be",
+    "mask_confirmation_sha256": "b3d77820ce1fc2a81c95e479f4412f545310ae8146cbd25f97f5c398b33fc7fe",
+    "sensor_mask_confirmation_sha256": "a93a38d43eb37af661744ddebd38b5b7f62fa31d297fbea14e8606a84b1b8781",
+    "paper_benchmark_sha256": "ebb39ab22720988b2657d0e4d6b9a5669c24fbca1083575797622a7f1e788eb0",
+    "mixed_cohort_sha256": "df0c592522b42fc66bf698456cd52b859b95cc44a2670e046ac5464745adbf8f"
+  },
+  "missing_data_policy": {
+    "missing_raster_scene_score": "positive=0, negative=1",
+    "missing_raster_pixel_policy": "zero intersection, all truth pixels false-negative, full 200x200 candidate mask false-positive",
+    "missing_raster_grid_pixels": 40000,
+    "missing_pixel_truth_policy": "zero intersection, archived truth pixels false-negative, predicted candidate pixels false-positive"
+  },
+  "superiority_gate": {
+    "views": ["full", "test_only_sites"],
+    "average_precision_delta_lower_95_gt_zero": true,
+    "pixel_iou_delta_lower_95_gt_zero": true,
+    "matched_fpr_recall_delta_lower_95_gt_zero": true,
+    "operational_fpr_delta_upper_95_lte_zero": true,
+    "must_beat_reconstructed_and_published_point_metrics": true
+  }
+}
