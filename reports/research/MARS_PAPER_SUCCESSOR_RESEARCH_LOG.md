@@ -1650,3 +1650,25 @@ target moment alignment therefore improves recall slightly without producing
 site-distributed AP/recall confidence and is rejected. No normalization or
 regularization will be tuned to this outcome. Exact result JSON SHA-256 is
 `9a37b84e410943953f3959a4ca8ae2c3d79db5cd90cb494bd1e695db30aca5f6`.
+
+## Multi-environment V-REx spatial representation: frozen protocol
+
+The next branch changes the learned representation. V-REx
+(<https://arxiv.org/abs/2003.00688>) penalizes variance in risk across source
+environments, while group-DRO evidence
+(<https://arxiv.org/abs/1911.08731>) motivates stronger regularization for
+worst-group generalization. Each physical-site fold is an environment. The
+existing nine-channel physics/morphology residual CNN is trained on four
+source folds with mean environment risk plus beta times risk variance.
+
+Two fixed beta values (0.5 and 2.0), two independent seeds, eight epochs,
+dropout 0.3, AdamW 2e-4 and weight decay 0.003 are frozen. Site/label/sensor
+cell row weights and square-root positive weighting remain. Each seed produces
+five leave-one-fold-out models; candidates average both seeds and test blends
+0.05 / 0.10 / 0.20 / 0.30 / 0.40 around current. Promotion requires the
+usual pooled, all-fold, sensor and paired-site gates plus nonnegative fold
+recall for each seed separately. A passing deployable artifact is the ten
+crossfold members, avoiding an all-data refit that previously harmed new-site
+transfer. Frozen script SHA-256 is
+`142b86e7d27fe9a78fabe347381cf1bc1b7e694999900f5c00b6169d4af52a41`;
+the environment-risk penalty test passes.
