@@ -886,3 +886,42 @@ methane structure from high-response background artifacts. If deep spatial
 features are revisited, the next justified design is an explicitly spatial,
 physics-guided morphology classifier over released logits and temporal SWIR
 contrast maps, not a larger classifier over pooled moments.
+
+## Physics-guided spatial morphology classifier
+
+The promoted follow-up preserves spatial structure at 64×64 resolution. A
+frozen released U-Net supplies mean- and max-pooled methane probability maps;
+the input also contains centered MBMP, target-minus-reference B11/B12,
+normalized B11/B12 temporal differences, cloud fraction, and observable
+fraction. The nine-channel float16 development cache is 3.27 GB and remains
+ignored by Git. Image SHA-256 is
+`6530fa2d07d94bd57ba1ac757039dedd18745227e7a476fb0d69f78f996134a5`;
+metadata SHA-256 is
+`0160ed93371396a487b819dd170a682f55756d285f0ba94d0f0d093ba51a8d01`.
+
+The classifier is a small residual CNN with learned spatial attention pooling,
+global average/max pooling, and an explicit sensor embedding. Four models were
+cross-fitted on folds 2/3/4: full physics inputs with uniform, group, or
+site/label/sensor-cell weighting, plus a probability-map-only group-weighted
+ablation. Each raw morphology score was tested only as a predeclared
+logit-space complement to the already frozen stronger scene head.
+
+The selected model uses full physics inputs, site-cell weighting, eight epochs,
+and a 0.10 spatial blend. Inner AP improves by +0.03018 versus primary and
++0.00060 versus the stronger head; recall improves by +0.01336/+0.00129.
+The paired physical-group AP interval versus primary is
+[+0.01997, +0.04190], while the interval versus the stronger head is
+[-0.00101, +0.00163]. Every pooled/per-fold point stability gate passes. The
+probability-only ablation remained 0.00041 AP below the stronger head, providing
+evidence that temporal SWIR/MBMP physics contributes beyond morphology alone.
+
+The architecture then passed both fixed held folds. Fold-0 AP delta is
++0.02564 versus primary and +0.00025 versus the stronger head, recall delta
++0.00537, and paired AP lower bound +0.01049. Fold-1 AP delta is +0.03735
+versus primary and +0.00101 versus the stronger head, recall delta +0.00671,
+and lower bound +0.01986. Sentinel-2 and Landsat AP improve on both folds. The
+conservative operational threshold is 0.30274470404433573. Artifact SHA-256 is
+`36135b7c8f9538f3ce7b896df0c2b767ee85b81d57e2de3eede2cf33384730c3`;
+selection report SHA-256 is
+`dfeba0d4e8dde28ae880077c0db2010ccda5c57f58d293f4d3f834b541605c22`.
+The candidate is frozen before any paper-test spatial features are extracted.
