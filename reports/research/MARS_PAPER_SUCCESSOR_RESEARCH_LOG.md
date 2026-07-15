@@ -1132,3 +1132,31 @@ are 745 / 745 / 797 / 758 / 766. The recorded fallback count is exactly 871.
 The compact acquisition/merge receipt includes every shard hash and has
 SHA-256
 `92995743aadcbaf8c93c2b80421da66bcd6d5b4a5365b8613f990875be0f1535`.
+
+The frozen development probe technically passes its predeclared promotion
+rule, with an important qualification. The selected model is a uniformly
+weighted linear probe over four Prithvi CLS tokens plus established scene
+features, weight decay 0.01, blended at only 0.05 with the current stronger
+head. On cross-fitted folds 2/3/4, AP improves +0.02960 versus the original
+primary score (paired physical-group lower bound +0.01975) but only +0.000026
+versus the current stronger head (lower bound -0.00183). This shows safe
+compatibility, not a material foundation-model gain.
+
+The single frozen model then passes both held development folds. Fold-0 AP
+delta is +0.02506 versus primary with lower bound +0.00955 and recall delta
++0.00537, but AP is -0.00033 versus the current head. Fold-1 AP delta is
++0.03765 with lower bound +0.02019 and recall delta +0.00537; incremental AP
+versus the current head is +0.00130. Both sensor strata pass the allowed
+regression bounds. The operational threshold is 0.2788401679788501 and the
+ignored artifact SHA-256 is
+`e0ac070549f3864af1407aabd64eedf653e5f48e7205320a8303dce097bc2fab`.
+
+Because the frozen rule required statistically positive gains versus primary
+and no material regression (rather than significant improvement) versus the
+current head, it authorizes one transparent exact-paper replay. The tiny,
+mixed incremental effect makes a large test-only-site improvement unlikely;
+paper feature extraction must not be interpreted as a new untouched test.
+Probe script SHA-256 is
+`6c5d4aa99c3882ca89a2892d98485fac595f8d52bb65b9dc54eba8e98176f419`;
+result JSON SHA-256 is
+`3a8d5e47a254722450993834a2cdeaddd093b68ac2801970904bb63ed73d70f2`.
