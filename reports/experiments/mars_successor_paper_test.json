@@ -122,7 +122,14 @@
     "training_site_count_from_released_config": 618
   },
   "decision": "Frozen ERSRR successor does not pass every preregistered paper-superiority gate.",
-  "generated_at_utc": "2026-07-14T22:34:37.683073+00:00",
+  "generated_at_utc": "2026-07-15T05:06:12.114339+00:00",
+  "metric_correction": {
+    "architecture_changed": false,
+    "predictions_changed": false,
+    "reason": "The frozen evaluator counted prediction & observable as FP even when those pixels were already TP. Correct FP is prediction & observable & ~truth when pixel truth is available.",
+    "status": "post_result_evaluator_bug_correction",
+    "superseded_result_sha256": "589210e313fd1c6e93daf83e22db2582223ad065162e98cb93be5627f3934119"
+  },
   "missing_scene_ids": [
     "3a42905f-bb33-4585-83c3-077e39b1a7be",
     "4d6f9ef0-79ca-4630-9112-86a1cec00df6",
@@ -133,7 +140,7 @@
   "passed": false,
   "provenance": {
     "device": "NVIDIA GeForce RTX 5070",
-    "git_commit": "e78338224b66d9187f62458689e8bdd69df0d611",
+    "git_commit": "0f31ce7b6ca81957c8b40ba885e601ad86e6259c",
     "joblib": "1.5.3",
     "manifest_sha256": "685937eb599ce4612116dc5c16edc74c4c0c6273f2fa864e651cfee73d1f4f6d",
     "mask_confirmation_sha256": "b3d77820ce1fc2a81c95e479f4412f545310ae8146cbd25f97f5c398b33fc7fe",
@@ -148,13 +155,13 @@
     "scene_head_sha256": "2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ec27c370",
     "scene_selection_sha256": "8fc190bf4cac9d3abb24979cd20678930f09143302a69ddbfb944a7959951b0b",
     "scipy": "1.17.1",
-    "script_sha256": "740b27cdbf089c4307f713bfd0946bb9b6e3c4a855de5be8360d58a061d12735",
+    "script_sha256": "dbe4243183d5832f4e18bf45a8af900d1a170378e2dd954c737817b9e4734f4f",
     "sklearn": "1.9.0",
     "spec_sha256": "b6ada879e727be8de73f287c707bb05d5fb699473cee339faa18f402b6d60926",
     "torch": "2.11.0+cu128"
   },
   "schema_version": 1,
-  "scope": "single one-shot official MARS-S2L paper-v3 test evaluation",
+  "scope": "deterministic metric correction of the frozen official MARS-S2L paper-v3 test evaluation",
   "views": {
     "full": {
       "bootstrap": {
@@ -181,9 +188,9 @@
             "upper": 0.03678005376215425
           },
           "pixel_iou": {
-            "lower": -0.0997734722875421,
-            "mean": -0.0740438550777032,
-            "upper": -0.047984983063913335
+            "lower": -0.006469717842681081,
+            "mean": 0.008115171232889094,
+            "upper": 0.02184038964238309
           }
         },
         "replicates": 10000,
@@ -194,8 +201,8 @@
         "ap_point_beats_published": true,
         "ap_point_beats_reconstructed": true,
         "iou_lower_95_above_zero": false,
-        "iou_point_beats_published": false,
-        "iou_point_beats_reconstructed": false,
+        "iou_point_beats_published": true,
+        "iou_point_beats_reconstructed": true,
         "matched_fpr_no_worse": true,
         "matched_recall_lower_95_above_zero": true,
         "matched_recall_point_higher": true,
@@ -241,8 +248,8 @@
           },
           "pixels": {
             "fn": 1277814,
-            "fp": 3509316,
-            "intersection_over_union": 0.24943579863538057,
+            "fp": 1918404,
+            "intersection_over_union": 0.3323310626617618,
             "tp": 1590912
           }
         },
@@ -252,7 +259,7 @@
           "fixed_recall": -0.048538334252619886,
           "matched_false_positive_rate": 0.0,
           "matched_fpr_recall": 0.025372311086596877,
-          "pixel_iou": -0.07492934994955491
+          "pixel_iou": 0.007965914076826341
         },
         "positive": 1813,
         "rows": 43529
@@ -294,9 +301,9 @@
             "upper": 0.04661016949152541
           },
           "pixel_iou": {
-            "lower": -0.0179380268051486,
-            "mean": -0.0029537703314662647,
-            "upper": 0.010395757762150981
+            "lower": 0.018773521208921645,
+            "mean": 0.03112359104160581,
+            "upper": 0.0440326344328304
           }
         },
         "replicates": 10000,
@@ -306,8 +313,8 @@
         "ap_lower_95_above_zero": false,
         "ap_point_beats_published": true,
         "ap_point_beats_reconstructed": true,
-        "iou_lower_95_above_zero": false,
-        "iou_point_beats_reconstructed": false,
+        "iou_lower_95_above_zero": true,
+        "iou_point_beats_reconstructed": true,
         "matched_fpr_no_worse": true,
         "matched_recall_lower_95_above_zero": true,
         "matched_recall_point_higher": true,
@@ -353,8 +360,8 @@
           },
           "pixels": {
             "fn": 165070,
-            "fp": 753992,
-            "intersection_over_union": 0.16869549172098275,
+            "fp": 567488,
+            "intersection_over_union": 0.20292863811146583,
             "tp": 186504
           }
         },
@@ -364,7 +371,7 @@
           "fixed_recall": -0.06167400881057272,
           "matched_false_positive_rate": 0.0,
           "matched_fpr_recall": 0.026431718061673992,
-          "pixel_iou": -0.0028664512180414103
+          "pixel_iou": 0.03136669517244167
         },
         "positive": 227,
         "rows": 15655

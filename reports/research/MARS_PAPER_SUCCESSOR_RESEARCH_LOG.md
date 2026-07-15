@@ -598,6 +598,26 @@ The original result JSON SHA-256
 remains the immutable superseded-result identity. The correction is post-result
 and will be reported as such; it is not a new independently sealed one-shot.
 
+The committed correction was then executed on the unchanged frozen model and
+cohort. The corrected JSON SHA-256 is
+`7e3bc6f45af2b116d654f6e3bbec82a78c3d54b1f1d9d1219e6d6201ac094a01`.
+All scene scores and scene metrics are identical to the superseded run. Full
+pixel IoU is 0.33233106 versus 0.32436515 (delta +0.00796591), with paired
+site-bootstrap 95% interval [-0.00646972, +0.02184039]. Test-only pixel IoU is
+0.20292864 versus 0.17156194 (delta +0.03136670), with interval
+[+0.01877352, +0.04403263].
+
+The corrected candidate therefore beats the exact and published comparator on
+every point estimate in both official views. It passes both recall-confidence
+gates, both no-worse-FPR gates, and the test-only IoU-confidence gate. It still
+fails the predeclared unambiguous-superiority standard because the AP-delta
+intervals cross zero in both views (full [-0.00898100, +0.01991029]; test-only
+[-0.00984156, +0.04321676]) and the full IoU-delta interval crosses zero. The
+remaining research problem is consequently narrower but not complete: produce
+larger, site-consistent ranking gains and stabilize full-view segmentation,
+without sacrificing the already confirmed recall, operational FPR, or
+test-only IoU improvements.
+
 The two author-released prediction archives permit an exact controlled
 comparison of the general checkpoint and the unpublished offshore fine-tuned
 checkpoint on identical paper-v3 scenes. This analysis is explicitly post-test
