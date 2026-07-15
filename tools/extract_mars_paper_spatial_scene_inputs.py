@@ -112,7 +112,13 @@ def main() -> int:
         return 0
 
     loader = DataLoader(
-        MarsPaperDataset((root / args.metadata_dir).resolve(), records, augment=False, seed=0),
+        MarsPaperDataset(
+            (root / args.metadata_dir).resolve(),
+            records,
+            augment=False,
+            seed=0,
+            allow_missing_positive_mask=True,
+        ),
         batch_size=args.batch_size,
         shuffle=False,
         num_workers=args.workers,
