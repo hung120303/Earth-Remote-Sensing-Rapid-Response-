@@ -1529,3 +1529,19 @@ fixed-FPR, and pixel-IoU point and confidence gates.
 Frozen evaluator SHA-256 is
 `b4abd3e37c9798877af9014dec988e9d31d55d1bfa3e949308d241b25d676db5`;
 its conservative-threshold contract tests pass.
+
+The exact replay rejects the development-promoted XGBoost complement. On the
+full 43,529-scene view it reaches AP 0.675991, delta +0.034971 with paired-site
+lower bound +0.015654. Matched-FPR recall improves +0.035301 (lower
++0.020871), fixed FPR improves -0.037540, and the confirmed masks retain IoU
+delta +0.055598 (lower +0.034992); every full-view gate passes.
+
+On 15,655 test-only-site scenes, AP is 0.464003, below v3 and the spatial and
+Prithvi complements. Its delta over the exact comparator is +0.013729 but the
+paired lower bound is -0.022625. Matched-FPR recall improves +0.022026 at the
+point estimate but has lower bound -0.009132. FPR and IoU remain decisive.
+The divergence between uniformly positive five-fold development results and
+worse new-site AP is further evidence that source-only scalar model capacity
+is not the limiting factor. No XGBoost parameter or blend will be tuned to the
+paper outcome. Exact result JSON SHA-256 is
+`4d1b802fe6f322e738aca2e74f396bb6f771c773c4ddb7e5ef39242004ba9e3d`.
