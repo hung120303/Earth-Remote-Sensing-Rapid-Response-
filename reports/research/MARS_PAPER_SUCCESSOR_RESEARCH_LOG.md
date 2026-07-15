@@ -1215,3 +1215,39 @@ Its compact tracked receipt binds the sealed manifest, acquisition receipt,
 foundation revision/checkpoint, input and NIR-transfer contracts, shard
 ranges, and every shard hash. This provenance checkpoint was committed before
 the frozen evaluator was allowed to inspect any paper-cohort labels or scores.
+
+## Site-relative spatial background model: frozen protocol
+
+The remaining exact-paper failure is restricted to scene ranking and recall
+uncertainty on new physical sites; both mask views, full-view scene metrics,
+and false-positive-rate gates already pass. A development-only diagnostic
+first tested direct within-site rank, mean, median, z-score, and maximum-gap
+normalization of the current scene score. None improved AP. The least harmful
+inner transform, a 0.025 maximum-gap logit blend, changed AP by -0.000223 and
+also slightly reduced AP on both held folds. Scalar score normalization is
+therefore rejected rather than tuned against the paper cache.
+
+The next model uses spatial site context that previous architectures did not
+represent. Of 3,811 development positives, 3,807 occur at mixed sites that
+also contain negative observations. For each scene and each of the nine
+64-by-64 probability/MBMP/SWIR/coverage maps, a label-free pixelwise site mean
+is computed from every *other* observation of that physical site. Singleton
+sites use the scene as their template and therefore have a zero residual.
+Sites are assigned wholly to folds, so no fitted parameter or label crosses a
+fold boundary; held-site templates use only unlabeled observations from that
+same held site, matching the intended historical-monitoring deployment mode.
+
+Before training, the search is frozen to four residual CNNs: original plus
+leave-one-out residual maps, or original plus template plus residual maps;
+each uses either physical-group or site/label/sensor-cell weighting. All use
+the established residual CNN, eight epochs, AdamW at 0.0003, weight decay
+0.001, dropout 0.2, and fixed logit blends 0.05 / 0.10 / 0.20 / 0.30 / 0.40 /
+0.50 / 0.625 / 0.75 / 1.00 with the current stronger head. Selection is fully
+cross-fitted on folds 2/3/4. Promotion requires positive AP and recall point
+gains versus the current head, nonnegative AP gain on every selection fold,
+a positive paired-site AP lower bound versus both primary and current heads,
+positive held-fold point gains, and a positive pooled folds-0/1 paired-site AP
+lower bound versus the current head. Only a complete pass can authorize a
+transparent exact-paper replay. The frozen training script SHA-256 is
+`cef9460b2d82bffc033aa9049564949b2477155ce3bef428ba4666b4661e8347`;
+two focused leave-one-out/template-schema tests pass.
