@@ -735,3 +735,18 @@ This substantially exceeds the current HGB head's development AP delta
 `9e6fa18b83ef065ac24c94a06a510057a0c382cecf1efa3b54e818566a45c9ac`.
 The artifact and selection report are frozen before one-shot fold-0 evaluation;
 fold 1 remains untouched at this stage.
+
+The frozen-head fold-0 result passed every gate. AP increased from 0.88645 to
+0.91429 (delta +0.02784), recall at no more than 7.13% FPR increased by
++0.00403, and the paired 107-site bootstrap AP interval was
+[+0.00966, +0.04546]. Both sensor non-regression and the unchanged primary
+segmentation gates passed. Result JSON SHA-256 is
+`89440711e43fd89ccc7eb67814b7f10659f93b87c732402a458896647006f43b`.
+
+Fold 1 has been used by earlier architecture confirmation in this research
+history, so it is not globally untouched. It remains label-independent for
+this newly frozen head, however: the head and blend were selected without
+fold-1 data. The next evaluation is therefore described as a fixed-head
+held-fold confirmation, not as a new pristine one-shot claim. Its image
+features will be generated with the independently trained fold-1 residual,
+which recorded zero fold-1 validation reads during training.

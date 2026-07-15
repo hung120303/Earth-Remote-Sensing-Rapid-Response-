@@ -54,7 +54,7 @@ def write_markdown(path: Path, report: dict) -> None:
     lines = [
         "# Stronger OOF MARS scene ensemble: one-shot fold 0",
         "",
-        "The head was frozen on folds 2/3/4. Fold 1 and the paper test were not loaded.",
+        f"The head was frozen on folds 2/3/4. This evaluates fold {report['fold']}; the paper test was not loaded.",
         "",
         "| Model | AP | Recall at <=7.13% FPR | FPR | Pixel IoU |",
         "|---|---:|---:|---:|---:|",
@@ -79,10 +79,13 @@ def main() -> int:
     parser.add_argument("--oof-report-sha256", default=DEFAULT_OOF_REPORT_SHA256)
     parser.add_argument("--primary-report", default=DEFAULT_PRIMARY_REPORT.as_posix())
     parser.add_argument("--primary-report-sha256", default=DEFAULT_PRIMARY_REPORT_SHA256)
+    parser.add_argument("--fold", type=int, default=0)
     parser.add_argument("--bootstrap-replicates", type=int, default=10000)
     parser.add_argument("--output-json", default=DEFAULT_JSON.as_posix())
     parser.add_argument("--output-markdown", default=DEFAULT_MARKDOWN.as_posix())
     args = parser.parse_args()
+    if args.fold not in range(5):
+        parser.error("fold must be in [0,4]")
     root = repo_root()
     paths = {
         "cache": (root / args.cache).resolve(),
@@ -119,10 +122,15 @@ def main() -> int:
             name: str(cache[name].item())
             for name in ("artifact_sha256", "manifest_sha256", "protocol_sha256")
         }
-    if set(np.unique(folds).tolist()) != {0}:
-        raise ValueError("Evaluation cache must contain fold 0 only")
-    if feature_names.tolist() != payload["feature_names"] or cache_provenance != payload["source_provenance"]:
-        raise ValueError("Fold-0 cache schema or provenance mismatch")
+    if set(np.unique(folds).tolist()) != {args.fold}:
+        raise ValueError("Evaluation cache contains another fold")
+    if feature_names.tolist() != payload["feature_names"]:
+        raise ValueError("Evaluation feature schema mismatch")
+    for name in ("manifest_sha256", "protocol_sha256"):
+        if cache_provenance[name] != payload["source_provenance"][name]:
+            raise ValueError("Evaluation cache data provenance mismatch")
+    if args.fold == 0 and cache_provenance["artifact_sha256"] != payload["source_provenance"]["artifact_sha256"]:
+        raise ValueError("Fold-0 cache residual provenance mismatch")
     features, augmented_names = augment_site_context(base_features, feature_names, groups)
     if augmented_names != payload["augmented_feature_names"]:
         raise ValueError("Augmented context schema mismatch")
@@ -146,8 +154,9 @@ def main() -> int:
     passed = all(checks.values())
     report = {
         "schema_version": 1,
-        "scope": "one-shot stronger OOF scene-head fold-0 evaluation; fold 1 and paper test not loaded",
+        "scope": f"frozen stronger OOF scene-head fold-{args.fold} evaluation; paper test not loaded",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "fold": args.fold,
         "rows": int(labels.size),
         "positive": int(labels.sum()),
         "sites": len(set(groups.tolist())),
@@ -163,7 +172,7 @@ def main() -> int:
         "checks": checks,
         "passed": passed,
         "decision": (
-            "Advance the stronger OOF scene ensemble to independent fold-1 confirmation."
+            "Advance the stronger OOF scene ensemble to the next confirmation stage."
             if passed
             else "Reject the stronger OOF scene ensemble on fold 0."
         ),

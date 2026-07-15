@@ -164,6 +164,7 @@ def main() -> int:
     parser.add_argument("--released-checkpoint", default=DEFAULT_CHECKPOINT.as_posix())
     parser.add_argument("--artifact", default=DEFAULT_ARTIFACT.as_posix())
     parser.add_argument("--artifact-sha256", default=DEFAULT_ARTIFACT_SHA256)
+    parser.add_argument("--artifact-fold", type=int, default=0)
     parser.add_argument("--folds", type=int, nargs="+", default=[2, 3, 4])
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--workers", type=int, default=8)
@@ -172,8 +173,10 @@ def main() -> int:
     folds = tuple(sorted(set(args.folds)))
     if not folds or any(fold not in range(5) for fold in folds):
         parser.error("folds must be a non-empty subset of 0..4")
-    if 1 in folds:
-        parser.error("fold 1 is reserved for independent confirmation")
+    if 1 in folds and (folds != (1,) or args.artifact_fold != 1):
+        parser.error("fold 1 extraction requires a fold-1 artifact and no other folds")
+    if args.artifact_fold not in range(5):
+        parser.error("artifact fold must be in [0,4]")
     if args.batch_size <= 0 or args.workers < 0:
         parser.error("batch size must be positive and workers non-negative")
 
@@ -189,8 +192,8 @@ def main() -> int:
     if sha256(artifact_path) != args.artifact_sha256:
         raise ValueError("Residual artifact hash mismatch")
     artifact = torch.load(artifact_path, map_location="cpu", weights_only=True)
-    if int(artifact["fold"]) != 0 or artifact["protocol_sha256"] != sha256(protocol_path):
-        raise ValueError("Residual artifact does not cover the frozen fold-0 protocol")
+    if int(artifact["fold"]) != args.artifact_fold or artifact["protocol_sha256"] != sha256(protocol_path):
+        raise ValueError("Residual artifact fold or protocol mismatch")
 
     group_to_fold = {
         str(item["group_id"]): int(item["fold"])
