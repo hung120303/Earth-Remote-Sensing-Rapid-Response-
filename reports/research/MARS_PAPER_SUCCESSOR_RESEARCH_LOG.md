@@ -1162,3 +1162,20 @@ result JSON SHA-256 is
 `7b8c935bba06feaefd38559175f4e25474687490547eaa3340ec04b502d2750d`.
 The reporting-only deterministic rerun retained the identical artifact and
 metrics while reducing the tracked JSON from 1.37 MB to 43.7 KB.
+
+Before paper-cohort feature extraction, the transparent replay pipeline was
+frozen separately. It verifies the exact 43,524-scene available sealed
+manifest and completed acquisition receipt, extracts only the selected 768 CLS
+features into five restartable contiguous shards, and forbids a `labels` array
+in every shard and merged cache. The exact five unavailable paper scenes keep
+their existing v3 score. The evaluator keeps the already-confirmed dense-mask
+gate driven by the unchanged v3 controller at 0.75; using the new blended
+score would silently alter the mask gate's calibrated score semantics.
+
+Seven focused Prithvi extraction/merge tests pass together, and a one-row
+sealed-cohort smoke produced finite features with no labels. Paper extractor,
+merger, and exact evaluator SHA-256 values are respectively
+`f3d0fc1c65c6312384e53523c231e33f133c975a7ac1ffc49755a54fa00345b7`,
+`0a118513123df51ef6bb7be6392bbf81b5d3c35118a4991a5b9232ce80fb57e4`,
+and
+`f41beaaf7be903dfa27114f9b0feea576f62a602b93e2613a42a7daa863267dc`.
