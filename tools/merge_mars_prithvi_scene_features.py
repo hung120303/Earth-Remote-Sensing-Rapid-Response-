@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -20,6 +22,7 @@ from acquire_mars_metadata import repo_root, sha256  # noqa: E402
 from extract_mars_scene_features import atomic_savez  # noqa: E402
 
 DEFAULT_OUTPUT = Path("outputs/mars_prithvi_eo_2_tiny_tl_features_all_folds.npz")
+DEFAULT_RECEIPT = Path("reports/acquisition/mars_prithvi_eo_2_tiny_tl_features.json")
 ARRAY_KEYS = ("features", "labels", "sensors", "sample_ids", "groups", "folds")
 SCALAR_KEYS = (
     "foundation_revision",
@@ -44,6 +47,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("inputs", nargs="+", help="Per-fold .npz shards")
     parser.add_argument("--output", default=DEFAULT_OUTPUT.as_posix())
+    parser.add_argument("--receipt", default=DEFAULT_RECEIPT.as_posix())
     parser.add_argument("--expected-rows", type=int, default=44_363)
     args = parser.parse_args()
     if len(args.inputs) != 5:
@@ -110,29 +114,33 @@ def main() -> int:
         source_shard_folds=np.asarray(observed_folds, dtype=np.uint8),
         source_shard_sha256=np.asarray([str(value["sha256"]) for value in shards]),
     )
-    print(
-        json.dumps(
+    report = {
+        "schema_version": 1,
+        "scope": "ignored frozen Prithvi development feature cache",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "ok": True,
+        "rows": total_rows,
+        "features": int(reference_names.size),
+        "missing_reference_datetime_rows": sum(int(value["missing"]) for value in shards),
+        "output": str(output.relative_to(root)),
+        "sha256": sha256(output),
+        "provenance": reference_scalars,
+        "shards": [
             {
-                "ok": True,
-                "rows": total_rows,
-                "features": int(reference_names.size),
-                "missing_reference_datetime_rows": sum(
-                    int(value["missing"]) for value in shards
-                ),
-                "output": args.output,
-                "sha256": sha256(output),
-                "shards": [
-                    {
-                        "fold": int(value["fold"]),
-                        "path": str(Path(value["path"]).relative_to(root)),
-                        "sha256": value["sha256"],
-                    }
-                    for value in shards
-                ],
-            },
-            indent=2,
-        )
-    )
+                "fold": int(value["fold"]),
+                "rows": int(value["arrays"]["labels"].shape[0]),  # type: ignore[index]
+                "path": str(Path(value["path"]).relative_to(root)),
+                "sha256": value["sha256"],
+            }
+            for value in shards
+        ],
+    }
+    receipt = (root / args.receipt).resolve()
+    receipt.parent.mkdir(parents=True, exist_ok=True)
+    temporary = receipt.with_suffix(receipt.suffix + ".tmp")
+    temporary.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    os.replace(temporary, receipt)
+    print(json.dumps(report, indent=2))
     return 0
 
 

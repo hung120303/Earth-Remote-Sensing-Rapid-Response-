@@ -47,6 +47,7 @@ class PrithviShardMergeTests(unittest.TestCase):
                 )
                 inputs.append(path.name)
             output = root / "merged.npz"
+            receipt = root / "receipt.json"
             argv = [
                 "merge_mars_prithvi_scene_features.py",
                 *inputs,
@@ -54,6 +55,8 @@ class PrithviShardMergeTests(unittest.TestCase):
                 "5",
                 "--output",
                 output.name,
+                "--receipt",
+                receipt.name,
             ]
             with mock.patch.object(sys, "argv", argv), mock.patch.object(
                 merge, "repo_root", return_value=root
@@ -68,6 +71,7 @@ class PrithviShardMergeTests(unittest.TestCase):
                 self.assertEqual(result["folds"].tolist(), list(range(5)))
                 self.assertEqual(int(result["missing_reference_datetime_rows"].item()), 1)
                 self.assertEqual(result["source_shard_sha256"].shape, (5,))
+            self.assertTrue(receipt.is_file())
 
 
 if __name__ == "__main__":
