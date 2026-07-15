@@ -1121,3 +1121,14 @@ worst-fold stability before pooled AP. The single selected probe must pass
 paired physical-group AP, recall, per-fold, and sensor gates on selection and
 then independently on both folds 0 and 1 before any paper-test Prithvi feature
 is extracted.
+
+The five restartable fold shards were extracted with the committed protocol,
+then schema-, provenance-, fold-, and duplicate-checked before merging. The
+ignored 250,854,616-byte cache contains 44,363 unique rows by 3,072 finite
+float16 features and has SHA-256
+`e3e52a9453426e5e048cd753daf2597d59cbe820a18ae584c61a2de7ae405f23`.
+Fold row counts are 8,987 / 8,798 / 8,833 / 8,799 / 8,946 and positive counts
+are 745 / 745 / 797 / 758 / 766. The recorded fallback count is exactly 871.
+The compact acquisition/merge receipt includes every shard hash and has
+SHA-256
+`92995743aadcbaf8c93c2b80421da66bcd6d5b4a5365b8613f990875be0f1535`.
