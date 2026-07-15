@@ -1451,3 +1451,33 @@ not merely tree randomness. Because the sole failure is a predeclared
 stability condition, no paper feature is loaded and the result remains a
 development-only negative. Result JSON SHA-256 is
 `1926e16e912e8e3aecc9df5fc1fc6b29d3b2b6af4e0d1d3e9ccd6252999af6a3`.
+
+## Regularized XGBoost scene head: frozen protocol
+
+The existing development program has already compared sklearn histogram
+gradient boosting, logistic/HGB stacking, ExtraTrees bagging and weighting,
+and spatial CNN ranking objectives. The next experiment therefore changes the
+learner family rather than adding another post-hoc score rule. XGBoost's
+regularized additive-tree formulation and histogram training are described in
+the primary system paper <https://arxiv.org/abs/1603.02754>; the installed
+research environment uses XGBoost 3.2.0. The 131.7 MB wheel is confined to the
+ignored project virtual environment.
+
+Three fixed CPU-histogram specifications use depths 3 / 4 / 5, learning rates
+0.04 / 0.03 / 0.025, 600 / 800 / 1000 trees, and minimum child weights 10 /
+10 / 20. Every specification fixes 0.8 row subsampling, 0.7 feature
+subsampling, L1 0.1, L2 10, and binary logistic loss. No held-fold early
+stopping is permitted. Each model is cross-fitted across all five complete
+physical-site folds and blended 0.10 / 0.20 / 0.30 / 0.40 / 0.50 / 0.625 /
+0.75 / 0.875 / 1.00 around the current v3 head in logit space.
+
+Promotion requires at least +0.002 pooled AP, positive pooled matched-FPR
+recall, strictly positive AP and nonnegative recall on every fold, no pooled
+sensor AP regression, superiority to primary, and positive 10,000-replicate
+paired physical-site AP lower bounds versus both current and primary. Only a
+passing choice is refitted on all development folds and serialized; otherwise
+no deployable artifact is produced. Paper features, images, scores, and labels
+remain excluded until a passing artifact and a separate exact evaluator are
+frozen. Frozen script SHA-256 is
+`0ba06e9d2abd2ddbb5b3ce7ae6add30ab2f04d789615843932141268cbc7bf2e`;
+two focused contract tests pass.
