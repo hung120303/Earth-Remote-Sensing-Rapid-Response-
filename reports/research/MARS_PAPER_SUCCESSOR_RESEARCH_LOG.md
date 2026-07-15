@@ -1637,3 +1637,16 @@ missing rows, and unchanged v3-driven dense masks. Both paper views retain all
 seven AP/recall/FPR/IoU point and paired-site confidence gates. Frozen
 evaluator SHA-256 is
 `7850a1c53a646000faaf56e977461863c097b55f76334dbad5d915bfeb978cd9`.
+
+The exact replay rejects adaptive Prithvi. Full-view AP reaches 0.677001,
+delta +0.035981 with paired-site lower bound +0.016325; matched-FPR recall
+improves +0.034197 (lower +0.020586), and FPR/IoU gates pass. This is a valid
+full-cohort improvement.
+
+Test-only-site AP is 0.465504, delta +0.015231 with lower bound -0.026300.
+Matched-FPR recall gains six positives (+0.026432), one more than v3, but its
+lower bound remains -0.006711. FPR and gated-mask IoU remain decisive. Global
+target moment alignment therefore improves recall slightly without producing
+site-distributed AP/recall confidence and is rejected. No normalization or
+regularization will be tuned to this outcome. Exact result JSON SHA-256 is
+`9a37b84e410943953f3959a4ca8ae2c3d79db5cd90cb494bd1e695db30aca5f6`.
