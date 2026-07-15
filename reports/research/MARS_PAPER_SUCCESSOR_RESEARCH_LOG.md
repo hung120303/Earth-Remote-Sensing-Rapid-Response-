@@ -816,3 +816,46 @@ Its full negative report is retained, while the 1.09 MB row-score cache is
 ignored by Git (SHA-256
 `fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7`)
 for a development-only, leakage-safe meta-model search.
+
+## Cross-fitted scene stacking: negative experiment
+
+A 48-candidate meta-model search combined the frozen primary score, legacy HGB
+head, and stronger ExtraTrees head. Candidate families were regularized
+logistic regression and HistGradientBoosting; weighting modes were uniform,
+physical-group balanced, and site/label/sensor-cell balanced. Sensor and
+offshore interaction features were available. Every folds-2/3/4 selection
+score remained cross-fitted, and the paper cache was not loaded during model
+selection or held-fold confirmation.
+
+The selected group-weighted logistic stacker improved the primary model on the
+inner partition by +0.02121 AP and +0.01206 recall; its paired AP lower bound
+versus primary was +0.01211. It also passed both held folds, improving primary
+AP by +0.02550 (fold 0) and +0.03802 (fold 1), with small AP gains over the
+stronger head of +0.00012 and +0.00167. However, on the actual cross-fitted
+selection partition it was 0.00836 AP below the stronger head, with paired
+interval lower bound -0.01252. It therefore failed the predeclared inner
+non-regression gate and is rejected.
+
+For diagnosis only, the rejected stacker was then scored from the ignored
+exact-paper cache. It preserved the full-view superiority result (AP delta
++0.03637, lower bound +0.01780; matched-recall lower bound +0.02429), but did
+not solve the test-only view: AP lower bound -0.01744 and matched-recall lower
+bound -0.00538. This confirms that calibration/stacking of the existing heads
+is not enough to close the remaining site-novel ranking uncertainty.
+
+## Offshore mask threshold: reverse-validation rejection
+
+The post-test diagnostic suggested using a 0.90 component-mask threshold on
+offshore scenes, over the confirmed Sentinel-2 0.80 / Landsat 0.70 rule. A
+single released-model inference pass computed all three thresholds on 44,363
+development scenes, followed by 10,000-replicate physical-group bootstraps.
+
+The rule passed the folds-0/1 confirmation partition, which contains 48
+offshore negatives and no offshore positive scenes. It failed where genuine
+offshore plumes are present. On folds 2/3/4, 102 offshore positives occur among
+830 offshore scenes; offshore IoU fell from 0.59830 to 0.55159. Pooled
+selection IoU delta was -0.00232 with interval [-0.00728, +0.00039], and the
+all-fold delta was -0.00136 with lower bound -0.00404. The rule is rejected.
+This is convergent evidence with the scene-routing failure: hard offshore
+suppression exploits the paper test's domain mix but is unsafe for real
+offshore plume detection.

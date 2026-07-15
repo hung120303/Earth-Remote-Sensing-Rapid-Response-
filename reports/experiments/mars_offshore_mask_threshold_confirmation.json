@@ -1,0 +1,216 @@
+{
+  "all_development_reverse_validation_gates_pass": false,
+  "baseline_rule": {
+    "Landsat": 0.7,
+    "Sentinel-2": 0.8
+  },
+  "candidate_rule": {
+    "Landsat": 0.7,
+    "Sentinel-2": 0.8,
+    "offshore_all_sensors": 0.9
+  },
+  "decision": "Reject the offshore 0.90 mask threshold because development reverse validation failed.",
+  "generated_at_utc": "2026-07-15T15:26:17.358272+00:00",
+  "minimum_connected_pixels": 100,
+  "partitions": {
+    "all_five_folds": {
+      "baseline_iou": 0.5640416220947194,
+      "candidate_iou": 0.5626817956072457,
+      "checks": {
+        "all_fold_deltas_nonnegative": false,
+        "bootstrap_interval_acceptable": false,
+        "offshore_nonnegative": false,
+        "offshore_positive_when_truth_present": false,
+        "onshore_unchanged": true,
+        "point_nonnegative": false
+      },
+      "delta": -0.001359826487473681,
+      "domains": {
+        "offshore": {
+          "baseline_iou": 0.5959818565014203,
+          "candidate_iou": 0.5515918229706875,
+          "delta": -0.044390033530732786,
+          "rows": 878
+        },
+        "onshore": {
+          "baseline_iou": 0.5630046565661599,
+          "candidate_iou": 0.5630046565661599,
+          "delta": 0.0,
+          "rows": 43485
+        }
+      },
+      "folds": {
+        "0": {
+          "baseline_iou": 0.5716381107345033,
+          "candidate_iou": 0.5716381107345033,
+          "delta": 0.0,
+          "rows": 8987
+        },
+        "1": {
+          "baseline_iou": 0.5314133484318914,
+          "candidate_iou": 0.5317391200134227,
+          "delta": 0.0003257715815313533,
+          "rows": 8798
+        },
+        "2": {
+          "baseline_iou": 0.5842765385962864,
+          "candidate_iou": 0.5783318251150045,
+          "delta": -0.005944713481281894,
+          "rows": 8833
+        },
+        "3": {
+          "baseline_iou": 0.5709976041013662,
+          "candidate_iou": 0.5723625370465855,
+          "delta": 0.0013649329452192216,
+          "rows": 8799
+        },
+        "4": {
+          "baseline_iou": 0.5616151913985389,
+          "candidate_iou": 0.5601070152652223,
+          "delta": -0.0015081761333165522,
+          "rows": 8946
+        }
+      },
+      "offshore_positive": 102,
+      "offshore_rows": 878,
+      "paired_group_bootstrap_delta": {
+        "confidence": 0.95,
+        "groups": 618,
+        "lower": -0.004041733214771212,
+        "mean": -0.0013781371118331226,
+        "replicates": 10000,
+        "upper": 0.0003025823018963949
+      },
+      "passed": false,
+      "positive": 3811,
+      "rows": 44363
+    },
+    "confirmation_folds_0_1": {
+      "baseline_iou": 0.5513467236730132,
+      "candidate_iou": 0.5515171716579734,
+      "checks": {
+        "all_fold_deltas_nonnegative": true,
+        "bootstrap_interval_acceptable": true,
+        "offshore_nonnegative": true,
+        "offshore_positive_when_truth_present": true,
+        "onshore_unchanged": true,
+        "point_nonnegative": true
+      },
+      "delta": 0.0001704479849602425,
+      "domains": {
+        "offshore": {
+          "baseline_iou": 0.0,
+          "candidate_iou": 0.0,
+          "delta": 0.0,
+          "rows": 48
+        },
+        "onshore": {
+          "baseline_iou": 0.5515171716579734,
+          "candidate_iou": 0.5515171716579734,
+          "delta": 0.0,
+          "rows": 17737
+        }
+      },
+      "folds": {
+        "0": {
+          "baseline_iou": 0.5716381107345033,
+          "candidate_iou": 0.5716381107345033,
+          "delta": 0.0,
+          "rows": 8987
+        },
+        "1": {
+          "baseline_iou": 0.5314133484318914,
+          "candidate_iou": 0.5317391200134227,
+          "delta": 0.0003257715815313533,
+          "rows": 8798
+        }
+      },
+      "offshore_positive": 0,
+      "offshore_rows": 48,
+      "paired_group_bootstrap_delta": {
+        "confidence": 0.95,
+        "groups": 215,
+        "lower": 0.0,
+        "mean": 0.00017706815673457007,
+        "replicates": 10000,
+        "upper": 0.0006404839515349342
+      },
+      "passed": true,
+      "positive": 1490,
+      "rows": 17785
+    },
+    "selection_folds_2_3_4": {
+      "baseline_iou": 0.5722762945592041,
+      "candidate_iou": 0.5699591061416234,
+      "checks": {
+        "all_fold_deltas_nonnegative": false,
+        "bootstrap_interval_acceptable": false,
+        "offshore_nonnegative": false,
+        "offshore_positive_when_truth_present": false,
+        "onshore_unchanged": true,
+        "point_nonnegative": false
+      },
+      "delta": -0.0023171884175807733,
+      "domains": {
+        "offshore": {
+          "baseline_iou": 0.5982954336387386,
+          "candidate_iou": 0.5515918229706875,
+          "delta": -0.046703610668051065,
+          "rows": 830
+        },
+        "onshore": {
+          "baseline_iou": 0.570859459236078,
+          "candidate_iou": 0.570859459236078,
+          "delta": 0.0,
+          "rows": 25748
+        }
+      },
+      "folds": {
+        "2": {
+          "baseline_iou": 0.5842765385962864,
+          "candidate_iou": 0.5783318251150045,
+          "delta": -0.005944713481281894,
+          "rows": 8833
+        },
+        "3": {
+          "baseline_iou": 0.5709976041013662,
+          "candidate_iou": 0.5723625370465855,
+          "delta": 0.0013649329452192216,
+          "rows": 8799
+        },
+        "4": {
+          "baseline_iou": 0.5616151913985389,
+          "candidate_iou": 0.5601070152652223,
+          "delta": -0.0015081761333165522,
+          "rows": 8946
+        }
+      },
+      "offshore_positive": 102,
+      "offshore_rows": 830,
+      "paired_group_bootstrap_delta": {
+        "confidence": 0.95,
+        "groups": 403,
+        "lower": -0.007278786377324056,
+        "mean": -0.0024375071026891517,
+        "replicates": 10000,
+        "upper": 0.0003924607555997187
+      },
+      "passed": false,
+      "positive": 2321,
+      "rows": 26578
+    }
+  },
+  "provenance": {
+    "checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "development_count_cache_sha256": "3935ef9d911747438ac9965744293b0b7ce98649770c72246c044312519a3703",
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "9f924d59c2a98f6edcdf4476d0f68863d24e5a8e",
+    "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "numpy": "2.4.4",
+    "protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "script_sha256": "d018930ee242d8dcce9b890c894bd6285da50928c2f817c7edc587c6f7ef4279",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "post-test-diagnosed mask rule reverse-validated on all development folds"
+}

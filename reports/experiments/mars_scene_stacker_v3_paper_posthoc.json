@@ -1,0 +1,198 @@
+{
+  "all_exact_paper_scene_gates_pass": false,
+  "decision": "Reject the stacker; it does not solve the exact paper scene gates.",
+  "generated_at_utc": "2026-07-15T15:08:30.659124+00:00",
+  "missing_rows_fallback_to_v3": 5,
+  "operational_scene_threshold": 0.09977902697239133,
+  "provenance": {
+    "cache_sha256": "1624fddc0222f8ffc5137f557c7fc3e465d53b335c82cc8014711baa35bb94a1",
+    "legacy_sha256": "2d014f54918f68726d2ca4da19f35a1f29cb1b622fe7c32b56afc554ec27c370",
+    "stacker_sha256": "d2e2da7566ad4080110b1ba5bbd0dce8dfdd9dd41ccaf9bbaf263d17d75ab3be"
+  },
+  "schema_version": 1,
+  "scope": "post-test diagnosis of a development-rejected stacker; not confirmation evidence",
+  "views": {
+    "full": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": 0.017804157414524034,
+            "mean": 0.03554411650926055,
+            "upper": 0.05077314620949352
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.043124184814471715,
+            "mean": -0.04047103805422116,
+            "upper": -0.03783151902752743
+          },
+          "fixed_recall": {
+            "lower": -0.0692546250111519,
+            "mean": -0.05037469774225148,
+            "upper": -0.03380766725330941
+          },
+          "matched_fpr_recall": {
+            "lower": 0.0242914132063828,
+            "mean": 0.03844494746240404,
+            "upper": 0.0542822677925211
+          },
+          "pixel_iou": {
+            "lower": -0.0036934527031713326,
+            "mean": 0.013319114469232764,
+            "upper": 0.02974233981034292
+          }
+        },
+        "replicates": 10000,
+        "sites": 1289
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.6410196024104218,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "fn": 378,
+            "fp": 2949,
+            "precision": 0.3273266423357664,
+            "recall": 0.7915057915057915,
+            "tn": 38767,
+            "tp": 1435
+          },
+          "pixels": {
+            "fn": 1073087,
+            "fp": 2668518,
+            "intersection_over_union": 0.3243651485849355,
+            "tp": 1796305
+          }
+        },
+        "candidate": {
+          "average_precision": 0.6773895499474674,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.030228209799597276,
+            "fn": 468,
+            "fp": 1261,
+            "precision": 0.5161166538756715,
+            "recall": 0.7418643132928847,
+            "threshold": 0.09977902697239133,
+            "tn": 40455,
+            "tp": 1345
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "precision": 0.3374522579195686,
+            "recall": 0.8284611141753999,
+            "target_fpr": 0.07069230031642536,
+            "threshold": 0.018543422997809908
+          },
+          "pixels": {
+            "fn": 1353542,
+            "fp": 1621048,
+            "intersection_over_union": 0.33747444748889366,
+            "tp": 1515184
+          }
+        },
+        "delta": {
+          "average_precision": 0.03636994753704559,
+          "fixed_false_positive_rate": -0.04046409051682808,
+          "fixed_recall": -0.049641478212906764,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.03695532266960844,
+          "pixel_iou": 0.013109298903958178
+        },
+        "positive": 1813,
+        "rows": 43529
+      },
+      "scene_gates_pass": true
+    },
+    "test_only_sites": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": -0.017444307868038276,
+            "mean": 0.016265434630594534,
+            "upper": 0.048453327141193554
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.05002791161283148,
+            "mean": -0.04573999926666338,
+            "upper": -0.04142323815336388
+          },
+          "fixed_recall": {
+            "lower": -0.14622641509433965,
+            "mean": -0.09217591038938582,
+            "upper": -0.0448973050758765
+          },
+          "matched_fpr_recall": {
+            "lower": -0.005377070619006091,
+            "mean": 0.030396851671948538,
+            "upper": 0.0654214103653356
+          },
+          "pixel_iou": {
+            "lower": 0.030069892266826322,
+            "mean": 0.046284309710921706,
+            "upper": 0.06253101375725335
+          }
+        },
+        "replicates": 10000,
+        "sites": 697
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.45027380014908475,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "fn": 51,
+            "fp": 1165,
+            "precision": 0.13124533929903057,
+            "recall": 0.775330396475771,
+            "tn": 14263,
+            "tp": 176
+          },
+          "pixels": {
+            "fn": 140494,
+            "fp": 875886,
+            "intersection_over_union": 0.17156194293902416,
+            "tp": 210483
+          }
+        },
+        "candidate": {
+          "average_precision": 0.46790538382771624,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.029815919108115114,
+            "fn": 72,
+            "fp": 460,
+            "precision": 0.25203252032520324,
+            "recall": 0.6828193832599119,
+            "threshold": 0.09977902697239133,
+            "tn": 14968,
+            "tp": 155
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "precision": 0.1357566765578635,
+            "recall": 0.8061674008810573,
+            "target_fpr": 0.07551205600207415,
+            "threshold": 0.014317652723007382
+          },
+          "pixels": {
+            "fn": 174400,
+            "fp": 460825,
+            "intersection_over_union": 0.21808741763591535,
+            "tp": 177174
+          }
+        },
+        "delta": {
+          "average_precision": 0.01763158367863149,
+          "fixed_false_positive_rate": -0.045696136893959044,
+          "fixed_recall": -0.09251101321585908,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.03083700440528636,
+          "pixel_iou": 0.046525474696891195
+        },
+        "positive": 227,
+        "rows": 15655
+      },
+      "scene_gates_pass": false
+    }
+  }
+}
