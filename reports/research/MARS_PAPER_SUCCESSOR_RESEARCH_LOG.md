@@ -790,3 +790,29 @@ test-only IoU 0.21809 retained [+0.03049, +0.06281]. V3 therefore clears the
 full AP gate but still fails full IoU confidence plus test-only AP and recall
 confidence. Result JSON SHA-256 is
 `6086f09d9948fde846b83a01c4ce6bdba2080d43a2f4cb409fa2e1de470a065a`.
+
+## Post-test domain-routing hypothesis and rejection
+
+The ignored v3 diagnostic cache was used to ask whether sensor-specific
+blending of the legacy HGB head and stronger ExtraTrees head, plus an offshore
+logit correction, could explain the remaining paper-test scene errors. The
+post-test rule (0.7 new-head weight for Sentinel-2, 1.0 for Landsat, and a
+-4.0 offshore logit shift) would clear both paper views' AP and recall
+confidence gates. Because that rule was discovered after opening paper-test
+labels, it was not promoted directly.
+
+Instead, the unchanged rule was reverse-validated on development data. Scores
+on folds 2/3/4 were cross-fitted, while the previously frozen heads scored
+held folds 0 and 1. The rule passed fold 0, but failed the pooled folds-2/3/4
+contract: AP improved by only +0.00895 with paired physical-group interval
+[-0.01942, +0.02685], and recall declined by -0.00215. The inner development
+partition contains 102 positive scenes from offshore groups, demonstrating
+that the hard offshore penalty is not a generally defensible domain rule.
+Fold 1 improved AP by +0.02907, but was 0.00728 below the stronger head and
+therefore also missed the conservative non-regression check.
+
+The rule is rejected and will not be represented as confirmation evidence.
+Its full negative report is retained, while the 1.09 MB row-score cache is
+ignored by Git (SHA-256
+`fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7`)
+for a development-only, leakage-safe meta-model search.
