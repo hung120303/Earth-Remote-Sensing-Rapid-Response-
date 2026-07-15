@@ -1404,3 +1404,33 @@ enough to exceed the AP floor, at least one fold again loses two positives.
 Recall-focused sample weighting therefore does not resolve the crossfold
 bag's AP/recall tradeoff. Result JSON SHA-256 is
 `f3a67223b3d0012f3be14ab8ba21df1910662822313c64a876e09f9c5e8535f7`.
+
+## Unsupervised target-density weighting: frozen protocol
+
+The next branch addresses the consistent new-site distribution shift rather
+than adding another source-only score complement. Importance weighting under
+covariate shift estimates the target/source density ratio and reweights labeled
+source fitting; modern work also warns that unconstrained importance or
+test-time adaptation can harm under support mismatch. Relevant primary sources
+are <https://arxiv.org/abs/2006.04662>,
+<https://openaccess.thecvf.com/content/CVPR2023/html/Chen_Improved_Test-Time_Adaptation_for_Domain_Generalization_CVPR_2023_paper.html>,
+and the satellite spatial-generalization expert framework at
+<https://openaccess.thecvf.com/content/CVPR2025W/EarthVision/html/Kuriyal_CoDEx_Combining_Domain_Expertise_for_Spatial_Generalization_in_Satellite_Image_CVPRW_2025_paper.html>.
+
+The leakage-safe simulation treats each development fold in turn as an
+unlabeled target. A balanced regularized logistic domain classifier receives
+the 169 scene/context features plus sensor identity from source and target,
+but never target methane labels. Its target/source odds are clipped and used
+as ExtraTrees fitting weights. Three fixed contracts compare square-root or
+full ratios with [0.25, 4] clipping, plus square-root ratios with [0.1, 10]
+clipping. Each target-weighted OOF head is blended 0.10 / 0.20 / 0.30 / 0.40 /
+0.50 / 0.625 / 0.75 / 0.875 / 1.00 around current.
+
+Promotion requires at least +0.002 pooled AP, positive pooled recall, strictly
+positive AP and nonnegative recall on every fold, no sensor AP regression, and
+positive paired-site AP lower bounds versus current and primary. A pass would
+freeze the weighting contract before extracting a separate label-free paper
+feature cache; only then could one all-development ExtraTrees model be fitted
+with paper-feature density weights. Frozen script SHA-256 is
+`3e95b711e64a00aeb5389b15a089d51f551cf81bbf4e38457cdf5fcc700564ce`;
+the synthetic density-direction/normalization test passes.
