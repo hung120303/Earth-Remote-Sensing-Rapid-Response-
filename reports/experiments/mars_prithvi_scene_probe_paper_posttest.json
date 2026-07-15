@@ -1,0 +1,226 @@
+{
+  "all_exact_paper_gates_pass": false,
+  "architecture": {
+    "mask_gate_cutoff": 0.75,
+    "mask_gate_score": "unchanged frozen v3 stronger scene score",
+    "mask_probability": "released MARS-S2L probability with sensor thresholds",
+    "scene_ranking": "current v3 stronger head plus frozen 0.05 Prithvi CLS linear probe",
+    "scene_threshold": 0.2788401679788501
+  },
+  "available_prithvi_rows": 43524,
+  "decision": "Reject the Prithvi complement as the final successor; at least one exact paper gate fails.",
+  "generated_at_utc": "2026-07-15T21:05:45.928731+00:00",
+  "missing_rows_fallback_to_v3": 5,
+  "provenance": {
+    "artifact_sha256": "e0ac070549f3864af1407aabd64eedf653e5f48e7205320a8303dce097bc2fab",
+    "development_report_sha256": "7b8c935bba06feaefd38559175f4e25474687490547eaa3340ec04b502d2750d",
+    "diagnostic_sha256": "1624fddc0222f8ffc5137f557c7fc3e465d53b335c82cc8014711baa35bb94a1",
+    "features_sha256": "d3d9bfb6423fe9ac6bf53185ea408a476491ca8fa31e941e1782a8c85a016795",
+    "gate_report_sha256": "c1e5a1497abebba80d42898a8165b30fd255ff252478a0ee1fd90fd32456a51c",
+    "script_sha256": "4b9e0feb69c718d3e5d2fd273adab3ff2f91c5a4503a92a16593a6be5c3d951b"
+  },
+  "schema_version": 1,
+  "scope": "transparent post-test Prithvi scene-probe replay on exact paper comparator",
+  "views": {
+    "full": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": 0.014808301501399456,
+            "mean": 0.031675466103751944,
+            "upper": 0.046365619648867006
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.039416830009013186,
+            "mean": -0.0368170624181506,
+            "upper": -0.03425115608962469
+          },
+          "fixed_recall": {
+            "lower": -0.06451668867945641,
+            "mean": -0.04557658407237649,
+            "upper": -0.02933150877519219
+          },
+          "matched_fpr_recall": {
+            "lower": 0.01857443690219068,
+            "mean": 0.03184538450434101,
+            "upper": 0.04661044694622261
+          },
+          "pixel_iou": {
+            "lower": 0.03481617112411907,
+            "mean": 0.055708949479589216,
+            "upper": 0.07746719121230139
+          }
+        },
+        "replicates": 10000,
+        "sites": 1289
+      },
+      "checks": {
+        "ap_lower_positive": true,
+        "ap_point_higher": true,
+        "fixed_fpr_upper_nonpositive": true,
+        "matched_recall_lower_positive": true,
+        "matched_recall_point_higher": true,
+        "pixel_iou_lower_positive": true,
+        "pixel_iou_point_higher": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.6410196024104218,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "fn": 378,
+            "fp": 2949,
+            "precision": 0.3273266423357664,
+            "recall": 0.7915057915057915,
+            "tn": 38767,
+            "tp": 1435
+          },
+          "pixels": {
+            "fn": 1073087,
+            "fp": 2668518,
+            "intersection_over_union": 0.3243651485849355,
+            "tp": 1796305
+          }
+        },
+        "candidate": {
+          "average_precision": 0.6733843697935856,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.03387189567552019,
+            "fn": 460,
+            "fp": 1413,
+            "precision": 0.4891540130151844,
+            "recall": 0.746276889134032,
+            "threshold": 0.2788401679788501,
+            "tn": 40303,
+            "tp": 1353
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "precision": 0.3358108108108108,
+            "recall": 0.8223938223938224,
+            "target_fpr": 0.07069230031642536,
+            "threshold": 0.08573447994527271
+          },
+          "pixels": {
+            "fn": 1431545,
+            "fp": 913692,
+            "intersection_over_union": 0.37996355770303547,
+            "tp": 1437181
+          }
+        },
+        "delta": {
+          "average_precision": 0.03236476738316385,
+          "fixed_false_positive_rate": -0.03682040464090517,
+          "fixed_recall": -0.04522890237175947,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.030888030888030937,
+          "pixel_iou": 0.05559840911809999
+        },
+        "positive": 1813,
+        "rows": 43529
+      },
+      "passed": true
+    },
+    "test_only_sites": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": -0.017804994172553476,
+            "mean": 0.01627791327434361,
+            "upper": 0.05002674246028483
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.04596095339836702,
+            "mean": -0.04170037642101565,
+            "upper": -0.03749344410073175
+          },
+          "fixed_recall": {
+            "lower": -0.12301587301587302,
+            "mean": -0.0696058634500049,
+            "upper": -0.02614379084967322
+          },
+          "matched_fpr_recall": {
+            "lower": -0.008697559115179292,
+            "mean": 0.020739159501729824,
+            "upper": 0.04938388959301505
+          },
+          "pixel_iou": {
+            "lower": 0.08598583504846548,
+            "mean": 0.12080776778282516,
+            "upper": 0.15544232819832757
+          }
+        },
+        "replicates": 10000,
+        "sites": 697
+      },
+      "checks": {
+        "ap_lower_positive": false,
+        "ap_point_higher": true,
+        "fixed_fpr_upper_nonpositive": true,
+        "matched_recall_lower_positive": false,
+        "matched_recall_point_higher": true,
+        "pixel_iou_lower_positive": true,
+        "pixel_iou_point_higher": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.45027380014908475,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "fn": 51,
+            "fp": 1165,
+            "precision": 0.13124533929903057,
+            "recall": 0.775330396475771,
+            "tn": 14263,
+            "tp": 176
+          },
+          "pixels": {
+            "fn": 140494,
+            "fp": 875886,
+            "intersection_over_union": 0.17156194293902416,
+            "tp": 210483
+          }
+        },
+        "candidate": {
+          "average_precision": 0.4677907362213155,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.03383458646616541,
+            "fn": 67,
+            "fp": 522,
+            "precision": 0.23460410557184752,
+            "recall": 0.7048458149779736,
+            "threshold": 0.2788401679788501,
+            "tn": 14906,
+            "tp": 160
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "precision": 0.13447251114413075,
+            "recall": 0.7973568281938326,
+            "target_fpr": 0.07551205600207415,
+            "threshold": 0.07445347466055954
+          },
+          "pixels": {
+            "fn": 185139,
+            "fp": 217508,
+            "intersection_over_union": 0.2924622462140781,
+            "tp": 166435
+          }
+        },
+        "delta": {
+          "average_precision": 0.01751693607223076,
+          "fixed_false_positive_rate": -0.04167746953590874,
+          "fixed_recall": -0.07048458149779735,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.022026431718061623,
+          "pixel_iou": 0.12090030327505397
+        },
+        "positive": 227,
+        "rows": 15655
+      },
+      "passed": false
+    }
+  }
+}

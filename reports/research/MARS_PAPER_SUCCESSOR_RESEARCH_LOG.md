@@ -1187,6 +1187,23 @@ after verifying its frozen SHA-256 identity, using the trusted-pickle path.
 This compatibility correction changes no cache, model, score, threshold,
 bootstrap seed, or promotion gate and was committed before metric replay.
 
+The frozen exact-paper replay rejects the Prithvi complement as the final
+successor. On all 43,529 paper rows, it reaches AP 0.673384 versus 0.641020
+(delta +0.032365; paired site-bootstrap lower bound +0.014808), matched-FPR
+recall delta +0.030888 (lower +0.018574), FPR delta -0.036820, and the already
+confirmed gated-mask IoU delta +0.055598 (lower +0.034816). That view passes.
+
+On the more important 15,655 test-only-site view, AP is 0.467791 versus
+0.450274 (delta +0.017517) but its paired lower bound is -0.017805. Matched-FPR
+recall improves +0.022026 at the point estimate but its lower bound is
+-0.008698. FPR improves -0.041677 and gated-mask IoU improves +0.120900 with
+lower bound +0.085986. The AP and recall uncertainty gates therefore fail.
+The result is also only +0.000051 AP above the previously tested ordinary
+spatial scene head, consistent with the negligible incremental development
+effect. No architecture or threshold was adapted to this outcome. The exact
+result JSON SHA-256 is
+`21f905944c24c119b5412fe6d2e626353f07381d3866811607d92492c25bcc89`.
+
 The exact-paper Prithvi extraction completed without retries across all five
 predeclared contiguous shards. Their row counts are 8,704 / 8,705 / 8,705 /
 8,705 / 8,705 and their missing-reference-time fallback counts are 428 / 409 /
