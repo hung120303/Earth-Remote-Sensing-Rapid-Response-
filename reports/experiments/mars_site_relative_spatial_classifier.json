@@ -1,0 +1,1006 @@
+{
+  "all_promotion_gates_pass": true,
+  "architecture": {
+    "candidate_feature_sets": [
+      "original_residual",
+      "original_template_residual"
+    ],
+    "singleton_policy": "template equals scene and residual is zero",
+    "site_template": "label-free leave-one-out pixelwise mean over same-site observations"
+  },
+  "candidate_blend_count": 36,
+  "candidate_model_count": 4,
+  "candidate_summaries": [
+    {
+      "ap_delta_vs_current": 0.0014258931882507042,
+      "ap_delta_vs_primary": 0.03099893818960786,
+      "blend_weight": 0.05,
+      "recall_delta_vs_current": 0.0012925463162430928,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": true,
+      "worst_fold_ap_delta_vs_current": 0.00044926406767975546
+    },
+    {
+      "ap_delta_vs_current": 0.0026622061192901336,
+      "ap_delta_vs_primary": 0.03223525112064729,
+      "blend_weight": 0.1,
+      "recall_delta_vs_current": 0.0012925463162430928,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": true,
+      "worst_fold_ap_delta_vs_current": 0.0006533898845134667
+    },
+    {
+      "ap_delta_vs_current": 0.004485747821792785,
+      "ap_delta_vs_primary": 0.03405879282314994,
+      "blend_weight": 0.2,
+      "recall_delta_vs_current": 0.00430848772081005,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": true,
+      "worst_fold_ap_delta_vs_current": 0.0005736291286090323
+    },
+    {
+      "ap_delta_vs_current": 0.0054609018000937315,
+      "ap_delta_vs_primary": 0.03503394680145089,
+      "blend_weight": 0.3,
+      "recall_delta_vs_current": 0.004739336492891044,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": true,
+      "worst_fold_ap_delta_vs_current": 1.5189076733257423e-05
+    },
+    {
+      "ap_delta_vs_current": 0.005639438296548338,
+      "ap_delta_vs_primary": 0.035212483297905495,
+      "blend_weight": 0.4,
+      "recall_delta_vs_current": 0.0034467901766480624,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0008379411270699189
+    },
+    {
+      "ap_delta_vs_current": 0.004757933307544149,
+      "ap_delta_vs_primary": 0.034330978308901305,
+      "blend_weight": 0.5,
+      "recall_delta_vs_current": 0.0025850926324860746,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0031861423964972824
+    },
+    {
+      "ap_delta_vs_current": 0.0020019009965508427,
+      "ap_delta_vs_primary": 0.031574945997908,
+      "blend_weight": 0.625,
+      "recall_delta_vs_current": 0.0004308487720809939,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.007326563373368455
+    },
+    {
+      "ap_delta_vs_current": -0.0027105604092482194,
+      "ap_delta_vs_primary": 0.026862484592108937,
+      "blend_weight": 0.75,
+      "recall_delta_vs_current": -0.0008616975441619878,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.012689493619496894
+    },
+    {
+      "ap_delta_vs_current": -0.020737218235682975,
+      "ap_delta_vs_primary": 0.008835826765674182,
+      "blend_weight": 1.0,
+      "recall_delta_vs_current": -0.012063765618267941,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.03036706231547892
+    },
+    {
+      "ap_delta_vs_current": 0.0010676251836837514,
+      "ap_delta_vs_primary": 0.030640670185040908,
+      "blend_weight": 0.05,
+      "recall_delta_vs_current": 0.0004308487720809939,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0008387338989960247
+    },
+    {
+      "ap_delta_vs_current": 0.0019928505280149,
+      "ap_delta_vs_primary": 0.03156589552937206,
+      "blend_weight": 0.1,
+      "recall_delta_vs_current": 0.0004308487720809939,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0017017123350850927
+    },
+    {
+      "ap_delta_vs_current": 0.0028839996431384574,
+      "ap_delta_vs_primary": 0.032457044644495614,
+      "blend_weight": 0.2,
+      "recall_delta_vs_current": 0.0004308487720809939,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0039931982674937805
+    },
+    {
+      "ap_delta_vs_current": 0.0026629471304595587,
+      "ap_delta_vs_primary": 0.032235992131816715,
+      "blend_weight": 0.3,
+      "recall_delta_vs_current": -0.0004308487720809939,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.006713084628751087
+    },
+    {
+      "ap_delta_vs_current": 0.0006753189357587841,
+      "ap_delta_vs_primary": 0.03024836393711594,
+      "blend_weight": 0.4,
+      "recall_delta_vs_current": -0.0025850926324859635,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.009869840018385312
+    },
+    {
+      "ap_delta_vs_current": -0.0035408570835884223,
+      "ap_delta_vs_primary": 0.026032187917768734,
+      "blend_weight": 0.5,
+      "recall_delta_vs_current": -0.0025850926324859635,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.013905966079273746
+    },
+    {
+      "ap_delta_vs_current": -0.013376848485047166,
+      "ap_delta_vs_primary": 0.01619619651630999,
+      "blend_weight": 0.625,
+      "recall_delta_vs_current": -0.005601034037052921,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.020542239656812566
+    },
+    {
+      "ap_delta_vs_current": -0.03072530863917855,
+      "ap_delta_vs_primary": -0.0011522636378213935,
+      "blend_weight": 0.75,
+      "recall_delta_vs_current": -0.008186126669538996,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.03146633270002275
+    },
+    {
+      "ap_delta_vs_current": -0.10058270249322077,
+      "ap_delta_vs_primary": -0.07100965749186361,
+      "blend_weight": 1.0,
+      "recall_delta_vs_current": -0.016803102111158985,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.08480218596141897
+    },
+    {
+      "ap_delta_vs_current": 0.0018659138518274387,
+      "ap_delta_vs_primary": 0.031438958853184595,
+      "blend_weight": 0.05,
+      "recall_delta_vs_current": 0.0012925463162430928,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": true,
+      "worst_fold_ap_delta_vs_current": 0.00039570192663818116
+    },
+    {
+      "ap_delta_vs_current": 0.00352382455319189,
+      "ap_delta_vs_primary": 0.03309686955454905,
+      "blend_weight": 0.1,
+      "recall_delta_vs_current": 0.0021542438604050806,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": true,
+      "worst_fold_ap_delta_vs_current": 0.0005568091827869992
+    },
+    {
+      "ap_delta_vs_current": 0.006093574216159747,
+      "ap_delta_vs_primary": 0.035666619217516904,
+      "blend_weight": 0.2,
+      "recall_delta_vs_current": 0.0021542438604050806,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": true,
+      "worst_fold_ap_delta_vs_current": 0.00026570273991954885
+    },
+    {
+      "ap_delta_vs_current": 0.0075773575529902715,
+      "ap_delta_vs_primary": 0.03715040255434743,
+      "blend_weight": 0.3,
+      "recall_delta_vs_current": 0.0017233950883240867,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0006836833146052212
+    },
+    {
+      "ap_delta_vs_current": 0.007978647636399772,
+      "ap_delta_vs_primary": 0.03755169263775693,
+      "blend_weight": 0.4,
+      "recall_delta_vs_current": 0.0004308487720809939,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0023471645597641366
+    },
+    {
+      "ap_delta_vs_current": 0.0072950029463111354,
+      "ap_delta_vs_primary": 0.03686804794766829,
+      "blend_weight": 0.5,
+      "recall_delta_vs_current": -0.0012925463162429818,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.004717960276979349
+    },
+    {
+      "ap_delta_vs_current": 0.004703161056096139,
+      "ap_delta_vs_primary": 0.034276206057453296,
+      "blend_weight": 0.625,
+      "recall_delta_vs_current": -0.0034467901766479514,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.008431218243484917
+    },
+    {
+      "ap_delta_vs_current": -0.00028562934201747936,
+      "ap_delta_vs_primary": 0.029287415659339677,
+      "blend_weight": 0.75,
+      "recall_delta_vs_current": -0.006893580353295903,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.013385829755570233
+    },
+    {
+      "ap_delta_vs_current": -0.02252312979074289,
+      "ap_delta_vs_primary": 0.007049915210614266,
+      "blend_weight": 1.0,
+      "recall_delta_vs_current": -0.016803102111158985,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.028369301518988976
+    },
+    {
+      "ap_delta_vs_current": 0.0005785533962133771,
+      "ap_delta_vs_primary": 0.030151598397570534,
+      "blend_weight": 0.05,
+      "recall_delta_vs_current": 0.0017233950883240867,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0006192229342409927
+    },
+    {
+      "ap_delta_vs_current": 0.0009383085699095073,
+      "ap_delta_vs_primary": 0.030511353571266664,
+      "blend_weight": 0.1,
+      "recall_delta_vs_current": 0.0017233950883240867,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0013953655529315157
+    },
+    {
+      "ap_delta_vs_current": 0.0011914680879299144,
+      "ap_delta_vs_primary": 0.03076451308928707,
+      "blend_weight": 0.2,
+      "recall_delta_vs_current": 0.0,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0035343053771931254
+    },
+    {
+      "ap_delta_vs_current": 0.0006470976793442329,
+      "ap_delta_vs_primary": 0.03022014268070139,
+      "blend_weight": 0.3,
+      "recall_delta_vs_current": -0.0017233950883239757,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.0060758389981168115
+    },
+    {
+      "ap_delta_vs_current": -0.0010602954241150098,
+      "ap_delta_vs_primary": 0.028512749577242147,
+      "blend_weight": 0.4,
+      "recall_delta_vs_current": -0.0025850926324859635,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.009433909089571868
+    },
+    {
+      "ap_delta_vs_current": -0.004257701747193532,
+      "ap_delta_vs_primary": 0.025315343254163625,
+      "blend_weight": 0.5,
+      "recall_delta_vs_current": -0.0030159414045669575,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.013655641327127599
+    },
+    {
+      "ap_delta_vs_current": -0.011286447844548464,
+      "ap_delta_vs_primary": 0.018286597156808693,
+      "blend_weight": 0.625,
+      "recall_delta_vs_current": -0.006031882809133915,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.02119258568625737
+    },
+    {
+      "ap_delta_vs_current": -0.024336177245684598,
+      "ap_delta_vs_primary": 0.0052368677556725585,
+      "blend_weight": 0.75,
+      "recall_delta_vs_current": -0.007324429125376897,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.033671630674154907
+    },
+    {
+      "ap_delta_vs_current": -0.09662845326309732,
+      "ap_delta_vs_primary": -0.06705540826174017,
+      "blend_weight": 1.0,
+      "recall_delta_vs_current": -0.014648858250753904,
+      "spec_key": "dropout-0.2_epochs-8_feature_set-original_template_residual_learning_rate-0.0003_weight_decay-0.001_weighting-site_cell",
+      "strict_stable": false,
+      "worst_fold_ap_delta_vs_current": -0.11176572620433034
+    }
+  ],
+  "confirmation": {
+    "fold0": {
+      "checks": {
+        "ap_ci_lower_positive_vs_primary": true,
+        "ap_higher_than_current": true,
+        "ap_higher_than_primary": true,
+        "no_material_ap_regression_vs_new": true,
+        "no_sensor_regression_vs_primary": true,
+        "recall_higher_than_primary": true,
+        "recall_no_worse_than_current": true
+      },
+      "paired_group_bootstrap_ap_delta_vs_primary": {
+        "confidence": 0.95,
+        "groups": 107,
+        "lower": 0.010660467323828447,
+        "mean": 0.02626837897352604,
+        "replicates": 10000,
+        "upper": 0.047395703798555275
+      },
+      "passed": true,
+      "positive": 745,
+      "rows": 8987,
+      "sites": 107,
+      "versus_new": {
+        "checks": {
+          "ap_higher": true,
+          "no_material_sensor_ap_regression": true,
+          "recall_at_fpr_0_0713_higher": true
+        },
+        "delta": {
+          "average_precision": 0.0013042853571438862,
+          "recall_at_fpr_0_0713": 0.0026845637583892135,
+          "sensor_average_precision": {
+            "Landsat": 5.494505452974252e-05,
+            "Sentinel-2": 0.0015502520910113393
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9316790920218093,
+          "auroc": 0.9815601543249586,
+          "average_precision": 0.9155986954880087,
+          "false_positive_rate": 0.0712205775297258,
+          "fn": 27.0,
+          "fp": 587.0,
+          "negative_predictive_value": 0.9964852902889872,
+          "operating_point": {
+            "false_positive_rate": 0.0712205775297258,
+            "precision": 0.550191570881226,
+            "recall": 0.963758389261745,
+            "target_fpr": 0.0713,
+            "threshold": 0.15502884118244428
+          },
+          "precision": 0.550191570881226,
+          "recall": 0.963758389261745,
+          "sensor_average_precision": {
+            "Landsat": 0.9862914233503566,
+            "Sentinel-2": 0.8822048901512789
+          },
+          "specificity": 0.9287794224702742,
+          "tn": 7655.0,
+          "tp": 718.0
+        },
+        "rank": [
+          0.0013042853571438862,
+          0.0039888491155331,
+          0.0013042853571438862
+        ]
+      },
+      "versus_primary": {
+        "checks": {
+          "ap_higher": true,
+          "no_material_sensor_ap_regression": true,
+          "recall_at_fpr_0_0713_higher": true
+        },
+        "delta": {
+          "average_precision": 0.0266880888048715,
+          "recall_at_fpr_0_0713": 0.006711409395973145,
+          "sensor_average_precision": {
+            "Landsat": 0.011389525436261705,
+            "Sentinel-2": 0.034003457834431705
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9316790920218093,
+          "auroc": 0.9815601543249586,
+          "average_precision": 0.9155986954880087,
+          "false_positive_rate": 0.0712205775297258,
+          "fn": 27.0,
+          "fp": 587.0,
+          "negative_predictive_value": 0.9964852902889872,
+          "operating_point": {
+            "false_positive_rate": 0.0712205775297258,
+            "precision": 0.550191570881226,
+            "recall": 0.963758389261745,
+            "target_fpr": 0.0713,
+            "threshold": 0.15502884118244428
+          },
+          "precision": 0.550191570881226,
+          "recall": 0.963758389261745,
+          "sensor_average_precision": {
+            "Landsat": 0.9862914233503566,
+            "Sentinel-2": 0.8822048901512789
+          },
+          "specificity": 0.9287794224702742,
+          "tn": 7655.0,
+          "tp": 718.0
+        },
+        "rank": [
+          0.006711409395973145,
+          0.033399498200844646,
+          0.0266880888048715
+        ]
+      }
+    },
+    "fold1": {
+      "checks": {
+        "ap_ci_lower_positive_vs_primary": true,
+        "ap_higher_than_current": true,
+        "ap_higher_than_primary": true,
+        "no_material_ap_regression_vs_new": true,
+        "no_sensor_regression_vs_primary": true,
+        "recall_higher_than_primary": true,
+        "recall_no_worse_than_current": true
+      },
+      "paired_group_bootstrap_ap_delta_vs_primary": {
+        "confidence": 0.95,
+        "groups": 108,
+        "lower": 0.019930639737970053,
+        "mean": 0.03786814241116019,
+        "replicates": 10000,
+        "upper": 0.06051686704611536
+      },
+      "passed": true,
+      "positive": 745,
+      "rows": 8798,
+      "sites": 108,
+      "versus_new": {
+        "checks": {
+          "ap_higher": true,
+          "no_material_sensor_ap_regression": true,
+          "recall_at_fpr_0_0713_higher": true
+        },
+        "delta": {
+          "average_precision": 0.0015621763312557713,
+          "recall_at_fpr_0_0713": 0.004026845637583931,
+          "sensor_average_precision": {
+            "Landsat": 2.4691853884206694e-05,
+            "Sentinel-2": 0.0019926292754615105
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9305523982723346,
+          "auroc": 0.9854649190722203,
+          "average_precision": 0.8981747270118353,
+          "false_positive_rate": 0.07127778467651807,
+          "fn": 37.0,
+          "fp": 574.0,
+          "negative_predictive_value": 0.9950771687067589,
+          "operating_point": {
+            "false_positive_rate": 0.07127778467651807,
+            "precision": 0.5522620904836193,
+            "recall": 0.9503355704697987,
+            "target_fpr": 0.0713,
+            "threshold": 0.30299312593404687
+          },
+          "precision": 0.5522620904836193,
+          "recall": 0.9503355704697987,
+          "sensor_average_precision": {
+            "Landsat": 0.983459092320914,
+            "Sentinel-2": 0.8583018232328554
+          },
+          "specificity": 0.928722215323482,
+          "tn": 7479.0,
+          "tp": 708.0
+        },
+        "rank": [
+          0.0015621763312557713,
+          0.0055890219688397025,
+          0.0015621763312557713
+        ]
+      },
+      "versus_primary": {
+        "checks": {
+          "ap_higher": true,
+          "no_material_sensor_ap_regression": true,
+          "recall_at_fpr_0_0713_higher": true
+        },
+        "delta": {
+          "average_precision": 0.037906035823962236,
+          "recall_at_fpr_0_0713": 0.00939597315436247,
+          "sensor_average_precision": {
+            "Landsat": 0.014675744132235269,
+            "Sentinel-2": 0.045905267347066125
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9305523982723346,
+          "auroc": 0.9854649190722203,
+          "average_precision": 0.8981747270118353,
+          "false_positive_rate": 0.07127778467651807,
+          "fn": 37.0,
+          "fp": 574.0,
+          "negative_predictive_value": 0.9950771687067589,
+          "operating_point": {
+            "false_positive_rate": 0.07127778467651807,
+            "precision": 0.5522620904836193,
+            "recall": 0.9503355704697987,
+            "target_fpr": 0.0713,
+            "threshold": 0.30299312593404687
+          },
+          "precision": 0.5522620904836193,
+          "recall": 0.9503355704697987,
+          "sensor_average_precision": {
+            "Landsat": 0.983459092320914,
+            "Sentinel-2": 0.8583018232328554
+          },
+          "specificity": 0.928722215323482,
+          "tn": 7479.0,
+          "tp": 708.0
+        },
+        "rank": [
+          0.00939597315436247,
+          0.047302008978324706,
+          0.037906035823962236
+        ]
+      }
+    }
+  },
+  "decision": "Freeze the site-relative spatial model for one transparent exact-paper replay.",
+  "generated_at_utc": "2026-07-15T21:31:45.849821+00:00",
+  "held_pooled_bootstrap_ap_delta_vs_new": {
+    "confidence": 0.95,
+    "groups": 215,
+    "lower": 0.0009102117405992456,
+    "mean": 0.0014421963007821635,
+    "replicates": 10000,
+    "upper": 0.002096104086369671
+  },
+  "operational_scene_threshold": 0.30299312593404687,
+  "provenance": {
+    "artifact_sha256": "9401678aa4f38fb3b54a914318dc5c2a553b39fa8b309d1a127b9d21abbfc496",
+    "device": "NVIDIA GeForce RTX 5070",
+    "fold0_cache_sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7",
+    "fold1_cache_sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108",
+    "git_commit": "c7da96cd5dbd9dafde511db2523036251692bc38",
+    "images_cache_sha256": "6530fa2d07d94bd57ba1ac757039dedd18745227e7a476fb0d69f78f996134a5",
+    "inner_cache_sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89",
+    "metadata_cache_sha256": "0160ed93371396a487b819dd170a682f55756d285f0ba94d0f0d093ba51a8d01",
+    "numpy": "2.4.4",
+    "score_cache_sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7",
+    "script_sha256": "cef9460b2d82bffc033aa9049564949b2477155ce3bef428ba4666b4661e8347",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "development only; paper-test labels, scores, and imagery are not loaded",
+  "selected": {
+    "blend_weight": 0.1,
+    "inner_passed": true,
+    "paired_group_bootstrap_ap_delta_vs_new": {
+      "confidence": 0.95,
+      "groups": 403,
+      "lower": 0.0006153407809697343,
+      "mean": 0.0025724122860638914,
+      "replicates": 10000,
+      "upper": 0.005112105038839136
+    },
+    "paired_group_bootstrap_ap_delta_vs_primary": {
+      "confidence": 0.95,
+      "groups": 403,
+      "lower": 0.020750218853326195,
+      "mean": 0.03198233072695838,
+      "replicates": 10000,
+      "upper": 0.04567025126708885
+    },
+    "per_fold": {
+      "2": {
+        "versus_new": {
+          "checks": {
+            "ap_higher": true,
+            "no_material_sensor_ap_regression": true,
+            "recall_at_fpr_0_0713_higher": true
+          },
+          "delta": {
+            "average_precision": 0.0010432573231896614,
+            "recall_at_fpr_0_0713": 0.0012547051442910462,
+            "sensor_average_precision": {
+              "Landsat": 0.00015766635904590487,
+              "Sentinel-2": 0.0016642870458329906
+            }
+          },
+          "metrics": {
+            "accuracy": 0.9313936374957545,
+            "auroc": 0.986877276846412,
+            "average_precision": 0.9176460530368833,
+            "false_positive_rate": 0.07117969138875062,
+            "fn": 34.0,
+            "fp": 572.0,
+            "negative_predictive_value": 0.9954654574553214,
+            "operating_point": {
+              "false_positive_rate": 0.07117969138875062,
+              "precision": 0.5715355805243446,
+              "recall": 0.9573400250941029,
+              "target_fpr": 0.0713,
+              "threshold": 0.07745665608727259
+            },
+            "precision": 0.5715355805243446,
+            "recall": 0.9573400250941029,
+            "sensor_average_precision": {
+              "Landsat": 0.9792005095017154,
+              "Sentinel-2": 0.8896505534188519
+            },
+            "specificity": 0.9288203086112494,
+            "tn": 7464.0,
+            "tp": 763.0
+          },
+          "rank": [
+            0.0010432573231896614,
+            0.0022979624674807075,
+            0.0010432573231896614
+          ]
+        },
+        "versus_primary": {
+          "checks": {
+            "ap_higher": true,
+            "no_material_sensor_ap_regression": true,
+            "recall_at_fpr_0_0713_higher": true
+          },
+          "delta": {
+            "average_precision": 0.03704729531427542,
+            "recall_at_fpr_0_0713": 0.031367628607277265,
+            "sensor_average_precision": {
+              "Landsat": 0.00036826009391610626,
+              "Sentinel-2": 0.05243236695235265
+            }
+          },
+          "metrics": {
+            "accuracy": 0.9313936374957545,
+            "auroc": 0.986877276846412,
+            "average_precision": 0.9176460530368833,
+            "false_positive_rate": 0.07117969138875062,
+            "fn": 34.0,
+            "fp": 572.0,
+            "negative_predictive_value": 0.9954654574553214,
+            "operating_point": {
+              "false_positive_rate": 0.07117969138875062,
+              "precision": 0.5715355805243446,
+              "recall": 0.9573400250941029,
+              "target_fpr": 0.0713,
+              "threshold": 0.07745665608727259
+            },
+            "precision": 0.5715355805243446,
+            "recall": 0.9573400250941029,
+            "sensor_average_precision": {
+              "Landsat": 0.9792005095017154,
+              "Sentinel-2": 0.8896505534188519
+            },
+            "specificity": 0.9288203086112494,
+            "tn": 7464.0,
+            "tp": 763.0
+          },
+          "rank": [
+            0.031367628607277265,
+            0.06841492392155268,
+            0.03704729531427542
+          ]
+        }
+      },
+      "3": {
+        "versus_new": {
+          "checks": {
+            "ap_higher": true,
+            "no_material_sensor_ap_regression": true,
+            "recall_at_fpr_0_0713_higher": true
+          },
+          "delta": {
+            "average_precision": 0.0006533898845134667,
+            "recall_at_fpr_0_0713": 0.0013192612137202797,
+            "sensor_average_precision": {
+              "Landsat": 0.00042246966500814054,
+              "Sentinel-2": 0.0006882651789579253
+            }
+          },
+          "metrics": {
+            "accuracy": 0.93260597795204,
+            "auroc": 0.9906289960522244,
+            "average_precision": 0.9309700493849663,
+            "false_positive_rate": 0.07125979355801518,
+            "fn": 20.0,
+            "fp": 573.0,
+            "negative_predictive_value": 0.9973290598290598,
+            "operating_point": {
+              "false_positive_rate": 0.07125979355801518,
+              "precision": 0.562929061784897,
+              "recall": 0.9736147757255936,
+              "target_fpr": 0.0713,
+              "threshold": 0.08468745646423881
+            },
+            "precision": 0.562929061784897,
+            "recall": 0.9736147757255936,
+            "sensor_average_precision": {
+              "Landsat": 0.9750730096592124,
+              "Sentinel-2": 0.9120277917097254
+            },
+            "specificity": 0.9287402064419849,
+            "tn": 7468.0,
+            "tp": 738.0
+          },
+          "rank": [
+            0.0006533898845134667,
+            0.0019726510982337464,
+            0.0006533898845134667
+          ]
+        },
+        "versus_primary": {
+          "checks": {
+            "ap_higher": true,
+            "no_material_sensor_ap_regression": true,
+            "recall_at_fpr_0_0713_higher": true
+          },
+          "delta": {
+            "average_precision": 0.03379691192334333,
+            "recall_at_fpr_0_0713": 0.01319261213720313,
+            "sensor_average_precision": {
+              "Landsat": 0.01706721984788906,
+              "Sentinel-2": 0.04028813326810121
+            }
+          },
+          "metrics": {
+            "accuracy": 0.93260597795204,
+            "auroc": 0.9906289960522244,
+            "average_precision": 0.9309700493849663,
+            "false_positive_rate": 0.07125979355801518,
+            "fn": 20.0,
+            "fp": 573.0,
+            "negative_predictive_value": 0.9973290598290598,
+            "operating_point": {
+              "false_positive_rate": 0.07125979355801518,
+              "precision": 0.562929061784897,
+              "recall": 0.9736147757255936,
+              "target_fpr": 0.0713,
+              "threshold": 0.08468745646423881
+            },
+            "precision": 0.562929061784897,
+            "recall": 0.9736147757255936,
+            "sensor_average_precision": {
+              "Landsat": 0.9750730096592124,
+              "Sentinel-2": 0.9120277917097254
+            },
+            "specificity": 0.9287402064419849,
+            "tn": 7468.0,
+            "tp": 738.0
+          },
+          "rank": [
+            0.01319261213720313,
+            0.04698952406054646,
+            0.03379691192334333
+          ]
+        }
+      },
+      "4": {
+        "versus_new": {
+          "checks": {
+            "ap_higher": true,
+            "no_material_sensor_ap_regression": true,
+            "recall_at_fpr_0_0713_higher": false
+          },
+          "delta": {
+            "average_precision": 0.0013340655634422882,
+            "recall_at_fpr_0_0713": 0.0,
+            "sensor_average_precision": {
+              "Landsat": 0.0018597014784677013,
+              "Sentinel-2": 0.0012004301216691493
+            }
+          },
+          "metrics": {
+            "accuracy": 0.9303599374021909,
+            "auroc": 0.982113605750509,
+            "average_precision": 0.8923496047610114,
+            "false_positive_rate": 0.07127139364303178,
+            "fn": 40.0,
+            "fp": 583.0,
+            "negative_predictive_value": 0.9947623412334686,
+            "operating_point": {
+              "false_positive_rate": 0.07127139364303178,
+              "precision": 0.5546218487394958,
+              "recall": 0.9477806788511749,
+              "target_fpr": 0.0713,
+              "threshold": 0.2516029234223888
+            },
+            "precision": 0.5546218487394958,
+            "recall": 0.9477806788511749,
+            "sensor_average_precision": {
+              "Landsat": 0.9744697792801655,
+              "Sentinel-2": 0.8558925849795813
+            },
+            "specificity": 0.9287286063569682,
+            "tn": 7597.0,
+            "tp": 726.0
+          },
+          "rank": [
+            0.0,
+            0.0013340655634422882,
+            0.0013340655634422882
+          ]
+        },
+        "versus_primary": {
+          "checks": {
+            "ap_higher": true,
+            "no_material_sensor_ap_regression": true,
+            "recall_at_fpr_0_0713_higher": true
+          },
+          "delta": {
+            "average_precision": 0.032887797007505215,
+            "recall_at_fpr_0_0713": 0.010443864229764954,
+            "sensor_average_precision": {
+              "Landsat": 0.01223867801855294,
+              "Sentinel-2": 0.039551727394368186
+            }
+          },
+          "metrics": {
+            "accuracy": 0.9303599374021909,
+            "auroc": 0.982113605750509,
+            "average_precision": 0.8923496047610114,
+            "false_positive_rate": 0.07127139364303178,
+            "fn": 40.0,
+            "fp": 583.0,
+            "negative_predictive_value": 0.9947623412334686,
+            "operating_point": {
+              "false_positive_rate": 0.07127139364303178,
+              "precision": 0.5546218487394958,
+              "recall": 0.9477806788511749,
+              "target_fpr": 0.0713,
+              "threshold": 0.2516029234223888
+            },
+            "precision": 0.5546218487394958,
+            "recall": 0.9477806788511749,
+            "sensor_average_precision": {
+              "Landsat": 0.9744697792801655,
+              "Sentinel-2": 0.8558925849795813
+            },
+            "specificity": 0.9287286063569682,
+            "tn": 7597.0,
+            "tp": 726.0
+          },
+          "rank": [
+            0.010443864229764954,
+            0.04333166123727017,
+            0.032887797007505215
+          ]
+        }
+      }
+    },
+    "rank": [
+      1,
+      0.0006533898845134667,
+      0.0026622061192901336,
+      0.03223525112064729
+    ],
+    "spec": {
+      "dropout": 0.2,
+      "epochs": 8,
+      "feature_set": "original_residual",
+      "learning_rate": 0.0003,
+      "weight_decay": 0.001,
+      "weighting": "group"
+    },
+    "spec_key": "dropout-0.2_epochs-8_feature_set-original_residual_learning_rate-0.0003_weight_decay-0.001_weighting-group",
+    "stable": true,
+    "strict_rank": [
+      1.0,
+      0.0006533898845134667,
+      0.0026622061192901336,
+      0.0012925463162430928,
+      0.03223525112064729
+    ],
+    "strict_stable": true,
+    "versus_new": {
+      "checks": {
+        "ap_higher": true,
+        "no_material_sensor_ap_regression": true,
+        "recall_at_fpr_0_0713_higher": true
+      },
+      "delta": {
+        "average_precision": 0.0026622061192901336,
+        "recall_at_fpr_0_0713": 0.0012925463162430928,
+        "sensor_average_precision": {
+          "Landsat": 0.0011798172627913717,
+          "Sentinel-2": 0.003212600774795238
+        }
+      },
+      "metrics": {
+        "accuracy": 0.9309203100308526,
+        "auroc": 0.985813322393939,
+        "average_precision": 0.9059687806447307,
+        "false_positive_rate": 0.07127839386568825,
+        "fn": 107.0,
+        "fp": 1729.0,
+        "negative_predictive_value": 0.9952728075988513,
+        "operating_point": {
+          "false_positive_rate": 0.07127839386568825,
+          "precision": 0.5615013948769972,
+          "recall": 0.9538991813873331,
+          "target_fpr": 0.0713,
+          "threshold": 0.13097983692637832
+        },
+        "precision": 0.5615013948769972,
+        "recall": 0.9538991813873331,
+        "sensor_average_precision": {
+          "Landsat": 0.977404306588353,
+          "Sentinel-2": 0.8724007930090311
+        },
+        "specificity": 0.9287216061343118,
+        "tn": 22528.0,
+        "tp": 2214.0
+      },
+      "rank": [
+        0.0012925463162430928,
+        0.003954752435533226,
+        0.0026622061192901336
+      ]
+    },
+    "versus_primary": {
+      "checks": {
+        "ap_higher": true,
+        "no_material_sensor_ap_regression": true,
+        "recall_at_fpr_0_0713_higher": true
+      },
+      "delta": {
+        "average_precision": 0.03223525112064729,
+        "recall_at_fpr_0_0713": 0.013356311934511034,
+        "sensor_average_precision": {
+          "Landsat": 0.009483790853090923,
+          "Sentinel-2": 0.03932456199226486
+        }
+      },
+      "metrics": {
+        "accuracy": 0.9309203100308526,
+        "auroc": 0.985813322393939,
+        "average_precision": 0.9059687806447307,
+        "false_positive_rate": 0.07127839386568825,
+        "fn": 107.0,
+        "fp": 1729.0,
+        "negative_predictive_value": 0.9952728075988513,
+        "operating_point": {
+          "false_positive_rate": 0.07127839386568825,
+          "precision": 0.5615013948769972,
+          "recall": 0.9538991813873331,
+          "target_fpr": 0.0713,
+          "threshold": 0.13097983692637832
+        },
+        "precision": 0.5615013948769972,
+        "recall": 0.9538991813873331,
+        "sensor_average_precision": {
+          "Landsat": 0.977404306588353,
+          "Sentinel-2": 0.8724007930090311
+        },
+        "specificity": 0.9287216061343118,
+        "tn": 22528.0,
+        "tp": 2214.0
+      },
+      "rank": [
+        0.013356311934511034,
+        0.045591563055158324,
+        0.03223525112064729
+      ]
+    }
+  }
+}

@@ -1251,3 +1251,28 @@ lower bound versus the current head. Only a complete pass can authorize a
 transparent exact-paper replay. The frozen training script SHA-256 is
 `cef9460b2d82bffc033aa9049564949b2477155ce3bef428ba4666b4661e8347`;
 two focused leave-one-out/template-schema tests pass.
+
+The four-model run passed the complete frozen protocol. The pooled-AP leader
+used original, template, and residual maps (+0.003524 AP versus the current
+head), but the preregistered worst-fold-first selector chose the more stable
+group-weighted original-plus-residual model at blend 0.10. Its worst selection
+fold AP gain is +0.000653 versus +0.000557 for the pooled leader, preventing a
+post-result preference for the larger pooled number.
+
+Across cross-fitted folds 2/3/4, the selected model improves current-head AP by
++0.002662 and recall at 7.13% FPR by +0.001293. Both sensors improve. The
+10,000-replicate paired physical-site AP interval versus the current head is
+[+0.000615, +0.005112], while the interval versus primary is
+[+0.020750, +0.045670]. Fold-0 AP/recall gains versus current are
++0.001304/+0.002685; fold-1 gains are +0.001562/+0.004027. The pooled held
+folds-0/1 AP interval versus current is [+0.000910, +0.002096]. Both held
+sensor strata improve and every frozen gate passes.
+
+The operational threshold is 0.30299312593404687. The ignored 3.91 MB artifact
+SHA-256 is
+`9401678aa4f38fb3b54a914318dc5c2a553b39fa8b309d1a127b9d21abbfc496`;
+the compact development result SHA-256 is
+`c2b6695dbe24f0b5bc097d89c6fa6332c2af93441079cd55bec99e77aeeb820f`.
+This statistically positive incremental evidence authorizes exactly one
+transparent paper-cache replay after its label-independent extraction and
+evaluator are frozen and committed.
