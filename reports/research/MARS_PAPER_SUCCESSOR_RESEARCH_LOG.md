@@ -1565,3 +1565,17 @@ primary. Only a development pass may authorize a separately frozen
 label-free paper adaptation. Frozen script SHA-256 is
 `bf64dab45ec6192e406f7e30283e7fd1a3340c16b1c048439515102023cb713f`;
 two focused logit-consensus tests pass.
+
+The frozen consensus is rejected before paper adaptation. Selection chooses
+current / target / XGBoost logit weights 0.65 / 0.30 / 0.05. It improves
+pooled AP +0.005435 with paired-site interval [+0.003180, +0.007958] and
+recall +0.002624. Fold AP improves +0.002906 / +0.004432 / +0.005643 /
++0.009926 / +0.004948; both sensors improve in every fold.
+
+Fold 4 nevertheless loses -0.001305 recall (one positive at its fold size),
+while fold 0 ties and folds 1--3 improve. No candidate in the frozen grid has
+nonnegative recall on every fold. This reproduces the target-weighting
+boundary failure despite an independent recall-safe component and closes the
+continuous scalar-ensemble path. No paper feature was loaded. Result JSON
+SHA-256 is
+`bdd8c1f0ccb7472b0ab3c7f54ab48d720cd39ece212e475438849c981f3a6212`.
