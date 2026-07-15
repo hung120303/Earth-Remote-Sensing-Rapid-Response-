@@ -281,6 +281,7 @@ def main() -> int:
         raise ValueError("Expected the frozen 3,072-feature Prithvi schema")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     candidates = []
+    candidate_summaries = []
     raw_by_spec = {}
     names_by_spec = {}
     for index, spec in enumerate(candidate_specs()):
@@ -291,6 +292,26 @@ def main() -> int:
         local = [screen(spec, partitions["inner"], raw, blend) for blend in BLENDS]
         candidates.extend(local)
         best = max(local, key=lambda value: tuple(value["rank"]))
+        candidate_summaries.append(
+            {
+                "spec": spec,
+                "spec_key": key,
+                "best_blend_weight": best["blend_weight"],
+                "stable": best["stable"],
+                "rank": best["rank"],
+                "best_delta_vs_primary": best["versus_primary"]["delta"],
+                "best_delta_vs_new": best["versus_new"]["delta"],
+                "per_fold_average_precision_delta": {
+                    fold: {
+                        "versus_primary": value["versus_primary"]["delta"][
+                            "average_precision"
+                        ],
+                        "versus_new": value["versus_new"]["delta"]["average_precision"],
+                    }
+                    for fold, value in best["per_fold"].items()
+                },
+            }
+        )
         print(
             json.dumps(
                 {
@@ -391,7 +412,8 @@ def main() -> int:
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "candidate_model_count": len(candidate_specs()),
         "candidate_blend_count": len(BLENDS),
-        "candidates": candidates,
+        "selection_candidate_count": len(candidates),
+        "candidate_summaries": candidate_summaries,
         "selected": selected,
         "confirmation": confirmation,
         "operational_scene_threshold": max(thresholds),
