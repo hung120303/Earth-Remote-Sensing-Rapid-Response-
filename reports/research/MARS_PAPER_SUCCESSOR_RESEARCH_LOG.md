@@ -1623,3 +1623,9 @@ moments, fits only development labels, and writes only paper IDs and scores.
 The outcome-bearing diagnostic archive is not an input to this step. Frozen
 adaptation script SHA-256 is
 `d95b77cb1246acd04125f1e982430e2605e290b30262787a35d78cd1ac2c442d`.
+
+The label-free adaptation produced 43,524 finite paper scores without opening
+outcomes. The 1.48 MB ignored score cache SHA-256 is
+`37aa4eb2e14bd7265df95a0cf55fc805e2a6e1ee8a2af7aa3e84a23165fe0059`;
+the committed receipt SHA-256 is
+`1b76927c30b3614c0c08c4139f25fb4e66f92b517ac4a5fc76d3e4cc06cb5f9f`.
