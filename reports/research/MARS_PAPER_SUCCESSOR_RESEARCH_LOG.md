@@ -1481,3 +1481,20 @@ remain excluded until a passing artifact and a separate exact evaluator are
 frozen. Frozen script SHA-256 is
 `0ba06e9d2abd2ddbb5b3ce7ae6add30ab2f04d789615843932141268cbc7bf2e`;
 two focused contract tests pass.
+
+The frozen XGBoost protocol passes every development gate. Worst-fold-first
+selection chooses the shallow depth-3, 600-tree specification at a conservative
+0.10 logit blend around current. Pooled AP improves +0.002455, with paired
+physical-site interval [+0.001508, +0.003484], and matched-FPR recall improves
++0.000787. Fold AP improves +0.002082 / +0.002206 / +0.002418 / +0.002894 /
++0.002161; recall ties on folds 0 and 4 and improves on folds 1--3. Both
+sensor strata improve (Landsat +0.000567; Sentinel-2 +0.003309 AP), including
+positive sensor deltas within every fold.
+
+The final all-development artifact is only 129,942 bytes and remains ignored;
+SHA-256 is
+`e383b9e4e0c3879aa1db4b33d12a823a396a66c8c7abd86ad6813bb44c56fb4b`.
+Compact result JSON SHA-256 is
+`f79fb3c8b0a0ff2832d6d7c9d1ae945b6bf6fc6d795e661e49bcaba0910da1db`.
+This authorizes freezing one exact-paper evaluator, but is not itself evidence
+about either paper view.
