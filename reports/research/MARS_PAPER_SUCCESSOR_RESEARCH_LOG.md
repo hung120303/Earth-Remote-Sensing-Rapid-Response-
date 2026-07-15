@@ -1545,3 +1545,23 @@ worse new-site AP is further evidence that source-only scalar model capacity
 is not the limiting factor. No XGBoost parameter or blend will be tuned to the
 paper outcome. Exact result JSON SHA-256 is
 `4d1b802fe6f322e738aca2e74f396bb6f771c773c4ddb7e5ef39242004ba9e3d`.
+
+## Target-adapted XGBoost consensus: frozen protocol
+
+The density-weighted ExtraTrees branch produced the largest recent
+development AP gain (+0.004408) but lost one fold-4 positive; regularized
+XGBoost produced smaller gains on every fold while tying or improving fold
+recall. Their complementary development failure modes motivate a direct
+convex logit consensus. Each held fold remains unlabeled to its density-ratio
+estimator, and both component models exclude that fold's labels.
+
+The target component is fixed to square-root density odds clipped to [0.25,
+4]; XGBoost is fixed to the depth-3, 600-tree specification. Target weights
+0.20 / 0.30 / 0.40 / 0.50 and XGBoost weights 0.05 / 0.10 / 0.20 leave the
+remaining weight on current. Promotion retains the +0.002 AP floor, positive
+pooled recall, strictly positive per-fold AP, nonnegative per-fold recall and
+sensor AP, and positive paired-site AP lower bounds versus current and
+primary. Only a development pass may authorize a separately frozen
+label-free paper adaptation. Frozen script SHA-256 is
+`bf64dab45ec6192e406f7e30283e7fd1a3340c16b1c048439515102023cb713f`;
+two focused logit-consensus tests pass.
