@@ -1377,3 +1377,18 @@ and positive pooled recall but loses one positive on one fold. The continuous
 score trust region therefore cannot simultaneously clear the strict AP,
 all-fold recall, and sensor gates. Result JSON SHA-256 is
 `e52b74527eba291c9ac0e94be7a4efe483d5c4714738dce062bc8a41627e12d2`.
+
+The next frozen experiment moves recall protection into fitting. Within every
+nested member's training folds, positives below that training subset's current
+head threshold at 7.13% FPR receive weight 2, 4, or 8; all other scenes retain
+unit weight. The hard definition uses only OOF development scores and training
+labels. Each multiplier is evaluated with the same three bag aggregations and
+bag weights 0.10 / 0.20 / 0.30 / 0.40 / 0.50 / 0.625 / 0.75 / 0.875 / 1.00
+around current. Promotion retains the +0.002 pooled AP floor, positive pooled
+recall, strictly positive per-fold AP, nonnegative per-fold recall, no sensor
+AP regression, and positive paired-site AP lower bounds versus current and
+primary. A promoted final artifact would refit five hard-positive-weighted
+members, each omitting one physical-site fold. Paper data remains excluded.
+Frozen script SHA-256 is
+`1e7d21727a99d0d1c43de289035eb04d90245baa53e71a46a280d8ce47703c42`;
+the focused hard-positive weighting test passes.
