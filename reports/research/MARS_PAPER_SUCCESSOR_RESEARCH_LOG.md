@@ -2597,3 +2597,18 @@ was written. The repeated split-dependent behavior shows that selecting individu
 sites by <=5% scene-positive rate is not an adequate transport model for the paper's
 rare-site mixture; it conflates site-level rarity with within-positive-site plume
 persistence.
+
+### 2026-07-16: Target-mixture transport simulation frozen
+
+The next experiment separates site-level rarity from plume persistence. Development
+folds contain 19%-45% positive sites, versus approximately 8.5% in the exact test-
+only diagnostic. Each simulation replicate therefore samples, per fold, 4 positive
+and 46 negative physical sites without replacement (8%), then uniformly caps each
+site at 23 scenes, close to the target's 22.5-scene mean. Site class controls
+evaluation sampling only; within-site scene sampling is label-blind, and no such
+label enters inference. Twenty-four temporal-spatial routes are frozen. Two hundred
+common-random-number replicates select on folds 2/3/4; the fixed route receives
+1,000 independent replicates on folds 0/1. Promotion requires a positive 2.5th
+percentile for simulated AP delta, positive per-fold AP medians, nonnegative combined
+recall median, and natural-cohort noninferiority. The architecture-family motivation
+is transparently post-test, but all parameter selection uses development labels only.

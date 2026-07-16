@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_target_mixture_selection",
+  "scope": "development-only transport simulation matching rare unseen-site prevalence and history length",
+  "trainer": {
+    "path": "tools/train_mars_target_mixture_temporal_spatial.py",
+    "sha256": "173421bf53fa09f6b8a4742a4288a8a4e3b8a2fbb02be878c436da2bbc827d35"
+  },
+  "inputs": {
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "spatial_scores": {"path": "outputs/mars_site_relative_spatial_development_scores.npz", "sha256": "186ab5946790798a4a81274130ba5756ab3e5316b7b42238c2772d36805152a1"},
+    "spatial_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_site_relative_spatial_classifier.pt", "sha256": "9401678aa4f38fb3b54a914318dc5c2a553b39fa8b309d1a127b9d21abbfc496"}
+  },
+  "folds": {
+    "selection": [2, 3, 4],
+    "confirmation": [0, 1],
+    "unit": "physical_location_id"
+  },
+  "target_mixture": {
+    "sites_per_fold": 50,
+    "positive_sites_per_fold": 4,
+    "positive_site_fraction": 0.08,
+    "maximum_scenes_per_site": 23,
+    "sampling": "sites sampled without replacement within class; scenes uniformly sampled without replacement",
+    "motivation": "approximate exact-paper test-only 8.5% positive-site prevalence and 22.5 scenes/site",
+    "inference_use": false
+  },
+  "simulation": {
+    "selection_replicates": 200,
+    "confirmation_replicates": 1000,
+    "selection_seed": 20264100,
+    "confirmation_seed": 20264200,
+    "common_random_numbers_across_candidates": true
+  },
+  "search": {
+    "min_site_size": [10, 20, 30],
+    "top_k": [1, 3],
+    "weights": [0.0, 0.1, 0.25, 0.5],
+    "candidate_count": 24,
+    "rank_rule": "simulated AP 2.5th percentile, median AP, worst-fold median AP, median recall, then smaller weight"
+  },
+  "gates": {
+    "simulated_combined": "AP 2.5th percentile and median positive; recall median nonnegative",
+    "each_fold_simulated_ap_median_positive": true,
+    "simulated_fold_recall_lower_tolerance": 0.25,
+    "natural_ap_noninferiority": 0.01,
+    "natural_recall_noninferiority": 0.01,
+    "all_required_in_selection_and_confirmation": true
+  },
+  "base_architecture": {
+    "current_comparator": "frozen v3 stronger OOF ExtraTrees scene score",
+    "spatial_component": "frozen site-relative residual CNN",
+    "operational_scene_threshold": 0.28187603894788654
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_target_mixture_temporal_spatial.joblib",
+    "json": "reports/experiments/mars_target_mixture_temporal_spatial.json",
+    "markdown": "reports/experiments/MARS_TARGET_MIXTURE_TEMPORAL_SPATIAL.md"
+  },
+  "interpretation": {
+    "architecture_family_motivation": "transparent post-test transport diagnosis",
+    "parameter_selection_and_confirmation": "authorized development labels only",
+    "prevalence_labels": "simulation/evaluation sampling only",
+    "deployment": "spatial score for all sites; temporal route only for unseen sites",
+    "paper_cache_during_experiment": false,
+    "inference_labels": false
+  },
+  "invariants": [
+    "The target mixture, 24 candidates, seeds, rank rule, and gates are frozen before simulation.",
+    "Selection and confirmation use disjoint physical-site folds and independent simulation seeds.",
+    "Scene sampling within each selected site is uniform and label-blind.",
+    "Failure writes no artifact and blocks fresh-safety and paper replay."
+  ]
+}
