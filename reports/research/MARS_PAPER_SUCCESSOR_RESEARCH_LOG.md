@@ -2389,3 +2389,14 @@ adds each physical site's top-k mean current-scene logit to every scene logit. T
 were frozen before development scoring. The family is transparently motivated by
 post-test diagnosis, but its parameter selection and confirmation use only authorized
 development folds; this experiment does not load the paper cache.
+### 2026-07-16: Deterministic temporal site prior rejected
+
+The frozen search selected top-1/weight-0.1, but it failed the preregistered evidence
+gates and wrote no artifact. Selection AP improved only +0.00044 with paired lower
+-0.00162, and fold 4 regressed -0.00119. Combined fold-0/1 confirmation improved AP
++0.00093 and recall +0.00201, but its AP lower bound was -0.00020. The direction is
+promising but not sufficiently stable. Post-failure cohort analysis clarifies the
+domain shift: development sites average 57-86 scenes/fold and roughly 31% contain a
+positive, while the exact test-only cohort averages 22.5 scenes/site and only 59/697
+(8.5%) sites contain a positive. A learned site-level risk model with one equal-weight
+row per physical site is the next research path.
