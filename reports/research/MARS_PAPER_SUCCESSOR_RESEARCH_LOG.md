@@ -1957,3 +1957,17 @@ This is the first new-data architecture to pass selection, two independent
 original-development confirmations, paired uncertainty, and external-domain
 noninferiority. It is therefore eligible for an exact transparent paper-cache
 replay; no paper row entered fitting or selection.
+
+The frozen exact-paper replay rejects the branch despite its clean development
+promotion. On the full 43,529-row view, it remains strong: AP 0.67429 (delta
++0.03327, 95% site interval [+0.01409, +0.04795]), matched-FPR recall delta
++0.03309 ([+0.01961, +0.04624]), and unchanged promoted-mask IoU 0.37996
+(delta +0.05560, lower bound +0.03531). On the 15,655-row test-only-site view,
+however, AP falls to 0.44823, delta -0.00204 with interval
+[-0.04284, +0.03440]; matched-FPR recall rises by +0.01762 but its lower bound
+is -0.01149. Mask IoU remains decisively higher at 0.29246 (delta +0.12090,
+lower bound +0.08528). This is evidence of unseen-facility domain shift, not a
+reason to post-hoc tune the auxiliary weight or blend on the paper cache. The
+branch is frozen and rejected. The next data path must add contemporaneous,
+source-disjoint negative evidence or a demonstrably invariant ranking signal;
+positive-only augmentation by itself is insufficient.

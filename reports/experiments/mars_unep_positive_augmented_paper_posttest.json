@@ -1,0 +1,232 @@
+{
+  "all_exact_paper_gates_pass": false,
+  "architecture": {
+    "dense_mask_changed": false,
+    "mask_gate_cutoff": 0.75,
+    "mask_gate_score": "unchanged frozen v3 stronger scene score",
+    "mask_probability": "released MARS-S2L probability with frozen sensor thresholds",
+    "scene_ranking": "frozen v3 stronger head plus 0.20 UNEP-positive augmented XGBoost",
+    "scene_threshold": 0.22438493114786343
+  },
+  "available_augmented_rows": 43524,
+  "decision": "At least one exact MARS-S2L v3 paper gate remains unresolved.",
+  "generated_at_utc": "2026-07-16T04:15:41.247402+00:00",
+  "missing_rows_fallback_to_v3": 5,
+  "provenance": {
+    "artifact_sha256": "f570a2ffa93486e9d4d5e3b52c4f4723f384f42c6c2692eb0f632ce7de4cbfcb",
+    "development_report_sha256": "2f06bba39c42081747d1862b3e7eaedf8b7777de1acad728c3a1f9b8ecef3f47",
+    "diagnostic_sha256": "1624fddc0222f8ffc5137f557c7fc3e465d53b335c82cc8014711baa35bb94a1",
+    "feature_receipt_sha256": "8f82262d60e9a47a40f2c7ded63042544c87bdfe00c74ed9c34cd5db462b168f",
+    "features_sha256": "8a35e60e7c396e58639f940239020adb36def885124841e0b20901e10db52f33",
+    "gate_report_sha256": "c1e5a1497abebba80d42898a8165b30fd255ff252478a0ee1fd90fd32456a51c",
+    "git_commit": "d63bb853be8186a27efcfa2cdbcd67226464396c",
+    "numpy": "2.4.4",
+    "protocol_sha256": "d4131c85248a635fc660189141af01ec42f4c6177f7aea250f8c9b1a69d93060",
+    "script_sha256": "ce3c6577386c5056379cd86e51a4993b665db263e93762a585e975a20a399aa6",
+    "xgboost": "3.2.0"
+  },
+  "schema_version": 1,
+  "scope": "transparent post-test replay on the exact MARS-S2L v3 comparator",
+  "views": {
+    "full": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": 0.014093639049525689,
+            "mean": 0.03248301664442776,
+            "upper": 0.047953193434171024
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.04002541769746946,
+            "mean": -0.03737235594156014,
+            "upper": -0.03465586128073812
+          },
+          "fixed_recall": {
+            "lower": -0.06145974579105637,
+            "mean": -0.04303372925530841,
+            "upper": -0.027497551034550136
+          },
+          "matched_fpr_recall": {
+            "lower": 0.01960784313725494,
+            "mean": 0.03245259867299519,
+            "upper": 0.04623532960194262
+          },
+          "pixel_iou": {
+            "lower": 0.035312683017296585,
+            "mean": 0.05577844959160063,
+            "upper": 0.07743733762790922
+          }
+        },
+        "replicates": 10000,
+        "sites": 1289
+      },
+      "checks": {
+        "ap_lower_positive": true,
+        "ap_point_higher": true,
+        "fixed_fpr_upper_nonpositive": true,
+        "matched_recall_lower_positive": true,
+        "matched_recall_point_higher": true,
+        "pixel_iou_lower_positive": true,
+        "pixel_iou_point_higher": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.6410196024104218,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "fn": 378,
+            "fp": 2949,
+            "precision": 0.3273266423357664,
+            "recall": 0.7915057915057915,
+            "tn": 38767,
+            "tp": 1435
+          },
+          "pixels": {
+            "fn": 1073087,
+            "fp": 2668518,
+            "intersection_over_union": 0.3243651485849355,
+            "tp": 1796305
+          }
+        },
+        "candidate": {
+          "average_precision": 0.6742942263179844,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.03329657685300604,
+            "fn": 455,
+            "fp": 1389,
+            "precision": 0.4943574808882417,
+            "recall": 0.749034749034749,
+            "threshold": 0.22438493114786343,
+            "tn": 40327,
+            "tp": 1358
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "precision": 0.3364086408640864,
+            "recall": 0.8246001103143961,
+            "target_fpr": 0.07069230031642536,
+            "threshold": 0.0631796547432789
+          },
+          "pixels": {
+            "fn": 1431545,
+            "fp": 913692,
+            "intersection_over_union": 0.37996355770303547,
+            "tp": 1437181
+          }
+        },
+        "delta": {
+          "average_precision": 0.03327462390756264,
+          "fixed_false_positive_rate": -0.037395723463419316,
+          "fixed_recall": -0.0424710424710425,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.033094318808604584,
+          "pixel_iou": 0.05559840911809999
+        },
+        "positive": 1813,
+        "rows": 43529
+      },
+      "passed": true
+    },
+    "test_only_sites": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": -0.04283713118615052,
+            "mean": -0.0028957760900276516,
+            "upper": 0.03439734846752656
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.04475454519954301,
+            "mean": -0.04035183060033575,
+            "upper": -0.035877753220090715
+          },
+          "fixed_recall": {
+            "lower": -0.1243250245063716,
+            "mean": -0.06986925012459594,
+            "upper": -0.025637755102040884
+          },
+          "matched_fpr_recall": {
+            "lower": -0.011494252873563204,
+            "mean": 0.017290599125327287,
+            "upper": 0.04611061848814012
+          },
+          "pixel_iou": {
+            "lower": 0.08527721274356066,
+            "mean": 0.12072727960529592,
+            "upper": 0.1553691646094573
+          }
+        },
+        "replicates": 10000,
+        "sites": 697
+      },
+      "checks": {
+        "ap_lower_positive": false,
+        "ap_point_higher": false,
+        "fixed_fpr_upper_nonpositive": true,
+        "matched_recall_lower_positive": false,
+        "matched_recall_point_higher": true,
+        "pixel_iou_lower_positive": true,
+        "pixel_iou_point_higher": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.45027380014908475,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "fn": 51,
+            "fp": 1165,
+            "precision": 0.13124533929903057,
+            "recall": 0.775330396475771,
+            "tn": 14263,
+            "tp": 176
+          },
+          "pixels": {
+            "fn": 140494,
+            "fp": 875886,
+            "intersection_over_union": 0.17156194293902416,
+            "tp": 210483
+          }
+        },
+        "candidate": {
+          "average_precision": 0.44823249674456056,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.03519574799066632,
+            "fn": 67,
+            "fp": 543,
+            "precision": 0.22759601706970128,
+            "recall": 0.7048458149779736,
+            "threshold": 0.22438493114786343,
+            "tn": 14885,
+            "tp": 160
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "precision": 0.13382899628252787,
+            "recall": 0.7929515418502202,
+            "target_fpr": 0.07551205600207415,
+            "threshold": 0.05854528259754052
+          },
+          "pixels": {
+            "fn": 185139,
+            "fp": 217508,
+            "intersection_over_union": 0.2924622462140781,
+            "tp": 166435
+          }
+        },
+        "delta": {
+          "average_precision": -0.0020413034045241862,
+          "fixed_false_positive_rate": -0.040316308011407835,
+          "fixed_recall": -0.07048458149779735,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.017621145374449254,
+          "pixel_iou": 0.12090030327505397
+        },
+        "positive": 227,
+        "rows": 15655
+      },
+      "passed": false
+    }
+  }
+}
