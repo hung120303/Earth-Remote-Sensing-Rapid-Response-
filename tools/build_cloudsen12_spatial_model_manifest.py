@@ -140,8 +140,10 @@ def model_record(
     cohort: dict[str, Any],
     crop: dict[str, Any],
     cloud_asset: dict[str, Any],
+    *,
+    allowed_roles: frozenset[str] = ALLOWED_ROLES,
 ) -> dict[str, Any]:
-    if cohort["research_role"] not in ALLOWED_ROLES:
+    if cohort["research_role"] not in allowed_roles:
         raise ValueError(f"Unsupported role: {cohort['research_role']}")
     identity = (cohort["sample_id"], cohort["group_id"], cohort["research_role"])
     if identity != (crop["sample_id"], crop["group_id"], crop["research_role"]):

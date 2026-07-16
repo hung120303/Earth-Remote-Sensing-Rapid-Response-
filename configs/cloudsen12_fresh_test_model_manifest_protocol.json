@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_fresh_test_loader_manifest_materialization",
+  "builder": {
+    "path": "tools/build_cloudsen12_fresh_test_model_manifest.py",
+    "sha256": "f891664da7c7cee905cec8992d51ea6c02f8e698a8711ac8301db04762346826"
+  },
+  "inputs": {
+    "cohort": {
+      "path": ".research/cloudsen12_fresh_test/cohort.jsonl",
+      "sha256": "be085ac1e934aede89d3a3a9b69a4915d0d15d8097fe4401fe8e89918f2e76a4"
+    },
+    "exact_assets": {
+      "path": ".research/cloudsen12_fresh_test/exact_assets.jsonl",
+      "sha256": "120cfac9d364c8c75ab44687307645ca5de353a24a7a4b18192f1c93cd948988"
+    },
+    "crop_report": {
+      "path": "reports/acquisition/cloudsen12_fresh_test_crop_acquisition.json",
+      "sha256": "500e22cca4c38afa38570d7d6bee1ebe48de3600f8bbe53ec7ab924ecc4f2803"
+    },
+    "metadata": {
+      "path": ".research/source_audit_20260715/cloudsen12_clear_images.csv",
+      "sha256": "d605cc19070d0f4c403ebdaa92caa193a78521580dc7407b86b26ee05cfad3f1"
+    },
+    "stats": {
+      "path": ".research/source_audit_20260715/cloudsen12_stats_dataset.csv",
+      "sha256": "15ca0c7d2097d9956b0ca3ea6ad4b335910c8031e46b434c088276284991e6b9"
+    }
+  },
+  "expected": {
+    "full_rows": 374,
+    "available_rows": 368,
+    "unavailable_rows": 6,
+    "all_clear_rows": 327,
+    "nonclear_rows": 41,
+    "clear_pixels": 14635412,
+    "nonclear_pixels": 84588,
+    "wind_zero_imputed_rows": 5,
+    "wind_zero_imputed_components": 10
+  },
+  "cloud_input_contract": {
+    "policy": "identically gridded all-zero proxy for every available row",
+    "reason": "producer spatial CloudSEN12+ cloud-mask TIFFs are metadata references and are not publicly downloadable",
+    "claim_limit": "the proxy is not published spatial cloud truth and is used only as an identical controlled input to both frozen scene heads",
+    "stratification": "report all-clear versus non-clear scenes from hash-bound published aggregate counts",
+    "no_post_access_change": true
+  },
+  "outputs": {
+    "crop_root": ".research/cloudsen12_fresh_test/crops",
+    "manifest": ".research/cloudsen12_fresh_test/model_test.jsonl",
+    "report_json": "reports/acquisition/cloudsen12_fresh_test_model_manifest.json",
+    "report_markdown": "reports/acquisition/CLOUDSEN12_FRESH_TEST_MODEL_MANIFEST.md"
+  },
+  "invariants": [
+    "All 368 available rows are materialized; no acquired row can be silently excluded.",
+    "The six unavailable identities remain explicit for adversarial full-cohort bounds.",
+    "The five missing-wind rows use the already frozen explicit zero-fill policy.",
+    "No published spatial cloud mask is fabricated or claimed.",
+    "The fixed model and exact MARS paper cache remain untouched."
+  ]
+}

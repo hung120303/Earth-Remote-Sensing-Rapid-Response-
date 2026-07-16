@@ -2308,3 +2308,12 @@ of rasters remain ignored. Public JP2 data reproduce the audited native-10 m ban
 statistics; B11/B12 follow the released conversion algorithm but cannot be claimed
 bitwise-identical to the unpublished producer Earth Engine TIFFs. The paper cache
 remained unopened.
+### 2026-07-16: Fresh-test loader and cloud proxy frozen
+
+Before feature extraction, the loader contract was frozen for all 368 acquired rows.
+The producer's spatial CloudSEN12+ mask TIFFs are unavailable; therefore both frozen
+scene heads receive the same exact-grid all-zero cloud proxy. This proxy is explicitly
+not claimed as published cloud truth. Hash-bound aggregate statistics preserve a
+separate all-clear (327 rows) versus non-clear (41 rows) stratification, with 84,588
+published non-clear pixels among available scenes. The six unavailable identities
+remain outside the loader manifest and inside the adversarial full-cohort bound.
