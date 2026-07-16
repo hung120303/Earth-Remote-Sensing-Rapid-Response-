@@ -224,6 +224,9 @@ def write_markdown(report: dict[str, Any], path: Path) -> None:
         f"- Cloud/radiometry/geometry gate pass: **{summary['gate_pass']:,}**.",
         f"- Gate failures retained in the audit: **{summary['gate_fail']:,}**.",
         f"- Acquisition errors: **{summary['errors']:,}**.",
+        f"- Median scene/plume clear fraction: **{summary['scene_clear_median']:.3f} / {summary['plume_clear_median']:.3f}**.",
+        f"- Auxiliary-training gate pass: **{summary['gate_pass_by_role'].get('auxiliary_training', 0):,}**.",
+        f"- Development gate pass: **{summary['gate_pass_by_role'].get('development', 0):,}**.",
         "",
         "## Frozen contract",
         "",
@@ -317,6 +320,8 @@ def main() -> None:
             if count % 10 == 0 or count == len(futures):
                 print(f"clouded {count}/{len(futures)} errors={len(errors)}", flush=True)
     completed.sort(key=lambda item: item["sample_id"])
+    gate_pass_records = [item for item in completed if item["quality"]["gate_pass"]]
+    gate_fail_records = [item for item in completed if not item["quality"]["gate_pass"]]
     report = {
         "schema_version": 1,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -337,8 +342,22 @@ def main() -> None:
         },
         "summary": {
             "processed": len(completed),
-            "gate_pass": sum(item["quality"]["gate_pass"] for item in completed),
-            "gate_fail": sum(not item["quality"]["gate_pass"] for item in completed),
+            "gate_pass": len(gate_pass_records),
+            "gate_fail": len(gate_fail_records),
+            "gate_pass_by_role": dict(
+                sorted(Counter(item["research_role"] for item in gate_pass_records).items())
+            ),
+            "gate_fail_by_role": dict(
+                sorted(Counter(item["research_role"] for item in gate_fail_records).items())
+            ),
+            "scene_clear_median": round(
+                float(np.median([item["quality"]["scene_clear_fraction"] for item in completed])),
+                8,
+            ),
+            "plume_clear_median": round(
+                float(np.median([item["quality"]["plume_clear_fraction"] for item in completed])),
+                8,
+            ),
             "by_role": dict(sorted(Counter(item["research_role"] for item in completed).items())),
             "errors": len(errors),
             "mask_bytes": sum(item["asset"]["bytes"] for item in completed),
