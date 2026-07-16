@@ -2703,3 +2703,12 @@ ensemble artifact has SHA-256
 `0a3be48f5eda659aaaa7cf91c259acd230f81340677e5a6fc5fab83ba048420b`.
 This authorizes a newly frozen fresh CloudSEN representation extraction and safety
 test; exact paper replay remains blocked until that safety gate passes.
+
+### 2026-07-16: Fresh spatial-Prithvi extraction frozen
+
+The passing ensemble requires representations not present in the original 108-
+feature fresh cache. A no-fit extractor is frozen against the previously acquired
+368 exact CloudSEN products, residual/released checkpoints, and pinned Prithvi-EO-2.0
+receipt. It will compute a 9x64x64 spatial tensor and 768 CLS features for the same
+identity-ordered rows in one pass. The six unavailable identities remain in the
+adversarial bound. No safety metric or paper data are accessed during extraction.

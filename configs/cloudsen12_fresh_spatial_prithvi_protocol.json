@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_fresh_spatial_prithvi_extraction",
+  "scope": "no-fit representation extraction for the fixed fresh external-negative safety cohort",
+  "extractor": {
+    "path": "tools/extract_cloudsen12_fresh_spatial_prithvi.py",
+    "sha256": "b26f7f864dabfd255c964fdc0447aaa0a9d71c02cac04c952e22b353303ed4e2"
+  },
+  "inputs": {
+    "manifest": {"path": ".research/cloudsen12_fresh_test/model_test.jsonl", "sha256": "c6cabb8b21c9573b5de9386327ec1800faab11225c8819e1fc3c5cad35d27d9a"},
+    "source_receipt": {"path": "reports/acquisition/cloudsen12_fresh_test_model_manifest.json", "sha256": "cafd39e0f5dc16abd1d4ed1e699085a6f049cb6782998425eb3b14c80cff020a"},
+    "residual_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_paper_residual_fold0_seed606.pt", "sha256": "b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49"},
+    "released_checkpoint": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch", "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"},
+    "foundation_receipt": {"path": "reports/acquisition/prithvi_eo_2_tiny_tl.json", "sha256": "ddc2dec982320ab23f9963b5221b8ce8752c04f01b0b84a018bb70ba84d518f3"},
+    "foundation_dir_receipt_anchor": {"path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/config.json", "sha256": "d7f9e36d2253cb82d296bfd95a9a651f2af455c0cfe8a5ea775b2e3d196ad170"}
+  },
+  "expected": {
+    "rows": 368,
+    "groups": 355,
+    "labels": "all NO_PLUME",
+    "sensor": "Sentinel-2",
+    "spatial_shape": [368, 9, 64, 64],
+    "prithvi_shape": [368, 768]
+  },
+  "outputs": {
+    "cache": "outputs/cloudsen12_fresh_spatial_prithvi.npz",
+    "report": "reports/acquisition/cloudsen12_fresh_spatial_prithvi.json"
+  },
+  "invariants": [
+    "The 368 exact-product scenes were acquired before the ensemble was selected.",
+    "No fitting, calibration, or model selection occurs during extraction.",
+    "Spatial and Prithvi representations are computed from the same ordered rows.",
+    "The six unavailable cohort identities remain outside the cache and inside the adversarial safety bound.",
+    "The exact MARS paper cache is not loaded."
+  ]
+}
