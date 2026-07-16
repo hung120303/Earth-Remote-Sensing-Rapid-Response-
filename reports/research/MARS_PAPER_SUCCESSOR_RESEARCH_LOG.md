@@ -2663,3 +2663,12 @@ written. Both bidirectional and one-sided temporal families are now retired. The
 next path is a non-temporal ensemble of two independently development-validated,
 test-complementary representations: site-relative spatial residuals and adaptive
 Prithvi foundation features.
+
+### 2026-07-16: Adaptive Prithvi development-score reproduction frozen
+
+The selected adaptive Prithvi control (`cls_plus_base`, C=0.01, current-score blend
+0.10) previously passed its five-fold development gates and independently reached
+test-only point AP 0.46550. A hash-bound builder is frozen to reproduce exactly that
+OOF vector from the 44,363-row Prithvi feature cache, align it by sample identity,
+and assert its original AP/recall deltas within 1e-10. No model or blend search is
+reopened, and the paper cache remains out of scope.

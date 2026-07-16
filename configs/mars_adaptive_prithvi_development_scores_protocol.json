@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_adaptive_prithvi_score_reproduction",
+  "scope": "reproduce the already selected adaptive Prithvi OOF score vector",
+  "builder": {
+    "path": "tools/build_mars_adaptive_prithvi_development_scores.py",
+    "sha256": "b3b2a2ebbbe23c6e525cbd2290474e8f8de67b7387dac09eef742c96e3ef9e85"
+  },
+  "inputs": {
+    "prithvi": {"path": "outputs/mars_prithvi_eo_2_tiny_tl_features_all_folds.npz", "sha256": "e3e52a9453426e5e048cd753daf2597d59cbe820a18ae584c61a2de7ae405f23"},
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "source_report": {"path": "reports/experiments/mars_adaptive_prithvi_probe.json", "sha256": "3a0478d9abdb94a76815744cefcf7ac181765c20e2969a7a40f310f272a03a8b"}
+  },
+  "selected_architecture": {
+    "feature_set": "cls_plus_base",
+    "C": 0.01,
+    "blend_weight": 0.1,
+    "selection_status": "already frozen and development-validated before this cache build"
+  },
+  "reproduction": {"metric_tolerance": 1e-10, "all_required": true},
+  "outputs": {
+    "scores": "outputs/mars_adaptive_prithvi_development_scores.npz",
+    "report": "reports/experiments/mars_adaptive_prithvi_development_scores.json"
+  },
+  "invariants": [
+    "Every score is OOF by physical-site fold.",
+    "Target-fold normalization uses target features but no target labels.",
+    "The selected feature set, C, and blend are not re-searched.",
+    "The paper cache is not loaded."
+  ]
+}
