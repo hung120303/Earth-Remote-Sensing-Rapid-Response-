@@ -2299,3 +2299,12 @@ Six scenes remain unavailable without substitution: one lacks a published refere
 identity, four have unavailable exact references, and five have unavailable exact
 targets (some scenes miss both sides). There were zero query errors. These six stay
 in the declared full-cohort adversarial false-positive bound.
+### 2026-07-16: Fresh CloudSEN exact crops acquired
+
+All 368 available exact target/reference pairs were acquired and independently
+reverified on their published 200x200, 10 m grids. Every no-plume crop passed the
+pre-cloud radiometry/geometry gate and there were zero errors. The 235,585,490 bytes
+of rasters remain ignored. Public JP2 data reproduce the audited native-10 m band
+statistics; B11/B12 follow the released conversion algorithm but cannot be claimed
+bitwise-identical to the unpublished producer Earth Engine TIFFs. The paper cache
+remained unopened.

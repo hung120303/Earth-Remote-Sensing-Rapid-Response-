@@ -1,0 +1,46 @@
+{
+  "contract": {
+    "exact_product_substitution": false,
+    "min_valid_fraction": 0.8,
+    "resolution_m": 10.0,
+    "sealed_external_accessed": false,
+    "sentinel2_pixel_equivalence": "native 10 m bands reproduce audited producer statistics; SWIR uses the released algorithm over public exact-product JP2 data, not a bitwise copy of the unpublished Earth Engine export",
+    "sentinel2_preprocessing": "native-10m bilinear; S2 20m GEE-nearest then official nearest-down/bilinear-up; nearest QA; all_touched polygon rasterization",
+    "shape": [
+      200,
+      200
+    ],
+    "shard_count": 1,
+    "shard_index": 0
+  },
+  "errors": [],
+  "generated_at_utc": "2026-07-16T17:04:46.551603+00:00",
+  "inputs": {
+    "assets": {
+      "path": ".research/cloudsen12_fresh_test/exact_assets.jsonl",
+      "sha256": "120cfac9d364c8c75ab44687307645ca5de353a24a7a4b18192f1c93cd948988"
+    },
+    "cohort": {
+      "path": ".research/cloudsen12_fresh_test/cohort.jsonl",
+      "sha256": "be085ac1e934aede89d3a3a9b69a4915d0d15d8097fe4401fe8e89918f2e76a4"
+    }
+  },
+  "schema_version": 1,
+  "status": "fresh external-test no-plume crops acquired; published cloud masks not yet materialized",
+  "summary": {
+    "acquired": 368,
+    "attempted": 368,
+    "by_label_state": {
+      "NO_PLUME": 368
+    },
+    "by_role": {
+      "fresh_external_test": 368
+    },
+    "by_sensor": {
+      "Sentinel-2": 368
+    },
+    "errors": 0,
+    "gate_pass_before_cloud": 368,
+    "raster_bytes": 235585490
+  }
+}
