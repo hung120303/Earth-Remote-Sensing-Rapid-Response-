@@ -1896,3 +1896,16 @@ documented but excluded from model fitting/scoring. Median scene and
 plume-polygon clear fractions are both 1.000. This produces a same-sensor,
 same-acquisition, exact-product positive cohort more than twice the size of
 the 55-sample time-offset EMIT confirmation and with direct polygon truth.
+
+The model-compatibility build verifies every accepted image, plume mask, and
+CloudSEN12 sidecar by byte count and SHA-256, then successfully loads all 139
+examples through the released MARS adapter. The ignored auxiliary manifest
+contains 135 positives across 27 independent source groups (SHA-256
+`2971ebad317c7f709a677e5c6431a75804fce4026bbcf28fa50ce5bb4cc89300`);
+the isolated development manifest contains 4 positives across 4 groups
+(SHA-256
+`5a17c24cb7a78941ed8586cbf99813c3f4772040d5c4bfb9377b2d3a675e1741`).
+Catalog flux, wind, and polygon coordinates are not model features. Wind is
+explicitly zero-filled only to retain the released 16-channel tensor shape,
+and polygon geometry supplies target pixels only. No sealed crop asset was
+opened.

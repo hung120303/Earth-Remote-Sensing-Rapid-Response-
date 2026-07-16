@@ -1,0 +1,58 @@
+{
+  "artifacts": {
+    "auxiliary": {
+      "bytes": 183489,
+      "path": ".research/unep_mars_post2024/model_auxiliary_training.jsonl",
+      "sha256": "2971ebad317c7f709a677e5c6431a75804fce4026bbcf28fa50ce5bb4cc89300"
+    },
+    "development": {
+      "bytes": 5385,
+      "path": ".research/unep_mars_post2024/model_development.jsonl",
+      "sha256": "5a17c24cb7a78941ed8586cbf99813c3f4772040d5c4bfb9377b2d3a675e1741"
+    }
+  },
+  "contract": {
+    "band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12",
+      "B02_bg",
+      "B03_bg",
+      "B04_bg",
+      "B08_bg",
+      "B11_bg",
+      "B12_bg"
+    ],
+    "catalog_flux_wind_geometry_as_features": false,
+    "label_scope": "positive-only",
+    "sealed_external_assets_accessed": false,
+    "wind_channels": "zero-filled for released tensor compatibility"
+  },
+  "generated_at_utc": "2026-07-16T03:48:30.037826+00:00",
+  "inputs": {
+    "cohort_path": ".research/unep_mars_post2024/eligible_manifest.jsonl",
+    "cohort_sha256": "13a19dd7daad36b40261f7acb0332b0418cb37b1b9407d708e864b3847976e74",
+    "crop_root": ".research/unep_mars_post2024/crops"
+  },
+  "schema_version": 1,
+  "status": "nonsealed loader manifests complete",
+  "summary": {
+    "by_role": {
+      "auxiliary_training": 135,
+      "development": 4
+    },
+    "eligible_catalog_by_role": {
+      "auxiliary_training": 215,
+      "development": 9,
+      "sealed_external": 13
+    },
+    "groups_by_role": {
+      "auxiliary_training": 27,
+      "development": 4
+    },
+    "rows": 139
+  }
+}
