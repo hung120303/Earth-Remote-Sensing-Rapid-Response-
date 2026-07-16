@@ -2226,3 +2226,23 @@ AP priority. The opened UNEP/CloudSEN development rows remain post-selection
 gates but are explicitly labeled reused tuning evidence. The exact paper cache
 and 374-row published CloudSEN test remain unopened; the latter is now the only
 eligible fresh external-negative confirmation.
+
+The stronger-negative run selects weight 4.0 and again passes every original
+gate: folds-2/3/4 AP/recall deltas are +0.003632/+0.003447 with interval
+[+0.000946, +0.006739]; fold 0 is +0.003738/+0.001342 with interval
+[+0.000214, +0.007394]; fold 1 is +0.003815/+0.004027 with interval
+[+0.001093, +0.008623]. UNEP development recall remains 3/4. CloudSEN
+development again ties false positives at 1/125 but fails the frozen raw
+probability-subtraction margin (-0.22302 versus -0.26096), so this run is also
+rejected as specified, with no artifact or paper access.
+
+A reporting-only scale audit shows why stronger negative weighting did not
+move that gate despite suppressing negatives. Candidate p95 negative score is
+0.01129 versus current 0.02091, and its p95 log-odds distance from the separate
+operating threshold is -3.28835 versus current -2.91114; both are safer. The
+failed quantity subtracts probabilities from thresholds on differently
+calibrated scales (candidate threshold 0.23431 versus current 0.28188), which
+reverses the safety ordering. This diagnostic does not retroactively pass the
+experiment. A new fixed-model safety contract may use false-positive count,
+raw negative-score quantiles, and log-odds threshold distance, but must freeze
+before refitting and must reserve the 374-row CloudSEN test for fresh evidence.
