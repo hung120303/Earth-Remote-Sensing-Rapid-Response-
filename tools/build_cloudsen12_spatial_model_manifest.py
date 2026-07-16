@@ -172,6 +172,11 @@ def model_record(
     longitude, latitude = cohort["source_center"]
     target = cohort["target_product"]
     role = cohort["research_role"]
+    published_wind = np.asarray(
+        [float(cohort["wind_u"]), float(cohort["wind_v"])], dtype=np.float64
+    )
+    missing_wind = ~np.isfinite(published_wind)
+    model_wind = np.where(missing_wind, 0.0, published_wind)
     return {
         "assets": [
             {"path": image["path"], "role": "image", "size": image["bytes"]},
@@ -201,9 +206,18 @@ def model_record(
         "split": f"cloudsen12_spatial_{role}",
         "target_datetime": cohort["tile_date"],
         "target_scene_id": target,
-        "wind_source": "published MARS-S2L CloudSEN12+ statistics",
-        "wind_u": float(cohort["wind_u"]),
-        "wind_v": float(cohort["wind_v"]),
+        "wind_imputed": bool(missing_wind.any()),
+        "wind_imputed_components": [
+            component
+            for component, missing in zip(("u", "v"), missing_wind.tolist())
+            if missing
+        ],
+        "wind_source": (
+            "published MARS-S2L CloudSEN12+ statistics; missing components "
+            "zero-filled for released 16-channel tensor compatibility"
+        ),
+        "wind_u": float(model_wind[0]),
+        "wind_v": float(model_wind[1]),
     }
 
 
@@ -212,7 +226,13 @@ def write_jsonl(path: Path, records: list[dict[str, Any]]) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(
         "".join(
-            json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n"
+            json.dumps(
+                record,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            )
+            + "\n"
             for record in records
         ),
         encoding="utf-8",
@@ -231,6 +251,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- Auxiliary training: **{summary['by_role']['auxiliary_training']:,}**.",
         f"- Development confirmation: **{summary['by_role']['development']:,}**.",
         f"- Radiometry or availability exclusions: **{summary['excluded']:,}**.",
+        f"- Rows with one or more missing wind components explicitly zero-filled: **{summary['wind_zero_imputed_rows']:,}**.",
         "- Published CloudSEN12+ test rows accessed: **0**.",
         "",
         "Each output row binds the exact 12-band crop and an identically gridded zero cloud mask by hash. The zero mask is valid only because every frozen source row has exactly 40,000 published clear pixels and zero non-clear pixels.",
@@ -290,6 +311,7 @@ def main() -> int:
             "band_order": list(MARS_BAND_ORDER),
             "label_scope": "negative-only",
             "cloud_label": "published all-clear represented as an exact-grid zero mask",
+            "wind": "published finite components; missing components explicitly zero-filled",
             "sealed_external_assets_accessed": False,
         },
         "artifacts": {
@@ -313,6 +335,16 @@ def main() -> int:
             },
             "cohort_by_role": dict(sorted(cohort_counts.items())),
             "excluded": sum(cohort_counts.values()) - len(all_records),
+            "wind_zero_imputed_rows": sum(
+                bool(record["wind_imputed"]) for record in all_records
+            ),
+            "wind_zero_imputed_components": sum(
+                len(record["wind_imputed_components"]) for record in all_records
+            ),
+            "wind_zero_imputed_rows_by_role": {
+                role: sum(bool(record["wind_imputed"]) for record in records[role])
+                for role in sorted(records)
+            },
         },
     }
     output_json = safe_repo_path(root, args.output_json)

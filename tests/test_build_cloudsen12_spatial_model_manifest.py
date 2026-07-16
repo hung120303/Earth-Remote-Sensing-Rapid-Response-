@@ -68,7 +68,15 @@ class CloudsenSpatialManifestTests(unittest.TestCase):
             record = model_record(root, cohort, crop, cloud)
             self.assertEqual(record["label_state"], "NO_PLUME")
             self.assertEqual((record["wind_u"], record["wind_v"]), (3.0, -2.0))
+            self.assertFalse(record["wind_imputed"])
             self.assertEqual([item["role"] for item in record["assets"]], ["image", "cloud_mask"])
+
+            cohort["wind_u"] = float("nan")
+            cohort["wind_v"] = float("nan")
+            imputed = model_record(root, cohort, crop, cloud)
+            self.assertEqual((imputed["wind_u"], imputed["wind_v"]), (0.0, 0.0))
+            self.assertTrue(imputed["wind_imputed"])
+            self.assertEqual(imputed["wind_imputed_components"], ["u", "v"])
 
     def test_positive_or_sealed_record_is_refused(self) -> None:
         cohort = {"sample_id": "sample", "research_role": "sealed_external"}

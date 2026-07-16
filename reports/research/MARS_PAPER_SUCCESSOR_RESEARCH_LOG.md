@@ -2135,8 +2135,25 @@ The loader-manifest build hash-verifies every 12-band image and zero plume
 mask, materializes exact-grid all-clear cloud masks from the published
 40,000-clear/0-nonclear label, and retains all 492 successful rows. The
 auxiliary manifest spans 362 groups (SHA-256
-`f21bbdfe428ff71bdcdda7720aa9ea24ca3903b8daabe3ab7b9ad512cc37f583`);
+`eab58d320d53d1b1937b148d9efc2c5b4f0f17618dfe60e13f5351481bafb377`);
 development spans 124 groups (SHA-256
-`35efc8c00376770346799bdf2168bc785e491994ccb8c27719393c5a81fe03b3`).
+`9652b546b5f0db933955e4f9049804e7af571216d37fb110912681d61cda841a`).
 The 20 frozen exclusions are exactly the unresolved products; zero sealed-test
 rows were acquired or materialized.
+
+The first auxiliary feature pass stopped before writing a cache because the
+loader correctly propagated non-finite wind metadata. The failure was not a
+raster defect or mixed-precision overflow: 103 accepted CloudSEN12+ rows have
+one or more missing published wind components, which made the broadcast wind
+channels and downstream logits non-finite in both float16 and float32. The
+manifest builder now retains every row but zero-fills only missing components,
+matching the already documented UNEP external-cohort compatibility convention;
+it records row/component imputation counts and writes strict JSON with
+`allow_nan=false`. Feature extraction must remain stopped until rebuilt
+manifest hashes and the feature protocol are recommitted.
+
+The corrected strict-JSON manifests retain all 492 rows and record 103 rows
+with 206 zero-filled components: 99 auxiliary and four development rows, in
+every case both `u` and `v`. Their final hashes are the ones reported above;
+they supersede the pre-diagnostic manifests that contained nonstandard JSON
+`NaN` values. No feature cache existed from the failed pass.

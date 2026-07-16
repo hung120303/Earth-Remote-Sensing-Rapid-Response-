@@ -4,7 +4,7 @@
   "scope": "model-aligned scene features for nonsealed source-disjoint CloudSEN12+ clear negatives",
   "source_receipt": {
     "path": "reports/acquisition/cloudsen12_spatial_pilot_model_manifest.json",
-    "sha256": "0f3748b2fac86b6f5420b923da86d50f3d4c472dd93d4cd99715c61dac15043f"
+    "sha256": "e4cc450e037b5e71baffbcd3c4da2d2068572b536322ad3bf54f434ba8929180"
   },
   "extractor": {
     "path": "tools/extract_cloudsen12_spatial_scene_features.py",
@@ -26,14 +26,14 @@
   "manifests": {
     "auxiliary_training": {
       "path": ".research/cloudsen12_spatial_pilot/model_auxiliary_training.jsonl",
-      "sha256": "f21bbdfe428ff71bdcdda7720aa9ea24ca3903b8daabe3ab7b9ad512cc37f583",
+      "sha256": "eab58d320d53d1b1937b148d9efc2c5b4f0f17618dfe60e13f5351481bafb377",
       "rows": 367,
       "groups": 362,
       "feature_output": "outputs/cloudsen12_spatial_scene_features_auxiliary.npz"
     },
     "development": {
       "path": ".research/cloudsen12_spatial_pilot/model_development.jsonl",
-      "sha256": "35efc8c00376770346799bdf2168bc785e491994ccb8c27719393c5a81fe03b3",
+      "sha256": "9652b546b5f0db933955e4f9049804e7af571216d37fb110912681d61cda841a",
       "rows": 125,
       "groups": 124,
       "feature_output": "outputs/cloudsen12_spatial_scene_features_development.npz"
@@ -42,6 +42,7 @@
   "invariants": [
     "The extractor verifies both manifest and model hashes before inference.",
     "Every row is Sentinel-2, NO_PLUME, and belongs to exactly one nonsealed role.",
+    "Published finite wind components are retained; both missing components in 103 rows are explicitly zero-filled and receipt-counted.",
     "Auxiliary and development feature caches remain physically separate.",
     "No fitted model, threshold, candidate weight, or blend is selected during extraction.",
     "No CloudSEN12+ published test row or MARS paper-test image, feature, score, or label is accessed."
