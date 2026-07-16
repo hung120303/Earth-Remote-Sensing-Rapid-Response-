@@ -1811,3 +1811,23 @@ with paired-site interval [-0.000573, +0.000589]; recall gains one positive
 does not add useful ranking information beyond the existing scene/site
 context. No paper score was computed. Result JSON SHA-256 is
 `f199c636653f471353c8455211b396d5b10e1f948505618dbbf7a1fa51dc024f`.
+
+## UNEP MARS post-2024 cohort: frozen acquisition protocol
+
+The source-only, invariance, frozen/spatial foundation-model, end-to-end
+cross-dataset transfer, and geographic-prior branches are now exhausted
+without a development result strong enough to justify another paper scoring
+step. The next hypothesis is genuinely new, independently validated examples
+under the exact MARS-S2L target/reference contract.
+
+UNEP IMEO's Eye on Methane MARS export provides the exact target product,
+exact multitemporal background product, timestamp, source coordinates,
+satellite, plume/source identity, and expert-validation status for each
+detection. Before downloading the catalog, the post-2024 protocol freezes
+Sentinel-2/Landsat-only selection, `actionable=YES`, exact product IDs, a 25 km
+exclusion around every pinned paper-test location, exact paper-test product
+exclusion, source-disjoint hash roles, and positive-only label semantics.
+Only polygonal GeoJSON may supply pixel truth; catalog absence is never a
+negative. The sealed external bucket cannot influence architecture or
+threshold selection. Bulk data remains ignored under
+`.research/unep_mars_post2024/`.

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_catalog_download",
+  "frozen_at_utc": "2026-07-16T02:27:12.4918626Z",
+  "research_role": "positive-only auxiliary training, development, and sealed external confirmation",
+  "source": {
+    "publisher": "UNEP International Methane Emissions Observatory",
+    "dataset": "Eye on Methane MARS sources and plumes",
+    "download_page": "https://methanedata.unep.org/download-dataset",
+    "csv_url": "https://unepazeconomyadlsstorage.blob.core.windows.net/public/unep_methanedata_detected_plumes_csv.zip",
+    "geojson_url": "https://unepazeconomyadlsstorage.blob.core.windows.net/public/unep_methanedata_detected_plumes_geojson.zip",
+    "data_dictionary": "https://methanedata.unep.org/dict-mars-plumes",
+    "methodology": "https://wedocs.unep.org/rest/api/core/bitstreams/e2c82c4c-b3bd-4a18-97bd-8e544a46d88a/content",
+    "license": "CC BY-NC-SA 4.0; non-commercial use only",
+    "catalog_sha256": "record_after_download_without_changing_selection_rules"
+  },
+  "paper_comparator_exclusion": {
+    "paper_test_csv": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/test.csv",
+    "paper_test_csv_sha256": "add125547e0e0066216070ed61a8544e76e84f062f636390be5d2ef1808dbfaa",
+    "minimum_distance_from_every_paper_test_location_km": 25.0,
+    "exclude_exact_target_product_ids": true,
+    "reason": "New auxiliary labels must not expose the successor to a paper-test facility or exact paper-test acquisition."
+  },
+  "catalog_selection": {
+    "minimum_tile_date_utc": "2025-01-01T00:00:00Z",
+    "allowed_satellites": [
+      "Sentinel-2 - ESA",
+      "Landsat-8 - USGS",
+      "Landsat-9 - USGS"
+    ],
+    "required_actionable_value_casefold": "yes",
+    "required_nonempty_fields": [
+      "id_plume",
+      "source_name",
+      "satellite",
+      "tile_date",
+      "tile",
+      "tile_background",
+      "lat",
+      "lon"
+    ],
+    "require_distinct_target_and_background": true,
+    "require_sensor_consistent_product_ids": true,
+    "deduplicate_target_products": true,
+    "merge_multiple_plumes_on_one_target": true,
+    "group_unit": "source_name with a 25 km connected-component fallback",
+    "never_infer_no_plume_from_catalog_absence": true
+  },
+  "pixel_truth": {
+    "accept_only_geojson_polygon_or_multipolygon_geometry": true,
+    "point_geometry_role": "scene-positive evidence only",
+    "require_geometry_intersection_with_four_km_crop": true,
+    "require_nonempty_observable_mask_after_rasterization": true,
+    "do_not_use_flux_wind_or_geometry_as_model_input": true
+  },
+  "fixed_group_split": {
+    "method": "sha256('ERSRR-UNEP-MARS-v1|' + canonical_group_id) modulo 10",
+    "auxiliary_training_buckets": [0, 1, 2, 3, 4, 5, 6, 7],
+    "development_bucket": [8],
+    "sealed_external_bucket": [9],
+    "sealed_external_use": "one-time positive recall and mask IoU confirmation only after architecture and thresholds are frozen",
+    "prohibit_threshold_or_architecture_selection_on_sealed_external": true
+  },
+  "image_contract": {
+    "target_and_reference": "exact tile and tile_background products named by UNEP",
+    "sentinel2": "MSI L1C target/reference using the released MARS-S2L band and normalization contract",
+    "landsat": "USGS Collection-2 Level-1 target/reference using the released MARS-S2L band and normalization contract",
+    "crop": "4 km source-centered crop on the released MARS-S2L grid contract",
+    "cloud_and_nodata": "same observability policy used by the frozen MARS paper evaluator",
+    "product_substitution": "prohibited"
+  },
+  "promotion_gates": {
+    "development": {
+      "scene_average_precision_delta_min": 0.002,
+      "matched_fpr_recall_delta_strictly_positive": true,
+      "sensor_average_precision_noninferiority": true,
+      "paired_site_bootstrap_average_precision_lower_95ci_strictly_positive": true
+    },
+    "paper": "unchanged exact MARS-S2L v3 full and test-only-site paired-bootstrap gates",
+    "external": "report positive recall and segmentation IoU with site-block confidence intervals; do not claim AP or false-positive rate without validated negative scenes"
+  },
+  "storage": {
+    "bulk_root": ".research/unep_mars_post2024",
+    "bulk_is_git_ignored": true,
+    "tracked_outputs": "compact protocol, acquisition audit, cohort manifest identities/counts, experiment summaries, and code only"
+  },
+  "frozen_invariants": [
+    "The catalog checksum is provenance, not a reason to alter selection rules after download.",
+    "No paper-test label, location, target product, or pixel mask may enter fitting.",
+    "All target/reference products must be the exact products named by UNEP.",
+    "UNEP non-detections and unlisted scenes are never treated as NO_PLUME labels.",
+    "Source groups never cross auxiliary-training, development, or sealed-external roles.",
+    "The sealed external bucket remains unread until the successor is frozen."
+  ]
+}
