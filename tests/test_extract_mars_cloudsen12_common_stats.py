@@ -42,3 +42,11 @@ def test_ordered_features_rejects_missing_identifier() -> None:
     frame = pd.DataFrame({"x": [1.0]}, index=["present"])
     with pytest.raises(ValueError, match="Missing 1"):
         MODULE.ordered_features(frame, np.asarray(["missing"]), ["x"])
+
+
+def test_cloud_metadata_identity_can_differ_from_statistics_key() -> None:
+    frame = pd.DataFrame({"x": [3.0]}, index=["ROI_00001__date_tile"])
+    values = MODULE.ordered_features(
+        frame, np.asarray(["ROI_00001__date_tile"]), ["x"]
+    )
+    np.testing.assert_allclose(values, [[3.0]])

@@ -157,11 +157,13 @@ def main() -> int:
 
     metadata = pd.read_csv(
         paths["cloud_metadata"],
-        usecols=["id_loc_image", "roi_id", "split_name", "isplume"],
+        usecols=["id_loc_image", "location_name", "roi_id", "split_name", "isplume"],
         low_memory=False,
     )
     if metadata["id_loc_image"].duplicated().any():
         raise ValueError("CloudSEN12 metadata contains duplicate scene IDs")
+    if metadata["location_name"].duplicated().any():
+        raise ValueError("CloudSEN12 metadata contains duplicate statistics keys")
     if metadata["isplume"].astype(bool).any():
         raise ValueError("CloudSEN12 clear metadata contains a positive label")
     observed_splits = set(metadata["split_name"].astype(str))
@@ -181,15 +183,16 @@ def main() -> int:
 
     cloud_frame = feature_frame(paths["cloud_stats"], feature_names)
     stats_ids = set(cloud_frame.index.astype(str))
-    metadata_ids = set(metadata["id_loc_image"].astype(str))
+    metadata_ids = set(metadata["location_name"].astype(str))
     if not stats_ids.issubset(metadata_ids):
         raise ValueError("CloudSEN12 statistics contain an unknown scene ID")
     selected = metadata[metadata["split_name"].isin(ALLOWED_CLOUD_SPLITS)].copy()
-    selected = selected[selected["id_loc_image"].isin(stats_ids)].sort_values("id_loc_image")
+    selected = selected[selected["location_name"].isin(stats_ids)].sort_values("id_loc_image")
     if (selected["split_name"] == SEALED_CLOUD_SPLIT).any():
         raise ValueError("Sealed CloudSEN12 test row reached feature extraction")
     cloud_ids = selected["id_loc_image"].astype(str).to_numpy()
-    cloud_features = ordered_features(cloud_frame, cloud_ids, feature_names)
+    cloud_stats_ids = selected["location_name"].astype(str).to_numpy()
+    cloud_features = ordered_features(cloud_frame, cloud_stats_ids, feature_names)
 
     mars_output = (root / args.mars_output).resolve()
     cloud_output = (root / args.cloud_output).resolve()
@@ -203,6 +206,7 @@ def main() -> int:
     atomic_savez(
         cloud_output,
         sample_ids=cloud_ids,
+        source_stats_ids=cloud_stats_ids,
         group_ids=selected["roi_id"].astype(str).to_numpy(),
         splits=selected["split_name"].astype(str).to_numpy(),
         features=cloud_features,
