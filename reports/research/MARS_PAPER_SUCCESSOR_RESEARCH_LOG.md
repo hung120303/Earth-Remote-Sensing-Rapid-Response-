@@ -2816,3 +2816,14 @@ numeric margin. The next development rule will instead require full negative
 empirical-CDF dominance in every selection fold, a stronger label-controlled
 calibration property that simultaneously constrains every observed negative
 quantile and fixed threshold.
+
+### 2026-07-16: Negative empirical-CDF calibration frozen
+
+The stronger calibration is frozen without using the observed 0.024823 fresh gap.
+For each selection fold, current and raw-ensemble negative scores are independently
+sorted. Every aligned order statistic supplies an offset limit; the fold limit is
+the minimum over all ranks, and the global offset is the minimum fold limit minus a
+fixed 0.05 logits. This enforces first-order empirical-CDF dominance for the entire
+observed development-negative distribution, hence every empirical quantile and
+fixed-threshold exceedance count, while leaving all rankings unchanged. Folds 0/1
+remain a reused audit. No fresh or paper input is accessible to the calibrator.
