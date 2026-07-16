@@ -14,6 +14,7 @@ if str(TOOLS) not in sys.path:
 from acquire_unep_mars_exact_crops import (
     LANDSAT_DESCRIPTIONS,
     S2_DESCRIPTIONS,
+    geometry_gate,
     landsat_cloud_classes,
     source_contract,
     stable_identity,
@@ -21,6 +22,14 @@ from acquire_unep_mars_exact_crops import (
 
 
 class ExactCropTests(unittest.TestCase):
+    def test_geometry_gate_respects_positive_and_negative_labels(self) -> None:
+        self.assertTrue(geometry_gate("PLUME", 1))
+        self.assertFalse(geometry_gate("PLUME", 0))
+        self.assertTrue(geometry_gate("NO_PLUME", 0))
+        self.assertFalse(geometry_gate("NO_PLUME", 1))
+        with self.assertRaises(ValueError):
+            geometry_gate("UNKNOWN", 0)
+
     def test_sensor_band_descriptions_match_released_order(self) -> None:
         self.assertEqual(source_contract("Sentinel-2")[1], S2_DESCRIPTIONS)
         self.assertEqual(source_contract("Landsat")[1], LANDSAT_DESCRIPTIONS)

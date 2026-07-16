@@ -2050,3 +2050,14 @@ selected crop is 27.64 km from a MARS emitter. Country and location metadata
 are sampling-only, not model features. The ignored selection manifest SHA-256
 is recorded in `cloudsen12_spatial_pilot_selection.json`; zero published test
 rows were selected or opened.
+
+Exact-product resolution succeeded for 492 of the 512 frozen pilot rows: 367
+auxiliary-training negatives and 125 development negatives. The remaining 20
+rows lack at least one exact target/reference product in the public Sentinel-2
+L1C catalog and were retained as unavailable without substituting another
+processing level or acquisition. The ignored resolver manifest has SHA-256
+`d2af7b9b60a98bf2708cc2cb54e08e3ed85e6533dc85c94cc40b8d499ce35c93`.
+All published CloudSEN12+ test rows remain sealed. Crop acquisition is allowed
+only for these resolved nonsealed identities and now enforces label-aware
+geometry: a clear-scene negative must have an exactly zero plume mask, whereas
+the pre-existing positive contract still requires nonempty rasterized truth.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Acquire resumable 200x200 exact-product crops for nonsealed UNEP MARS plumes."""
+"""Acquire resumable 200x200 exact-product crops for nonsealed scene cohorts."""
 
 from __future__ import annotations
 
@@ -125,6 +125,15 @@ def rasterized_plumes(
     )
 
 
+def geometry_gate(label_state: str, plume_pixels: int) -> bool:
+    """Require label-consistent geometry without weakening positive-cohort checks."""
+    if label_state == "NO_PLUME":
+        return plume_pixels == 0
+    if label_state == "PLUME":
+        return plume_pixels > 0
+    raise ValueError(f"Unsupported label_state: {label_state}")
+
+
 def verify_cached(path: Path, expected_identity: str, root: Path) -> dict[str, Any]:
     manifest = json.loads(path.read_text(encoding="utf-8"))
     if manifest["input_identity_sha256"] != expected_identity:
@@ -167,10 +176,11 @@ def acquire_one(
     reference = read_stack(reference_assets, bands, crs=crs, transform=transform)
     image = np.concatenate([target, reference], axis=0)
     valid = np.all(image > 0, axis=0)
+    label_state = cohort.get("label_state", "PLUME")
     mask = rasterized_plumes(cohort["plume_geometries"], crs=crs, transform=transform)
     plume_pixels = int(np.count_nonzero(mask))
     valid_fraction = float(np.mean(valid))
-    plume_valid_fraction = float(np.mean(valid[mask > 0])) if plume_pixels else 0.0
+    plume_valid_fraction = float(np.mean(valid[mask > 0])) if plume_pixels else None
 
     scene_dir.mkdir(parents=True, exist_ok=True)
     image_path = scene_dir / "image.tif"
@@ -188,7 +198,9 @@ def acquire_one(
         mask,
         crs=crs,
         transform=transform,
-        descriptions=["UNEP_IMEO_MARS_PLUME"],
+        descriptions=[
+            "NO_PLUME_ZERO_MASK" if label_state == "NO_PLUME" else "UNEP_IMEO_MARS_PLUME"
+        ],
         nodata=0,
     )
     output_assets = {
@@ -231,12 +243,18 @@ def acquire_one(
         output_assets["cloud_mask"] = file_record(cloud_path, root)
         clear = cloud == 0
         clear_fraction = float(np.mean(clear))
-        plume_clear_fraction = float(np.mean(clear[mask > 0])) if plume_pixels else 0.0
+        plume_clear_fraction = float(np.mean(clear[mask > 0])) if plume_pixels else None
         cloud_status = "landsat_qa_complete"
 
-    geometry_gate = plume_pixels > 0
-    radiometry_gate = valid_fraction >= min_valid_fraction and plume_valid_fraction >= min_valid_fraction
-    gate_pass = geometry_gate and radiometry_gate
+    geometry_pass = geometry_gate(label_state, plume_pixels)
+    radiometry_gate = valid_fraction >= min_valid_fraction and (
+        label_state == "NO_PLUME"
+        or (
+            plume_valid_fraction is not None
+            and plume_valid_fraction >= min_valid_fraction
+        )
+    )
+    gate_pass = geometry_pass and radiometry_gate
     manifest = {
         "schema_version": 1,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -247,7 +265,8 @@ def acquire_one(
         "source_name": cohort["source_name"],
         "target_product": cohort["target_product"],
         "background_product": cohort["background_product"],
-        "plume_ids": cohort["plume_ids"],
+        "label_state": label_state,
+        "plume_ids": cohort.get("plume_ids", []),
         "source_center": cohort["source_center"],
         "input_identity_sha256": identity,
         "product_contract": {
@@ -262,7 +281,11 @@ def acquire_one(
         "quality": {
             "gate_pass_before_cloud": gate_pass,
             "radiometric_valid_fraction": round(valid_fraction, 8),
-            "plume_radiometric_valid_fraction": round(plume_valid_fraction, 8),
+            "plume_radiometric_valid_fraction": (
+                None
+                if plume_valid_fraction is None
+                else round(plume_valid_fraction, 8)
+            ),
             "plume_pixels": plume_pixels,
             "cloud_status": cloud_status,
             "clear_fraction": None if clear_fraction is None else round(clear_fraction, 8),
@@ -280,8 +303,13 @@ def acquire_one(
 
 def write_markdown(report: dict[str, Any], path: Path) -> None:
     summary = report["summary"]
+    negative_only = set(summary["by_label_state"]) == {"NO_PLUME"}
     lines = [
-        "# UNEP MARS post-2024 exact crop acquisition",
+        (
+            "# CloudSEN12+ clear-scene spatial-pilot crop acquisition"
+            if negative_only
+            else "# UNEP MARS post-2024 exact crop acquisition"
+        ),
         "",
         f"Generated: {report['generated_at_utc']}.",
         "",
@@ -295,12 +323,20 @@ def write_markdown(report: dict[str, Any], path: Path) -> None:
         "",
         "## Contract",
         "",
-        "- Exact UNEP target and background products; no product substitution.",
-        "- 200×200 pixels at 10 m in the target product CRS (2×2 km).",
+        "- Exact target and background products; no product substitution.",
+        "- 200x200 pixels at 10 m in the target product CRS (2x2 km).",
         "- Twelve uint16 bands: six target then six reference bands.",
-        "- UNEP MultiPolygon plume truth is rasterized on the identical grid.",
+        (
+            "- Explicit clear-scene negatives require an identically gridded zero plume mask."
+            if negative_only
+            else "- UNEP MultiPolygon plume truth is rasterized on the identical grid."
+        ),
         "- Landsat cloud support is the target/reference union of QA_PIXEL fill, dilated-cloud, cirrus, cloud, shadow, and snow bits.",
-        "- Sentinel-2 CloudSEN12+ masks remain a separate required acquisition gate.",
+        (
+            "- Published CloudSEN12+ all-clear labels remain the negative cloud contract."
+            if negative_only
+            else "- Sentinel-2 CloudSEN12+ masks remain a separate required acquisition gate."
+        ),
         "- Sealed-external samples were excluded.",
         "",
     ]
@@ -407,6 +443,9 @@ def main() -> None:
             ),
             "by_sensor": dict(sorted(Counter(item["sensor_family"] for item in manifests).items())),
             "by_role": dict(sorted(Counter(item["research_role"] for item in manifests).items())),
+            "by_label_state": dict(
+                sorted(Counter(item.get("label_state", "PLUME") for item in manifests).items())
+            ),
             "errors": len(errors),
             "raster_bytes": raster_bytes,
         },
