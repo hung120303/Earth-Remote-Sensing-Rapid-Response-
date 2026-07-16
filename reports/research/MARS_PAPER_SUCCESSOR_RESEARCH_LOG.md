@@ -2561,3 +2561,12 @@ alignment, tight frozen-artifact fold-0/1 reproduction, and broad drift detectio
 All predictive deltas are diagnostics, not acceptance criteria. Downstream temporal-
 ensemble selection and independent confirmation will carry the actual AP/recall
 promotion gates. This protocol was frozen before rebuilding the cache.
+
+### 2026-07-16: Site-relative deterministic feature cache built
+
+The correctness-only build passed and wrote an ignored 1,748,406-byte cache with
+SHA-256 `186ab5946790798a4a81274130ba5756ab3e5316b7b42238c2772d36805152a1`.
+The deterministic inner spatial score improved AP +0.003080 and recall +0.003016
+versus current; frozen-artifact fold-0/1 deltas reproduced exactly. These numbers
+remain diagnostic. The cache is now authorized only as a leakage-controlled input
+to a separately frozen temporal-spatial ensemble experiment.

@@ -1,0 +1,55 @@
+{
+  "all_frozen_metrics_reproduced": false,
+  "deltas_versus_current": {
+    "fold0": {
+      "average_precision": 0.0013042853571438862,
+      "recall_at_fpr_0_0713": 0.0026845637583892135,
+      "sensor_average_precision": {
+        "Landsat": 5.494505452974252e-05,
+        "Sentinel-2": 0.0015502520910113393
+      }
+    },
+    "fold1": {
+      "average_precision": 0.0015621763312557713,
+      "recall_at_fpr_0_0713": 0.004026845637583931,
+      "sensor_average_precision": {
+        "Landsat": 2.4691853884206694e-05,
+        "Sentinel-2": 0.0019926292754615105
+      }
+    },
+    "inner": {
+      "average_precision": 0.0030797571246080624,
+      "recall_at_fpr_0_0713": 0.0030159414045670685,
+      "sensor_average_precision": {
+        "Landsat": 0.0013955319448200054,
+        "Sentinel-2": 0.0037240823190139993
+      }
+    }
+  },
+  "feature_cache_checks_pass": true,
+  "generated_at_utc": "2026-07-16T18:46:42.965893+00:00",
+  "interpretation": "New deterministic OOF feature cache. Predictive metrics are diagnostics only; the cache is not a promoted model and does not claim exact old stochastic OOF reproduction.",
+  "output": {
+    "bytes": 1748406,
+    "path": "outputs/mars_site_relative_spatial_development_scores.npz",
+    "sha256": "186ab5946790798a4a81274130ba5756ab3e5316b7b42238c2772d36805152a1",
+    "tracked": false
+  },
+  "provenance": {
+    "cuda_deterministic_algorithms": true,
+    "device": "NVIDIA GeForce RTX 5070",
+    "feature_cache_wrapper_sha256": "94277e6ea5f156e25149621546e2fea47ba126c206864b00f5dca54fad94fc5a",
+    "git_commit": "e3fd66e7d059f7c478a2f62de67194ed2bcb5bbd",
+    "numpy": "2.4.4",
+    "protocol_sha256": "b257c554f13bc069e50118b22fd42675c49e2ba65a89217866aef1b39518cf0b",
+    "script_sha256": "f1666b00ba273c298e852dad3edfba2d2fe40b0439a0e28e640969839e383ab8",
+    "torch": "2.11.0+cu128"
+  },
+  "rows": {
+    "fold0": 8987,
+    "fold1": 8798,
+    "inner": 26578
+  },
+  "schema_version": 1,
+  "scope": "label-free score reproduction on authorized development folds only"
+}
