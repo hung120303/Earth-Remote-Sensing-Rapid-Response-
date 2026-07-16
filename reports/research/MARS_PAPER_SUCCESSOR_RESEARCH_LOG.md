@@ -2447,3 +2447,16 @@ a confidence cutoff; sites above the cutoff are unchanged. Thirty-six top-k/cuto
 weight candidates and all evidence gates are frozen. Selection uses folds 2/3/4,
 confirmation uses folds 0/1, and every candidate is runtime-asserted never to raise
 any score. The paper and fresh-test caches remain out of scope.
+
+### 2026-07-16: One-sided temporal suppression rejected
+
+The frozen search selected top-1, confidence cutoff 0.90, and penalty weight 0.50.
+It passed the selection-stage direction checks with AP delta +0.000526 and paired
+site-bootstrap lower bound +0.000026, and every selection fold improved. It did not
+replicate on independent folds 0/1: combined confirmation AP changed -0.000053
+with lower bound -0.000844, including fold-0 delta -0.000495 (fold 1 improved
++0.000316). Confirmation recall improved +0.002013, but the AP failure is decisive.
+No artifact was written. The next architecture will route temporal evidence only
+for sites absent from the training cohort and will select parameters on whole-site
+low-prevalence development strata that more closely represent the declared unseen-
+site target domain; prevalence labels define evaluation strata only, never routing.
