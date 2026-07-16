@@ -2551,3 +2551,13 @@ unchanged recall; fold 0 AP regressed -0.000638 while fold 1 improved +0.000561.
 Whole-fold confirmation AP was effectively unchanged (+0.000074) and recall changed
 -0.000671. The inferential failures are decisive, no artifact was written, and the
 paper cache remains unauthorized for this candidate.
+
+### 2026-07-16: Site-relative deterministic feature-cache build frozen
+
+The earlier deterministic rebuild incorrectly coupled feature acquisition to model-
+promotion recall gates. A new v3 contract cleanly separates those roles. It accepts
+or rejects the spatial OOF cache only on leakage control, deterministic execution,
+alignment, tight frozen-artifact fold-0/1 reproduction, and broad drift detection.
+All predictive deltas are diagnostics, not acceptance criteria. Downstream temporal-
+ensemble selection and independent confirmation will carry the actual AP/recall
+promotion gates. This protocol was frozen before rebuilding the cache.

@@ -1,0 +1,44 @@
+{
+  "schema_version": 3,
+  "status": "frozen_before_deterministic_site_relative_feature_cache_build",
+  "scope": "correctness-gated deterministic site-relative OOF feature acquisition; not model promotion",
+  "wrapper": {
+    "path": "tools/build_mars_site_relative_development_scores_feature_cache.py",
+    "sha256": "94277e6ea5f156e25149621546e2fea47ba126c206864b00f5dca54fad94fc5a"
+  },
+  "builder": {
+    "path": "tools/build_mars_site_relative_development_scores.py",
+    "sha256": "f1666b00ba273c298e852dad3edfba2d2fe40b0439a0e28e640969839e383ab8"
+  },
+  "inputs": {
+    "images": {"path": "outputs/mars_spatial_scene_inputs_all_folds.npy", "sha256": "6530fa2d07d94bd57ba1ac757039dedd18745227e7a476fb0d69f78f996134a5"},
+    "metadata": {"path": "outputs/mars_spatial_scene_inputs_all_folds_metadata.npz", "sha256": "0160ed93371396a487b819dd170a682f55756d285f0ba94d0f0d093ba51a8d01"},
+    "scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_site_relative_spatial_classifier.pt", "sha256": "9401678aa4f38fb3b54a914318dc5c2a553b39fa8b309d1a127b9d21abbfc496"},
+    "source_report": {"path": "reports/experiments/mars_site_relative_spatial_classifier.json", "sha256": "c2b6695dbe24f0b5bc097d89c6fa6332c2af93441079cd55bec99e77aeeb820f"}
+  },
+  "seeds": {"inner_base": 20261100},
+  "reproduction": {
+    "metric_tolerance": 1e-7,
+    "meaning": "frozen artifact inference on folds 0/1 must reproduce tightly"
+  },
+  "drift_checks": {
+    "inner_ap_tolerance": 0.005,
+    "inner_recall_tolerance": 0.005,
+    "purpose": "detect pipeline breakage, not select predictive performance"
+  },
+  "outputs": {
+    "scores": "outputs/mars_site_relative_spatial_development_scores.npz",
+    "report": "reports/experiments/mars_site_relative_spatial_development_scores.json"
+  },
+  "invariants": [
+    "Deterministic CUDA algorithms are enabled before every crossfit model.",
+    "Every folds-2/3/4 score is produced by a model excluding that fold.",
+    "Fold-0/1 scores come from the frozen folds-2/3/4 artifact.",
+    "Predictive deltas are recorded but are not feature-cache acceptance gates.",
+    "The paper cache is not loaded."
+  ]
+}
