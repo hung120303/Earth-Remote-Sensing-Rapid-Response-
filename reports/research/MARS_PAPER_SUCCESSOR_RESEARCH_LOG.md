@@ -2525,3 +2525,17 @@ raised failure, so these scores are not inputs to subsequent selection. Rather t
 relax a seen gate, the next model will learn a permutation-equivariant site context
 directly from the existing deterministic 108-feature OOF caches and frozen current
 scores. This removes the stochastic spatial-crossfit dependency entirely.
+
+### 2026-07-16: Low-prevalence set-context head frozen
+
+The literature-motivated site-set path is now a concrete, development-only
+experiment. The model consumes the deterministic 108 scene features, existing
+label-free site-context features, and nine current-score set statistics including
+leave-one-out maximum and within-site rank. Two strongly regularized shallow
+gradient-boosted models and five current-score blends (10 candidates) are frozen.
+Selection predictions are cross-fitted across folds 2/3/4. The fixed winner is then
+fit on low-prevalence sites in those folds and confirmed once on folds 0/1. The
+primary strata require positive paired-site AP lower bounds and nondecreasing recall;
+whole-fold and per-fold safeguards are also required. The 5% site-positive threshold
+defines supervised development domains only and is absent from inference. Known
+training sites remain on current v3; the head routes only unseen sites if promoted.
