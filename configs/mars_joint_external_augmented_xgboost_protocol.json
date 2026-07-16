@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_joint_external_model_fitting",
+  "scope": "joint source-disjoint positive and spatial-negative scene augmentation",
+  "trainer": {
+    "path": "tools/train_mars_joint_external_augmented_xgboost.py",
+    "sha256": "bc4f0c31d01c9009d0af227734534331775925ae7f5424512d4038e3a6aa628c"
+  },
+  "base_architecture": {
+    "score": "frozen v3 stronger OOF ExtraTrees scene head",
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_oof_scene_ensemble_v2.joblib",
+    "artifact_sha256": "9e6fa18b83ef065ac24c94a06a510057a0c382cecf1efa3b54e818566a45c9ac",
+    "blend_lambda": 0.625,
+    "dense_mask_change": false
+  },
+  "feature_caches": {
+    "original_inner": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"
+    },
+    "original_fold0": {
+      "path": "outputs/mars_scene_features_fold0.npz",
+      "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"
+    },
+    "original_fold1": {
+      "path": "outputs/mars_scene_features_fold1_crossfit.npz",
+      "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"
+    },
+    "original_scores": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    },
+    "unep_positive_auxiliary": {
+      "path": "outputs/unep_mars_post2024_scene_features_auxiliary.npz",
+      "sha256": "f7e330a93d54f9aeebcaeb887ebbfd1e6c57618aad6f4f3530a2f1d8874ccdcd",
+      "rows": 135,
+      "groups": 27
+    },
+    "unep_positive_development": {
+      "path": "outputs/unep_mars_post2024_scene_features_development.npz",
+      "sha256": "c1a128ea673909e6667ef9b1d154aa6b581abc72b8503972407d80ae2f143f50",
+      "rows": 4,
+      "groups": 4,
+      "access": "only after every original confirmation gate passes"
+    },
+    "cloudsen12_negative_auxiliary": {
+      "path": "outputs/cloudsen12_spatial_scene_features_auxiliary.npz",
+      "sha256": "9d1f5116f10088a953aea66233e5896ef06be8252f3565f5b4b1d768d8e2ac0b",
+      "rows": 367,
+      "groups": 362
+    },
+    "cloudsen12_negative_development": {
+      "path": "outputs/cloudsen12_spatial_scene_features_development.npz",
+      "sha256": "a7f5c4100ecd2d4172bccd550f6a17736e4008e551f8bce2a935ce3caed6dcb4",
+      "rows": 125,
+      "groups": 124,
+      "access": "only after every original confirmation gate passes"
+    }
+  },
+  "candidate_family": {
+    "model": "regularized XGBoost depth3_lr004",
+    "n_estimators": 600,
+    "max_depth": 3,
+    "learning_rate": 0.04,
+    "min_child_weight": 10.0,
+    "subsample": 0.8,
+    "colsample_bytree": 0.7,
+    "reg_alpha": 0.1,
+    "reg_lambda": 10.0,
+    "positive_weight_multipliers": [1.0, 2.7185185185185183],
+    "negative_weight_multipliers": [1.0],
+    "candidate_logit_blends": [0.1, 0.2],
+    "rationale": "weight 1.0 is independently selected by both single-domain experiments; 2.7185 balances total 135-positive weight to the 367-negative auxiliary mass"
+  },
+  "selection_ranking": [
+    "all gates pass",
+    "largest worst-fold AP delta",
+    "largest pooled matched-FPR recall delta",
+    "largest pooled AP delta",
+    "smallest blend",
+    "smallest positive multiplier"
+  ],
+  "partitions": {
+    "selection": "cross-fit original folds 2/3/4 with both auxiliary cohorts in each fitting split",
+    "confirmation": "one frozen fit on original folds 2/3/4 plus both auxiliary cohorts; score folds 0 and 1",
+    "final_refit": "all five original folds plus both auxiliary cohorts only after original gates pass",
+    "external_development": "four UNEP positives and 125 CloudSEN negatives remain unread until all original gates pass",
+    "paper": "no access unless both external development gates pass"
+  },
+  "promotion_gates": {
+    "selection_pooled": {
+      "average_precision_delta_vs_current_min": 0.002,
+      "recall_at_fpr_delta_vs_current_nonnegative": true,
+      "sensor_average_precision_delta_min": -0.002,
+      "paired_group_bootstrap_ap_lower_95ci_strictly_positive": true
+    },
+    "selection_each_fold": {
+      "average_precision_delta_vs_current_strictly_positive": true,
+      "recall_at_fpr_delta_vs_current_nonnegative": true
+    },
+    "each_original_confirmation": {
+      "average_precision_delta_vs_current_min": 0.002,
+      "recall_at_fpr_delta_vs_current_strictly_positive": true,
+      "sensor_average_precision_delta_min": -0.002,
+      "paired_group_bootstrap_ap_lower_95ci_strictly_positive": true
+    },
+    "unep_positive_development": {
+      "candidate_positive_recall_no_worse_than_current_at_separate_frozen_thresholds": true
+    },
+    "cloudsen12_negative_development": {
+      "false_positive_count_no_higher": true,
+      "threshold_margin_p95_no_higher": true
+    }
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20260717,
+    "confidence": 0.95,
+    "unit": "physical source group"
+  },
+  "invariants": [
+    "External development and all published test rows cannot select a candidate, weight, blend, or threshold.",
+    "Positive and negative external development gates use separately frozen current and candidate thresholds.",
+    "The already promoted dense-mask branch and sensor thresholds do not change.",
+    "No MARS paper-test image, feature, score, label, or metric is loaded by this experiment.",
+    "An artifact is written only after original and both external development gates pass."
+  ]
+}

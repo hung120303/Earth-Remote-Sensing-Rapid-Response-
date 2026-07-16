@@ -2185,3 +2185,17 @@ confirmation requirements. The branch is therefore rejected before opening
 the 125-row CloudSEN development cache, before any paper-cache replay, and
 without writing an artifact. The direction is useful evidence that localized
 source-disjoint negatives transfer, but it is not yet robust enough alone.
+
+The next model is frozen as a joint external-data head before fitting. It adds
+both the 135 source-disjoint UNEP positives and 367 source-disjoint CloudSEN
+negatives to the same regularized depth-3 XGBoost fit. The candidate family is
+deliberately four settings: positive per-row weight 1.0 or 367/135=2.7185,
+negative weight 1.0, and complement blend 0.10 or 0.20. Weight 1.0 is the
+independently selected value in both one-domain experiments; 2.7185 equalizes
+total external positive and negative sample mass. Selection is cross-fitted on
+folds 2/3/4 and ranks passing candidates by worst-fold AP first. Both original
+confirmation folds must have AP delta at least 0.002, strictly higher recall,
+and positive paired-group AP lower bounds. Only afterward may the four UNEP
+development positives and 125 CloudSEN development negatives be opened, and
+both must pass their independent recall/false-positive gates before paper
+replay. Dense masks remain unchanged.
