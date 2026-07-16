@@ -1,0 +1,138 @@
+{
+  "all_calibration_gates_pass": true,
+  "artifact": {
+    "bytes": 501,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_negative_cdf_calibrated_spatial_prithvi_ensemble.joblib",
+    "sha256": "ce33bae550f20ad53076338e8412aef97d26a4b1c6c9c6e201086ccd208a1c37",
+    "tracked": false
+  },
+  "binding_selection_limit": -0.4544762783678564,
+  "decision": "Freeze negative-CDF calibrated ensemble for transparent fresh replay.",
+  "generated_at_utc": "2026-07-16T19:49:38.124091+00:00",
+  "logit_offset": -0.5044762783678565,
+  "provenance": {
+    "git_commit": "9c1a4a33b4c0d2aa59c44add092ca09cd9791bde",
+    "joblib": "1.5.3",
+    "numpy": "2.4.4",
+    "protocol_sha256": "1eebcd2c64028bc72260da2251b2c54b4d89b399385863c7b81da73f5e6ab8be",
+    "script_sha256": "dce3cc97f7f910bbba9ee7a870cb144e407ccd220b576689678617f72c298f9f"
+  },
+  "reused_holdout_audit": {
+    "folds": {
+      "0": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.9164676979068671,
+        "calibrated_false_positives": 270,
+        "calibrated_negative_logit_p95": -1.657562295185368,
+        "current_false_positives": 357,
+        "current_negative_logit_p95": -1.1495788001103013,
+        "raw_ap": 0.9164676979068671,
+        "raw_false_positives": 353,
+        "raw_negative_logit_p95": -1.1530860168175114
+      },
+      "1": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.8980928145550502,
+        "calibrated_false_positives": 421,
+        "calibrated_negative_logit_p95": -0.870595835598129,
+        "current_false_positives": 574,
+        "current_negative_logit_p95": -0.34639306017949756,
+        "raw_ap": 0.8980928145550502,
+        "raw_false_positives": 567,
+        "raw_negative_logit_p95": -0.36611955723027273
+      }
+    },
+    "independent_confirmation": false,
+    "negative_cdf_dominance_by_fold": {
+      "0": true,
+      "1": true
+    },
+    "reason": "folds 0/1 were exposed by preceding calibration-family experiments",
+    "standard_checks": {
+      "every_fold_ap_exact": true,
+      "every_fold_false_positives_no_higher": true,
+      "every_fold_negative_p95_no_higher": true
+    }
+  },
+  "schema_version": 1,
+  "scope": "development-only negative empirical-CDF dominance calibration",
+  "selection": {
+    "folds": {
+      "2": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.9194141609942714,
+        "calibrated_false_positives": 157,
+        "calibrated_negative_logit_p95": -2.3983844337844022,
+        "current_false_positives": 224,
+        "current_negative_logit_p95": -1.877140846048896,
+        "raw_ap": 0.9194141609942714,
+        "raw_false_positives": 227,
+        "raw_negative_logit_p95": -1.893908155416546
+      },
+      "3": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.9341429498182684,
+        "calibrated_false_positives": 199,
+        "calibrated_negative_logit_p95": -2.173592328459515,
+        "current_false_positives": 249,
+        "current_negative_logit_p95": -1.6711811523379896,
+        "raw_ap": 0.9341429498182684,
+        "raw_false_positives": 250,
+        "raw_negative_logit_p95": -1.6691160500916584
+      },
+      "4": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.8929019994426096,
+        "calibrated_false_positives": 416,
+        "calibrated_negative_logit_p95": -0.9117513489223698,
+        "current_false_positives": 546,
+        "current_negative_logit_p95": -0.39568936873753835,
+        "raw_ap": 0.8929019994426096,
+        "raw_false_positives": 523,
+        "raw_negative_logit_p95": -0.40727507055451306
+      }
+    },
+    "negative_cdf_dominance_by_fold": {
+      "2": true,
+      "3": true,
+      "4": true
+    },
+    "standard_checks": {
+      "every_fold_ap_exact": true,
+      "every_fold_false_positives_no_higher": true,
+      "every_fold_negative_p95_no_higher": true
+    }
+  },
+  "selection_constraints": {
+    "2": {
+      "binding_ascending_rank_zero_based": 337,
+      "binding_current_score": 4.327013433816764e-05,
+      "binding_empirical_quantile": 0.04194150591163659,
+      "binding_raw_score": 6.816382794904058e-05,
+      "maximum_raw_minus_current_score": 0.03880671426303728,
+      "minimum_raw_minus_current_score": -0.008926394079981081,
+      "negative_count": 8036,
+      "offset_limit": -0.4544762783678564
+    },
+    "3": {
+      "binding_ascending_rank_zero_based": 482,
+      "binding_current_score": 4.33362485253939e-05,
+      "binding_empirical_quantile": 0.059950248756218905,
+      "binding_raw_score": 6.433782134355966e-05,
+      "maximum_raw_minus_current_score": 0.023965471986063358,
+      "minimum_raw_minus_current_score": -0.011469713328936093,
+      "negative_count": 8041,
+      "offset_limit": -0.3951792291364278
+    },
+    "4": {
+      "binding_ascending_rank_zero_based": 492,
+      "binding_current_score": 4.328035412155719e-05,
+      "binding_empirical_quantile": 0.060154053062721605,
+      "binding_raw_score": 5.92401903842058e-05,
+      "maximum_raw_minus_current_score": 0.0022984737316689152,
+      "minimum_raw_minus_current_score": -0.03335069156945092,
+      "negative_count": 8180,
+      "offset_limit": -0.3139173472158223
+    }
+  }
+}

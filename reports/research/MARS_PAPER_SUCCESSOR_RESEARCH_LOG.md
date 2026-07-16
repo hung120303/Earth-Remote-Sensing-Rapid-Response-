@@ -2827,3 +2827,15 @@ fixed 0.05 logits. This enforces first-order empirical-CDF dominance for the ent
 observed development-negative distribution, hence every empirical quantile and
 fixed-threshold exceedance count, while leaving all rankings unchanged. Folds 0/1
 remain a reused audit. No fresh or paper input is accessible to the calibrator.
+
+### 2026-07-16: Negative empirical-CDF calibration passes development
+
+The binding selection rank was fold 2's 338th ascending negative (empirical quantile
+0.04194), with current/raw scores 0.00004327/0.00006816. Its -0.454476 limit plus
+the frozen margin produced a -0.504476-logit offset. Full negative empirical-CDF
+dominance passed on folds 2/3/4 and in the reused fold-0/1 audit. Fixed-threshold
+false positives fell to 157/199/416 from current's 224/249/546 on selection and to
+270/421 from 357/574 in the audit; AP remained exactly invariant. The ignored
+501-byte artifact has SHA-256
+`ce33bae550f20ad53076338e8412aef97d26a4b1c6c9c6e201086ccd208a1c37`.
+This authorizes one more explicitly post-test fresh replay under unchanged gates.
