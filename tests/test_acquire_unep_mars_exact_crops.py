@@ -14,6 +14,7 @@ if str(TOOLS) not in sys.path:
 from acquire_unep_mars_exact_crops import (
     LANDSAT_DESCRIPTIONS,
     S2_DESCRIPTIONS,
+    crop_grid,
     geometry_gate,
     landsat_cloud_classes,
     select_shard,
@@ -23,6 +24,20 @@ from acquire_unep_mars_exact_crops import (
 
 
 class ExactCropTests(unittest.TestCase):
+    def test_published_crop_grid_is_preserved_exactly(self) -> None:
+        cohort = {
+            "sample_id": "sample",
+            "source_grid": {
+                "crs": "EPSG:32632",
+                "transform": [10.0, 0.0, 408510.0, 0.0, -10.0, 3776960.0],
+                "width": 200,
+                "height": 200,
+            },
+        }
+        crs, transform = crop_grid(cohort, "not-opened")
+        self.assertEqual(crs.to_string(), "EPSG:32632")
+        self.assertEqual(tuple(transform)[:6], tuple(cohort["source_grid"]["transform"]))
+
     def test_shards_are_disjoint_and_complete(self) -> None:
         records = [{"sample_id": str(index)} for index in range(11)]
         shards = [select_shard(records, 3, index) for index in range(3)]

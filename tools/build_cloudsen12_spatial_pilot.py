@@ -155,7 +155,8 @@ def main() -> int:
     metadata_columns = [
         "id_loc_image", "location_name", "roi_id", "split_name", "isplume",
         "satellite", "tile", "background_image_tile", "tile_date", "country",
-        "lon", "lat", "wind_u", "wind_v",
+        "lon", "lat", "wind_u", "wind_v", "crs", "transform_a", "transform_b",
+        "transform_c", "transform_d", "transform_e", "transform_f", "width", "height",
     ]
     metadata = pd.read_csv(paths["cloud_metadata"], usecols=metadata_columns, low_memory=False)
     stats = pd.read_csv(
@@ -196,6 +197,15 @@ def main() -> int:
         local["research_role"] = role
         selected_parts.append(local)
     selected = pd.concat(selected_parts, ignore_index=True).sort_values("id_loc_image")
+    if not (
+        (selected["width"] == 200).all()
+        and (selected["height"] == 200).all()
+        and (selected["transform_a"] == 10.0).all()
+        and (selected["transform_b"] == 0.0).all()
+        and (selected["transform_d"] == 0.0).all()
+        and (selected["transform_e"] == -10.0).all()
+    ):
+        raise ValueError("Selected producer grids differ from the frozen 200x200 10 m contract")
     records = []
     for row in selected.to_dict("records"):
         records.append(
@@ -210,6 +220,20 @@ def main() -> int:
                 "background_product": str(row["background_image_tile"]),
                 "tile_date": str(row["tile_date"]),
                 "source_center": [float(row["lon"]), float(row["lat"])],
+                "source_grid": {
+                    "crs": str(row["crs"]),
+                    "transform": [
+                        float(row["transform_a"]),
+                        float(row["transform_b"]),
+                        float(row["transform_c"]),
+                        float(row["transform_d"]),
+                        float(row["transform_e"]),
+                        float(row["transform_f"]),
+                    ],
+                    "width": int(row["width"]),
+                    "height": int(row["height"]),
+                    "provenance": "frozen CloudSEN12+ producer metadata",
+                },
                 "wind_u": float(row["wind_u"]),
                 "wind_v": float(row["wind_v"]),
                 "label_state": "NO_PLUME",
@@ -249,6 +273,7 @@ def main() -> int:
         "script_sha256": sha256(Path(__file__).resolve()),
         "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(),
         "country_used_as_model_input": False,
+        "published_producer_grid_preserved": True,
         "cloudsen12_test_accessed": False,
         "paper_test_accessed": False,
     }

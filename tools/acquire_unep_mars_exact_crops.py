@@ -16,6 +16,8 @@ from typing import Any
 
 import numpy as np
 import rasterio
+from affine import Affine
+from rasterio.crs import CRS
 from rasterio.enums import Resampling
 from rasterio.features import rasterize
 from rasterio.warp import transform_geom
@@ -73,6 +75,30 @@ def source_contract(sensor: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
     if sensor == "Landsat":
         return LANDSAT_SOURCE_BANDS, LANDSAT_DESCRIPTIONS
     raise ValueError(f"Unsupported sensor: {sensor}")
+
+
+def crop_grid(cohort: dict[str, Any], reference_url: str) -> tuple[Any, Affine]:
+    """Use a published producer grid when available, else the legacy center rule."""
+    contract = cohort.get("source_grid")
+    if contract is None:
+        return aligned_grid(
+            reference_url, cohort["source_center"], size=SIZE, resolution=RESOLUTION
+        )
+    if (
+        int(contract["width"]) != SIZE
+        or int(contract["height"]) != SIZE
+        or len(contract["transform"]) != 6
+    ):
+        raise ValueError(f"Invalid published crop grid for {cohort['sample_id']}")
+    transform = Affine(*[float(value) for value in contract["transform"]])
+    if (
+        transform.a != RESOLUTION
+        or transform.b != 0.0
+        or transform.d != 0.0
+        or transform.e != -RESOLUTION
+    ):
+        raise ValueError(f"Published crop resolution changed for {cohort['sample_id']}")
+    return CRS.from_string(str(contract["crs"])), transform
 
 
 def landsat_cloud_classes(qa: np.ndarray) -> np.ndarray:
@@ -182,9 +208,7 @@ def acquire_one(
     bands, descriptions = source_contract(sensor)
     target_assets = assets["target"]["assets"]
     reference_assets = assets["reference"]["assets"]
-    crs, transform = aligned_grid(
-        target_assets[bands[0]], cohort["source_center"], size=SIZE, resolution=RESOLUTION
-    )
+    crs, transform = crop_grid(cohort, target_assets[bands[0]])
     target = read_stack(target_assets, bands, crs=crs, transform=transform)
     reference = read_stack(reference_assets, bands, crs=crs, transform=transform)
     image = np.concatenate([target, reference], axis=0)
