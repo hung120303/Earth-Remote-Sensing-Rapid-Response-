@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_cloudsen12_fresh_test_feature_extraction",
+  "scope": "one-shot model-aligned scene features for the fixed fresh no-plume safety test",
+  "source_receipt": {
+    "path": "reports/acquisition/cloudsen12_fresh_test_model_manifest.json",
+    "sha256": "cafd39e0f5dc16abd1d4ed1e699085a6f049cb6782998425eb3b14c80cff020a"
+  },
+  "extractor": {
+    "path": "tools/extract_cloudsen12_spatial_scene_features.py",
+    "sha256": "abb0c6063a471f8126203b4f58809662bdc119f9dbc3d4c767f2ae03d08256a4",
+    "feature_schema": "108 frozen released/residual probability and operational-input scene features"
+  },
+  "model_contract": {
+    "released_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+      "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"
+    },
+    "residual_artifact": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/mars_paper_residual_fold0_seed606.pt",
+      "sha256": "b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49"
+    },
+    "trust_region_strength": 0.5,
+    "fitting_during_extraction": false
+  },
+  "manifests": {
+    "fresh_external_test": {
+      "path": ".research/cloudsen12_fresh_test/model_test.jsonl",
+      "sha256": "c6cabb8b21c9573b5de9386327ec1800faab11225c8819e1fc3c5cad35d27d9a",
+      "rows": 368,
+      "groups": 355,
+      "feature_output": "outputs/cloudsen12_fresh_test_scene_features.npz"
+    }
+  },
+  "invariants": [
+    "The extractor verifies its own hash plus source receipt, manifest, checkpoint, and residual-artifact hashes before inference.",
+    "All 368 available rows are Sentinel-2 NO_PLUME fresh_external_test rows; no fitting or selection occurs.",
+    "Current and candidate heads will consume the identical 108-feature rows.",
+    "Published all-clear flags and non-clear pixel counts are carried only for prespecified evaluation strata, never as model features.",
+    "The six unavailable identities remain outside the feature cache and inside the adversarial full-cohort bound.",
+    "The exact MARS paper-test image, feature, score, and label cache remains unopened."
+  ]
+}

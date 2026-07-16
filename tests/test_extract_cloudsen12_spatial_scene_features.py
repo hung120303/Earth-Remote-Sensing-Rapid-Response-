@@ -36,6 +36,15 @@ class CloudsenSpatialSceneFeatureTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "duplicate"):
             validate_records([record, record], "auxiliary_training", 2)
 
+    def test_fresh_external_negative_role_is_supported(self) -> None:
+        record = {
+            "sample_id": "fresh",
+            "research_role": "fresh_external_test",
+            "label_state": "NO_PLUME",
+            "sensor_family": "Sentinel-2",
+        }
+        validate_records([record], "fresh_external_test", 1)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2325,3 +2325,10 @@ It reconciled all 41 available non-clear rows and all 84,588 published non-clear
 pixels, explicitly zero-filled both missing wind components in five rows, and kept
 all six unavailable identities in the receipt. No scoring or paper-test access
 occurred.
+### 2026-07-16: Fresh-test feature protocol frozen
+
+The one-shot feature extraction protocol now binds the 368-row loader manifest,
+released checkpoint, fold-0 residual representation, 108-feature schema, and output
+path by hash. Published cloud-composition fields are carried only for prespecified
+stratification and are prohibited model features. Neither scene head can be refit or
+selected during extraction, and the exact paper cache remains sealed.

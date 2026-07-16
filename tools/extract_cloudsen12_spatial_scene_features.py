@@ -58,8 +58,13 @@ def validate_records(records: list[dict[str, Any]], role: str, expected_rows: in
 
 
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
+    fresh_test = set(report["roles"]) == {"fresh_external_test"}
     lines = [
-        "# CloudSEN12+ spatial-pilot scene features",
+        (
+            "# CloudSEN12+ fresh-test scene features"
+            if fresh_test
+            else "# CloudSEN12+ spatial-pilot scene features"
+        ),
         "",
         "The released detector and frozen residual representation extracted scene features without fitting or model selection.",
         "",
@@ -74,7 +79,11 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
     lines.extend(
         [
             "",
-            "Auxiliary and development caches remain physically separate. Published CloudSEN12+ test rows and MARS paper-test imagery were not accessed.",
+            (
+                "The fixed representation was applied once to the fresh published test rows; the exact MARS paper-test cache was not accessed."
+                if fresh_test
+                else "Auxiliary and development caches remain physically separate. Published CloudSEN12+ test rows and MARS paper-test imagery were not accessed."
+            ),
             "",
         ]
     )
@@ -96,6 +105,11 @@ def main() -> int:
 
     protocol_path = (ROOT / args.protocol).resolve()
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    if sha256(Path(__file__).resolve()) != protocol["extractor"]["sha256"]:
+        raise ValueError("Scene-feature extractor hash mismatch")
+    source_receipt = (ROOT / protocol["source_receipt"]["path"]).resolve()
+    if sha256(source_receipt) != protocol["source_receipt"]["sha256"]:
+        raise ValueError("Source receipt hash mismatch")
     model_contract = protocol["model_contract"]
     artifact_path = (ROOT / model_contract["residual_artifact"]["path"]).resolve()
     if sha256(artifact_path) != model_contract["residual_artifact"]["sha256"]:
@@ -114,13 +128,15 @@ def main() -> int:
         *tensor_feature_names(),
     ]
     results: dict[str, Any] = {}
-    for role in ("auxiliary_training", "development"):
+    roles = list(protocol["manifests"])
+    for role in roles:
         contract = protocol["manifests"][role]
         manifest = (ROOT / contract["path"]).resolve()
         if sha256(manifest) != contract["sha256"]:
             raise ValueError(f"{role} manifest hash mismatch")
         records = list(iter_manifest(manifest))
         validate_records(records, role, int(contract["rows"]))
+        record_by_id = {record["sample_id"]: record for record in records}
         loader = DataLoader(
             MarsPaperDataset(ROOT, records, augment=False, seed=0),
             batch_size=args.batch_size,
@@ -182,6 +198,14 @@ def main() -> int:
             sensors=np.zeros(len(rows), dtype=np.uint8),
             sample_ids=np.asarray(sample_ids),
             groups=np.asarray(groups),
+            published_all_clear=np.asarray(
+                [record_by_id[sample_id].get("published_all_clear", True) for sample_id in sample_ids],
+                dtype=np.bool_,
+            ),
+            published_nonclear_pixels=np.asarray(
+                [record_by_id[sample_id].get("published_nonclear_pixels", 0) for sample_id in sample_ids],
+                dtype=np.int32,
+            ),
             research_role=np.asarray(role),
             artifact_sha256=np.asarray(model_contract["residual_artifact"]["sha256"]),
             checkpoint_sha256=np.asarray(model_contract["released_checkpoint"]["sha256"]),
@@ -200,7 +224,11 @@ def main() -> int:
 
     report = {
         "schema_version": 1,
-        "status": "nonsealed frozen negative scene features extracted",
+        "status": (
+            "fresh external-test frozen negative scene features extracted"
+            if set(roles) == {"fresh_external_test"}
+            else "nonsealed frozen negative scene features extracted"
+        ),
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "roles": results,
         "contract": {
@@ -208,7 +236,7 @@ def main() -> int:
             "residual_artifact_sha256": model_contract["residual_artifact"]["sha256"],
             "checkpoint_sha256": model_contract["released_checkpoint"]["sha256"],
             "trust_region_strength": trust_region_strength,
-            "cloudsen12_test_accessed": False,
+            "cloudsen12_test_accessed": set(roles) == {"fresh_external_test"},
             "paper_test_accessed": False,
         },
         "provenance": {
