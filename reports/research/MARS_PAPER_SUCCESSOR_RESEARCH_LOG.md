@@ -2712,3 +2712,8 @@ feature fresh cache. A no-fit extractor is frozen against the previously acquire
 receipt. It will compute a 9x64x64 spatial tensor and 768 CLS features for the same
 identity-ordered rows in one pass. The six unavailable identities remain in the
 adversarial bound. No safety metric or paper data are accessed during extraction.
+
+The v1 extractor exited at module import because `CLS_WIDTH` was imported from the
+feature extractor rather than defined locally. No model or scene was loaded and no
+output was written. V2 fixes the constant at its frozen 768-feature contract and is
+refrozen under a new script hash before inference.

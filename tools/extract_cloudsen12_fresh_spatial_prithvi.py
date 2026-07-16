@@ -24,7 +24,6 @@ from acquire_mars_metadata import sha256  # noqa: E402
 from evaluate_mars_residual_endpoint_blend import load_residual_model  # noqa: E402
 from extract_cloudsen12_spatial_scene_features import validate_records  # noqa: E402
 from extract_mars_prithvi_scene_features import (  # noqa: E402
-    CLS_WIDTH,
     INPUT_SIZE,
     build_features,
     build_input,
@@ -38,6 +37,7 @@ from train_mars_paper_residual import MarsPaperDataset, move_batch  # noqa: E402
 
 
 DEFAULT_PROTOCOL = Path("configs/cloudsen12_fresh_spatial_prithvi_protocol.json")
+CLS_WIDTH = 768
 
 
 @torch.no_grad()
