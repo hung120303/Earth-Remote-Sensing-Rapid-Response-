@@ -2379,3 +2379,13 @@ lower -0.04445) and matched-FPR recall delta +0.01762 with lower -0.01081.
 Test-only IoU remains decisive at 0.29246225 versus 0.17156194 (lower delta
 +0.08597), and FPR improves by -0.04226. Because both views must pass, the joint
 scene head is rejected for final promotion; the dense-mask result remains valid.
+### 2026-07-16: Temporal site-prior development experiment frozen
+
+Repeated exact-paper failures diagnose unseen-site transfer, while simple temporal
+site evidence remains label-free at inference. A new candidate family therefore
+adds each physical site's top-k mean current-scene logit to every scene logit. The
+18 top-k/weight combinations, selection folds 2/3/4, independent confirmation folds
+0/1, paired site-bootstrap gates, recall tolerances, rank rule, and artifact policy
+were frozen before development scoring. The family is transparently motivated by
+post-test diagnosis, but its parameter selection and confirmation use only authorized
+development folds; this experiment does not load the paper cache.

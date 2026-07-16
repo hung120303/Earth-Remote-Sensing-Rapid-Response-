@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_temporal_site_prior_development_selection",
+  "scope": "label-free temporal site-evidence architecture selected only on authorized cross-site development folds",
+  "trainer": {
+    "path": "tools/train_mars_temporal_site_prior.py",
+    "sha256": "b6ab1b774d851da32d05db39b010a44a698d922852000cbdd8243eabea5606dd"
+  },
+  "inputs": {
+    "inner": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"
+    },
+    "fold0": {
+      "path": "outputs/mars_scene_features_fold0.npz",
+      "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"
+    },
+    "fold1": {
+      "path": "outputs/mars_scene_features_fold1_crossfit.npz",
+      "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"
+    },
+    "scores": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    }
+  },
+  "folds": {
+    "selection": [2, 3, 4],
+    "confirmation": [0, 1],
+    "unit": "physical_location_id"
+  },
+  "search": {
+    "top_k": [1, 3, 5],
+    "weights": [0.1, 0.2, 0.3, 0.5, 0.75, 1.0],
+    "formula": "logit(current_scene_score) + weight * mean(site top-k current-scene logits)",
+    "candidate_count": 18
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "selection_seed": 20262710,
+    "confirmation_seed": 20262750,
+    "unit": "physical_location_id",
+    "confidence": 0.95
+  },
+  "gates": {
+    "selection": "combined AP and recall improve, AP lower CI positive, every fold AP nonnegative and recall within tolerance",
+    "confirmation": "same fixed candidate has combined AP and recall improve, AP lower CI positive, every fold AP nonnegative and recall within tolerance",
+    "per_fold_recall_tolerance": 0.002,
+    "all_required": true
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_temporal_site_prior.joblib",
+    "json": "reports/experiments/mars_temporal_site_prior.json",
+    "markdown": "reports/experiments/MARS_TEMPORAL_SITE_PRIOR.md"
+  },
+  "interpretation": {
+    "architecture_hypothesis_source": "transparent diagnosis after prior exact-paper failures showed a recurring unseen-site transfer problem",
+    "parameter_selection_data": "folds 2/3/4 only",
+    "independent_confirmation_data": "folds 0/1 only",
+    "paper_cache_during_this_experiment": false,
+    "inference_labels": false
+  },
+  "invariants": [
+    "No label, country, coordinate, paper split, or training-site membership is used by the inference formula.",
+    "Physical-site aggregation uses only the already frozen current scene scores available at inference.",
+    "The 18 candidates, rank rule, confirmation gates, seeds, and output paths are frozen before development scoring.",
+    "Failure writes no artifact and blocks fresh-safety or paper replay."
+  ]
+}
