@@ -1771,3 +1771,13 @@ can authorize two-seed five-fold transfer; paper data is excluded. Frozen
 script SHA-256 is
 `08b9c96b3dbe2b11f2ae6ea7151b1b82587b80118306fa410113fd0b5fddb4f5`;
 the input-contract test passes.
+
+The frozen end-to-end transfer pilot is rejected before a full campaign.
+Three-epoch adaptation reduces mean scene BCE from 0.519 to 0.331. At the
+selected 0.10 current-logit blend, fold-2 AP improves +0.001369, recall is
+unchanged, and Landsat/Sentinel-2 AP improve +0.000155/+0.001504. However the
+gain misses the frozen +0.003 pilot floor and its paired-site interval is
+[-0.001341, +0.003668]. MethaneS2CM pretraining transfers weakly after full
+adaptation, but not decisively enough to justify ten crossfit runs. The paper
+cache remains unused. Compact result JSON SHA-256 is
+`2c08a97c91923d6522fdef10371170b821cf3839396625baebdc5071e995a226`.
