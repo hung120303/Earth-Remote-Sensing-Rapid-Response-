@@ -2946,3 +2946,16 @@ Samples, replacement sampler, augmentation rules and seeds, architecture, optimi
 losses, epochs, folds, blends, and gates are unchanged. A repeat 16-scene GPU smoke
 test passed with finite losses, 16/16 finite scores, and the same 130,754 trainable
 parameters. The amended trainer hash and loader settings were frozen before restart.
+
+### 2026-07-16: Patch-supervised Prithvi LoRA scene pilot rejected
+
+The seed-20261800 pilot completed all three selection cross-fits and the reused
+fold-0/1 audit without numerical or data failures, but its ranking signal was
+anti-helpful. The selected minimum 0.05 blend reduced selection AP by 0.000489
+(paired-site interval [-0.001637,+0.000990]) and matched-FPR recall by 0.000431.
+Fold 2 regressed most: AP -0.001691 and recall -0.003764. Folds 3/4 had small AP
+gains, but could not satisfy the every-fold gate. The reused audit also regressed
+AP by 0.000514 (interval [-0.001526,+0.000361]); folds 0 and 1 both lost recall.
+Larger blends worsened selection AP monotonically, reaching -0.052206 at 0.50.
+This rules out second-seed replication and external scoring for this score family.
+No artifact or score cache was written, and no fresh or paper input was opened.
