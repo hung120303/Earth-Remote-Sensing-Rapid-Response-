@@ -1684,3 +1684,24 @@ independent signal beyond the current ensemble. This closes environment-risk
 variance regularization of the existing nine-channel spatial CNN; the paper
 cache was not loaded. Compact result JSON SHA-256 is
 `008df042388e601740f3c24088efda9356da38dea5eb542b8d7ce52409230d37`.
+
+## Spatial Prithvi patch representation: frozen extraction protocol
+
+The next branch adds spatial foundation information rather than another loss
+over the existing representation. Prithvi-EO-2.0 is a multi-temporal ViT/MAE
+whose non-overlapping 3-D patch embeddings retain temporal and spatial token
+geometry (<https://arxiv.org/abs/2412.02732>; official model card
+<https://huggingface.co/ibm-nasa-geospatial/Prithvi-EO-2.0-tiny-TL>). The
+earlier probe compressed these tokens to CLS and global statistics, while the
+existing spatial CNN used only nine pooled probability/physics maps.
+
+The frozen development extraction therefore keeps signed target-minus-
+reference patch tokens from encoder blocks 3, 6, 9, and 12. At the fixed
+128-pixel input and 16-pixel patch size this produces a 768 x 8 x 8 float16
+map per scene. Plume and observability fractions are stored separately at the
+same grid for auxiliary training; they cannot enter paper feature extraction.
+The cache is resumable, hash-pinned, and ignored by Git. A 64-row real-data
+CUDA smoke run completed with the expected shape and finite values. Frozen
+extractor SHA-256 is
+`7f6bb99befcffa96f18e58eb7431dccfa2b60d051c461f6c36f48c5323cf9f35`;
+the two tensor-contract tests pass.
