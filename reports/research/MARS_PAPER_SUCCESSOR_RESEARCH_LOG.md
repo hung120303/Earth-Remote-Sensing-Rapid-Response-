@@ -2903,3 +2903,15 @@ Only pair weights 0/0.25/0.5 and current blends 0.05/0.10/0.20/0.30 are searched
 Selection cross-fits folds 2/3/4 using only the other selection folds; the fixed
 winner is audited on already-exposed folds 0/1. Every fold, both sensors, matched-
 FPR recall, and paired-site AP must pass before any fresh or paper scoring.
+
+### 2026-07-16: Robust Prithvi hard-pair ranker rejected
+
+The selected pair weight was 0.50 with a 0.10 blend. Selection AP improved
++0.001993 with paired-site interval [+0.000725,+0.003275], but fold-2 and fold-4
+matched-FPR recall each regressed about 0.0013. More importantly, the reused
+fold-0/1 audit improved AP only +0.000658 with interval
+[-0.000524,+0.001675], and fold-0 recall regressed 0.00134. No artifact or score
+cache was written; fresh and paper data were never loaded. A nonlinear head over
+frozen embeddings remains too correlated with current errors. Frozen-feature head
+experiments are now retired. The next representation experiment must adapt internal
+foundation-model features under strong parameter and group-robust regularization.

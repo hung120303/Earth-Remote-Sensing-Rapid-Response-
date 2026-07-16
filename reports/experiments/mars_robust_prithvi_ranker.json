@@ -1,0 +1,3313 @@
+{
+  "all_promotion_gates_pass": false,
+  "artifact": null,
+  "candidate_count": 12,
+  "decision": "Reject robust Prithvi ranker before fresh or paper scoring.",
+  "development_score_cache": null,
+  "generated_at_utc": "2026-07-16T20:12:50.120932+00:00",
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "253cc126293a79e48ef453521552b2d80fa29e48",
+    "numpy": "2.4.4",
+    "protocol_sha256": "c156725a8e2d83f7b29ce41110eb97a105a6b8f14a701867a14d20dee9ff04e1",
+    "script_sha256": "f7fc883c4f70b11ea53c308d7aba711af56ccfe71afb757898bae6ece6a4d40e",
+    "torch": "2.11.0+cu128"
+  },
+  "reused_holdout_audit": {
+    "blend_weight": 0.1,
+    "bootstrap": {
+      "confidence": 0.95,
+      "groups": 215,
+      "lower": -0.0005236991616390568,
+      "mean": 0.0006174172734962923,
+      "replicates": 10000,
+      "upper": 0.0016745350307253353
+    },
+    "independent_confirmation": false,
+    "metrics": {
+      "accuracy": 0.9309530503233061,
+      "auroc": 0.9831351899026136,
+      "average_precision": 0.9038157346050762,
+      "false_positive_rate": 0.07124884934028843,
+      "fn": 67.0,
+      "fp": 1161.0,
+      "negative_predictive_value": 0.9955923952371555,
+      "operating_point": {
+        "false_positive_rate": 0.07124884934028843,
+        "precision": 0.5506965944272446,
+        "recall": 0.9550335570469799,
+        "target_fpr": 0.0713,
+        "threshold": 0.2559863155265052
+      },
+      "precision": 0.5506965944272446,
+      "recall": 0.9550335570469799,
+      "sensor_average_precision": {
+        "Landsat": 0.9846533010363638,
+        "Sentinel-2": 0.8656802271503609
+      },
+      "specificity": 0.9287511506597116,
+      "tn": 15134.0,
+      "tp": 1423.0
+    },
+    "per_fold": {
+      "0": {
+        "checks": {
+          "ap_higher": true,
+          "no_material_sensor_ap_regression": true,
+          "recall_at_fpr_0_0713_higher": false
+        },
+        "delta": {
+          "average_precision": 0.0005687740917931228,
+          "recall_at_fpr_0_0713": -0.0013422818791947178,
+          "sensor_average_precision": {
+            "Landsat": 0.00038835593419950243,
+            "Sentinel-2": 0.0007227272430141429
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9313452765105152,
+          "auroc": 0.9813401321435958,
+          "average_precision": 0.9148631842226579,
+          "false_positive_rate": 0.0712205775297258,
+          "fn": 30.0,
+          "fp": 587.0,
+          "negative_predictive_value": 0.996096291476903,
+          "operating_point": {
+            "false_positive_rate": 0.0712205775297258,
+            "precision": 0.5491551459293394,
+            "recall": 0.959731543624161,
+            "target_fpr": 0.0713,
+            "threshold": 0.1848024278185324
+          },
+          "precision": 0.5491551459293394,
+          "recall": 0.959731543624161,
+          "sensor_average_precision": {
+            "Landsat": 0.9866248342300263,
+            "Sentinel-2": 0.8813773653032817
+          },
+          "specificity": 0.9287794224702742,
+          "tn": 7655.0,
+          "tp": 715.0
+        },
+        "rank": [
+          -0.0013422818791947178,
+          -0.000773507787401595,
+          0.0005687740917931228
+        ]
+      },
+      "1": {
+        "checks": {
+          "ap_higher": true,
+          "no_material_sensor_ap_regression": true,
+          "recall_at_fpr_0_0713_higher": false
+        },
+        "delta": {
+          "average_precision": 0.0007241401676991721,
+          "recall_at_fpr_0_0713": 0.0,
+          "sensor_average_precision": {
+            "Landsat": 0.0002546242197437598,
+            "Sentinel-2": 0.0011778417197602087
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9302114116844737,
+          "auroc": 0.985233399200098,
+          "average_precision": 0.8973366908482787,
+          "false_positive_rate": 0.07127778467651807,
+          "fn": 40.0,
+          "fp": 574.0,
+          "negative_predictive_value": 0.9946801436361218,
+          "operating_point": {
+            "false_positive_rate": 0.07127778467651807,
+            "precision": 0.5512118842845973,
+            "recall": 0.9463087248322147,
+            "target_fpr": 0.0713,
+            "threshold": 0.3284782827521428
+          },
+          "precision": 0.5512118842845973,
+          "recall": 0.9463087248322147,
+          "sensor_average_precision": {
+            "Landsat": 0.9836890246867735,
+            "Sentinel-2": 0.8574870356771541
+          },
+          "specificity": 0.928722215323482,
+          "tn": 7479.0,
+          "tp": 705.0
+        },
+        "rank": [
+          0.0,
+          0.0007241401676991721,
+          0.0007241401676991721
+        ]
+      }
+    },
+    "rank": [
+      1,
+      0.0005687740917931228,
+      0.0006575278277342056,
+      0.0,
+      -0.1
+    ],
+    "reason": "folds 0/1 have been exposed by predecessor architecture experiments",
+    "stable": true,
+    "versus_current": {
+      "checks": {
+        "ap_higher": true,
+        "no_material_sensor_ap_regression": true,
+        "recall_at_fpr_0_0713_higher": false
+      },
+      "delta": {
+        "average_precision": 0.0006575278277342056,
+        "recall_at_fpr_0_0713": 0.0,
+        "sensor_average_precision": {
+          "Landsat": 0.0004169138806714434,
+          "Sentinel-2": 0.0009263645270607412
+        }
+      },
+      "metrics": {
+        "accuracy": 0.9309530503233061,
+        "auroc": 0.9831351899026136,
+        "average_precision": 0.9038157346050762,
+        "false_positive_rate": 0.07124884934028843,
+        "fn": 67.0,
+        "fp": 1161.0,
+        "negative_predictive_value": 0.9955923952371555,
+        "operating_point": {
+          "false_positive_rate": 0.07124884934028843,
+          "precision": 0.5506965944272446,
+          "recall": 0.9550335570469799,
+          "target_fpr": 0.0713,
+          "threshold": 0.2559863155265052
+        },
+        "precision": 0.5506965944272446,
+        "recall": 0.9550335570469799,
+        "sensor_average_precision": {
+          "Landsat": 0.9846533010363638,
+          "Sentinel-2": 0.8656802271503609
+        },
+        "specificity": 0.9287511506597116,
+        "tn": 15134.0,
+        "tp": 1423.0
+      },
+      "rank": [
+        0.0,
+        0.0006575278277342056,
+        0.0006575278277342056
+      ]
+    }
+  },
+  "reused_holdout_audit_passed": false,
+  "schema_version": 1,
+  "scope": "development-only worst-domain pairwise-AUC Prithvi ranker; no fresh or paper inputs",
+  "selected": {
+    "blend_weight": 0.1,
+    "bootstrap": {
+      "confidence": 0.95,
+      "groups": 403,
+      "lower": 0.0007249017967400246,
+      "mean": 0.0019220781829812786,
+      "replicates": 10000,
+      "upper": 0.0032754617580718344
+    },
+    "metrics": {
+      "accuracy": 0.9309203100308526,
+      "auroc": 0.9856342298363725,
+      "average_precision": 0.905299505167133,
+      "false_positive_rate": 0.07127839386568825,
+      "fn": 107.0,
+      "fp": 1729.0,
+      "negative_predictive_value": 0.9952728075988513,
+      "operating_point": {
+        "false_positive_rate": 0.07127839386568825,
+        "precision": 0.5615013948769972,
+        "recall": 0.9538991813873331,
+        "target_fpr": 0.0713,
+        "threshold": 0.16476843747618541
+      },
+      "precision": 0.5615013948769972,
+      "recall": 0.9538991813873331,
+      "sensor_average_precision": {
+        "Landsat": 0.9766510471920439,
+        "Sentinel-2": 0.8719225718406987
+      },
+      "specificity": 0.9287216061343118,
+      "tn": 22528.0,
+      "tp": 2214.0
+    },
+    "per_fold": {
+      "2": {
+        "checks": {
+          "ap_higher": true,
+          "no_material_sensor_ap_regression": true,
+          "recall_at_fpr_0_0713_higher": false
+        },
+        "delta": {
+          "average_precision": 0.0006648658680057373,
+          "recall_at_fpr_0_0713": -0.0012547051442911572,
+          "sensor_average_precision": {
+            "Landsat": -2.8170098294033608e-06,
+            "Sentinel-2": 0.0009562138729811709
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9311672138571266,
+          "auroc": 0.9867384723574529,
+          "average_precision": 0.9172676615816994,
+          "false_positive_rate": 0.07117969138875062,
+          "fn": 36.0,
+          "fp": 572.0,
+          "negative_predictive_value": 0.9952,
+          "operating_point": {
+            "false_positive_rate": 0.07117969138875062,
+            "precision": 0.5708927231807952,
+            "recall": 0.9548306148055207,
+            "target_fpr": 0.0713,
+            "threshold": 0.10036466815428768
+          },
+          "precision": 0.5708927231807952,
+          "recall": 0.9548306148055207,
+          "sensor_average_precision": {
+            "Landsat": 0.9790400261328401,
+            "Sentinel-2": 0.8889424802460001
+          },
+          "specificity": 0.9288203086112494,
+          "tn": 7464.0,
+          "tp": 761.0
+        },
+        "rank": [
+          -0.0012547051442911572,
+          -0.0005898392762854199,
+          0.0006648658680057373
+        ]
+      },
+      "3": {
+        "checks": {
+          "ap_higher": true,
+          "no_material_sensor_ap_regression": true,
+          "recall_at_fpr_0_0713_higher": true
+        },
+        "delta": {
+          "average_precision": 0.0004770925165452633,
+          "recall_at_fpr_0_0713": 0.0013192612137202797,
+          "sensor_average_precision": {
+            "Landsat": 0.0013191828960028573,
+            "Sentinel-2": -6.197671814056616e-05
+          }
+        },
+        "metrics": {
+          "accuracy": 0.93260597795204,
+          "auroc": 0.9907193968641583,
+          "average_precision": 0.9307937520169981,
+          "false_positive_rate": 0.07125979355801518,
+          "fn": 20.0,
+          "fp": 573.0,
+          "negative_predictive_value": 0.9973290598290598,
+          "operating_point": {
+            "false_positive_rate": 0.07125979355801518,
+            "precision": 0.562929061784897,
+            "recall": 0.9736147757255936,
+            "target_fpr": 0.0713,
+            "threshold": 0.11673941874144622
+          },
+          "precision": 0.562929061784897,
+          "recall": 0.9736147757255936,
+          "sensor_average_precision": {
+            "Landsat": 0.9759697228902071,
+            "Sentinel-2": 0.9112775498126269
+          },
+          "specificity": 0.9287402064419849,
+          "tn": 7468.0,
+          "tp": 738.0
+        },
+        "rank": [
+          0.0004770925165452633,
+          0.001796353730265543,
+          0.0004770925165452633
+        ]
+      },
+      "4": {
+        "checks": {
+          "ap_higher": true,
+          "no_material_sensor_ap_regression": true,
+          "recall_at_fpr_0_0713_higher": false
+        },
+        "delta": {
+          "average_precision": 0.0010842980496450494,
+          "recall_at_fpr_0_0713": -0.0013054830287205776,
+          "sensor_average_precision": {
+            "Landsat": 8.288822272162211e-05,
+            "Sentinel-2": 0.0016422127941184694
+          }
+        },
+        "metrics": {
+          "accuracy": 0.9302481556002683,
+          "auroc": 0.9818202710553026,
+          "average_precision": 0.8920998372472142,
+          "false_positive_rate": 0.07127139364303178,
+          "fn": 41.0,
+          "fp": 583.0,
+          "negative_predictive_value": 0.9946321026446714,
+          "operating_point": {
+            "false_positive_rate": 0.07127139364303178,
+            "precision": 0.5542813455657493,
+            "recall": 0.9464751958224543,
+            "target_fpr": 0.0713,
+            "threshold": 0.2898725901690817
+          },
+          "precision": 0.5542813455657493,
+          "recall": 0.9464751958224543,
+          "sensor_average_precision": {
+            "Landsat": 0.9726929660244195,
+            "Sentinel-2": 0.8563343676520306
+          },
+          "specificity": 0.9287286063569682,
+          "tn": 7597.0,
+          "tp": 725.0
+        },
+        "rank": [
+          -0.0013054830287205776,
+          -0.00022118497907552825,
+          0.0010842980496450494
+        ]
+      }
+    },
+    "rank": [
+      1,
+      0.0004770925165452633,
+      0.0019929306416923698,
+      0.0012925463162430928,
+      -0.1
+    ],
+    "spec": {
+      "dropout": 0.25,
+      "epochs": 20,
+      "gradient_clip": 5.0,
+      "group_temperature": 0.1,
+      "hard_negative_pool": 4096,
+      "hidden": 128,
+      "learning_rate": 0.0003,
+      "pair_count": 8192,
+      "pair_margin": 0.5,
+      "pair_weight": 0.5,
+      "weight_decay": 0.01
+    },
+    "spec_key": "pair_weight_0.50",
+    "stable": true,
+    "versus_current": {
+      "checks": {
+        "ap_higher": true,
+        "no_material_sensor_ap_regression": true,
+        "recall_at_fpr_0_0713_higher": true
+      },
+      "delta": {
+        "average_precision": 0.0019929306416923698,
+        "recall_at_fpr_0_0713": 0.0012925463162430928,
+        "sensor_average_precision": {
+          "Landsat": 0.0004265578664822689,
+          "Sentinel-2": 0.0027343796064628334
+        }
+      },
+      "metrics": {
+        "accuracy": 0.9309203100308526,
+        "auroc": 0.9856342298363725,
+        "average_precision": 0.905299505167133,
+        "false_positive_rate": 0.07127839386568825,
+        "fn": 107.0,
+        "fp": 1729.0,
+        "negative_predictive_value": 0.9952728075988513,
+        "operating_point": {
+          "false_positive_rate": 0.07127839386568825,
+          "precision": 0.5615013948769972,
+          "recall": 0.9538991813873331,
+          "target_fpr": 0.0713,
+          "threshold": 0.16476843747618541
+        },
+        "precision": 0.5615013948769972,
+        "recall": 0.9538991813873331,
+        "sensor_average_precision": {
+          "Landsat": 0.9766510471920439,
+          "Sentinel-2": 0.8719225718406987
+        },
+        "specificity": 0.9287216061343118,
+        "tn": 22528.0,
+        "tp": 2214.0
+      },
+      "rank": [
+        0.0012925463162430928,
+        0.0032854769579354626,
+        0.0019929306416923698
+      ]
+    }
+  },
+  "selection_passed": true,
+  "training_history": {
+    "audit": {
+      "20261700": [
+        {
+          "epoch": 1,
+          "loss": 5.924298286437988,
+          "pair_loss": 2.4680886268615723,
+          "robust_bce": 4.690253734588623,
+          "worst_domain_bce": 4.690253257751465
+        },
+        {
+          "epoch": 2,
+          "loss": 4.4621782302856445,
+          "pair_loss": 1.8543251752853394,
+          "robust_bce": 3.535015821456909,
+          "worst_domain_bce": 3.5350160598754883
+        },
+        {
+          "epoch": 3,
+          "loss": 3.1302194595336914,
+          "pair_loss": 1.4885075092315674,
+          "robust_bce": 2.385965585708618,
+          "worst_domain_bce": 2.3858284950256348
+        },
+        {
+          "epoch": 4,
+          "loss": 2.928013801574707,
+          "pair_loss": 1.5572608709335327,
+          "robust_bce": 2.149383306503296,
+          "worst_domain_bce": 2.066223621368408
+        },
+        {
+          "epoch": 5,
+          "loss": 2.884657621383667,
+          "pair_loss": 1.4354033470153809,
+          "robust_bce": 2.1669559478759766,
+          "worst_domain_bce": 2.0868470668792725
+        },
+        {
+          "epoch": 6,
+          "loss": 2.6125054359436035,
+          "pair_loss": 1.2388503551483154,
+          "robust_bce": 1.9930801391601562,
+          "worst_domain_bce": 1.8941882848739624
+        },
+        {
+          "epoch": 7,
+          "loss": 2.2802793979644775,
+          "pair_loss": 1.0616519451141357,
+          "robust_bce": 1.7494534254074097,
+          "worst_domain_bce": 1.660960078239441
+        },
+        {
+          "epoch": 8,
+          "loss": 1.9814534187316895,
+          "pair_loss": 0.9564546346664429,
+          "robust_bce": 1.5032260417938232,
+          "worst_domain_bce": 1.418607473373413
+        },
+        {
+          "epoch": 9,
+          "loss": 1.876223087310791,
+          "pair_loss": 0.9264833331108093,
+          "robust_bce": 1.412981390953064,
+          "worst_domain_bce": 1.3930310010910034
+        },
+        {
+          "epoch": 10,
+          "loss": 1.8092703819274902,
+          "pair_loss": 0.8976463079452515,
+          "robust_bce": 1.3604472875595093,
+          "worst_domain_bce": 1.3528356552124023
+        },
+        {
+          "epoch": 11,
+          "loss": 1.6459391117095947,
+          "pair_loss": 0.8375135660171509,
+          "robust_bce": 1.2271822690963745,
+          "worst_domain_bce": 1.2145289182662964
+        },
+        {
+          "epoch": 12,
+          "loss": 1.567355990409851,
+          "pair_loss": 0.7615306377410889,
+          "robust_bce": 1.1865906715393066,
+          "worst_domain_bce": 1.1760680675506592
+        },
+        {
+          "epoch": 13,
+          "loss": 1.447601556777954,
+          "pair_loss": 0.6870032548904419,
+          "robust_bce": 1.104099988937378,
+          "worst_domain_bce": 1.081260323524475
+        },
+        {
+          "epoch": 14,
+          "loss": 1.281501293182373,
+          "pair_loss": 0.6322417259216309,
+          "robust_bce": 0.9653804898262024,
+          "worst_domain_bce": 0.882178008556366
+        },
+        {
+          "epoch": 15,
+          "loss": 1.2172001600265503,
+          "pair_loss": 0.5995163917541504,
+          "robust_bce": 0.9174419641494751,
+          "worst_domain_bce": 0.8397521376609802
+        },
+        {
+          "epoch": 16,
+          "loss": 1.128454327583313,
+          "pair_loss": 0.5373092889785767,
+          "robust_bce": 0.8597996830940247,
+          "worst_domain_bce": 0.7803559899330139
+        },
+        {
+          "epoch": 17,
+          "loss": 1.0396099090576172,
+          "pair_loss": 0.5070786476135254,
+          "robust_bce": 0.7860706448554993,
+          "worst_domain_bce": 0.6833343505859375
+        },
+        {
+          "epoch": 18,
+          "loss": 0.9733701348304749,
+          "pair_loss": 0.4842245578765869,
+          "robust_bce": 0.7312578558921814,
+          "worst_domain_bce": 0.6372186541557312
+        },
+        {
+          "epoch": 19,
+          "loss": 0.8979889750480652,
+          "pair_loss": 0.4550527036190033,
+          "robust_bce": 0.6704626083374023,
+          "worst_domain_bce": 0.5853027701377869
+        },
+        {
+          "epoch": 20,
+          "loss": 0.839918315410614,
+          "pair_loss": 0.42175495624542236,
+          "robust_bce": 0.6290408372879028,
+          "worst_domain_bce": 0.5523067116737366
+        }
+      ],
+      "20261701": [
+        {
+          "epoch": 1,
+          "loss": 2.6062231063842773,
+          "pair_loss": 1.3389675617218018,
+          "robust_bce": 1.9367393255233765,
+          "worst_domain_bce": 1.9245537519454956
+        },
+        {
+          "epoch": 2,
+          "loss": 2.3761377334594727,
+          "pair_loss": 1.096634864807129,
+          "robust_bce": 1.8278201818466187,
+          "worst_domain_bce": 1.8078216314315796
+        },
+        {
+          "epoch": 3,
+          "loss": 1.9407529830932617,
+          "pair_loss": 0.854007363319397,
+          "robust_bce": 1.5137492418289185,
+          "worst_domain_bce": 1.4663655757904053
+        },
+        {
+          "epoch": 4,
+          "loss": 1.7208573818206787,
+          "pair_loss": 0.8130038976669312,
+          "robust_bce": 1.3143553733825684,
+          "worst_domain_bce": 1.2861576080322266
+        },
+        {
+          "epoch": 5,
+          "loss": 1.559156060218811,
+          "pair_loss": 0.7940089702606201,
+          "robust_bce": 1.162151575088501,
+          "worst_domain_bce": 1.1158796548843384
+        },
+        {
+          "epoch": 6,
+          "loss": 1.4269217252731323,
+          "pair_loss": 0.7233228087425232,
+          "robust_bce": 1.0652602910995483,
+          "worst_domain_bce": 0.9636502265930176
+        },
+        {
+          "epoch": 7,
+          "loss": 1.3826797008514404,
+          "pair_loss": 0.6349772214889526,
+          "robust_bce": 1.0651910305023193,
+          "worst_domain_bce": 1.003259539604187
+        },
+        {
+          "epoch": 8,
+          "loss": 1.2626922130584717,
+          "pair_loss": 0.5634711980819702,
+          "robust_bce": 0.9809566736221313,
+          "worst_domain_bce": 0.9091637134552002
+        },
+        {
+          "epoch": 9,
+          "loss": 1.1875884532928467,
+          "pair_loss": 0.5479757785797119,
+          "robust_bce": 0.9136005640029907,
+          "worst_domain_bce": 0.8362934589385986
+        },
+        {
+          "epoch": 10,
+          "loss": 1.0670980215072632,
+          "pair_loss": 0.5195993185043335,
+          "robust_bce": 0.8072983622550964,
+          "worst_domain_bce": 0.7185172438621521
+        },
+        {
+          "epoch": 11,
+          "loss": 0.9612537622451782,
+          "pair_loss": 0.4793298840522766,
+          "robust_bce": 0.7215887904167175,
+          "worst_domain_bce": 0.6293177008628845
+        },
+        {
+          "epoch": 12,
+          "loss": 0.9427348375320435,
+          "pair_loss": 0.4485599994659424,
+          "robust_bce": 0.7184548377990723,
+          "worst_domain_bce": 0.6825218796730042
+        },
+        {
+          "epoch": 13,
+          "loss": 0.8416953682899475,
+          "pair_loss": 0.4194541275501251,
+          "robust_bce": 0.6319683194160461,
+          "worst_domain_bce": 0.5639005303382874
+        },
+        {
+          "epoch": 14,
+          "loss": 0.7687439918518066,
+          "pair_loss": 0.39008551836013794,
+          "robust_bce": 0.5737012028694153,
+          "worst_domain_bce": 0.44674158096313477
+        },
+        {
+          "epoch": 15,
+          "loss": 0.7545109391212463,
+          "pair_loss": 0.3837425410747528,
+          "robust_bce": 0.5626396536827087,
+          "worst_domain_bce": 0.45741018652915955
+        },
+        {
+          "epoch": 16,
+          "loss": 0.7070469856262207,
+          "pair_loss": 0.3508914113044739,
+          "robust_bce": 0.5316012501716614,
+          "worst_domain_bce": 0.3888702988624573
+        },
+        {
+          "epoch": 17,
+          "loss": 0.680404007434845,
+          "pair_loss": 0.33946123719215393,
+          "robust_bce": 0.5106734037399292,
+          "worst_domain_bce": 0.3584417998790741
+        },
+        {
+          "epoch": 18,
+          "loss": 0.6610389351844788,
+          "pair_loss": 0.3258731961250305,
+          "robust_bce": 0.4981023371219635,
+          "worst_domain_bce": 0.36834216117858887
+        },
+        {
+          "epoch": 19,
+          "loss": 0.6410397291183472,
+          "pair_loss": 0.33183419704437256,
+          "robust_bce": 0.4751226007938385,
+          "worst_domain_bce": 0.3393702805042267
+        },
+        {
+          "epoch": 20,
+          "loss": 0.6270563006401062,
+          "pair_loss": 0.3183888792991638,
+          "robust_bce": 0.4678618609905243,
+          "worst_domain_bce": 0.34993964433670044
+        }
+      ]
+    },
+    "selection": {
+      "pair_weight_0.00": {
+        "2": [
+          [
+            {
+              "epoch": 1,
+              "loss": 3.981938123703003,
+              "pair_loss": 1.3825819492340088,
+              "robust_bce": 3.981938123703003,
+              "worst_domain_bce": 3.981938123703003
+            },
+            {
+              "epoch": 2,
+              "loss": 2.795832395553589,
+              "pair_loss": 1.16621732711792,
+              "robust_bce": 2.795832395553589,
+              "worst_domain_bce": 2.7958319187164307
+            },
+            {
+              "epoch": 3,
+              "loss": 1.8656278848648071,
+              "pair_loss": 1.1200780868530273,
+              "robust_bce": 1.8656278848648071,
+              "worst_domain_bce": 1.7885997295379639
+            },
+            {
+              "epoch": 4,
+              "loss": 1.877793312072754,
+              "pair_loss": 1.023752212524414,
+              "robust_bce": 1.877793312072754,
+              "worst_domain_bce": 1.8353370428085327
+            },
+            {
+              "epoch": 5,
+              "loss": 1.7100285291671753,
+              "pair_loss": 0.8956888914108276,
+              "robust_bce": 1.7100285291671753,
+              "worst_domain_bce": 1.6575088500976562
+            },
+            {
+              "epoch": 6,
+              "loss": 1.486583948135376,
+              "pair_loss": 0.8004118800163269,
+              "robust_bce": 1.486583948135376,
+              "worst_domain_bce": 1.3989208936691284
+            },
+            {
+              "epoch": 7,
+              "loss": 1.408880591392517,
+              "pair_loss": 0.7718657851219177,
+              "robust_bce": 1.408880591392517,
+              "worst_domain_bce": 1.395362377166748
+            },
+            {
+              "epoch": 8,
+              "loss": 1.3652892112731934,
+              "pair_loss": 0.7425236701965332,
+              "robust_bce": 1.3652892112731934,
+              "worst_domain_bce": 1.360167145729065
+            },
+            {
+              "epoch": 9,
+              "loss": 1.218519926071167,
+              "pair_loss": 0.6917530298233032,
+              "robust_bce": 1.218519926071167,
+              "worst_domain_bce": 1.2050354480743408
+            },
+            {
+              "epoch": 10,
+              "loss": 1.0758966207504272,
+              "pair_loss": 0.6386290192604065,
+              "robust_bce": 1.0758966207504272,
+              "worst_domain_bce": 1.0246399641036987
+            },
+            {
+              "epoch": 11,
+              "loss": 0.997050940990448,
+              "pair_loss": 0.5810100436210632,
+              "robust_bce": 0.997050940990448,
+              "worst_domain_bce": 0.9231881499290466
+            },
+            {
+              "epoch": 12,
+              "loss": 0.9390818476676941,
+              "pair_loss": 0.5402302742004395,
+              "robust_bce": 0.9390818476676941,
+              "worst_domain_bce": 0.8694562315940857
+            },
+            {
+              "epoch": 13,
+              "loss": 0.8553299307823181,
+              "pair_loss": 0.5049319863319397,
+              "robust_bce": 0.8553299307823181,
+              "worst_domain_bce": 0.7817405462265015
+            },
+            {
+              "epoch": 14,
+              "loss": 0.7918021082878113,
+              "pair_loss": 0.48846209049224854,
+              "robust_bce": 0.7918021082878113,
+              "worst_domain_bce": 0.7076977491378784
+            },
+            {
+              "epoch": 15,
+              "loss": 0.7408326864242554,
+              "pair_loss": 0.46499624848365784,
+              "robust_bce": 0.7408326864242554,
+              "worst_domain_bce": 0.6869980096817017
+            },
+            {
+              "epoch": 16,
+              "loss": 0.6689610481262207,
+              "pair_loss": 0.4302636981010437,
+              "robust_bce": 0.6689610481262207,
+              "worst_domain_bce": 0.5969036221504211
+            },
+            {
+              "epoch": 17,
+              "loss": 0.6407422423362732,
+              "pair_loss": 0.39791542291641235,
+              "robust_bce": 0.6407422423362732,
+              "worst_domain_bce": 0.5760789513587952
+            },
+            {
+              "epoch": 18,
+              "loss": 0.5913576483726501,
+              "pair_loss": 0.37876421213150024,
+              "robust_bce": 0.5913576483726501,
+              "worst_domain_bce": 0.495243102312088
+            },
+            {
+              "epoch": 19,
+              "loss": 0.5551820993423462,
+              "pair_loss": 0.36464834213256836,
+              "robust_bce": 0.5551820993423462,
+              "worst_domain_bce": 0.43225759267807007
+            },
+            {
+              "epoch": 20,
+              "loss": 0.5288100242614746,
+              "pair_loss": 0.3517759442329407,
+              "robust_bce": 0.5288100242614746,
+              "worst_domain_bce": 0.3984922766685486
+            }
+          ],
+          [
+            {
+              "epoch": 1,
+              "loss": 2.3504080772399902,
+              "pair_loss": 1.3363914489746094,
+              "robust_bce": 2.3504080772399902,
+              "worst_domain_bce": 2.350311517715454
+            },
+            {
+              "epoch": 2,
+              "loss": 2.0794055461883545,
+              "pair_loss": 1.038191556930542,
+              "robust_bce": 2.0794055461883545,
+              "worst_domain_bce": 2.0107381343841553
+            },
+            {
+              "epoch": 3,
+              "loss": 1.9182456731796265,
+              "pair_loss": 0.9401257038116455,
+              "robust_bce": 1.9182456731796265,
+              "worst_domain_bce": 1.8583557605743408
+            },
+            {
+              "epoch": 4,
+              "loss": 1.6533783674240112,
+              "pair_loss": 0.9324853420257568,
+              "robust_bce": 1.6533783674240112,
+              "worst_domain_bce": 1.5590938329696655
+            },
+            {
+              "epoch": 5,
+              "loss": 1.6800415515899658,
+              "pair_loss": 0.9126036167144775,
+              "robust_bce": 1.6800415515899658,
+              "worst_domain_bce": 1.6767271757125854
+            },
+            {
+              "epoch": 6,
+              "loss": 1.5667051076889038,
+              "pair_loss": 0.8640720248222351,
+              "robust_bce": 1.5667051076889038,
+              "worst_domain_bce": 1.5638518333435059
+            },
+            {
+              "epoch": 7,
+              "loss": 1.3685920238494873,
+              "pair_loss": 0.754673957824707,
+              "robust_bce": 1.3685920238494873,
+              "worst_domain_bce": 1.3545118570327759
+            },
+            {
+              "epoch": 8,
+              "loss": 1.1993345022201538,
+              "pair_loss": 0.656629204750061,
+              "robust_bce": 1.1993345022201538,
+              "worst_domain_bce": 1.1138275861740112
+            },
+            {
+              "epoch": 9,
+              "loss": 1.1330865621566772,
+              "pair_loss": 0.5675725936889648,
+              "robust_bce": 1.1330865621566772,
+              "worst_domain_bce": 1.064122200012207
+            },
+            {
+              "epoch": 10,
+              "loss": 1.0505865812301636,
+              "pair_loss": 0.5405495166778564,
+              "robust_bce": 1.0505865812301636,
+              "worst_domain_bce": 0.975723385810852
+            },
+            {
+              "epoch": 11,
+              "loss": 0.9507733583450317,
+              "pair_loss": 0.5026504993438721,
+              "robust_bce": 0.9507733583450317,
+              "worst_domain_bce": 0.8591684103012085
+            },
+            {
+              "epoch": 12,
+              "loss": 0.8503891229629517,
+              "pair_loss": 0.4858640134334564,
+              "robust_bce": 0.8503891229629517,
+              "worst_domain_bce": 0.7726804614067078
+            },
+            {
+              "epoch": 13,
+              "loss": 0.7961465716362,
+              "pair_loss": 0.4576839208602905,
+              "robust_bce": 0.7961465716362,
+              "worst_domain_bce": 0.7459987998008728
+            },
+            {
+              "epoch": 14,
+              "loss": 0.706093966960907,
+              "pair_loss": 0.4214491844177246,
+              "robust_bce": 0.706093966960907,
+              "worst_domain_bce": 0.6353057026863098
+            },
+            {
+              "epoch": 15,
+              "loss": 0.6901838183403015,
+              "pair_loss": 0.4157021641731262,
+              "robust_bce": 0.6901838183403015,
+              "worst_domain_bce": 0.6340028643608093
+            },
+            {
+              "epoch": 16,
+              "loss": 0.6285016536712646,
+              "pair_loss": 0.386536180973053,
+              "robust_bce": 0.6285016536712646,
+              "worst_domain_bce": 0.517055094242096
+            },
+            {
+              "epoch": 17,
+              "loss": 0.5955857038497925,
+              "pair_loss": 0.39325273036956787,
+              "robust_bce": 0.5955857038497925,
+              "worst_domain_bce": 0.47158506512641907
+            },
+            {
+              "epoch": 18,
+              "loss": 0.5632203221321106,
+              "pair_loss": 0.37258315086364746,
+              "robust_bce": 0.5632203221321106,
+              "worst_domain_bce": 0.44041135907173157
+            },
+            {
+              "epoch": 19,
+              "loss": 0.5316960215568542,
+              "pair_loss": 0.3718744218349457,
+              "robust_bce": 0.5316960215568542,
+              "worst_domain_bce": 0.3971746563911438
+            },
+            {
+              "epoch": 20,
+              "loss": 0.5049964189529419,
+              "pair_loss": 0.36555078625679016,
+              "robust_bce": 0.5049964189529419,
+              "worst_domain_bce": 0.36633917689323425
+            }
+          ]
+        ],
+        "3": [
+          [
+            {
+              "epoch": 1,
+              "loss": 2.5851898193359375,
+              "pair_loss": 1.7207708358764648,
+              "robust_bce": 2.5851898193359375,
+              "worst_domain_bce": 2.585186243057251
+            },
+            {
+              "epoch": 2,
+              "loss": 1.972220778465271,
+              "pair_loss": 1.227396011352539,
+              "robust_bce": 1.972220778465271,
+              "worst_domain_bce": 1.905809760093689
+            },
+            {
+              "epoch": 3,
+              "loss": 1.8041479587554932,
+              "pair_loss": 1.1183929443359375,
+              "robust_bce": 1.8041479587554932,
+              "worst_domain_bce": 1.7368135452270508
+            },
+            {
+              "epoch": 4,
+              "loss": 1.6128171682357788,
+              "pair_loss": 1.1195186376571655,
+              "robust_bce": 1.6128171682357788,
+              "worst_domain_bce": 1.5642622709274292
+            },
+            {
+              "epoch": 5,
+              "loss": 1.4650319814682007,
+              "pair_loss": 1.039604902267456,
+              "robust_bce": 1.4650319814682007,
+              "worst_domain_bce": 1.4175560474395752
+            },
+            {
+              "epoch": 6,
+              "loss": 1.3361217975616455,
+              "pair_loss": 0.9111641645431519,
+              "robust_bce": 1.3361217975616455,
+              "worst_domain_bce": 1.261391520500183
+            },
+            {
+              "epoch": 7,
+              "loss": 1.2179633378982544,
+              "pair_loss": 0.7998613119125366,
+              "robust_bce": 1.2179633378982544,
+              "worst_domain_bce": 1.1840238571166992
+            },
+            {
+              "epoch": 8,
+              "loss": 1.0767592191696167,
+              "pair_loss": 0.7298875451087952,
+              "robust_bce": 1.0767592191696167,
+              "worst_domain_bce": 1.0224769115447998
+            },
+            {
+              "epoch": 9,
+              "loss": 1.022391676902771,
+              "pair_loss": 0.6648104190826416,
+              "robust_bce": 1.022391676902771,
+              "worst_domain_bce": 0.9854862093925476
+            },
+            {
+              "epoch": 10,
+              "loss": 0.9432436227798462,
+              "pair_loss": 0.592162013053894,
+              "robust_bce": 0.9432436227798462,
+              "worst_domain_bce": 0.9120455980300903
+            },
+            {
+              "epoch": 11,
+              "loss": 0.8117236495018005,
+              "pair_loss": 0.5330039858818054,
+              "robust_bce": 0.8117236495018005,
+              "worst_domain_bce": 0.7262212038040161
+            },
+            {
+              "epoch": 12,
+              "loss": 0.7421779036521912,
+              "pair_loss": 0.47074830532073975,
+              "robust_bce": 0.7421779036521912,
+              "worst_domain_bce": 0.6903088092803955
+            },
+            {
+              "epoch": 13,
+              "loss": 0.6965486407279968,
+              "pair_loss": 0.4293862581253052,
+              "robust_bce": 0.6965486407279968,
+              "worst_domain_bce": 0.621461808681488
+            },
+            {
+              "epoch": 14,
+              "loss": 0.6204890608787537,
+              "pair_loss": 0.40956056118011475,
+              "robust_bce": 0.6204890608787537,
+              "worst_domain_bce": 0.5413810610771179
+            },
+            {
+              "epoch": 15,
+              "loss": 0.5696482062339783,
+              "pair_loss": 0.39069610834121704,
+              "robust_bce": 0.5696482062339783,
+              "worst_domain_bce": 0.4700200855731964
+            },
+            {
+              "epoch": 16,
+              "loss": 0.557914674282074,
+              "pair_loss": 0.3662131726741791,
+              "robust_bce": 0.557914674282074,
+              "worst_domain_bce": 0.48959943652153015
+            },
+            {
+              "epoch": 17,
+              "loss": 0.5386955142021179,
+              "pair_loss": 0.370029091835022,
+              "robust_bce": 0.5386955142021179,
+              "worst_domain_bce": 0.4779638648033142
+            },
+            {
+              "epoch": 18,
+              "loss": 0.49582844972610474,
+              "pair_loss": 0.34805554151535034,
+              "robust_bce": 0.49582844972610474,
+              "worst_domain_bce": 0.4080483317375183
+            },
+            {
+              "epoch": 19,
+              "loss": 0.46693849563598633,
+              "pair_loss": 0.3275257647037506,
+              "robust_bce": 0.46693849563598633,
+              "worst_domain_bce": 0.341748982667923
+            },
+            {
+              "epoch": 20,
+              "loss": 0.45532891154289246,
+              "pair_loss": 0.33289361000061035,
+              "robust_bce": 0.45532891154289246,
+              "worst_domain_bce": 0.3319524824619293
+            }
+          ],
+          [
+            {
+              "epoch": 1,
+              "loss": 2.9484317302703857,
+              "pair_loss": 1.5950407981872559,
+              "robust_bce": 2.9484317302703857,
+              "worst_domain_bce": 2.9484148025512695
+            },
+            {
+              "epoch": 2,
+              "loss": 2.545734167098999,
+              "pair_loss": 1.552923560142517,
+              "robust_bce": 2.545734167098999,
+              "worst_domain_bce": 2.54012393951416
+            },
+            {
+              "epoch": 3,
+              "loss": 2.231252908706665,
+              "pair_loss": 1.3485174179077148,
+              "robust_bce": 2.231252908706665,
+              "worst_domain_bce": 2.2113380432128906
+            },
+            {
+              "epoch": 4,
+              "loss": 1.9319124221801758,
+              "pair_loss": 1.2261236906051636,
+              "robust_bce": 1.9319124221801758,
+              "worst_domain_bce": 1.8868522644042969
+            },
+            {
+              "epoch": 5,
+              "loss": 1.7798866033554077,
+              "pair_loss": 1.1948201656341553,
+              "robust_bce": 1.7798866033554077,
+              "worst_domain_bce": 1.7584975957870483
+            },
+            {
+              "epoch": 6,
+              "loss": 1.5900421142578125,
+              "pair_loss": 1.1781668663024902,
+              "robust_bce": 1.5900421142578125,
+              "worst_domain_bce": 1.5055705308914185
+            },
+            {
+              "epoch": 7,
+              "loss": 1.4795488119125366,
+              "pair_loss": 1.1504757404327393,
+              "robust_bce": 1.4795488119125366,
+              "worst_domain_bce": 1.4416263103485107
+            },
+            {
+              "epoch": 8,
+              "loss": 1.377978801727295,
+              "pair_loss": 1.1175957918167114,
+              "robust_bce": 1.377978801727295,
+              "worst_domain_bce": 1.3069123029708862
+            },
+            {
+              "epoch": 9,
+              "loss": 1.2468268871307373,
+              "pair_loss": 1.0587331056594849,
+              "robust_bce": 1.2468268871307373,
+              "worst_domain_bce": 1.1932536363601685
+            },
+            {
+              "epoch": 10,
+              "loss": 1.1297281980514526,
+              "pair_loss": 0.9819460511207581,
+              "robust_bce": 1.1297281980514526,
+              "worst_domain_bce": 1.0573370456695557
+            },
+            {
+              "epoch": 11,
+              "loss": 1.038408875465393,
+              "pair_loss": 0.896108865737915,
+              "robust_bce": 1.038408875465393,
+              "worst_domain_bce": 0.9758200645446777
+            },
+            {
+              "epoch": 12,
+              "loss": 0.9404966235160828,
+              "pair_loss": 0.7902942895889282,
+              "robust_bce": 0.9404966235160828,
+              "worst_domain_bce": 0.8885460495948792
+            },
+            {
+              "epoch": 13,
+              "loss": 0.8499119877815247,
+              "pair_loss": 0.6974621415138245,
+              "robust_bce": 0.8499119877815247,
+              "worst_domain_bce": 0.7862422466278076
+            },
+            {
+              "epoch": 14,
+              "loss": 0.7759494185447693,
+              "pair_loss": 0.6256886124610901,
+              "robust_bce": 0.7759494185447693,
+              "worst_domain_bce": 0.7104284167289734
+            },
+            {
+              "epoch": 15,
+              "loss": 0.6905984878540039,
+              "pair_loss": 0.5556300282478333,
+              "robust_bce": 0.6905984878540039,
+              "worst_domain_bce": 0.6320369839668274
+            },
+            {
+              "epoch": 16,
+              "loss": 0.6460364460945129,
+              "pair_loss": 0.5062988996505737,
+              "robust_bce": 0.6460364460945129,
+              "worst_domain_bce": 0.5566782355308533
+            },
+            {
+              "epoch": 17,
+              "loss": 0.5721637010574341,
+              "pair_loss": 0.4835905432701111,
+              "robust_bce": 0.5721637010574341,
+              "worst_domain_bce": 0.4896944761276245
+            },
+            {
+              "epoch": 18,
+              "loss": 0.5527641773223877,
+              "pair_loss": 0.4562534689903259,
+              "robust_bce": 0.5527641773223877,
+              "worst_domain_bce": 0.45622968673706055
+            },
+            {
+              "epoch": 19,
+              "loss": 0.5255711674690247,
+              "pair_loss": 0.424700528383255,
+              "robust_bce": 0.5255711674690247,
+              "worst_domain_bce": 0.43806734681129456
+            },
+            {
+              "epoch": 20,
+              "loss": 0.4899570047855377,
+              "pair_loss": 0.4129180610179901,
+              "robust_bce": 0.4899570047855377,
+              "worst_domain_bce": 0.3832554519176483
+            }
+          ]
+        ],
+        "4": [
+          [
+            {
+              "epoch": 1,
+              "loss": 1.8185144662857056,
+              "pair_loss": 1.5988359451293945,
+              "robust_bce": 1.8185144662857056,
+              "worst_domain_bce": 1.7721385955810547
+            },
+            {
+              "epoch": 2,
+              "loss": 1.6259679794311523,
+              "pair_loss": 1.3951622247695923,
+              "robust_bce": 1.6259679794311523,
+              "worst_domain_bce": 1.6219440698623657
+            },
+            {
+              "epoch": 3,
+              "loss": 1.34059476852417,
+              "pair_loss": 1.3629398345947266,
+              "robust_bce": 1.34059476852417,
+              "worst_domain_bce": 1.3187892436981201
+            },
+            {
+              "epoch": 4,
+              "loss": 1.1480225324630737,
+              "pair_loss": 1.3152203559875488,
+              "robust_bce": 1.1480225324630737,
+              "worst_domain_bce": 1.0370501279830933
+            },
+            {
+              "epoch": 5,
+              "loss": 1.0450776815414429,
+              "pair_loss": 1.3105326890945435,
+              "robust_bce": 1.0450776815414429,
+              "worst_domain_bce": 0.9613353610038757
+            },
+            {
+              "epoch": 6,
+              "loss": 0.9582027792930603,
+              "pair_loss": 1.3125824928283691,
+              "robust_bce": 0.9582027792930603,
+              "worst_domain_bce": 0.8582420945167542
+            },
+            {
+              "epoch": 7,
+              "loss": 0.8888233304023743,
+              "pair_loss": 1.2378886938095093,
+              "robust_bce": 0.8888233304023743,
+              "worst_domain_bce": 0.8089168071746826
+            },
+            {
+              "epoch": 8,
+              "loss": 0.8187627196311951,
+              "pair_loss": 1.105529546737671,
+              "robust_bce": 0.8187627196311951,
+              "worst_domain_bce": 0.7338050007820129
+            },
+            {
+              "epoch": 9,
+              "loss": 0.7491373419761658,
+              "pair_loss": 0.9399865865707397,
+              "robust_bce": 0.7491373419761658,
+              "worst_domain_bce": 0.6612097024917603
+            },
+            {
+              "epoch": 10,
+              "loss": 0.6894297003746033,
+              "pair_loss": 0.8050917983055115,
+              "robust_bce": 0.6894297003746033,
+              "worst_domain_bce": 0.6081570982933044
+            },
+            {
+              "epoch": 11,
+              "loss": 0.6378424763679504,
+              "pair_loss": 0.6600655317306519,
+              "robust_bce": 0.6378424763679504,
+              "worst_domain_bce": 0.5565109848976135
+            },
+            {
+              "epoch": 12,
+              "loss": 0.5881065130233765,
+              "pair_loss": 0.5910382270812988,
+              "robust_bce": 0.5881065130233765,
+              "worst_domain_bce": 0.5032956600189209
+            },
+            {
+              "epoch": 13,
+              "loss": 0.5435677766799927,
+              "pair_loss": 0.5196995735168457,
+              "robust_bce": 0.5435677766799927,
+              "worst_domain_bce": 0.4473358988761902
+            },
+            {
+              "epoch": 14,
+              "loss": 0.5072582960128784,
+              "pair_loss": 0.480360209941864,
+              "robust_bce": 0.5072582960128784,
+              "worst_domain_bce": 0.40410736203193665
+            },
+            {
+              "epoch": 15,
+              "loss": 0.48037487268447876,
+              "pair_loss": 0.4428822994232178,
+              "robust_bce": 0.48037487268447876,
+              "worst_domain_bce": 0.3566725254058838
+            },
+            {
+              "epoch": 16,
+              "loss": 0.4644022583961487,
+              "pair_loss": 0.4128306806087494,
+              "robust_bce": 0.4644022583961487,
+              "worst_domain_bce": 0.3263227939605713
+            },
+            {
+              "epoch": 17,
+              "loss": 0.4452102780342102,
+              "pair_loss": 0.39281898736953735,
+              "robust_bce": 0.4452102780342102,
+              "worst_domain_bce": 0.3059331178665161
+            },
+            {
+              "epoch": 18,
+              "loss": 0.43084391951560974,
+              "pair_loss": 0.36770617961883545,
+              "robust_bce": 0.43084391951560974,
+              "worst_domain_bce": 0.28464847803115845
+            },
+            {
+              "epoch": 19,
+              "loss": 0.41825157403945923,
+              "pair_loss": 0.35600629448890686,
+              "robust_bce": 0.41825157403945923,
+              "worst_domain_bce": 0.2714383006095886
+            },
+            {
+              "epoch": 20,
+              "loss": 0.40905413031578064,
+              "pair_loss": 0.3478364050388336,
+              "robust_bce": 0.40905413031578064,
+              "worst_domain_bce": 0.25923046469688416
+            }
+          ],
+          [
+            {
+              "epoch": 1,
+              "loss": 1.8090490102767944,
+              "pair_loss": 2.2715060710906982,
+              "robust_bce": 1.8090490102767944,
+              "worst_domain_bce": 1.7955379486083984
+            },
+            {
+              "epoch": 2,
+              "loss": 1.3436057567596436,
+              "pair_loss": 1.6808662414550781,
+              "robust_bce": 1.3436057567596436,
+              "worst_domain_bce": 1.2189592123031616
+            },
+            {
+              "epoch": 3,
+              "loss": 1.338716745376587,
+              "pair_loss": 1.3311569690704346,
+              "robust_bce": 1.338716745376587,
+              "worst_domain_bce": 1.2846431732177734
+            },
+            {
+              "epoch": 4,
+              "loss": 1.188083529472351,
+              "pair_loss": 1.176106333732605,
+              "robust_bce": 1.188083529472351,
+              "worst_domain_bce": 1.1360677480697632
+            },
+            {
+              "epoch": 5,
+              "loss": 1.0335896015167236,
+              "pair_loss": 1.144817590713501,
+              "robust_bce": 1.0335896015167236,
+              "worst_domain_bce": 0.9480354189872742
+            },
+            {
+              "epoch": 6,
+              "loss": 0.9637852907180786,
+              "pair_loss": 1.1342719793319702,
+              "robust_bce": 0.9637852907180786,
+              "worst_domain_bce": 0.9103237986564636
+            },
+            {
+              "epoch": 7,
+              "loss": 0.9241213202476501,
+              "pair_loss": 1.0418590307235718,
+              "robust_bce": 0.9241213202476501,
+              "worst_domain_bce": 0.88564133644104
+            },
+            {
+              "epoch": 8,
+              "loss": 0.8297671675682068,
+              "pair_loss": 0.91077721118927,
+              "robust_bce": 0.8297671675682068,
+              "worst_domain_bce": 0.7824439406394958
+            },
+            {
+              "epoch": 9,
+              "loss": 0.7436129450798035,
+              "pair_loss": 0.7639787793159485,
+              "robust_bce": 0.7436129450798035,
+              "worst_domain_bce": 0.6498141288757324
+            },
+            {
+              "epoch": 10,
+              "loss": 0.6924585700035095,
+              "pair_loss": 0.6430105566978455,
+              "robust_bce": 0.6924585700035095,
+              "worst_domain_bce": 0.5998935103416443
+            },
+            {
+              "epoch": 11,
+              "loss": 0.6574225425720215,
+              "pair_loss": 0.5667518377304077,
+              "robust_bce": 0.6574225425720215,
+              "worst_domain_bce": 0.5738212466239929
+            },
+            {
+              "epoch": 12,
+              "loss": 0.6102429032325745,
+              "pair_loss": 0.5156840682029724,
+              "robust_bce": 0.6102429032325745,
+              "worst_domain_bce": 0.528823971748352
+            },
+            {
+              "epoch": 13,
+              "loss": 0.562480628490448,
+              "pair_loss": 0.4813890755176544,
+              "robust_bce": 0.562480628490448,
+              "worst_domain_bce": 0.46589037775993347
+            },
+            {
+              "epoch": 14,
+              "loss": 0.5174817442893982,
+              "pair_loss": 0.4611760973930359,
+              "robust_bce": 0.5174817442893982,
+              "worst_domain_bce": 0.4047410190105438
+            },
+            {
+              "epoch": 15,
+              "loss": 0.48573264479637146,
+              "pair_loss": 0.4402122497558594,
+              "robust_bce": 0.48573264479637146,
+              "worst_domain_bce": 0.3417472243309021
+            },
+            {
+              "epoch": 16,
+              "loss": 0.4779243469238281,
+              "pair_loss": 0.4295130968093872,
+              "robust_bce": 0.4779243469238281,
+              "worst_domain_bce": 0.36850401759147644
+            },
+            {
+              "epoch": 17,
+              "loss": 0.4514913558959961,
+              "pair_loss": 0.40585339069366455,
+              "robust_bce": 0.4514913558959961,
+              "worst_domain_bce": 0.34533676505088806
+            },
+            {
+              "epoch": 18,
+              "loss": 0.4292552173137665,
+              "pair_loss": 0.390178382396698,
+              "robust_bce": 0.4292552173137665,
+              "worst_domain_bce": 0.3067893981933594
+            },
+            {
+              "epoch": 19,
+              "loss": 0.4203406274318695,
+              "pair_loss": 0.3590559959411621,
+              "robust_bce": 0.4203406274318695,
+              "worst_domain_bce": 0.30840691924095154
+            },
+            {
+              "epoch": 20,
+              "loss": 0.3963545262813568,
+              "pair_loss": 0.3318783640861511,
+              "robust_bce": 0.3963545262813568,
+              "worst_domain_bce": 0.2350102812051773
+            }
+          ]
+        ]
+      },
+      "pair_weight_0.25": {
+        "2": [
+          [
+            {
+              "epoch": 1,
+              "loss": 4.3275837898254395,
+              "pair_loss": 1.3825819492340088,
+              "robust_bce": 3.981938123703003,
+              "worst_domain_bce": 3.981938123703003
+            },
+            {
+              "epoch": 2,
+              "loss": 3.088022232055664,
+              "pair_loss": 1.1578011512756348,
+              "robust_bce": 2.798572063446045,
+              "worst_domain_bce": 2.7985715866088867
+            },
+            {
+              "epoch": 3,
+              "loss": 2.1445865631103516,
+              "pair_loss": 1.1174376010894775,
+              "robust_bce": 1.8652271032333374,
+              "worst_domain_bce": 1.7874054908752441
+            },
+            {
+              "epoch": 4,
+              "loss": 2.1381072998046875,
+              "pair_loss": 1.0013117790222168,
+              "robust_bce": 1.8877792358398438,
+              "worst_domain_bce": 1.8465496301651
+            },
+            {
+              "epoch": 5,
+              "loss": 1.9378142356872559,
+              "pair_loss": 0.8554403781890869,
+              "robust_bce": 1.723954200744629,
+              "worst_domain_bce": 1.6727875471115112
+            },
+            {
+              "epoch": 6,
+              "loss": 1.6840416193008423,
+              "pair_loss": 0.7609041929244995,
+              "robust_bce": 1.493815541267395,
+              "worst_domain_bce": 1.415800929069519
+            },
+            {
+              "epoch": 7,
+              "loss": 1.56462824344635,
+              "pair_loss": 0.7469271421432495,
+              "robust_bce": 1.3778964281082153,
+              "worst_domain_bce": 1.3560508489608765
+            },
+            {
+              "epoch": 8,
+              "loss": 1.5159376859664917,
+              "pair_loss": 0.7190165519714355,
+              "robust_bce": 1.3361835479736328,
+              "worst_domain_bce": 1.3287725448608398
+            },
+            {
+              "epoch": 9,
+              "loss": 1.3613073825836182,
+              "pair_loss": 0.6605983972549438,
+              "robust_bce": 1.1961578130722046,
+              "worst_domain_bce": 1.178719401359558
+            },
+            {
+              "epoch": 10,
+              "loss": 1.2105876207351685,
+              "pair_loss": 0.5965625047683716,
+              "robust_bce": 1.061447024345398,
+              "worst_domain_bce": 1.003324031829834
+            },
+            {
+              "epoch": 11,
+              "loss": 1.1159664392471313,
+              "pair_loss": 0.527582585811615,
+              "robust_bce": 0.9840707778930664,
+              "worst_domain_bce": 0.9050881266593933
+            },
+            {
+              "epoch": 12,
+              "loss": 1.0437639951705933,
+              "pair_loss": 0.4782693684101105,
+              "robust_bce": 0.9241966605186462,
+              "worst_domain_bce": 0.8491527438163757
+            },
+            {
+              "epoch": 13,
+              "loss": 0.9496344327926636,
+              "pair_loss": 0.438703328371048,
+              "robust_bce": 0.8399586081504822,
+              "worst_domain_bce": 0.7591807246208191
+            },
+            {
+              "epoch": 14,
+              "loss": 0.8804519176483154,
+              "pair_loss": 0.4173699617385864,
+              "robust_bce": 0.7761093974113464,
+              "worst_domain_bce": 0.6877126693725586
+            },
+            {
+              "epoch": 15,
+              "loss": 0.8240529894828796,
+              "pair_loss": 0.3945496678352356,
+              "robust_bce": 0.7254155874252319,
+              "worst_domain_bce": 0.6682274341583252
+            },
+            {
+              "epoch": 16,
+              "loss": 0.7477625012397766,
+              "pair_loss": 0.36468178033828735,
+              "robust_bce": 0.656592071056366,
+              "worst_domain_bce": 0.5817942023277283
+            },
+            {
+              "epoch": 17,
+              "loss": 0.7162076830863953,
+              "pair_loss": 0.3389807343482971,
+              "robust_bce": 0.6314625144004822,
+              "worst_domain_bce": 0.5674607753753662
+            },
+            {
+              "epoch": 18,
+              "loss": 0.6643850207328796,
+              "pair_loss": 0.32434648275375366,
+              "robust_bce": 0.58329838514328,
+              "worst_domain_bce": 0.49115708470344543
+            },
+            {
+              "epoch": 19,
+              "loss": 0.622320294380188,
+              "pair_loss": 0.3135579824447632,
+              "robust_bce": 0.5439307689666748,
+              "worst_domain_bce": 0.418068528175354
+            },
+            {
+              "epoch": 20,
+              "loss": 0.5910505652427673,
+              "pair_loss": 0.2987687587738037,
+              "robust_bce": 0.5163583755493164,
+              "worst_domain_bce": 0.38881802558898926
+            }
+          ],
+          [
+            {
+              "epoch": 1,
+              "loss": 2.6845059394836426,
+              "pair_loss": 1.3363914489746094,
+              "robust_bce": 2.3504080772399902,
+              "worst_domain_bce": 2.350311517715454
+            },
+            {
+              "epoch": 2,
+              "loss": 2.324220657348633,
+              "pair_loss": 1.0020437240600586,
+              "robust_bce": 2.073709726333618,
+              "worst_domain_bce": 2.00964617729187
+            },
+            {
+              "epoch": 3,
+              "loss": 2.132617235183716,
+              "pair_loss": 0.8519108295440674,
+              "robust_bce": 1.9196395874023438,
+              "worst_domain_bce": 1.8689301013946533
+            },
+            {
+              "epoch": 4,
+              "loss": 1.8358604907989502,
+              "pair_loss": 0.7743185758590698,
+              "robust_bce": 1.6422808170318604,
+              "worst_domain_bce": 1.5595524311065674
+            },
+            {
+              "epoch": 5,
+              "loss": 1.805542230606079,
+              "pair_loss": 0.709323525428772,
+              "robust_bce": 1.6282113790512085,
+              "worst_domain_bce": 1.6231948137283325
+            },
+            {
+              "epoch": 6,
+              "loss": 1.6930248737335205,
+              "pair_loss": 0.6443865895271301,
+              "robust_bce": 1.5319281816482544,
+              "worst_domain_bce": 1.528632402420044
+            },
+            {
+              "epoch": 7,
+              "loss": 1.4760825634002686,
+              "pair_loss": 0.5588070154190063,
+              "robust_bce": 1.3363808393478394,
+              "worst_domain_bce": 1.3208822011947632
+            },
+            {
+              "epoch": 8,
+              "loss": 1.3059853315353394,
+              "pair_loss": 0.5072132349014282,
+              "robust_bce": 1.1791820526123047,
+              "worst_domain_bce": 1.0775730609893799
+            },
+            {
+              "epoch": 9,
+              "loss": 1.2322181463241577,
+              "pair_loss": 0.4642735719680786,
+              "robust_bce": 1.1161497831344604,
+              "worst_domain_bce": 1.0297889709472656
+            },
+            {
+              "epoch": 10,
+              "loss": 1.1476306915283203,
+              "pair_loss": 0.4491484761238098,
+              "robust_bce": 1.0353435277938843,
+              "worst_domain_bce": 0.9398749470710754
+            },
+            {
+              "epoch": 11,
+              "loss": 1.0389251708984375,
+              "pair_loss": 0.4156138300895691,
+              "robust_bce": 0.935021698474884,
+              "worst_domain_bce": 0.8271388411521912
+            },
+            {
+              "epoch": 12,
+              "loss": 0.9366143941879272,
+              "pair_loss": 0.39793479442596436,
+              "robust_bce": 0.8371307253837585,
+              "worst_domain_bce": 0.7613632678985596
+            },
+            {
+              "epoch": 13,
+              "loss": 0.8781417608261108,
+              "pair_loss": 0.37521207332611084,
+              "robust_bce": 0.7843387722969055,
+              "worst_domain_bce": 0.7363388538360596
+            },
+            {
+              "epoch": 14,
+              "loss": 0.7832425832748413,
+              "pair_loss": 0.34819382429122925,
+              "robust_bce": 0.6961941123008728,
+              "worst_domain_bce": 0.6280845403671265
+            },
+            {
+              "epoch": 15,
+              "loss": 0.7681427597999573,
+              "pair_loss": 0.34483566880226135,
+              "robust_bce": 0.6819338202476501,
+              "worst_domain_bce": 0.6289265751838684
+            },
+            {
+              "epoch": 16,
+              "loss": 0.6978753805160522,
+              "pair_loss": 0.31511080265045166,
+              "robust_bce": 0.6190977096557617,
+              "worst_domain_bce": 0.5063223838806152
+            },
+            {
+              "epoch": 17,
+              "loss": 0.6643565893173218,
+              "pair_loss": 0.31946223974227905,
+              "robust_bce": 0.5844910144805908,
+              "worst_domain_bce": 0.4663951098918915
+            },
+            {
+              "epoch": 18,
+              "loss": 0.625698983669281,
+              "pair_loss": 0.2949070334434509,
+              "robust_bce": 0.5519722104072571,
+              "worst_domain_bce": 0.43451160192489624
+            },
+            {
+              "epoch": 19,
+              "loss": 0.5934246182441711,
+              "pair_loss": 0.29225295782089233,
+              "robust_bce": 0.5203613638877869,
+              "worst_domain_bce": 0.3933286666870117
+            },
+            {
+              "epoch": 20,
+              "loss": 0.5634852051734924,
+              "pair_loss": 0.28500205278396606,
+              "robust_bce": 0.4922346770763397,
+              "worst_domain_bce": 0.35780757665634155
+            }
+          ]
+        ],
+        "3": [
+          [
+            {
+              "epoch": 1,
+              "loss": 3.0153825283050537,
+              "pair_loss": 1.7207708358764648,
+              "robust_bce": 2.5851898193359375,
+              "worst_domain_bce": 2.585186243057251
+            },
+            {
+              "epoch": 2,
+              "loss": 2.2573225498199463,
+              "pair_loss": 1.1391360759735107,
+              "robust_bce": 1.9725385904312134,
+              "worst_domain_bce": 1.9112797975540161
+            },
+            {
+              "epoch": 3,
+              "loss": 2.071767568588257,
+              "pair_loss": 0.8848830461502075,
+              "robust_bce": 1.8505468368530273,
+              "worst_domain_bce": 1.7998676300048828
+            },
+            {
+              "epoch": 4,
+              "loss": 1.7937015295028687,
+              "pair_loss": 0.7632361054420471,
+              "robust_bce": 1.602892518043518,
+              "worst_domain_bce": 1.5131243467330933
+            },
+            {
+              "epoch": 5,
+              "loss": 1.6439019441604614,
+              "pair_loss": 0.6875208616256714,
+              "robust_bce": 1.4720216989517212,
+              "worst_domain_bce": 1.4516940116882324
+            },
+            {
+              "epoch": 6,
+              "loss": 1.5235792398452759,
+              "pair_loss": 0.6091774702072144,
+              "robust_bce": 1.37128484249115,
+              "worst_domain_bce": 1.3555164337158203
+            },
+            {
+              "epoch": 7,
+              "loss": 1.3233054876327515,
+              "pair_loss": 0.551276683807373,
+              "robust_bce": 1.1854863166809082,
+              "worst_domain_bce": 1.105640172958374
+            },
+            {
+              "epoch": 8,
+              "loss": 1.2091730833053589,
+              "pair_loss": 0.5120887756347656,
+              "robust_bce": 1.0811508893966675,
+              "worst_domain_bce": 1.0200645923614502
+            },
+            {
+              "epoch": 9,
+              "loss": 1.1208363771438599,
+              "pair_loss": 0.47424593567848206,
+              "robust_bce": 1.0022748708724976,
+              "worst_domain_bce": 0.9140419363975525
+            },
+            {
+              "epoch": 10,
+              "loss": 1.034339189529419,
+              "pair_loss": 0.44780975580215454,
+              "robust_bce": 0.9223867654800415,
+              "worst_domain_bce": 0.8672318458557129
+            },
+            {
+              "epoch": 11,
+              "loss": 0.9197773933410645,
+              "pair_loss": 0.43166619539260864,
+              "robust_bce": 0.8118608593940735,
+              "worst_domain_bce": 0.7241526246070862
+            },
+            {
+              "epoch": 12,
+              "loss": 0.8314794898033142,
+              "pair_loss": 0.4049939215183258,
+              "robust_bce": 0.730230987071991,
+              "worst_domain_bce": 0.6525601744651794
+            },
+            {
+              "epoch": 13,
+              "loss": 0.7847439050674438,
+              "pair_loss": 0.37371358275413513,
+              "robust_bce": 0.6913155317306519,
+              "worst_domain_bce": 0.6199297308921814
+            },
+            {
+              "epoch": 14,
+              "loss": 0.697422206401825,
+              "pair_loss": 0.35513919591903687,
+              "robust_bce": 0.6086373925209045,
+              "worst_domain_bce": 0.5151258111000061
+            },
+            {
+              "epoch": 15,
+              "loss": 0.6429293155670166,
+              "pair_loss": 0.3358865976333618,
+              "robust_bce": 0.5589576959609985,
+              "worst_domain_bce": 0.4602682888507843
+            },
+            {
+              "epoch": 16,
+              "loss": 0.6162531971931458,
+              "pair_loss": 0.31081622838974,
+              "robust_bce": 0.5385491251945496,
+              "worst_domain_bce": 0.4537487328052521
+            },
+            {
+              "epoch": 17,
+              "loss": 0.5971300601959229,
+              "pair_loss": 0.31513744592666626,
+              "robust_bce": 0.5183457136154175,
+              "worst_domain_bce": 0.4449962377548218
+            },
+            {
+              "epoch": 18,
+              "loss": 0.5541502237319946,
+              "pair_loss": 0.2975803017616272,
+              "robust_bce": 0.47975513339042664,
+              "worst_domain_bce": 0.3819345235824585
+            },
+            {
+              "epoch": 19,
+              "loss": 0.521165132522583,
+              "pair_loss": 0.27653419971466064,
+              "robust_bce": 0.45203161239624023,
+              "worst_domain_bce": 0.33427366614341736
+            },
+            {
+              "epoch": 20,
+              "loss": 0.5105313658714294,
+              "pair_loss": 0.282703161239624,
+              "robust_bce": 0.43985557556152344,
+              "worst_domain_bce": 0.3228558599948883
+            }
+          ],
+          [
+            {
+              "epoch": 1,
+              "loss": 3.34719181060791,
+              "pair_loss": 1.5950407981872559,
+              "robust_bce": 2.9484317302703857,
+              "worst_domain_bce": 2.9484148025512695
+            },
+            {
+              "epoch": 2,
+              "loss": 2.857328414916992,
+              "pair_loss": 1.503791332244873,
+              "robust_bce": 2.4813807010650635,
+              "worst_domain_bce": 2.474426507949829
+            },
+            {
+              "epoch": 3,
+              "loss": 2.4837470054626465,
+              "pair_loss": 1.2770224809646606,
+              "robust_bce": 2.1644914150238037,
+              "worst_domain_bce": 2.140255928039551
+            },
+            {
+              "epoch": 4,
+              "loss": 2.1746134757995605,
+              "pair_loss": 1.1307034492492676,
+              "robust_bce": 1.8919376134872437,
+              "worst_domain_bce": 1.8555158376693726
+            },
+            {
+              "epoch": 5,
+              "loss": 2.000079870223999,
+              "pair_loss": 1.0596983432769775,
+              "robust_bce": 1.7351553440093994,
+              "worst_domain_bce": 1.7114131450653076
+            },
+            {
+              "epoch": 6,
+              "loss": 1.799261450767517,
+              "pair_loss": 0.9897175431251526,
+              "robust_bce": 1.5518320798873901,
+              "worst_domain_bce": 1.4738318920135498
+            },
+            {
+              "epoch": 7,
+              "loss": 1.6650429964065552,
+              "pair_loss": 0.8984336853027344,
+              "robust_bce": 1.4404345750808716,
+              "worst_domain_bce": 1.3983585834503174
+            },
+            {
+              "epoch": 8,
+              "loss": 1.5384831428527832,
+              "pair_loss": 0.8092601299285889,
+              "robust_bce": 1.3361680507659912,
+              "worst_domain_bce": 1.2600009441375732
+            },
+            {
+              "epoch": 9,
+              "loss": 1.3826024532318115,
+              "pair_loss": 0.7242476940155029,
+              "robust_bce": 1.201540470123291,
+              "worst_domain_bce": 1.1465497016906738
+            },
+            {
+              "epoch": 10,
+              "loss": 1.2495452165603638,
+              "pair_loss": 0.6488009691238403,
+              "robust_bce": 1.087345004081726,
+              "worst_domain_bce": 1.0090007781982422
+            },
+            {
+              "epoch": 11,
+              "loss": 1.1448233127593994,
+              "pair_loss": 0.5872808694839478,
+              "robust_bce": 0.9980031251907349,
+              "worst_domain_bce": 0.9331651926040649
+            },
+            {
+              "epoch": 12,
+              "loss": 1.0400606393814087,
+              "pair_loss": 0.5302959084510803,
+              "robust_bce": 0.907486617565155,
+              "worst_domain_bce": 0.8412613272666931
+            },
+            {
+              "epoch": 13,
+              "loss": 0.9446800947189331,
+              "pair_loss": 0.4872828423976898,
+              "robust_bce": 0.8228594064712524,
+              "worst_domain_bce": 0.7504130601882935
+            },
+            {
+              "epoch": 14,
+              "loss": 0.8644960522651672,
+              "pair_loss": 0.4467647969722748,
+              "robust_bce": 0.7528048753738403,
+              "worst_domain_bce": 0.6780376434326172
+            },
+            {
+              "epoch": 15,
+              "loss": 0.7745769023895264,
+              "pair_loss": 0.40848201513290405,
+              "robust_bce": 0.6724563837051392,
+              "worst_domain_bce": 0.6011261343955994
+            },
+            {
+              "epoch": 16,
+              "loss": 0.7264931797981262,
+              "pair_loss": 0.37887945771217346,
+              "robust_bce": 0.6317732930183411,
+              "worst_domain_bce": 0.5481466054916382
+            },
+            {
+              "epoch": 17,
+              "loss": 0.6482699513435364,
+              "pair_loss": 0.3695148825645447,
+              "robust_bce": 0.555891215801239,
+              "worst_domain_bce": 0.46382829546928406
+            },
+            {
+              "epoch": 18,
+              "loss": 0.6271632313728333,
+              "pair_loss": 0.35254842042922974,
+              "robust_bce": 0.539026141166687,
+              "worst_domain_bce": 0.44666409492492676
+            },
+            {
+              "epoch": 19,
+              "loss": 0.5921139717102051,
+              "pair_loss": 0.328421950340271,
+              "robust_bce": 0.5100085139274597,
+              "worst_domain_bce": 0.41950204968452454
+            },
+            {
+              "epoch": 20,
+              "loss": 0.5540730357170105,
+              "pair_loss": 0.3199453055858612,
+              "robust_bce": 0.474086731672287,
+              "worst_domain_bce": 0.3639868199825287
+            }
+          ]
+        ],
+        "4": [
+          [
+            {
+              "epoch": 1,
+              "loss": 2.2182235717773438,
+              "pair_loss": 1.5988359451293945,
+              "robust_bce": 1.8185144662857056,
+              "worst_domain_bce": 1.7721385955810547
+            },
+            {
+              "epoch": 2,
+              "loss": 1.9559369087219238,
+              "pair_loss": 1.3575799465179443,
+              "robust_bce": 1.616541862487793,
+              "worst_domain_bce": 1.6120784282684326
+            },
+            {
+              "epoch": 3,
+              "loss": 1.6466761827468872,
+              "pair_loss": 1.2593613862991333,
+              "robust_bce": 1.3318358659744263,
+              "worst_domain_bce": 1.3075573444366455
+            },
+            {
+              "epoch": 4,
+              "loss": 1.4356935024261475,
+              "pair_loss": 1.124542474746704,
+              "robust_bce": 1.1545579433441162,
+              "worst_domain_bce": 1.0547430515289307
+            },
+            {
+              "epoch": 5,
+              "loss": 1.3018358945846558,
+              "pair_loss": 1.004245400428772,
+              "robust_bce": 1.0507745742797852,
+              "worst_domain_bce": 0.9756332039833069
+            },
+            {
+              "epoch": 6,
+              "loss": 1.1655213832855225,
+              "pair_loss": 0.8974776268005371,
+              "robust_bce": 0.9411519169807434,
+              "worst_domain_bce": 0.8646266460418701
+            },
+            {
+              "epoch": 7,
+              "loss": 1.0431206226348877,
+              "pair_loss": 0.7878015041351318,
+              "robust_bce": 0.8461702466011047,
+              "worst_domain_bce": 0.7503560185432434
+            },
+            {
+              "epoch": 8,
+              "loss": 0.9449676275253296,
+              "pair_loss": 0.6775991916656494,
+              "robust_bce": 0.7755678296089172,
+              "worst_domain_bce": 0.6816607117652893
+            },
+            {
+              "epoch": 9,
+              "loss": 0.8589829802513123,
+              "pair_loss": 0.5752182602882385,
+              "robust_bce": 0.7151784300804138,
+              "worst_domain_bce": 0.6109659075737
+            },
+            {
+              "epoch": 10,
+              "loss": 0.7881669998168945,
+              "pair_loss": 0.5109049677848816,
+              "robust_bce": 0.6604407429695129,
+              "worst_domain_bce": 0.5559728741645813
+            },
+            {
+              "epoch": 11,
+              "loss": 0.7313674688339233,
+              "pair_loss": 0.4369310140609741,
+              "robust_bce": 0.6221346855163574,
+              "worst_domain_bce": 0.5194706320762634
+            },
+            {
+              "epoch": 12,
+              "loss": 0.6798877120018005,
+              "pair_loss": 0.40699025988578796,
+              "robust_bce": 0.578140139579773,
+              "worst_domain_bce": 0.48149606585502625
+            },
+            {
+              "epoch": 13,
+              "loss": 0.6327836513519287,
+              "pair_loss": 0.3772568702697754,
+              "robust_bce": 0.5384694337844849,
+              "worst_domain_bce": 0.43371114134788513
+            },
+            {
+              "epoch": 14,
+              "loss": 0.5877268314361572,
+              "pair_loss": 0.347099244594574,
+              "robust_bce": 0.5009520053863525,
+              "worst_domain_bce": 0.38967421650886536
+            },
+            {
+              "epoch": 15,
+              "loss": 0.5535513758659363,
+              "pair_loss": 0.31266409158706665,
+              "robust_bce": 0.4753853380680084,
+              "worst_domain_bce": 0.34306514263153076
+            },
+            {
+              "epoch": 16,
+              "loss": 0.5314289331436157,
+              "pair_loss": 0.2904928922653198,
+              "robust_bce": 0.45880571007728577,
+              "worst_domain_bce": 0.3388887941837311
+            },
+            {
+              "epoch": 17,
+              "loss": 0.5068192481994629,
+              "pair_loss": 0.2768298089504242,
+              "robust_bce": 0.43761181831359863,
+              "worst_domain_bce": 0.3176427185535431
+            },
+            {
+              "epoch": 18,
+              "loss": 0.4844224750995636,
+              "pair_loss": 0.25573039054870605,
+              "robust_bce": 0.4204898774623871,
+              "worst_domain_bce": 0.2836689352989197
+            },
+            {
+              "epoch": 19,
+              "loss": 0.466958612203598,
+              "pair_loss": 0.24436445534229279,
+              "robust_bce": 0.40586748719215393,
+              "worst_domain_bce": 0.25683268904685974
+            },
+            {
+              "epoch": 20,
+              "loss": 0.4538000822067261,
+              "pair_loss": 0.2372172623872757,
+              "robust_bce": 0.39449575543403625,
+              "worst_domain_bce": 0.2511489689350128
+            }
+          ],
+          [
+            {
+              "epoch": 1,
+              "loss": 2.376925468444824,
+              "pair_loss": 2.2715060710906982,
+              "robust_bce": 1.8090490102767944,
+              "worst_domain_bce": 1.7955379486083984
+            },
+            {
+              "epoch": 2,
+              "loss": 1.745910406112671,
+              "pair_loss": 1.5981040000915527,
+              "robust_bce": 1.3463844060897827,
+              "worst_domain_bce": 1.215934157371521
+            },
+            {
+              "epoch": 3,
+              "loss": 1.7433714866638184,
+              "pair_loss": 1.1663212776184082,
+              "robust_bce": 1.4517911672592163,
+              "worst_domain_bce": 1.3858466148376465
+            },
+            {
+              "epoch": 4,
+              "loss": 1.5846271514892578,
+              "pair_loss": 0.980915904045105,
+              "robust_bce": 1.3393981456756592,
+              "worst_domain_bce": 1.2762318849563599
+            },
+            {
+              "epoch": 5,
+              "loss": 1.3685402870178223,
+              "pair_loss": 0.862159252166748,
+              "robust_bce": 1.1530004739761353,
+              "worst_domain_bce": 1.0904405117034912
+            },
+            {
+              "epoch": 6,
+              "loss": 1.1637765169143677,
+              "pair_loss": 0.7888274788856506,
+              "robust_bce": 0.9665696024894714,
+              "worst_domain_bce": 0.8671397566795349
+            },
+            {
+              "epoch": 7,
+              "loss": 1.109393835067749,
+              "pair_loss": 0.7360277771949768,
+              "robust_bce": 0.925386905670166,
+              "worst_domain_bce": 0.861487090587616
+            },
+            {
+              "epoch": 8,
+              "loss": 1.054103970527649,
+              "pair_loss": 0.6812999248504639,
+              "robust_bce": 0.883778989315033,
+              "worst_domain_bce": 0.8477203845977783
+            },
+            {
+              "epoch": 9,
+              "loss": 0.9708640575408936,
+              "pair_loss": 0.6062328815460205,
+              "robust_bce": 0.8193058371543884,
+              "worst_domain_bce": 0.7724767327308655
+            },
+            {
+              "epoch": 10,
+              "loss": 0.8779686689376831,
+              "pair_loss": 0.5424356460571289,
+              "robust_bce": 0.7423597574234009,
+              "worst_domain_bce": 0.6824358701705933
+            },
+            {
+              "epoch": 11,
+              "loss": 0.8027052879333496,
+              "pair_loss": 0.4905145764350891,
+              "robust_bce": 0.6800766587257385,
+              "worst_domain_bce": 0.5796411633491516
+            },
+            {
+              "epoch": 12,
+              "loss": 0.7506324052810669,
+              "pair_loss": 0.447426974773407,
+              "robust_bce": 0.638775646686554,
+              "worst_domain_bce": 0.5462588667869568
+            },
+            {
+              "epoch": 13,
+              "loss": 0.7106401920318604,
+              "pair_loss": 0.4028567671775818,
+              "robust_bce": 0.6099259853363037,
+              "worst_domain_bce": 0.52750563621521
+            },
+            {
+              "epoch": 14,
+              "loss": 0.6595151424407959,
+              "pair_loss": 0.3672464191913605,
+              "robust_bce": 0.5677035450935364,
+              "worst_domain_bce": 0.48240241408348083
+            },
+            {
+              "epoch": 15,
+              "loss": 0.6044120192527771,
+              "pair_loss": 0.3339167535305023,
+              "robust_bce": 0.5209328532218933,
+              "worst_domain_bce": 0.41584306955337524
+            },
+            {
+              "epoch": 16,
+              "loss": 0.5727187395095825,
+              "pair_loss": 0.3198871612548828,
+              "robust_bce": 0.49274691939353943,
+              "worst_domain_bce": 0.3634216785430908
+            },
+            {
+              "epoch": 17,
+              "loss": 0.5398266315460205,
+              "pair_loss": 0.30592334270477295,
+              "robust_bce": 0.4633457660675049,
+              "worst_domain_bce": 0.3379664421081543
+            },
+            {
+              "epoch": 18,
+              "loss": 0.5158433318138123,
+              "pair_loss": 0.3011341392993927,
+              "robust_bce": 0.4405597746372223,
+              "worst_domain_bce": 0.31283754110336304
+            },
+            {
+              "epoch": 19,
+              "loss": 0.5022525787353516,
+              "pair_loss": 0.27944087982177734,
+              "robust_bce": 0.43239232897758484,
+              "worst_domain_bce": 0.3281261920928955
+            },
+            {
+              "epoch": 20,
+              "loss": 0.47122931480407715,
+              "pair_loss": 0.2580299973487854,
+              "robust_bce": 0.4067218005657196,
+              "worst_domain_bce": 0.26473623514175415
+            }
+          ]
+        ]
+      },
+      "pair_weight_0.50": {
+        "2": [
+          [
+            {
+              "epoch": 1,
+              "loss": 4.673229217529297,
+              "pair_loss": 1.3825819492340088,
+              "robust_bce": 3.981938123703003,
+              "worst_domain_bce": 3.981938123703003
+            },
+            {
+              "epoch": 2,
+              "loss": 3.380056619644165,
+              "pair_loss": 1.1526416540145874,
+              "robust_bce": 2.8037357330322266,
+              "worst_domain_bce": 2.8037352561950684
+            },
+            {
+              "epoch": 3,
+              "loss": 2.4210751056671143,
+              "pair_loss": 1.1148927211761475,
+              "robust_bce": 1.8636287450790405,
+              "worst_domain_bce": 1.7815178632736206
+            },
+            {
+              "epoch": 4,
+              "loss": 2.396268367767334,
+              "pair_loss": 0.990370512008667,
+              "robust_bce": 1.90108323097229,
+              "worst_domain_bce": 1.8612724542617798
+            },
+            {
+              "epoch": 5,
+              "loss": 2.162405014038086,
+              "pair_loss": 0.8339415192604065,
+              "robust_bce": 1.7454341650009155,
+              "worst_domain_bce": 1.6959911584854126
+            },
+            {
+              "epoch": 6,
+              "loss": 1.8837419748306274,
+              "pair_loss": 0.740772545337677,
+              "robust_bce": 1.5133557319641113,
+              "worst_domain_bce": 1.4424829483032227
+            },
+            {
+              "epoch": 7,
+              "loss": 1.7207907438278198,
+              "pair_loss": 0.7345455288887024,
+              "robust_bce": 1.353518009185791,
+              "worst_domain_bce": 1.3152722120285034
+            },
+            {
+              "epoch": 8,
+              "loss": 1.6616874933242798,
+              "pair_loss": 0.7034241557121277,
+              "robust_bce": 1.3099753856658936,
+              "worst_domain_bce": 1.2987512350082397
+            },
+            {
+              "epoch": 9,
+              "loss": 1.4987901449203491,
+              "pair_loss": 0.6371269226074219,
+              "robust_bce": 1.1802266836166382,
+              "worst_domain_bce": 1.1580942869186401
+            },
+            {
+              "epoch": 10,
+              "loss": 1.3363209962844849,
+              "pair_loss": 0.5655977725982666,
+              "robust_bce": 1.0535221099853516,
+              "worst_domain_bce": 0.9901955723762512
+            },
+            {
+              "epoch": 11,
+              "loss": 1.223723292350769,
+              "pair_loss": 0.4940393567085266,
+              "robust_bce": 0.9767036437988281,
+              "worst_domain_bce": 0.8911604881286621
+            },
+            {
+              "epoch": 12,
+              "loss": 1.1392806768417358,
+              "pair_loss": 0.44487264752388,
+              "robust_bce": 0.916844367980957,
+              "worst_domain_bce": 0.835231363773346
+            },
+            {
+              "epoch": 13,
+              "loss": 1.0379183292388916,
+              "pair_loss": 0.4076225757598877,
+              "robust_bce": 0.8341070413589478,
+              "worst_domain_bce": 0.7459818720817566
+            },
+            {
+              "epoch": 14,
+              "loss": 0.965610146522522,
+              "pair_loss": 0.38801753520965576,
+              "robust_bce": 0.7716013789176941,
+              "worst_domain_bce": 0.6819339990615845
+            },
+            {
+              "epoch": 15,
+              "loss": 0.9066554307937622,
+              "pair_loss": 0.36801373958587646,
+              "robust_bce": 0.722648561000824,
+              "worst_domain_bce": 0.6652272343635559
+            },
+            {
+              "epoch": 16,
+              "loss": 0.824731171131134,
+              "pair_loss": 0.3409748077392578,
+              "robust_bce": 0.6542437672615051,
+              "worst_domain_bce": 0.5792193412780762
+            },
+            {
+              "epoch": 17,
+              "loss": 0.7865718603134155,
+              "pair_loss": 0.3156989812850952,
+              "robust_bce": 0.6287223696708679,
+              "worst_domain_bce": 0.5650619268417358
+            },
+            {
+              "epoch": 18,
+              "loss": 0.7300336360931396,
+              "pair_loss": 0.29984909296035767,
+              "robust_bce": 0.5801091194152832,
+              "worst_domain_bce": 0.4900015890598297
+            },
+            {
+              "epoch": 19,
+              "loss": 0.6818371415138245,
+              "pair_loss": 0.2869550287723541,
+              "robust_bce": 0.5383596420288086,
+              "worst_domain_bce": 0.41300246119499207
+            },
+            {
+              "epoch": 20,
+              "loss": 0.6454721093177795,
+              "pair_loss": 0.2702348530292511,
+              "robust_bce": 0.5103546977043152,
+              "worst_domain_bce": 0.3831510543823242
+            }
+          ],
+          [
+            {
+              "epoch": 1,
+              "loss": 3.018603801727295,
+              "pair_loss": 1.3363914489746094,
+              "robust_bce": 2.3504080772399902,
+              "worst_domain_bce": 2.350311517715454
+            },
+            {
+              "epoch": 2,
+              "loss": 2.5533499717712402,
+              "pair_loss": 0.9811474084854126,
+              "robust_bce": 2.0627763271331787,
+              "worst_domain_bce": 2.001511573791504
+            },
+            {
+              "epoch": 3,
+              "loss": 2.327759265899658,
+              "pair_loss": 0.8139119744300842,
+              "robust_bce": 1.9208033084869385,
+              "worst_domain_bce": 1.8755079507827759
+            },
+            {
+              "epoch": 4,
+              "loss": 2.0001754760742188,
+              "pair_loss": 0.714557945728302,
+              "robust_bce": 1.6428965330123901,
+              "worst_domain_bce": 1.5729771852493286
+            },
+            {
+              "epoch": 5,
+              "loss": 1.9202903509140015,
+              "pair_loss": 0.6393051147460938,
+              "robust_bce": 1.6006377935409546,
+              "worst_domain_bce": 1.5938140153884888
+            },
+            {
+              "epoch": 6,
+              "loss": 1.8071465492248535,
+              "pair_loss": 0.5860913991928101,
+              "robust_bce": 1.5141009092330933,
+              "worst_domain_bce": 1.5101799964904785
+            },
+            {
+              "epoch": 7,
+              "loss": 1.5839829444885254,
+              "pair_loss": 0.5229952335357666,
+              "robust_bce": 1.322485327720642,
+              "worst_domain_bce": 1.3046839237213135
+            },
+            {
+              "epoch": 8,
+              "loss": 1.421457290649414,
+              "pair_loss": 0.49106916785240173,
+              "robust_bce": 1.1759227514266968,
+              "worst_domain_bce": 1.0821810960769653
+            },
+            {
+              "epoch": 9,
+              "loss": 1.3358688354492188,
+              "pair_loss": 0.450894832611084,
+              "robust_bce": 1.1104214191436768,
+              "worst_domain_bce": 1.0278013944625854
+            },
+            {
+              "epoch": 10,
+              "loss": 1.243371605873108,
+              "pair_loss": 0.42889729142189026,
+              "robust_bce": 1.0289229154586792,
+              "worst_domain_bce": 0.9353358149528503
+            },
+            {
+              "epoch": 11,
+              "loss": 1.1253358125686646,
+              "pair_loss": 0.3916034400463104,
+              "robust_bce": 0.9295340776443481,
+              "worst_domain_bce": 0.8189389109611511
+            },
+            {
+              "epoch": 12,
+              "loss": 1.0190378427505493,
+              "pair_loss": 0.3721331059932709,
+              "robust_bce": 0.8329712748527527,
+              "worst_domain_bce": 0.753369927406311
+            },
+            {
+              "epoch": 13,
+              "loss": 0.9542303085327148,
+              "pair_loss": 0.34954509139060974,
+              "robust_bce": 0.7794577479362488,
+              "worst_domain_bce": 0.7277909517288208
+            },
+            {
+              "epoch": 14,
+              "loss": 0.8536046147346497,
+              "pair_loss": 0.32271960377693176,
+              "robust_bce": 0.692244827747345,
+              "worst_domain_bce": 0.6189332008361816
+            },
+            {
+              "epoch": 15,
+              "loss": 0.8344606757164001,
+              "pair_loss": 0.31696268916130066,
+              "robust_bce": 0.6759793162345886,
+              "worst_domain_bce": 0.6185342669487
+            },
+            {
+              "epoch": 16,
+              "loss": 0.7607356905937195,
+              "pair_loss": 0.28771546483039856,
+              "robust_bce": 0.6168779730796814,
+              "worst_domain_bce": 0.5068651437759399
+            },
+            {
+              "epoch": 17,
+              "loss": 0.726905107498169,
+              "pair_loss": 0.291454017162323,
+              "robust_bce": 0.5811781287193298,
+              "worst_domain_bce": 0.4665710926055908
+            },
+            {
+              "epoch": 18,
+              "loss": 0.6828013062477112,
+              "pair_loss": 0.2678612470626831,
+              "robust_bce": 0.5488706827163696,
+              "worst_domain_bce": 0.435454398393631
+            },
+            {
+              "epoch": 19,
+              "loss": 0.6502898931503296,
+              "pair_loss": 0.26664870977401733,
+              "robust_bce": 0.5169655680656433,
+              "worst_domain_bce": 0.39436668157577515
+            },
+            {
+              "epoch": 20,
+              "loss": 0.6187119483947754,
+              "pair_loss": 0.26039832830429077,
+              "robust_bce": 0.4885128140449524,
+              "worst_domain_bce": 0.35980424284935
+            }
+          ]
+        ],
+        "3": [
+          [
+            {
+              "epoch": 1,
+              "loss": 3.44557523727417,
+              "pair_loss": 1.7207708358764648,
+              "robust_bce": 2.5851898193359375,
+              "worst_domain_bce": 2.585186243057251
+            },
+            {
+              "epoch": 2,
+              "loss": 2.5204787254333496,
+              "pair_loss": 1.0995813608169556,
+              "robust_bce": 1.9706881046295166,
+              "worst_domain_bce": 1.9083656072616577
+            },
+            {
+              "epoch": 3,
+              "loss": 2.339548110961914,
+              "pair_loss": 0.8229179978370667,
+              "robust_bce": 1.9280891418457031,
+              "worst_domain_bce": 1.8924835920333862
+            },
+            {
+              "epoch": 4,
+              "loss": 2.0296757221221924,
+              "pair_loss": 0.6996148228645325,
+              "robust_bce": 1.6798683404922485,
+              "worst_domain_bce": 1.6319966316223145
+            },
+            {
+              "epoch": 5,
+              "loss": 1.781424641609192,
+              "pair_loss": 0.6311917304992676,
+              "robust_bce": 1.465828776359558,
+              "worst_domain_bce": 1.418078064918518
+            },
+            {
+              "epoch": 6,
+              "loss": 1.700580358505249,
+              "pair_loss": 0.5831679105758667,
+              "robust_bce": 1.4089964628219604,
+              "worst_domain_bce": 1.3964028358459473
+            },
+            {
+              "epoch": 7,
+              "loss": 1.484358787536621,
+              "pair_loss": 0.5435608625411987,
+              "robust_bce": 1.212578296661377,
+              "worst_domain_bce": 1.1578495502471924
+            },
+            {
+              "epoch": 8,
+              "loss": 1.355360746383667,
+              "pair_loss": 0.5080809593200684,
+              "robust_bce": 1.1013202667236328,
+              "worst_domain_bce": 1.028454065322876
+            },
+            {
+              "epoch": 9,
+              "loss": 1.2643235921859741,
+              "pair_loss": 0.468229204416275,
+              "robust_bce": 1.030208945274353,
+              "worst_domain_bce": 0.9526523947715759
+            },
+            {
+              "epoch": 10,
+              "loss": 1.1623154878616333,
+              "pair_loss": 0.43910396099090576,
+              "robust_bce": 0.9427635073661804,
+              "worst_domain_bce": 0.8665322661399841
+            },
+            {
+              "epoch": 11,
+              "loss": 1.04476797580719,
+              "pair_loss": 0.42031991481781006,
+              "robust_bce": 0.8346080183982849,
+              "worst_domain_bce": 0.7417819499969482
+            },
+            {
+              "epoch": 12,
+              "loss": 0.9430327415466309,
+              "pair_loss": 0.39151322841644287,
+              "robust_bce": 0.7472761273384094,
+              "worst_domain_bce": 0.6654626131057739
+            },
+            {
+              "epoch": 13,
+              "loss": 0.8924900889396667,
+              "pair_loss": 0.35934922099113464,
+              "robust_bce": 0.7128154635429382,
+              "worst_domain_bce": 0.654332160949707
+            },
+            {
+              "epoch": 14,
+              "loss": 0.7919623851776123,
+              "pair_loss": 0.3390122652053833,
+              "robust_bce": 0.6224562525749207,
+              "worst_domain_bce": 0.5284641981124878
+            },
+            {
+              "epoch": 15,
+              "loss": 0.7312426567077637,
+              "pair_loss": 0.31798046827316284,
+              "robust_bce": 0.5722524523735046,
+              "worst_domain_bce": 0.4782688319683075
+            },
+            {
+              "epoch": 16,
+              "loss": 0.6952350735664368,
+              "pair_loss": 0.29418206214904785,
+              "robust_bce": 0.5481440424919128,
+              "worst_domain_bce": 0.4548149108886719
+            },
+            {
+              "epoch": 17,
+              "loss": 0.67437744140625,
+              "pair_loss": 0.29691851139068604,
+              "robust_bce": 0.525918185710907,
+              "worst_domain_bce": 0.44583749771118164
+            },
+            {
+              "epoch": 18,
+              "loss": 0.6285203695297241,
+              "pair_loss": 0.2805463373661041,
+              "robust_bce": 0.48824721574783325,
+              "worst_domain_bce": 0.38719815015792847
+            },
+            {
+              "epoch": 19,
+              "loss": 0.5883214473724365,
+              "pair_loss": 0.26012223958969116,
+              "robust_bce": 0.45826035737991333,
+              "worst_domain_bce": 0.34589430689811707
+            },
+            {
+              "epoch": 20,
+              "loss": 0.5772017240524292,
+              "pair_loss": 0.26637014746665955,
+              "robust_bce": 0.4440166652202606,
+              "worst_domain_bce": 0.330090194940567
+            }
+          ],
+          [
+            {
+              "epoch": 1,
+              "loss": 3.7459521293640137,
+              "pair_loss": 1.5950407981872559,
+              "robust_bce": 2.9484317302703857,
+              "worst_domain_bce": 2.9484148025512695
+            },
+            {
+              "epoch": 2,
+              "loss": 3.1517081260681152,
+              "pair_loss": 1.4624617099761963,
+              "robust_bce": 2.4204773902893066,
+              "worst_domain_bce": 2.4116389751434326
+            },
+            {
+              "epoch": 3,
+              "loss": 2.7174954414367676,
+              "pair_loss": 1.2237155437469482,
+              "robust_bce": 2.105637550354004,
+              "worst_domain_bce": 2.075760841369629
+            },
+            {
+              "epoch": 4,
+              "loss": 2.4072482585906982,
+              "pair_loss": 1.067845106124878,
+              "robust_bce": 1.8733257055282593,
+              "worst_domain_bce": 1.8473775386810303
+            },
+            {
+              "epoch": 5,
+              "loss": 2.2018659114837646,
+              "pair_loss": 0.9786273241043091,
+              "robust_bce": 1.7125523090362549,
+              "worst_domain_bce": 1.689449429512024
+            },
+            {
+              "epoch": 6,
+              "loss": 1.9788057804107666,
+              "pair_loss": 0.8897123336791992,
+              "robust_bce": 1.533949613571167,
+              "worst_domain_bce": 1.4608442783355713
+            },
+            {
+              "epoch": 7,
+              "loss": 1.825587511062622,
+              "pair_loss": 0.7934839725494385,
+              "robust_bce": 1.4288455247879028,
+              "worst_domain_bce": 1.3852858543395996
+            },
+            {
+              "epoch": 8,
+              "loss": 1.6786742210388184,
+              "pair_loss": 0.7082377672195435,
+              "robust_bce": 1.3245552778244019,
+              "worst_domain_bce": 1.2498866319656372
+            },
+            {
+              "epoch": 9,
+              "loss": 1.5087854862213135,
+              "pair_loss": 0.6381089687347412,
+              "robust_bce": 1.1897310018539429,
+              "worst_domain_bce": 1.1298232078552246
+            },
+            {
+              "epoch": 10,
+              "loss": 1.3691821098327637,
+              "pair_loss": 0.578787624835968,
+              "robust_bce": 1.079788327217102,
+              "worst_domain_bce": 1.0080060958862305
+            },
+            {
+              "epoch": 11,
+              "loss": 1.2573024034500122,
+              "pair_loss": 0.5284952521324158,
+              "robust_bce": 0.9930548071861267,
+              "worst_domain_bce": 0.9336358904838562
+            },
+            {
+              "epoch": 12,
+              "loss": 1.145999550819397,
+              "pair_loss": 0.48334136605262756,
+              "robust_bce": 0.9043288230895996,
+              "worst_domain_bce": 0.8273108005523682
+            },
+            {
+              "epoch": 13,
+              "loss": 1.0458717346191406,
+              "pair_loss": 0.44779306650161743,
+              "robust_bce": 0.8219751715660095,
+              "worst_domain_bce": 0.7445532083511353
+            },
+            {
+              "epoch": 14,
+              "loss": 0.9574922919273376,
+              "pair_loss": 0.4092583656311035,
+              "robust_bce": 0.7528631091117859,
+              "worst_domain_bce": 0.6754056811332703
+            },
+            {
+              "epoch": 15,
+              "loss": 0.8589423894882202,
+              "pair_loss": 0.3723757863044739,
+              "robust_bce": 0.6727544665336609,
+              "worst_domain_bce": 0.5978126525878906
+            },
+            {
+              "epoch": 16,
+              "loss": 0.8044781684875488,
+              "pair_loss": 0.34443360567092896,
+              "robust_bce": 0.6322613954544067,
+              "worst_domain_bce": 0.550388753414154
+            },
+            {
+              "epoch": 17,
+              "loss": 0.7249764800071716,
+              "pair_loss": 0.33763745427131653,
+              "robust_bce": 0.5561577677726746,
+              "worst_domain_bce": 0.46228963136672974
+            },
+            {
+              "epoch": 18,
+              "loss": 0.7014110088348389,
+              "pair_loss": 0.32387450337409973,
+              "robust_bce": 0.5394737720489502,
+              "worst_domain_bce": 0.4483247697353363
+            },
+            {
+              "epoch": 19,
+              "loss": 0.6591129899024963,
+              "pair_loss": 0.3006932735443115,
+              "robust_bce": 0.5087663531303406,
+              "worst_domain_bce": 0.41493716835975647
+            },
+            {
+              "epoch": 20,
+              "loss": 0.6199340224266052,
+              "pair_loss": 0.2931799590587616,
+              "robust_bce": 0.4733440577983856,
+              "worst_domain_bce": 0.3591279089450836
+            }
+          ]
+        ],
+        "4": [
+          [
+            {
+              "epoch": 1,
+              "loss": 2.6179323196411133,
+              "pair_loss": 1.5988359451293945,
+              "robust_bce": 1.8185144662857056,
+              "worst_domain_bce": 1.7721385955810547
+            },
+            {
+              "epoch": 2,
+              "loss": 2.2779953479766846,
+              "pair_loss": 1.3311868906021118,
+              "robust_bce": 1.6124019622802734,
+              "worst_domain_bce": 1.6075520515441895
+            },
+            {
+              "epoch": 3,
+              "loss": 1.9286903142929077,
+              "pair_loss": 1.190946102142334,
+              "robust_bce": 1.3332172632217407,
+              "worst_domain_bce": 1.3078936338424683
+            },
+            {
+              "epoch": 4,
+              "loss": 1.6742967367172241,
+              "pair_loss": 1.0167567729949951,
+              "robust_bce": 1.1659183502197266,
+              "worst_domain_bce": 1.073534369468689
+            },
+            {
+              "epoch": 5,
+              "loss": 1.5073330402374268,
+              "pair_loss": 0.8675705194473267,
+              "robust_bce": 1.0735477209091187,
+              "worst_domain_bce": 0.9992693662643433
+            },
+            {
+              "epoch": 6,
+              "loss": 1.3392744064331055,
+              "pair_loss": 0.7539358139038086,
+              "robust_bce": 0.9623064994812012,
+              "worst_domain_bce": 0.8930830359458923
+            },
+            {
+              "epoch": 7,
+              "loss": 1.1853405237197876,
+              "pair_loss": 0.6687692403793335,
+              "robust_bce": 0.8509559035301208,
+              "worst_domain_bce": 0.7706371545791626
+            },
+            {
+              "epoch": 8,
+              "loss": 1.0700916051864624,
+              "pair_loss": 0.5973533987998962,
+              "robust_bce": 0.7714149355888367,
+              "worst_domain_bce": 0.6636728644371033
+            },
+            {
+              "epoch": 9,
+              "loss": 0.9817053079605103,
+              "pair_loss": 0.5258398056030273,
+              "robust_bce": 0.7187854051589966,
+              "worst_domain_bce": 0.6262763738632202
+            },
+            {
+              "epoch": 10,
+              "loss": 0.9005391597747803,
+              "pair_loss": 0.4763335585594177,
+              "robust_bce": 0.6623724102973938,
+              "worst_domain_bce": 0.5601614713668823
+            },
+            {
+              "epoch": 11,
+              "loss": 0.8288723826408386,
+              "pair_loss": 0.40566107630729675,
+              "robust_bce": 0.626041829586029,
+              "worst_domain_bce": 0.5157874226570129
+            },
+            {
+              "epoch": 12,
+              "loss": 0.7687986493110657,
+              "pair_loss": 0.37500497698783875,
+              "robust_bce": 0.5812961459159851,
+              "worst_domain_bce": 0.4767597019672394
+            },
+            {
+              "epoch": 13,
+              "loss": 0.7150369882583618,
+              "pair_loss": 0.34136977791786194,
+              "robust_bce": 0.544352114200592,
+              "worst_domain_bce": 0.44016990065574646
+            },
+            {
+              "epoch": 14,
+              "loss": 0.6598420143127441,
+              "pair_loss": 0.3092905282974243,
+              "robust_bce": 0.505196750164032,
+              "worst_domain_bce": 0.3991106450557709
+            },
+            {
+              "epoch": 15,
+              "loss": 0.6162695288658142,
+              "pair_loss": 0.27836060523986816,
+              "robust_bce": 0.4770892262458801,
+              "worst_domain_bce": 0.3474610447883606
+            },
+            {
+              "epoch": 16,
+              "loss": 0.5881144404411316,
+              "pair_loss": 0.26103073358535767,
+              "robust_bce": 0.45759907364845276,
+              "worst_domain_bce": 0.3273235559463501
+            },
+            {
+              "epoch": 17,
+              "loss": 0.5641116499900818,
+              "pair_loss": 0.2550129294395447,
+              "robust_bce": 0.43660518527030945,
+              "worst_domain_bce": 0.307582825422287
+            },
+            {
+              "epoch": 18,
+              "loss": 0.5381419062614441,
+              "pair_loss": 0.2361035943031311,
+              "robust_bce": 0.42009010910987854,
+              "worst_domain_bce": 0.2749321162700653
+            },
+            {
+              "epoch": 19,
+              "loss": 0.5176583528518677,
+              "pair_loss": 0.224490225315094,
+              "robust_bce": 0.4054132103919983,
+              "worst_domain_bce": 0.2646830677986145
+            },
+            {
+              "epoch": 20,
+              "loss": 0.5030767321586609,
+              "pair_loss": 0.2180252969264984,
+              "robust_bce": 0.3940640985965729,
+              "worst_domain_bce": 0.261161744594574
+            }
+          ],
+          [
+            {
+              "epoch": 1,
+              "loss": 2.9448020458221436,
+              "pair_loss": 2.2715060710906982,
+              "robust_bce": 1.8090490102767944,
+              "worst_domain_bce": 1.7955379486083984
+            },
+            {
+              "epoch": 2,
+              "loss": 2.137753963470459,
+              "pair_loss": 1.5789300203323364,
+              "robust_bce": 1.348288893699646,
+              "worst_domain_bce": 1.2301980257034302
+            },
+            {
+              "epoch": 3,
+              "loss": 2.069321632385254,
+              "pair_loss": 1.1597893238067627,
+              "robust_bce": 1.4894269704818726,
+              "worst_domain_bce": 1.4214916229248047
+            },
+            {
+              "epoch": 4,
+              "loss": 1.9027318954467773,
+              "pair_loss": 0.9983320236206055,
+              "robust_bce": 1.4035658836364746,
+              "worst_domain_bce": 1.334426760673523
+            },
+            {
+              "epoch": 5,
+              "loss": 1.6565113067626953,
+              "pair_loss": 0.8694204688072205,
+              "robust_bce": 1.2218010425567627,
+              "worst_domain_bce": 1.1562914848327637
+            },
+            {
+              "epoch": 6,
+              "loss": 1.3941843509674072,
+              "pair_loss": 0.7695529460906982,
+              "robust_bce": 1.009407877922058,
+              "worst_domain_bce": 0.9307114481925964
+            },
+            {
+              "epoch": 7,
+              "loss": 1.2684518098831177,
+              "pair_loss": 0.7045190930366516,
+              "robust_bce": 0.9161922335624695,
+              "worst_domain_bce": 0.8187462091445923
+            },
+            {
+              "epoch": 8,
+              "loss": 1.207289695739746,
+              "pair_loss": 0.6607062816619873,
+              "robust_bce": 0.8769365549087524,
+              "worst_domain_bce": 0.8325486183166504
+            },
+            {
+              "epoch": 9,
+              "loss": 1.1276252269744873,
+              "pair_loss": 0.5967527031898499,
+              "robust_bce": 0.8292489051818848,
+              "worst_domain_bce": 0.7822850346565247
+            },
+            {
+              "epoch": 10,
+              "loss": 1.0293176174163818,
+              "pair_loss": 0.534796953201294,
+              "robust_bce": 0.7619192004203796,
+              "worst_domain_bce": 0.7104558348655701
+            },
+            {
+              "epoch": 11,
+              "loss": 0.9349174499511719,
+              "pair_loss": 0.4777761697769165,
+              "robust_bce": 0.6960293650627136,
+              "worst_domain_bce": 0.6181657910346985
+            },
+            {
+              "epoch": 12,
+              "loss": 0.8560234308242798,
+              "pair_loss": 0.428830087184906,
+              "robust_bce": 0.6416083574295044,
+              "worst_domain_bce": 0.5343717932701111
+            },
+            {
+              "epoch": 13,
+              "loss": 0.8063739538192749,
+              "pair_loss": 0.3841940760612488,
+              "robust_bce": 0.6142769455909729,
+              "worst_domain_bce": 0.5266980528831482
+            },
+            {
+              "epoch": 14,
+              "loss": 0.7526331543922424,
+              "pair_loss": 0.34833288192749023,
+              "robust_bce": 0.5784667134284973,
+              "worst_domain_bce": 0.493004709482193
+            },
+            {
+              "epoch": 15,
+              "loss": 0.6897673606872559,
+              "pair_loss": 0.31242066621780396,
+              "robust_bce": 0.5335570573806763,
+              "worst_domain_bce": 0.4340055584907532
+            },
+            {
+              "epoch": 16,
+              "loss": 0.6497219800949097,
+              "pair_loss": 0.2956618368625641,
+              "robust_bce": 0.5018910765647888,
+              "worst_domain_bce": 0.3848296105861664
+            },
+            {
+              "epoch": 17,
+              "loss": 0.6083425879478455,
+              "pair_loss": 0.2796382009983063,
+              "robust_bce": 0.46852347254753113,
+              "worst_domain_bce": 0.3359138071537018
+            },
+            {
+              "epoch": 18,
+              "loss": 0.5798580646514893,
+              "pair_loss": 0.27346810698509216,
+              "robust_bce": 0.44312402606010437,
+              "worst_domain_bce": 0.3026767373085022
+            },
+            {
+              "epoch": 19,
+              "loss": 0.558437705039978,
+              "pair_loss": 0.2524472177028656,
+              "robust_bce": 0.43221408128738403,
+              "worst_domain_bce": 0.31903964281082153
+            },
+            {
+              "epoch": 20,
+              "loss": 0.5238840579986572,
+              "pair_loss": 0.2322915643453598,
+              "robust_bce": 0.4077382981777191,
+              "worst_domain_bce": 0.259375661611557
+            }
+          ]
+        ]
+      }
+    }
+  }
+}
