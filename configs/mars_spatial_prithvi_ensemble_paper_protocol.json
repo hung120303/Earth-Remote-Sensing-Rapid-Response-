@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_exact_spatial_prithvi_ensemble_paper_replay",
+  "scope": "exact MARS-S2L v3 full and test-only site benchmark for the frozen calibrated representation ensemble",
+  "evaluator": {
+    "path": "tools/evaluate_mars_spatial_prithvi_ensemble_paper_cache.py",
+    "sha256": "a998eab2679474665dd538e269b593d8855a99c1b4cdf37bc86e99bf0872bad5"
+  },
+  "paper_contract": {
+    "revision": "v3",
+    "url": "https://arxiv.org/html/2511.21777v3",
+    "exact_reconstructed_comparator": {
+      "full": {
+        "rows": 43529,
+        "sites": 1289,
+        "positive": 1813,
+        "average_precision": 0.6410196024104218,
+        "recall": 0.7915057915057915,
+        "false_positive_rate": 0.07069230031642536,
+        "pixel_iou": 0.3243651485849355
+      },
+      "test_only_sites": {
+        "rows": 15655,
+        "sites": 697,
+        "positive": 227,
+        "average_precision": 0.45027380014908475,
+        "recall": 0.775330396475771,
+        "false_positive_rate": 0.07551205600207415,
+        "pixel_iou": 0.17156194293902416
+      }
+    }
+  },
+  "inputs": {
+    "paper_benchmark": {"path": "reports/acquisition/mars_s2l_paper_v3_benchmark.json", "sha256": "ebb39ab22720988b2657d0e4d6b9a5669c24fbca1083575797622a7f1e788eb0"},
+    "label_free_scores": {"path": "outputs/mars_paper_scene_features_label_free.npz", "sha256": "8a35e60e7c396e58639f940239020adb36def885124841e0b20901e10db52f33"},
+    "label_free_receipt": {"path": "reports/acquisition/mars_paper_scene_features_label_free.json", "sha256": "8f82262d60e9a47a40f2c7ded63042544c87bdfe00c74ed9c34cd5db462b168f"},
+    "spatial_images": {"path": "outputs/mars_paper_spatial_scene_inputs.npy", "sha256": "7cce444a552c6c873c05ae3a972f62a8081fde89d31ac63d94303dbfac3b1b94"},
+    "spatial_metadata": {"path": "outputs/mars_paper_spatial_scene_inputs_metadata.npz", "sha256": "b2b58eabf4478b46912d3c3437c1ee0b039841ee283bd7fe0164775b9d448022"},
+    "spatial_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_site_relative_spatial_classifier.pt", "sha256": "9401678aa4f38fb3b54a914318dc5c2a553b39fa8b309d1a127b9d21abbfc496"},
+    "spatial_development": {"path": "reports/experiments/mars_site_relative_spatial_classifier.json", "sha256": "c2b6695dbe24f0b5bc097d89c6fa6332c2af93441079cd55bec99e77aeeb820f"},
+    "prithvi_scores": {"path": "outputs/mars_adaptive_prithvi_paper_scores.npz", "sha256": "37aa4eb2e14bd7265df95a0cf55fc805e2a6e1ee8a2af7aa3e84a23165fe0059"},
+    "prithvi_receipt": {"path": "reports/acquisition/mars_adaptive_prithvi_paper_scores.json", "sha256": "1b76927c30b3614c0c08c4139f25fb4e66f92b517ac4a5fc76d3e4cc06cb5f9f"},
+    "prithvi_development": {"path": "reports/experiments/mars_adaptive_prithvi_probe.json", "sha256": "3a0478d9abdb94a76815744cefcf7ac181765c20e2969a7a40f310f272a03a8b"},
+    "ensemble_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_spatial_prithvi_ensemble.joblib", "sha256": "0a3be48f5eda659aaaa7cf91c259acd230f81340677e5a6fc5fab83ba048420b"},
+    "ensemble_development": {"path": "reports/experiments/mars_spatial_prithvi_ensemble.json", "sha256": "6cf8b8da7a63d8a124137def4fdc408f02f84a9858adfda206614c3cc2213ff1"},
+    "calibration_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_negative_cdf_calibrated_spatial_prithvi_ensemble.joblib", "sha256": "ce33bae550f20ad53076338e8412aef97d26a4b1c6c9c6e201086ccd208a1c37"},
+    "calibration_development": {"path": "reports/experiments/mars_spatial_prithvi_negative_cdf_calibration.json", "sha256": "334feb1937edab7b6949c2bcb89ad68508f0c35a274081defe17da3c345dd1b6"},
+    "fresh_safety": {"path": "reports/experiments/cloudsen12_fresh_negative_cdf_spatial_prithvi.json", "sha256": "ef401d27120b7986af2bdc8dc71734d53c64db4d0466880090face82e09dbf8a"},
+    "mask_gate_development": {"path": "reports/experiments/mars_scene_gated_masks.json", "sha256": "c1e5a1497abebba80d42898a8165b30fd255ff252478a0ee1fd90fd32456a51c"},
+    "diagnostic": {"path": "outputs/mars_paper_test_v3_diagnostic_cache.npz", "sha256": "1624fddc0222f8ffc5137f557c7fc3e465d53b335c82cc8014711baa35bb94a1"}
+  },
+  "architecture": {
+    "available_scene_score": "logit blend of site-relative spatial score at weight 0.25 and adaptive Prithvi score at weight 0.75, followed by the frozen -0.5044762783678565 logit offset",
+    "missing_scene_policy": "retain the frozen adversarial diagnostic scores: zero for a missing positive and one for a missing negative",
+    "dense_mask": "released MARS-S2L probability mask with frozen sensor thresholds, gated by unchanged v3 stronger scene score at the independently selected 0.75 cutoff",
+    "label_access_order": "construct and persist all 43,524 available candidate scores before opening diagnostic labels"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20261610,
+    "confidence": 0.95,
+    "unit": "physical location/site",
+    "views": ["full", "test_only_sites"]
+  },
+  "gates": {
+    "both_views_required": true,
+    "average_precision": "point estimate beats exact v3 and published table; paired site-bootstrap lower bound above zero",
+    "matched_fpr_recall": "point estimate and paired site-bootstrap lower bound above exact v3 at no worse FPR",
+    "fixed_false_positive_rate": "paired site-bootstrap upper bound no higher than exact v3",
+    "pixel_iou": "point estimate beats exact v3 and paired site-bootstrap lower bound above zero",
+    "comparator_identity": "recomputed v3 AP, recall, FPR, IoU, rows, sites, and positives must exactly match the hash-bound receipt"
+  },
+  "outputs": {
+    "label_free_scores": "outputs/mars_spatial_prithvi_ensemble_paper_scores.npz",
+    "json": "reports/experiments/mars_spatial_prithvi_ensemble_paper_posttest.json",
+    "markdown": "reports/experiments/MARS_SPATIAL_PRITHVI_ENSEMBLE_PAPER_POSTTEST.md"
+  },
+  "invariants": [
+    "The evaluator uses the official v3 paper URL and exact reconstructed archive metrics, not an earlier revision or rounded substitute.",
+    "No paper label participates in architecture, ensemble, calibration, threshold, or dense-mask selection.",
+    "The five unavailable rows retain the adversarial missing-data policy.",
+    "All 10,000 bootstrap replicates resample physical sites and pair candidate with the exact v3 comparator.",
+    "This is transparent post-test architecture evaluation because the paper cohort was opened by predecessor experiments; it is not independent external confirmation.",
+    "Failure on any gate in either view rejects the ensemble and resumes architecture research."
+  ]
+}

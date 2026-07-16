@@ -2858,3 +2858,17 @@ Available p95 fell from 0.022308 to 0.014564; all-clear p95 fell from 0.023027 t
 the symmetric six-unavailable-row bound passed. This is post-test safety consistency,
 not independent external confirmation, but it authorizes the already planned exact
 MARS-S2L v3 paper replay. The fresh evaluator accessed no paper input.
+
+### 2026-07-16: Exact calibrated spatial-Prithvi paper replay frozen
+
+The final evaluator is checksum-bound to the official MARS-S2L paper v3 receipt and
+paper URL. It must reproduce the exact full 43,529-row/1,289-site comparator (AP
+0.6410196024, recall 0.7915057915, FPR 0.0706923003, IoU 0.3243651486) and exact
+15,655-row/697-site test-only comparator (AP 0.4502738001, recall 0.7753303965,
+FPR 0.0755120560, IoU 0.1715619429) before candidate evaluation. All 43,524
+available ensemble scores are built and persisted from label-free current, spatial,
+and Prithvi inputs before the diagnostic labels open; five unavailable rows retain
+the adversarial missing policy. The dense mask is the independently validated
+released-probability gate. Both views require positive point and 10,000-replicate
+paired-site lower bounds for AP, matched-FPR recall, and IoU, plus no-worse fixed
+FPR. Failure on any gate resumes architecture research.
