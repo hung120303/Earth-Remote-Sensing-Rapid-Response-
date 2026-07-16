@@ -11,4 +11,4 @@ The bounded pilot was selected before pixel acquisition. CloudSEN12 test rows we
 
 Half of each partition targets high-MBMP-variance clear backgrounds; half is selected by deterministic country round-robin. Country and location metadata are sampling-only and prohibited model inputs.
 
-Each selected row also preserves the producer-published CRS and six-value affine transform for the exact 200x200 grid.
+Each selected row preserves the producer-published CRS and six-value affine transform for the exact 200x200 grid.
