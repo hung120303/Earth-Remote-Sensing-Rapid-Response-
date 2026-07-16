@@ -2070,3 +2070,18 @@ and a direct named-crop request returns HTTP 404. This rules out a missing-login
 explanation. The pilot consequently reconstructs the exact grid from the
 resolved public L1C target/reference identities; the raw path is slower but
 does not substitute products or processing levels.
+
+A first-row grid audit stopped that reconstruction before model use. A
+center-derived grid began at easting 408500, while the frozen producer affine
+for the same scene begins at 408510: an otherwise easy-to-miss one-pixel
+offset. The selection contract now carries the published CRS, affine, width,
+and height for every row, and the cropper uses that grid without recomputing
+it from the rounded longitude/latitude center. Selection membership and all
+source/product identities are unchanged. The corrected ignored selection
+manifest SHA-256 is
+`98eaacc62e94fb72cbdc05aa74172283165b1f2f235babde4606a06881813908`;
+the resolver output remains byte-identical at
+`d2af7b9b60a98bf2708cc2cb54e08e3ed85e6533dc85c94cc40b8d499ce35c93`.
+An overwrite smoke test confirms exact equality among producer, manifest, and
+written-raster transforms for the audited row. No feature or outcome was
+computed from the offset crops.
