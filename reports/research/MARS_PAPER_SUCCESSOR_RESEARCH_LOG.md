@@ -2199,3 +2199,22 @@ and positive paired-group AP lower bounds. Only afterward may the four UNEP
 development positives and 125 CloudSEN development negatives be opened, and
 both must pass their independent recall/false-positive gates before paper
 replay. Dense masks remain unchanged.
+
+The joint experiment selects class-mass-balanced positive weight 2.7185,
+negative weight 1.0, and blend 0.20. It passes every original-development
+gate. Cross-fitted folds 2/3/4 improve AP +0.003448 and matched-FPR recall
++0.003016, with paired-group interval [+0.000936, +0.006275] and improvements
+in both sensor strata. Fold 0 improves AP +0.003958 and recall +0.001342, with
+interval [+0.000547, +0.007880]; fold 1 improves AP +0.003287 and recall
++0.006711, with interval [+0.000742, +0.007871]. This is the first new-data
+scene head to pass the pooled selection and both strict original confirmations.
+
+Only then were both external development caches opened. UNEP positive recall
+ties current at 3/4 using separate frozen current/candidate thresholds. On 125
+CloudSEN negatives, current and candidate both produce exactly one false
+positive, but the candidate p95 probability margin to threshold is -0.22081
+versus current -0.26096. The predeclared margin-noninferiority gate therefore
+fails. No artifact is written and the paper cache remains unopened. Because
+the CloudSEN development partition is now observed, subsequent negative-weight
+calibration must label it as reused development evidence and reserve the still
+sealed 374-row CloudSEN published test partition for final external safety.
