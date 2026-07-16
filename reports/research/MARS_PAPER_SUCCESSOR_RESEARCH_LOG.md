@@ -1875,3 +1875,14 @@ inspected: it is 200×200 at 10 m in the target UTM CRS, a 2×2 km footprint.
 Earlier prose calling the crop 4 km is corrected. All prior training and
 benchmark evaluation used the actual stored 200×200 rasters, so no numerical
 result changes.
+
+Exact crop acquisition succeeds for all 141 resolved Sentinel-2 samples (136
+auxiliary training, 5 development). Every 12-band 200×200 uint16 target/
+reference crop has a nonempty UNEP plume mask and passes the frozen 0.80
+radiometry gate; compact ignored raster storage is 87,674,839 bytes. All 26
+resolved Landsat attempts fail before artifact acceptance because the public
+USGS STAC pixel links redirect to the separate EROS login page. This is an
+access gate, not an image-quality rejection. No Earthdata credential applies
+to EROS, no tier/L2 substitute is used, and the exact Landsat metadata remain
+available for a later authenticated extension. Sentinel-2 proceeds to the
+frozen CloudSEN12+ observability acquisition.
