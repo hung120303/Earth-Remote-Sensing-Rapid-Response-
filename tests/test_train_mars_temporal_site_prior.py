@@ -30,6 +30,12 @@ class TemporalSitePriorTests(unittest.TestCase):
         result = temporal_site_prior(scores, groups, top_k=3, weight=0.5)
         self.assertEqual(np.argsort(result).tolist(), np.argsort(scores).tolist())
 
+    def test_sites_below_minimum_history_are_unchanged(self) -> None:
+        scores = np.asarray([0.1, 0.8, 0.2])
+        groups = np.asarray(["a", "a", "b"])
+        result = temporal_site_prior(scores, groups, top_k=1, weight=0.5, min_site_size=3)
+        np.testing.assert_allclose(result, scores, rtol=0.0, atol=1e-15)
+
 
 if __name__ == "__main__":
     unittest.main()

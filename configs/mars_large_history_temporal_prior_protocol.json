@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_large_history_temporal_prior_selection",
+  "scope": "history-length-routed label-free temporal prior selected only on authorized development folds",
+  "trainer": {
+    "path": "tools/train_mars_temporal_site_prior.py",
+    "sha256": "ddf9609434e8dcfd2e7fb4c0630fe8e561535c787980b743b8bd903659dd3b64"
+  },
+  "inputs": {
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"}
+  },
+  "folds": {
+    "selection": [2, 3, 4],
+    "confirmation": [0, 1],
+    "unit": "physical_location_id"
+  },
+  "search": {
+    "min_site_size": [10, 20, 30, 40, 50],
+    "top_k": [1, 3, 5],
+    "weights": [0.25, 0.5, 0.75],
+    "formula": "for sites meeting min history only: logit(current score) + weight * mean(site top-k current logits); otherwise current score unchanged",
+    "candidate_count": 45
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "selection_seed": 20263100,
+    "confirmation_seed": 20263200,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "gates": {
+    "selection": "combined AP and recall improve, paired AP lower CI positive, every fold AP nonnegative and recall within tolerance",
+    "confirmation": "same fixed candidate has combined AP and recall improve, paired AP lower CI positive, every fold AP nonnegative and recall within tolerance",
+    "per_fold_recall_tolerance": 0.002,
+    "all_required": true
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_large_history_temporal_prior.joblib",
+    "json": "reports/experiments/mars_large_history_temporal_prior.json",
+    "markdown": "reports/experiments/MARS_LARGE_HISTORY_TEMPORAL_PRIOR.md"
+  },
+  "interpretation": {
+    "hypothesis_source": "transparent post-failure diagnosis found temporal priors help sites with sufficient history and hurt sparse sites",
+    "parameter_selection": "all cutoff/top-k/weight choices selected only on folds 2/3/4",
+    "independent_confirmation": "folds 0/1 opened once after selection",
+    "inference_labels": false,
+    "paper_cache_during_experiment": false
+  },
+  "invariants": [
+    "History length, current scores, and physical grouping are available without labels at inference.",
+    "All 45 candidates, ranking, bootstrap seeds, and gates are frozen before development scoring.",
+    "Sparse sites are mathematically unchanged by a candidate route.",
+    "Failure writes no artifact and blocks fresh-safety or paper replay."
+  ]
+}

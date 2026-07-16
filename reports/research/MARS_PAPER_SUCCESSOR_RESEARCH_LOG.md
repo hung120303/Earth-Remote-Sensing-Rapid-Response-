@@ -2421,3 +2421,11 @@ post-failure diagnostic found that temporal priors have opposite behavior by his
 length: they hurt sparse sites but materially improve sites with roughly 30 or more
 observations. The next candidate family will freeze history-length routing and select
 its cutoff/top-k/weight only on authorized development folds.
+### 2026-07-16: Large-history temporal routing frozen
+
+The history-length hypothesis is now a formal development-only experiment. Forty-five
+minimum-history/top-k/weight combinations are frozen. A candidate leaves sparse sites
+mathematically unchanged and adds top-k temporal evidence only at sites meeting its
+minimum scene count. Selection remains folds 2/3/4 with positive paired-bootstrap AP
+evidence and per-fold stability; the fixed winner must repeat those properties on
+folds 0/1. No paper or fresh-test cache is loaded during parameter selection.

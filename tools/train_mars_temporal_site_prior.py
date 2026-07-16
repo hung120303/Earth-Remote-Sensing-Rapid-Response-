@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import itertools
 import json
 import os
 import subprocess
@@ -36,19 +37,25 @@ def logit(values: np.ndarray) -> np.ndarray:
 
 
 def temporal_site_prior(
-    scores: np.ndarray, groups: np.ndarray, top_k: int, weight: float
+    scores: np.ndarray,
+    groups: np.ndarray,
+    top_k: int,
+    weight: float,
+    min_site_size: int = 1,
 ) -> np.ndarray:
     """Add a label-free site's top-k temporal evidence to every scene logit."""
-    if top_k < 1 or weight < 0.0:
-        raise ValueError("top_k must be positive and weight non-negative")
+    if top_k < 1 or weight < 0.0 or min_site_size < 1:
+        raise ValueError("top_k/min_site_size must be positive and weight non-negative")
     scores = np.asarray(scores, dtype=np.float64)
     groups = np.asarray(groups).astype(str)
     if scores.ndim != 1 or groups.shape != scores.shape or not np.isfinite(scores).all():
         raise ValueError("Invalid temporal site-prior inputs")
     logits = logit(scores)
-    priors = np.empty_like(logits)
+    priors = np.zeros_like(logits)
     for group in np.unique(groups):
         rows = np.flatnonzero(groups == group)
+        if rows.size < min_site_size:
+            continue
         count = min(top_k, rows.size)
         priors[rows] = np.mean(np.partition(logits[rows], -count)[-count:])
     candidate_logits = logits + float(weight) * priors
@@ -74,7 +81,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
     lines = [
         "# Label-free temporal site-prior scene architecture",
         "",
-        f"- Selected top-k: **{selected['top_k']}**; logit prior weight: **{selected['weight']:.2f}**.",
+        f"- Selected minimum site history: **{selected['min_site_size']}** scenes; top-k: **{selected['top_k']}**; logit prior weight: **{selected['weight']:.2f}**.",
         f"- Selection AP delta: **{selected['combined']['versus_current']['delta']['average_precision']:+.5f}**.",
         f"- Confirmation AP delta: **{report['confirmation']['combined']['versus_current']['delta']['average_precision']:+.5f}**.",
         f"- All promotion gates pass: **{str(report['all_promotion_gates_pass']).lower()}**.",
@@ -108,10 +115,15 @@ def main() -> int:
     confirmation_rows = np.isin(values["folds"], protocol["folds"]["confirmation"])
     candidates: list[dict[str, Any]] = []
     score_by_key: dict[str, np.ndarray] = {}
-    for top_k in protocol["search"]["top_k"]:
-        for weight in protocol["search"]["weights"]:
-            scores = temporal_site_prior(values["current"], values["groups"], int(top_k), float(weight))
-            key = f"top{top_k}_weight{weight}"
+    for min_site_size, top_k, weight in itertools.product(
+        protocol["search"].get("min_site_size", [1]),
+        protocol["search"]["top_k"],
+        protocol["search"]["weights"],
+    ):
+            scores = temporal_site_prior(
+                values["current"], values["groups"], int(top_k), float(weight), int(min_site_size)
+            )
+            key = f"min{min_site_size}_top{top_k}_weight{weight}"
             score_by_key[key] = scores
             combined = evaluate_rows(values, scores, selection_rows)
             per_fold = {
@@ -138,6 +150,7 @@ def main() -> int:
             candidates.append(
                 {
                     "key": key,
+                    "min_site_size": int(min_site_size),
                     "top_k": int(top_k),
                     "weight": float(weight),
                     "combined": combined,
@@ -194,6 +207,7 @@ def main() -> int:
                 "kind": "mars_label_free_temporal_site_prior",
                 "top_k": selected["top_k"],
                 "weight": selected["weight"],
+                "min_site_size": selected["min_site_size"],
                 "operational_scene_threshold": operational_threshold,
                 "base_score": "frozen v3 stronger OOF ExtraTrees scene score",
                 "protocol_sha256": sha256(protocol_path),
