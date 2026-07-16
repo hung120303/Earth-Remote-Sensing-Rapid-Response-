@@ -2888,3 +2888,18 @@ AP and matched-recall intervals crossed zero ([-0.023301,+0.052032] and
 not the final successor, and no claim of unequivocal superiority is permitted.
 The next architecture must create a materially stronger unseen-site ranking signal,
 not another calibration or blend of these highly correlated component scores.
+
+### 2026-07-16: Robust Prithvi hard-pair ranker frozen
+
+The next architecture targets unseen-site ordering directly. A compact 128-hidden
+residual MLP consumes frozen Prithvi CLS, augmented scene/context, and OOF spatial
+features. Its BCE objective is a smooth worst-domain loss over source-fold x sensor
+x class groups with physical-site balancing; a frozen three-value pairwise term
+compares positives against the ranker's hardest source negatives each epoch. This draws
+on regularized GroupDRO (`https://openreview.net/pdf?id=ryxGuJrFvS`), unlabeled
+target moment alignment (`https://arxiv.org/abs/1607.01719`), and direct AUC
+optimization for imbalance (`https://proceedings.mlr.press/v119/guo20f.html`).
+Only pair weights 0/0.25/0.5 and current blends 0.05/0.10/0.20/0.30 are searched.
+Selection cross-fits folds 2/3/4 using only the other selection folds; the fixed
+winner is audited on already-exposed folds 0/1. Every fold, both sensors, matched-
+FPR recall, and paired-site AP must pass before any fresh or paper scoring.

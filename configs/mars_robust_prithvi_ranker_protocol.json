@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_robust_prithvi_ranker_training",
+  "scope": "development-only worst-domain and hard-pair Prithvi scene-ranking experiment",
+  "trainer": {
+    "path": "tools/train_mars_robust_prithvi_ranker.py",
+    "sha256": "f7fc883c4f70b11ea53c308d7aba711af56ccfe71afb757898bae6ece6a4d40e"
+  },
+  "inputs": {
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "prithvi": {"path": "outputs/mars_prithvi_eo_2_tiny_tl_features_all_folds.npz", "sha256": "e3e52a9453426e5e048cd753daf2597d59cbe820a18ae584c61a2de7ae405f23"},
+    "spatial_scores": {"path": "outputs/mars_site_relative_spatial_development_scores.npz", "sha256": "186ab5946790798a4a81274130ba5756ab3e5316b7b42238c2772d36805152a1"}
+  },
+  "folds": {
+    "selection": [2, 3, 4],
+    "reused_holdout_audit": [0, 1],
+    "unit": "physical_location_id",
+    "selection_training_rule": "for each held selection fold, train only on the other two selection folds",
+    "audit_training_rule": "fit the frozen winner on folds 2/3/4 and score folds 0/1 once",
+    "holdout_status": "folds 0/1 are a reused audit after predecessor experiments, not independent confirmation"
+  },
+  "training": {
+    "seeds": [20261700, 20261701],
+    "features": "768 frozen Prithvi CLS features plus augmented v3 scene/context features plus the OOF site-relative spatial logit",
+    "target_adaptation": "source and each unlabeled target fold use independent per-feature mean and standard deviation",
+    "domain_groups": "source fold by sensor by class",
+    "site_weighting": "each physical site receives equal total base weight; positives receive square-root class balancing",
+    "operational_scene_threshold": 0.28187603894788654,
+    "model": {
+      "hidden": 128,
+      "dropout": 0.25,
+      "epochs": 20,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.01,
+      "group_temperature": 0.1,
+      "hard_negative_pool": 4096,
+      "pair_count": 8192,
+      "pair_margin": 0.5,
+      "gradient_clip": 5.0
+    }
+  },
+  "search": {
+    "pair_weights": [0.0, 0.25, 0.5],
+    "current_blends": [0.05, 0.1, 0.2, 0.3],
+    "candidate_count": 12,
+    "rank_rule": "stability, worst selection-fold AP delta, combined AP delta, matched-FPR recall delta, then smaller blend",
+    "no_feature_or_capacity_search": true
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "selection_seed": 20261750,
+    "audit_seed": 20261751,
+    "unit": "physical_location_id",
+    "confidence": 0.95
+  },
+  "gates": {
+    "selection": "combined AP and matched-FPR recall nonnegative, every fold AP positive, fold recall no worse than -0.002, both sensors no worse than -0.0025 AP, and paired-site AP lower bound positive",
+    "reused_holdout_audit": "the frozen winner passes the same point/fold/sensor rules and paired-site AP lower bound on folds 0/1",
+    "all_required": true
+  },
+  "research_basis": [
+    {"method": "group distributionally robust optimization with regularization", "url": "https://openreview.net/pdf?id=ryxGuJrFvS"},
+    {"method": "unlabeled target correlation/moment alignment", "url": "https://arxiv.org/abs/1607.01719"},
+    {"method": "direct AUC optimization for imbalanced classification", "url": "https://proceedings.mlr.press/v119/guo20f.html"}
+  ],
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_robust_prithvi_ranker.pt",
+    "development_scores": "outputs/mars_robust_prithvi_ranker_development_scores.npz",
+    "json": "reports/experiments/mars_robust_prithvi_ranker.json",
+    "markdown": "reports/experiments/MARS_ROBUST_PRITHVI_RANKER.md"
+  },
+  "invariants": [
+    "No fresh CloudSEN or exact paper input is loaded.",
+    "The model capacity, optimization settings, pair-weight grid, blend grid, seeds, and gates are fixed before training.",
+    "Hard negatives are selected only inside each source training split.",
+    "Unlabeled target features affect only target normalization, never fitting or candidate selection labels.",
+    "Failure writes no artifact or score cache and blocks external scoring."
+  ]
+}
