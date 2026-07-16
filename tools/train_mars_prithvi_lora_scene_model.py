@@ -160,8 +160,11 @@ def train_one(
     )
     loader = DataLoader(
         MarsPaperDataset(paths["metadata_root"], records, augment=True, seed=seed),
-        batch_size=int(spec["batch_size"]), sampler=sampler, num_workers=0,
-        pin_memory=False,
+        batch_size=int(spec["batch_size"]), sampler=sampler,
+        pin_memory=True,
+        num_workers=int(spec["loader_workers"]),
+        prefetch_factor=int(spec["loader_prefetch_factor"]),
+        persistent_workers=True,
     )
     history: list[dict[str, float]] = []
     for epoch in range(epochs):
@@ -222,8 +225,10 @@ def score_records(
     model.eval()
     loader = DataLoader(
         MarsPaperDataset(paths["metadata_root"], records, augment=False, seed=0),
-        batch_size=int(spec["evaluation_batch_size"]), shuffle=False, num_workers=0,
-        pin_memory=False,
+        batch_size=int(spec["evaluation_batch_size"]), shuffle=False,
+        num_workers=int(spec["loader_workers"]), pin_memory=True,
+        prefetch_factor=int(spec["loader_prefetch_factor"]),
+        persistent_workers=True,
     )
     ids: list[str] = []
     scores: list[np.ndarray] = []

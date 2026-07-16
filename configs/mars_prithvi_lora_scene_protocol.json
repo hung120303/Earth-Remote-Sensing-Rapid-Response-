@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "status": "frozen_after_successful_16_scene_gpu_smoke_before_full_lora_training",
+  "status": "frozen_after_parallel_loader_repeat_smoke_before_full_lora_training",
   "scope": "patch-supervised low-rank Prithvi adaptation on MARS development folds",
   "trainer": {
     "path": "tools/train_mars_prithvi_lora_scene_model.py",
-    "sha256": "0bf6ec8ef308fcb5d574d2d1ff3034a56326e0bdd0131c8cff58dc04c69bb99f"
+    "sha256": "315ee2af2065fef7c02c8d30fa7e1296bb2bce715702c238a1916eacd503eacd"
   },
   "code_dependencies": [
     {"path": "EarthRemoteSensingRapidResponse/mars_prithvi_lora_model.py", "sha256": "556ab7e47ae77bd3e3e2a107b0726617bab127c617291c7d953e855d921a162c"},
@@ -42,6 +42,8 @@
     "topk_patches": 4,
     "batch_size": 16,
     "evaluation_batch_size": 32,
+    "loader_workers": 4,
+    "loader_prefetch_factor": 2,
     "lora_learning_rate": 0.0001,
     "head_learning_rate": 0.001,
     "weight_decay": 0.01,

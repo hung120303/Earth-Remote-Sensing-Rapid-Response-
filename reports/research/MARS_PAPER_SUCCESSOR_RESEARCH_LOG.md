@@ -2935,3 +2935,14 @@ to 0.05/0.10/0.20/0.30/0.50, and fixed every-fold, sensor, matched-FPR recall, a
 not independent confirmation. A passing seed 20261800 must be reproduced by a
 separately frozen second seed before any fresh or exact-paper scoring. No fresh or
 paper input is available to this trainer.
+
+### 2026-07-16: Pre-result parallel-loader amendment frozen
+
+The initial full command was interrupted before its first epoch or any metric after
+measured single-worker TIFF throughput left the GPU near 2% utilization. No candidate
+result was observed. The only amendment uses four deterministic data-loader workers,
+two-batch prefetch per worker, and pinned host transfer for training and scoring.
+Samples, replacement sampler, augmentation rules and seeds, architecture, optimizer,
+losses, epochs, folds, blends, and gates are unchanged. A repeat 16-scene GPU smoke
+test passed with finite losses, 16/16 finite scores, and the same 130,754 trainable
+parameters. The amended trainer hash and loader settings were frozen before restart.
