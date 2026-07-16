@@ -2690,3 +2690,16 @@ identity. Five logit-space Prithvi weights are frozen. Selection uses folds 2/3/
 the fixed weight is confirmed once on folds 0/1. Both stages require positive paired-
 site AP lower bounds, nondecreasing matched-FPR recall, per-fold stability, and sensor
 noninferiority. No paper data are loaded during this experiment.
+
+### 2026-07-16: Spatial-Prithvi representation ensemble passes development
+
+All frozen gates passed. The selected logit ensemble assigns 0.75 weight to adaptive
+Prithvi and 0.25 to site-relative spatial scores. Selection AP/recall improved
++0.004911/+0.002585 with paired-site AP interval [+0.002437, +0.007277]; every fold
+and both sensors improved. Independent fold-0/1 confirmation improved AP/recall
++0.002248/+0.000671 with interval [+0.001135, +0.003462]. Fold AP deltas were
++0.002173 and +0.001480, and both sensor deltas were positive. The ignored 408-byte
+ensemble artifact has SHA-256
+`0a3be48f5eda659aaaa7cf91c259acd230f81340677e5a6fc5fab83ba048420b`.
+This authorizes a newly frozen fresh CloudSEN representation extraction and safety
+test; exact paper replay remains blocked until that safety gate passes.
