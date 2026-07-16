@@ -2769,3 +2769,15 @@ gate failed even though folds 3/4 improved (246 vs 249 and 514 vs 546). No artif
 was written and the fresh cohort was not replayed. A single p95 statistic does not
 guarantee fixed-threshold tail control; any replacement calibration must derive its
 tail constraint from development data and receive a new frozen confirmation test.
+
+### 2026-07-16: Exact-tail spatial-Prithvi calibration frozen
+
+The replacement monotone calibration controls both the negative logit p95 and the
+exact fixed-threshold tail. Within each selection fold, the candidate score at the
+first rank beyond current's false-positive budget defines an upper offset limit.
+The frozen offset is the minimum of all p95 and exact-tail limits over folds 2/3/4,
+minus the same fixed 0.05-logit margin. This is a deterministic constraint, not an
+offset search. It loads no fresh or paper data and preserves every ranking metric.
+Because folds 0/1 were exposed by the p95-only attempt, their evaluation is now
+explicitly a reused holdout audit rather than independent confirmation. Passing
+development permits only a transparently post-test fresh safety replay.
