@@ -2499,3 +2499,17 @@ combines the stronger site-relative spatial scene score with label-free set cont
 using site-held-out development evaluation. First, a hash-bound builder will
 reproduce all leakage-controlled site-relative development scores and assert the
 published internal metrics before any new model selection.
+
+### 2026-07-16: Exact site-relative OOF reproduction rejected; deterministic rebuild frozen
+
+The hash-bound reproduction attempt completed all three inner fits but rejected its
+output: rebuilt combined inner AP delta differed from the old report by 0.00106,
+far above the frozen 1e-7 tolerance. Inputs, architecture, code revision, and seeds
+matched. The historical trainer seeded CUDA but did not require deterministic
+kernels, so seeded training alone is insufficient for bitwise research provenance.
+No score cache or success report was written. A separately declared v2 rebuild is
+now frozen with deterministic PyTorch/cuDNN algorithms. It does not claim to recreate
+the old stochastic OOF scores. Instead, it requires positive AP delta in every inner
+fold, bounded recall changes, limited AP drift, and tight reproduction of fold-0/1
+metrics produced by the already frozen artifact. This distinction will be disclosed
+in the methods and reproducibility limitations.
