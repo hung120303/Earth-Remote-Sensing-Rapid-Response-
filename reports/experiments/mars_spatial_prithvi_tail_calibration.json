@@ -1,0 +1,123 @@
+{
+  "all_calibration_gates_pass": true,
+  "artifact": {
+    "bytes": 454,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_tail_calibrated_spatial_prithvi_ensemble.joblib",
+    "sha256": "fbb69fc987220cda88e04532f74bf610ab4eaecb2cb9d18594a985851af7387b",
+    "tracked": false
+  },
+  "binding_selection_limit": -0.05561041450180715,
+  "decision": "Freeze tail-calibrated ensemble for transparent fresh safety replay.",
+  "generated_at_utc": "2026-07-16T19:42:02.461338+00:00",
+  "logit_offset": -0.10561041450180715,
+  "provenance": {
+    "git_commit": "d06f004896605d88b5305434de8e655a3ff34802",
+    "joblib": "1.5.3",
+    "numpy": "2.4.4",
+    "protocol_sha256": "20e6af83fff732d38fe85995bb04ca136aa8a7e4a856bbeb3896da6374c79454",
+    "script_sha256": "0b997ece3100a63b27221ae12598c3c2fd9dbaf883126df4e31a15e6cac37153"
+  },
+  "reused_holdout_audit": {
+    "checks": {
+      "every_fold_ap_exact": true,
+      "every_fold_false_positives_no_higher": true,
+      "every_fold_negative_p95_no_higher": true
+    },
+    "folds": {
+      "0": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.9164676979068671,
+        "calibrated_false_positives": 334,
+        "calibrated_negative_logit_p95": -1.2586964313193187,
+        "current_false_positives": 357,
+        "current_negative_logit_p95": -1.1495788001103013,
+        "raw_ap": 0.9164676979068671,
+        "raw_false_positives": 353,
+        "raw_negative_logit_p95": -1.1530860168175114
+      },
+      "1": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.8980928145550502,
+        "calibrated_false_positives": 531,
+        "calibrated_negative_logit_p95": -0.47172997173208,
+        "current_false_positives": 574,
+        "current_negative_logit_p95": -0.34639306017949756,
+        "raw_ap": 0.8980928145550502,
+        "raw_false_positives": 567,
+        "raw_negative_logit_p95": -0.36611955723027273
+      }
+    },
+    "independent_confirmation": false,
+    "reason": "folds 0/1 were exposed by the preceding p95-only calibration"
+  },
+  "schema_version": 1,
+  "scope": "development-only monotone p95 and exact-tail calibration",
+  "selection": {
+    "checks": {
+      "every_fold_ap_exact": true,
+      "every_fold_false_positives_no_higher": true,
+      "every_fold_negative_p95_no_higher": true
+    },
+    "folds": {
+      "2": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.9194141609942714,
+        "calibrated_false_positives": 215,
+        "calibrated_negative_logit_p95": -1.9995185699183535,
+        "current_false_positives": 224,
+        "current_negative_logit_p95": -1.877140846048896,
+        "raw_ap": 0.9194141609942714,
+        "raw_false_positives": 227,
+        "raw_negative_logit_p95": -1.893908155416546
+      },
+      "3": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.9341429498182684,
+        "calibrated_false_positives": 242,
+        "calibrated_negative_logit_p95": -1.7747264645934653,
+        "current_false_positives": 249,
+        "current_negative_logit_p95": -1.6711811523379896,
+        "raw_ap": 0.9341429498182684,
+        "raw_false_positives": 250,
+        "raw_negative_logit_p95": -1.6691160500916584
+      },
+      "4": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.8929019994426096,
+        "calibrated_false_positives": 499,
+        "calibrated_negative_logit_p95": -0.5128854850563203,
+        "current_false_positives": 546,
+        "current_negative_logit_p95": -0.39568936873753835,
+        "raw_ap": 0.8929019994426096,
+        "raw_false_positives": 523,
+        "raw_negative_logit_p95": -0.40727507055451306
+      }
+    }
+  },
+  "selection_constraints": {
+    "2": {
+      "binding_offset_limit": -0.05561041450180715,
+      "current_false_positive_budget": 224,
+      "false_positive_tail_offset_limit": -0.05561041450180715,
+      "first_disallowed_raw_score": 0.2932680558731478,
+      "negative_count": 8036,
+      "p95_offset_limit": 0.01676730936764992
+    },
+    "3": {
+      "binding_offset_limit": -0.005396202523446747,
+      "current_false_positive_budget": 249,
+      "false_positive_tail_offset_limit": -0.005396202523446747,
+      "first_disallowed_raw_score": 0.2829696332701788,
+      "negative_count": 8041,
+      "p95_offset_limit": -0.002065102246331163
+    },
+    "4": {
+      "binding_offset_limit": 0.011585701816974714,
+      "current_false_positive_budget": 546,
+      "false_positive_tail_offset_limit": 0.08760685479941832,
+      "first_disallowed_raw_score": 0.26448592104590624,
+      "negative_count": 8180,
+      "p95_offset_limit": 0.011585701816974714
+    }
+  }
+}

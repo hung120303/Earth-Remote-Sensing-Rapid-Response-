@@ -2781,3 +2781,15 @@ offset search. It loads no fresh or paper data and preserves every ranking metri
 Because folds 0/1 were exposed by the p95-only attempt, their evaluation is now
 explicitly a reused holdout audit rather than independent confirmation. Passing
 development permits only a transparently post-test fresh safety replay.
+
+### 2026-07-16: Exact-tail spatial-Prithvi calibration passes development
+
+The binding selection constraint was fold 2's first disallowed negative, yielding
+an offset limit of -0.055610 and a final conservative offset of -0.105610 logits.
+All selection gates passed: calibrated false-positive counts were 215/242/499 versus
+current's 224/249/546 on folds 2/3/4, every negative p95 was lower, and AP was
+bitwise unchanged. The reused fold-0/1 audit also passed (334/531 false positives
+versus 357/574), but is not independent evidence. The ignored 454-byte calibration
+artifact has SHA-256
+`fbb69fc987220cda88e04532f74bf610ab4eaecb2cb9d18594a985851af7387b`.
+This authorizes a post-test fresh replay under the already frozen safety gates.
