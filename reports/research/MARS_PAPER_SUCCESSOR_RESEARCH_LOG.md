@@ -2650,3 +2650,16 @@ Forty-eight minimum-history/top-k/cutoff/weight combinations, selection folds 2/
 confirmation folds 0/1, and paired-site gates on both low-prevalence and complete
 views are frozen. The rule uses no labels at inference, and the paper cache remains
 out of scope.
+
+### 2026-07-16: Gated temporal-spatial boost rejected
+
+The search selected minimum history 20, top-1, cutoff 0.10, weight 1.0. Selection
+target AP improved +0.027425 but its paired interval crossed zero
+[-0.002733, +0.061129], recall changed -0.005556, and the whole-view AP regressed
+-0.013863. Independent confirmation was uniformly adverse: target AP/recall changed
+-0.024858/-0.020979, while whole AP/recall changed -0.011317/-0.008725; the whole-
+view AP interval was entirely negative [-0.023321, -0.000113]. No artifact was
+written. Both bidirectional and one-sided temporal families are now retired. The
+next path is a non-temporal ensemble of two independently development-validated,
+test-complementary representations: site-relative spatial residuals and adaptive
+Prithvi foundation features.
