@@ -1,0 +1,186 @@
+{
+  "all_safety_gates_pass": false,
+  "component_score_summary": {
+    "ensemble_p95": 0.02389157665412077,
+    "prithvi_p95": 0.029261803193456053,
+    "spatial_p95": 0.015443193331428826
+  },
+  "decision": "Reject ensemble before exact MARS paper evaluation.",
+  "full_cohort_bounds": {
+    "available_rows": 368,
+    "candidate_worst_case_fpr": 0.026737967914438502,
+    "current_worst_case_fpr": 0.026737967914438502,
+    "full_rows": 374,
+    "symmetric_worst_case_candidate_no_worse": true,
+    "unavailable_rows": 6
+  },
+  "generated_at_utc": "2026-07-16T19:32:17.635262+00:00",
+  "paired_transitions": {
+    "both_false_positive": 4,
+    "both_true_negative": 364,
+    "candidate_only_false_positive": 0,
+    "current_only_false_positive": 0
+  },
+  "paper_test_accessed": false,
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "ac82e5413a74d8dadd6f9fdfef772392bda2a46e",
+    "protocol_sha256": "702279980954d7dcbdc3ca1195e688c4f7df25511df9d8dc30c16c18ab7c08ba",
+    "script_sha256": "07d600df6d3d2688448f10f8f897a694ab532deb913614c67ba90b8c67a87304"
+  },
+  "safety_checks": {
+    "available_false_positive_count_no_higher": true,
+    "available_logit_margin_p95_no_higher": false,
+    "available_raw_score_p95_no_higher": false,
+    "published_all_clear_false_positive_count_no_higher": true,
+    "published_all_clear_logit_margin_p95_no_higher": false,
+    "published_nonclear_false_positive_count_no_higher": true,
+    "published_nonclear_logit_margin_p95_no_higher": false,
+    "symmetric_adversarial_full_bound_no_worse": true
+  },
+  "schema_version": 1,
+  "scope": "one-shot fresh external-negative safety evaluation for spatial-Prithvi ensemble",
+  "strata": {
+    "available": {
+      "candidate": {
+        "false_positive_rate": 0.010869565217391304,
+        "false_positives": 4,
+        "logit_threshold_margin": {
+          "max": 3.071434465287302,
+          "p50": -7.134577776876988,
+          "p90": -3.2726756581195513,
+          "p95": -2.774994984429633,
+          "p99": 0.19778781113831045
+        },
+        "raw_score": {
+          "max": 0.8943777957489253,
+          "p50": 0.00031277940993157497,
+          "p90": 0.014660577031726268,
+          "p95": 0.02389157665412077,
+          "p99": 0.3281241101448781
+        },
+        "rows": 368,
+        "threshold": 0.28187603894788654
+      },
+      "checks": {
+        "false_positive_count_no_higher": true,
+        "logit_margin_p95_no_higher": false,
+        "raw_score_p95_no_higher": false
+      },
+      "current": {
+        "false_positive_rate": 0.010869565217391304,
+        "false_positives": 4,
+        "logit_threshold_margin": {
+          "max": 2.3680312830390875,
+          "p50": -7.458741344733269,
+          "p90": -3.326506135279777,
+          "p95": -2.8456401044439135,
+          "p99": -0.4628721260265569
+        },
+        "raw_score": {
+          "max": 0.8073459978765792,
+          "p50": 0.00022618883420710218,
+          "p90": 0.013903109428110913,
+          "p95": 0.02230768334554338,
+          "p99": 0.2037486629330241
+        },
+        "rows": 368,
+        "threshold": 0.28187603894788654
+      }
+    },
+    "published_all_clear": {
+      "candidate": {
+        "false_positive_rate": 0.012232415902140673,
+        "false_positives": 4,
+        "logit_threshold_margin": {
+          "max": 3.071434465287302,
+          "p50": -7.218980887781993,
+          "p90": -3.2520625132352223,
+          "p95": -2.68217548723971,
+          "p99": 0.5137898841082561
+        },
+        "raw_score": {
+          "max": 0.8943777957489253,
+          "p50": 0.0002874552994010125,
+          "p90": 0.014961899991038098,
+          "p95": 0.02615623847299726,
+          "p99": 0.3996301345494735
+        },
+        "rows": 327,
+        "threshold": 0.28187603894788654
+      },
+      "checks": {
+        "false_positive_count_no_higher": true,
+        "logit_margin_p95_no_higher": false,
+        "raw_score_p95_no_higher": false
+      },
+      "current": {
+        "false_positive_rate": 0.012232415902140673,
+        "false_positives": 4,
+        "logit_threshold_margin": {
+          "max": 2.3680312830390875,
+          "p50": -7.495174092256511,
+          "p90": -3.324557914631756,
+          "p95": -2.8126092350453766,
+          "p99": -0.16303274823784666
+        },
+        "raw_score": {
+          "max": 0.8073459978765792,
+          "p50": 0.00021809778960453507,
+          "p90": 0.013929919910920512,
+          "p95": 0.023027465235732226,
+          "p99": 0.25493575176976707
+        },
+        "rows": 327,
+        "threshold": 0.28187603894788654
+      }
+    },
+    "published_nonclear": {
+      "candidate": {
+        "false_positive_rate": 0.0,
+        "false_positives": 0,
+        "logit_threshold_margin": {
+          "max": -2.7632268749795577,
+          "p50": -5.792022267102957,
+          "p90": -3.6553911407232667,
+          "p95": -3.0363643258358204,
+          "p99": -2.8062491932053373
+        },
+        "raw_score": {
+          "max": 0.02416468233490002,
+          "p50": 0.0011964526300753443,
+          "p90": 0.010045184393145086,
+          "p95": 0.018495863211280186,
+          "p99": 0.02320046087650856
+        },
+        "rows": 41,
+        "threshold": 0.28187603894788654
+      },
+      "checks": {
+        "false_positive_count_no_higher": true,
+        "logit_margin_p95_no_higher": false,
+        "raw_score_p95_no_higher": false
+      },
+      "current": {
+        "false_positive_rate": 0.0,
+        "false_positives": 0,
+        "logit_threshold_margin": {
+          "max": -2.7180461469772,
+          "p50": -5.695269319112966,
+          "p90": -3.8535680753046906,
+          "p95": -3.1022452479501466,
+          "p99": -2.787659775740585
+        },
+        "raw_score": {
+          "max": 0.02525329629265729,
+          "p50": 0.0013178379104808924,
+          "p90": 0.008254214584923892,
+          "p95": 0.01733705508877546,
+          "p99": 0.023674171609618773
+        },
+        "rows": 41,
+        "threshold": 0.28187603894788654
+      }
+    }
+  }
+}

@@ -2733,3 +2733,15 @@ adversarial bound. The adaptive Prithvi source probe may be refit under its alre
 selected C/blend and use unlabeled fresh feature moments; no fresh label, calibration,
 or selection enters scoring. The same false-positive-count, raw-p95, logit-margin,
 and symmetric unavailable-row gates used for the prior fresh test are required.
+
+### 2026-07-16: Uncalibrated spatial-Prithvi fresh safety test rejected
+
+The ensemble produced exactly the same four false positives as current on 368 rows,
+with four shared errors, zero candidate-only errors, and zero errors in the 41-row
+published non-clear stratum. The symmetric unavailable-row bound also passed. It
+failed every preregistered p95 distribution gate: overall candidate p95 was 0.023892
+versus current 0.022308, all-clear 0.026156 versus 0.023027, and non-clear 0.018496
+versus 0.017337. Thus this is a calibration rejection, not an error-count rejection;
+exact paper replay remains blocked. A monotone logit-offset calibration will be fit
+only from development negatives. Such an offset preserves every scene ranking, AP,
+and matched-FPR recall exactly while reducing fixed-threshold scores.
