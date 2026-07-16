@@ -1093,7 +1093,7 @@ Prithvi was pretrained on 4.2 million global HLS V2 time-series samples at
 location coordinates. Five spectral channels closely correspond to MARS.
 The HLS Narrow NIR slot receives broad Sentinel-2 B08 or Landsat B05 in this
 transfer experiment; that declared spectral-response mismatch prevents any
-claim of an exact band contract. MARS's 4 km Sentinel-2 crop is resized to
+claim of an exact band contract. MARS's 2×2 km, 200×200 Sentinel-2 crop is resized to
 128x128, placing a 16-pixel token near the HLS pretraining footprint. Landsat
 remains a separately reported sensor stratum.
 
@@ -1843,7 +1843,7 @@ promotion rule changed.
 The GeoJSON schema audit found 25,555 MultiPolygon plume geometries and 1,207
 records without geometry. Before outcome filtering, deduplication was also
 clarified from whole-product identity to exact product plus source-centered
-crop. A 100+ km satellite product can contain multiple distant 4 km samples;
+crop. A 100+ km satellite product can contain multiple distant 2×2 km samples;
 only plume polygons for the same target/source crop are merged. This preserves
 the released MARS-S2L sample contract and does not inspect labels or model
 scores.
@@ -1869,3 +1869,9 @@ retired real-time products. No later tier product, L2 product, or otherwise
 similar acquisition is substituted. Sealed-external products were not
 resolved. The ignored exact-asset manifest SHA-256 is
 `027022bf72ea7f17e68bf69c887f5e408cf9ca5aa485ef4c59c0560b5e25d269`.
+
+Before new pixel acquisition, a released 12-band MARS raster was directly
+inspected: it is 200×200 at 10 m in the target UTM CRS, a 2×2 km footprint.
+Earlier prose calling the crop 4 km is corrected. All prior training and
+benchmark evaluation used the actual stored 200×200 rasters, so no numerical
+result changes.

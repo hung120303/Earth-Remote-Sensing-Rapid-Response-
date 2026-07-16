@@ -66,7 +66,7 @@
     "target_and_reference": "exact tile and tile_background products named by UNEP",
     "sentinel2": "MSI L1C target/reference using the released MARS-S2L band and normalization contract",
     "landsat": "USGS Collection-2 Level-1 target/reference using the released MARS-S2L band and normalization contract",
-    "crop": "4 km source-centered crop on the released MARS-S2L grid contract",
+    "crop": "2 km by 2 km source-centered crop: 200 by 200 pixels at 10 m on the released MARS-S2L grid contract",
     "cloud_and_nodata": "same observability policy used by the frozen MARS paper evaluator",
     "product_substitution": "prohibited"
   },
@@ -88,6 +88,7 @@
   "frozen_invariants": [
     "After download but before outcome filtering, the Landsat display name was corrected from spacecraft-specific placeholders to the catalog's documented aggregate value; LC08/LC09 remain enforced from exact product IDs.",
     "Before outcome filtering, deduplication was clarified to exact product plus source-centered crop because one full satellite tile can contain multiple distant facilities; only plume records within the same source crop are merged.",
+    "Before pixel acquisition, direct inspection of a released MARS raster corrected the footprint description from 4 km to the actual 200 by 200 at 10 m (2 km by 2 km) contract; prior model metrics already used the stored 200 by 200 rasters and are unaffected.",
     "The catalog checksum is provenance, not a reason to alter selection rules after download.",
     "No paper-test label, location, target product, or pixel mask may enter fitting.",
     "All target/reference products must be the exact products named by UNEP.",

@@ -10,9 +10,14 @@ spacecraft. This is a schema repair, not a selection change.
 
 The GeoJSON schema audit also established that records describe full satellite
 products plus source coordinates. Because one full product can contain several
-distant 4 km source crops, the deduplication key is clarified as exact target
+distant source-centered crops, the deduplication key is clarified as exact target
 product plus source-centered crop. Only multiple plume polygons for that same
 sample are merged; distant sources on one product remain separate samples.
+
+Before pixel acquisition, direct inspection of a released MARS image fixed the
+grid contract at 200×200 pixels with 10 m spacing: a 2×2 km footprint. Earlier
+text calling this a 4 km crop was incorrect; prior benchmark computations used
+the actual stored rasters and are unaffected.
 
 ## Why this cohort
 
