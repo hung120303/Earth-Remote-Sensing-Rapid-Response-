@@ -12,6 +12,7 @@ if str(TOOLS) not in sys.path:
 from resolve_unep_mars_exact_products import (
     contains,
     official_s2_href,
+    resolve_product_side,
     s2_date,
     summarize,
 )
@@ -35,6 +36,10 @@ class ExactProductResolverTests(unittest.TestCase):
         item = {"bbox": [10.0, 20.0, 11.0, 21.0]}
         self.assertTrue(contains(item, [10.0, 21.0]))
         self.assertFalse(contains(item, [9.9, 20.5]))
+
+    def test_missing_product_identity_is_unavailable_not_query_error(self) -> None:
+        result = resolve_product_side(lambda *_: self.fail("resolver called"), "nan", [0, 0])
+        self.assertEqual(result, {"status": "missing_product_identity", "product": None})
 
     def test_summary_stratifies_resolved_and_unresolved(self) -> None:
         records = [

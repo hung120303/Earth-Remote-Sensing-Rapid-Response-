@@ -231,37 +231,44 @@ def resolve_landsat(product: str, center: list[float]) -> dict[str, Any]:
     }
 
 
-def resolve_one(sample: dict[str, Any]) -> dict[str, Any]:
-    resolver = resolve_s2 if sample["sensor_family"] == "Sentinel-2" else resolve_landsat
-    center = list(map(float, sample["source_center"]))
+def resolve_product_side(
+    resolver: Any, product: Any, center: list[float]
+) -> dict[str, Any]:
+    """Resolve one side without losing the other side's provenance on failure."""
+    if not isinstance(product, str) or product.strip().lower() in {"", "nan", "none"}:
+        return {"status": "missing_product_identity", "product": None}
     try:
-        target = resolver(sample["target_product"], center)
-        reference = resolver(sample["background_product"], center)
-        status = (
-            "resolved"
-            if target["status"] == "resolved" and reference["status"] == "resolved"
-            else "unresolved"
-        )
-        return {
-            "sample_id": sample["sample_id"],
-            "research_role": sample["research_role"],
-            "sensor_family": sample["sensor_family"],
-            "group_id": sample["group_id"],
-            "source_center": sample["source_center"],
-            "status": status,
-            "target": target,
-            "reference": reference,
-        }
+        return resolver(product, center)
     except Exception as exc:
         return {
-            "sample_id": sample["sample_id"],
-            "research_role": sample["research_role"],
-            "sensor_family": sample["sensor_family"],
-            "group_id": sample["group_id"],
             "status": "query_error",
+            "product": product,
             "error_type": type(exc).__name__,
             "error": str(exc)[:500],
         }
+
+
+def resolve_one(sample: dict[str, Any]) -> dict[str, Any]:
+    resolver = resolve_s2 if sample["sensor_family"] == "Sentinel-2" else resolve_landsat
+    center = list(map(float, sample["source_center"]))
+    target = resolve_product_side(resolver, sample.get("target_product"), center)
+    reference = resolve_product_side(resolver, sample.get("background_product"), center)
+    side_statuses = {target["status"], reference["status"]}
+    status = (
+        "resolved"
+        if side_statuses == {"resolved"}
+        else "query_error" if "query_error" in side_statuses else "unresolved"
+    )
+    return {
+        "sample_id": sample["sample_id"],
+        "research_role": sample["research_role"],
+        "sensor_family": sample["sensor_family"],
+        "group_id": sample["group_id"],
+        "source_center": sample["source_center"],
+        "status": status,
+        "target": target,
+        "reference": reference,
+    }
 
 
 def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
@@ -290,16 +297,26 @@ def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
 
 def write_markdown(report: dict[str, Any], path: Path) -> None:
     summary = report["summary"]
+    roles = sorted(summary["by_role"])
+    fresh_cloudsen = roles == ["fresh_external_test"]
     lines = [
-        "# UNEP MARS post-2024 exact-product resolution",
+        (
+            "# CloudSEN12+ fresh-test exact-product resolution"
+            if fresh_cloudsen
+            else "# UNEP MARS post-2024 exact-product resolution"
+        ),
         "",
         f"Generated: {report['generated_at_utc']}.",
         "",
-        "Only auxiliary-training and development samples were resolved. Sealed-external rows were excluded.",
+        (
+            "The fixed model was authorized before these fresh external-test product identities were resolved."
+            if fresh_cloudsen
+            else "Only auxiliary-training and development samples were resolved. Sealed-external rows were excluded."
+        ),
         "",
         "## Result",
         "",
-        f"- Nonsealed samples: **{summary['samples']:,}**.",
+        f"- Exact-product samples: **{summary['samples']:,}**.",
         f"- Fully resolved exact target/reference pairs: **{summary['status'].get('resolved', 0):,}**.",
         f"- Unresolved pairs: **{summary['status'].get('unresolved', 0):,}**.",
         f"- Query errors: **{summary['status'].get('query_error', 0):,}**.",
@@ -314,7 +331,7 @@ def write_markdown(report: dict[str, Any], path: Path) -> None:
     lines.extend(["", "## Integrity", ""])
     lines.extend(
         [
-            "- Sentinel-2 identities must match the exact UNEP product URI and cover the source center.",
+            "- Sentinel-2 identities must match the exact published product URI and cover the source center.",
             "- Landsat identities must match the exact USGS Collection-2 Level-1 product ID and cover the source center.",
             "- Missing real-time Landsat products are reported unavailable; later tier products are not substituted.",
             "- Resolved spectral assets are the six released MARS-S2L bands; Landsat also retains QA_PIXEL.",
@@ -365,7 +382,7 @@ def main() -> None:
     report = {
         "schema_version": 1,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "status": "nonsealed exact-product assets resolved; imagery not downloaded",
+        "status": "exact-product assets resolved; imagery not downloaded",
         "source_manifest": {"path": args.input, "sha256": sha256(input_path)},
         "summary": summarize(records),
         "output": {
