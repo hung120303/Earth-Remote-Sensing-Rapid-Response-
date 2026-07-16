@@ -50,3 +50,8 @@ def test_cloud_metadata_identity_can_differ_from_statistics_key() -> None:
         frame, np.asarray(["ROI_00001__date_tile"]), ["x"]
     )
     np.testing.assert_allclose(values, [[3.0]])
+
+
+def test_npz_identity_arrays_must_be_pickle_free_strings() -> None:
+    values = np.asarray(pd.Series(["a", "b"]).astype(str).tolist(), dtype=str)
+    assert values.dtype.kind == "U"

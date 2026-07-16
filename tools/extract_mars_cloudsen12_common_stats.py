@@ -190,8 +190,8 @@ def main() -> int:
     selected = selected[selected["location_name"].isin(stats_ids)].sort_values("id_loc_image")
     if (selected["split_name"] == SEALED_CLOUD_SPLIT).any():
         raise ValueError("Sealed CloudSEN12 test row reached feature extraction")
-    cloud_ids = selected["id_loc_image"].astype(str).to_numpy()
-    cloud_stats_ids = selected["location_name"].astype(str).to_numpy()
+    cloud_ids = np.asarray(selected["id_loc_image"].astype(str).tolist(), dtype=str)
+    cloud_stats_ids = np.asarray(selected["location_name"].astype(str).tolist(), dtype=str)
     cloud_features = ordered_features(cloud_frame, cloud_stats_ids, feature_names)
 
     mars_output = (root / args.mars_output).resolve()
@@ -207,8 +207,8 @@ def main() -> int:
         cloud_output,
         sample_ids=cloud_ids,
         source_stats_ids=cloud_stats_ids,
-        group_ids=selected["roi_id"].astype(str).to_numpy(),
-        splits=selected["split_name"].astype(str).to_numpy(),
+        group_ids=np.asarray(selected["roi_id"].astype(str).tolist(), dtype=str),
+        splits=np.asarray(selected["split_name"].astype(str).tolist(), dtype=str),
         features=cloud_features,
         feature_names=np.asarray(feature_names),
         labels=np.zeros(cloud_ids.size, dtype=np.uint8),
