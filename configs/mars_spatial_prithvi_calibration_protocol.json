@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_development_calibration",
+  "scope": "development-only monotone calibration of the validated spatial-Prithvi scene ensemble",
+  "calibrator": {
+    "path": "tools/calibrate_mars_spatial_prithvi_ensemble.py",
+    "sha256": "05303b3989455b1c3e82745926d164985f5b3591a17e25e95d7d34bd2fad8bd6"
+  },
+  "inputs": {
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "spatial_scores": {"path": "outputs/mars_site_relative_spatial_development_scores.npz", "sha256": "186ab5946790798a4a81274130ba5756ab3e5316b7b42238c2772d36805152a1"},
+    "prithvi_scores": {"path": "outputs/mars_adaptive_prithvi_development_scores.npz", "sha256": "672ab43155280de950ac529f197b5084bb0b0ab76f17361b60ac99fc65ba1208"},
+    "ensemble_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_spatial_prithvi_ensemble.joblib", "sha256": "0a3be48f5eda659aaaa7cf91c259acd230f81340677e5a6fc5fab83ba048420b"}
+  },
+  "folds": {
+    "selection": [2, 3, 4],
+    "confirmation": [0, 1],
+    "unit": "physical_location_id"
+  },
+  "calibration": {
+    "statistic": "95th percentile of negative-scene logits",
+    "fold_offset": "current negative logit p95 minus raw ensemble negative logit p95",
+    "aggregate_rule": "minimum selection-fold offset minus the fixed conservative margin",
+    "conservative_logit_margin": 0.05,
+    "operational_threshold": 0.28187603894788654,
+    "direction": "negative only; every scene score must strictly decrease"
+  },
+  "gates": {
+    "ap_absolute_tolerance": 1e-12,
+    "selection": "every fold has calibrated negative logit p95 and fixed-threshold false positives no higher than current, with AP exactly preserved",
+    "confirmation": "the identical fixed offset passes the same rules once on folds 0/1",
+    "all_required": true
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_calibrated_spatial_prithvi_ensemble.joblib",
+    "json": "reports/experiments/mars_spatial_prithvi_calibration.json"
+  },
+  "invariants": [
+    "No fresh CloudSEN score or paper-cache input is loaded by the calibrator.",
+    "Only selection-fold negative labels determine the offset; confirmation folds are evaluated once.",
+    "A constant logit offset is strictly monotone, so scene ranking, AP, AUROC, and matched-FPR recall are invariant.",
+    "Failure writes no artifact and blocks a calibrated fresh-safety replay."
+  ]
+}

@@ -2745,3 +2745,16 @@ versus 0.017337. Thus this is a calibration rejection, not an error-count reject
 exact paper replay remains blocked. A monotone logit-offset calibration will be fit
 only from development negatives. Such an offset preserves every scene ranking, AP,
 and matched-FPR recall exactly while reducing fixed-threshold scores.
+
+### 2026-07-16: Development-only spatial-Prithvi calibration frozen
+
+The calibration experiment is checksum-bound before execution. For each selection
+fold (2/3/4), it computes the current model's negative-scene logit p95 minus the raw
+ensemble's negative-scene logit p95. The single offset is the most conservative
+(minimum) fold difference minus a fixed 0.05-logit margin. It must be negative and
+strictly lower every score. Selection and one-shot fold-0/1 confirmation each
+require every fold's negative logit p95 and false-positive count at the fixed
+0.281876 threshold to be no higher than current, while raw-ensemble AP is preserved
+within 1e-12. The calibrator cannot load fresh CloudSEN or paper-cache inputs. If it
+passes, the resulting artifact authorizes a transparently post-test replay of the
+same fresh safety cohort; that replay cannot be described as a new untouched test.
