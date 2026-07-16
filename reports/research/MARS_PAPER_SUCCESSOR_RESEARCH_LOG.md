@@ -1886,3 +1886,13 @@ access gate, not an image-quality rejection. No Earthdata credential applies
 to EROS, no tier/L2 substitute is used, and the exact Landsat metadata remain
 available for a later authenticated extension. Sentinel-2 proceeds to the
 frozen CloudSEN12+ observability acquisition.
+
+CloudSEN12+ acquisition completes for all 141 exact Sentinel-2 crops with zero
+errors using the already pinned `UNetMobV2_V2.pt` weights (SHA-256
+`218fa69aa3c7212d4e690b48af88ac6f3c976fc50d07f275b8fd623909183d7a`).
+At the frozen 0.80 scene/plume clear gates, 139 pass: 135 auxiliary-training
+and 4 isolated development samples. One sample in each role fails and remains
+documented but excluded from model fitting/scoring. Median scene and
+plume-polygon clear fractions are both 1.000. This produces a same-sensor,
+same-acquisition, exact-product positive cohort more than twice the size of
+the 55-sample time-offset EMIT confirmation and with direct polygon truth.
