@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_exact_paper_cache_replay",
+  "scope": "transparent post-test replay on the exact MARS-S2L v3 comparator",
+  "candidate": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_unep_positive_augmented_xgboost.joblib",
+    "artifact_sha256": "f570a2ffa93486e9d4d5e3b52c4f4723f384f42c6c2692eb0f632ce7de4cbfcb",
+    "development_report": "reports/experiments/mars_unep_positive_augmented_xgboost.json",
+    "development_report_sha256": "2f06bba39c42081747d1862b3e7eaedf8b7777de1acad728c3a1f9b8ecef3f47",
+    "base_score": "frozen v3 stronger OOF ExtraTrees scene score",
+    "candidate_logit_blend": 0.2,
+    "operational_scene_threshold": 0.22438493114786343,
+    "missing_feature_rows": "fall back unchanged to frozen v3 scene score"
+  },
+  "paper_caches": {
+    "label_free_features": {
+      "path": "outputs/mars_paper_scene_features_label_free.npz",
+      "sha256": "8a35e60e7c396e58639f940239020adb36def885124841e0b20901e10db52f33",
+      "receipt": "reports/acquisition/mars_paper_scene_features_label_free.json",
+      "receipt_sha256": "8f82262d60e9a47a40f2c7ded63042544c87bdfe00c74ed9c34cd5db462b168f"
+    },
+    "diagnostic_outcomes": {
+      "path": "outputs/mars_paper_test_v3_diagnostic_cache.npz",
+      "sha256": "1624fddc0222f8ffc5137f557c7fc3e465d53b335c82cc8014711baa35bb94a1",
+      "access_order": "only after all candidate scores are computed from the separate label-free cache"
+    }
+  },
+  "dense_mask": {
+    "gate_report": "reports/experiments/mars_scene_gated_masks.json",
+    "gate_report_sha256": "c1e5a1497abebba80d42898a8165b30fd255ff252478a0ee1fd90fd32456a51c",
+    "gate_score": "unchanged frozen v3 stronger scene score",
+    "gate_cutoff": 0.75,
+    "probability": "released MARS-S2L probability with frozen sensor thresholds",
+    "changed_by_candidate": false
+  },
+  "views": [
+    "full_43529",
+    "test_only_sites_15655"
+  ],
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20261620,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "superiority_gates_each_view": {
+    "average_precision_delta_point_strictly_positive": true,
+    "average_precision_delta_lower_95ci_strictly_positive": true,
+    "matched_fpr_recall_delta_point_strictly_positive": true,
+    "matched_fpr_recall_delta_lower_95ci_strictly_positive": true,
+    "fixed_operational_fpr_delta_upper_95ci_nonpositive": true,
+    "pixel_iou_delta_point_strictly_positive": true,
+    "pixel_iou_delta_lower_95ci_strictly_positive": true,
+    "must_beat_reconstructed_and_published_paper_points": true
+  },
+  "interpretation": {
+    "untouched_test_claim": false,
+    "reason": "The exact paper comparator was opened in earlier transparent architecture evaluations.",
+    "independent_new_data": "UNEP post-2024 auxiliary positives affected fitting; isolated UNEP development confirmed noninferiority; sealed external remained unread."
+  }
+}
