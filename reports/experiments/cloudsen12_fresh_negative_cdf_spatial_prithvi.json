@@ -1,0 +1,196 @@
+{
+  "all_safety_gates_pass": true,
+  "calibration": {
+    "artifact_sha256": "ce33bae550f20ad53076338e8412aef97d26a4b1c6c9c6e201086ccd208a1c37",
+    "logit_offset": -0.5044762783678565,
+    "ranking_invariant": true,
+    "selected_without_fresh_inputs": true
+  },
+  "component_score_summary": {
+    "calibrated_ensemble_p95": 0.014564141157474897,
+    "prithvi_p95": 0.029261803193456053,
+    "raw_ensemble_p95": 0.023891576654120776,
+    "spatial_p95": 0.015443193331428826
+  },
+  "decision": "Authorize frozen exact MARS paper evaluation.",
+  "full_cohort_bounds": {
+    "available_rows": 368,
+    "candidate_worst_case_fpr": 0.026737967914438502,
+    "current_worst_case_fpr": 0.026737967914438502,
+    "full_rows": 374,
+    "symmetric_worst_case_candidate_no_worse": true,
+    "unavailable_rows": 6
+  },
+  "generated_at_utc": "2026-07-16T19:52:22.150032+00:00",
+  "independent_external_confirmation": false,
+  "paired_transitions": {
+    "both_false_positive": 4,
+    "both_true_negative": 364,
+    "candidate_only_false_positive": 0,
+    "current_only_false_positive": 0
+  },
+  "paper_test_accessed": false,
+  "post_test_reuse": true,
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "c3ca763ad6d6e28ca67f833f3c9d752eceb32e92",
+    "protocol_sha256": "4cd5076dcf579515d843baf264bb05648d663e40675429b2ccb96105122ec9e4",
+    "script_sha256": "7cbcd736621d36ca4df7466ec73a6841e72b8dacd1e8444fa4944ae9d982a120"
+  },
+  "reuse_reason": "the identical fresh cohort scores were inspected during the uncalibrated safety evaluation",
+  "safety_checks": {
+    "available_false_positive_count_no_higher": true,
+    "available_logit_margin_p95_no_higher": true,
+    "available_raw_score_p95_no_higher": true,
+    "published_all_clear_false_positive_count_no_higher": true,
+    "published_all_clear_logit_margin_p95_no_higher": true,
+    "published_nonclear_false_positive_count_no_higher": true,
+    "published_nonclear_logit_margin_p95_no_higher": true,
+    "symmetric_adversarial_full_bound_no_worse": true
+  },
+  "schema_version": 1,
+  "scope": "post-test fresh external-negative safety replay for tail-calibrated spatial-Prithvi ensemble",
+  "strata": {
+    "available": {
+      "candidate": {
+        "false_positive_rate": 0.010869565217391304,
+        "false_positives": 4,
+        "logit_threshold_margin": {
+          "max": 2.5669581869194458,
+          "p50": -7.639054055244845,
+          "p90": -3.7771519364874075,
+          "p95": -3.279471262797489,
+          "p99": -0.30668846722954607
+        },
+        "raw_score": {
+          "max": 0.8364137976734288,
+          "p50": 0.00018888641212462727,
+          "p90": 0.008904094477499012,
+          "p95": 0.014564141157474897,
+          "p99": 0.23024723556310883
+        },
+        "rows": 368,
+        "threshold": 0.28187603894788654
+      },
+      "checks": {
+        "false_positive_count_no_higher": true,
+        "logit_margin_p95_no_higher": true,
+        "raw_score_p95_no_higher": true
+      },
+      "current": {
+        "false_positive_rate": 0.010869565217391304,
+        "false_positives": 4,
+        "logit_threshold_margin": {
+          "max": 2.3680312830390875,
+          "p50": -7.458741344733269,
+          "p90": -3.326506135279777,
+          "p95": -2.8456401044439135,
+          "p99": -0.4628721260265569
+        },
+        "raw_score": {
+          "max": 0.8073459978765792,
+          "p50": 0.00022618883420710218,
+          "p90": 0.013903109428110913,
+          "p95": 0.02230768334554338,
+          "p99": 0.2037486629330241
+        },
+        "rows": 368,
+        "threshold": 0.28187603894788654
+      }
+    },
+    "published_all_clear": {
+      "candidate": {
+        "false_positive_rate": 0.012232415902140673,
+        "false_positives": 4,
+        "logit_threshold_margin": {
+          "max": 2.5669581869194458,
+          "p50": -7.72345716614985,
+          "p90": -3.7565387916030786,
+          "p95": -3.186651765607566,
+          "p99": 0.009313605740399494
+        },
+        "raw_score": {
+          "max": 0.8364137976734288,
+          "p50": 0.00017359152457575185,
+          "p90": 0.00908819826913327,
+          "p95": 0.015959144118708513,
+          "p99": 0.28895827729940027
+        },
+        "rows": 327,
+        "threshold": 0.28187603894788654
+      },
+      "checks": {
+        "false_positive_count_no_higher": true,
+        "logit_margin_p95_no_higher": true,
+        "raw_score_p95_no_higher": true
+      },
+      "current": {
+        "false_positive_rate": 0.012232415902140673,
+        "false_positives": 4,
+        "logit_threshold_margin": {
+          "max": 2.3680312830390875,
+          "p50": -7.495174092256511,
+          "p90": -3.324557914631756,
+          "p95": -2.8126092350453766,
+          "p99": -0.16303274823784666
+        },
+        "raw_score": {
+          "max": 0.8073459978765792,
+          "p50": 0.00021809778960453507,
+          "p90": 0.013929919910920512,
+          "p95": 0.023027465235732226,
+          "p99": 0.25493575176976707
+        },
+        "rows": 327,
+        "threshold": 0.28187603894788654
+      }
+    },
+    "published_nonclear": {
+      "candidate": {
+        "false_positive_rate": 0.0,
+        "false_positives": 0,
+        "logit_threshold_margin": {
+          "max": -3.267703153347414,
+          "p50": -6.296498545470813,
+          "p90": -4.159867419091123,
+          "p95": -3.5408406042036766,
+          "p99": -3.3107254715731935
+        },
+        "raw_score": {
+          "max": 0.01473219925842467,
+          "p50": 0.0007227867005905358,
+          "p90": 0.006089735812614711,
+          "p95": 0.011250644960442657,
+          "p99": 0.014139243239812076
+        },
+        "rows": 41,
+        "threshold": 0.28187603894788654
+      },
+      "checks": {
+        "false_positive_count_no_higher": true,
+        "logit_margin_p95_no_higher": true,
+        "raw_score_p95_no_higher": true
+      },
+      "current": {
+        "false_positive_rate": 0.0,
+        "false_positives": 0,
+        "logit_threshold_margin": {
+          "max": -2.7180461469771995,
+          "p50": -5.695269319112966,
+          "p90": -3.8535680753046906,
+          "p95": -3.1022452479501466,
+          "p99": -2.7876597757405848
+        },
+        "raw_score": {
+          "max": 0.025253296292657296,
+          "p50": 0.0013178379104808924,
+          "p90": 0.008254214584923892,
+          "p95": 0.01733705508877546,
+          "p99": 0.023674171609618776
+        },
+        "rows": 41,
+        "threshold": 0.28187603894788654
+      }
+    }
+  }
+}

@@ -2848,3 +2848,13 @@ new checksum-bound protocol. Only the calibration artifact changes, to the passi
 p95 and false-positive gates, and the unavailable-row bound remain identical. This
 is still post-test reuse; a pass is a safety consistency check, not new external
 evidence. Paper inputs remain inaccessible to the evaluator.
+
+### 2026-07-16: Negative-CDF fresh safety replay passes
+
+Every unchanged safety gate passed. Current and candidate each produced four false
+positives, all shared, with zero candidate-only errors and zero non-clear errors.
+Available p95 fell from 0.022308 to 0.014564; all-clear p95 fell from 0.023027 to
+0.015959; non-clear p95 fell from 0.017337 to 0.011251. All logit-margin gates and
+the symmetric six-unavailable-row bound passed. This is post-test safety consistency,
+not independent external confirmation, but it authorizes the already planned exact
+MARS-S2L v3 paper replay. The fresh evaluator accessed no paper input.
