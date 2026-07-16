@@ -2282,3 +2282,11 @@ non-clear scene): 14,835,412 clear and 124,588 non-clear pixels in total. The fr
 protocol was corrected to assert this exact composition. No identity was excluded,
 the fixed model was not changed, and the exact MARS paper cache remained unopened.
 This makes the safety test harder and more representative of operational negatives.
+### 2026-07-16: Fresh CloudSEN test identities materialized
+
+After the fixed joint scene artifact was finalized, the corrected frozen protocol
+materialized all 374 published CloudSEN12+ test identities (361 ROI groups across
+55 countries; cohort SHA-256 `be085ac1e934aede89d3a3a9b69a4915d0d15d8097fe4401fe8e89918f2e76a4`).
+Five rows have missing published wind components and will use the already frozen,
+explicit zero-fill policy. Exact-product resolution had not yet begun and the exact
+MARS paper cache remained unopened.
