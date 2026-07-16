@@ -2246,3 +2246,11 @@ reverses the safety ordering. This diagnostic does not retroactively pass the
 experiment. A new fixed-model safety contract may use false-positive count,
 raw negative-score quantiles, and log-odds threshold distance, but must freeze
 before refitting and must reserve the 374-row CloudSEN test for fresh evidence.
+
+The calibration-aware finalization contract is frozen around exactly the
+weight-4 candidate and final-fit seed 20260917. It hash-binds the rejected
+source report and does not rerun or reinterpret its original-fold gates. The
+reused development safety checks are fixed to positive recall, false-positive
+count, raw negative-score p95, and log-odds distance from each model's own
+frozen threshold. Passing may create an ignored artifact and authorize fresh
+CloudSEN-test acquisition; it does not itself authorize or inspect paper data.
