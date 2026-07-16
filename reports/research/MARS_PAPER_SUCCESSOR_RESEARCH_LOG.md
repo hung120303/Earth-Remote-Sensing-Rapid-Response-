@@ -2717,3 +2717,9 @@ The v1 extractor exited at module import because `CLS_WIDTH` was imported from t
 feature extractor rather than defined locally. No model or scene was loaded and no
 output was written. V2 fixes the constant at its frozen 768-feature contract and is
 refrozen under a new script hash before inference.
+
+The corrected extraction completed all 368 rows with 355 groups. The ignored
+19,163,578-byte representation cache has SHA-256
+`a1f46a7dd9c4d579ad141122b8997aeb1713f27bd3c9a08a53a9ce8f7e9f08fa`;
+its shapes are exactly 368x9x64x64 spatial and 368x768 Prithvi. No paper cache or
+labels beyond the fixed all-negative contract were accessed.
