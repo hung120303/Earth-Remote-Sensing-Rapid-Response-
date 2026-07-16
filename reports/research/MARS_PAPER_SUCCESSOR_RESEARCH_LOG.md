@@ -2400,3 +2400,14 @@ domain shift: development sites average 57-86 scenes/fold and roughly 31% contai
 positive, while the exact test-only cohort averages 22.5 scenes/site and only 59/697
 (8.5%) sites contain a positive. A learned site-level risk model with one equal-weight
 row per physical site is the next research path.
+### 2026-07-16: Cross-site risk-prior experiment frozen
+
+The next architecture addresses the measured site-prevalence shift directly. Each
+physical site contributes one equally weighted classifier row built from 32
+label-free temporal aggregates of the frozen current and primary scene scores.
+Four small site models and five scene-logit weights (20 candidates) are frozen.
+Selection uses nested site-held-out predictions on folds 2/3/4; the selected model
+is then fit on those folds and confirmed once on folds 0/1. Both stages require
+positive paired site-bootstrap AP evidence, improved recall, and per-fold stability.
+Coordinates, country, site identity, and all inference-time labels are prohibited;
+the exact paper cache is not loaded.

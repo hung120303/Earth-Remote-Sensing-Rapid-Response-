@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_cross_site_risk_development_selection",
+  "scope": "one-equal-row-per-site risk prior selected only on authorized cross-site development folds",
+  "trainer": {
+    "path": "tools/train_mars_site_risk_prior.py",
+    "sha256": "0a0046ff55f5e2b5789bce099cfd95611130eb9474a06322c34493addb953ead"
+  },
+  "inputs": {
+    "inner": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"
+    },
+    "fold0": {
+      "path": "outputs/mars_scene_features_fold0.npz",
+      "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"
+    },
+    "fold1": {
+      "path": "outputs/mars_scene_features_fold1_crossfit.npz",
+      "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"
+    },
+    "scores": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    }
+  },
+  "folds": {
+    "selection": [2, 3, 4],
+    "confirmation": [0, 1],
+    "unit": "physical_location_id"
+  },
+  "site_features": {
+    "scene_scores": ["frozen current v3 stronger", "frozen primary connected"],
+    "aggregates_per_score": ["max", "top2 mean", "top3 mean", "top5 mean", "q95", "q90", "q75", "median", "mean", "std", "min", "fractions >= 0.01/0.03/0.1/0.3"],
+    "other": ["log1p scene count", "Sentinel-2 fraction"],
+    "total": 32,
+    "prohibited": ["coordinates", "country", "paper split", "site identity", "per-scene or per-site label at inference"]
+  },
+  "search": {
+    "models": [
+      {"name": "logistic_c01", "kind": "logistic", "C": 0.1},
+      {"name": "logistic_c1", "kind": "logistic", "C": 1.0},
+      {"name": "extra_depth3", "kind": "extra_trees", "max_depth": 3, "min_samples_leaf": 5, "max_features": 0.7},
+      {"name": "extra_depth5", "kind": "extra_trees", "max_depth": 5, "min_samples_leaf": 5, "max_features": 0.7}
+    ],
+    "weights": [0.1, 0.25, 0.5, 0.75, 1.0],
+    "formula": "logit(current scene score) + weight * logit(predicted site-has-plume risk)",
+    "candidate_count": 20
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "seeds": {
+    "model": 20262800,
+    "selection_bootstrap": 20262850,
+    "confirmation_model": 20262900,
+    "confirmation_bootstrap": 20262950,
+    "final_model": 20263000
+  },
+  "gates": {
+    "selection": "combined AP and recall improve, paired AP lower CI positive, every fold AP nonnegative and recall within tolerance",
+    "confirmation": "same fixed candidate has combined AP and recall improve, paired AP lower CI positive, every fold AP nonnegative and recall within tolerance",
+    "per_fold_recall_tolerance": 0.002,
+    "all_required": true
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_site_risk_prior.joblib",
+    "json": "reports/experiments/mars_site_risk_prior.json",
+    "markdown": "reports/experiments/MARS_SITE_RISK_PRIOR.md"
+  },
+  "interpretation": {
+    "hypothesis": "scene ranking at unseen sites needs an explicit site-existence prior trained with equal site weights, not another scene-weighted classifier",
+    "parameter_selection": "folds 2/3/4 only with nested site holdouts",
+    "independent_confirmation": "folds 0/1 only",
+    "paper_cache_during_experiment": false
+  },
+  "invariants": [
+    "Every physical site contributes exactly one site-classifier training row regardless of scene count.",
+    "Selection site risks are cross-fitted: each site's risk comes from a model trained on other physical-site folds.",
+    "The selected site model is fit only on folds 2/3/4 before fold-0/1 confirmation.",
+    "A final all-development fit is allowed only after every frozen selection and confirmation gate passes.",
+    "Failure writes no artifact and blocks fresh-safety or paper replay."
+  ]
+}
