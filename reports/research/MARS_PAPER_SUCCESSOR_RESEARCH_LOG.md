@@ -2471,3 +2471,15 @@ set, its group identity, and current scene scores. Known training sites remain
 exactly unchanged. Forty-five minimum-history/top-k/weight candidates, selection
 folds 2/3/4, confirmation folds 0/1, 10,000-replicate paired site bootstraps, and
 whole-fold safeguards are frozen before scoring. The paper cache remains prohibited.
+
+### 2026-07-16: Unseen low-prevalence temporal router rejected
+
+The frozen search selected minimum history 20, top-1, weight 0.25. It was strong
+on selection folds 2/3/4: low-prevalence AP improved +0.017486 with paired site-
+bootstrap interval [+0.003218, +0.036668]. The fixed route did not replicate on
+folds 0/1. Combined low-prevalence AP improved only +0.000203 with interval
+[-0.013497, +0.013972]; fold 0 improved +0.003467 while fold 1 regressed
+-0.005999. Recall was unchanged. Whole-fold AP changed +0.001100 and recall
+-0.000671, within safeguards, but the primary confirmation interval failure is
+decisive. No artifact was written, and neither fresh safety nor paper replay is
+authorized for this route.
