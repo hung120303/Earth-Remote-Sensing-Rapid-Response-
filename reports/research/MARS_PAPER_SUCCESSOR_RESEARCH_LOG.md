@@ -2583,3 +2583,17 @@ target stratum and the complete view require positive AP point deltas, positive
 recall, with per-fold safeguards. If promoted, the spatial component scores every
 site; temporal corroboration applies only to groups absent from the frozen training-
 site list. No inference-time labels or paper-cache data enter this experiment.
+
+### 2026-07-16: Temporal-spatial unseen-site ensemble rejected
+
+The frozen search selected minimum history 20, top-1, weight 0.50. Selection target-
+stratum AP improved +0.026561 with paired interval [+0.004207, +0.052496], but
+recall changed -0.005556; the natural whole-view AP delta was only +0.000361 with
+interval [-0.010983, +0.014434]. Independent confirmation failed decisively:
+target AP changed -0.003325 with interval [-0.027510, +0.022416], driven by fold 1
+(-0.017670; fold 0 was +0.006735). Whole confirmation AP changed +0.000412 with
+interval [-0.004948, +0.005988], and fold-0 recall regressed -0.006711. No artifact
+was written. The repeated split-dependent behavior shows that selecting individual
+sites by <=5% scene-positive rate is not an adequate transport model for the paper's
+rare-site mixture; it conflates site-level rarity with within-positive-site plume
+persistence.
