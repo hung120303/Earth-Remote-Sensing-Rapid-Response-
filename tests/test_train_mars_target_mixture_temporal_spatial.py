@@ -11,10 +11,13 @@ TOOLS = ROOT / "tools"
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
-from train_mars_target_mixture_temporal_spatial import build_cohort_plans
+from train_mars_target_mixture_temporal_spatial import ap_recall, build_cohort_plans
 
 
 class TargetMixtureTests(unittest.TestCase):
+    def test_single_class_metric_is_explicitly_undefined(self) -> None:
+        self.assertIsNone(ap_recall(np.zeros(4, dtype=np.uint8), np.linspace(0, 1, 4)))
+
     def test_plan_has_frozen_site_mixture_and_scene_cap(self) -> None:
         groups = np.repeat(np.asarray([f"s{i}" for i in range(8)]), 3)
         folds = np.zeros(groups.size, dtype=np.uint8)

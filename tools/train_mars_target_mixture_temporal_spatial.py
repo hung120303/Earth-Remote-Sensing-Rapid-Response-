@@ -87,7 +87,9 @@ def build_cohort_plans(
     return plans
 
 
-def ap_recall(labels: np.ndarray, scores: np.ndarray) -> tuple[float, float]:
+def ap_recall(labels: np.ndarray, scores: np.ndarray) -> tuple[float, float] | None:
+    if not np.any(labels == 1) or not np.any(labels == 0):
+        return None
     ap = float(average_precision_score(labels, scores))
     fpr, tpr, _ = roc_curve(labels, scores, drop_intermediate=False)
     valid = fpr <= TARGET_FPR + 1e-12
@@ -127,12 +129,16 @@ def simulate(
             spatial[combined_rows], values["groups"][combined_rows],
             min_site_size, top_k, weight,
         )
-        current_ap, current_recall = ap_recall(
+        current_metric = ap_recall(
             values["labels"][combined_rows], values["current"][combined_rows]
         )
-        candidate_ap, candidate_recall = ap_recall(
+        candidate_metric = ap_recall(
             values["labels"][combined_rows], candidate
         )
+        if current_metric is None or candidate_metric is None:
+            raise RuntimeError("Combined target-mixture replicate lacks a metric class")
+        current_ap, current_recall = current_metric
+        candidate_ap, candidate_recall = candidate_metric
         combined_ap.append(candidate_ap - current_ap)
         combined_recall.append(candidate_recall - current_recall)
         offset = 0
@@ -140,8 +146,12 @@ def simulate(
             rows = plan[fold]
             local_candidate = candidate[offset : offset + rows.size]
             offset += rows.size
-            old_ap, old_recall = ap_recall(values["labels"][rows], values["current"][rows])
-            new_ap, new_recall = ap_recall(values["labels"][rows], local_candidate)
+            old_metric = ap_recall(values["labels"][rows], values["current"][rows])
+            new_metric = ap_recall(values["labels"][rows], local_candidate)
+            if old_metric is None or new_metric is None:
+                continue
+            old_ap, old_recall = old_metric
+            new_ap, new_recall = new_metric
             per_fold_ap[fold].append(new_ap - old_ap)
             per_fold_recall[fold].append(new_recall - old_recall)
     return {
@@ -151,6 +161,8 @@ def simulate(
             str(fold): {
                 "ap_delta": distribution_summary(np.asarray(per_fold_ap[fold])),
                 "recall_delta": distribution_summary(np.asarray(per_fold_recall[fold])),
+                "valid_replicates": len(per_fold_ap[fold]),
+                "valid_fraction": len(per_fold_ap[fold]) / len(plans),
             }
             for fold in folds
         },
@@ -185,6 +197,9 @@ def checks(
         "each_fold_simulated_ap_median_positive": min(
             value["ap_delta"]["median"] for value in simulation["per_fold"].values()
         ) > 0.0,
+        "each_fold_valid_fraction_sufficient": min(
+            value["valid_fraction"] for value in simulation["per_fold"].values()
+        ) >= float(gates["minimum_fold_valid_fraction"]),
         "each_fold_simulated_recall_lower_within_tolerance": min(
             value["recall_delta"]["lower"] for value in simulation["per_fold"].values()
         ) >= -float(gates["simulated_fold_recall_lower_tolerance"]),

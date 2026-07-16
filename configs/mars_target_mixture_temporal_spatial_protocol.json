@@ -1,10 +1,10 @@
 {
-  "schema_version": 1,
-  "status": "frozen_before_target_mixture_selection",
+  "schema_version": 2,
+  "status": "refrozen_after_v1_undefined_fold_metric_failure",
   "scope": "development-only transport simulation matching rare unseen-site prevalence and history length",
   "trainer": {
     "path": "tools/train_mars_target_mixture_temporal_spatial.py",
-    "sha256": "173421bf53fa09f6b8a4742a4288a8a4e3b8a2fbb02be878c436da2bbc827d35"
+    "sha256": "40b0dd57409feca9f752f001993f552faecab0ce5983f1a0bc3e28fdbf000a63"
   },
   "inputs": {
     "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
@@ -33,7 +33,9 @@
     "confirmation_replicates": 1000,
     "selection_seed": 20264100,
     "confirmation_seed": 20264200,
-    "common_random_numbers_across_candidates": true
+    "common_random_numbers_across_candidates": true,
+    "undefined_fold_metric_rule": "exclude a fold-level replicate only when uniform scene sampling contains no positive scene; combined replicates must always contain both classes",
+    "fold_metric_coverage_reported": true
   },
   "search": {
     "min_site_size": [10, 20, 30],
@@ -45,6 +47,7 @@
   "gates": {
     "simulated_combined": "AP 2.5th percentile and median positive; recall median nonnegative",
     "each_fold_simulated_ap_median_positive": true,
+    "minimum_fold_valid_fraction": 0.5,
     "simulated_fold_recall_lower_tolerance": 0.25,
     "natural_ap_noninferiority": 0.01,
     "natural_recall_noninferiority": 0.01,
@@ -69,7 +72,7 @@
     "inference_labels": false
   },
   "invariants": [
-    "The target mixture, 24 candidates, seeds, rank rule, and gates are frozen before simulation.",
+    "The v2 target mixture, 24 candidates, seeds, undefined-metric rule, rank rule, and gates are frozen before simulation.",
     "Selection and confirmation use disjoint physical-site folds and independent simulation seeds.",
     "Scene sampling within each selected site is uniform and label-blind.",
     "Failure writes no artifact and blocks fresh-safety and paper replay."

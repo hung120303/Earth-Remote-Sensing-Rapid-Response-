@@ -2612,3 +2612,15 @@ common-random-number replicates select on folds 2/3/4; the fixed route receives
 percentile for simulated AP delta, positive per-fold AP medians, nonnegative combined
 recall median, and natural-cohort noninferiority. The architecture-family motivation
 is transparently post-test, but all parameter selection uses development labels only.
+
+### 2026-07-16: Target-mixture v1 protocol rejected; v2 metric rule frozen
+
+The v1 run was stopped during selection because uniformly sampling 23 scenes from
+a site known to be positive over its full history can yield a fold-level replicate
+with no sampled positive scene. Scikit-learn correctly warned that AP/recall were
+undefined, but v1 attempted to rank those values. No report or artifact was written,
+and partial candidate outputs are discarded. V2 preserves the exact site/scene
+sampling, candidates, seeds, and gates. It now excludes an undefined replicate only
+from that fold's metric distribution, requires every combined replicate to contain
+both classes, reports valid fold-replicate coverage, and requires at least 50%
+coverage in every fold. This analysis rule was frozen before restarting.
