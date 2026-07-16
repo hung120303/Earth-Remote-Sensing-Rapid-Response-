@@ -44,7 +44,7 @@ DEFAULT_ARTIFACT = Path(
     "EarthRemoteSensingRapidResponse/artifacts/mars_paper_residual_fold0_seed606.pt"
 )
 DEFAULT_ARTIFACT_SHA256 = (
-    "b94880d858e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49"
+    "b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49"
 )
 ROLE_CONTRACTS = {
     "auxiliary_training": {
