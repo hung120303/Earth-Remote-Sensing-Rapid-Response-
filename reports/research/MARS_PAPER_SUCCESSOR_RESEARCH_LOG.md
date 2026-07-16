@@ -2218,3 +2218,11 @@ fails. No artifact is written and the paper cache remains unopened. Because
 the CloudSEN development partition is now observed, subsequent negative-weight
 calibration must label it as reused development evidence and reserve the still
 sealed 374-row CloudSEN published test partition for final external safety.
+
+A narrow follow-up is frozen before fitting. It retains the jointly successful
+positive weight 2.7185 and blend 0.20, varies only CloudSEN auxiliary-negative
+weight 2.0 versus 4.0, and selects by the same original folds with worst-fold
+AP priority. The opened UNEP/CloudSEN development rows remain post-selection
+gates but are explicitly labeled reused tuning evidence. The exact paper cache
+and 374-row published CloudSEN test remain unopened; the latter is now the only
+eligible fresh external-negative confirmation.

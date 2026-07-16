@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_negative_weight_calibration_fit",
+  "scope": "joint external head with stronger source-disjoint negative weighting after documented validation-margin failure",
+  "trainer": {
+    "path": "tools/train_mars_joint_external_augmented_xgboost.py",
+    "sha256": "6d68f4fcac679d36a514c560ba4fd654d3fe00a5f7f24127325d7775007a96d4"
+  },
+  "base_architecture": {
+    "score": "frozen v3 stronger OOF ExtraTrees scene head",
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_oof_scene_ensemble_v2.joblib",
+    "artifact_sha256": "9e6fa18b83ef065ac24c94a06a510057a0c382cecf1efa3b54e818566a45c9ac",
+    "blend_lambda": 0.625,
+    "dense_mask_change": false
+  },
+  "feature_caches": {
+    "original_inner": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"
+    },
+    "original_fold0": {
+      "path": "outputs/mars_scene_features_fold0.npz",
+      "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"
+    },
+    "original_fold1": {
+      "path": "outputs/mars_scene_features_fold1_crossfit.npz",
+      "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"
+    },
+    "original_scores": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    },
+    "unep_positive_auxiliary": {
+      "path": "outputs/unep_mars_post2024_scene_features_auxiliary.npz",
+      "sha256": "f7e330a93d54f9aeebcaeb887ebbfd1e6c57618aad6f4f3530a2f1d8874ccdcd",
+      "rows": 135,
+      "groups": 27
+    },
+    "unep_positive_development": {
+      "path": "outputs/unep_mars_post2024_scene_features_development.npz",
+      "sha256": "c1a128ea673909e6667ef9b1d154aa6b581abc72b8503972407d80ae2f143f50",
+      "rows": 4,
+      "groups": 4,
+      "access": "reused development gate; not fresh confirmation"
+    },
+    "cloudsen12_negative_auxiliary": {
+      "path": "outputs/cloudsen12_spatial_scene_features_auxiliary.npz",
+      "sha256": "9d1f5116f10088a953aea66233e5896ef06be8252f3565f5b4b1d768d8e2ac0b",
+      "rows": 367,
+      "groups": 362
+    },
+    "cloudsen12_negative_development": {
+      "path": "outputs/cloudsen12_spatial_scene_features_development.npz",
+      "sha256": "a7f5c4100ecd2d4172bccd550f6a17736e4008e551f8bce2a935ce3caed6dcb4",
+      "rows": 125,
+      "groups": 124,
+      "access": "reused development gate; the published 374-row CloudSEN test remains sealed"
+    }
+  },
+  "candidate_family": {
+    "model": "regularized XGBoost depth3_lr004",
+    "n_estimators": 600,
+    "max_depth": 3,
+    "learning_rate": 0.04,
+    "min_child_weight": 10.0,
+    "positive_weight_multipliers": [2.7185185185185183],
+    "negative_weight_multipliers": [2.0, 4.0],
+    "candidate_logit_blends": [0.2],
+    "rationale": "retain the first joint head's all-original-gate positive weight/blend and change only negative evidence strength after its explicit negative-margin failure"
+  },
+  "selection_ranking": [
+    "all original selection gates pass",
+    "largest worst-fold AP delta",
+    "largest pooled matched-FPR recall delta",
+    "largest pooled AP delta",
+    "smallest negative multiplier on remaining ties"
+  ],
+  "promotion_gates": {
+    "selection_pooled": {
+      "average_precision_delta_vs_current_min": 0.002,
+      "recall_at_fpr_delta_vs_current_nonnegative": true,
+      "sensor_average_precision_delta_min": -0.002,
+      "paired_group_bootstrap_ap_lower_95ci_strictly_positive": true
+    },
+    "selection_each_fold": {
+      "average_precision_delta_vs_current_strictly_positive": true,
+      "recall_at_fpr_delta_vs_current_nonnegative": true
+    },
+    "each_original_confirmation": {
+      "average_precision_delta_vs_current_min": 0.002,
+      "recall_at_fpr_delta_vs_current_strictly_positive": true,
+      "sensor_average_precision_delta_min": -0.002,
+      "paired_group_bootstrap_ap_lower_95ci_strictly_positive": true
+    },
+    "reused_unep_development": {
+      "candidate_positive_recall_no_worse_than_current_at_separate_thresholds": true
+    },
+    "reused_cloudsen12_development": {
+      "false_positive_count_no_higher": true,
+      "probability_threshold_margin_p95_no_higher": true
+    }
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20260718,
+    "confidence": 0.95,
+    "unit": "physical source group"
+  },
+  "invariants": [
+    "The original folds select among the two stronger negative weights before reused external-development scoring.",
+    "Reused external development results are reported as tuning evidence, not independent confirmation.",
+    "The 374-row CloudSEN published test and exact MARS paper benchmark remain sealed.",
+    "Dense masks and their already promoted thresholds do not change.",
+    "An artifact is written only if all original and reused-development gates pass."
+  ]
+}

@@ -276,6 +276,7 @@ def main() -> int:
                             delta["recall_at_fpr_0_0713"],
                             delta["average_precision"],
                             -blend,
+                            -negative_multiplier,
                             -positive_multiplier,
                         ],
                     }
