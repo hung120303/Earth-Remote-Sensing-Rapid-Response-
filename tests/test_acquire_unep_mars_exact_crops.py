@@ -16,6 +16,7 @@ from acquire_unep_mars_exact_crops import (
     S2_DESCRIPTIONS,
     crop_grid,
     geometry_gate,
+    interpolate_s2ee_20m_bands,
     landsat_cloud_classes,
     select_shard,
     source_contract,
@@ -24,6 +25,15 @@ from acquire_unep_mars_exact_crops import (
 
 
 class ExactCropTests(unittest.TestCase):
+    def test_official_s2ee_20m_interpolation_is_typed_and_deterministic(self) -> None:
+        values = np.arange(200 * 200, dtype=np.uint16).reshape(200, 200)
+        first = interpolate_s2ee_20m_bands(values)
+        second = interpolate_s2ee_20m_bands(values)
+        self.assertEqual(first.shape, (200, 200))
+        self.assertEqual(first.dtype, np.uint16)
+        np.testing.assert_array_equal(first, second)
+        self.assertFalse(np.array_equal(first, values))
+
     def test_published_crop_grid_is_preserved_exactly(self) -> None:
         cohort = {
             "sample_id": "sample",

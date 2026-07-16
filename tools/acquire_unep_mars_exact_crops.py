@@ -21,6 +21,7 @@ from rasterio.crs import CRS
 from rasterio.enums import Resampling
 from rasterio.features import rasterize
 from rasterio.warp import transform_geom
+from skimage.transform import resize
 
 from acquire_emit_v002_l1c_crops import (
     aligned_grid,
@@ -43,6 +44,7 @@ S2_SOURCE_BANDS = ("B02", "B03", "B04", "B08", "B11", "B12")
 S2_DESCRIPTIONS = S2_SOURCE_BANDS
 LANDSAT_SOURCE_BANDS = ("B2", "B3", "B4", "B5", "B6", "B7")
 LANDSAT_DESCRIPTIONS = ("B02", "B03", "B04", "B05", "B06", "B07")
+S2_20M_BANDS = frozenset({"B11", "B12"})
 
 
 def repo_root() -> Path:
@@ -116,19 +118,50 @@ def read_stack(
     crs: Any,
     transform: Any,
 ) -> np.ndarray:
-    return np.stack(
-        [
-            read_to_grid(
-                assets[band],
-                crs=crs,
-                transform=transform,
-                size=SIZE,
-                resampling=Resampling.bilinear,
-                dtype="uint16",
-            )
-            for band in bands
-        ]
+    output = []
+    for band in bands:
+        producer_interpolation = band in S2_20M_BANDS
+        values = read_to_grid(
+            assets[band],
+            crs=crs,
+            transform=transform,
+            size=SIZE,
+            resampling=(
+                Resampling.nearest if producer_interpolation else Resampling.bilinear
+            ),
+            dtype="uint16",
+        )
+        if producer_interpolation:
+            values = interpolate_s2ee_20m_bands(values)
+        output.append(values)
+    return np.stack(output)
+
+
+def interpolate_s2ee_20m_bands(values: np.ndarray) -> np.ndarray:
+    """Match marss2l's GEE nearest-downsample/bilinear-upsample correction."""
+    source = np.asarray(values)
+    if source.shape != (SIZE, SIZE) or source.dtype != np.uint16:
+        raise ValueError("S2 20 m interpolation expects one 200x200 uint16 band")
+    reflectance = source.astype(np.float64) / 10_000.0
+    native = resize(
+        reflectance,
+        (SIZE // 2, SIZE // 2),
+        order=0,
+        anti_aliasing=False,
+        preserve_range=False,
+        cval=0,
+        mode="constant",
     )
+    restored = resize(
+        native,
+        (SIZE, SIZE),
+        order=1,
+        anti_aliasing=False,
+        preserve_range=False,
+        cval=0,
+        mode="constant",
+    )
+    return np.round(restored * 10_000.0).astype(np.uint16)
 
 
 def rasterized_plumes(
@@ -313,7 +346,11 @@ def acquire_one(
             "transform": list(transform)[:6],
             "band_order": list(descriptions) + [f"{band}_bg" for band in descriptions],
             "dtype": "uint16",
-            "resampling": "bilinear spectral; nearest QA; all_touched polygon rasterization",
+            "resampling": (
+                "native-10m bilinear; S2 20m GEE-nearest then official nearest-down/bilinear-up; nearest QA; all_touched polygon rasterization"
+                if sensor == "Sentinel-2"
+                else "bilinear spectral; nearest QA; all_touched polygon rasterization"
+            ),
         },
         "quality": {
             "gate_pass_before_cloud": gate_pass,
