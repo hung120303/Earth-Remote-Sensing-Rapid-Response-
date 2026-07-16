@@ -1,0 +1,60 @@
+{
+  "all_finalization_gates_pass": true,
+  "artifact": {
+    "bytes": 129486,
+    "operational_scene_threshold": 0.23431125612493842,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_joint_calibration_aware_xgboost.joblib",
+    "sha256": "e1305d4f1199891b8f2f2cae27ee27219af819de72f42f95e329ffd3fa6c15b1",
+    "tracked": false
+  },
+  "cloudsen12_negative_development": {
+    "candidate_false_positive_rate": 0.008,
+    "candidate_false_positives": 1,
+    "candidate_logit_threshold_margin_p95": -3.289368638096256,
+    "candidate_raw_score_p95": 0.011290085478367936,
+    "candidate_threshold": 0.23431125612493842,
+    "checks": {
+      "false_positive_count_no_higher": true,
+      "logit_threshold_margin_p95_no_higher": true,
+      "raw_score_p95_no_higher": true
+    },
+    "current_false_positive_rate": 0.008,
+    "current_false_positives": 1,
+    "current_logit_threshold_margin_p95": -2.912874775976844,
+    "current_raw_score_p95": 0.02091162071361144,
+    "current_threshold": 0.28187603894788654,
+    "groups": 124,
+    "passed": true,
+    "rows": 125
+  },
+  "decision": "Freeze the fixed joint head for fresh CloudSEN-test and exact-paper evaluation.",
+  "fixed_candidate": {
+    "candidate_blend": 0.2,
+    "final_fit_seed": 20260917,
+    "negative_multiplier": 4.0,
+    "positive_multiplier": 2.7185185185185183
+  },
+  "generated_at_utc": "2026-07-16T16:24:31.749290+00:00",
+  "provenance": {
+    "git_commit": "18fd12bd3ebbb82948047a4f171d8a347b9205c2",
+    "protocol_sha256": "871482ee962f8d9daf76127fd5abcb964fd90b84d9fe51978e12aaaa1b8dba11",
+    "script_sha256": "9b089ba583c70fbc31327f0272f132059d01fe8d6438d003698e2de5efb89094"
+  },
+  "schema_version": 1,
+  "scope": "calibration-aware finalization; no fresh external or paper test loaded",
+  "source_experiment": {
+    "path": "reports/experiments/mars_joint_external_negative_calibrated_xgboost.json",
+    "protocol": "configs/mars_joint_external_negative_calibrated_xgboost_protocol.json",
+    "protocol_sha256": "d9eee6a5bf5e251924c6ae43e4db43f8b1a28a546c80afa673b1a06eedbdd923",
+    "sha256": "8ab3a91566e6ba0b60bceaa13c3ee7e36bc390e5ce69ab7486895883f35e779a"
+  },
+  "unep_positive_development": {
+    "candidate_no_worse": true,
+    "candidate_positive_recall": 0.75,
+    "candidate_threshold": 0.23431125612493842,
+    "current_positive_recall": 0.75,
+    "current_threshold": 0.28187603894788654,
+    "groups": 4,
+    "rows": 4
+  }
+}

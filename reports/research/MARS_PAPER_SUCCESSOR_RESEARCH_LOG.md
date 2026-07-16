@@ -2254,3 +2254,15 @@ reused development safety checks are fixed to positive recall, false-positive
 count, raw negative-score p95, and log-odds distance from each model's own
 frozen threshold. Passing may create an ignored artifact and authorize fresh
 CloudSEN-test acquisition; it does not itself authorize or inspect paper data.
+
+Fixed-candidate finalization passes. UNEP development recall remains 3/4.
+CloudSEN development keeps false positives at 1/125 while lowering raw-score
+p95 from 0.02091 to 0.01129 and making logit distance from threshold more
+negative, -3.28937 versus -2.91287. The ignored fixed artifact is 129,486
+bytes with SHA-256
+`e1305d4f1199891b8f2f2cae27ee27219af819de72f42f95e329ffd3fa6c15b1`
+and operational threshold 0.2343112561. This authorizes acquisition and
+evaluation of the still-sealed 374-row CloudSEN published test as fresh
+external-negative evidence. It also makes the fixed head eligible for a
+separately frozen exact-paper evaluator, but paper access should follow the
+CloudSEN test safety check.
