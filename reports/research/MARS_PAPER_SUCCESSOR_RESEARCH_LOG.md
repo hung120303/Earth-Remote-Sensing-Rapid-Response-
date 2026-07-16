@@ -2483,3 +2483,19 @@ folds 0/1. Combined low-prevalence AP improved only +0.000203 with interval
 -0.000671, within safeguards, but the primary confirmation interval failure is
 decisive. No artifact was written, and neither fresh safety nor paper replay is
 authorized for this route.
+
+### 2026-07-16: Permutation-equivariant site modeling research path
+
+The next path builds on the already validated site-relative spatial classifier,
+which improved every development fold and raised exact test-only point AP to
+0.46712 but lacked a positive bootstrap lower bound. Physical-site observations
+form unordered sets. Deep Sets establishes the sum-decomposition family for
+permutation-invariant/equivariant functions
+(https://proceedings.neurips.cc/paper/2017/hash/f22e4747da1aa27e363d86d40ff442fe-Abstract.html),
+while attention-based multiple-instance learning provides a learned, interpretable
+way to emphasize rare informative instances within a bag
+(https://proceedings.mlr.press/v80/ilse18a.html). The planned meta-head therefore
+combines the stronger site-relative spatial scene score with label-free set context,
+using site-held-out development evaluation. First, a hash-bound builder will
+reproduce all leakage-controlled site-relative development scores and assert the
+published internal metrics before any new model selection.
