@@ -1847,3 +1847,15 @@ crop. A 100+ km satellite product can contain multiple distant 4 km samples;
 only plume polygons for the same target/source crop are merged. This preserves
 the released MARS-S2L sample contract and does not inspect labels or model
 scores.
+
+The frozen catalog audit yields 237 exact-product source-crop samples across
+42 independent 25 km groups: 153 Sentinel-2 and 84 Landsat. Every sample has
+expert-actionable positive evidence and MultiPolygon pixel truth. The fixed
+hash assigns 215 samples to auxiliary training, 9 to development, and 13 to
+sealed external confirmation. All accepted samples are at least 25.631 km
+from every paper-test location; none were selected by model score. The compact
+audit records the two source archive hashes, the 26,762-row catalog identity,
+the 13,393 exact paper-test targets and 1,289 paper-test locations excluded,
+and eligible manifest SHA-256
+`13a19dd7daad36b40261f7acb0332b0418cb37b1b9407d708e864b3847976e74`.
+This cohort is large enough to authorize exact-product asset resolution.

@@ -1,0 +1,74 @@
+{
+  "catalog": {
+    "archives": {
+      "unep_mars_plumes_csv.zip": {
+        "bytes": 9513038,
+        "sha256": "9bef49a34ce4017d6aa280f8689a9b6d1e5852516bd38b7a27af7247e4b19525"
+      },
+      "unep_mars_plumes_geojson.zip": {
+        "bytes": 48568994,
+        "sha256": "dc7033999cf0bf803cb49f80db9cae92b227c7f35a68c9a9fb69cba9f14742bd"
+      }
+    },
+    "csv": {
+      "bytes": 8669650,
+      "sha256": "0ce552b898c194fae8807c25de0a3c8f8eebbdcada5c3593241aafabff0a04e8"
+    },
+    "geojson": {
+      "bytes": 46189791,
+      "geometry_types": {
+        "MultiPolygon": 25555,
+        "None": 1207
+      },
+      "sha256": "e6c95e58ebe0a761236e42248b03c892b2e9a053c3f004d8aef4be3902459392"
+    },
+    "plume_rows": 26762
+  },
+  "cohort": {
+    "by_role": {
+      "auxiliary_training": 215,
+      "development": 9,
+      "sealed_external": 13
+    },
+    "by_sensor": {
+      "Landsat": 84,
+      "Sentinel-2": 153
+    },
+    "groups": 42,
+    "minimum_paper_test_distance_km": 25.631477,
+    "pixel_truth_samples": 237,
+    "samples": 237,
+    "sources": 84
+  },
+  "generated_at_utc": "2026-07-16T02:34:42.285556+00:00",
+  "label_semantics": {
+    "all_samples": "expert-actionable positive plume",
+    "external_metrics": "positive recall and mask IoU only",
+    "no_plume_from_catalog_absence": false
+  },
+  "manifest": {
+    "bytes": 396977,
+    "path": ".research/unep_mars_post2024/eligible_manifest.jsonl",
+    "sha256": "13a19dd7daad36b40261f7acb0332b0418cb37b1b9407d708e864b3847976e74"
+  },
+  "paper_exclusion": {
+    "paper_test_locations": 1289,
+    "paper_test_sha256": "add125547e0e0066216070ed61a8544e76e84f062f636390be5d2ef1808dbfaa",
+    "paper_test_targets": 13393
+  },
+  "protocol": {
+    "path": "configs/unep_mars_post2024_protocol.json",
+    "sha256": "34125ae51d5b8c6120f2bfa171afd3bff4995a03fc01095cdbd9ce0e7bf6c8ef"
+  },
+  "schema_version": 1,
+  "selection_audit": {
+    "accepted_plume_records": 237,
+    "before_cutoff": 13525,
+    "disallowed_satellite": 9246,
+    "merged_duplicate_plume_records": 0,
+    "missing_required_field": 76,
+    "not_expert_actionable": 929,
+    "within_paper_test_exclusion": 2749
+  },
+  "status": "catalog_audited; imagery_not_yet_acquired"
+}
