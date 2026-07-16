@@ -430,9 +430,12 @@ def acquire_one(
 def write_markdown(report: dict[str, Any], path: Path) -> None:
     summary = report["summary"]
     negative_only = set(summary["by_label_state"]) == {"NO_PLUME"}
+    fresh_external_test = set(summary["by_role"]) == {"fresh_external_test"}
     lines = [
         (
-            "# CloudSEN12+ clear-scene spatial-pilot crop acquisition"
+            "# CloudSEN12+ fresh no-plume test crop acquisition"
+            if fresh_external_test
+            else "# CloudSEN12+ clear-scene spatial-pilot crop acquisition"
             if negative_only
             else "# UNEP MARS post-2024 exact crop acquisition"
         ),
@@ -441,7 +444,7 @@ def write_markdown(report: dict[str, Any], path: Path) -> None:
         "",
         "## Result",
         "",
-        f"- Fully resolved nonsealed samples attempted: **{summary['attempted']:,}**.",
+        f"- Fully resolved exact-product samples attempted: **{summary['attempted']:,}**.",
         f"- Crops acquired and hash-verified: **{summary['acquired']:,}**.",
         f"- Pre-cloud radiometry/geometry gate pass: **{summary['gate_pass_before_cloud']:,}**.",
         f"- Acquisition errors: **{summary['errors']:,}**.",
@@ -555,11 +558,16 @@ def main() -> None:
     negative_only = bool(manifests) and all(
         item.get("label_state") == "NO_PLUME" for item in manifests
     )
+    fresh_external_test = bool(manifests) and all(
+        item.get("research_role") == "fresh_external_test" for item in manifests
+    )
     report = {
         "schema_version": 1,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "status": (
-            "nonsealed clear-scene crops acquired; published zero cloud masks not yet materialized"
+            "fresh external-test no-plume crops acquired; published cloud masks not yet materialized"
+            if fresh_external_test
+            else "nonsealed clear-scene crops acquired; published zero cloud masks not yet materialized"
             if negative_only
             else "nonsealed crops acquired; Sentinel-2 cloud gate pending"
         ),
