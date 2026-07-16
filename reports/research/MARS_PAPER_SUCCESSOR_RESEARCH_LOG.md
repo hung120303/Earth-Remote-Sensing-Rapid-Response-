@@ -2803,3 +2803,16 @@ strata, false-positive counts, p95 comparisons, logit-margin checks, and symmetr
 six-row unavailable bound. No gate has been relaxed. The report must state that the
 cohort was previously inspected and therefore supplies a post-test safety audit,
 not independent external confirmation. The exact paper cache remains out of scope.
+
+### 2026-07-16: Tail-calibrated fresh replay rejected
+
+The -0.105610-logit candidate retained exactly the same four false positives as
+current, with zero candidate-only errors and zero errors in the 41 non-clear rows.
+Overall p95 improved to 0.021549 versus 0.022308, and the available/non-clear logit-
+margin gates passed. The sole failure was the published all-clear logit-margin p95:
+-2.787786 versus current's -2.812609, a 0.024823-logit excess. No paper input was
+opened. Because this is already a post-test cohort, that gap cannot select another
+numeric margin. The next development rule will instead require full negative
+empirical-CDF dominance in every selection fold, a stronger label-controlled
+calibration property that simultaneously constrains every observed negative
+quantile and fixed threshold.
