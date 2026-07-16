@@ -2570,3 +2570,16 @@ The deterministic inner spatial score improved AP +0.003080 and recall +0.003016
 versus current; frozen-artifact fold-0/1 deltas reproduced exactly. These numbers
 remain diagnostic. The cache is now authorized only as a leakage-controlled input
 to a separately frozen temporal-spatial ensemble experiment.
+
+### 2026-07-16: Temporal-spatial unseen-site ensemble frozen
+
+The strongest validated spatial component and strongest observed unseen-site
+mechanism are now combined in a leakage-controlled development experiment. Twenty-
+four minimum-history/top-k/weight routes include a zero-temporal control. Each held
+development fold is unseen to its deterministic spatial model. Selection uses folds
+2/3/4; the fixed route is confirmed once on folds 0/1. Both the <=5% site-positive
+target stratum and the complete view require positive AP point deltas, positive
+10,000-replicate paired-site bootstrap lower bounds, and nondecreasing matched-FPR
+recall, with per-fold safeguards. If promoted, the spatial component scores every
+site; temporal corroboration applies only to groups absent from the frozen training-
+site list. No inference-time labels or paper-cache data enter this experiment.
