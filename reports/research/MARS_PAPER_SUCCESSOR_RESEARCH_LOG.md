@@ -2061,3 +2061,12 @@ All published CloudSEN12+ test rows remain sealed. Crop acquisition is allowed
 only for these resolved nonsealed identities and now enforces label-aware
 geometry: a clear-scene negative must have an exactly zero plume mask, whereas
 the pre-existing positive contract still requires nonempty rasterized truth.
+
+The frozen metadata also names producer-side 200x200 CloudSEN12+ image and
+cloud-mask paths, which would have been the closest and most efficient data
+source. A recursive audit of the pinned public MARS-S2L tree found that those
+rasters are not published: only the metadata and statistics CSVs are present,
+and a direct named-crop request returns HTTP 404. This rules out a missing-login
+explanation. The pilot consequently reconstructs the exact grid from the
+resolved public L1C target/reference identities; the raw path is slower but
+does not substitute products or processing levels.
