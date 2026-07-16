@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_fresh_cloudsen12_scene_score_access",
+  "scope": "one-shot comparative false-positive safety test for the fixed candidate",
+  "evaluator": {
+    "path": "tools/evaluate_cloudsen12_fresh_test_scene_heads.py",
+    "sha256": "417b0cba75aef9190b74c29f4a3735ca3e2b1b02d95ea4555903b8174080adc6"
+  },
+  "inputs": {
+    "features": {
+      "path": "outputs/cloudsen12_fresh_test_scene_features.npz",
+      "sha256": "4104ed4bbc1c2289943d1b76f251b3a8739d946cb67e09fce1f8301baf9afe3c"
+    },
+    "feature_report": {
+      "path": "reports/acquisition/cloudsen12_fresh_test_scene_features.json",
+      "sha256": "c492a023dd3bf354de5d6fbe63aca87d6a769322d9eed13f8662bad32cae3871"
+    },
+    "finalization_report": {
+      "path": "reports/experiments/mars_joint_calibration_aware_finalization.json",
+      "sha256": "c432cdd404aee488303de99d6d0f6968cff35319507f505d4aac27bea4283ae5"
+    },
+    "current_artifact": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/mars_oof_scene_ensemble_v2.joblib",
+      "sha256": "9e6fa18b83ef065ac24c94a06a510057a0c382cecf1efa3b54e818566a45c9ac"
+    },
+    "candidate_artifact": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/mars_joint_calibration_aware_xgboost.joblib",
+      "sha256": "e1305d4f1199891b8f2f2cae27ee27219af819de72f42f95e329ffd3fa6c15b1"
+    }
+  },
+  "thresholds": {
+    "current": 0.28187603894788654,
+    "candidate": 0.23431125612493842,
+    "source": "hash-bound calibration-aware finalization report; no fresh-test calibration"
+  },
+  "expected": {
+    "full_rows": 374,
+    "available_rows": 368,
+    "groups": 355,
+    "features": 108,
+    "all_clear_rows": 327,
+    "nonclear_rows": 41,
+    "nonclear_pixels": 84588
+  },
+  "safety_gates": {
+    "false_positive_count_strata": [
+      "available",
+      "published_all_clear",
+      "published_nonclear"
+    ],
+    "raw_score_p95_strata": [
+      "available"
+    ],
+    "logit_margin_p95_strata": [
+      "available",
+      "published_all_clear",
+      "published_nonclear"
+    ],
+    "full_cohort_bound": "count all six unavailable rows as false positives for both heads and require candidate no worse",
+    "pass_rule": "every listed check must pass"
+  },
+  "cloud_input_limit": {
+    "input": "identical predeclared exact-grid zero proxy for both heads",
+    "not_claimed": "producer spatial CloudSEN12+ cloud truth",
+    "published_strata": "hash-bound aggregate all-clear/non-clear pixel counts",
+    "interpretation": "comparative scene-head safety under a controlled proxy, not cloud-mask reproduction"
+  },
+  "outputs": {
+    "json": "reports/experiments/cloudsen12_fresh_test_scene_head_evaluation.json",
+    "markdown": "reports/experiments/CLOUDSEN12_FRESH_TEST_SCENE_HEAD_EVALUATION.md"
+  },
+  "invariants": [
+    "The current and candidate artifacts, thresholds, feature rows, strata, metrics, and gates are frozen before score access.",
+    "No refitting, recalibration, candidate selection, or threshold adjustment is permitted.",
+    "Every available row is evaluated; all six unavailable identities remain in symmetric adversarial bounds.",
+    "The exact MARS paper cache remains unopened unless every fresh-safety gate passes."
+  ]
+}

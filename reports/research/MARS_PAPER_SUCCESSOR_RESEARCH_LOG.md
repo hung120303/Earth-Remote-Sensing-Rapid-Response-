@@ -2339,3 +2339,12 @@ features per row (cache SHA-256
 `4104ed4bbc1c2289943d1b76f251b3a8739d946cb67e09fce1f8301baf9afe3c`).
 The cache retains all-clear/non-clear metadata only as evaluation strata. No model
 fit, threshold change, paper score, or paper label was accessed.
+### 2026-07-16: One-shot fresh-scene safety evaluation frozen
+
+Before reading any fresh scene score, the comparison froze both artifacts and
+operational thresholds, all 368 feature rows, three published-cloud strata, score
+quantiles, logit-to-threshold margins, false-positive gates, and symmetric
+adversarial bounds for six unavailable identities. Passing requires no higher false
+positive count in the full available, all-clear, and non-clear strata; no higher
+overall raw p95; no higher p95 logit margin in all three strata; and no worse
+symmetric full-cohort bound. Failure blocks paper-cache access.
