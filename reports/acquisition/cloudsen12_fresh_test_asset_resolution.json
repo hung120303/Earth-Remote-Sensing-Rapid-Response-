@@ -1,0 +1,46 @@
+{
+  "generated_at_utc": "2026-07-16T16:33:56.408856+00:00",
+  "output": {
+    "bytes": 698890,
+    "path": ".research/cloudsen12_fresh_test/exact_assets.jsonl",
+    "sha256": "120cfac9d364c8c75ab44687307645ca5de353a24a7a4b18192f1c93cd948988"
+  },
+  "providers": {
+    "landsat": "USGS LandsatLook landsat-c2l1 STAC",
+    "sentinel2": "Element 84 Earth Search sentinel-2-l1c backed by public Sentinel-2 L1C assets"
+  },
+  "schema_version": 1,
+  "sealed_external_accessed": false,
+  "source_manifest": {
+    "path": ".research/cloudsen12_fresh_test/cohort.jsonl",
+    "sha256": "be085ac1e934aede89d3a3a9b69a4915d0d15d8097fe4401fe8e89918f2e76a4"
+  },
+  "status": "exact-product assets resolved; imagery not downloaded",
+  "substitution_policy": "exact product only; no RT-to-tier or L1C-to-L2A substitution",
+  "summary": {
+    "by_role": {
+      "fresh_external_test": {
+        "resolved": 368,
+        "total": 374,
+        "unresolved": 6
+      }
+    },
+    "by_sensor": {
+      "Sentinel-2": {
+        "resolved": 368,
+        "total": 374,
+        "unresolved": 6
+      }
+    },
+    "samples": 374,
+    "status": {
+      "resolved": 368,
+      "unresolved": 6
+    },
+    "unresolved_product_sides": {
+      "Sentinel-2:reference:missing_product_identity": 1,
+      "Sentinel-2:reference:unavailable_exact_product": 4,
+      "Sentinel-2:target:unavailable_exact_product": 5
+    }
+  }
+}

@@ -2290,3 +2290,12 @@ materialized all 374 published CloudSEN12+ test identities (361 ROI groups acros
 Five rows have missing published wind components and will use the already frozen,
 explicit zero-fill policy. Exact-product resolution had not yet begun and the exact
 MARS paper cache remained unopened.
+### 2026-07-16: Fresh CloudSEN exact products resolved
+
+Exact published target/reference identities resolved for 368 of 374 fresh-test
+scenes (resolver manifest SHA-256
+`120cfac9d364c8c75ab44687307645ca5de353a24a7a4b18192f1c93cd948988`).
+Six scenes remain unavailable without substitution: one lacks a published reference
+identity, four have unavailable exact references, and five have unavailable exact
+targets (some scenes miss both sides). There were zero query errors. These six stay
+in the declared full-cohort adversarial false-positive bound.
