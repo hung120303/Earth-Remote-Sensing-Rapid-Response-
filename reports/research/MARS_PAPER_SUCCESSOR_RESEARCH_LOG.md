@@ -2332,3 +2332,10 @@ released checkpoint, fold-0 residual representation, 108-feature schema, and out
 path by hash. Published cloud-composition fields are carried only for prespecified
 stratification and are prohibited model features. Neither scene head can be refit or
 selected during extraction, and the exact paper cache remains sealed.
+### 2026-07-16: Fresh-test features extracted
+
+The RTX 5070 extraction completed all 368 rows/355 groups with 108 finite frozen
+features per row (cache SHA-256
+`4104ed4bbc1c2289943d1b76f251b3a8739d946cb67e09fce1f8301baf9afe3c`).
+The cache retains all-clear/non-clear metadata only as evaluation strata. No model
+fit, threshold change, paper score, or paper label was accessed.
