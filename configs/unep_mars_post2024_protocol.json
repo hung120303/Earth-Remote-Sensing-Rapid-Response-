@@ -41,8 +41,9 @@
     "require_distinct_target_and_background": true,
     "require_sensor_consistent_product_ids": true,
     "landsat_product_prefixes": ["LC08", "LC09"],
-    "deduplicate_target_products": true,
-    "merge_multiple_plumes_on_one_target": true,
+    "deduplicate_sample_key": "exact target product plus source-centered crop",
+    "merge_multiple_plumes_on_one_target_and_source_crop": true,
+    "allow_one_full_satellite_product_to_yield_multiple_distant_source_crops": true,
     "group_unit": "source_name with a 25 km connected-component fallback",
     "never_infer_no_plume_from_catalog_absence": true
   },
@@ -86,6 +87,7 @@
   },
   "frozen_invariants": [
     "After download but before outcome filtering, the Landsat display name was corrected from spacecraft-specific placeholders to the catalog's documented aggregate value; LC08/LC09 remain enforced from exact product IDs.",
+    "Before outcome filtering, deduplication was clarified to exact product plus source-centered crop because one full satellite tile can contain multiple distant facilities; only plume records within the same source crop are merged.",
     "The catalog checksum is provenance, not a reason to alter selection rules after download.",
     "No paper-test label, location, target product, or pixel mask may enter fitting.",
     "All target/reference products must be the exact products named by UNEP.",

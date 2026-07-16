@@ -8,6 +8,12 @@ computed, showed that UNEP encodes both Landsat spacecraft under
 catalog value; exact `LC08`/`LC09` prefixes still identify and constrain the
 spacecraft. This is a schema repair, not a selection change.
 
+The GeoJSON schema audit also established that records describe full satellite
+products plus source coordinates. Because one full product can contain several
+distant 4 km source crops, the deduplication key is clarified as exact target
+product plus source-centered crop. Only multiple plume polygons for that same
+sample are merged; distant sources on one product remain separate samples.
+
 ## Why this cohort
 
 UNEP IMEO's Eye on Methane export identifies each MARS plume with the exact
@@ -33,8 +39,9 @@ aggregate Landsat category, constrained to exact `LC08`/`LC09` products.
 Require `actionable=YES` and nonempty plume ID, source ID,
 satellite, timestamp, target product, background product, latitude, and
 longitude. Target and background must be distinct, sensor-consistent exact
-product IDs. Multiple plume records on one target are merged rather than
-duplicating the scene.
+product IDs. Multiple plume records on one target and one source-centered crop
+are merged rather than duplicating that sample; one full product may validly
+yield multiple distant source crops.
 
 Every accepted source must be at least 25 km from every location in the pinned
 MARS-S2L paper test CSV, and every exact paper-test target product is excluded.

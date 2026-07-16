@@ -1839,3 +1839,11 @@ one transparent schema correction: UNEP uses the aggregate display value
 therefore recognizes that value while still requiring exact `LC08` or `LC09`
 product prefixes. No date, validation, spatial-exclusion, grouping, or
 promotion rule changed.
+
+The GeoJSON schema audit found 25,555 MultiPolygon plume geometries and 1,207
+records without geometry. Before outcome filtering, deduplication was also
+clarified from whole-product identity to exact product plus source-centered
+crop. A 100+ km satellite product can contain multiple distant 4 km samples;
+only plume polygons for the same target/source crop are merged. This preserves
+the released MARS-S2L sample contract and does not inspect labels or model
+scores.
