@@ -2460,3 +2460,14 @@ No artifact was written. The next architecture will route temporal evidence only
 for sites absent from the training cohort and will select parameters on whole-site
 low-prevalence development strata that more closely represent the declared unseen-
 site target domain; prevalence labels define evaluation strata only, never routing.
+
+### 2026-07-16: Unseen low-prevalence temporal router frozen
+
+The next experiment formalizes the transfer target without using target labels at
+inference. Entire development sites with scene-positive rate at most 5% define the
+selection and confirmation evaluation strata; this definition is evaluation-only.
+The deployed route uses only whether a physical site appears in the frozen training
+set, its group identity, and current scene scores. Known training sites remain
+exactly unchanged. Forty-five minimum-history/top-k/weight candidates, selection
+folds 2/3/4, confirmation folds 0/1, 10,000-replicate paired site bootstraps, and
+whole-fold safeguards are frozen before scoring. The paper cache remains prohibited.
