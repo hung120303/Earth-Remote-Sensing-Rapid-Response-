@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_pilot_selection_or_pixel_acquisition",
+  "scope": "bounded model-aligned CloudSEN12+ hard-negative spatial pilot",
+  "hypothesis": "CloudSEN12+ negatives can improve unseen-site ranking only when represented by released-model probability morphology and localized temporal SWIR/MBMP structure, rather than global moments.",
+  "sources": {
+    "metadata_sha256": "d605cc19070d0f4c403ebdaa92caa193a78521580dc7407b86b26ee05cfad3f1",
+    "stats_sha256": "15ca0c7d2097d9956b0ca3ea6ad4b335910c8031e46b434c088276284991e6b9",
+    "repository_revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32"
+  },
+  "eligibility": {
+    "label": "isplume=false",
+    "sensor": "Sentinel-2 L1C target and exact published reference product",
+    "cloudmask_clear_pixels": 40000,
+    "cloudmask_nonclear_pixels": 0,
+    "published_partitions_allowed": ["train", "validation"],
+    "published_test_partition_accessed": false,
+    "exact_product_substitution": false
+  },
+  "sample_sizes": {
+    "train": 384,
+    "validation": 128,
+    "sealed_test": 0
+  },
+  "selection": {
+    "per_partition_hard_fraction": 0.5,
+    "hard_order": "descending MBMP_std, descending MBMP_max, ascending SHA-256 scene identity",
+    "diversity_order": "country-round-robin by ascending SHA-256 scene identity, then global SHA-256 fill",
+    "seed_text": "ERSRR_CLOUDSEN12_SPATIAL_PILOT_V1",
+    "country_is_sampling_metadata_only": true
+  },
+  "pixel_contract": {
+    "shape": [200, 200],
+    "resolution_m": 10,
+    "band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12",
+      "B02_bg",
+      "B03_bg",
+      "B04_bg",
+      "B08_bg",
+      "B11_bg",
+      "B12_bg"
+    ],
+    "dtype": "uint16",
+    "cloud_mask": "all-clear uint8, permitted only because published target/reference-union statistics are exactly 40,000 clear and zero non-clear pixels",
+    "wind": "published wind_u and wind_v",
+    "label_state": "NO_PLUME"
+  },
+  "representation": {
+    "released_checkpoint_sha256": "be634d91c2acfc8663451a85c0787a23cf998fe5e9ec83db4b02f26f036622b8",
+    "residual_artifact_sha256": "b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49",
+    "scene_schema": "108 frozen released/residual probability and operational-input features",
+    "spatial_schema": "existing nine-channel 64x64 probability/SWIR/MBMP morphology tensor if scalar pilot passes"
+  },
+  "go_no_go": {
+    "scalar_pilot": "Cloud training negatives must improve the frozen MARS folds-2/3/4 AP by at least 0.002, preserve matched-FPR recall in every fold, and have positive paired-site AP lower 95% CI.",
+    "pixel_expansion": "Acquire more than 512 CloudSEN12 crops only after the scalar model-aligned pilot passes its MARS selection and Cloud validation gates.",
+    "paper_access": "No paper cache may be loaded until selection plus folds-0/1 confirmation pass."
+  },
+  "storage": {
+    "bulk_data_ignored": true,
+    "only_compact_protocols_receipts_reports_committed": true
+  }
+}
