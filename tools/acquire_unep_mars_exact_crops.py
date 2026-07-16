@@ -134,6 +134,19 @@ def geometry_gate(label_state: str, plume_pixels: int) -> bool:
     raise ValueError(f"Unsupported label_state: {label_state}")
 
 
+def select_shard(
+    records: list[dict[str, Any]], shard_count: int, shard_index: int
+) -> list[dict[str, Any]]:
+    """Select a deterministic disjoint shard from sample-id-sorted records."""
+    if shard_count < 1 or not 0 <= shard_index < shard_count:
+        raise ValueError("Shard count must be positive and index must be in range")
+    return [
+        record
+        for position, record in enumerate(records)
+        if position % shard_count == shard_index
+    ]
+
+
 def verify_cached(path: Path, expected_identity: str, root: Path) -> dict[str, Any]:
     manifest = json.loads(path.read_text(encoding="utf-8"))
     if manifest["input_identity_sha256"] != expected_identity:
@@ -353,12 +366,16 @@ def main() -> None:
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--min-valid-fraction", type=float, default=0.8)
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--shard-count", type=int, default=1)
+    parser.add_argument("--shard-index", type=int, default=0)
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
     if not 1 <= args.workers <= 12:
         parser.error("--workers must be between 1 and 12")
     if not 0.0 <= args.min_valid_fraction <= 1.0:
         parser.error("--min-valid-fraction must be in [0,1]")
+    if args.shard_count < 1 or not 0 <= args.shard_index < args.shard_count:
+        parser.error("--shard-count must be positive and --shard-index must be in range")
 
     root = repo_root()
     cohort_path = safe_repo_path(root, args.cohort)
@@ -381,6 +398,7 @@ def main() -> None:
         if item["status"] == "resolved"
     ]
     resolved.sort(key=lambda item: item["sample_id"])
+    resolved = select_shard(resolved, args.shard_count, args.shard_index)
     if args.limit is not None:
         resolved = resolved[: args.limit]
     if any(item["sample_id"] not in cohort for item in resolved):
@@ -434,6 +452,8 @@ def main() -> None:
             "min_valid_fraction": args.min_valid_fraction,
             "exact_product_substitution": False,
             "sealed_external_accessed": False,
+            "shard_count": args.shard_count,
+            "shard_index": args.shard_index,
         },
         "summary": {
             "attempted": len(resolved),

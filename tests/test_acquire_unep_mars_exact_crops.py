@@ -16,12 +16,22 @@ from acquire_unep_mars_exact_crops import (
     S2_DESCRIPTIONS,
     geometry_gate,
     landsat_cloud_classes,
+    select_shard,
     source_contract,
     stable_identity,
 )
 
 
 class ExactCropTests(unittest.TestCase):
+    def test_shards_are_disjoint_and_complete(self) -> None:
+        records = [{"sample_id": str(index)} for index in range(11)]
+        shards = [select_shard(records, 3, index) for index in range(3)]
+        flattened = [item["sample_id"] for shard in shards for item in shard]
+        self.assertEqual(sorted(flattened, key=int), [str(index) for index in range(11)])
+        self.assertEqual(len(flattened), len(set(flattened)))
+        with self.assertRaises(ValueError):
+            select_shard(records, 3, 3)
+
     def test_geometry_gate_respects_positive_and_negative_labels(self) -> None:
         self.assertTrue(geometry_gate("PLUME", 1))
         self.assertFalse(geometry_gate("PLUME", 0))
