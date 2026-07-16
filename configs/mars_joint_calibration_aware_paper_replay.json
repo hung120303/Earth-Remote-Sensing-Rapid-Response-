@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_fixed_joint_exact_paper_replay",
+  "scope": "transparent post-test replay of the fresh-safety-passed fixed joint candidate on the exact MARS-S2L v3 comparator",
+  "evaluator": {
+    "path": "tools/evaluate_mars_unep_augmented_paper_cache.py",
+    "sha256": "7a8fa57fca1ea26179869b3d88397720bedccc87a7522b5f52fd8bfe26ffac01"
+  },
+  "candidate": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_joint_calibration_aware_xgboost.joblib",
+    "artifact_sha256": "e1305d4f1199891b8f2f2cae27ee27219af819de72f42f95e329ffd3fa6c15b1",
+    "artifact_kind": "mars_joint_calibration_aware_xgboost",
+    "development_report": "reports/experiments/mars_joint_calibration_aware_finalization.json",
+    "development_report_sha256": "c432cdd404aee488303de99d6d0f6968cff35319507f505d4aac27bea4283ae5",
+    "promotion_gate": "all_finalization_gates_pass",
+    "authorization_report": "reports/experiments/cloudsen12_fresh_test_scene_head_evaluation.json",
+    "authorization_report_sha256": "2777cc0b4b4929ed68301f6b13a691d0e8d8c91aecba8a83cc639a1d950e21bc",
+    "authorization_gate": "all_safety_gates_pass",
+    "base_score": "frozen v3 stronger OOF ExtraTrees scene score",
+    "candidate_logit_blend": 0.2,
+    "operational_scene_threshold": 0.23431125612493842,
+    "missing_feature_rows": "fall back unchanged to frozen v3 scene score"
+  },
+  "architecture": {
+    "scene_ranking": "frozen v3 stronger head plus 0.20 joint UNEP-positive/CloudSEN-negative XGBoost",
+    "dense_mask_changed": false
+  },
+  "paper_comparator": {
+    "official_paper_url": "https://arxiv.org/html/2511.21777v3",
+    "revision": "v3",
+    "revision_date": "2026-04-24",
+    "receipt": "reports/acquisition/mars_s2l_paper_v3_benchmark.json",
+    "receipt_sha256": "ebb39ab22720988b2657d0e4d6b9a5669c24fbca1083575797622a7f1e788eb0",
+    "assert_live_baseline_equals_exact_reconstruction": true,
+    "published_full": {
+      "rows": 43529,
+      "average_precision": 0.6408,
+      "recall": 0.7915,
+      "false_positive_rate": 0.0713,
+      "pixel_iou": 0.3224
+    },
+    "published_test_only_sites": {
+      "rows": 15655,
+      "average_precision": 0.4496,
+      "recall": 0.7753,
+      "false_positive_rate": 0.0763
+    }
+  },
+  "paper_caches": {
+    "label_free_features": {
+      "path": "outputs/mars_paper_scene_features_label_free.npz",
+      "sha256": "8a35e60e7c396e58639f940239020adb36def885124841e0b20901e10db52f33",
+      "receipt": "reports/acquisition/mars_paper_scene_features_label_free.json",
+      "receipt_sha256": "8f82262d60e9a47a40f2c7ded63042544c87bdfe00c74ed9c34cd5db462b168f"
+    },
+    "diagnostic_outcomes": {
+      "path": "outputs/mars_paper_test_v3_diagnostic_cache.npz",
+      "sha256": "1624fddc0222f8ffc5137f557c7fc3e465d53b335c82cc8014711baa35bb94a1",
+      "access_order": "only after all candidate scores are computed from the separate label-free cache"
+    }
+  },
+  "dense_mask": {
+    "gate_report": "reports/experiments/mars_scene_gated_masks.json",
+    "gate_report_sha256": "c1e5a1497abebba80d42898a8165b30fd255ff252478a0ee1fd90fd32456a51c",
+    "gate_score": "unchanged frozen v3 stronger scene score",
+    "gate_cutoff": 0.75,
+    "probability": "released MARS-S2L probability with frozen sensor thresholds",
+    "changed_by_candidate": false
+  },
+  "views": [
+    "full_43529",
+    "test_only_sites_15655"
+  ],
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20262617,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "superiority_gates_each_view": {
+    "average_precision_delta_point_strictly_positive": true,
+    "average_precision_delta_lower_95ci_strictly_positive": true,
+    "matched_fpr_recall_delta_point_strictly_positive": true,
+    "matched_fpr_recall_delta_lower_95ci_strictly_positive": true,
+    "fixed_operational_fpr_delta_upper_95ci_nonpositive": true,
+    "pixel_iou_delta_point_strictly_positive": true,
+    "pixel_iou_delta_lower_95ci_strictly_positive": true,
+    "must_beat_reconstructed_and_published_paper_points": true
+  },
+  "interpretation": {
+    "untouched_test_claim": false,
+    "reason": "The exact paper comparator was opened in earlier transparent architecture evaluations; this replay is explicitly post-test.",
+    "independent_new_data": "UNEP post-2024 positives and CloudSEN spatial negatives affected fitting; isolated development and a fresh 374-row published CloudSEN test authorized this fixed replay.",
+    "publication_claim_if_passed": "superiority on the exact authors' released v3 archive under paired site-block bootstrap, not a new untouched benchmark"
+  },
+  "invariants": [
+    "The live baseline must equal the exact hash-bound v3 reconstruction for all AP, recall, FPR, IoU, and row-count assertions.",
+    "Candidate inference from the label-free cache precedes diagnostic outcome-cache loading.",
+    "No artifact, blend, threshold, mask gate, metric, view, bootstrap seed, or superiority gate changes after this commit.",
+    "Both the 43,529-row full view and 15,655-row test-only-site view must pass every gate."
+  ]
+}

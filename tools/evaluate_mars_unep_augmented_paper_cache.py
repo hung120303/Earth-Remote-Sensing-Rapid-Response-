@@ -43,11 +43,14 @@ def validate_candidate(
     artifact: dict[str, Any], development: dict[str, Any], protocol: dict[str, Any]
 ) -> None:
     candidate = protocol["candidate"]
-    if development.get("all_promotion_gates_pass") is not True:
+    promotion_gate = candidate.get("promotion_gate", "all_promotion_gates_pass")
+    if development.get(promotion_gate) is not True:
         raise ValueError("Development model was not promoted")
     if development.get("artifact", {}).get("sha256") != candidate["artifact_sha256"]:
         raise ValueError("Development report names a different artifact")
-    if artifact.get("kind") != "mars_unep_positive_augmented_xgboost":
+    if artifact.get("kind") != candidate.get(
+        "artifact_kind", "mars_unep_positive_augmented_xgboost"
+    ):
         raise ValueError("Unexpected candidate artifact kind")
     if float(artifact.get("candidate_blend")) != float(candidate["candidate_logit_blend"]):
         raise ValueError("Candidate blend differs from frozen replay")
@@ -55,6 +58,25 @@ def validate_candidate(
         candidate["operational_scene_threshold"]
     ):
         raise ValueError("Candidate threshold differs from frozen replay")
+
+
+def assert_paper_comparator(
+    metrics: dict[str, Any], benchmark: dict[str, Any], selected_rows: int, view: str
+) -> None:
+    """Require the live baseline to be the exact audited paper-v3 comparator."""
+    expected = benchmark["reconstruction"][view]
+    baseline = metrics["baseline"]
+    observed = {
+        "average_precision": baseline["average_precision"],
+        "recall": baseline["fixed_operating_point"]["recall"],
+        "false_positive_rate": baseline["fixed_operating_point"]["false_positive_rate"],
+        "pixel_iou": baseline["pixels"]["intersection_over_union"],
+    }
+    for key, value in observed.items():
+        if not np.isclose(value, float(expected[key]), rtol=0.0, atol=1e-15):
+            raise ValueError(f"{view} live comparator differs from audited paper receipt: {key}")
+    if selected_rows != int(expected["rows"]):
+        raise ValueError(f"{view} row count differs from audited paper receipt")
 
 
 def write_json(path: Path, value: dict[str, Any]) -> None:
@@ -66,7 +88,7 @@ def write_json(path: Path, value: dict[str, Any]) -> None:
 
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
     lines = [
-        "# UNEP-augmented successor: exact MARS-S2L paper benchmark",
+        "# Joint external-data successor: exact MARS-S2L paper benchmark",
         "",
         "Transparent post-test replay, not an untouched confirmation. Candidate scores were computed from the label-free cache before comparator outcomes were opened; dense masks remain the unchanged promoted v3 branch.",
         "",
@@ -100,6 +122,8 @@ def main() -> int:
     args = parser.parse_args()
     protocol_path = (ROOT / args.protocol).resolve()
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    if "evaluator" in protocol and sha256(Path(__file__).resolve()) != protocol["evaluator"]["sha256"]:
+        raise ValueError("Exact-paper evaluator hash mismatch")
     candidate_contract = protocol["candidate"]
     feature_contract = protocol["paper_caches"]["label_free_features"]
     diagnostic_contract = protocol["paper_caches"]["diagnostic_outcomes"]
@@ -111,6 +135,7 @@ def main() -> int:
         "feature_receipt": (ROOT / feature_contract["receipt"]).resolve(),
         "diagnostic": (ROOT / diagnostic_contract["path"]).resolve(),
         "gate_report": (ROOT / dense_contract["gate_report"]).resolve(),
+        "benchmark_receipt": (ROOT / protocol["paper_comparator"]["receipt"]).resolve(),
     }
     expected = {
         "artifact": candidate_contract["artifact_sha256"],
@@ -119,7 +144,12 @@ def main() -> int:
         "feature_receipt": feature_contract["receipt_sha256"],
         "diagnostic": diagnostic_contract["sha256"],
         "gate_report": dense_contract["gate_report_sha256"],
+        "benchmark_receipt": protocol["paper_comparator"]["receipt_sha256"],
     }
+    authorization = candidate_contract.get("authorization_report")
+    if authorization is not None:
+        paths["authorization_report"] = (ROOT / authorization).resolve()
+        expected["authorization_report"] = candidate_contract["authorization_report_sha256"]
     for name, digest in expected.items():
         if sha256(paths[name]) != digest:
             raise ValueError(f"Frozen {name} hash mismatch")
@@ -127,6 +157,16 @@ def main() -> int:
     development = json.loads(paths["development_report"].read_text(encoding="utf-8"))
     artifact = joblib.load(paths["artifact"])
     validate_candidate(artifact, development, protocol)
+    if authorization is not None:
+        authorization_report = json.loads(paths["authorization_report"].read_text(encoding="utf-8"))
+        if authorization_report.get(candidate_contract["authorization_gate"]) is not True:
+            raise ValueError("Fresh external safety did not authorize exact-paper replay")
+    benchmark = json.loads(paths["benchmark_receipt"].read_text(encoding="utf-8"))
+    if (
+        benchmark["paper"]["url"] != protocol["paper_comparator"]["official_paper_url"]
+        or benchmark["paper"]["revision"] != protocol["paper_comparator"]["revision"]
+    ):
+        raise ValueError("Paper receipt is not the frozen official v3 comparator")
     gate_report = json.loads(paths["gate_report"].read_text(encoding="utf-8"))
     if gate_report.get("all_selection_and_confirmation_gates_pass") is not True:
         raise ValueError("Dense-mask gate was not promoted")
@@ -197,6 +237,8 @@ def main() -> int:
             triplet(gated_pixels[selected]),
             threshold,
         )
+        benchmark_view = "full" if name == "full" else "test_only_sites"
+        assert_paper_comparator(metrics, benchmark, int(np.count_nonzero(selected)), benchmark_view)
         bootstrap = bootstrap_view(
             labels=labels[selected],
             sites=sites[selected],
@@ -219,6 +261,18 @@ def main() -> int:
             "fixed_fpr_upper_nonpositive": intervals["fixed_false_positive_rate"]["upper"] <= 0.0,
             "pixel_iou_point_higher": metrics["delta"]["pixel_iou"] > 0.0,
             "pixel_iou_lower_positive": intervals["pixel_iou"]["lower"] > 0.0,
+            "candidate_ap_above_published_table": (
+                metrics["candidate"]["average_precision"]
+                > benchmark["reconstruction"]["published"][benchmark_view]["average_precision"]
+            ),
+            "matched_recall_above_published_table": (
+                metrics["candidate"]["matched_fpr_operating_point"]["recall"]
+                > benchmark["reconstruction"]["published"][benchmark_view]["recall"]
+            ),
+            "fixed_fpr_no_worse_than_published_table": (
+                metrics["candidate"]["fixed_operating_point"]["false_positive_rate"]
+                <= benchmark["reconstruction"]["published"][benchmark_view]["false_positive_rate"]
+            ),
         }
         views[name] = {
             "metrics": metrics,
@@ -232,7 +286,7 @@ def main() -> int:
         "scope": protocol["scope"],
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "architecture": {
-            "scene_ranking": "frozen v3 stronger head plus 0.20 UNEP-positive augmented XGBoost",
+            "scene_ranking": protocol["architecture"]["scene_ranking"],
             "scene_threshold": threshold,
             "mask_probability": dense_contract["probability"],
             "mask_gate_score": dense_contract["gate_score"],
@@ -241,6 +295,15 @@ def main() -> int:
         },
         "available_augmented_rows": int(sample_ids.size),
         "missing_rows_fallback_to_v3": int(labels.size - sample_ids.size),
+        "official_comparator": {
+            "paper": benchmark["paper"],
+            "published": benchmark["reconstruction"]["published"],
+            "exact_reconstruction": {
+                "full": benchmark["reconstruction"]["full"],
+                "test_only_sites": benchmark["reconstruction"]["test_only_sites"],
+            },
+            "receipt_sha256": expected["benchmark_receipt"],
+        },
         "views": views,
         "all_exact_paper_gates_pass": passed,
         "decision": (

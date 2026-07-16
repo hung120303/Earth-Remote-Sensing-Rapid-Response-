@@ -2358,3 +2358,13 @@ The candidate also lowered overall raw p95 (0.02231 to 0.01392) and p95
 logit-to-threshold margin (-2.84564 to -3.07652). Counting all six unavailable rows
 as errors for both heads gives symmetric worst-case full-cohort FPR bounds of
 2.67380% current versus 2.13904% candidate. This authorizes exact paper replay.
+### 2026-07-16: Fixed joint exact-paper replay frozen
+
+After fresh-safety authorization, the exact-paper replay was frozen against the
+official [MARS-S2L v3 paper](https://arxiv.org/html/2511.21777v3) and the hash-bound
+benchmark receipt. The evaluator must assert that its live baseline exactly matches
+the reconstructed 43,529-row full and 15,655-row test-only-site AP/recall/FPR/IoU
+values, which are slightly stronger than the rounded published tables. Candidate
+scores are computed before outcome-cache loading. Both views require strictly
+positive paired site-bootstrap lower bounds for AP, matched-FPR recall, and IoU,
+plus a nonpositive upper bound for fixed-FPR delta. No partial pass is promotable.
