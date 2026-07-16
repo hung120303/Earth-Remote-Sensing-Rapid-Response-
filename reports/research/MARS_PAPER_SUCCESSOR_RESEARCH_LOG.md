@@ -1737,3 +1737,14 @@ pass preserves all ten crossfit members; a rejection never opens the paper
 cache. Frozen trainer SHA-256 is
 `26e83caef2915eea73bda006ac7af87e65e6a6683a0559c58fc34ed88b1a765f`;
 its forward and missing-mask loss tests pass.
+
+The frozen spatial Prithvi head is rejected before paper scoring. At the
+minimum 0.05 blend it changes pooled AP -0.000654 and matched-FPR recall
+-0.002886; the paired-site AP interval is [-0.001489, +0.000106]. Landsat AP
+changes +0.000034 but Sentinel-2 changes -0.000932. Fold AP deltas are
++0.000155 / +0.000044 / -0.001883 / +0.000319 / +0.000385; fold 4 loses two
+matched-FPR positives (-0.002611). The multi-depth tokens optimize stably but
+do not add a sufficiently general rank signal beyond current, especially on
+fold-2 Sentinel-2. No paper feature was extracted. Compact result JSON
+SHA-256 is
+`77507f57de075a7b47adf36831d93830900db51062484ee48765094dea1a3f2f`.
