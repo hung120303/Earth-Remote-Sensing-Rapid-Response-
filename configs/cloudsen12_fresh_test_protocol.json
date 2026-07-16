@@ -4,7 +4,7 @@
   "scope": "fresh external-negative safety test for the fixed joint scene head",
   "builder": {
     "path": "tools/build_cloudsen12_fresh_test_cohort.py",
-    "sha256": "81f794cb827ae9f8446e4abcf04ec0fe88b987ea3f4704d4cb310d6ac72a490c"
+    "sha256": "b34de071eac0f2dbfe5284f492b851df32a723ca61ec85439bb0fb78fae79f06"
   },
   "sources": {
     "metadata_path": ".research/source_audit_20260715/cloudsen12_clear_images.csv",
@@ -22,8 +22,10 @@
   "truth_contract": {
     "published_split": "test",
     "label_state": "NO_PLUME",
-    "clear_pixels": 40000,
-    "nonclear_pixels": 0,
+    "clear_pixels": 14835412,
+    "nonclear_pixels": 124588,
+    "all_clear_rows": 332,
+    "nonclear_rows": 42,
     "producer_grid": "200x200 at 10 m with published CRS/affine",
     "product_substitution": false
   },
@@ -40,6 +42,7 @@
     "All 374 published test identities are materialized before exact-product resolution.",
     "No unavailable product is substituted by another date, level, or processing tier.",
     "The candidate artifact, operational threshold, feature schema, and all metrics are frozen before pixel access.",
-    "The exact MARS paper cache remains unopened during CloudSEN test acquisition/evaluation."
+    "The exact MARS paper cache remains unopened during CloudSEN test acquisition/evaluation.",
+    "The 42 partially or fully non-clear no-plume rows remain in the cohort as hard negatives; no row is removed after this metadata audit."
   ]
 }

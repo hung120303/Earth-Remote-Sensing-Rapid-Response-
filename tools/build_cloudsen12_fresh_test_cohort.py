@@ -45,7 +45,9 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- Unique ROI groups: **{summary['groups']:,}**.",
         f"- Countries: **{summary['countries']:,}**.",
         f"- Rows with missing published wind: **{summary['missing_wind_rows']:,}**.",
-        "- Every row is published no-plume/all-clear truth on its producer 200x200 grid.",
+        "- Every row is published no-plume truth on its producer 200x200 grid.",
+        f"- All-clear scenes: **{summary['all_clear_rows']:,}**; scenes with published non-clear pixels: **{summary['nonclear_rows']:,}**.",
+        f"- Published pixel composition: **{summary['clear_pixels']:,}** clear and **{summary['nonclear_pixels']:,}** non-clear.",
         "- Exact-product resolution and imagery acquisition occur only after this cohort receipt is committed.",
         "",
     ]
@@ -95,10 +97,18 @@ def main() -> int:
     selected = joined[joined["split_name"] == "test"].copy()
     if len(selected) != int(protocol["expected_rows"]):
         raise ValueError("Published CloudSEN test row count changed")
+    clear_pixels = int(selected["cloudmask_0.0"].sum())
+    nonclear_pixels = int(selected["cloudmask_1.0"].sum())
+    all_clear_rows = int((selected["cloudmask_0.0"] == 40000.0).sum())
+    nonclear_rows = int((selected["cloudmask_1.0"] > 0.0).sum())
+    truth = protocol["truth_contract"]
     if (
         selected["isplume"].astype(bool).any()
-        or not (selected["cloudmask_0.0"] == 40000.0).all()
-        or not (selected["cloudmask_1.0"] == 0.0).all()
+        or not ((selected["cloudmask_0.0"] + selected["cloudmask_1.0"]) == 40000.0).all()
+        or clear_pixels != int(truth["clear_pixels"])
+        or nonclear_pixels != int(truth["nonclear_pixels"])
+        or all_clear_rows != int(truth["all_clear_rows"])
+        or nonclear_rows != int(truth["nonclear_rows"])
         or not selected["satellite"].astype(str).str.startswith("S2").all()
     ):
         raise ValueError("CloudSEN published test label/sensor contract changed")
@@ -120,7 +130,7 @@ def main() -> int:
                 "sample_id": str(row["id_loc_image"]),
                 "group_id": f"cloudsen12:{row['roi_id']}",
                 "research_role": "fresh_external_test",
-                "source_name": "CloudSEN12+ published clear-scene test",
+            "source_name": "CloudSEN12+ published no-plume test",
                 "sensor_family": "Sentinel-2",
                 "target_product": str(row["tile"]),
                 "background_product": str(row["background_image_tile"]),
@@ -158,7 +168,10 @@ def main() -> int:
             "countries": int(selected["country"].nunique()),
             "missing_wind_rows": int(missing_wind.sum()),
             "plume_rows": 0,
-            "nonclear_rows": 0,
+            "all_clear_rows": all_clear_rows,
+            "nonclear_rows": nonclear_rows,
+            "clear_pixels": clear_pixels,
+            "nonclear_pixels": nonclear_pixels,
         },
         "output": {
             "path": args.output,

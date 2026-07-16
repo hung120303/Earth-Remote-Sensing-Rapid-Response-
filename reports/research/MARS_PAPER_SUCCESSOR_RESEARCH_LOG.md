@@ -2273,3 +2273,12 @@ producer-grid requirements, exact-product/no-substitution rule, fixed artifact
 hash, operational threshold, and safety metrics. Missing exact products must be
 reported and receive an adversarial candidate-false-positive bound. The exact
 MARS paper cache remains outside this workflow.
+### 2026-07-15: Fresh CloudSEN test metadata contract correction
+
+The first post-freeze cohort materialization stopped before imagery access because the
+published test split is not uniformly all-clear. All 374 identities are no-plume
+Sentinel-2 scenes, but 42 contain published non-clear pixels (including one fully
+non-clear scene): 14,835,412 clear and 124,588 non-clear pixels in total. The frozen
+protocol was corrected to assert this exact composition. No identity was excluded,
+the fixed model was not changed, and the exact MARS paper cache remained unopened.
+This makes the safety test harder and more representative of operational negatives.
