@@ -2085,3 +2085,9 @@ the resolver output remains byte-identical at
 An overwrite smoke test confirms exact equality among producer, manifest, and
 written-raster transforms for the audited row. No feature or outcome was
 computed from the offset crops.
+
+The full 512-row geometry diagnostic shows this was systematic: only 18
+rounded-center grids exactly matched the producer affine. Another 413 differed
+by one pixel on both axes, 46 differed on the vertical axis, and 35 differed
+on the horizontal axis. Preserving the producer affine is therefore a material
+architecture/data-contract correction rather than a cosmetic one-row fix.
