@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_cloudsen12_spatial_feature_extraction",
+  "scope": "model-aligned scene features for nonsealed source-disjoint CloudSEN12+ clear negatives",
+  "source_receipt": {
+    "path": "reports/acquisition/cloudsen12_spatial_pilot_model_manifest.json",
+    "sha256": "0f3748b2fac86b6f5420b923da86d50f3d4c472dd93d4cd99715c61dac15043f"
+  },
+  "extractor": {
+    "path": "tools/extract_cloudsen12_spatial_scene_features.py",
+    "sha256": "24037476e84b71c020b57fa5ee3294443272bb6e5a7b82f3fccee63f6eb8632b",
+    "feature_schema": "108 frozen released/residual probability and operational-input scene features"
+  },
+  "model_contract": {
+    "released_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+      "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"
+    },
+    "residual_artifact": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/mars_paper_residual_fold0_seed606.pt",
+      "sha256": "b94880d858e1e7791591eeb5f7d0da9be84b99a324e980437ebe83cfae6c7d49"
+    },
+    "trust_region_strength": 0.5,
+    "fitting_during_extraction": false
+  },
+  "manifests": {
+    "auxiliary_training": {
+      "path": ".research/cloudsen12_spatial_pilot/model_auxiliary_training.jsonl",
+      "sha256": "f21bbdfe428ff71bdcdda7720aa9ea24ca3903b8daabe3ab7b9ad512cc37f583",
+      "rows": 367,
+      "groups": 362,
+      "feature_output": "outputs/cloudsen12_spatial_scene_features_auxiliary.npz"
+    },
+    "development": {
+      "path": ".research/cloudsen12_spatial_pilot/model_development.jsonl",
+      "sha256": "35efc8c00376770346799bdf2168bc785e491994ccb8c27719393c5a81fe03b3",
+      "rows": 125,
+      "groups": 124,
+      "feature_output": "outputs/cloudsen12_spatial_scene_features_development.npz"
+    }
+  },
+  "invariants": [
+    "The extractor verifies both manifest and model hashes before inference.",
+    "Every row is Sentinel-2, NO_PLUME, and belongs to exactly one nonsealed role.",
+    "Auxiliary and development feature caches remain physically separate.",
+    "No fitted model, threshold, candidate weight, or blend is selected during extraction.",
+    "No CloudSEN12+ published test row or MARS paper-test image, feature, score, or label is accessed."
+  ]
+}
