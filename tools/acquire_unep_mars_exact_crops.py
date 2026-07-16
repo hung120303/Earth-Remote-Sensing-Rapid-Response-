@@ -462,10 +462,17 @@ def main() -> None:
     raster_bytes = sum(
         asset["bytes"] for manifest in manifests for asset in manifest["assets"].values()
     )
+    negative_only = bool(manifests) and all(
+        item.get("label_state") == "NO_PLUME" for item in manifests
+    )
     report = {
         "schema_version": 1,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "status": "nonsealed crops acquired; Sentinel-2 cloud gate pending",
+        "status": (
+            "nonsealed clear-scene crops acquired; published zero cloud masks not yet materialized"
+            if negative_only
+            else "nonsealed crops acquired; Sentinel-2 cloud gate pending"
+        ),
         "inputs": {
             "cohort": {"path": args.cohort, "sha256": sha256(cohort_path)},
             "assets": {"path": args.assets, "sha256": sha256(assets_path)},
