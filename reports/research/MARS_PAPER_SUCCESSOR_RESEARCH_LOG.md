@@ -2672,3 +2672,11 @@ test-only point AP 0.46550. A hash-bound builder is frozen to reproduce exactly 
 OOF vector from the 44,363-row Prithvi feature cache, align it by sample identity,
 and assert its original AP/recall deltas within 1e-10. No model or blend search is
 reopened, and the paper cache remains out of scope.
+
+### 2026-07-16: Adaptive Prithvi development scores reproduced
+
+All five OOF probes completed and reproduced the frozen AP/recall deltas exactly:
++0.00434163/+0.00131199 versus current. The ignored 2,082,539-byte score cache has
+SHA-256 `672ab43155280de950ac529f197b5084bb0b0ab76f17361b60ac99fc65ba1208`
+and is aligned by 44,363 unique sample identities. It is authorized only as an input
+to a separately frozen representation ensemble.
