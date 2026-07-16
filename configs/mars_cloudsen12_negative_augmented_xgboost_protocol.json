@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_source_extraction_or_model_fitting",
+  "scope": "scene-only CloudSEN12+ clear-background augmentation under the exact MARS-S2L v3 benchmark contract",
+  "scientific_hypothesis": "A low-capacity scene head trained with globally diverse, source-disjoint CloudSEN12+ clear scenes will suppress background artifacts at unseen emitter sites while preserving plume recall better than positive-only augmentation.",
+  "source_revisions": {
+    "mars_s2l": {
+      "repository": "UNEP-IMEO/MARS-S2L",
+      "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+      "validated_images_all_sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2",
+      "current_vs_frozen_paper_metadata": "byte_identical"
+    },
+    "cloudsen12_clear": {
+      "metadata_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L/resolve/c26b1d7e31a0c5241fa37c9140802622c215eb32/cloudsen12_clear_images.csv",
+      "metadata_sha256": "d605cc19070d0f4c403ebdaa92caa193a78521580dc7407b86b26ee05cfad3f1",
+      "stats_url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-S2L/resolve/c26b1d7e31a0c5241fa37c9140802622c215eb32/cloudsen12_data/cloudsen12_stats_dataset.csv",
+      "stats_sha256": "15ca0c7d2097d9956b0ca3ea6ad4b335910c8031e46b434c088276284991e6b9",
+      "label_contract": "Every row is explicitly isplume=false; the MARS-S2L paper uses this cohort as a global clear-scene false-positive benchmark."
+    },
+    "methaneset_audit": {
+      "repository": "tacofoundation/methaneset",
+      "revision": "f7dc01e166d7a2f4ae659a7046b2c5a3c49ab7be",
+      "s2_pretraining_level0_sha256": "65a667ad22265f726f84131f90e6dbf62d8fad5bb765c50943dbddc9adc42274",
+      "decision": "Do not treat as new labels: every unique target product is already present in MARS-S2L."
+    }
+  },
+  "partitions": {
+    "cloudsen12_training": "published split_name=train only; 9,805 rows; fitting only",
+    "cloudsen12_development": "published split_name=validation only; 256 rows; negative-domain gate only",
+    "cloudsen12_sealed_external": "published split_name=test only; 374 rows; inaccessible until every original-development gate passes",
+    "mars_selection": "cross-fitted folds 2, 3, and 4; each held fold is excluded from fitting",
+    "mars_confirmation": "fixed-family cross-fitted folds 0 and 1; each held fold is excluded from fitting",
+    "final_refit": "all five authorized MARS development folds plus CloudSEN12 training, only after all gates pass"
+  },
+  "feature_contract": {
+    "allowed": [
+      "wind_u",
+      "wind_v",
+      "MBMP_mean",
+      "MBMP_std",
+      "MBMP_min",
+      "MBMP_max",
+      "B02_mean",
+      "B02_std",
+      "B02_min",
+      "B02_max",
+      "B03_mean",
+      "B03_std",
+      "B03_min",
+      "B03_max",
+      "B04_mean",
+      "B04_std",
+      "B04_min",
+      "B04_max",
+      "B08_mean",
+      "B08_std",
+      "B08_min",
+      "B08_max",
+      "B11_mean",
+      "B11_std",
+      "B11_min",
+      "B11_max",
+      "B12_mean",
+      "B12_std",
+      "B12_min",
+      "B12_max",
+      "cloudmask_0.0",
+      "cloudmask_1.0"
+    ],
+    "prohibited": [
+      "country",
+      "case_study",
+      "location_name",
+      "coordinates",
+      "sector",
+      "offshore",
+      "flux",
+      "plume_geometry",
+      "notification_state",
+      "split_identity",
+      "paper_test_membership"
+    ],
+    "inference_availability": "All allowed fields are deterministic summaries of the released 16-channel operational input or its clear/valid mask."
+  },
+  "base_architecture": {
+    "scene_score": "frozen v3 stronger OOF ExtraTrees head",
+    "scene_artifact_sha256": "9e6fa18b83ef065ac24c94a06a510057a0c382cecf1efa3b54e818566a45c9ac",
+    "dense_mask": "unchanged promoted scene-gated sensor mask",
+    "dense_mask_change": false
+  },
+  "candidate_family": {
+    "model": "XGBoost binary logistic",
+    "specifications": [
+      {
+        "name": "depth2_lr003",
+        "n_estimators": 500,
+        "max_depth": 2,
+        "learning_rate": 0.03,
+        "min_child_weight": 20.0
+      },
+      {
+        "name": "depth3_lr003",
+        "n_estimators": 700,
+        "max_depth": 3,
+        "learning_rate": 0.03,
+        "min_child_weight": 20.0
+      }
+    ],
+    "fixed_parameters": {
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "reg_alpha": 0.1,
+      "reg_lambda": 20.0,
+      "tree_method": "hist",
+      "n_jobs": 8,
+      "random_state": 20260716
+    },
+    "cloudsen12_negative_weight_multipliers": [0.25, 1.0, 4.0],
+    "candidate_logit_blends": [0.025, 0.05, 0.1, 0.2, 0.3]
+  },
+  "promotion_gates": {
+    "mars_selection": {
+      "pooled_average_precision_delta_vs_current_min": 0.002,
+      "pooled_matched_fpr_recall_delta_strictly_positive": true,
+      "each_fold_average_precision_delta_strictly_positive": true,
+      "each_fold_matched_fpr_recall_delta_nonnegative": true,
+      "sensor_average_precision_delta_min": -0.002,
+      "paired_group_bootstrap_ap_lower_95ci_strictly_positive": true
+    },
+    "mars_confirmation_each_fold": {
+      "average_precision_delta_vs_current_strictly_positive": true,
+      "matched_fpr_recall_delta_vs_current_nonnegative": true,
+      "sensor_average_precision_delta_min": -0.002,
+      "paired_group_bootstrap_ap_lower_95ci_strictly_positive": true
+    },
+    "cloudsen12_development": {
+      "rows_all_explicit_negative": true,
+      "candidate_head_score_p95_no_higher_than_mars_held_negative_score_p95": true,
+      "candidate_head_score_p99_below": 0.5
+    }
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20260716,
+    "confidence": 0.95,
+    "unit": "physical source group"
+  },
+  "invariants": [
+    "CloudSEN12 test rows are never loaded during fitting, model selection, threshold selection, or development confirmation.",
+    "No MARS paper-test cache, label, metric, or imagery is loaded before a candidate passes every development gate.",
+    "No location, country, offshore, sector, plume geometry, flux, or split field is an input feature.",
+    "The exact MARS v3 comparator and promoted dense-mask branch remain unchanged.",
+    "Bulk source tables, rasters, features, and model artifacts remain ignored by Git; only compact protocols, receipts, and reports are committed."
+  ]
+}
