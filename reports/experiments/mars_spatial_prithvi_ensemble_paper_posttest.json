@@ -1,0 +1,308 @@
+{
+  "all_exact_paper_gates_pass": false,
+  "architecture": {
+    "calibration": "development-negative empirical-CDF dominance via constant logit offset",
+    "logit_offset": -0.5044762783678565,
+    "mask_gate_cutoff": 0.75,
+    "mask_gate_score": "unchanged frozen v3 stronger scene score",
+    "mask_probability": "released MARS-S2L probability with frozen sensor thresholds",
+    "operational_scene_threshold": 0.28187603894788654,
+    "scene_ranking": "0.75 adaptive Prithvi plus 0.25 site-relative spatial logit ensemble"
+  },
+  "audit_status": {
+    "exact_comparator": true,
+    "independent_external_confirmation": false,
+    "paper_labels_used_for_architecture_or_calibration": false,
+    "phase": "transparent post-test architecture evaluation"
+  },
+  "available_rows": 43524,
+  "comparator_identity": {
+    "full": {
+      "average_precision_exact": true,
+      "false_positive_rate_exact": true,
+      "pixel_iou_exact": true,
+      "positives_exact": true,
+      "recall_exact": true,
+      "rows_exact": true,
+      "sites_exact": true
+    },
+    "test_only_sites": {
+      "average_precision_exact": true,
+      "false_positive_rate_exact": true,
+      "pixel_iou_exact": true,
+      "positives_exact": true,
+      "recall_exact": true,
+      "rows_exact": true,
+      "sites_exact": true
+    }
+  },
+  "decision": "The frozen ensemble does not beat the exact MARS-S2L v3 comparator on every required gate.",
+  "generated_at_utc": "2026-07-16T20:01:26.882615+00:00",
+  "label_free_score_cache": {
+    "bytes": 2339911,
+    "labels_accessed_during_score_construction": false,
+    "path": "outputs/mars_spatial_prithvi_ensemble_paper_scores.npz",
+    "sha256": "b58895b44091e02e0161842abbe2becf2da4c2060952b804320755d0a30e92ed",
+    "tracked": false
+  },
+  "missing_rows_adversarial_policy": 5,
+  "paper": {
+    "revision": "v3",
+    "revision_date": "2026-04-24",
+    "url": "https://arxiv.org/html/2511.21777v3"
+  },
+  "provenance": {
+    "calibration_artifact_sha256": "ce33bae550f20ad53076338e8412aef97d26a4b1c6c9c6e201086ccd208a1c37",
+    "calibration_development_sha256": "334feb1937edab7b6949c2bcb89ad68508f0c35a274081defe17da3c345dd1b6",
+    "device": "NVIDIA GeForce RTX 5070",
+    "diagnostic_sha256": "1624fddc0222f8ffc5137f557c7fc3e465d53b335c82cc8014711baa35bb94a1",
+    "ensemble_artifact_sha256": "0a3be48f5eda659aaaa7cf91c259acd230f81340677e5a6fc5fab83ba048420b",
+    "ensemble_development_sha256": "6cf8b8da7a63d8a124137def4fdc408f02f84a9858adfda206614c3cc2213ff1",
+    "fresh_safety_sha256": "ef401d27120b7986af2bdc8dc71734d53c64db4d0466880090face82e09dbf8a",
+    "git_commit": "f287133a7a7f404ab33a0a4e4f29f185288b7f8a",
+    "label_free_receipt_sha256": "8f82262d60e9a47a40f2c7ded63042544c87bdfe00c74ed9c34cd5db462b168f",
+    "label_free_scores_sha256": "8a35e60e7c396e58639f940239020adb36def885124841e0b20901e10db52f33",
+    "mask_gate_development_sha256": "c1e5a1497abebba80d42898a8165b30fd255ff252478a0ee1fd90fd32456a51c",
+    "paper_benchmark_sha256": "ebb39ab22720988b2657d0e4d6b9a5669c24fbca1083575797622a7f1e788eb0",
+    "prithvi_development_sha256": "3a0478d9abdb94a76815744cefcf7ac181765c20e2969a7a40f310f272a03a8b",
+    "prithvi_receipt_sha256": "1b76927c30b3614c0c08c4139f25fb4e66f92b517ac4a5fc76d3e4cc06cb5f9f",
+    "prithvi_scores_sha256": "37aa4eb2e14bd7265df95a0cf55fc805e2a6e1ee8a2af7aa3e84a23165fe0059",
+    "protocol_sha256": "8ace6a9649b480910638efbae11830fe96a8df05359cd9d2c2eee4434dd24f81",
+    "script_sha256": "a998eab2679474665dd538e269b593d8855a99c1b4cdf37bc86e99bf0872bad5",
+    "spatial_artifact_sha256": "9401678aa4f38fb3b54a914318dc5c2a553b39fa8b309d1a127b9d21abbfc496",
+    "spatial_development_sha256": "c2b6695dbe24f0b5bc097d89c6fa6332c2af93441079cd55bec99e77aeeb820f",
+    "spatial_images_sha256": "7cce444a552c6c873c05ae3a972f62a8081fde89d31ac63d94303dbfac3b1b94",
+    "spatial_metadata_sha256": "b2b58eabf4478b46912d3c3437c1ee0b039841ee283bd7fe0164775b9d448022"
+  },
+  "schema_version": 1,
+  "scope": "transparent post-test calibrated spatial-Prithvi ensemble replay on exact MARS-S2L v3 comparator",
+  "site_template_count": 1289,
+  "views": {
+    "full": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": 0.016224205796476175,
+            "mean": 0.034134449275787536,
+            "upper": 0.049490944288632384
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.046696871289031536,
+            "mean": -0.04407403637425316,
+            "upper": -0.041491093891859544
+          },
+          "fixed_recall": {
+            "lower": -0.08610949768184786,
+            "mean": -0.06398243566999373,
+            "upper": -0.045161138591327046
+          },
+          "matched_fpr_recall": {
+            "lower": 0.01997916481581928,
+            "mean": 0.03307011646168192,
+            "upper": 0.04811002922615555
+          },
+          "pixel_iou": {
+            "lower": 0.034660419878325445,
+            "mean": 0.055599562803443,
+            "upper": 0.07729757137373663
+          }
+        },
+        "replicates": 10000,
+        "sites": 1289
+      },
+      "checks": {
+        "ap_point_beats_exact_v3": true,
+        "ap_point_beats_published_table": true,
+        "ap_site_bootstrap_lower_positive": true,
+        "fixed_fpr_site_bootstrap_upper_nonpositive": true,
+        "matched_false_positive_rate_no_worse": true,
+        "matched_fpr_recall_point_higher": true,
+        "matched_fpr_recall_site_bootstrap_lower_positive": true,
+        "pixel_iou_point_beats_exact_v3": true,
+        "pixel_iou_point_beats_published_table": true,
+        "pixel_iou_site_bootstrap_lower_positive": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.6410196024104218,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "fn": 378,
+            "fp": 2949,
+            "precision": 0.3273266423357664,
+            "recall": 0.7915057915057915,
+            "tn": 38767,
+            "tp": 1435
+          },
+          "pixels": {
+            "fn": 1073087,
+            "fp": 2668518,
+            "intersection_over_union": 0.3243651485849355,
+            "tp": 1796305
+          }
+        },
+        "candidate": {
+          "average_precision": 0.6761016429002372,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.02663246715888388,
+            "fn": 493,
+            "fp": 1111,
+            "precision": 0.5429864253393665,
+            "recall": 0.7280750137892995,
+            "threshold": 0.28187603894788654,
+            "tn": 40605,
+            "tp": 1320
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "precision": 0.3359603692861968,
+            "recall": 0.8229453943739659,
+            "target_fpr": 0.07069230031642536,
+            "threshold": 0.0547242856763529
+          },
+          "pixels": {
+            "fn": 1431545,
+            "fp": 913692,
+            "intersection_over_union": 0.37996355770303547,
+            "tp": 1437181
+          }
+        },
+        "delta": {
+          "average_precision": 0.03508204048981545,
+          "fixed_false_positive_rate": -0.04405983315754147,
+          "fixed_recall": -0.06343077771649197,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.03143960286817438,
+          "pixel_iou": 0.05559840911809999
+        },
+        "positive": 1813,
+        "rows": 43529
+      },
+      "passed": true,
+      "published_table": {
+        "average_precision": 0.6408,
+        "false_positive_rate": 0.0713,
+        "negative": 41716,
+        "pixel_iou": 0.3224,
+        "positive": 1813,
+        "precision": 0.3253,
+        "recall": 0.7915,
+        "rows": 43529,
+        "sites": 1289
+      }
+    },
+    "test_only_sites": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": -0.023301067638944094,
+            "mean": 0.01545168102273106,
+            "upper": 0.052032207945082946
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.0532130916358106,
+            "mean": -0.048801419527654336,
+            "upper": -0.04439129328172911
+          },
+          "fixed_recall": {
+            "lower": -0.13705583756345174,
+            "mean": -0.083551397411898,
+            "upper": -0.04040200391006849
+          },
+          "matched_fpr_recall": {
+            "lower": -0.008066155258326865,
+            "mean": 0.02117951500496314,
+            "upper": 0.0511186646819634
+          },
+          "pixel_iou": {
+            "lower": 0.08577165271019419,
+            "mean": 0.12048492270131715,
+            "upper": 0.15542624671501742
+          }
+        },
+        "replicates": 10000,
+        "sites": 697
+      },
+      "checks": {
+        "ap_point_beats_exact_v3": true,
+        "ap_point_beats_published_table": true,
+        "ap_site_bootstrap_lower_positive": false,
+        "fixed_fpr_site_bootstrap_upper_nonpositive": true,
+        "matched_false_positive_rate_no_worse": true,
+        "matched_fpr_recall_point_higher": true,
+        "matched_fpr_recall_site_bootstrap_lower_positive": false,
+        "pixel_iou_point_beats_exact_v3": true,
+        "pixel_iou_site_bootstrap_lower_positive": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.45027380014908475,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "fn": 51,
+            "fp": 1165,
+            "precision": 0.13124533929903057,
+            "recall": 0.775330396475771,
+            "tn": 14263,
+            "tp": 176
+          },
+          "pixels": {
+            "fn": 140494,
+            "fp": 875886,
+            "intersection_over_union": 0.17156194293902416,
+            "tp": 210483
+          }
+        },
+        "candidate": {
+          "average_precision": 0.46702729261517734,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.026704692766398756,
+            "fn": 70,
+            "fp": 412,
+            "precision": 0.2759226713532513,
+            "recall": 0.6916299559471366,
+            "threshold": 0.28187603894788654,
+            "tn": 15016,
+            "tp": 157
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "precision": 0.13447251114413075,
+            "recall": 0.7973568281938326,
+            "target_fpr": 0.07551205600207415,
+            "threshold": 0.04623719983558598
+          },
+          "pixels": {
+            "fn": 185139,
+            "fp": 217508,
+            "intersection_over_union": 0.2924622462140781,
+            "tp": 166435
+          }
+        },
+        "delta": {
+          "average_precision": 0.01675349246609259,
+          "fixed_false_positive_rate": -0.0488073632356754,
+          "fixed_recall": -0.08370044052863435,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.022026431718061623,
+          "pixel_iou": 0.12090030327505397
+        },
+        "positive": 227,
+        "rows": 15655
+      },
+      "passed": false,
+      "published_table": {
+        "average_precision": 0.4496,
+        "false_positive_rate": 0.0763,
+        "negative": 15428,
+        "positive": 227,
+        "precision": 0.1301,
+        "recall": 0.7753,
+        "rows": 15655,
+        "sites": 697
+      }
+    }
+  }
+}

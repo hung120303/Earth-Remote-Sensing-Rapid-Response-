@@ -2872,3 +2872,19 @@ the adversarial missing policy. The dense mask is the independently validated
 released-probability gate. Both views require positive point and 10,000-replicate
 paired-site lower bounds for AP, matched-FPR recall, and IoU, plus no-worse fixed
 FPR. Failure on any gate resumes architecture research.
+
+### 2026-07-16: Calibrated spatial-Prithvi ensemble rejected on exact v3 test-only uncertainty
+
+The evaluator reproduced every exact comparator identity field and built the
+2,339,911-byte label-free ensemble cache (SHA-256
+`b58895b44091e02e0161842abbe2becf2da4c2060952b804320755d0a30e92ed`)
+before labels opened. The full view passed decisively: AP 0.676102 versus 0.641020
+(delta +0.035082, paired-site interval [+0.016224,+0.049491]); matched-FPR recall
+delta +0.031440 [+0.019979,+0.048110]; IoU 0.379964 versus 0.324365 (delta
++0.055598 [+0.034660,+0.077298]). Test-only point metrics improved—AP 0.467027
+versus 0.450274, matched-FPR recall +0.022026, IoU 0.292462 versus 0.171562—but
+AP and matched-recall intervals crossed zero ([-0.023301,+0.052032] and
+[-0.008066,+0.051119]). The test-only view therefore failed. This architecture is
+not the final successor, and no claim of unequivocal superiority is permitted.
+The next architecture must create a materially stronger unseen-site ranking signal,
+not another calibration or blend of these highly correlated component scores.
