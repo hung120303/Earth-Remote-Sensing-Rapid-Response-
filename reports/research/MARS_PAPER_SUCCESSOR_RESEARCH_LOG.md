@@ -1672,3 +1672,15 @@ crossfold members, avoiding an all-data refit that previously harmed new-site
 transfer. Frozen script SHA-256 is
 `142b86e7d27fe9a78fabe347381cf1bc1b7e694999900f5c00b6169d4af52a41`;
 the environment-risk penalty test passes.
+
+The frozen two-seed V-REx sweep is rejected before paper scoring. Its selected
+candidate is beta=0.5 with a 0.05 blend around current. Development AP changes
+only +0.000077 and its paired-site interval is [-0.000297, +0.000429];
+matched-FPR recall changes -0.000787. Folds 2 and 4 each lose one positive at
+the operating point, so the pooled recall, all-fold recall, bootstrap, and
+per-seed stability gates fail. The representation does improve substantially
+over the original primary model (+0.029646 AP), but it adds essentially no
+independent signal beyond the current ensemble. This closes environment-risk
+variance regularization of the existing nine-channel spatial CNN; the paper
+cache was not loaded. Compact result JSON SHA-256 is
+`008df042388e601740f3c24088efda9356da38dea5eb542b8d7ce52409230d37`.
