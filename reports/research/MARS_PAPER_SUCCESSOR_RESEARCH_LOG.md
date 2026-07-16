@@ -2157,3 +2157,15 @@ with 206 zero-filled components: 99 auxiliary and four development rows, in
 every case both `u` and `v`. Their final hashes are the ones reported above;
 they supersede the pre-diagnostic manifests that contained nonstandard JSON
 `NaN` values. No feature cache existed from the failed pass.
+
+The recommitted protocol then completed model-aligned extraction on the RTX
+5070. The physically separate auxiliary cache contains 367 unique negative
+rows by 108 finite features across 362 groups (SHA-256
+`9d1f5116f10088a953aea66233e5896ef06be8252f3565f5b4b1d768d8e2ac0b`);
+the development cache contains 125 unique negative rows across 124 groups
+(SHA-256
+`a7f5c4100ecd2d4172bccd550f6a17736e4008e551f8bce2a935ce3caed6dcb4`).
+Both caches have label sum zero and no non-finite value. Extraction used the
+hash-pinned released checkpoint plus frozen alpha-0.5 residual representation,
+performed no fitting or selection, and accessed neither the MARS paper test nor
+the 374-row published CloudSEN12+ test partition.
