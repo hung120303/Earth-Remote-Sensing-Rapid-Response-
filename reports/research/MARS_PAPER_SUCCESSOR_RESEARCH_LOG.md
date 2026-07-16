@@ -2723,3 +2723,13 @@ The corrected extraction completed all 368 rows with 355 groups. The ignored
 `a1f46a7dd9c4d579ad141122b8997aeb1713f27bd3c9a08a53a9ce8f7e9f08fa`;
 its shapes are exactly 368x9x64x64 spatial and 368x768 Prithvi. No paper cache or
 labels beyond the fixed all-negative contract were accessed.
+
+### 2026-07-16: Spatial-Prithvi fresh safety evaluation frozen
+
+The one-shot evaluator is frozen against both fresh representation caches, all
+component/ensemble artifacts, adaptive source features, the conservative 0.281876
+threshold for both heads, published clear/non-clear strata, and the six-row
+adversarial bound. The adaptive Prithvi source probe may be refit under its already
+selected C/blend and use unlabeled fresh feature moments; no fresh label, calibration,
+or selection enters scoring. The same false-positive-count, raw-p95, logit-margin,
+and symmetric unavailable-row gates used for the prior fresh test are required.
