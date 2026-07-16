@@ -1971,3 +1971,51 @@ reason to post-hoc tune the auxiliary weight or blend on the paper cache. The
 branch is frozen and rejected. The next data path must add contemporaneous,
 source-disjoint negative evidence or a demonstrably invariant ranking signal;
 positive-only augmentation by itself is insufficient.
+
+## CloudSEN12+ source-disjoint negative augmentation
+
+The rejected positive-only branch motivated a primary-source audit for
+explicitly labeled negative backgrounds. The current MARS-S2L repository at
+revision `c26b1d7e31a0c5241fa37c9140802622c215eb32` was checked first. Its
+93,538-row `validated_images_all.csv` is byte-identical to the frozen local
+paper source (SHA-256
+`799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2`),
+so the July repository activity does not provide a new MARS label cohort.
+
+MethaneSET's June 2026 Sentinel-2 pretraining release is genuinely useful as
+a format and pretraining resource: it contains 57,291 explicitly plume-free
+target/reference crops. It is not new label evidence for this benchmark,
+however. Its 19,572 unique target products all occur in the existing MARS-S2L
+table; multiple 2 km facility crops explain the larger row count. MethaneSET
+is therefore not counted as an independent negative confirmation cohort and
+cannot be used to relabel or leak the paper test split.
+
+The MARS paper's CloudSEN12+ false-positive cohort is independent of the 1,315
+emitter-site archive and provides the missing negative domain. UNEP publishes
+10,435 clear-scene metadata rows from 10,150 ROI groups across 181 countries,
+with disjoint ROI identities in the published train/validation/test splits.
+The companion label-free statistics table contains the exact 10,434 scenes
+used in the paper: 9,804 training negatives, 256 validation negatives, and 374
+sealed test negatives; one metadata-only training row lacks statistics. Every
+row is explicitly `isplume=false`.
+
+Before fitting, a protocol froze 32 operationally available features: wind,
+global MBMP moments/range, global moments/range for the six shared spectral
+bands, and clear/non-clear pixel counts. Country, coordinates, ROI, sector,
+offshore state, flux, plume geometry, notification state, and split identity
+are prohibited model inputs. Two small regularized XGBoost specifications,
+three CloudSEN12 negative weights, and five conservative logit blends are
+predeclared. Selection remains on cross-fitted MARS folds 2/3/4, fixed-family
+confirmation remains on folds 0/1, and the CloudSEN12 test partition remains
+sealed until all original-development and 256-row negative-development gates
+pass.
+
+The label-free extractor maps all 44,363 authorized MARS development scenes
+to the common statistic schema and extracts only the 10,060 nonsealed
+CloudSEN12 rows. Ignored caches are
+`mars_cloudsen12_common_stats_development.npz` (SHA-256
+`99ce2c6c39b3d184ef8821290d32a8759291adf1e825a1d1ec421602154a8a4e`)
+and `cloudsen12_common_stats_nonsealed.npz` (SHA-256
+`5f0e70b876d875aa49a88a13745de28656fc8193b6e5e563b2fd9f81cf47dcbc`).
+No paper-test label or CloudSEN12 sealed-test feature is present. This branch
+is now ready for its preregistered development-only model fit.
