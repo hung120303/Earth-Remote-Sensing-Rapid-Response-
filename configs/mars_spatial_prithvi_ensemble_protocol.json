@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_spatial_prithvi_ensemble_selection",
+  "scope": "non-temporal ensemble of two independently development-validated scene representations",
+  "trainer": {
+    "path": "tools/train_mars_spatial_prithvi_ensemble.py",
+    "sha256": "875809cfc144e83a079a67c3b72471982b7aa2236f513690ac129ed639e0c433"
+  },
+  "inputs": {
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "spatial_scores": {"path": "outputs/mars_site_relative_spatial_development_scores.npz", "sha256": "186ab5946790798a4a81274130ba5756ab3e5316b7b42238c2772d36805152a1"},
+    "prithvi_scores": {"path": "outputs/mars_adaptive_prithvi_development_scores.npz", "sha256": "672ab43155280de950ac529f197b5084bb0b0ab76f17361b60ac99fc65ba1208"},
+    "spatial_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_site_relative_spatial_classifier.pt", "sha256": "9401678aa4f38fb3b54a914318dc5c2a553b39fa8b309d1a127b9d21abbfc496"},
+    "prithvi_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_adaptive_prithvi_probe.joblib", "sha256": "a38be1acc8ca425ef5307c0ad2b253274fd36d4c3e6b5ed63ce1bf205f6fb0d5"}
+  },
+  "folds": {"selection": [2, 3, 4], "confirmation": [0, 1], "unit": "physical_location_id"},
+  "search": {
+    "prithvi_weights": [0.0, 0.25, 0.5, 0.75, 1.0],
+    "candidate_count": 5,
+    "formula": "logit ensemble between site-relative spatial and adaptive Prithvi scores",
+    "rank_rule": "worst-fold AP, combined AP, combined recall, worst sensor AP, then weight closest to 0.5"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "selection_seed": 20264400,
+    "confirmation_seed": 20264450,
+    "unit": "physical_location_id"
+  },
+  "gates": {
+    "combined": "AP point and paired site-bootstrap lower bound positive; matched-FPR recall nonnegative",
+    "per_fold_ap_tolerance": 0.001,
+    "per_fold_recall_tolerance": 0.002,
+    "sensor_ap_tolerance": 0.0025,
+    "all_required_in_selection_and_confirmation": true
+  },
+  "base_architecture": {
+    "current_comparator": "frozen v3 stronger OOF ExtraTrees scene score",
+    "spatial_component": "frozen site-relative residual CNN",
+    "prithvi_component": "frozen adaptive Prithvi-EO-2.0 CLS+base probe",
+    "operational_scene_threshold": 0.28187603894788654
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_spatial_prithvi_ensemble.joblib",
+    "json": "reports/experiments/mars_spatial_prithvi_ensemble.json",
+    "markdown": "reports/experiments/MARS_SPATIAL_PRITHVI_ENSEMBLE.md"
+  },
+  "invariants": [
+    "Both input score vectors are OOF by physical-site fold and reproduce frozen component metrics.",
+    "Only five blend weights are searched on folds 2/3/4.",
+    "The fixed winner is confirmed once on folds 0/1.",
+    "Failure writes no artifact and blocks fresh-safety and paper replay."
+  ]
+}

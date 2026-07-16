@@ -2680,3 +2680,13 @@ All five OOF probes completed and reproduced the frozen AP/recall deltas exactly
 SHA-256 `672ab43155280de950ac529f197b5084bb0b0ab76f17361b60ac99fc65ba1208`
 and is aligned by 44,363 unique sample identities. It is authorized only as an input
 to a separately frozen representation ensemble.
+
+### 2026-07-16: Spatial-Prithvi representation ensemble frozen
+
+Two non-temporal components with independent positive development evidence are now
+combined: the site-relative spatial residual CNN and adaptive Prithvi-EO-2.0 probe.
+Their OOF score caches reproduce the original component metrics and align by sample
+identity. Five logit-space Prithvi weights are frozen. Selection uses folds 2/3/4;
+the fixed weight is confirmed once on folds 0/1. Both stages require positive paired-
+site AP lower bounds, nondecreasing matched-FPR recall, per-fold stability, and sensor
+noninferiority. No paper data are loaded during this experiment.
