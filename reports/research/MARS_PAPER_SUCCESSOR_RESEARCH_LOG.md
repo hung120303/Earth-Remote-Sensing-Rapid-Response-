@@ -2624,3 +2624,18 @@ sampling, candidates, seeds, and gates. It now excludes an undefined replicate o
 from that fold's metric distribution, requires every combined replicate to contain
 both classes, reports valid fold-replicate coverage, and requires at least 50%
 coverage in every fold. This analysis rule was frozen before restarting.
+
+### 2026-07-16: Target-mixture transport simulation rejected
+
+V2 selected minimum history 20, top-1, weight 0.10. Across 200 selection
+simulations, median AP delta was +0.011099 but its interval was
+[-0.006482, +0.040466]; all three fold medians were positive and natural-cohort AP/
+recall improved +0.003526/+0.002585. The fixed route did not obtain inferential
+confirmation: across 1,000 fold-0/1 simulations, median AP delta was +0.002545 with
+interval [-0.010218, +0.017912], and fold medians were effectively zero. Natural
+confirmation AP/recall improved +0.002347/+0.002013. Valid fold-metric coverage was
+99.5%-100%, so missing-class handling is not the explanation. No artifact was
+written. Prevalence/history standardization alone cannot make an unconstrained site
+offset reliable. The next temporal mechanism will be one-sided and attention-like:
+only high-confidence large sites may receive a boost, while every other scene remains
+exactly on the validated spatial score.
