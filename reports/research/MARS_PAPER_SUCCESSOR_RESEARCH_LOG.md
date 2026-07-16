@@ -2793,3 +2793,13 @@ versus 357/574), but is not independent evidence. The ignored 454-byte calibrati
 artifact has SHA-256
 `fbb69fc987220cda88e04532f74bf610ab4eaecb2cb9d18594a985851af7387b`.
 This authorizes a post-test fresh replay under the already frozen safety gates.
+
+### 2026-07-16: Tail-calibrated fresh replay frozen
+
+A separate evaluator is checksum-bound to the passing -0.105610-logit artifact and
+all original fresh inputs. It rescales the raw ensemble only after both components
+are reproduced, then applies the exact same 0.281876 thresholds, clear/non-clear
+strata, false-positive counts, p95 comparisons, logit-margin checks, and symmetric
+six-row unavailable bound. No gate has been relaxed. The report must state that the
+cohort was previously inspected and therefore supplies a post-test safety audit,
+not independent external confirmation. The exact paper cache remains out of scope.
