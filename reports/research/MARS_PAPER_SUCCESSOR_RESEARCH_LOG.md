@@ -1781,3 +1781,24 @@ gain misses the frozen +0.003 pilot floor and its paired-site interval is
 adaptation, but not decisively enough to justify ten crossfit runs. The paper
 cache remains unused. Compact result JSON SHA-256 is
 `2c08a97c91923d6522fdef10371170b821cf3839396625baebdc5071e995a226`.
+
+## Geographic neighboring-site prior: frozen protocol
+
+The exact new-site benchmark excludes exact training facilities but not whole
+emission basins. Neither released MARS-S2L nor the current scene/context head
+uses neighboring sites' historical labels. The next deterministic branch
+tests whether this operational information improves unseen-facility ranking
+without using any held-site label.
+
+For each held physical-site fold, source sites receive Jeffreys-smoothed scene
+prevalence from source labels. Each held site receives a haversine k-nearest
+estimate weighted by exp(-distance/scale) and square-root source observation
+count, with one global-prior pseudo-observation. The fixed grid is k=5 / 20 /
+50, scale=100 / 500 / 2,000 km, and current-logit blend 0.05 / 0.10 / 0.20 /
+0.30 / 0.40. Promotion retains the +0.002 pooled AP, positive recall,
+all-fold AP/recall, sensor, and paired-site gates. A pass would store only the
+selected deterministic specification and use all pre-2024 development sites
+as the historical source for a label-free paper scoring step. Frozen script
+SHA-256 is
+`9a689b20f6564e45a52c91c0d6962deb7db68e20b187ed56f772cfe366282bb5`;
+the distance and held-label exclusion tests pass.
