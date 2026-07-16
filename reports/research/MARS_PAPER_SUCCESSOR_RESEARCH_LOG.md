@@ -2987,3 +2987,24 @@ adapter strengths must deliver at least +0.003 AP, nonnegative matched-FPR recal
 strictly higher IoU, nonnegative AP for both sensors, and a positive 10,000-replicate
 paired-site AP lower bound. A pass authorizes only a new multi-seed cross-fit; no
 fresh or exact-paper input is available to this trainer.
+
+### 2026-07-16: Physics-guided teacher adapter v1 rejected with positive point signal
+
+The fixed endpoint completed 98,304 optimizer samples without a runtime or numerical
+failure. At adapter strength 0.25 it passed every point gate on reused selection fold
+2: AP +0.003174, matched-FPR recall +0.003764 (three additional positives), IoU
++0.009601, Landsat AP +0.000247, and Sentinel-2 AP +0.005036. Its paired-site AP
+interval nevertheless crossed zero [-0.004576,+0.007349], so the preregistered
+confidence gate failed and no full cross-fit is authorized. Strength 0.5 raised
+recall and IoU further but regressed Landsat AP; strength 1.0 overcorrected.
+
+The run also exposed a training-distribution mismatch without changing any metric:
+the inherited site/label/sensor-cell sampler generated comparatively few positive
+requests, and simulation is attempted only for positive requests. Consequently the
+declared 0.50 attempt probability realized just 10.4-10.8% simulated scenes. The
+paper instead samples a binary plume indicator within locations and reports roughly
+half of plume examples as simulated. A distinct v2 may correct the sampler to equal
+positive/negative and sensor request mass, retain the same architecture and gates,
+use the single v1 point-safe strength 0.25, and require the same positive site-
+bootstrap lower bound. V1 itself is rejected: no artifact was written and no fresh
+or paper input was opened.
