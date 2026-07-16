@@ -2915,3 +2915,23 @@ cache was written; fresh and paper data were never loaded. A nonlinear head over
 frozen embeddings remains too correlated with current errors. Frozen-feature head
 experiments are now retired. The next representation experiment must adapt internal
 foundation-model features under strong parameter and group-robust regularization.
+
+### 2026-07-16: Patch-supervised Prithvi LoRA pilot frozen
+
+The first internal-representation adaptation is now frozen after a successful
+16-scene GPU smoke test. It adds rank-4 low-rank residuals only to attention qkv
+and output projections in Prithvi's final four encoder blocks; all other foundation
+weights remain fixed. A shared target-frame 8x8 patch head receives observable-mask
+supervision, while learned patch attention, top-4 pooling, and the CLS token feed a
+192-hidden scene head. Scene BCE is augmented by fixed 0.25 patch and 0.10 hard-pair
+terms. The complete model has 130,754 trainable parameters. The smoke run completed
+one epoch with finite total, scene, patch, and pair losses and produced no report,
+candidate choice, checkpoint, or score cache.
+
+Selection is physical-location cross-fitting on folds 2/3/4, with only the other
+two selection folds used for each prediction. Current-score blends are restricted
+to 0.05/0.10/0.20/0.30/0.50, and fixed every-fold, sensor, matched-FPR recall, and
+10,000-replicate paired-site AP gates apply. Folds 0/1 are explicitly a reused audit,
+not independent confirmation. A passing seed 20261800 must be reproduced by a
+separately frozen second seed before any fresh or exact-paper scoring. No fresh or
+paper input is available to this trainer.

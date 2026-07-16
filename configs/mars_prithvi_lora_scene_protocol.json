@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_successful_16_scene_gpu_smoke_before_full_lora_training",
+  "scope": "patch-supervised low-rank Prithvi adaptation on MARS development folds",
+  "trainer": {
+    "path": "tools/train_mars_prithvi_lora_scene_model.py",
+    "sha256": "0bf6ec8ef308fcb5d574d2d1ff3034a56326e0bdd0131c8cff58dc04c69bb99f"
+  },
+  "code_dependencies": [
+    {"path": "EarthRemoteSensingRapidResponse/mars_prithvi_lora_model.py", "sha256": "556ab7e47ae77bd3e3e2a107b0726617bab127c617291c7d953e855d921a162c"},
+    {"path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/prithvi_mae.py", "sha256": "9cee9a8cb17c3859d6365a7e58f723e0f4c08e3e29aa4b8e6523506db70321da"},
+    {"path": "tools/train_mars_prithvi_spatial_head.py", "sha256": "26e83caef2915eea73bda006ac7af87e65e6a6683a0559c58fc34ed88b1a765f"}
+  ],
+  "inputs": {
+    "metadata_root": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L", "sha256": "directory_verified_by_acquisition_receipt"},
+    "manifest": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl", "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"},
+    "acquisition_receipt": {"path": "reports/acquisition/mars_s2l_paper_v3_development_download.json", "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"},
+    "fold_protocol": {"path": "configs/mars_paper_v3_group_folds.json", "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"},
+    "foundation_receipt": {"path": "reports/acquisition/prithvi_eo_2_tiny_tl.json", "sha256": "ddc2dec982320ab23f9963b5221b8ce8752c04f01b0b84a018bb70ba84d518f3"},
+    "foundation_config": {"path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/config.json", "sha256": "d7f9e36d2253cb82d296bfd95a9a651f2af455c0cfe8a5ea775b2e3d196ad170"},
+    "foundation_checkpoint": {"path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/Prithvi_EO_V2_tiny_TL.pt", "sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70"},
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"}
+  },
+  "folds": {
+    "selection": [2, 3, 4],
+    "reused_holdout_audit": [0, 1],
+    "unit": "physical_location_id",
+    "selection_training_rule": "train on the other two selection folds for each held fold",
+    "audit_training_rule": "train on folds 2/3/4 and score folds 0/1",
+    "holdout_status": "reused audit, not independent confirmation"
+  },
+  "architecture": {
+    "last_blocks": 4,
+    "rank": 4,
+    "alpha": 8.0,
+    "lora_dropout": 0.1,
+    "head_hidden": 192,
+    "head_dropout": 0.25,
+    "topk_patches": 4,
+    "batch_size": 16,
+    "evaluation_batch_size": 32,
+    "lora_learning_rate": 0.0001,
+    "head_learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "patch_loss_weight": 0.25,
+    "pair_loss_weight": 0.1,
+    "pair_margin": 0.5,
+    "gradient_clip": 5.0,
+    "scene_pooling": "learned CLS plus patch-attention plus top-4 target-patch token head",
+    "patch_supervision": "8x8 max-pooled target-frame plume mask with observable and missing-truth controls",
+    "frozen_parameters": "all Prithvi parameters except rank-4 qkv/projection residuals in encoder blocks 9-12"
+  },
+  "training": {
+    "pilot_seed": 20261800,
+    "selection_epochs": 3,
+    "audit_epochs": 3,
+    "final_epochs": 4,
+    "sampler": "replacement sampling with inverse physical-site count and square-root class/sensor balancing",
+    "operational_scene_threshold": 0.28187603894788654,
+    "second_seed_rule": "a passing pilot must be replicated under a separately frozen second seed before any external scoring"
+  },
+  "search": {
+    "current_blends": [0.05, 0.1, 0.2, 0.3, 0.5],
+    "candidate_count": 5,
+    "architecture_search": false,
+    "rank_rule": "stability, worst selection-fold AP delta, combined AP delta, matched-FPR recall delta, then smaller blend"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "selection_seed": 20261850,
+    "audit_seed": 20261851,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "gates": {
+    "selection": "positive combined and every-fold AP, nonnegative combined recall, fold recall no worse than -0.002, sensor AP no worse than -0.0025, paired-site AP lower bound positive",
+    "reused_holdout_audit": "same point/fold/sensor rules and positive paired-site AP lower bound",
+    "second_seed_required_after_pilot": true,
+    "all_required_before_external_scoring": true
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_prithvi_lora_scene_model.pt",
+    "development_scores": "outputs/mars_prithvi_lora_development_scores.npz",
+    "json": "reports/experiments/mars_prithvi_lora_scene_model.json"
+  },
+  "invariants": [
+    "The smoke flag may validate code on 16 development rows for one epoch but cannot create a report, artifact, candidate choice, or protocol change based on metrics.",
+    "No fresh CloudSEN or exact paper input is loaded.",
+    "Only five current-score blends are selected; architecture and optimization are fixed.",
+    "All hard-pair and patch supervision uses source training rows only.",
+    "A passing pilot is not externally promoted until a second seed reproduces all development gates.",
+    "Failure writes no artifact or score cache."
+  ]
+}
