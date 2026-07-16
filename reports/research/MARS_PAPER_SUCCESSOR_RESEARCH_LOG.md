@@ -2639,3 +2639,14 @@ written. Prevalence/history standardization alone cannot make an unconstrained s
 offset reliable. The next temporal mechanism will be one-sided and attention-like:
 only high-confidence large sites may receive a boost, while every other scene remains
 exactly on the validated spatial score.
+
+### 2026-07-16: Gated temporal-spatial boost frozen
+
+The next candidate is an attention-like one-sided rule. Only sites meeting a minimum
+history can change, and only when their top-k spatial evidence exceeds a confidence
+cutoff. The excess evidence raises every site scene logit; it can never suppress a
+scene. Sparse and below-cutoff sites remain bitwise on the validated spatial score.
+Forty-eight minimum-history/top-k/cutoff/weight combinations, selection folds 2/3/4,
+confirmation folds 0/1, and paired-site gates on both low-prevalence and complete
+views are frozen. The rule uses no labels at inference, and the paper cache remains
+out of scope.
