@@ -120,6 +120,8 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         "",
         "Half of each partition targets high-MBMP-variance clear backgrounds; half is selected by deterministic country round-robin. Country and location metadata are sampling-only and prohibited model inputs.",
         "",
+        "Each selected row preserves the producer-published CRS and six-value affine transform for the exact 200x200 grid.",
+        "",
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines), encoding="utf-8")
