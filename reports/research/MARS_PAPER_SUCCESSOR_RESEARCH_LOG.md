@@ -2429,3 +2429,13 @@ mathematically unchanged and adds top-k temporal evidence only at sites meeting 
 minimum scene count. Selection remains folds 2/3/4 with positive paired-bootstrap AP
 evidence and per-fold stability; the fixed winner must repeat those properties on
 folds 0/1. No paper or fresh-test cache is loaded during parameter selection.
+### 2026-07-16: Large-history temporal routing rejected
+
+The 45-route search selected minimum history 20, top-1, weight 0.25, but failed
+selection and confirmation gates and wrote no artifact. Folds 2/3 improved AP by
++0.00485/+0.00562, while fold 4 regressed -0.00436; the combined selection AP
+delta was effectively zero with lower -0.00515. Confirmation AP improved +0.00110
+but recall changed -0.00067 and its AP lower bound was -0.00177. History length
+does not make a bidirectional prior stable. The next rule is one-sided: it may only
+suppress scenes at sites whose top-k evidence is below a confidence cutoff, so it
+cannot create new high-score false positives at a fixed threshold.
