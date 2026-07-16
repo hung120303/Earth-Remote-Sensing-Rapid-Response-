@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_negative_cdf_post_test_fresh_replay",
+  "scope": "post-test replay of unchanged fresh-negative gates for the development negative-CDF calibrated ensemble",
+  "evaluator": {
+    "path": "tools/evaluate_cloudsen12_fresh_tail_calibrated_spatial_prithvi.py",
+    "sha256": "7cbcd736621d36ca4df7466ec73a6841e72b8dacd1e8444fa4944ae9d982a120"
+  },
+  "inputs": {
+    "fresh_features": {"path": "outputs/cloudsen12_fresh_test_scene_features.npz", "sha256": "4104ed4bbc1c2289943d1b76f251b3a8739d946cb67e09fce1f8301baf9afe3c"},
+    "fresh_representations": {"path": "outputs/cloudsen12_fresh_spatial_prithvi.npz", "sha256": "a1f46a7dd9c4d579ad141122b8997aeb1713f27bd3c9a08a53a9ce8f7e9f08fa"},
+    "current_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_oof_scene_ensemble_v2.joblib", "sha256": "9e6fa18b83ef065ac24c94a06a510057a0c382cecf1efa3b54e818566a45c9ac"},
+    "spatial_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_site_relative_spatial_classifier.pt", "sha256": "9401678aa4f38fb3b54a914318dc5c2a553b39fa8b309d1a127b9d21abbfc496"},
+    "prithvi_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_adaptive_prithvi_probe.joblib", "sha256": "a38be1acc8ca425ef5307c0ad2b253274fd36d4c3e6b5ed63ce1bf205f6fb0d5"},
+    "ensemble_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_spatial_prithvi_ensemble.joblib", "sha256": "0a3be48f5eda659aaaa7cf91c259acd230f81340677e5a6fc5fab83ba048420b"},
+    "calibration_artifact": {"path": "EarthRemoteSensingRapidResponse/artifacts/mars_negative_cdf_calibrated_spatial_prithvi_ensemble.joblib", "sha256": "ce33bae550f20ad53076338e8412aef97d26a4b1c6c9c6e201086ccd208a1c37"},
+    "development_prithvi": {"path": "outputs/mars_prithvi_eo_2_tiny_tl_features_all_folds.npz", "sha256": "e3e52a9453426e5e048cd753daf2597d59cbe820a18ae584c61a2de7ae405f23"},
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "development_scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"}
+  },
+  "thresholds": {
+    "current": 0.28187603894788654,
+    "candidate": 0.28187603894788654,
+    "source": "unchanged conservative operational threshold; negative-CDF calibration fit only on development folds"
+  },
+  "expected": {
+    "full_rows": 374,
+    "available_rows": 368,
+    "groups": 355,
+    "features": 108,
+    "spatial_shape": [368, 9, 64, 64],
+    "prithvi_shape": [368, 768],
+    "all_clear_rows": 327,
+    "nonclear_rows": 41,
+    "nonclear_pixels": 84588
+  },
+  "safety_gates": {
+    "false_positive_count_strata": ["available", "published_all_clear", "published_nonclear"],
+    "raw_score_p95_strata": ["available"],
+    "logit_margin_p95_strata": ["available", "published_all_clear", "published_nonclear"],
+    "full_cohort_bound": "count all six unavailable rows as false positives for both heads and require candidate no worse",
+    "pass_rule": "every original gate must pass without modification"
+  },
+  "outputs": {
+    "json": "reports/experiments/cloudsen12_fresh_negative_cdf_spatial_prithvi.json",
+    "markdown": "reports/experiments/CLOUDSEN12_FRESH_NEGATIVE_CDF_SPATIAL_PRITHVI.md"
+  },
+  "invariants": [
+    "This is post-test reuse, never independent external confirmation.",
+    "The offset was selected by full development-negative empirical-CDF dominance without loading fresh inputs.",
+    "The prior evaluator code, thresholds, strata, unavailable-row bound, and safety gates are unchanged.",
+    "The exact MARS paper cache remains unopened unless every gate passes."
+  ]
+}

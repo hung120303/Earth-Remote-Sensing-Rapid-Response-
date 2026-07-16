@@ -2839,3 +2839,12 @@ false positives fell to 157/199/416 from current's 224/249/546 on selection and 
 501-byte artifact has SHA-256
 `ce33bae550f20ad53076338e8412aef97d26a4b1c6c9c6e201086ccd208a1c37`.
 This authorizes one more explicitly post-test fresh replay under unchanged gates.
+
+### 2026-07-16: Negative-CDF fresh replay frozen
+
+The previously frozen calibrated fresh evaluator is reused byte-for-byte under a
+new checksum-bound protocol. Only the calibration artifact changes, to the passing
+-0.504476-logit negative-CDF control. All inputs, thresholds, row contracts, strata,
+p95 and false-positive gates, and the unavailable-row bound remain identical. This
+is still post-test reuse; a pass is a safety consistency check, not new external
+evidence. Paper inputs remain inaccessible to the evaluator.
