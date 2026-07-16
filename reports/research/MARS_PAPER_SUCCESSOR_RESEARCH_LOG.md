@@ -1931,3 +1931,29 @@ It does not authorize loosening the production threshold because positive-only
 data provide no false-positive evidence. The next experiment must improve
 hard-positive representation while preserving the existing negative replay
 and frozen paper operating point.
+
+## UNEP-positive augmented scene head
+
+The first architecture use of the new cohort is scene-only: the already
+successful regularized depth-3 XGBoost representation is refit with all
+original MARS negatives/positives plus the 135 source-disjoint UNEP auxiliary
+positives. Dense masks, sensor mask thresholds, and the mask gate remain
+unchanged. The protocol froze auxiliary multipliers 1/2/4/8 and small logit
+blends 0.025/0.05/0.10/0.20 before fitting. Fold 2 selected while folds 0 and
+1 and the four UNEP development groups remained unread.
+
+The selected setting is the most conservative auxiliary multiplier, 1.0, with
+a 0.20 complement blend. On fold 2 it improves AP by +0.00412 and recall at
+7.13% FPR by +0.00251 over the current stronger scene head. With that setting
+frozen, independent fold 0 improves AP by +0.00392 and recall by +0.00134;
+its paired group-bootstrap AP interval is [+0.00052, +0.00808]. Fold 1
+improves AP by +0.00325 and recall by +0.00537, with AP interval
+[+0.00067, +0.00754]. Both Sentinel-2 and Landsat AP pass noninferiority on
+both folds. Only after those gates passed were the four isolated UNEP
+development features opened: candidate and current positive recall are both
+3/4 at the frozen conservative threshold. The final ignored artifact SHA-256
+is `f570a2ffa93486e9d4d5e3b52c4f4723f384f42c6c2692eb0f632ce7de4cbfcb`.
+This is the first new-data architecture to pass selection, two independent
+original-development confirmations, paired uncertainty, and external-domain
+noninferiority. It is therefore eligible for an exact transparent paper-cache
+replay; no paper row entered fitting or selection.
