@@ -2019,3 +2019,22 @@ and `cloudsen12_common_stats_nonsealed.npz` (SHA-256
 `404bd6569949017014966d8fc04b2f94e07654df98120a30eb1b3d380fa9bcaf`).
 No paper-test label or CloudSEN12 sealed-test feature is present. This branch
 is now ready for its preregistered development-only model fit.
+
+The common-statistic branch is rejected at its first selection gate. The
+frozen choice is the shallower depth-2 head, CloudSEN12 negative multiplier
+4.0, and minimum 0.025 logit blend. Pooled folds-2/3/4 AP changes only
++0.000083, recall ties, and the paired 403-group AP interval is
+[-0.000419, +0.000629]. Fold 2 regresses AP by -0.000135 and recall by one
+positive (-0.001255), so the per-fold stability gate also fails. In contrast,
+the 256 source-disjoint validation negatives receive low raw-head scores
+(p95 0.03145, p99 0.05154 versus MARS held-negative p95 0.25155), confirming
+that the external data and negative label contract behave as intended.
+
+No fold-0/fold-1 confirmation, CloudSEN12 sealed-test feature, or paper cache
+was opened. Global spectral/MBMP moments can recognize generic clear
+backgrounds but do not supply the localized, model-aligned morphology needed
+to reorder difficult MARS scenes. The justified continuation retains the
+CloudSEN12 source but acquires a bounded target/reference crop pilot so the
+released detector and the frozen spatial feature extractor can generate
+hard-negative representations. A full 10,434-scene imagery download is not
+authorized unless that pilot first shows transferable development benefit.
