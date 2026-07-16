@@ -1,0 +1,311 @@
+{
+  "all_exact_paper_gates_pass": false,
+  "architecture": {
+    "dense_mask_changed": false,
+    "mask_gate_cutoff": 0.75,
+    "mask_gate_score": "unchanged frozen v3 stronger scene score",
+    "mask_probability": "released MARS-S2L probability with frozen sensor thresholds",
+    "scene_ranking": "frozen v3 stronger head plus 0.20 joint UNEP-positive/CloudSEN-negative XGBoost",
+    "scene_threshold": 0.23431125612493842
+  },
+  "available_augmented_rows": 43524,
+  "decision": "At least one exact MARS-S2L v3 paper gate remains unresolved.",
+  "generated_at_utc": "2026-07-16T17:24:01.303438+00:00",
+  "missing_rows_fallback_to_v3": 5,
+  "official_comparator": {
+    "exact_reconstruction": {
+      "full": {
+        "accuracy": 0.9235681959153668,
+        "average_precision": 0.6410196024104218,
+        "false_positive_rate": 0.07069230031642536,
+        "fn": 378,
+        "fp": 2949,
+        "negative": 41716,
+        "pixel_fn": 1073087,
+        "pixel_fp": 2668518,
+        "pixel_iou": 0.3243651485849355,
+        "pixel_tp": 1796305,
+        "positive": 1813,
+        "precision": 0.3273266423357664,
+        "recall": 0.7915057915057915,
+        "rows": 43529,
+        "sites": 1289,
+        "tn": 38767,
+        "tp": 1435
+      },
+      "test_only_sites": {
+        "accuracy": 0.9223251357393804,
+        "average_precision": 0.45027380014908475,
+        "false_positive_rate": 0.07551205600207415,
+        "fn": 51,
+        "fp": 1165,
+        "negative": 15428,
+        "pixel_fn": 140494,
+        "pixel_fp": 875886,
+        "pixel_iou": 0.17156194293902416,
+        "pixel_tp": 210483,
+        "positive": 227,
+        "precision": 0.13124533929903057,
+        "recall": 0.775330396475771,
+        "rows": 15655,
+        "sites": 697,
+        "tn": 14263,
+        "tp": 176
+      }
+    },
+    "paper": {
+      "revision": "v3",
+      "revision_date": "2026-04-24",
+      "url": "https://arxiv.org/html/2511.21777v3"
+    },
+    "published": {
+      "full": {
+        "average_precision": 0.6408,
+        "false_positive_rate": 0.0713,
+        "negative": 41716,
+        "pixel_iou": 0.3224,
+        "positive": 1813,
+        "precision": 0.3253,
+        "recall": 0.7915,
+        "rows": 43529,
+        "sites": 1289
+      },
+      "test_only_sites": {
+        "average_precision": 0.4496,
+        "false_positive_rate": 0.0763,
+        "negative": 15428,
+        "positive": 227,
+        "precision": 0.1301,
+        "recall": 0.7753,
+        "rows": 15655,
+        "sites": 697
+      }
+    },
+    "receipt_sha256": "ebb39ab22720988b2657d0e4d6b9a5669c24fbca1083575797622a7f1e788eb0"
+  },
+  "provenance": {
+    "artifact_sha256": "e1305d4f1199891b8f2f2cae27ee27219af819de72f42f95e329ffd3fa6c15b1",
+    "authorization_report_sha256": "2777cc0b4b4929ed68301f6b13a691d0e8d8c91aecba8a83cc639a1d950e21bc",
+    "benchmark_receipt_sha256": "ebb39ab22720988b2657d0e4d6b9a5669c24fbca1083575797622a7f1e788eb0",
+    "development_report_sha256": "c432cdd404aee488303de99d6d0f6968cff35319507f505d4aac27bea4283ae5",
+    "diagnostic_sha256": "1624fddc0222f8ffc5137f557c7fc3e465d53b335c82cc8014711baa35bb94a1",
+    "feature_receipt_sha256": "8f82262d60e9a47a40f2c7ded63042544c87bdfe00c74ed9c34cd5db462b168f",
+    "features_sha256": "8a35e60e7c396e58639f940239020adb36def885124841e0b20901e10db52f33",
+    "gate_report_sha256": "c1e5a1497abebba80d42898a8165b30fd255ff252478a0ee1fd90fd32456a51c",
+    "git_commit": "8b52915dec0ed632e7dad9f00247785fc69f520a",
+    "numpy": "2.4.4",
+    "protocol_sha256": "a4021779bdaa380443bdb8bb9ddf383e66a695ded3e76ad28b8cd182a740e2e1",
+    "script_sha256": "7a8fa57fca1ea26179869b3d88397720bedccc87a7522b5f52fd8bfe26ffac01",
+    "xgboost": "3.2.0"
+  },
+  "schema_version": 1,
+  "scope": "transparent post-test replay of the fresh-safety-passed fixed joint candidate on the exact MARS-S2L v3 comparator",
+  "views": {
+    "full": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": 0.012983581762850275,
+            "mean": 0.03224002183753139,
+            "upper": 0.04842939309863788
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.04178710779316311,
+            "mean": -0.03914839704664057,
+            "upper": -0.03648923933146661
+          },
+          "fixed_recall": {
+            "lower": -0.0695461571313752,
+            "mean": -0.04924535232302308,
+            "upper": -0.032003193734235276
+          },
+          "matched_fpr_recall": {
+            "lower": 0.01973250947320021,
+            "mean": 0.03260167257838443,
+            "upper": 0.046604885425989395
+          },
+          "pixel_iou": {
+            "lower": 0.0350644217419272,
+            "mean": 0.05577140327786671,
+            "upper": 0.07802281603699725
+          }
+        },
+        "replicates": 10000,
+        "sites": 1289
+      },
+      "checks": {
+        "ap_lower_positive": true,
+        "ap_point_higher": true,
+        "candidate_ap_above_published_table": true,
+        "fixed_fpr_no_worse_than_published_table": true,
+        "fixed_fpr_upper_nonpositive": true,
+        "matched_recall_above_published_table": true,
+        "matched_recall_lower_positive": true,
+        "matched_recall_point_higher": true,
+        "pixel_iou_lower_positive": true,
+        "pixel_iou_point_higher": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.6410196024104218,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "fn": 378,
+            "fp": 2949,
+            "precision": 0.3273266423357664,
+            "recall": 0.7915057915057915,
+            "tn": 38767,
+            "tp": 1435
+          },
+          "pixels": {
+            "fn": 1073087,
+            "fp": 2668518,
+            "intersection_over_union": 0.3243651485849355,
+            "tp": 1796305
+          }
+        },
+        "candidate": {
+          "average_precision": 0.6741607935827403,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.031546648767858856,
+            "fn": 466,
+            "fp": 1316,
+            "precision": 0.5058205031918889,
+            "recall": 0.7429674572531716,
+            "threshold": 0.23431125612493842,
+            "tn": 40400,
+            "tp": 1347
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07069230031642536,
+            "precision": 0.33655793025871766,
+            "recall": 0.8251516822945394,
+            "target_fpr": 0.07069230031642536,
+            "threshold": 0.06351487118405798
+          },
+          "pixels": {
+            "fn": 1431545,
+            "fp": 913692,
+            "intersection_over_union": 0.37996355770303547,
+            "tp": 1437181
+          }
+        },
+        "delta": {
+          "average_precision": 0.03314119117231851,
+          "fixed_false_positive_rate": -0.0391456515485665,
+          "fixed_recall": -0.048538334252619886,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.03364589078874791,
+          "pixel_iou": 0.05559840911809999
+        },
+        "positive": 1813,
+        "rows": 43529
+      },
+      "passed": true
+    },
+    "test_only_sites": {
+      "bootstrap": {
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": -0.04444801560369337,
+            "mean": -0.0030032320924346808,
+            "upper": 0.0358673669124017
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.0465807239410731,
+            "mean": -0.04221305682186515,
+            "upper": -0.0377514334442343
+          },
+          "fixed_recall": {
+            "lower": -0.125,
+            "mean": -0.07065985845314744,
+            "upper": -0.02868852459016391
+          },
+          "matched_fpr_recall": {
+            "lower": -0.01081227967097531,
+            "mean": 0.01774019860303598,
+            "upper": 0.04590163934426228
+          },
+          "pixel_iou": {
+            "lower": 0.08596875039513638,
+            "mean": 0.12049784764726232,
+            "upper": 0.155450355112178
+          }
+        },
+        "replicates": 10000,
+        "sites": 697
+      },
+      "checks": {
+        "ap_lower_positive": false,
+        "ap_point_higher": false,
+        "candidate_ap_above_published_table": false,
+        "fixed_fpr_no_worse_than_published_table": true,
+        "fixed_fpr_upper_nonpositive": true,
+        "matched_recall_above_published_table": true,
+        "matched_recall_lower_positive": false,
+        "matched_recall_point_higher": true,
+        "pixel_iou_lower_positive": true,
+        "pixel_iou_point_higher": true
+      },
+      "metrics": {
+        "baseline": {
+          "average_precision": 0.45027380014908475,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "fn": 51,
+            "fp": 1165,
+            "precision": 0.13124533929903057,
+            "recall": 0.775330396475771,
+            "tn": 14263,
+            "tp": 176
+          },
+          "pixels": {
+            "fn": 140494,
+            "fp": 875886,
+            "intersection_over_union": 0.17156194293902416,
+            "tp": 210483
+          }
+        },
+        "candidate": {
+          "average_precision": 0.4481093684419365,
+          "fixed_operating_point": {
+            "false_positive_rate": 0.0332512315270936,
+            "fn": 67,
+            "fp": 513,
+            "precision": 0.237741456166419,
+            "recall": 0.7048458149779736,
+            "threshold": 0.23431125612493842,
+            "tn": 14915,
+            "tp": 160
+          },
+          "matched_fpr_operating_point": {
+            "false_positive_rate": 0.07551205600207415,
+            "precision": 0.13382899628252787,
+            "recall": 0.7929515418502202,
+            "target_fpr": 0.07551205600207415,
+            "threshold": 0.05774605767520556
+          },
+          "pixels": {
+            "fn": 185139,
+            "fp": 217508,
+            "intersection_over_union": 0.2924622462140781,
+            "tp": 166435
+          }
+        },
+        "delta": {
+          "average_precision": -0.002164431707148251,
+          "fixed_false_positive_rate": -0.04226082447498056,
+          "fixed_recall": -0.07048458149779735,
+          "matched_false_positive_rate": 0.0,
+          "matched_fpr_recall": 0.017621145374449254,
+          "pixel_iou": 0.12090030327505397
+        },
+        "positive": 227,
+        "rows": 15655
+      },
+      "passed": false
+    }
+  }
+}

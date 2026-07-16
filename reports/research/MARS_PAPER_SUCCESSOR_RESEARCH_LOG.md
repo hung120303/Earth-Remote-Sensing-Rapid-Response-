@@ -2368,3 +2368,14 @@ values, which are slightly stronger than the rounded published tables. Candidate
 scores are computed before outcome-cache loading. Both views require strictly
 positive paired site-bootstrap lower bounds for AP, matched-FPR recall, and IoU,
 plus a nonpositive upper bound for fixed-FPR delta. No partial pass is promotable.
+### 2026-07-16: Fixed joint scene head rejected on exact paper replay
+
+The evaluator exactly reproduced the official v3 comparator and the candidate passed
+every full-view gate: AP 0.67416079 versus 0.64101960 (paired lower delta +0.01298),
+matched-FPR recall delta +0.03365 (lower +0.01973), FPR delta -0.03915, and IoU
+0.37996356 versus 0.32436515 (lower delta +0.03506). It failed the required
+test-only-site scene gates: AP 0.44810937 versus 0.45027380 (delta -0.00216,
+lower -0.04445) and matched-FPR recall delta +0.01762 with lower -0.01081.
+Test-only IoU remains decisive at 0.29246225 versus 0.17156194 (lower delta
++0.08597), and FPR improves by -0.04226. Because both views must pass, the joint
+scene head is rejected for final promotion; the dense-mask result remains valid.
