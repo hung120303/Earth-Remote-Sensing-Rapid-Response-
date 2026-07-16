@@ -2104,3 +2104,11 @@ deviation, minimum, and maximum to numerical precision. The official SWIR
 interpolation was frozen from source code rather than selected against a model
 metric. Package hashes and code paths are recorded in
 `MARSS2L_SENTINEL2_PREPROCESSING_AUDIT.md`.
+
+A pre-feature-extraction hash check corrected one metadata-only transcription
+in the spatial-pilot protocol: the pinned released `best_epoch` checkpoint is
+SHA-256
+`be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246`,
+matching the local file and every earlier verified training/evaluation receipt.
+The mistyped protocol value began `be634d`; no different checkpoint was loaded,
+and no data partition, architecture, fitted weight, or outcome was changed.
