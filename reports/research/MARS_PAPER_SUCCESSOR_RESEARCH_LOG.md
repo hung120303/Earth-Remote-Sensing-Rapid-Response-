@@ -1802,3 +1802,12 @@ as the historical source for a label-free paper scoring step. Frozen script
 SHA-256 is
 `9a689b20f6564e45a52c91c0d6962deb7db68e20b187ed56f772cfe366282bb5`;
 the distance and held-label exclusion tests pass.
+
+The geographic prior is rejected before paper scoring. The safest result uses
+20 neighbors, a 2,000 km scale, and a 0.05 blend. Pooled AP changes -0.000052
+with paired-site interval [-0.000573, +0.000589]; recall gains one positive
+(+0.000262). Fold AP changes -0.000379 / -0.000354 / -0.000075 / -0.000395 /
++0.000829, so four all-fold AP gates fail. Neighboring historical prevalence
+does not add useful ranking information beyond the existing scene/site
+context. No paper score was computed. Result JSON SHA-256 is
+`f199c636653f471353c8455211b396d5b10e1f948505618dbbf7a1fa51dc024f`.
