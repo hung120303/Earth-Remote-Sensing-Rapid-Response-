@@ -2038,3 +2038,15 @@ CloudSEN12 source but acquires a bounded target/reference crop pilot so the
 released detector and the frozen spatial feature extractor can generate
 hard-negative representations. A full 10,434-scene imagery download is not
 authorized unless that pilot first shows transferable development benefit.
+
+The bounded spatial pilot is frozen at 512 exact Sentinel-2 target/reference
+pairs: 384 auxiliary-training negatives and 128 development negatives. Every
+selected scene has exactly 40,000 published clear pixels and zero non-clear
+pixels, is at least 25 km from every MARS emitter location, and belongs to the
+published CloudSEN12 train or validation partition. Half of each partition is
+selected for high MBMP variance/range and half by deterministic country
+round-robin. The result spans 506 ROI groups and 176 countries; the closest
+selected crop is 27.64 km from a MARS emitter. Country and location metadata
+are sampling-only, not model features. The ignored selection manifest SHA-256
+is recorded in `cloudsen12_spatial_pilot_selection.json`; zero published test
+rows were selected or opened.
