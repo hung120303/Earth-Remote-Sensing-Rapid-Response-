@@ -1748,3 +1748,26 @@ do not add a sufficiently general rank signal beyond current, especially on
 fold-2 Sentinel-2. No paper feature was extracted. Compact result JSON
 SHA-256 is
 `77507f57de075a7b47adf36831d93830900db51062484ee48765094dea1a3f2f`.
+
+## MethaneS2CM v5.1 end-to-end transfer: frozen pilot
+
+The earlier MethaneS2CM experiment froze zero-shot v5.1 context features,
+which were not transferable. End-to-end adaptation remains distinct and is
+tested first on one inner development fold before authorizing a costly full
+campaign. The source checkpoint is the independently validated v5.1 seed-1101
+model (SHA-256
+`7b648548cc62ca3f6d428df2cf427e373fba5a7bdcf03aabada68bf6f1cfc446`),
+which achieved 0.818 scene AP on its sealed MethaneS2CM location test.
+
+MARS provides one reference rather than v5.1's 90- and 365-day references, so
+the single reference and MBMP map are duplicated into both pretrained slots.
+All weights are adapted on physical-site folds 3 and 4 at 64 x 64, using the
+v5.1 segmentation-first BCE/hard-negative/Dice/scene loss, balanced
+label-sensor sampling, AdamW 1e-4 with weight decay 0.01, seed 20262200, and
+exactly three epochs. Fold 2 is scored once at current-logit blends 0.05 /
+0.10 / 0.20 / 0.30. The pilot must gain at least +0.003 AP, retain recall and
+both sensor APs, and have a positive paired-site AP lower bound. Only a pass
+can authorize two-seed five-fold transfer; paper data is excluded. Frozen
+script SHA-256 is
+`08b9c96b3dbe2b11f2ae6ea7151b1b82587b80118306fa410113fd0b5fddb4f5`;
+the input-contract test passes.
