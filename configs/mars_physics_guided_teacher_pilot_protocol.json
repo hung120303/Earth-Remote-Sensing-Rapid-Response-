@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_exact-identity_simulation_gpu_smoke_before_development_pilot",
+  "scope": "physics-simulated feature-guided released-U-Net adapter pilot on development fold 2",
+  "research_basis": [
+    "https://arxiv.org/html/2511.21777v3",
+    "https://arxiv.org/abs/2606.26416",
+    "https://proceedings.mlr.press/v151/wang22b.html"
+  ],
+  "trainer": {
+    "path": "tools/train_mars_physics_guided_teacher_pilot.py",
+    "sha256": "73e5161fa03eec45b637d64998ff0ed116fc0496f2af32a8f72d74f546dbb376"
+  },
+  "code_dependencies": [
+    {"path": "EarthRemoteSensingRapidResponse/mars_physics_guided_teacher.py", "sha256": "f3a0253243448429bdb4cc4fea766af962729d01af0e8685a27581ab9e8b4a32"},
+    {"path": "EarthRemoteSensingRapidResponse/mars_paper_model.py", "sha256": "f9cc65b3bb764ed83a4aa67209cccdbad2b6c80826b0915711392ca8b10a0486"},
+    {"path": "EarthRemoteSensingRapidResponse/mars_v4_simulation.py", "sha256": "0a2bf48dcf1f214b72cd9f0b5c425de03ec7a2baba387155ee9bd052cf0d7e09"},
+    {"path": "tools/train_mars_source_aligned_residual.py", "sha256": "6eac7c57b9bbe25d4c06062dd8fddacbb5b3e25728d5e2f9609742ac3f066360"},
+    {"path": "tools/evaluate_released_marss2l.py", "sha256": "22363ab23e5b98bff3c294ded35952636318f2d67bdfe99673ed481081edb5d7"}
+  ],
+  "inputs": {
+    "metadata_root": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L", "sha256": "directory_verified_by_acquisition_receipt"},
+    "manifest": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl", "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"},
+    "metadata_csv": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/validated_images_all.csv", "sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2"},
+    "acquisition_receipt": {"path": "reports/acquisition/mars_s2l_paper_v3_development_download.json", "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"},
+    "fold_protocol": {"path": "configs/mars_paper_v3_group_folds.json", "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"},
+    "released_checkpoint": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch", "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"},
+    "lut": {"path": "configs/mars_s2_integrated_transmittances.json", "sha256": "1c11ef3f84a9d2a8ce65fc7301166ce20517bb57425ed3f5dca5a313a876c03f"}
+  },
+  "folds": {
+    "fit": [3, 4],
+    "held": 2,
+    "unit": "physical_location_id",
+    "status": "reused architecture-selection fold; not independent confirmation"
+  },
+  "architecture": {
+    "teacher": "exact hash-pinned released MARS-S2L U-Net, fully frozen",
+    "physics_channels": "MBMP, six differences, six normalized differences, six log ratios, wind u/v, cloud, sensor identity, released logit",
+    "fusion": "zero-initialized bounded scale-and-shift gates on all five teacher encoder levels, decoded by frozen teacher decoder",
+    "scene_surrogate": "equal blend of global top-100 observable logits and maximum observable 10x10 local mean",
+    "initialization": "bitwise released-logit identity required before training"
+  },
+  "training": {
+    "seed": 20262300,
+    "epochs": 3,
+    "samples_per_epoch": 32768,
+    "batch_size": 16,
+    "loader_workers": 4,
+    "crop_size": 192,
+    "simulation_fraction": 0.5,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "gradient_clip": 2.0,
+    "positive_pixel_weight": 10.0,
+    "focal_gamma": 2.0,
+    "dice_weight": 0.5,
+    "scene_weight": 0.25,
+    "pair_weight": 0.2,
+    "pair_margin": 0.5,
+    "negative_upward_weight": 0.05,
+    "positive_downward_weight": 0.05,
+    "correction_l2_weight": 0.001,
+    "wind_speed_tolerance_mps": 1.5,
+    "maximum_simulation_wind_mps": 9.0,
+    "endpoint_rule": "fixed epoch 3; no held-fold epoch selection"
+  },
+  "search": {
+    "strengths": [0.125, 0.25, 0.5, 1.0],
+    "candidate_count": 4,
+    "rank_rule": "all gates, worst sensor AP delta, AP delta, matched-FPR recall delta, IoU delta, smaller strength"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20262350,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.003,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "pixel_iou_delta_strictly_positive": true,
+    "each_sensor_ap_delta_minimum": 0.0,
+    "paired_site_ap_lower_bound_strictly_positive": true,
+    "pass_action": "freeze a separately preregistered multi-seed full development cross-fit; do not score external data"
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_physics_guided_teacher_pilot.pt",
+    "json": "reports/experiments/mars_physics_guided_teacher_pilot.json"
+  },
+  "invariants": [
+    "The smoke run may train on 64 sampled development crops for one epoch but writes no report or artifact.",
+    "No fresh CloudSEN or exact paper input is loaded by this trainer.",
+    "All architecture, optimization, endpoint, strength, and gate choices are fixed before held-fold scoring.",
+    "Failure writes no artifact and cannot authorize a second seed or external scoring.",
+    "A passing pilot is exploratory selection evidence only and must be followed by cross-fitted multi-seed development confirmation."
+  ]
+}

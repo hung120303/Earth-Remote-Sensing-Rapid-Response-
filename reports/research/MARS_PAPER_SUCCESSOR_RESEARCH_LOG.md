@@ -2959,3 +2959,31 @@ AP by 0.000514 (interval [-0.001526,+0.000361]); folds 0 and 1 both lost recall.
 Larger blends worsened selection AP monotonically, reaching -0.052206 at 0.50.
 This rules out second-seed replication and external scoring for this score family.
 No artifact or score cache was written, and no fresh or paper input was opened.
+
+### 2026-07-16: Physics-guided released-U-Net adapter pilot frozen
+
+The next representation restores the ingredient most associated with MARS-S2L's
+unseen-site gain: its wind-matched physics simulation. The exact v3 paper reports
+test-only AP 0.4496 with simulation versus 0.2725 without it
+(<https://arxiv.org/html/2511.21777v3>). A June 2026 methane-segmentation study
+independently motivates multi-scale feature-guided fusion of semantic context and
+an explicit methane-enhancement branch (<https://arxiv.org/abs/2606.26416>).
+
+The frozen pilot keeps the released U-Net entirely fixed. A 25-channel physics
+pyramid (MBMP, target/reference changes and ratios, wind, cloud, sensor identity,
+and released logits) supplies bounded scale-and-shift gates to all five teacher
+encoder levels; the frozen teacher decoder maps the adapted features back to plume
+logits. Every gate is zero-initialized, and the GPU smoke test reproduced released
+logits bitwise (`max_abs_delta=0`). Its 1,293,888 trainable parameters then completed
+one 64-sample physics-simulated epoch with finite focal, Dice, scene, pairwise, and
+teacher-conservation terms.
+
+Training is fixed to folds 3/4, seed 20262300, three 32,768-sample epochs, 50%
+requested wind-consistent simulation, and no held-fold epoch selection. The scene
+surrogate combines global top-100 evidence with a local 10x10 mean, aligning much
+more closely with the paper's 100-connected-pixel score than the rejected top-4
+Prithvi patches. Fold 2 is a reused architecture-selection pilot. Four frozen
+adapter strengths must deliver at least +0.003 AP, nonnegative matched-FPR recall,
+strictly higher IoU, nonnegative AP for both sensors, and a positive 10,000-replicate
+paired-site AP lower bound. A pass authorizes only a new multi-seed cross-fit; no
+fresh or exact-paper input is available to this trainer.
