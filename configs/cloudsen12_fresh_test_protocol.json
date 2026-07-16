@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_published_cloudsen12_test_row_materialization",
+  "scope": "fresh external-negative safety test for the fixed joint scene head",
+  "builder": {
+    "path": "tools/build_cloudsen12_fresh_test_cohort.py",
+    "sha256": "81f794cb827ae9f8446e4abcf04ec0fe88b987ea3f4704d4cb310d6ac72a490c"
+  },
+  "sources": {
+    "metadata_path": ".research/source_audit_20260715/cloudsen12_clear_images.csv",
+    "metadata_sha256": "d605cc19070d0f4c403ebdaa92caa193a78521580dc7407b86b26ee05cfad3f1",
+    "stats_path": ".research/source_audit_20260715/cloudsen12_stats_dataset.csv",
+    "stats_sha256": "15ca0c7d2097d9956b0ca3ea6ad4b335910c8031e46b434c088276284991e6b9"
+  },
+  "authorization": {
+    "report_path": "reports/experiments/mars_joint_calibration_aware_finalization.json",
+    "report_sha256": "c432cdd404aee488303de99d6d0f6968cff35319507f505d4aac27bea4283ae5",
+    "artifact_path": "EarthRemoteSensingRapidResponse/artifacts/mars_joint_calibration_aware_xgboost.joblib",
+    "artifact_sha256": "e1305d4f1199891b8f2f2cae27ee27219af819de72f42f95e329ffd3fa6c15b1"
+  },
+  "expected_rows": 374,
+  "truth_contract": {
+    "published_split": "test",
+    "label_state": "NO_PLUME",
+    "clear_pixels": 40000,
+    "nonclear_pixels": 0,
+    "producer_grid": "200x200 at 10 m with published CRS/affine",
+    "product_substitution": false
+  },
+  "evaluation": {
+    "primary": "false-positive count/rate at the frozen operational scene threshold",
+    "secondary": [
+      "raw score p50/p90/p95/p99/max",
+      "logit distance to frozen threshold p95/p99/max"
+    ],
+    "missing_exact_products": "reported separately and adversarially counted as candidate false positives in a full-cohort bound",
+    "comparison": "frozen current-head and fixed-candidate scores on identical available rows"
+  },
+  "invariants": [
+    "All 374 published test identities are materialized before exact-product resolution.",
+    "No unavailable product is substituted by another date, level, or processing tier.",
+    "The candidate artifact, operational threshold, feature schema, and all metrics are frozen before pixel access.",
+    "The exact MARS paper cache remains unopened during CloudSEN test acquisition/evaluation."
+  ]
+}

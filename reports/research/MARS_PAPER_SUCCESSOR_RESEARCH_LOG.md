@@ -2266,3 +2266,10 @@ evaluation of the still-sealed 374-row CloudSEN published test as fresh
 external-negative evidence. It also makes the fixed head eligible for a
 separately frozen exact-paper evaluator, but paper access should follow the
 CloudSEN test safety check.
+
+Before fresh-test row materialization, a dedicated CloudSEN protocol freezes
+the expected 374 published test identities, all-clear/no-plume truth contract,
+producer-grid requirements, exact-product/no-substitution rule, fixed artifact
+hash, operational threshold, and safety metrics. Missing exact products must be
+reported and receive an adversarial candidate-false-positive bound. The exact
+MARS paper cache remains outside this workflow.
