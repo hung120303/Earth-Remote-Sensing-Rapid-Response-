@@ -1909,3 +1909,25 @@ Catalog flux, wind, and polygon coordinates are not model features. Wind is
 explicitly zero-filled only to retain the released 16-channel tensor shape,
 and polygon geometry supplies target pixels only. No sealed crop asset was
 opened.
+
+## UNEP MARS post-2024 positive baseline
+
+Before inference, the evaluation froze two released-logit endpoints: the
+paper's 0.5 pixel cutoff and the current controller's independently confirmed
+0.8 Sentinel-2 cutoff, each with the 100-pixel connected-component rule. The
+positive-only cohort is permitted to estimate detection recall and mask
+overlap, never AP, FPR, precision, specificity, or AUROC. Uncertainty uses
+10,000 bootstrap replicates over the frozen 25 km source groups.
+
+On 135 auxiliary-training positives, released 0.5 detects 87/135 (recall
+0.6444, group-bootstrap 95% CI 0.5030--0.8061) with aggregate pixel IoU 0.4440
+(0.3743--0.5199). The current 0.8 Sentinel-2 threshold detects 78/135 (recall
+0.5778, 0.4279--0.7576) with IoU 0.3945 (0.3154--0.4806). On the four isolated
+development groups, both detect 3/4; IoU is 0.4308 at 0.5 and 0.3235 at 0.8.
+The development intervals are necessarily wide and did not select an
+endpoint. The consistent direction shows that merely tightening the released
+mask sacrifices true-plume sensitivity on the independently acquired cohort.
+It does not authorize loosening the production threshold because positive-only
+data provide no false-positive evidence. The next experiment must improve
+hard-positive representation while preserving the existing negative replay
+and frozen paper operating point.

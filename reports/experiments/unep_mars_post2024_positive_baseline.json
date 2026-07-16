@@ -1,0 +1,158 @@
+{
+  "generated_at_utc": "2026-07-16T03:56:19.068329+00:00",
+  "limitations": [
+    "average precision",
+    "false-positive rate",
+    "precision",
+    "specificity",
+    "AUROC"
+  ],
+  "provenance": {
+    "checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "a6235c340c492f44cd48b8eff134fd582d9239cf",
+    "numpy": "2.4.4",
+    "protocol_sha256": "b89ab132a1780da42e14dd0d2ba14ac563b5b1c0c8cda1d9b2d0dc3eec1374eb",
+    "scipy": "1.17.1",
+    "script_sha256": "bcd67132694fc8208118225ec19235298e487767e8c35836cc1b500627a8f7bb",
+    "torch": "2.11.0+cu128"
+  },
+  "roles": {
+    "auxiliary_training": {
+      "connected_scene_score": {
+        "maximum": 0.9995117190701421,
+        "median": 0.9177596679655835,
+        "minimum": 0.00029243528842926025,
+        "q05": 0.0022563405334949495,
+        "q95": 0.9995117188664153
+      },
+      "endpoints": {
+        "current_sentinel_mask": {
+          "bootstrap": {
+            "confidence": 0.95,
+            "groups": 27,
+            "pixel_iou": {
+              "lower": 0.31539534685479653,
+              "median": 0.3930790738350787,
+              "upper": 0.4806366324720623
+            },
+            "positive_recall": {
+              "lower": 0.42786069651741293,
+              "median": 0.5862068965517241,
+              "upper": 0.7575757575757576
+            },
+            "replicates": 10000
+          },
+          "metrics": {
+            "detected": 78,
+            "intersection_pixels": 70315,
+            "pixel_dice": 0.5657879914385491,
+            "pixel_iou": 0.39449397164513217,
+            "positive_recall": 0.5777777777777777,
+            "predicted_positive_pixels": 89639,
+            "rows": 135,
+            "truth_positive_pixels": 158917
+          }
+        },
+        "released_fixed_0_5": {
+          "bootstrap": {
+            "confidence": 0.95,
+            "groups": 27,
+            "pixel_iou": {
+              "lower": 0.37426163985015554,
+              "median": 0.44299832772174075,
+              "upper": 0.5198576360148095
+            },
+            "positive_recall": {
+              "lower": 0.502956043956044,
+              "median": 0.6532258064516129,
+              "upper": 0.8061224489795918
+            },
+            "replicates": 10000
+          },
+          "metrics": {
+            "detected": 87,
+            "intersection_pixels": 86905,
+            "pixel_dice": 0.614984520123839,
+            "pixel_iou": 0.4440271816881259,
+            "positive_recall": 0.6444444444444445,
+            "predicted_positive_pixels": 123708,
+            "rows": 135,
+            "truth_positive_pixels": 158917
+          }
+        }
+      },
+      "groups": 27,
+      "rows": 135
+    },
+    "development": {
+      "connected_scene_score": {
+        "maximum": 0.9995117188955192,
+        "median": 0.9350633630674565,
+        "minimum": 0.0057828426361083984,
+        "q05": 0.13675045967102054,
+        "q95": 0.9982689265510999
+      },
+      "endpoints": {
+        "current_sentinel_mask": {
+          "bootstrap": {
+            "confidence": 0.95,
+            "groups": 4,
+            "pixel_iou": {
+              "lower": 0.028086025729156437,
+              "median": 0.32353591160220996,
+              "upper": 0.7030991246747101
+            },
+            "positive_recall": {
+              "lower": 0.25,
+              "median": 0.75,
+              "upper": 1.0
+            },
+            "replicates": 10000
+          },
+          "metrics": {
+            "detected": 3,
+            "intersection_pixels": 4392,
+            "pixel_dice": 0.4888963099014861,
+            "pixel_iou": 0.32353591160220996,
+            "positive_recall": 0.75,
+            "predicted_positive_pixels": 4785,
+            "rows": 4,
+            "truth_positive_pixels": 13182
+          }
+        },
+        "released_fixed_0_5": {
+          "bootstrap": {
+            "confidence": 0.95,
+            "groups": 4,
+            "pixel_iou": {
+              "lower": 0.0916506717850288,
+              "median": 0.4307893209518282,
+              "upper": 0.7507137758743755
+            },
+            "positive_recall": {
+              "lower": 0.25,
+              "median": 0.75,
+              "upper": 1.0
+            },
+            "replicates": 10000
+          },
+          "metrics": {
+            "detected": 3,
+            "intersection_pixels": 5938,
+            "pixel_dice": 0.6021701652976371,
+            "pixel_iou": 0.4307893209518282,
+            "positive_recall": 0.75,
+            "predicted_positive_pixels": 6540,
+            "rows": 4,
+            "truth_positive_pixels": 13182
+          }
+        }
+      },
+      "groups": 4,
+      "rows": 4
+    }
+  },
+  "schema_version": 1,
+  "scope": "positive-only nonsealed UNEP MARS post-2024 exact Sentinel-2 cohort"
+}
