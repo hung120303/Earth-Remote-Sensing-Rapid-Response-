@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_balanced-request_exact-identity_simulation_gpu_smoke",
+  "scope": "paper-aligned balanced-request physics-guided teacher adapter v2 on development fold 2",
+  "trainer": {
+    "path": "tools/train_mars_physics_guided_teacher_balanced_pilot.py",
+    "sha256": "88e8afce95d62f8c425e9c604aae8ed3fe91db79e75befe710141c1a76299938"
+  },
+  "code_dependencies": [
+    {"path": "tools/train_mars_physics_guided_teacher_pilot.py", "sha256": "73e5161fa03eec45b637d64998ff0ed116fc0496f2af32a8f72d74f546dbb376"},
+    {"path": "EarthRemoteSensingRapidResponse/mars_physics_guided_teacher.py", "sha256": "f3a0253243448429bdb4cc4fea766af962729d01af0e8685a27581ab9e8b4a32"},
+    {"path": "EarthRemoteSensingRapidResponse/mars_paper_model.py", "sha256": "f9cc65b3bb764ed83a4aa67209cccdbad2b6c80826b0915711392ca8b10a0486"},
+    {"path": "EarthRemoteSensingRapidResponse/mars_v4_simulation.py", "sha256": "0a2bf48dcf1f214b72cd9f0b5c425de03ec7a2baba387155ee9bd052cf0d7e09"},
+    {"path": "tools/train_mars_source_aligned_residual.py", "sha256": "6eac7c57b9bbe25d4c06062dd8fddacbb5b3e25728d5e2f9609742ac3f066360"}
+  ],
+  "inputs": {
+    "metadata_root": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L", "sha256": "directory_verified_by_acquisition_receipt"},
+    "manifest": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl", "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"},
+    "metadata_csv": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/validated_images_all.csv", "sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2"},
+    "acquisition_receipt": {"path": "reports/acquisition/mars_s2l_paper_v3_development_download.json", "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"},
+    "fold_protocol": {"path": "configs/mars_paper_v3_group_folds.json", "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"},
+    "released_checkpoint": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch", "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"},
+    "lut": {"path": "configs/mars_s2_integrated_transmittances.json", "sha256": "1c11ef3f84a9d2a8ce65fc7301166ce20517bb57425ed3f5dca5a313a876c03f"}
+  },
+  "folds": {
+    "fit": [3, 4],
+    "held": 2,
+    "unit": "physical_location_id",
+    "status": "reused architecture-selection fold; v1 point metrics already exposed"
+  },
+  "architecture": {
+    "identity": "unchanged v1 exact-identity five-scale physics-guided released-U-Net adapter",
+    "only_architecture_change": "none",
+    "training_distribution_change": "equal total request mass for PLUME/NO_PLUME x Sentinel-2/Landsat, then equal occupied physical-site cells within each stratum",
+    "simulation_interpretation": "0.5 attempt probability conditional on a positive request; expected successful overall fraction below 0.25 due source matching and visibility rejection"
+  },
+  "training": {
+    "seed": 20262400,
+    "epochs": 4,
+    "samples_per_epoch": 32768,
+    "batch_size": 16,
+    "loader_workers": 4,
+    "crop_size": 192,
+    "simulation_fraction": 0.5,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "gradient_clip": 2.0,
+    "positive_pixel_weight": 10.0,
+    "focal_gamma": 2.0,
+    "dice_weight": 0.5,
+    "scene_weight": 0.25,
+    "pair_weight": 0.2,
+    "pair_margin": 0.5,
+    "negative_upward_weight": 0.05,
+    "positive_downward_weight": 0.05,
+    "correction_l2_weight": 0.001,
+    "endpoint_rule": "fixed epoch 4; no held-fold epoch selection"
+  },
+  "search": {
+    "strengths": [0.25],
+    "candidate_count": 1,
+    "reason": "v1 strength 0.25 uniquely passed every point gate; v2 does not reopen strength selection"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20262450,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.003,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "pixel_iou_delta_strictly_positive": true,
+    "each_sensor_ap_delta_minimum": 0.0,
+    "paired_site_ap_lower_bound_strictly_positive": true,
+    "pass_action": "freeze a separate multi-seed full development cross-fit; no external scoring"
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_physics_guided_teacher_balanced_pilot.pt",
+    "json": "reports/experiments/mars_physics_guided_teacher_balanced_pilot.json"
+  },
+  "invariants": [
+    "The smoke run validates exact identity, 0.5 positive request mass, simulation, and finite optimization without writing results.",
+    "No fresh CloudSEN or exact paper input is loaded.",
+    "Fold-2 is reused selection evidence and cannot serve as independent confirmation.",
+    "Only the fixed epoch-4 endpoint at strength 0.25 is scored.",
+    "Failure writes no artifact and cannot authorize full cross-fitting or external scoring."
+  ]
+}

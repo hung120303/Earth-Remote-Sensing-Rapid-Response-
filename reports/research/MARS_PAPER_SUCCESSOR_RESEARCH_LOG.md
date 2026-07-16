@@ -3008,3 +3008,21 @@ positive/negative and sensor request mass, retain the same architecture and gate
 use the single v1 point-safe strength 0.25, and require the same positive site-
 bootstrap lower bound. V1 itself is rejected: no artifact was written and no fresh
 or paper input was opened.
+
+### 2026-07-16: Balanced-request physics-guided adapter v2 frozen
+
+V2 changes no model layer, loss weight, optimizer setting, metric, or evidence gate.
+Its sampler first gives exactly 0.25 total request mass to each PLUME/NO_PLUME x
+Sentinel-2/Landsat stratum, then equalizes occupied physical-site cells within the
+stratum. Positive requests therefore carry exactly 0.50 mass before the unchanged
+0.50 simulation attempt and wind/visibility filters. The single adapter strength is
+fixed to 0.25 because it was the only v1 strength that passed every point gate; no
+strength search is reopened. A fourth fixed endpoint epoch is justified by the still-
+declining training objective and is frozen without intermediate held-fold scoring.
+
+The GPU smoke reproduced released logits exactly, verified all four request masses
+at 0.25, realized 17.2% successful simulations in its 64-sample draw, and completed
+finite optimization with the unchanged 1,293,888 trainable parameters. The full
+pilot retains the +0.003 AP, nonnegative recall and two-sensor AP, positive IoU, and
+strictly positive paired-site lower-bound gates. Fold 2 is transparently reused
+selection evidence. Failure cannot create an artifact or authorize external access.
