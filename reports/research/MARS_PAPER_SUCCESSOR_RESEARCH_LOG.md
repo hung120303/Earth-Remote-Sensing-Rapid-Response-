@@ -2513,3 +2513,15 @@ the old stochastic OOF scores. Instead, it requires positive AP delta in every i
 fold, bounded recall changes, limited AP drift, and tight reproduction of fold-0/1
 metrics produced by the already frozen artifact. This distinction will be disclosed
 in the methods and reproducibility limitations.
+
+### 2026-07-16: Deterministic site-relative score rebuild rejected
+
+The deterministic v2 rebuild improved combined inner AP by +0.003080 and matched-
+FPR recall by +0.003016; all three inner folds improved AP. Frozen-artifact inference
+also exactly reproduced fold-0 AP/recall deltas (+0.001304/+0.002685) and fold-1
+deltas (+0.001562/+0.004027). Nevertheless, at least one inner fold exceeded the
+preregistered -0.002 recall tolerance. The wrapper deleted the 1.75 MB cache and
+raised failure, so these scores are not inputs to subsequent selection. Rather than
+relax a seen gate, the next model will learn a permutation-equivariant site context
+directly from the existing deterministic 108-feature OOF caches and frozen current
+scores. This removes the stochastic spatial-crossfit dependency entirely.
