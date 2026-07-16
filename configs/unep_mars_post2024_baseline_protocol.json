@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_baseline_inference",
+  "scope": "positive-only nonsealed UNEP MARS post-2024 exact Sentinel-2 cohort",
+  "manifests": {
+    "auxiliary_training": {
+      "path": ".research/unep_mars_post2024/model_auxiliary_training.jsonl",
+      "sha256": "2971ebad317c7f709a677e5c6431a75804fce4026bbcf28fa50ce5bb4cc89300",
+      "rows": 135,
+      "groups": 27
+    },
+    "development": {
+      "path": ".research/unep_mars_post2024/model_development.jsonl",
+      "sha256": "5a17c24cb7a78941ed8586cbf99813c3f4772040d5c4bfb9377b2d3a675e1741",
+      "rows": 4,
+      "groups": 4
+    }
+  },
+  "model": {
+    "name": "released MARS-S2L UnetOriginal",
+    "checkpoint": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+    "checkpoint_sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246",
+    "input": "released 16-channel MARS-S2L contract; wind channels zero by the frozen acquisition protocol"
+  },
+  "endpoints": {
+    "released_fixed_0_5": {
+      "pixel_probability_threshold": 0.5,
+      "minimum_connected_pixels": 100
+    },
+    "current_sentinel_mask": {
+      "pixel_probability_threshold": 0.8,
+      "minimum_connected_pixels": 100,
+      "provenance": "development-selected and independently confirmed Sentinel-2 mask threshold used by the current v3 controller"
+    }
+  },
+  "metrics": {
+    "allowed": [
+      "positive recall from nonempty retained mask",
+      "aggregate pixel intersection over union",
+      "aggregate pixel Dice",
+      "connected scene-score distribution"
+    ],
+    "prohibited": [
+      "average precision",
+      "false-positive rate",
+      "precision",
+      "specificity",
+      "AUROC"
+    ],
+    "uncertainty": {
+      "method": "group bootstrap",
+      "unit": "frozen 25 km source group",
+      "replicates": 10000,
+      "seed": 20260716,
+      "confidence": 0.95
+    }
+  },
+  "interpretation": {
+    "auxiliary_training": "training-domain diagnostic only",
+    "development": "isolated four-group confirmation only; cannot select thresholds or architecture",
+    "sealed_external_accessed": false,
+    "paper_test_accessed": false
+  }
+}
