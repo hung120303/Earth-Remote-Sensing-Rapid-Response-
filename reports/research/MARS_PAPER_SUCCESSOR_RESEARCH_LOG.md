@@ -2317,3 +2317,11 @@ not claimed as published cloud truth. Hash-bound aggregate statistics preserve a
 separate all-clear (327 rows) versus non-clear (41 rows) stratification, with 84,588
 published non-clear pixels among available scenes. The six unavailable identities
 remain outside the loader manifest and inside the adversarial full-cohort bound.
+### 2026-07-16: Fresh-test loader manifest materialized
+
+The frozen loader builder emitted 368 unique rows across 355 groups (manifest
+SHA-256 `c6cabb8b21c9573b5de9386327ec1800faab11225c8819e1fc3c5cad35d27d9a`).
+It reconciled all 41 available non-clear rows and all 84,588 published non-clear
+pixels, explicitly zero-filled both missing wind components in five rows, and kept
+all six unavailable identities in the receipt. No scoring or paper-test access
+occurred.
