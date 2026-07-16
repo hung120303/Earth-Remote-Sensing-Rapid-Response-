@@ -1,0 +1,94 @@
+{
+  "all_calibration_gates_pass": false,
+  "artifact": null,
+  "confirmation": {
+    "checks": {
+      "every_fold_ap_exact": true,
+      "every_fold_false_positives_no_higher": true,
+      "every_fold_negative_p95_no_higher": true
+    },
+    "folds": {
+      "0": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.9164676979068671,
+        "calibrated_false_positives": 343,
+        "calibrated_negative_logit_p95": -1.2051511190638426,
+        "current_false_positives": 357,
+        "current_negative_logit_p95": -1.1495788001103013,
+        "raw_ap": 0.9164676979068671,
+        "raw_minus_current_negative_logit_p95": -0.0035072167072101035,
+        "raw_negative_logit_p95": -1.1530860168175114
+      },
+      "1": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.8980928145550502,
+        "calibrated_false_positives": 544,
+        "calibrated_negative_logit_p95": -0.41818465947660405,
+        "current_false_positives": 574,
+        "current_negative_logit_p95": -0.34639306017949756,
+        "raw_ap": 0.8980928145550502,
+        "raw_minus_current_negative_logit_p95": -0.01972649705077517,
+        "raw_negative_logit_p95": -0.36611955723027273
+      }
+    }
+  },
+  "decision": "Reject calibration before fresh re-evaluation.",
+  "generated_at_utc": "2026-07-16T19:38:23.932855+00:00",
+  "logit_offset": -0.052065102246331166,
+  "provenance": {
+    "git_commit": "f7a8a29f451b5a23a88eb6254b5ab22ce37636a9",
+    "joblib": "1.5.3",
+    "numpy": "2.4.4",
+    "protocol_sha256": "7930e6da33fcbb479baca1f629efd776733bb6a841ae38ba30a373a0fbdeb338",
+    "script_sha256": "05303b3989455b1c3e82745926d164985f5b3591a17e25e95d7d34bd2fad8bd6"
+  },
+  "schema_version": 1,
+  "scope": "development-only monotone negative-logit calibration",
+  "selection": {
+    "checks": {
+      "every_fold_ap_exact": true,
+      "every_fold_false_positives_no_higher": false,
+      "every_fold_negative_p95_no_higher": true
+    },
+    "folds": {
+      "2": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.9194141609942714,
+        "calibrated_false_positives": 226,
+        "calibrated_negative_logit_p95": -1.9459732576628774,
+        "current_false_positives": 224,
+        "current_negative_logit_p95": -1.877140846048896,
+        "raw_ap": 0.9194141609942714,
+        "raw_minus_current_negative_logit_p95": -0.01676730936764992,
+        "raw_negative_logit_p95": -1.893908155416546
+      },
+      "3": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.9341429498182684,
+        "calibrated_false_positives": 246,
+        "calibrated_negative_logit_p95": -1.7211811523379896,
+        "current_false_positives": 249,
+        "current_negative_logit_p95": -1.6711811523379896,
+        "raw_ap": 0.9341429498182684,
+        "raw_minus_current_negative_logit_p95": 0.002065102246331163,
+        "raw_negative_logit_p95": -1.6691160500916584
+      },
+      "4": {
+        "ap_absolute_difference": 0.0,
+        "calibrated_ap": 0.8929019994426096,
+        "calibrated_false_positives": 514,
+        "calibrated_negative_logit_p95": -0.4593401728008441,
+        "current_false_positives": 546,
+        "current_negative_logit_p95": -0.39568936873753835,
+        "raw_ap": 0.8929019994426096,
+        "raw_minus_current_negative_logit_p95": -0.011585701816974714,
+        "raw_negative_logit_p95": -0.40727507055451306
+      }
+    }
+  },
+  "selection_fold_offsets_before_margin": [
+    0.01676730936764992,
+    -0.002065102246331163,
+    0.011585701816974714
+  ]
+}

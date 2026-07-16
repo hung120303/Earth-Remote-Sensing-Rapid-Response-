@@ -2758,3 +2758,14 @@ require every fold's negative logit p95 and false-positive count at the fixed
 within 1e-12. The calibrator cannot load fresh CloudSEN or paper-cache inputs. If it
 passes, the resulting artifact authorizes a transparently post-test replay of the
 same fresh safety cohort; that replay cannot be described as a new untouched test.
+
+### 2026-07-16: P95-derived spatial-Prithvi calibration rejected
+
+The frozen rule produced a -0.052065-logit offset. It preserved AP exactly and made
+negative p95 lower than current in all five folds. Confirmation folds also reduced
+fixed-threshold false positives (343 vs 357 and 544 vs 574). However, selection fold
+2 retained 226 false positives versus current's 224, so the predeclared all-fold
+gate failed even though folds 3/4 improved (246 vs 249 and 514 vs 546). No artifact
+was written and the fresh cohort was not replayed. A single p95 statistic does not
+guarantee fixed-threshold tail control; any replacement calibration must derive its
+tail constraint from development data and receive a new frozen confirmation test.
