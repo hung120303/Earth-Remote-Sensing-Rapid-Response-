@@ -2439,3 +2439,11 @@ but recall changed -0.00067 and its AP lower bound was -0.00177. History length
 does not make a bidirectional prior stable. The next rule is one-sided: it may only
 suppress scenes at sites whose top-k evidence is below a confidence cutoff, so it
 cannot create new high-score false positives at a fixed threshold.
+### 2026-07-16: One-sided temporal suppression frozen
+
+The new candidate family is mathematically conservative: it can only lower a scene
+score. For each site, a penalty applies when its top-k current logits remain below
+a confidence cutoff; sites above the cutoff are unchanged. Thirty-six top-k/cutoff/
+weight candidates and all evidence gates are frozen. Selection uses folds 2/3/4,
+confirmation uses folds 0/1, and every candidate is runtime-asserted never to raise
+any score. The paper and fresh-test caches remain out of scope.
