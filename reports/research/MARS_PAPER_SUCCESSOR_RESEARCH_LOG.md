@@ -1859,3 +1859,13 @@ the 13,393 exact paper-test targets and 1,289 paper-test locations excluded,
 and eligible manifest SHA-256
 `13a19dd7daad36b40261f7acb0332b0418cb37b1b9407d708e864b3847976e74`.
 This cohort is large enough to authorize exact-product asset resolution.
+
+The frozen nonsealed resolver finds 167 fully available exact target/reference
+pairs out of 224: 141/143 Sentinel-2 and 26/81 Landsat. Auxiliary training has
+162 resolved samples and development has 5. There are zero query errors.
+Unresolved sides are 38 Landsat targets, 26 Landsat references, one Sentinel-2
+target, and one Sentinel-2 reference; the Landsat losses are dominated by
+retired real-time products. No later tier product, L2 product, or otherwise
+similar acquisition is substituted. Sealed-external products were not
+resolved. The ignored exact-asset manifest SHA-256 is
+`027022bf72ea7f17e68bf69c887f5e408cf9ca5aa485ef4c59c0560b5e25d269`.

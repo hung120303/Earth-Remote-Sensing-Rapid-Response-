@@ -1,0 +1,57 @@
+{
+  "generated_at_utc": "2026-07-16T02:40:20.171714+00:00",
+  "output": {
+    "bytes": 448555,
+    "path": ".research/unep_mars_post2024/nonsealed_exact_assets.jsonl",
+    "sha256": "027022bf72ea7f17e68bf69c887f5e408cf9ca5aa485ef4c59c0560b5e25d269"
+  },
+  "providers": {
+    "landsat": "USGS LandsatLook landsat-c2l1 STAC",
+    "sentinel2": "Element 84 Earth Search sentinel-2-l1c backed by public Sentinel-2 L1C assets"
+  },
+  "schema_version": 1,
+  "sealed_external_accessed": false,
+  "source_manifest": {
+    "path": ".research/unep_mars_post2024/eligible_manifest.jsonl",
+    "sha256": "13a19dd7daad36b40261f7acb0332b0418cb37b1b9407d708e864b3847976e74"
+  },
+  "status": "nonsealed exact-product assets resolved; imagery not downloaded",
+  "substitution_policy": "exact product only; no RT-to-tier or L1C-to-L2A substitution",
+  "summary": {
+    "by_role": {
+      "auxiliary_training": {
+        "resolved": 162,
+        "total": 215,
+        "unresolved": 53
+      },
+      "development": {
+        "resolved": 5,
+        "total": 9,
+        "unresolved": 4
+      }
+    },
+    "by_sensor": {
+      "Landsat": {
+        "resolved": 26,
+        "total": 81,
+        "unresolved": 55
+      },
+      "Sentinel-2": {
+        "resolved": 141,
+        "total": 143,
+        "unresolved": 2
+      }
+    },
+    "samples": 224,
+    "status": {
+      "resolved": 167,
+      "unresolved": 57
+    },
+    "unresolved_product_sides": {
+      "Landsat:reference:unavailable_exact_product": 26,
+      "Landsat:target:unavailable_exact_product": 38,
+      "Sentinel-2:reference:unavailable_exact_product": 1,
+      "Sentinel-2:target:unavailable_exact_product": 1
+    }
+  }
+}
