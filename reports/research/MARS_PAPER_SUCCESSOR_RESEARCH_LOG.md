@@ -2411,3 +2411,13 @@ is then fit on those folds and confirmed once on folds 0/1. Both stages require
 positive paired site-bootstrap AP evidence, improved recall, and per-fold stability.
 Coordinates, country, site identity, and all inference-time labels are prohibited;
 the exact paper cache is not loaded.
+### 2026-07-16: Learned cross-site risk prior rejected
+
+The 20-candidate experiment selected ExtraTrees depth-3/weight-0.1 but failed its
+frozen gates and wrote no artifact. Selection AP delta was +0.00025 with paired lower
+-0.00054; confirmation delta was +0.00034 with lower -0.00058, and fold 0 regressed
+-0.00038. Equal site weighting alone does not resolve the transfer gap. A constrained
+post-failure diagnostic found that temporal priors have opposite behavior by history
+length: they hurt sparse sites but materially improve sites with roughly 30 or more
+observations. The next candidate family will freeze history-length routing and select
+its cutoff/top-k/weight only on authorized development folds.
