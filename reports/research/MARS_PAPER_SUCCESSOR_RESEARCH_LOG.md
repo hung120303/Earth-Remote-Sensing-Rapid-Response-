@@ -2539,3 +2539,15 @@ primary strata require positive paired-site AP lower bounds and nondecreasing re
 whole-fold and per-fold safeguards are also required. The 5% site-positive threshold
 defines supervised development domains only and is absent from inference. Known
 training sites remain on current v3; the head routes only unseen sites if promoted.
+
+### 2026-07-16: Low-prevalence set-context head rejected
+
+The frozen search selected the depth-2 model with a 0.10 blend. Every selection
+fold improved low-prevalence AP (+0.006362, +0.007537, +0.006756), but combined
+selection AP delta was +0.005471 with paired interval [-0.003393, +0.014600], and
+pooled matched-FPR recall changed -0.005556. Independent confirmation improved
+combined low-prevalence AP +0.003820 with interval [-0.001282, +0.009054] and
+unchanged recall; fold 0 AP regressed -0.000638 while fold 1 improved +0.000561.
+Whole-fold confirmation AP was effectively unchanged (+0.000074) and recall changed
+-0.000671. The inferential failures are decisive, no artifact was written, and the
+paper cache remains unauthorized for this candidate.
