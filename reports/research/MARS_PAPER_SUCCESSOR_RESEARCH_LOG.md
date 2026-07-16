@@ -2348,3 +2348,13 @@ adversarial bounds for six unavailable identities. Passing requires no higher fa
 positive count in the full available, all-clear, and non-clear strata; no higher
 overall raw p95; no higher p95 logit margin in all three strata; and no worse
 symmetric full-cohort bound. Failure blocks paper-cache access.
+### 2026-07-16: Fixed candidate passes fresh no-plume safety test
+
+All predeclared gates passed. On 368 available fresh scenes, the current head made
+4 false positives (1.08696%) and the fixed candidate made 2 (0.54348%); both
+candidate errors were shared with the current head, so there were zero candidate-only
+false positives. Both heads made 0/41 errors in the published non-clear stratum.
+The candidate also lowered overall raw p95 (0.02231 to 0.01392) and p95
+logit-to-threshold margin (-2.84564 to -3.07652). Counting all six unavailable rows
+as errors for both heads gives symmetric worst-case full-cohort FPR bounds of
+2.67380% current versus 2.13904% candidate. This authorizes exact paper replay.
