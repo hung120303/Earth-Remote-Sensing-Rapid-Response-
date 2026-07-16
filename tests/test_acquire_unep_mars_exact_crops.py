@@ -21,6 +21,7 @@ from acquire_unep_mars_exact_crops import (
     select_shard,
     source_contract,
     stable_identity,
+    validate_cached_contract,
 )
 
 
@@ -85,6 +86,47 @@ class ExactCropTests(unittest.TestCase):
         right = stable_identity(cohort, {"target": "two"})
         self.assertNotEqual(left, right)
         self.assertEqual(left, stable_identity(cohort, {"target": "one"}))
+
+    def test_cached_contract_rejects_superseded_s2_resampling(self) -> None:
+        cohort = {
+            "sample_id": "sample",
+            "group_id": "group",
+            "research_role": "development",
+            "label_state": "NO_PLUME",
+            "sensor_family": "Sentinel-2",
+            "target_product": "target",
+            "background_product": "background",
+            "source_grid": {
+                "crs": "EPSG:32632",
+                "transform": [10.0, 0.0, 408510.0, 0.0, -10.0, 3776960.0],
+                "width": 200,
+                "height": 200,
+            },
+        }
+        manifest = {
+            **{key: cohort[key] for key in (
+                "sample_id",
+                "group_id",
+                "research_role",
+                "label_state",
+                "target_product",
+                "background_product",
+            )},
+            "product_contract": {
+                "shape": [200, 200],
+                "resolution_m": 10.0,
+                "crs": "EPSG:32632",
+                "transform": cohort["source_grid"]["transform"],
+                "band_order": [
+                    *S2_DESCRIPTIONS,
+                    *(f"{band}_bg" for band in S2_DESCRIPTIONS),
+                ],
+                "dtype": "uint16",
+                "resampling": "bilinear spectral",
+            },
+        }
+        with self.assertRaisesRegex(ValueError, "preprocessing contract"):
+            validate_cached_contract(manifest, cohort)
 
 
 if __name__ == "__main__":

@@ -45,6 +45,13 @@ S2_DESCRIPTIONS = S2_SOURCE_BANDS
 LANDSAT_SOURCE_BANDS = ("B2", "B3", "B4", "B5", "B6", "B7")
 LANDSAT_DESCRIPTIONS = ("B02", "B03", "B04", "B05", "B06", "B07")
 S2_20M_BANDS = frozenset({"B11", "B12"})
+S2_RESAMPLING_CONTRACT = (
+    "native-10m bilinear; S2 20m GEE-nearest then official "
+    "nearest-down/bilinear-up; nearest QA; all_touched polygon rasterization"
+)
+LANDSAT_RESAMPLING_CONTRACT = (
+    "bilinear spectral; nearest QA; all_touched polygon rasterization"
+)
 
 
 def repo_root() -> Path:
@@ -206,10 +213,55 @@ def select_shard(
     ]
 
 
-def verify_cached(path: Path, expected_identity: str, root: Path) -> dict[str, Any]:
+def validate_cached_contract(manifest: dict[str, Any], cohort: dict[str, Any]) -> None:
+    """Reject internally valid files produced under a superseded crop contract."""
+    sensor = str(cohort["sensor_family"])
+    _, descriptions = source_contract(sensor)
+    expected_resampling = (
+        S2_RESAMPLING_CONTRACT
+        if sensor == "Sentinel-2"
+        else LANDSAT_RESAMPLING_CONTRACT
+    )
+    contract = manifest.get("product_contract", {})
+    expected_bands = list(descriptions) + [f"{band}_bg" for band in descriptions]
+    if (
+        contract.get("shape") != [SIZE, SIZE]
+        or float(contract.get("resolution_m", -1.0)) != RESOLUTION
+        or contract.get("dtype") != "uint16"
+        or contract.get("band_order") != expected_bands
+        or contract.get("resampling") != expected_resampling
+    ):
+        raise ValueError(
+            f"Cached crop preprocessing contract mismatch: {cohort['sample_id']}"
+        )
+    source_grid = cohort.get("source_grid")
+    if source_grid is not None and (
+        contract.get("crs") != source_grid["crs"]
+        or contract.get("transform") != source_grid["transform"]
+        or contract.get("shape") != [source_grid["height"], source_grid["width"]]
+    ):
+        raise ValueError(f"Cached crop producer grid mismatch: {cohort['sample_id']}")
+    if (
+        manifest.get("sample_id") != cohort["sample_id"]
+        or manifest.get("group_id") != cohort["group_id"]
+        or manifest.get("research_role") != cohort["research_role"]
+        or manifest.get("label_state") != cohort.get("label_state", "PLUME")
+        or manifest.get("target_product") != cohort["target_product"]
+        or manifest.get("background_product") != cohort["background_product"]
+    ):
+        raise ValueError(f"Cached crop cohort contract mismatch: {cohort['sample_id']}")
+
+
+def verify_cached(
+    path: Path,
+    expected_identity: str,
+    root: Path,
+    cohort: dict[str, Any],
+) -> dict[str, Any]:
     manifest = json.loads(path.read_text(encoding="utf-8"))
     if manifest["input_identity_sha256"] != expected_identity:
         raise ValueError(f"Cached crop identity mismatch: {path}")
+    validate_cached_contract(manifest, cohort)
     for record in manifest["assets"].values():
         asset = safe_repo_path(root, record["path"])
         if asset.stat().st_size != record["bytes"] or sha256(asset) != record["sha256"]:
@@ -231,7 +283,7 @@ def acquire_one(
     scene_dir = output_root / sample_id
     manifest_path = scene_dir / "manifest.json"
     if manifest_path.is_file() and not overwrite:
-        return verify_cached(manifest_path, identity, root)
+        return verify_cached(manifest_path, identity, root, cohort)
 
     if cohort["research_role"] == "sealed_external" or assets["research_role"] == "sealed_external":
         raise ValueError("Sealed-external sample reached crop acquisition")
@@ -347,9 +399,9 @@ def acquire_one(
             "band_order": list(descriptions) + [f"{band}_bg" for band in descriptions],
             "dtype": "uint16",
             "resampling": (
-                "native-10m bilinear; S2 20m GEE-nearest then official nearest-down/bilinear-up; nearest QA; all_touched polygon rasterization"
+                S2_RESAMPLING_CONTRACT
                 if sensor == "Sentinel-2"
-                else "bilinear spectral; nearest QA; all_touched polygon rasterization"
+                else LANDSAT_RESAMPLING_CONTRACT
             ),
         },
         "quality": {
