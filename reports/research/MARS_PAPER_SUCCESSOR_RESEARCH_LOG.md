@@ -1831,3 +1831,11 @@ Only polygonal GeoJSON may supply pixel truth; catalog absence is never a
 negative. The sealed external bucket cannot influence architecture or
 threshold selection. Bulk data remains ignored under
 `.research/unep_mars_post2024/`.
+
+The first schema-only catalog audit found 26,762 rows spanning 2020-10-29 to
+2026-06-15. Before computing any eligible-cohort result, the protocol received
+one transparent schema correction: UNEP uses the aggregate display value
+`Landsat - NASA/USGS`, not spacecraft-specific display names. The selection
+therefore recognizes that value while still requiring exact `LC08` or `LC09`
+product prefixes. No date, validation, spatial-exclusion, grouping, or
+promotion rule changed.

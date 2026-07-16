@@ -1,6 +1,12 @@
 # UNEP MARS post-2024 acquisition protocol
 
-Status: **frozen before catalog download** on 2026-07-16 UTC.
+Status: **frozen with one pre-outcome schema correction** on 2026-07-16 UTC.
+
+The initial header/category audit, performed before any eligibility outcome was
+computed, showed that UNEP encodes both Landsat spacecraft under
+`Landsat - NASA/USGS`. The frozen placeholder names were corrected to that
+catalog value; exact `LC08`/`LC09` prefixes still identify and constrain the
+spacecraft. This is a schema repair, not a selection change.
 
 ## Why this cohort
 
@@ -22,8 +28,9 @@ research artifacts must credit UNEP IMEO and retain compatible terms.
 
 ## Frozen selection
 
-Use only observations at or after 2025-01-01 UTC from Sentinel-2, Landsat-8,
-or Landsat-9. Require `actionable=YES` and nonempty plume ID, source ID,
+Use only observations at or after 2025-01-01 UTC from Sentinel-2 or UNEP's
+aggregate Landsat category, constrained to exact `LC08`/`LC09` products.
+Require `actionable=YES` and nonempty plume ID, source ID,
 satellite, timestamp, target product, background product, latitude, and
 longitude. Target and background must be distinct, sensor-consistent exact
 product IDs. Multiple plume records on one target are merged rather than

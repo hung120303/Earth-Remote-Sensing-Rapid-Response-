@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "frozen_before_catalog_download",
+  "status": "frozen_with_pre_outcome_schema_correction",
   "frozen_at_utc": "2026-07-16T02:27:12.4918626Z",
   "research_role": "positive-only auxiliary training, development, and sealed external confirmation",
   "source": {
@@ -25,8 +25,7 @@
     "minimum_tile_date_utc": "2025-01-01T00:00:00Z",
     "allowed_satellites": [
       "Sentinel-2 - ESA",
-      "Landsat-8 - USGS",
-      "Landsat-9 - USGS"
+      "Landsat - NASA/USGS"
     ],
     "required_actionable_value_casefold": "yes",
     "required_nonempty_fields": [
@@ -41,6 +40,7 @@
     ],
     "require_distinct_target_and_background": true,
     "require_sensor_consistent_product_ids": true,
+    "landsat_product_prefixes": ["LC08", "LC09"],
     "deduplicate_target_products": true,
     "merge_multiple_plumes_on_one_target": true,
     "group_unit": "source_name with a 25 km connected-component fallback",
@@ -85,6 +85,7 @@
     "tracked_outputs": "compact protocol, acquisition audit, cohort manifest identities/counts, experiment summaries, and code only"
   },
   "frozen_invariants": [
+    "After download but before outcome filtering, the Landsat display name was corrected from spacecraft-specific placeholders to the catalog's documented aggregate value; LC08/LC09 remain enforced from exact product IDs.",
     "The catalog checksum is provenance, not a reason to alter selection rules after download.",
     "No paper-test label, location, target product, or pixel mask may enter fitting.",
     "All target/reference products must be the exact products named by UNEP.",
