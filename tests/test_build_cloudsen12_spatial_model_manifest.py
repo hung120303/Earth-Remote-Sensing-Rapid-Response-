@@ -37,6 +37,12 @@ class CloudsenSpatialManifestTests(unittest.TestCase):
                 "target_product": "S2A_target",
                 "background_product": "S2B_reference",
                 "source_center": [1.0, 2.0],
+                "source_grid": {
+                    "crs": "EPSG:32632",
+                    "transform": [10.0, 0.0, 100.0, 0.0, -10.0, 200.0],
+                    "width": 200,
+                    "height": 200,
+                },
                 "source_name": "CloudSEN12+",
                 "tile_date": "2025-01-01T00:00:00+00:00",
                 "wind_u": 3.0,
@@ -50,7 +56,12 @@ class CloudsenSpatialManifestTests(unittest.TestCase):
                 "sensor_family": "Sentinel-2",
                 "target_product": "S2A_target",
                 "background_product": "S2B_reference",
-                "product_contract": {"band_order": list(MARS_BAND_ORDER)},
+                "product_contract": {
+                    "band_order": list(MARS_BAND_ORDER),
+                    "crs": "EPSG:32632",
+                    "transform": [10.0, 0.0, 100.0, 0.0, -10.0, 200.0],
+                    "shape": [200, 200],
+                },
                 "quality": {"gate_pass_before_cloud": True, "plume_pixels": 0},
                 "assets": {"image": image},
             }

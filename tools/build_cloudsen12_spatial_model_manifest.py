@@ -154,6 +154,14 @@ def model_record(
         raise ValueError(f"Clear-scene crop has plume pixels: {cohort['sample_id']}")
     if tuple(crop["product_contract"]["band_order"]) != MARS_BAND_ORDER:
         raise ValueError(f"Band order changed for {cohort['sample_id']}")
+    source_grid = cohort["source_grid"]
+    if (
+        crop["product_contract"]["crs"] != source_grid["crs"]
+        or crop["product_contract"]["transform"] != source_grid["transform"]
+        or crop["product_contract"]["shape"]
+        != [source_grid["height"], source_grid["width"]]
+    ):
+        raise ValueError(f"Published grid changed for {cohort['sample_id']}")
     if crop["target_product"] != cohort["target_product"]:
         raise ValueError(f"Target product changed for {cohort['sample_id']}")
     if crop["background_product"] != cohort["background_product"]:
