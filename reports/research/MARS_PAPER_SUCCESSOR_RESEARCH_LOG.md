@@ -1705,3 +1705,35 @@ CUDA smoke run completed with the expected shape and finite values. Frozen
 extractor SHA-256 is
 `7f6bb99befcffa96f18e58eb7431dccfa2b60d051c461f6c36f48c5323cf9f35`;
 the two tensor-contract tests pass.
+
+The full development extraction completed 44,363 scenes in 1:04:46. The
+feature tensor is 4,361,060,480 bytes with SHA-256
+`c0bd358da7563bec1e6e3cd706aeec86c6558b5bde6181c66bab9c5b30621925`;
+the separate 11,357,056-byte target tensor SHA-256 is
+`6aca9c26dd72d56d3a8c95b7ccc2ef55331f2c8f376a06e4fc2298099744c3c9`;
+metadata SHA-256 is
+`de89016e60ab5b6b71cf3f2c6b5d4b9885a1d7257b0cf34e09158396fc0fe813`.
+Sample IDs, labels, sensors, and groups exactly match the established physics
+cache. The bulk files remain ignored.
+
+## Spatial Prithvi patch head: frozen development protocol
+
+The fixed 1.52M-parameter head projects each of the four 192-channel encoder
+depths separately, fuses them with the existing nine physics/probability maps
+pooled to 8 x 8, and uses two local residual blocks. Observable-weighted
+attention, mean, and maximum pooling feed the scene classifier. Training uses
+site-cell weights, square-root positive weighting capped at four, AdamW at
+3e-4 with weight decay 0.01, dropout 0.3, eight epochs, and scene BCE plus
+0.25 times observable fractional-patch BCE/Dice. Positive rows without pixel
+truth are excluded only from the patch term, not scene supervision.
+
+Two fixed seeds (20261900 and 20262000) each produce five geographic
+leave-one-fold-out members. Their averaged OOF score is tested only at blends
+0.05 / 0.10 / 0.20 / 0.30 / 0.40 around current. Promotion requires at least
++0.002 pooled AP, positive pooled recall, positive AP and nonnegative recall
+in every fold, no pooled sensor AP loss, positive paired-site lower bounds,
+and independently positive AP plus nonnegative fold recall for each seed. A
+pass preserves all ten crossfit members; a rejection never opens the paper
+cache. Frozen trainer SHA-256 is
+`26e83caef2915eea73bda006ac7af87e65e6a6683a0559c58fc34ed88b1a765f`;
+its forward and missing-mask loss tests pass.
