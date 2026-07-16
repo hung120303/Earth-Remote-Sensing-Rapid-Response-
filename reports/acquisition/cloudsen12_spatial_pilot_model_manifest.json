@@ -1,0 +1,57 @@
+{
+  "artifacts": {
+    "auxiliary": {
+      "bytes": 514103,
+      "path": ".research/cloudsen12_spatial_pilot/model_auxiliary_training.jsonl",
+      "sha256": "f21bbdfe428ff71bdcdda7720aa9ea24ca3903b8daabe3ab7b9ad512cc37f583"
+    },
+    "development": {
+      "bytes": 174170,
+      "path": ".research/cloudsen12_spatial_pilot/model_development.jsonl",
+      "sha256": "35efc8c00376770346799bdf2168bc785e491994ccb8c27719393c5a81fe03b3"
+    }
+  },
+  "contract": {
+    "band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12",
+      "B02_bg",
+      "B03_bg",
+      "B04_bg",
+      "B08_bg",
+      "B11_bg",
+      "B12_bg"
+    ],
+    "cloud_label": "published all-clear represented as an exact-grid zero mask",
+    "label_scope": "negative-only",
+    "sealed_external_assets_accessed": false
+  },
+  "generated_at_utc": "2026-07-16T15:49:19.352990+00:00",
+  "inputs": {
+    "cohort_path": ".research/cloudsen12_spatial_pilot/selected_manifest.jsonl",
+    "cohort_sha256": "98eaacc62e94fb72cbdc05aa74172283165b1f2f235babde4606a06881813908",
+    "crop_root": ".research/cloudsen12_spatial_pilot/crops"
+  },
+  "schema_version": 1,
+  "status": "nonsealed clear-scene loader manifests complete",
+  "summary": {
+    "by_role": {
+      "auxiliary_training": 367,
+      "development": 125
+    },
+    "cohort_by_role": {
+      "auxiliary_training": 384,
+      "development": 128
+    },
+    "excluded": 20,
+    "groups_by_role": {
+      "auxiliary_training": 362,
+      "development": 124
+    },
+    "rows": 492
+  }
+}

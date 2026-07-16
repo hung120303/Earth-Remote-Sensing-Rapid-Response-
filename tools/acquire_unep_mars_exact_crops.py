@@ -452,6 +452,7 @@ def write_markdown(report: dict[str, Any], path: Path) -> None:
         "- Exact target and background products; no product substitution.",
         "- 200x200 pixels at 10 m in the target product CRS (2x2 km).",
         "- Twelve uint16 bands: six target then six reference bands.",
+        "- Sentinel-2 native 10 m bands reproduce the audited producer statistics; B11/B12 follow the released GEE-nearest/nearest-down/bilinear-up algorithm, but the unpublished producer GEE pixels cannot be recovered bit-for-bit from the public JP2 archive.",
         (
             "- Explicit clear-scene negatives require an identically gridded zero plume mask."
             if negative_only
@@ -572,6 +573,12 @@ def main() -> None:
             "min_valid_fraction": args.min_valid_fraction,
             "exact_product_substitution": False,
             "sealed_external_accessed": False,
+            "sentinel2_preprocessing": S2_RESAMPLING_CONTRACT,
+            "sentinel2_pixel_equivalence": (
+                "native 10 m bands reproduce audited producer statistics; SWIR "
+                "uses the released algorithm over public exact-product JP2 data, "
+                "not a bitwise copy of the unpublished Earth Engine export"
+            ),
             "shard_count": args.shard_count,
             "shard_index": args.shard_index,
         },

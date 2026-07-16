@@ -2112,3 +2112,31 @@ SHA-256
 matching the local file and every earlier verified training/evaluation receipt.
 The mistyped protocol value began `be634d`; no different checkpoint was loaded,
 and no data partition, architecture, fitted weight, or outcome was changed.
+
+All 16 deterministic acquisition shards completed and jointly reconcile to
+492/492 resolved nonsealed crops, 492 pre-cloud geometry/radiometry passes,
+and zero errors: 367 auxiliary-training negatives and 125 isolated-development
+negatives. Ignored image and zero-plume-mask storage is 287,840,064 bytes. The
+canonical unsharded verifier then rechecked every cached identity, current
+preprocessing contract, byte count, and asset SHA-256 without redownloading.
+
+The one-row producer-statistics audit is intentionally precise about replay
+equivalence. Public exact-product JP2 data on the published producer grid
+reproduce B02/B03/B04/B08 mean, standard deviation, minimum, and maximum to
+numerical precision. B11/B12 follow the released Earth Engine nearest export
+plus `georeader` nearest-down/bilinear-up algorithm, but are not bitwise equal
+to the unpublished producer GEE TIFF: for the audited target, reconstructed
+B11 mean/std are 0.535728/0.049399 versus 0.537828/0.047414 published, and B12
+mean/std are 0.425124/0.064243 versus 0.427001/0.063348. This is recorded as an
+upstream pixel-source limitation, not hidden as exact TIFF recovery and not
+tuned against a model outcome.
+
+The loader-manifest build hash-verifies every 12-band image and zero plume
+mask, materializes exact-grid all-clear cloud masks from the published
+40,000-clear/0-nonclear label, and retains all 492 successful rows. The
+auxiliary manifest spans 362 groups (SHA-256
+`f21bbdfe428ff71bdcdda7720aa9ea24ca3903b8daabe3ab7b9ad512cc37f583`);
+development spans 124 groups (SHA-256
+`35efc8c00376770346799bdf2168bc785e491994ccb8c27719393c5a81fe03b3`).
+The 20 frozen exclusions are exactly the unresolved products; zero sealed-test
+rows were acquired or materialized.

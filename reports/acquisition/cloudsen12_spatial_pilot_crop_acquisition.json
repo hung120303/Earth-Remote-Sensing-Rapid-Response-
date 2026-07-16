@@ -1,0 +1,47 @@
+{
+  "contract": {
+    "exact_product_substitution": false,
+    "min_valid_fraction": 0.8,
+    "resolution_m": 10.0,
+    "sealed_external_accessed": false,
+    "sentinel2_pixel_equivalence": "native 10 m bands reproduce audited producer statistics; SWIR uses the released algorithm over public exact-product JP2 data, not a bitwise copy of the unpublished Earth Engine export",
+    "sentinel2_preprocessing": "native-10m bilinear; S2 20m GEE-nearest then official nearest-down/bilinear-up; nearest QA; all_touched polygon rasterization",
+    "shape": [
+      200,
+      200
+    ],
+    "shard_count": 1,
+    "shard_index": 0
+  },
+  "errors": [],
+  "generated_at_utc": "2026-07-16T15:50:35.054631+00:00",
+  "inputs": {
+    "assets": {
+      "path": ".research/cloudsen12_spatial_pilot/exact_assets.jsonl",
+      "sha256": "d2af7b9b60a98bf2708cc2cb54e08e3ed85e6533dc85c94cc40b8d499ce35c93"
+    },
+    "cohort": {
+      "path": ".research/cloudsen12_spatial_pilot/selected_manifest.jsonl",
+      "sha256": "98eaacc62e94fb72cbdc05aa74172283165b1f2f235babde4606a06881813908"
+    }
+  },
+  "schema_version": 1,
+  "status": "nonsealed clear-scene crops acquired; published zero cloud masks not yet materialized",
+  "summary": {
+    "acquired": 492,
+    "attempted": 492,
+    "by_label_state": {
+      "NO_PLUME": 492
+    },
+    "by_role": {
+      "auxiliary_training": 367,
+      "development": 125
+    },
+    "by_sensor": {
+      "Sentinel-2": 492
+    },
+    "errors": 0,
+    "gate_pass_before_cloud": 492,
+    "raster_bytes": 287840064
+  }
+}
