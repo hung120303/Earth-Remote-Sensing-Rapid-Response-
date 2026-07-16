@@ -2091,3 +2091,16 @@ rounded-center grids exactly matched the producer affine. Another 413 differed
 by one pixel on both axes, 46 differed on the vertical axis, and 35 differed
 on the horizontal axis. Preserving the producer affine is therefore a material
 architecture/data-contract correction rather than a cosmetic one-row fix.
+
+The remaining Sentinel-2 resampling contract was resolved from the public
+`marss2l` 0.2.4 and `georeader-spaceml` 1.5.9 wheels. The official pipeline
+does not directly bilinear-warp B11/B12 from their 20 m source grids. Earth
+Engine first exports them at 10 m with nearest neighbor, after which
+`interpolate_20mbands_s2ee` downsamples to 20 m with nearest neighbor and
+restores 10 m with bilinear interpolation and uint16 rounding. The cropper now
+implements that published rule. On the audited row, the exact producer affine
+and product already reproduce the published B02/B03/B04/B08 mean, standard
+deviation, minimum, and maximum to numerical precision. The official SWIR
+interpolation was frozen from source code rather than selected against a model
+metric. Package hashes and code paths are recorded in
+`MARSS2L_SENTINEL2_PREPROCESSING_AUDIT.md`.
