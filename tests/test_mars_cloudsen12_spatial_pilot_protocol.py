@@ -13,6 +13,7 @@ def test_spatial_pilot_is_bounded_and_keeps_test_sealed() -> None:
     assert payload["status"] == "frozen_before_pilot_selection_or_pixel_acquisition"
     assert payload["sample_sizes"] == {"train": 384, "validation": 128, "sealed_test": 0}
     assert payload["eligibility"]["published_test_partition_accessed"] is False
+    assert payload["eligibility"]["minimum_distance_from_any_mars_emitter_site_km"] == 25
     assert payload["storage"]["bulk_data_ignored"] is True
     assert "No paper cache" in payload["go_no_go"]["paper_access"]
 
