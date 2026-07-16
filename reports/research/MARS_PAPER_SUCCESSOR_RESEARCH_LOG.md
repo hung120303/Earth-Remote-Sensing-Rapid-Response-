@@ -2169,3 +2169,19 @@ Both caches have label sum zero and no non-finite value. Extraction used the
 hash-pinned released checkpoint plus frozen alpha-0.5 residual representation,
 performed no fitting or selection, and accessed neither the MARS paper test nor
 the 374-row published CloudSEN12+ test partition.
+
+The frozen spatial-negative XGBoost experiment selected auxiliary weight 1.0
+and complement blend 0.20. Cross-fitted folds 2/3/4 pass: AP improves
++0.002286, matched-FPR recall +0.005170 (12 additional positives), both sensor
+AP strata improve, and the paired 403-group AP interval is
+[+0.000233, +0.005250]. Each selection fold has positive AP and nonnegative
+recall change.
+
+The frozen setting then reached both independent original confirmation folds.
+Fold 1 passes with AP +0.00295, recall +0.00537, and paired AP interval
+[+0.00079, +0.00692]. Fold 0 improves AP +0.00337 but recall is exactly tied
+and its paired AP interval is [-0.00025, +0.00711], failing both strict
+confirmation requirements. The branch is therefore rejected before opening
+the 125-row CloudSEN development cache, before any paper-cache replay, and
+without writing an artifact. The direction is useful evidence that localized
+source-disjoint negatives transfer, but it is not yet robust enough alone.
