@@ -3065,3 +3065,23 @@ losses will be reported separately, with synthetic examples used for representat
 learning but real examples controlling the scene-ranking objective. This branch
 targets the two failed quantities directly—unseen-site AP and component IoU—without
 reopening score calibration or synthetic frequency.
+
+### 2026-07-30: Instance-guided teacher pilot frozen after GPU smoke
+
+The implementation adds a half-resolution plume-occupancy and component-center head
+over concatenated physics and released-teacher features. Upsampled objectness gates
+the adapted-teacher correction plus a bounded, zero-initialized pixel residual. The
+training scene surrogate combines the paper-aligned connected-pixel approximation
+with proposal occupancy and center evidence. Synthetic examples receive half weight
+for pixel/object representation learning; only real examples drive scene BCE,
+real-positive/negative pairs, and teacher-direction penalties. Balanced request
+mass is retained, while simulation attempt probability is reduced to 0.25 so
+synthetic exposure is no longer the dominant change.
+
+The 64-sample GPU smoke reproduced released logits exactly (`max_abs_delta=0`),
+verified 0.25 mass in every label x sensor stratum, produced nonempty center targets
+for all eight positive inspection rows, and completed finite optimization for all
+loss terms. The architecture has 1,551,795 trainable parameters and realized 14.1%
+simulation in the smoke draw. The full pilot is fixed to seed 20263000, three
+32,768-sample epochs, strength 0.25, and the unchanged AP/recall/IoU/two-sensor/site-
+bootstrap gates on reused fold 2. It cannot access fresh or exact-paper inputs.
