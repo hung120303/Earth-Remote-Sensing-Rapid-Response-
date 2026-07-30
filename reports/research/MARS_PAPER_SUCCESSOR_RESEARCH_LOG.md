@@ -3118,3 +3118,22 @@ requires a material, site-bootstrap-positive AP gain over the current ranker,
 nonnegative matched-FPR recall and per-sensor AP, plus the already frozen positive
 mask-IoU evidence. Failure writes no model or score cache and cannot authorize any
 external evaluation.
+
+### 2026-07-30: Conservative instance-scene ensemble pilot frozen
+
+The second-seed protocol is fixed at seed 20263100 and the same three-epoch
+instance-training recipe. At the endpoint it will create three label-free fold-2
+signals: connected corrected probability at strength 0.25, sigmoid real-scene head,
+and sigmoid proposal objectness. For each signal, only weights
+0.025/0.05/0.10/0.20 are allowed in a convex blend with the stronger current
+`inner_new` score. This is twelve candidates total. Promotion requires at least
++0.001 AP over current, nonnegative matched-FPR recall, nonnegative AP for both
+sensors, and a positive 10,000-replicate paired-site AP lower bound.
+
+The mask is not searched: it remains the confirmed sensor threshold plus current
+scene cutoff rule, and must reproduce positive point, sensor, retained-TP, and
+paired-site IoU gates from frozen development caches. Score and pixel caches are
+checksum-bound and must align exactly to live evaluation labels, sensors, and
+physical sites. The GPU smoke reproduced released logits exactly, completed finite
+optimization with 1,551,795 trainable parameters, and wrote no output. No fresh or
+exact-paper input is available to the protocol.
