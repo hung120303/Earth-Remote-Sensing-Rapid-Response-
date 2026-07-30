@@ -1,0 +1,217 @@
+{
+  "all_promotion_gates_pass": false,
+  "artifact": null,
+  "candidate": {
+    "bootstrap": {
+      "confidence": 0.95,
+      "groups": 153,
+      "lower": -0.005347567293546731,
+      "mean": -0.0012327605037919303,
+      "replicates": 10000,
+      "upper": 0.0023511139091584154
+    },
+    "metrics": {
+      "accuracy": 0.9281104947356504,
+      "auroc": 0.9755157625066123,
+      "average_precision": 0.8722299542924774,
+      "false_positive_rate": 0.07117969138875062,
+      "fn": 63.0,
+      "fp": 572.0,
+      "negative_predictive_value": 0.9916301315265046,
+      "operating_point": {
+        "false_positive_rate": 0.07117969138875062,
+        "precision": 0.5620214395099541,
+        "recall": 0.9209535759096612,
+        "target_fpr": 0.0713,
+        "threshold": 0.47537456202553585
+      },
+      "precision": 0.5620214395099541,
+      "recall": 0.9209535759096612,
+      "sensor_average_precision": {
+        "Landsat": 0.9734354228031972,
+        "Sentinel-2": 0.827115892343446
+      },
+      "specificity": 0.9288203086112494,
+      "tn": 7464.0,
+      "tp": 734.0
+    },
+    "passed": false,
+    "pixel_fixed_0_5": {
+      "dice": 0.7180170841704082,
+      "intersection_over_union": 0.5600831924548447,
+      "intersection_pixels": 1007164,
+      "predicted_positive_pixels": 1563139,
+      "truth_positive_pixels": 1242265
+    },
+    "pixel_iou_delta": -0.0018028181568831014,
+    "rank": [
+      0,
+      -0.0006708860298966224,
+      -0.0011889157143182283,
+      0.0012547051442910462,
+      -0.0018028181568831014,
+      -0.25
+    ],
+    "strength": 0.25,
+    "versus_released": {
+      "checks": {
+        "ap_higher": false,
+        "no_material_sensor_ap_regression": true,
+        "recall_at_fpr_0_0713_higher": true
+      },
+      "delta": {
+        "average_precision": -0.0011889157143182283,
+        "recall_at_fpr_0_0713": 0.0012547051442910462,
+        "sensor_average_precision": {
+          "Landsat": 0.00011603715035646278,
+          "Sentinel-2": -0.0006708860298966224
+        }
+      },
+      "metrics": {
+        "accuracy": 0.9281104947356504,
+        "auroc": 0.9755157625066123,
+        "average_precision": 0.8722299542924774,
+        "false_positive_rate": 0.07117969138875062,
+        "fn": 63.0,
+        "fp": 572.0,
+        "negative_predictive_value": 0.9916301315265046,
+        "operating_point": {
+          "false_positive_rate": 0.07117969138875062,
+          "precision": 0.5620214395099541,
+          "recall": 0.9209535759096612,
+          "target_fpr": 0.0713,
+          "threshold": 0.47537456202553585
+        },
+        "precision": 0.5620214395099541,
+        "recall": 0.9209535759096612,
+        "sensor_average_precision": {
+          "Landsat": 0.9734354228031972,
+          "Sentinel-2": 0.827115892343446
+        },
+        "specificity": 0.9288203086112494,
+        "tn": 7464.0,
+        "tp": 734.0
+      },
+      "rank": [
+        -0.0011889157143182283,
+        6.578942997281789e-05,
+        -0.0011889157143182283
+      ]
+    }
+  },
+  "decision": "Reject balanced adapter pilot before full cross-fit or external scoring.",
+  "external_inputs_accessed": false,
+  "fit_folds": [
+    3,
+    4
+  ],
+  "fit_rows": 17745,
+  "generated_at_utc": "2026-07-30T20:41:13.099695+00:00",
+  "held_fold": 2,
+  "held_rows": 8833,
+  "history": [
+    {
+      "correction_l2": 0.4842298741316995,
+      "dice": 0.2889786749437917,
+      "epoch": 1,
+      "focal": 0.10522266435668826,
+      "loss": 0.31817038250301266,
+      "negative_upward": 0.14273364324753857,
+      "pair": 0.06914126434099888,
+      "positive_downward": 0.018912800667786105,
+      "scene": 0.1842543003805588,
+      "simulated_fraction": 0.245391845703125
+    },
+    {
+      "correction_l2": 0.7811370799172437,
+      "dice": 0.2778571469716553,
+      "epoch": 2,
+      "focal": 0.08884088756212805,
+      "loss": 0.2873418644849153,
+      "negative_upward": 0.15495687842849293,
+      "pair": 0.05150266358383161,
+      "positive_downward": 0.020159216063969976,
+      "scene": 0.15893971623489733,
+      "simulated_fraction": 0.2415771484375
+    },
+    {
+      "correction_l2": 0.8470882942347089,
+      "dice": 0.26920633943518624,
+      "epoch": 3,
+      "focal": 0.08293294254235661,
+      "loss": 0.26973317183728795,
+      "negative_upward": 0.1310575637680813,
+      "pair": 0.04222253699117529,
+      "positive_downward": 0.02182793157308327,
+      "scene": 0.141044753272908,
+      "simulated_fraction": 0.244781494140625
+    },
+    {
+      "correction_l2": 0.8784869245428126,
+      "dice": 0.26199705014005303,
+      "epoch": 4,
+      "focal": 0.07665256029906686,
+      "loss": 0.25724943923341925,
+      "negative_upward": 0.13017647013521128,
+      "pair": 0.03830219586501144,
+      "positive_downward": 0.01974987351994631,
+      "scene": 0.13425244218785792,
+      "simulated_fraction": 0.24517822265625
+    }
+  ],
+  "identity_max_abs": 0.0,
+  "positive_request_mass": 0.500000000000001,
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "fa323cd14217bac5f20360dbf4a45d7c75b13f61",
+    "numpy": "2.4.4",
+    "protocol_sha256": "1ff063b3331210a2967eb30f537aadde774dc9aa52125aa09497016628834acc",
+    "torch": "2.11.0+cu128",
+    "trainer_sha256": "88e8afce95d62f8c425e9c604aae8ed3fe91db79e75befe710141c1a76299938"
+  },
+  "released_identity": {
+    "released_metrics": {
+      "accuracy": 0.9279972829163364,
+      "auroc": 0.9742249900541664,
+      "average_precision": 0.8734188700067956,
+      "false_positive_rate": 0.07117969138875062,
+      "fn": 64.0,
+      "fp": 572.0,
+      "negative_predictive_value": 0.9914984059511158,
+      "operating_point": {
+        "false_positive_rate": 0.07117969138875062,
+        "precision": 0.5616858237547893,
+        "recall": 0.9196988707653702,
+        "target_fpr": 0.0713,
+        "threshold": 0.4285795004107058
+      },
+      "precision": 0.5616858237547893,
+      "recall": 0.9196988707653702,
+      "sensor_average_precision": {
+        "Landsat": 0.9733193856528407,
+        "Sentinel-2": 0.8277867783733426
+      },
+      "specificity": 0.9288203086112494,
+      "tn": 7464.0,
+      "tp": 733.0
+    },
+    "released_pixel_fixed_0_5": {
+      "dice": 0.7194968221677839,
+      "intersection_over_union": 0.5618860106117278,
+      "intersection_pixels": 982002,
+      "predicted_positive_pixels": 1487426,
+      "truth_positive_pixels": 1242265
+    },
+    "rows": 8833,
+    "sample_id_sha256": "6bd268a910d792c276185e98f349d1862023c007002f1c241752c188ed68b0e1"
+  },
+  "request_mass": {
+    "NO_PLUME|Landsat": 0.24999999999999928,
+    "NO_PLUME|Sentinel-2": 0.2500000000000079,
+    "PLUME|Landsat": 0.2499999999999998,
+    "PLUME|Sentinel-2": 0.2500000000000012
+  },
+  "schema_version": 1,
+  "scope": "balanced-request physics-guided released-U-Net adapter v2 pilot",
+  "trainable_parameters": 1293888
+}

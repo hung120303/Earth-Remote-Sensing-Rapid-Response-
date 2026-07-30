@@ -3026,3 +3026,42 @@ finite optimization with the unchanged 1,293,888 trainable parameters. The full
 pilot retains the +0.003 AP, nonnegative recall and two-sensor AP, positive IoU, and
 strictly positive paired-site lower-bound gates. Fold 2 is transparently reused
 selection evidence. Failure cannot create an artifact or authorize external access.
+
+### 2026-07-30: Balanced-request physics-guided adapter v2 rejected
+
+The checksum-bound restart completed four fixed 32,768-sample epochs after an
+earlier process interruption produced no report. All losses were finite and total
+loss fell from 0.318170 to 0.257249. The sampler correction worked as designed:
+successful simulation stayed between 24.16% and 24.54%, versus 10.4-10.8% in v1.
+The fixed strength-0.25 endpoint nevertheless reduced fold-2 AP by 0.001189 and IoU
+by 0.001803. It recovered one additional positive at matched FPR (recall delta
++0.001255), but Sentinel-2 AP fell 0.000671 and the paired-site AP interval was
+[-0.005348,+0.002351]. It failed four promotion gates and wrote no artifact.
+
+This is a clean negative ablation: correcting simulation frequency did not improve
+the same architecture, so additional synthetic exposure is retired as an isolated
+lever. Future simulation must distinguish real from synthetic domains through a
+curriculum, domain-conditioned normalization, or separate losses rather than assume
+exchangeability. Fresh and exact-paper inputs remained inaccessible.
+
+### 2026-07-30: Instance-aware physics architecture selected as the next branch
+
+Two primary 2026 results motivate replacing the current pixel-only correction with
+explicit object structure. A MethaneSAT study reports Mask R-CNN outperforming U-Net
+on both MethaneAIR and MethaneSAT, followed by further gains from physics-informed
+morphological filtering and proximity merging
+(<https://arxiv.org/abs/2605.24273>). CVPR 2026 work shows that neighbor-critical
+segmentation penalties can improve connected-component topology while remaining
+compatible with focal and Dice losses
+(<https://openaccess.thecvf.com/content/CVPR2026/papers/Valverde_Towards_High-Quality_Image_Segmentation_Improving_Topology_Accuracy_by_Penalizing_Neighbor_CVPR_2026_paper.pdf>).
+
+The next local experiment will therefore retain the exact released model as an
+identity-safe floor but add a compact objectness/proposal branch over physics-guided
+features. Supervision will be derived from the existing connected plume masks:
+component centers, component extent, and a differentiable occupancy map aligned to
+the paper's 100-connected-pixel scene rule. A consistency gate will permit pixel
+corrections only where objectness and methane enhancement agree. Real and synthetic
+losses will be reported separately, with synthetic examples used for representation
+learning but real examples controlling the scene-ranking objective. This branch
+targets the two failed quantities directly—unseen-site AP and component IoU—without
+reopening score calibration or synthetic frequency.
