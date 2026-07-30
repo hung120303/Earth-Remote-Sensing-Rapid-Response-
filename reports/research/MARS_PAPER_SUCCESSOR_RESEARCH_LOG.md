@@ -3085,3 +3085,36 @@ loss terms. The architecture has 1,551,795 trainable parameters and realized 14.
 simulation in the smoke draw. The full pilot is fixed to seed 20263000, three
 32,768-sample epochs, strength 0.25, and the unchanged AP/recall/IoU/two-sensor/site-
 bootstrap gates on reused fold 2. It cannot access fresh or exact-paper inputs.
+
+### 2026-07-30: Instance-guided teacher rejected, ranking branch retained
+
+Three fixed epochs completed without numerical failure. Total loss fell from
+0.338580 to 0.268222, object and real-scene losses improved, simulation stayed near
+12.2%, and mean object gate probability tightened from 0.0599 to 0.0452. At the
+fixed strength, fold-2 AP improved +0.003147, meeting the point floor; Landsat and
+Sentinel-2 AP improved +0.000638 and +0.004058, and matched-FPR recall was unchanged.
+The paired-site AP interval still crossed zero [-0.003005,+0.006813].
+
+Pixel behavior explains the rejection. The candidate added 105,440 predicted-
+positive pixels but only 29,942 intersecting truth pixels, reducing IoU by 0.006802.
+No checkpoint was written. The object representation is therefore rejected as a
+standalone mask corrector but retained as a candidate scene-ranking signal.
+
+### 2026-07-30: Conservative two-output instance ensemble selected
+
+Scene ranking and dense segmentation will now be separated, as already supported
+by the project's multi-task architecture and prior development evidence. The
+instance signal must improve the stronger cross-fitted spatial/Prithvi scene score,
+not merely the released U-Net. The dense output will reuse the independently
+confirmed development rule: released probabilities thresholded at 0.70 for Landsat
+and 0.80 for Sentinel-2, then set empty below the fixed cross-fitted scene cutoff
+0.75. That rule improved development IoU +0.022211 overall, +0.010805 on fold 2,
+and passed every sensor, fold, retained-TP, and paired-site gate.
+
+A separately seeded rerun will expose three label-free instance signals—connected
+corrected probability, the real-scene head, and proposal objectness. Only small
+predeclared blends with the current `inner_new` score will be tested. Promotion
+requires a material, site-bootstrap-positive AP gain over the current ranker,
+nonnegative matched-FPR recall and per-sensor AP, plus the already frozen positive
+mask-IoU evidence. Failure writes no model or score cache and cannot authorize any
+external evaluation.
