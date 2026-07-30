@@ -3172,3 +3172,32 @@ physics/object branches can produce repeatable gains over the released model.
 Dense token fusion is intended to combine semantic generalization with local plume
 geometry before connected-component scoring. It is a representation change, not
 another calibration or scalar-feature head.
+
+### 2026-07-30: Dense Prithvi/U-Net pilot frozen
+
+The cache audit verified 44,363 development rows with exact alignment across sample
+identifier, physical-site fold, label, sensor, and the current cross-fitted score.
+Each scene carries four 192-channel target-minus-reference token maps from frozen
+Prithvi-EO-2.0 blocks 3/6/9/12 on an 8x8 grid. The 4.36 GB cache remains ignored;
+its SHA-256, the Prithvi checkpoint identity, the development manifest, and the
+fold protocol are bound into the new protocol.
+
+The fusion model projects the four token depths and combines them with explicit
+spectral-change physics at released-U-Net levels 3, 4, and 5. Zero-initialized
+bounded feature gates make the dense output exactly the released U-Net at
+initialization. A separate zero-initialized scene residual is stacked on the
+current cross-fitted spatial/Prithvi score, so scene ranking also starts at the
+stronger current system rather than at the paper model. Auxiliary 8x8 plume
+occupancy, pixel focal/Dice, scene BCE, and pair-ranking losses jointly supervise
+the representation.
+
+The full-batch GPU smoke used the production batch size of eight, reproduced both
+floors exactly (`pixel_max_abs=0`, `scene_delta_max_abs=0`), assigned exactly 0.25
+sampling mass to every label x sensor stratum, and completed finite optimization
+with 5,470,867 trainable parameters. The fixed pilot uses folds 3/4 for fitting,
+reused fold 2 for architecture selection, seed 20263200, three 24,576-sample
+epochs, and only residual strengths 0.25/0.50/1.00. Promotion requires at least
++0.001 AP over the current ranker, nonnegative matched-FPR recall and both sensor
+AP deltas, a positive paired-site AP lower bound, and higher dense-mask IoU under
+the already frozen sensor-threshold/scene-gate rule. No fresh or exact-paper input
+is accessible to this experiment.

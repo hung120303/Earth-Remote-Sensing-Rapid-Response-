@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_exact-identity_full-batch_gpu_smoke",
+  "scope": "identity-safe dense Prithvi token fusion on development fold 2",
+  "trainer": {
+    "path": "tools/train_mars_dense_prithvi_teacher_pilot.py",
+    "sha256": "a827afc5b9d76856a7358d7de5488e7a23ed8cbacae7475d30b18547dcc8d331"
+  },
+  "code_dependencies": [
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_dense_prithvi_teacher.py",
+      "sha256": "dd595fc41356c9e929ea729576dbb2903b1408d9a65192c308d6c0a2ad8dda44"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_physics_guided_teacher.py",
+      "sha256": "f3a0253243448429bdb4cc4fea766af962729d01af0e8685a27581ab9e8b4a32"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_paper_model.py",
+      "sha256": "f9cc65b3bb764ed83a4aa67209cccdbad2b6c80826b0915711392ca8b10a0486"
+    },
+    {
+      "path": "tools/train_mars_paper_residual.py",
+      "sha256": "cdbe9313f3d532cbe435a7302f543b55387c7b29e4e1fedafccb3193556a6874"
+    },
+    {
+      "path": "tools/train_mars_physics_guided_teacher_balanced_pilot.py",
+      "sha256": "88e8afce95d62f8c425e9c604aae8ed3fe91db79e75befe710141c1a76299938"
+    },
+    {
+      "path": "tools/train_mars_physics_guided_teacher_pilot.py",
+      "sha256": "73e5161fa03eec45b637d64998ff0ed116fc0496f2af32a8f72d74f546dbb376"
+    },
+    {
+      "path": "tools/analyze_mars_mask_routing.py",
+      "sha256": "257267dc0c2678c98f0c39262aafcc0ab5e062a04531e167e70f8a3dc540f779"
+    },
+    {
+      "path": "tools/analyze_mars_mask_thresholds.py",
+      "sha256": "2b2d1d4c5a869ebb8a8acb0e03f4db46c5cdbcf8dba6179184a95f1a4613e6ff"
+    },
+    {
+      "path": "tools/train_mars_oof_scene_ensemble_v2.py",
+      "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"
+    },
+    {
+      "path": "tools/train_mars_scene_ranker.py",
+      "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"
+    }
+  ],
+  "inputs": {
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_acquisition_receipt"
+    },
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "acquisition_receipt": {
+      "path": "reports/acquisition/mars_s2l_paper_v3_development_download.json",
+      "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "released_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+      "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"
+    },
+    "features": {
+      "path": "outputs/mars_prithvi_spatial_features_all_folds.npy",
+      "sha256": "c0bd358da7563bec1e6e3cd706aeec86c6558b5bde6181c66bab9c5b30621925"
+    },
+    "feature_metadata": {
+      "path": "outputs/mars_prithvi_spatial_features_all_folds_metadata.npz",
+      "sha256": "de89016e60ab5b6b71cf3f2c6b5d4b9885a1d7257b0cf34e09158396fc0fe813"
+    },
+    "score_cache": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    }
+  },
+  "folds": {
+    "fit": [
+      3,
+      4
+    ],
+    "held": 2,
+    "unit": "physical_location_id",
+    "status": "reused architecture-selection fold"
+  },
+  "architecture": {
+    "teacher": "exact released MARS-S2L U-Net, frozen",
+    "foundation": "frozen Prithvi-EO-2.0 tiny temporal target-minus-reference maps from encoder blocks 3, 6, 9, and 12",
+    "fusion": "per-depth token normalization/projection plus explicit spectral-physics features injected through zero-initialized gates at U-Net levels 3, 4, and 5",
+    "segmentation_identity": "zero deep gates reproduce released logits exactly",
+    "scene_identity": "zero final residual reproduces the current cross-fitted spatial/Prithvi ensemble score exactly",
+    "auxiliary_supervision": "8x8 plume-occupancy head plus pixel focal/Dice, scene BCE, and pair ranking",
+    "inference_contract": "released U-Net plus Prithvi token extractor plus current cross-fitted ranker"
+  },
+  "training": {
+    "seed": 20263200,
+    "epochs": 3,
+    "samples_per_epoch": 24576,
+    "batch_size": 8,
+    "loader_workers": 2,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "gradient_clip": 2.0,
+    "positive_pixel_weight": 10.0,
+    "focal_gamma": 2.0,
+    "dice_weight": 0.5,
+    "patch_positive_weight": 5.0,
+    "patch_weight": 0.15,
+    "scene_weight": 0.5,
+    "pair_weight": 0.2,
+    "pair_margin": 0.5,
+    "negative_upward_weight": 0.1,
+    "positive_downward_weight": 0.05,
+    "correction_l2_weight": 0.002,
+    "scene_delta_l2_weight": 0.05,
+    "endpoint_rule": "fixed epoch 3; no held-fold epoch selection",
+    "sampling": "equal request mass for each label x sensor stratum, then equal physical-site mass within stratum",
+    "augmentation": "joint quarter-turn and reflection transforms applied identically to 200x200 MARS inputs and 8x8 token maps",
+    "simulation": "none; cached foundation features bind each real temporal pair and cannot represent an on-the-fly synthetic injection"
+  },
+  "search": {
+    "strengths": [
+      0.25,
+      0.5,
+      1.0
+    ],
+    "candidate_count": 3,
+    "rule": "apply the same residual strength to dense logits and the cross-fitted scene logit",
+    "mask_rule": "sensor thresholds Sentinel-2 0.80 and Landsat 0.70, minimum 100 connected pixels, empty below scene score 0.75"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20263250,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.001,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "each_sensor_ap_delta_minimum": 0.0,
+    "paired_site_ap_lower_bound_strictly_positive": true,
+    "pixel_iou_delta_strictly_positive": true,
+    "paired_site_pixel_iou_interval": "reported now; must be strictly positive in the later full-development cross-fit",
+    "pass_action": "freeze a separate multi-seed full-development cross-fit; no external scoring"
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_dense_prithvi_teacher_pilot.pt",
+    "json": "reports/experiments/mars_dense_prithvi_teacher_pilot.json",
+    "markdown": "reports/experiments/MARS_DENSE_PRITHVI_TEACHER_PILOT.md"
+  },
+  "invariants": [
+    "The GPU smoke must validate exact released-logit and current-scene-score identity plus finite optimization.",
+    "All 44,363 token rows must align to the frozen manifest, folds, labels, sensors, and physical sites.",
+    "No fresh external or exact-paper input is loaded.",
+    "Fold 2 is reused selection evidence and cannot serve as independent confirmation.",
+    "Only fixed epoch 3 and three predeclared residual strengths are scored.",
+    "Failure writes no artifact and cannot authorize external scoring.",
+    "The 4.36 GB feature cache and any checkpoint remain Git-ignored."
+  ]
+}
