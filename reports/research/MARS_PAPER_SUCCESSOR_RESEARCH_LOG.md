@@ -3232,3 +3232,27 @@ and paired-site IoU gates with the current scene score left exactly unchanged.
 That follow-up is development-only and will require independent folds before any
 paper-cache use. Scene ranking will proceed as a separate research branch using
 features from the learned dense representation rather than its BCE residual.
+
+### 2026-07-30: Mask preservation replication closes initialization gap
+
+The joint trainer set seed 20263200 immediately before optimization but constructed
+random token projections, physics blocks, and scene layers just before that call.
+Thus its sampling and optimization were seed-bound while its random module
+initialization was not. The result remains valid as one completed pilot, but its
+checkpoint could not have been exactly reconstructed from the nominal seed. This
+provenance gap was found before promoting or preserving any artifact.
+
+The mask-only replication now calls the same seeding function before model
+construction and again at optimization start. It otherwise retains the exact
+architecture, folds, 24,576-sample endpoint, batch size, sampler, augmentations,
+loss, and optimizer. Strength 0.50 is fixed from the completed joint result; scene
+strength is exactly zero, so the current cross-fitted score and 0.75 gate cannot
+change. Promotion requires positive pooled and paired-site IoU, nonnegative IoU
+for both sensors, at least 100% of the current rule's aggregate true-positive
+pixels, and scene-score identity within 1e-6.
+
+The full-batch GPU smoke reproduced zero pixel and scene residuals at
+initialization, exact 0.25 request mass in all four label x sensor strata, all
+44,363 cache identities, and finite optimization with the initialization-bound
+seed. No exact-paper or fresh external input is accessible. The protocol is frozen
+before its full reproduction run.

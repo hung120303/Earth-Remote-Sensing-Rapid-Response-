@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_initialization-bound_exact-identity_gpu_smoke",
+  "scope": "initialization-controlled reproduction and preservation of the dense Prithvi mask branch",
+  "trainer": {
+    "path": "tools/preserve_mars_dense_prithvi_mask_pilot.py",
+    "sha256": "e1fede50d181b8a60a288627cb9d2494bc9019f3807ade5d7690af9983f04cad"
+  },
+  "code_dependencies": [
+    {
+      "path": "tools/train_mars_dense_prithvi_teacher_pilot.py",
+      "sha256": "a827afc5b9d76856a7358d7de5488e7a23ed8cbacae7475d30b18547dcc8d331"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_dense_prithvi_teacher.py",
+      "sha256": "dd595fc41356c9e929ea729576dbb2903b1408d9a65192c308d6c0a2ad8dda44"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_physics_guided_teacher.py",
+      "sha256": "f3a0253243448429bdb4cc4fea766af962729d01af0e8685a27581ab9e8b4a32"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_paper_model.py",
+      "sha256": "f9cc65b3bb764ed83a4aa67209cccdbad2b6c80826b0915711392ca8b10a0486"
+    },
+    {
+      "path": "tools/train_mars_paper_residual.py",
+      "sha256": "cdbe9313f3d532cbe435a7302f543b55387c7b29e4e1fedafccb3193556a6874"
+    },
+    {
+      "path": "tools/train_mars_physics_guided_teacher_balanced_pilot.py",
+      "sha256": "88e8afce95d62f8c425e9c604aae8ed3fe91db79e75befe710141c1a76299938"
+    },
+    {
+      "path": "tools/train_mars_physics_guided_teacher_pilot.py",
+      "sha256": "73e5161fa03eec45b637d64998ff0ed116fc0496f2af32a8f72d74f546dbb376"
+    },
+    {
+      "path": "tools/analyze_mars_mask_routing.py",
+      "sha256": "257267dc0c2678c98f0c39262aafcc0ab5e062a04531e167e70f8a3dc540f779"
+    },
+    {
+      "path": "tools/analyze_mars_mask_thresholds.py",
+      "sha256": "2b2d1d4c5a869ebb8a8acb0e03f4db46c5cdbcf8dba6179184a95f1a4613e6ff"
+    }
+  ],
+  "inputs": {
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_acquisition_receipt"
+    },
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "acquisition_receipt": {
+      "path": "reports/acquisition/mars_s2l_paper_v3_development_download.json",
+      "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "released_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+      "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"
+    },
+    "features": {
+      "path": "outputs/mars_prithvi_spatial_features_all_folds.npy",
+      "sha256": "c0bd358da7563bec1e6e3cd706aeec86c6558b5bde6181c66bab9c5b30621925"
+    },
+    "feature_metadata": {
+      "path": "outputs/mars_prithvi_spatial_features_all_folds_metadata.npz",
+      "sha256": "de89016e60ab5b6b71cf3f2c6b5d4b9885a1d7257b0cf34e09158396fc0fe813"
+    },
+    "score_cache": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    },
+    "prior_result": {
+      "path": "reports/experiments/mars_dense_prithvi_teacher_pilot.json",
+      "sha256": "327d057af6f99cb2770f8701bbd83e2cdf52ee1de80a1499526a439380ffe995"
+    }
+  },
+  "folds": {
+    "fit": [
+      3,
+      4
+    ],
+    "held": 2,
+    "unit": "physical_location_id",
+    "status": "reused architecture-selection fold; preservation requires later independent-fold confirmation"
+  },
+  "training": {
+    "seed": 20263200,
+    "epochs": 3,
+    "samples_per_epoch": 24576,
+    "batch_size": 8,
+    "loader_workers": 2,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "gradient_clip": 2.0,
+    "positive_pixel_weight": 10.0,
+    "focal_gamma": 2.0,
+    "dice_weight": 0.5,
+    "patch_positive_weight": 5.0,
+    "patch_weight": 0.15,
+    "scene_weight": 0.5,
+    "pair_weight": 0.2,
+    "pair_margin": 0.5,
+    "negative_upward_weight": 0.1,
+    "positive_downward_weight": 0.05,
+    "correction_l2_weight": 0.002,
+    "scene_delta_l2_weight": 0.05,
+    "endpoint_rule": "fixed epoch 3",
+    "sampling": "identical balanced physical-site sampler",
+    "augmentation": "identical joint quarter-turn/reflection transforms",
+    "initialization_fix": "seed is now set before random module construction as well as immediately before optimization"
+  },
+  "mask": {
+    "strength": 0.5,
+    "selection_source": "strongest positive-CI mask strength in the completed joint pilot",
+    "scene_strength": 0.0,
+    "scene_rule": "current cross-fitted score and fixed 0.75 gate unchanged",
+    "pixel_rule": "Sentinel-2 threshold 0.80, Landsat threshold 0.70, minimum 100 connected pixels"
+  },
+  "reproduction": {
+    "history_absolute_tolerance": 0.2,
+    "history_role": "descriptive only because the prior joint run did not bind random module initialization"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20263350,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "gates": {
+    "pixel_iou_delta_strictly_positive": true,
+    "paired_site_pixel_iou_lower_bound_strictly_positive": true,
+    "each_sensor_iou_delta_minimum": 0.0,
+    "minimum_true_positive_pixel_ratio": 1.0,
+    "scene_score_max_absolute_change": 0.000001,
+    "pass_action": "save ignored mask adapter for independent full-development cross-fitting; do not access exact-paper inputs"
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_dense_prithvi_mask_pilot.pt",
+    "json": "reports/experiments/mars_dense_prithvi_mask_preservation.json",
+    "markdown": "reports/experiments/MARS_DENSE_PRITHVI_MASK_PRESERVATION.md"
+  },
+  "invariants": [
+    "The full-batch GPU smoke must reproduce exact released-mask and current-scene identity.",
+    "The initialization, sampler, optimizer, and augmentation are all seed-bound.",
+    "The scene score and scene gate cannot change during evaluation.",
+    "No fresh external or exact-paper input is loaded.",
+    "Failure writes no artifact.",
+    "The feature cache and artifact remain Git-ignored."
+  ]
+}
