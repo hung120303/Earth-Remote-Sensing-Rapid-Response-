@@ -3201,3 +3201,34 @@ epochs, and only residual strengths 0.25/0.50/1.00. Promotion requires at least
 AP deltas, a positive paired-site AP lower bound, and higher dense-mask IoU under
 the already frozen sensor-threshold/scene-gate rule. No fresh or exact-paper input
 is accessible to this experiment.
+
+### 2026-07-30: Dense fusion splits the mask and scene decisions
+
+All three fixed epochs completed cleanly. Total loss fell from 0.327994 to
+0.221126; focal loss fell from 0.068986 to 0.029523, Dice loss from 0.266612 to
+0.187245, patch loss from 0.137736 to 0.061773, scene BCE from 0.165925 to
+0.137560, and the real-negative upward penalty from 0.052949 to 0.012075. The
+representation learned meaningful local and scene structure without numerical or
+memory failure.
+
+The joint candidate is rejected because the learned scene residual does not improve
+the already-strong current ranker. At selected strength 0.25, fold-2 AP changes
+-0.000644, matched-FPR recall is unchanged, Sentinel-2 AP changes -0.000937, and
+the paired-site AP interval is [-0.001659,+0.000297]. Strengths 0.50 and 1.00
+regress AP further. No artifact was written under the frozen joint-promotion rule.
+
+The dense-mask result is materially different. At strength 0.25, IoU improves
+from 0.577726 to 0.584476 (+0.006750) with a positive paired-site interval
+[+0.001740,+0.010598]. The preregistered strength 0.50 is stronger still:
+IoU 0.588789, delta +0.011063, interval [+0.003561,+0.016703], while increasing
+true-positive pixels from 801,164 to 826,403. Strength 1.00 becomes over-aggressive
+and loses interval support. Dense Prithvi/U-Net fusion is therefore retained as a
+mask architecture at strength 0.50, while its scene residual is retired.
+
+Because the joint failure protocol correctly wrote no checkpoint, a separate
+mask-only preservation protocol must reproduce the fixed seed/endpoint and save
+the adapter only if strength 0.50 reproduces positive point, sensor, retained-TP,
+and paired-site IoU gates with the current scene score left exactly unchanged.
+That follow-up is development-only and will require independent folds before any
+paper-cache use. Scene ranking will proceed as a separate research branch using
+features from the learned dense representation rather than its BCE residual.
