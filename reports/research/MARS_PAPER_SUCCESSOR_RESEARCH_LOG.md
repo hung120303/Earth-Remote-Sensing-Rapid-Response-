@@ -3137,3 +3137,38 @@ checksum-bound and must align exactly to live evaluation labels, sensors, and
 physical sites. The GPU smoke reproduced released logits exactly, completed finite
 optimization with 1,551,795 trainable parameters, and wrote no output. No fresh or
 exact-paper input is available to the protocol.
+
+### 2026-07-30: Conservative instance-scene ensemble rejected
+
+The independent seed completed cleanly and live fold-2 rows aligned exactly to both
+frozen caches. Its connected signal again improved over released AP (0.876105 versus
+0.873419), demonstrating repeatability of the small object-aware gain. It did not
+improve the current `inner_new` ranker at AP 0.916603. The best of twelve frozen
+blends was scene-head weight 0.025 with AP delta -0.000004, recall delta -0.001255,
+minimum sensor AP delta -0.000293, and paired-site interval
+[-0.001317,+0.001008]. All larger weights worsened AP monotonically. Standalone
+proposal AP was only 0.671773.
+
+The conservative mask reproduced +0.010805 point IoU on fold 2, but the isolated
+fold's paired-site lower bound was -0.002249; the prior positive mask interval was
+for the larger selection and confirmation cohorts. No model or score cache was
+written. This closes the instance/object signal family: it is reproducible against
+the released model but redundant relative to current spatial/Prithvi errors.
+
+### 2026-07-30: Dense foundation-token fusion selected next
+
+The next branch will use Prithvi where previous experiments did not: dense spatial
+tokens will be injected into the released U-Net hierarchy, rather than reducing the
+foundation model to a frozen CLS vector or adapting late transformer blocks for a
+standalone scene head. The exact released segmentation remains an identity-safe
+floor. Frozen multi-layer Prithvi token maps will be projected into the teacher
+bottleneck and decoder with zero-initialized cross-scale residuals, while the
+physics branch supplies spectral-change cues. Training will retain real-only scene
+ranking and conservative correction penalties.
+
+This architecture is justified by two surviving observations: frozen Prithvi
+features materially improved the current cross-fitted ensemble, while explicit
+physics/object branches can produce repeatable gains over the released model.
+Dense token fusion is intended to combine semantic generalization with local plume
+geometry before connected-component scoring. It is a representation change, not
+another calibration or scalar-feature head.
