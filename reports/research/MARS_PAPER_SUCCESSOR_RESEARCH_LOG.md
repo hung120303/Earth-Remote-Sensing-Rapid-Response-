@@ -3256,3 +3256,28 @@ initialization, exact 0.25 request mass in all four label x sensor strata, all
 44,363 cache identities, and finite optimization with the initialization-bound
 seed. No exact-paper or fresh external input is accessible. The protocol is frozen
 before its full reproduction run.
+
+### 2026-07-30: Deterministic dense mask replication passes
+
+The initialization-bound run closely reproduced the original learning trajectory.
+At epoch 3, total loss was 0.221123 versus 0.221126 previously; focal, Dice, patch,
+scene, and pair losses remained similarly close. The largest absolute difference
+among all recorded history fields was 0.02425, arising in correction L2 scale,
+well below the descriptive 0.20 bound. Exact scene-score identity held to
+5.96e-8.
+
+At the fixed mask strength 0.50, fold-2 IoU improved from 0.577726 to 0.587695,
+a +0.009969 gain with paired-site interval [+0.002480,+0.016141]. Sentinel-2
+improved +0.010014 and Landsat +0.009504. True-positive pixels rose from 801,164
+to 823,208 (1.027515x) while recall increased from 0.644922 to 0.662667. The
+precision tradeoff was 0.847206 to 0.838567, but aggregate IoU and both sensor
+domains improved.
+
+All preservation gates passed. The ignored 21,925,323-byte adapter was saved as
+`EarthRemoteSensingRapidResponse/artifacts/mars_dense_prithvi_mask_pilot.pt` with
+SHA-256 `f5304281ed85e1eb997da33905bb047673e8e5c0176ac99feb76b6a7105c6cea`.
+This is architecture-selection evidence on reused fold 2, not final confirmation.
+The next mask step is a preregistered multi-seed cross-fit over all development
+folds, with pooled and per-sensor paired-site IoU gates. The scene branch remains
+the unchanged current ranker until a separately validated representation-level
+ranking improvement is found.

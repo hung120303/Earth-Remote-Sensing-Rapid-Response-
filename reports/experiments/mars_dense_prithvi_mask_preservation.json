@@ -1,0 +1,179 @@
+{
+  "all_preservation_gates_pass": true,
+  "artifact": {
+    "bytes": 21925323,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_dense_prithvi_mask_pilot.pt",
+    "sha256": "f5304281ed85e1eb997da33905bb047673e8e5c0176ac99feb76b6a7105c6cea"
+  },
+  "decision": "Preserve the mask adapter for independent full-development cross-fitting.",
+  "evaluation_identity": {
+    "rows": 8833,
+    "sample_id_sha256": "6bd268a910d792c276185e98f349d1862023c007002f1c241752c188ed68b0e1",
+    "scene_score_identity_max_abs": 5.960464477539063e-08
+  },
+  "external_inputs_accessed": false,
+  "feature_identity": {
+    "feature_dtype": "float16",
+    "feature_shape": [
+      44363,
+      768,
+      8,
+      8
+    ],
+    "fold_counts": {
+      "0": 8987,
+      "1": 8798,
+      "2": 8833,
+      "3": 8799,
+      "4": 8946
+    },
+    "fold_protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "foundation_checkpoint_sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70",
+    "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "rows": 44363,
+    "sample_id_sha256": "ae21523a46e8c7d783a2ee5aa8a7c52f8903ce6d2f37f0d3852ece0070b18219"
+  },
+  "fit_folds": [
+    3,
+    4
+  ],
+  "fit_rows": 17745,
+  "generated_at_utc": "2026-07-30T23:59:57.933067+00:00",
+  "held_fold": 2,
+  "held_rows": 8833,
+  "history": [
+    {
+      "correction_l2": 0.859530042195928,
+      "dice": 0.2666834245270972,
+      "epoch": 1,
+      "focal": 0.06869284721063336,
+      "loss": 0.3281042479861753,
+      "negative_upward": 0.0534057785905541,
+      "pair": 0.040392223629669356,
+      "patch": 0.1391112126199611,
+      "positive_downward": 0.018693902840497933,
+      "scene": 0.16595981651914826,
+      "scene_delta_l2": 0.12300637976911954
+    },
+    {
+      "correction_l2": 1.0263526945927879,
+      "dice": 0.21522682002493335,
+      "epoch": 2,
+      "focal": 0.03864703916677541,
+      "loss": 0.2504764900534913,
+      "negative_upward": 0.02153990774456756,
+      "pair": 0.02784839688771305,
+      "patch": 0.08740638946960644,
+      "positive_downward": 0.027401100163507136,
+      "scene": 0.14218346006475713,
+      "scene_delta_l2": 0.17733841927603558
+    },
+    {
+      "correction_l2": 1.0915254162488661,
+      "dice": 0.18700118355748904,
+      "epoch": 3,
+      "focal": 0.02945946333335973,
+      "loss": 0.22112265233916636,
+      "negative_upward": 0.012246627188668905,
+      "pair": 0.02704856816326588,
+      "patch": 0.0626684378637113,
+      "positive_downward": 0.030125279646097347,
+      "scene": 0.1373642375016099,
+      "scene_delta_l2": 0.19513042273433712
+    }
+  ],
+  "history_reproduction": {
+    "maximum_absolute_delta": 0.02425004786831164,
+    "passed": true,
+    "role": "descriptive only; the prior pilot did not seed random module initialization, while this replication does",
+    "tolerance": 0.2
+  },
+  "identity_pixel_max_abs": 0.0,
+  "identity_scene_max_abs": 0.0,
+  "mask_result": {
+    "baseline": {
+      "fn": 441101,
+      "fp": 144490,
+      "intersection_over_union": 0.5777256977620416,
+      "precision": 0.8472062720614516,
+      "recall": 0.644921977194882,
+      "tp": 801164
+    },
+    "candidate": {
+      "fn": 419057,
+      "fp": 158476,
+      "intersection_over_union": 0.5876946558999844,
+      "precision": 0.838567196776152,
+      "recall": 0.6626669832926148,
+      "tp": 823208
+    },
+    "iou_delta": 0.00996895813794274,
+    "paired_site_iou_delta": {
+      "confidence": 0.95,
+      "groups": 153,
+      "lower": 0.0024797368397468777,
+      "mean": 0.009833497675750308,
+      "replicates": 10000,
+      "upper": 0.016141220099110995
+    },
+    "retained_true_positive_pixel_fraction": 1.0275149657248703,
+    "sensors": {
+      "Landsat": {
+        "baseline": {
+          "fn": 105339,
+          "fp": 42099,
+          "intersection_over_union": 0.702078045941708,
+          "precision": 0.891928871592534,
+          "recall": 0.7673552140180084,
+          "tp": 347450
+        },
+        "candidate": {
+          "fn": 96378,
+          "fp": 48082,
+          "intersection_over_union": 0.7115824234184052,
+          "precision": 0.8811302049726447,
+          "recall": 0.7871458891448334,
+          "tp": 356411
+        },
+        "iou_delta": 0.00950437747669719
+      },
+      "Sentinel-2": {
+        "baseline": {
+          "fn": 335762,
+          "fp": 102391,
+          "intersection_over_union": 0.5087238343833778,
+          "precision": 0.8158782963648952,
+          "recall": 0.5747027142053717,
+          "tp": 453714
+        },
+        "candidate": {
+          "fn": 322679,
+          "fp": 110394,
+          "intersection_over_union": 0.5187382621934279,
+          "precision": 0.8087392215055328,
+          "recall": 0.5912744655949009,
+          "tp": 466797
+        },
+        "iou_delta": 0.01001442781005013
+      }
+    }
+  },
+  "mask_strength": 0.5,
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "d23babc89c8cb386d11db787521a17d773aa1cfe",
+    "numpy": "2.4.4",
+    "protocol_sha256": "b649a3abe76315cc8489cdc8924070badc05a428a971e2ce53a390427c269a0b",
+    "torch": "2.11.0+cu128",
+    "trainer_sha256": "e1fede50d181b8a60a288627cb9d2494bc9019f3807ade5d7690af9983f04cad"
+  },
+  "request_mass": {
+    "NO_PLUME|Landsat": 0.24999999999999928,
+    "NO_PLUME|Sentinel-2": 0.2500000000000079,
+    "PLUME|Landsat": 0.2499999999999998,
+    "PLUME|Sentinel-2": 0.2500000000000012
+  },
+  "scene_strength": 0.0,
+  "schema_version": 1,
+  "scope": "development-only reproduction and preservation of the dense Prithvi mask branch"
+}
