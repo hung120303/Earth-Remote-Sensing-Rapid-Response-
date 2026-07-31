@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "frozen_after_synthetic_transform_smoke_before_real_development_extraction",
+  "status": "frozen_after_real_smoke_and_batch64_throughput_benchmark_before_full_development_extraction",
   "scope": "label-free counterfactual and frequency-aligned scene representation on development folds 3 and 4 only",
   "extractor": {
     "path": "tools/extract_mars_counterfactual_scene_inputs.py",
@@ -48,8 +48,8 @@
     "label_use": "none in image transforms or frozen-teacher inference; labels are copied to ignored metadata for later fold-restricted evaluation"
   },
   "runtime": {
-    "batch_size": 8,
-    "workers": 2,
+    "batch_size": 64,
+    "workers": 8,
     "device": "CUDA",
     "autocast": "float16 teacher; float32 counterfactual and Fourier transforms"
   },

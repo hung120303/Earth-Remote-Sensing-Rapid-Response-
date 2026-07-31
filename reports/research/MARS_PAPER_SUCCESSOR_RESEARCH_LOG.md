@@ -3993,3 +3993,10 @@ exact-paper data, and fresh external data are forbidden. The eventual ranker
 must improve the already frozen spatial-Prithvi ensemble, not an obsolete weaker
 scene head. Bulk outputs remain ignored and only a compact hashed receipt will
 be committed.
+
+The first full attempt was stopped before 800 rows because batch 8 left most of
+the 12 GB GPU unused and projected to several hours. The ignored partial memmap
+was deleted without producing a receipt. A label-free 128-row benchmark then
+processed batch 64 at 1,561 rows/minute with 5.67 GiB peak CUDA allocation. The
+runtime-only contract is re-frozen at batch 64 and eight loader workers; the
+eligible folds, transforms, model, and representation are unchanged.
