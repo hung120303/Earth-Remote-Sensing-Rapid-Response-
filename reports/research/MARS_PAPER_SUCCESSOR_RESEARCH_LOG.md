@@ -3694,3 +3694,17 @@ Before any fold-2 representation or label access, a new dense adapter must be
 trained on folds 3+4, and the fold-2 extractor, fixed component signs/transforms/
 strengths, low-prevalence definition, sensor/recall gates, and paired-site
 bootstrap must be frozen. External and exact-paper inputs remain untouched.
+
+### 2026-07-30: Fold-2-excluding dense adapter training frozen
+
+A fit-only adapter trainer is frozen for the one-shot confirmation path. It selects
+only folds 3+4, uses the identical three-epoch/24,576-sample dense training
+endpoint and balanced label x sensor sampler, records held fold 2 in the artifact
+contract, and never constructs a fold-2 dataset, loader, mask evaluation, or
+metric. The adapter is an ignored intermediate representation endpoint, not a
+promoted prediction model.
+
+The 16-row CUDA smoke used only folds 3+4, reproduced exact zero pixel and scene
+corrections at initialization, maintained the required 0.25 request mass in each
+label x sensor cell, completed a finite training epoch, and wrote no artifact.
+The full trainer and its hashes will be committed before the endpoint is fit.
