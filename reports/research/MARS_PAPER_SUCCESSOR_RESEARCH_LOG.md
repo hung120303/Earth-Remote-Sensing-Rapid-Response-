@@ -3299,3 +3299,23 @@ token cache, current score cache, manifest, and fold protocol by SHA-256. Its
 Extraction is label-free; labels are copied only into ignored development metadata
 for the later ranker. The bulk cache will remain ignored and only its compact
 receipt will be committed. No exact-paper or fresh external input is in scope.
+
+### 2026-07-30: Dense scene cache completed and independently finalized
+
+All 44,363 rows and 671 features were extracted without a geometry or finiteness
+failure. A transient WSL DrvFs visibility race occurred after the atomic rename:
+the extractor successfully created and hashed both final cache files, but its
+immediate `stat()` for receipt formatting briefly returned not-found. It therefore
+failed closed and wrote no receipt.
+
+A separately committed finalizer verified the historical generator commit and raw
+extractor blob, re-hashed every frozen input, scanned the complete float16 matrix
+for finiteness, checked the 44,363x671 shape, and matched every sample identifier,
+physical site, and fold back to the manifest and site protocol. The final feature
+cache is 59,535,274 bytes with SHA-256
+`cb44c6957be7fb2df9b95652dcf8f099775e244d87ddfea91d15679cc62400cc`;
+metadata is 1,537,400 bytes with SHA-256
+`533300f8ec7760b645b7e30c23a569dcc6c5522d6bc1c64ee7ad485623cffb32`.
+Both remain ignored. The compact receipt records generator commit
+`8e3d0807650fc21215c19f43a9d702e692930212`, finalizer commit
+`3f06447e1f140f16104ab08fa5ae45560cf27c0b`, and no external input access.
