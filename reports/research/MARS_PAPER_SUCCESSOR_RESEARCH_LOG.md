@@ -4671,3 +4671,22 @@ methane-gated branch is therefore retained as a validated segmentation research
 direction, while its learned scene head is retired. It will not be forced into
 the current scene score or evaluated on fold 2/external/test data without a new
 independent scene rationale.
+
+### 2026-07-31: Segmentation-only dense-surrogate branch frozen
+
+The next experiment decouples the repeatable spatial gain from the retired
+learned scene head. Scene BCE, learned pair ranking, and scene-residual penalties
+are all zero-weighted; DINOv3 fusion is trained only by pixel focal/Dice,
+8x8 occupancy, asymmetric no-plume/plume preservation, and correction L2.
+At evaluation, the same top-100/global plus local-window MIL statistic is
+computed on released and corrected logits. Their difference is bounded by
+`2*tanh`, multiplied by the fixed 0.25 evidence weight, and applied only in the
+already frozen >=0.50 protected scene coordinates. Mask gating continues to use
+the unchanged current score, isolating dense-map quality from scene reranking.
+
+The full-batch smoke reproduces pixel logits and current scene scores exactly,
+then completes finite segmentation optimization with nonzero correction L2 and
+an unchanged zero learned-scene residual. Peak CUDA allocation is 2.23 GB. Data,
+folds, endpoint seeds, epochs, sampling, pixel losses, three residual strengths,
+and all joint AP/IoU gates remain fixed. The contract was hashed before any new
+held-fold outcome.

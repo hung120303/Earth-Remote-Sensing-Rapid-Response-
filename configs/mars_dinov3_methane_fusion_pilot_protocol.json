@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "status": "frozen_after_exact_identity_all_score_scene_gradient_gpu_smoke",
-  "scope": "two-fold DINOv3 semantic-change and counterfactual-methane spatial fusion pilot",
+  "status": "frozen_after_exact_identity_segmentation_only_gpu_smoke",
+  "scope": "two-fold segmentation-only DINOv3 methane fusion with protected dense-MIL scene evidence",
   "trainer": {
     "path": "tools/train_mars_dinov3_methane_fusion_pilot.py",
-    "sha256": "9d1da768567f3d351e8873c6409f9a7ecaaf016b62dfd828efd5e62c9e91af63"
+    "sha256": "3d1aa56264e7e5c4f12b9cf6902b8694a23170ef0aefe7fae7ee0724eba4e575"
   },
   "code_dependencies": [
     {
@@ -106,28 +106,25 @@
     "methane_branch": "28 aligned factual/swapped/self U-Net, MBMP, SWIR change, frequency, cloud, and observability maps",
     "fusion": "feature-guided methane gate over semantic change followed by physics-aware injection at released U-Net levels 3/4/5",
     "segmentation_identity": "zero deep gates reproduce released logits exactly",
-    "scene_identity": "zero final residual reproduces the current cross-fitted spatial-Prithvi score exactly",
+    "scene_identity": "the bounded change in dense MIL evidence is zero when candidate and released logits match, reproducing the current cross-fitted spatial-Prithvi score exactly",
     "scene_protection": "scores below 0.50 are unchanged; higher scores are adjusted in local log-odds coordinates and remain above 0.50"
   },
   "correction": {
-    "reason": "train scene BCE and partial-AUC losses in raw additive logit coordinates for every row while retaining the fixed protected mapping at inference",
-    "scientific_changes": "scene objective coordinates only; data, folds, architecture tensors, loss weights, epochs, sampling, strengths, inference mapping, and gates remain fixed",
-    "prior_result_sha256": "e60c8bd49d3309ac8592958d295a3f633fe765b610a6adf79c1f4ba29b174949"
+    "reason": "retire the nontransporting learned scene head, train only the repeatedly successful segmentation path, and derive bounded scene evidence from its dense MIL statistic",
+    "scientific_changes": "scene losses are zeroed and evaluation uses a fixed top-100/local dense-surrogate residual; data, folds, epochs, sampling, pixel losses, strengths, protection gate, and promotion gates remain fixed",
+    "prior_result_sha256": "e43151c2ce8df8192a3acc1828204084615ef36b8ebf5df01b0a9ba94df1dc08"
   },
   "smoke": {
-    "scope": "two full batches from a balanced fold-3-only development subset plus low/high raw-logit gradient probes; no held-out scoring",
+    "scope": "two full batches from a balanced fold-3-only development subset; no held-out scoring",
     "identity_pixel_max_abs": 0.0,
-    "identity_scene_delta_max_abs": 0.0,
+    "identity_learned_scene_delta_max_abs": 0.0,
     "identity_scene_score_max_abs": 0.0,
-    "scene_gradient_probe_max_abs": {
-      "base_score_0_05": 0.203125,
-      "base_score_0_75": 0.444091796875
-    },
-    "finite_optimization": true,
-    "post_step_scene_delta_l2": 5.185062263990403e-07,
+    "finite_segmentation_optimization": true,
+    "post_step_correction_l2": 0.0009062042227014899,
+    "post_step_learned_scene_delta_l2": 0.0,
     "batch_size": 8,
     "trainable_parameters": 8540787,
-    "peak_cuda_bytes": 3162351104,
+    "peak_cuda_bytes": 2228347904,
     "device": "NVIDIA GeForce RTX 5070"
   },
   "training": {
@@ -144,16 +141,16 @@
     "dice_weight": 0.5,
     "patch_positive_weight": 5.0,
     "patch_weight": 0.15,
-    "scene_weight": 0.5,
+    "scene_weight": 0.0,
     "pair_weight": 0.0,
     "pair_margin": 0.5,
-    "partial_auc_weight": 0.3,
+    "partial_auc_weight": 0.0,
     "partial_auc_negative_fraction": 0.125,
     "partial_auc_margin": 0.5,
     "negative_upward_weight": 0.1,
     "positive_downward_weight": 0.05,
     "correction_l2_weight": 0.002,
-    "scene_delta_l2_weight": 0.05,
+    "scene_delta_l2_weight": 0.0,
     "endpoint_rule": "fixed epoch 2 for both directions; no held-fold epoch selection",
     "sampling": "equal request mass for each label x sensor stratum, then equal physical-site mass within stratum",
     "augmentation": "joint quarter-turn and reflection transforms across 200x200 MARS tensors and 64x64 counterfactual maps"
@@ -165,8 +162,9 @@
       0.5
     ],
     "candidate_count": 3,
-    "rule": "apply the same fixed residual strength to dense logits and protected scene coordinates",
-    "mask_rule": "sensor thresholds Sentinel-2 0.80 and Landsat 0.70, minimum 100 connected pixels, empty below scene score 0.75"
+    "scene_evidence_weight": 0.25,
+    "rule": "apply each fixed residual strength to dense logits; compute the bounded change in the top-100/local MIL logit statistic and add it at fixed weight 0.25 only within protected scene coordinates",
+    "mask_rule": "sensor thresholds Sentinel-2 0.80 and Landsat 0.70, minimum 100 connected pixels, empty below the unchanged current scene score 0.75"
   },
   "bootstrap": {
     "replicates": 10000,
@@ -187,12 +185,12 @@
     "pass_action": "freeze a separately seeded confirmation; no fold-2, external, or official-test scoring"
   },
   "outputs": {
-    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_dinov3_methane_fusion_all_score_scene_crossfit.pt",
-    "json": "reports/experiments/mars_dinov3_methane_fusion_all_score_scene.json",
-    "markdown": "reports/experiments/MARS_DINOV3_METHANE_FUSION_ALL_SCORE_SCENE.md"
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_dinov3_methane_fusion_dense_surrogate_crossfit.pt",
+    "json": "reports/experiments/mars_dinov3_methane_fusion_dense_surrogate.json",
+    "markdown": "reports/experiments/MARS_DINOV3_METHANE_FUSION_DENSE_SURROGATE.md"
   },
   "invariants": [
-    "The draft protocol permits only an identity/finite/nonzero-low-and-high-score-gradient GPU smoke; outcome evaluation requires frozen hashes.",
+    "The draft protocol permits only an identity/finite segmentation GPU smoke; outcome evaluation requires frozen hashes.",
     "Both cross-fit endpoints train on exactly one of development folds 3/4 and predict the other.",
     "No fold-2, external, or sealed official-test input or label is loaded.",
     "DINOv3 and the released MARS-S2L U-Net remain frozen.",

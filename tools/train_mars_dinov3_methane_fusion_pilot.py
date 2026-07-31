@@ -308,6 +308,7 @@ def collect_predictions(
     strengths: list[float],
     device: torch.device,
     fold: int,
+    scene_evidence_weight: float,
 ) -> dict[str, Any]:
     model.eval()
     rows: dict[str, Any] = {
@@ -335,9 +336,23 @@ def collect_predictions(
             )
         baseline_probability = torch.sigmoid(output["baseline_logits"]).float()
         pixel_delta = output["correction_logits"].float()
+        baseline_surrogate = model.scene_surrogate(
+            output["baseline_logits"].float(), batch["observable"].float()
+        )
         for strength in strengths:
+            candidate_logits = (
+                output["baseline_logits"].float() + float(strength) * pixel_delta
+            )
+            candidate_surrogate = model.scene_surrogate(
+                candidate_logits, batch["observable"].float()
+            )
+            surrogate_delta = 2.0 * torch.tanh(
+                candidate_surrogate - baseline_surrogate
+            )
             score = model.protected_scene_score(
-                batch["base_scene_score"], output["scene_delta_logit"], strength
+                batch["base_scene_score"],
+                surrogate_delta,
+                scene_evidence_weight,
             )
             rows["candidate_scores"][str(strength)].extend(
                 float(value) for value in score.cpu().numpy()
@@ -363,11 +378,10 @@ def collect_predictions(
                     + float(strength) * pixel_delta[index, 0]
                 ).cpu().numpy()
                 probability[~clear] = 0.0
-                score = rows["candidate_scores"][str(strength)][-baseline_probability.shape[0] + index]
                 prediction = component_mask_at(
                     probability, threshold, MINIMUM_CONNECTED_PIXELS
                 )
-                if score < MASK_SCENE_GATE:
+                if base_score < MASK_SCENE_GATE:
                     prediction[:] = False
                 rows["candidate_pixels"][str(strength)].append(
                     pixel_counts(prediction, truth, observable)
@@ -669,28 +683,6 @@ def main() -> int:
             )
         if identity_pixel != 0.0 or identity_scene != 0.0 or identity_score != 0.0:
             raise ValueError("DINOv3 fusion initialization is not exact identity")
-        scene_gradients: dict[str, float] = {}
-        for name, score in (("low", 0.05), ("high", 0.75)):
-            model.zero_grad(set_to_none=True)
-            with torch.amp.autocast("cuda", dtype=torch.float16):
-                probe = model(
-                    first["inputs"],
-                    first["observable"],
-                    first["sensor_index"],
-                    first["prithvi_tokens"],
-                    torch.full_like(first["base_scene_score"], score),
-                )
-                probe_loss = F.binary_cross_entropy_with_logits(
-                    probe["scene_logit"], first["presence"]
-                )
-            probe_loss.backward()
-            scene_gradients[name] = float(model.scene_output.weight.grad.abs().max())
-        if any(
-            not np.isfinite(value) or value <= 0.0
-            for value in scene_gradients.values()
-        ):
-            raise ValueError("Raw all-score scene path has no gradient at identity")
-        model.zero_grad(set_to_none=True)
         started = time.perf_counter()
         history = train_endpoint(model, loader, spec, device, 1)
         elapsed = time.perf_counter() - started
@@ -702,7 +694,6 @@ def main() -> int:
                     "identity_pixel_max_abs": identity_pixel,
                     "identity_scene_max_abs": identity_scene,
                     "identity_score_max_abs": identity_score,
-                    "scene_gradient_probe_max_abs": scene_gradients,
                     "elapsed_seconds": elapsed,
                     "peak_cuda_bytes": int(torch.cuda.max_memory_allocated()),
                     "trainable_parameters": model.trainable_parameter_count(),
@@ -795,7 +786,14 @@ def main() -> int:
             model, train_loader, endpoint_spec, device, int(spec["epochs"])
         )
         raw_parts.append(
-            collect_predictions(model, held_loader, strengths, device, held_fold)
+            collect_predictions(
+                model,
+                held_loader,
+                strengths,
+                device,
+                held_fold,
+                float(protocol["search"]["scene_evidence_weight"]),
+            )
         )
         endpoint_states[str(held_fold)] = model.trainable_state()
         endpoints.append(
