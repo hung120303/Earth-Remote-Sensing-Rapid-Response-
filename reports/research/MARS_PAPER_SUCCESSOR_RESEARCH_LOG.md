@@ -3516,3 +3516,22 @@ Only the top 20 point-gate survivors may be bootstrapped. The eight-feature smok
 found five direction-agreeing features, exercised the no-survivor path cleanly,
 and wrote no output. This is an exploratory development audit; any discovery
 would require a separately committed fold-2 protocol.
+
+### 2026-07-30: Invariant univariate audit finds sparse transferable signal
+
+Of 669 features, 345 had plume directions that agreed across folds after
+fold x sensor rank normalization. Twelve feature/strength candidates passed all
+point gates and were bootstrapped; six retained a positive paired-site AP lower
+bound. The gate-ranked winner is `scene_head_input_49` (matrix column 51) at
+strength 0.10. It improved pooled AP +0.001362, fold-3/fold-4 AP
++0.000403/+0.000786, Sentinel-2/Landsat AP +0.001738/+0.000321, and left
+matched-FPR recall unchanged. Its paired-site AP interval is
+[+0.000298,+0.002181].
+
+This proves that the dense representation contains a small transferable signal
+once raw domain offsets are removed, but the magnitude is not yet sufficient for
+the paper test-only uncertainty target. Five unique features survived all gates:
+columns 51, 47, 644, 335, and 156. Before opening fold 2, the next experiment will
+freeze simple equal-weight top-k ensembles over only these survivors and add a
+strict low-prevalence-site gate. No fold-2, fresh, or exact-paper input was
+accessed.

@@ -1,0 +1,606 @@
+{
+  "baseline": {
+    "average_precision": {
+      "folds": {
+        "3": 0.9303166595004528,
+        "4": 0.8910155391975692
+      },
+      "pooled": 0.9040758422255568,
+      "sensors": {
+        "0": 0.8723696664361476,
+        "1": 0.9749181013475057
+      }
+    },
+    "metrics": {
+      "accuracy": 0.9315863623555931,
+      "auroc": 0.9858845205843628,
+      "average_precision": 0.9040758422255568,
+      "false_positive_rate": 0.07126564330189261,
+      "fn": 58.0,
+      "fp": 1156.0,
+      "negative_predictive_value": 0.9961647821199497,
+      "operating_point": {
+        "false_positive_rate": 0.07126564330189261,
+        "precision": 0.559115179252479,
+        "recall": 0.9619422572178478,
+        "target_fpr": 0.0713,
+        "threshold": 0.16728139929966007
+      },
+      "precision": 0.559115179252479,
+      "recall": 0.9619422572178478,
+      "sensor_average_precision": {
+        "Landsat": 0.9749181013475057,
+        "Sentinel-2": 0.8723696664361476
+      },
+      "specificity": 0.9287343566981074,
+      "tn": 15065.0,
+      "tp": 1466.0
+    }
+  },
+  "decision": "Freeze the selected sparse signal in a separate protocol before fold 2.",
+  "evaluated_candidates": [
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9307198160719017,
+          "4": 0.8918014631211384
+        },
+        "pooled": 0.9054375612355038,
+        "sensors": {
+          "0": 0.8741072979059561,
+          "1": 0.9752394369779686
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.0004031565714488483,
+          "4": 0.0007859239235692428
+        },
+        "pooled": 0.0013617190099469711,
+        "sensors": {
+          "0": 0.0017376314698085427,
+          "1": 0.00032133563046288227
+        }
+      },
+      "effects": {
+        "3": 1.1596392469621037,
+        "4": 0.5497309282047145
+      },
+      "feature_index": 51,
+      "feature_name": "scene_head_input_49",
+      "matched_fpr_recall_delta": 0.0,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": 0.0002982137373596206,
+        "mean": 0.0012618462026981433,
+        "replicates": 10000,
+        "upper": 0.0021809263201228745
+      },
+      "passed": true,
+      "strength": 0.1
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9307173516516655,
+          "4": 0.8918007474529619
+        },
+        "pooled": 0.9061942975643166,
+        "sensors": {
+          "0": 0.8749747320002836,
+          "1": 0.975772082205656
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.0004006921512126338,
+          "4": 0.0007852082553927442
+        },
+        "pooled": 0.0021184553387597616,
+        "sensors": {
+          "0": 0.0026050655641360887,
+          "1": 0.0008539808581503605
+        }
+      },
+      "effects": {
+        "3": 1.1596392469621037,
+        "4": 0.5497309282047145
+      },
+      "feature_index": 51,
+      "feature_name": "scene_head_input_49",
+      "matched_fpr_recall_delta": 0.0006561679790025865,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.00010495719000139116,
+        "mean": 0.0018749208512933535,
+        "replicates": 10000,
+        "upper": 0.0036032154479155106
+      },
+      "passed": false,
+      "strength": 0.2
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9311734921832617,
+          "4": 0.891401510090468
+        },
+        "pooled": 0.9055306984376655,
+        "sensors": {
+          "0": 0.8738152174044338,
+          "1": 0.9757374037830022
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.0008568326828088946,
+          "4": 0.0003859708928988237
+        },
+        "pooled": 0.0014548562121087238,
+        "sensors": {
+          "0": 0.0014455509682862466,
+          "1": 0.0008193024354965495
+        }
+      },
+      "effects": {
+        "3": 0.848171433969079,
+        "4": 0.5788163687861761
+      },
+      "feature_index": 9,
+      "feature_name": "scene_head_input_7",
+      "matched_fpr_recall_delta": 0.0006561679790025865,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.0007341024506279763,
+        "mean": 0.0011859907010279152,
+        "replicates": 10000,
+        "upper": 0.0025460525338505346
+      },
+      "passed": false,
+      "strength": 0.2
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9306862501358877,
+          "4": 0.8916338386645126
+        },
+        "pooled": 0.9052790445942839,
+        "sensors": {
+          "0": 0.8740439601921236,
+          "1": 0.9752083676478273
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.0003695906354348466,
+          "4": 0.0006182994669434727
+        },
+        "pooled": 0.0012032023687270632,
+        "sensors": {
+          "0": 0.001674293755976053,
+          "1": 0.0002902663003215844
+        }
+      },
+      "effects": {
+        "3": 1.5412408998711045,
+        "4": 0.4609920620437534
+      },
+      "feature_index": 335,
+      "feature_name": "scene_head_input_333",
+      "matched_fpr_recall_delta": 0.0,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": 0.0001727012528088051,
+        "mean": 0.0010494196108008606,
+        "replicates": 10000,
+        "upper": 0.0018137236997309398
+      },
+      "passed": true,
+      "strength": 0.05
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9309835893814108,
+          "4": 0.8912899784955128
+        },
+        "pooled": 0.9051444635540791,
+        "sensors": {
+          "0": 0.8738815195364185,
+          "1": 0.974974021919419
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.000666929880957956,
+          "4": 0.00027443929794368493
+        },
+        "pooled": 0.0010686213285222568,
+        "sensors": {
+          "0": 0.0015118531002709101,
+          "1": 5.592057191328159e-05
+        }
+      },
+      "effects": {
+        "3": 1.592890704450043,
+        "4": 0.9722714095098224
+      },
+      "feature_index": 243,
+      "feature_name": "scene_head_input_241",
+      "matched_fpr_recall_delta": 0.0006561679790025865,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.00025088928451427186,
+        "mean": 0.0008740478025044204,
+        "replicates": 10000,
+        "upper": 0.0018953129170318022
+      },
+      "passed": false,
+      "strength": 0.1
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9310127749695578,
+          "4": 0.8911983813152563
+        },
+        "pooled": 0.9050794873661807,
+        "sensors": {
+          "0": 0.873604144681365,
+          "1": 0.9749241643622869
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.0006961154691049742,
+          "4": 0.0001828421176871542
+        },
+        "pooled": 0.0010036451406238989,
+        "sensors": {
+          "0": 0.0012344782452174963,
+          "1": 6.06301478123239e-06
+        }
+      },
+      "effects": {
+        "3": 1.0627549639725284,
+        "4": 0.7916033610931309
+      },
+      "feature_index": 78,
+      "feature_name": "scene_head_input_76",
+      "matched_fpr_recall_delta": 0.0,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.0009792528476348817,
+        "mean": 0.0007635773878579097,
+        "replicates": 10000,
+        "upper": 0.0021677480911318323
+      },
+      "passed": false,
+      "strength": 0.2
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9304853950372133,
+          "4": 0.891254475885421
+        },
+        "pooled": 0.9051616873478491,
+        "sensors": {
+          "0": 0.8738179576477141,
+          "1": 0.975127528303146
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.00016873553676044484,
+          "4": 0.00023893668785179845
+        },
+        "pooled": 0.0010858451222922616,
+        "sensors": {
+          "0": 0.0014482912115665325,
+          "1": 0.00020942695564030167
+        }
+      },
+      "effects": {
+        "3": 1.67627944581273,
+        "4": 0.06576088789453982
+      },
+      "feature_index": 47,
+      "feature_name": "scene_head_input_45",
+      "matched_fpr_recall_delta": 0.0,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": 0.0002255854050896237,
+        "mean": 0.0010108405847791524,
+        "replicates": 10000,
+        "upper": 0.0018051874684535062
+      },
+      "passed": true,
+      "strength": 0.05
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9304663508721543,
+          "4": 0.8916647804363783
+        },
+        "pooled": 0.9059602825793621,
+        "sensors": {
+          "0": 0.8749280957614175,
+          "1": 0.97512838630985
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.00014969137170151026,
+          "4": 0.0006492412388091617
+        },
+        "pooled": 0.0018844403538053056,
+        "sensors": {
+          "0": 0.002558429325269951,
+          "1": 0.00021028496234432037
+        }
+      },
+      "effects": {
+        "3": -1.4209650833271146,
+        "4": -0.5291353771307649
+      },
+      "feature_index": 644,
+      "feature_name": "scene_embedding_57",
+      "matched_fpr_recall_delta": 0.0,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": 0.00017330155213882462,
+        "mean": 0.0017144543194732816,
+        "replicates": 10000,
+        "upper": 0.0034093715593486664
+      },
+      "passed": true,
+      "strength": 0.1
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9304449635242676,
+          "4": 0.8913412931263792
+        },
+        "pooled": 0.9051347746962041,
+        "sensors": {
+          "0": 0.8738175072117077,
+          "1": 0.9749796220766846
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.000128304023814807,
+          "4": 0.0003257539288100686
+        },
+        "pooled": 0.0010589324706472558,
+        "sensors": {
+          "0": 0.0014478407755601497,
+          "1": 6.152072917897655e-05
+        }
+      },
+      "effects": {
+        "3": -1.4209650833271146,
+        "4": -0.5291353771307649
+      },
+      "feature_index": 644,
+      "feature_name": "scene_embedding_57",
+      "matched_fpr_recall_delta": 0.0006561679790025865,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": 0.00015890316775085128,
+        "mean": 0.0009690366520379488,
+        "replicates": 10000,
+        "upper": 0.001860428935387961
+      },
+      "passed": true,
+      "strength": 0.05
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9304386805554063,
+          "4": 0.8913044107473309
+        },
+        "pooled": 0.9052877198992659,
+        "sensors": {
+          "0": 0.873921498852396,
+          "1": 0.9749892768720189
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.0001220210549535139,
+          "4": 0.00028887154976176
+        },
+        "pooled": 0.0012118776737091164,
+        "sensors": {
+          "0": 0.0015518324162484554,
+          "1": 7.117552451318954e-05
+        }
+      },
+      "effects": {
+        "3": -1.08303631563445,
+        "4": -0.38922365524641395
+      },
+      "feature_index": 129,
+      "feature_name": "scene_head_input_127",
+      "matched_fpr_recall_delta": 0.0,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.00016685550111227487,
+        "mean": 0.001115891377173574,
+        "replicates": 10000,
+        "upper": 0.002486357311131562
+      },
+      "passed": false,
+      "strength": 0.1
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9304206347261008,
+          "4": 0.892191138445953
+        },
+        "pooled": 0.9052580731717362,
+        "sensors": {
+          "0": 0.8738813677191694,
+          "1": 0.9754329587351741
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.00010397522564797868,
+          "4": 0.0011755992483838407
+        },
+        "pooled": 0.001182230946179419,
+        "sensors": {
+          "0": 0.0015117012830218046,
+          "1": 0.0005148573876684326
+        }
+      },
+      "effects": {
+        "3": 0.6208952019168871,
+        "4": 0.4362874138450155
+      },
+      "feature_index": 156,
+      "feature_name": "scene_head_input_154",
+      "matched_fpr_recall_delta": 0.0,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": 0.00010864326183230036,
+        "mean": 0.0011138961433218048,
+        "replicates": 10000,
+        "upper": 0.002055675168169825
+      },
+      "passed": true,
+      "strength": 0.1
+    },
+    {
+      "average_precision": {
+        "folds": {
+          "3": 0.9304127765403702,
+          "4": 0.8919585583811287
+        },
+        "pooled": 0.9072604993341462,
+        "sensors": {
+          "0": 0.8767330325103768,
+          "1": 0.9752952348319777
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 9.611703991740939e-05,
+          "4": 0.0009430191835595458
+        },
+        "pooled": 0.003184657108589395,
+        "sensors": {
+          "0": 0.004363366074229269,
+          "1": 0.000377133484471992
+        }
+      },
+      "effects": {
+        "3": -1.4209650833271146,
+        "4": -0.5291353771307649
+      },
+      "feature_index": 644,
+      "feature_name": "scene_embedding_57",
+      "matched_fpr_recall_delta": 0.0,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.00046398444715519657,
+        "mean": 0.002831305938918193,
+        "replicates": 10000,
+        "upper": 0.0060862774217982215
+      },
+      "passed": false,
+      "strength": 0.2
+    }
+  ],
+  "exact_paper_inputs_accessed": false,
+  "fold2_accessed": false,
+  "fresh_inputs_accessed": false,
+  "generated_at_utc": "2026-07-31T02:52:30.834175+00:00",
+  "normalization": {
+    "domains": "each fold x sensor independently",
+    "invariance_rule": "feature direction must agree between folds before any strength is evaluated",
+    "method": "unlabeled empirical rank followed by inverse-normal transform",
+    "missing": "absolute values >=1000 or non-finite are replaced by the domain median",
+    "orientation": "positive-minus-negative normalized mean on the opposite fit fold",
+    "purpose": "remove fold/sensor scale offsets and test only within-domain ranking signal"
+  },
+  "provenance": {
+    "explorer_sha256": "91232a20bb34af8b1b0de53525bbb9f83f03089fbb9896f7938eb69ddf7d1b9f",
+    "features_sha256": "f45de57bda41ba083b4a981cbbcafa3c1e537ff7178eedae2c2ae2567987f78e",
+    "git_commit": "39879c9f9d55fe57e5d00a03cda05dfdbee03fb5",
+    "metadata_sha256": "5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d",
+    "numpy": "2.4.4",
+    "protocol_sha256": "542f10d5d7a4bb54e537273ce101dbb8f4a537bc9fd14ef06bc12e627eb7561a"
+  },
+  "schema_version": 1,
+  "scope": "exploratory invariant-univariate audit on honest dense-Prithvi development features",
+  "status": "candidate_found_for_preregistered_fold2_test",
+  "summary": {
+    "bootstrapped_candidates": 12,
+    "direction_agreement_features": 345,
+    "features_considered": 669,
+    "passing_candidates": 6,
+    "point_gate_candidates": 12,
+    "selected": {
+      "average_precision": {
+        "folds": {
+          "3": 0.9307198160719017,
+          "4": 0.8918014631211384
+        },
+        "pooled": 0.9054375612355038,
+        "sensors": {
+          "0": 0.8741072979059561,
+          "1": 0.9752394369779686
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "3": 0.0004031565714488483,
+          "4": 0.0007859239235692428
+        },
+        "pooled": 0.0013617190099469711,
+        "sensors": {
+          "0": 0.0017376314698085427,
+          "1": 0.00032133563046288227
+        }
+      },
+      "effects": {
+        "3": 1.1596392469621037,
+        "4": 0.5497309282047145
+      },
+      "feature_index": 51,
+      "feature_name": "scene_head_input_49",
+      "matched_fpr_recall_delta": 0.0,
+      "paired_site_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": 0.0002982137373596206,
+        "mean": 0.0012618462026981433,
+        "replicates": 10000,
+        "upper": 0.0021809263201228745
+      },
+      "passed": true,
+      "strength": 0.1
+    }
+  }
+}
