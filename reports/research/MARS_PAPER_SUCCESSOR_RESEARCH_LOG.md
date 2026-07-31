@@ -3671,3 +3671,26 @@ unchanged in both views. Its 100-replicate smoke lower bounds were +0.000746
 whole and +0.000430 low-prevalence. These smoke intervals are not inferential
 evidence. The committed full protocol requires the unchanged 10,000-replicate
 paired-site gates before fold 2 can be considered.
+
+### 2026-07-30: Complementary invariant residual pair passes development
+
+Eight of 16 candidates passed every point gate and six retained strictly positive
+paired-site AP lower bounds in both views. The gate-ranked selection is anchor
+strength 0.20 plus booster strength 0.05. On all 17,745 development rows, AP
+improved +0.004336, fold-3/fold-4 AP +0.000166/+0.002748,
+Sentinel-2/Landsat AP +0.005804/+0.001158, and matched-FPR recall +0.001312.
+The 10,000-replicate physical-site AP interval was
+[+0.000555,+0.007336].
+
+On the 11,344-row low-prevalence stress view, AP improved +0.018325,
+fold AP +0.024956/+0.017260, Sentinel-2/Landsat AP
++0.018623/+0.009407, and matched-FPR recall +0.008475. Its paired-site AP
+interval was [+0.001558,+0.036592]. This is the first dense-scene architecture
+in the current sequence to clear every preregistered whole and rare-site
+development gate with publication-strength resampling.
+
+The result authorizes only a separately committed, one-shot fold-2 confirmation.
+Before any fold-2 representation or label access, a new dense adapter must be
+trained on folds 3+4, and the fold-2 extractor, fixed component signs/transforms/
+strengths, low-prevalence definition, sensor/recall gates, and paired-site
+bootstrap must be frozen. External and exact-paper inputs remain untouched.
