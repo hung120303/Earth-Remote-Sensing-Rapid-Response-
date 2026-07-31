@@ -4560,3 +4560,34 @@ nonnegative AP on both sensors and both folds, unchanged operating confusion
 counts, positive pooled and per-fold IoU changes, and strictly positive
 physical-site bootstrap lower bounds for both AP and IoU. Failure cannot create
 an artifact or authorize fold-2/external scoring.
+
+### 2026-07-31: First DINOv3 fusion run exposes a zero-gradient scene bug
+
+The frozen two-fold run completes without numerical or memory failure, but it
+cannot pass promotion because all three candidate strengths reproduce the
+current scene scores exactly: AP delta 0.0, recall delta 0.0, and paired-site AP
+interval [0.0,0.0]. The spatial branch is nevertheless active. At strength
+0.10 it improves pooled mask IoU by +0.003292 with paired-site 95% interval
+[+0.000981,+0.005181], positive changes on both folds
+(+0.005633/+0.001536), and unchanged scene operating counts. Strength 0.25
+raises pooled IoU by +0.006070 with interval [+0.000841,+0.010278], also
+positive on both folds, while 0.50 loses uncertainty support. No artifact is
+written; result SHA-256 is
+`81da27897942b0f78f3234ca64892bb4dde83e78a1774956ed4446298b342149`.
+
+An implementation audit explains the exact-zero scene result. The protected
+score function used `where(delta == 0, base, adjusted)` to guarantee bit-exact
+identity. Because the zero-initialized scene head satisfies that condition for
+every row, autograd follows the constant `base` branch and supplies exactly
+zero gradient to the scene head. This is not caused by an empty protected
+region: folds 3/4 contain 1,890 scores at or above 0.50, including 1,401 plume
+scenes. The run therefore evaluates the spatial branch but is not a valid test
+of the intended scene architecture.
+
+The correction is algebraic and does not use the observed labels to change a
+scientific choice: compute `base + (1-gate) * (sigmoid(logit(local)+delta) -
+sigmoid(logit(local)))`. The two sigmoid terms are bit-identical at delta zero,
+so initialization remains exact, while the first term retains its derivative.
+All folds, inputs, sampling, epochs, losses, strengths, and promotion gates will
+remain fixed in a separately hashed rerun. Fold 2 and external/test data remain
+unauthorized.
