@@ -3343,3 +3343,24 @@ The trainer, two final seeds, 1,500-step endpoint, strength 0.80, feature hashes
 exact current-score cache, and +0.001 held-fold AP floor are now committed before
 fitting on folds 3+4 and evaluating the reused architecture fold once. Failure
 writes no artifact and cannot authorize external scoring.
+
+### 2026-07-30: AP residual rejected by true representation holdout
+
+The frozen internal selection recomputed exactly, then two final seeds trained on
+folds 3+4 and strength 0.80 was evaluated once on fold 2. It failed decisively:
+AP changed -0.015748, matched-FPR recall -0.007528, Sentinel-2 AP -0.021159,
+Landsat AP -0.004460, and the paired-site AP interval was
+[-0.032805,-0.003079]. No artifact was written and no external input was loaded.
+
+This large reversal is informative. The ranker heads cross-predicted folds 3 and 4,
+but the frozen dense adapter that generated both sets of features had itself been
+trained on both folds. Head-level cross-fitting therefore did not remove
+representation-label leakage. Fold 2 was the first genuinely out-of-fit
+representation and exposed the distribution shift. SmoothAP optimization is not
+rejected; training it on in-sample learned representations is.
+
+Any next dense scene experiment must generate fold-3 features from an adapter that
+did not train on fold 3 and fold-4 features from an adapter that did not train on
+fold 4. Only those honest cross-fitted representations may select a residual head
+for the existing folds-3+4 -> fold-2 adapter. This correction is also the required
+design for later five-fold paper-grade training.
