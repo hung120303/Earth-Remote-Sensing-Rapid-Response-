@@ -3857,3 +3857,27 @@ interval lower bounds were +0.000315/+0.000475. These smoke numbers are not
 promotion evidence; the committed protocol requires 10,000 replicates over all
 six candidates. Fold 2 remains report-only, and folds 0/1 and external inputs
 remain untouched.
+
+### 2026-07-30: Uniform global shrinkage passes development gates
+
+Five of six frozen shrinkages passed every point and 10,000-replicate paired-site
+bootstrap gate. The preregistered selection rule chose shrinkage 0.50, equivalent
+to anchor strength 0.10 and booster strength 0.025.
+
+On all 17,745 development rows, AP changed 0.904076 -> 0.906798
+(+0.002722). Fold-3/fold-4 AP changed +0.000307/+0.001782 and
+Sentinel-2/Landsat AP changed +0.003671/+0.000586. Matched-FPR recall was
+unchanged at 0.961942 with FPR 0.071266. The physical-site paired AP interval
+was [+0.000761,+0.004360].
+
+On the 11,344-row low-prevalence proxy, AP changed 0.708187 -> 0.718851
+(+0.010664). Fold-3/fold-4 AP changed +0.018570/+0.009332 and
+Sentinel-2/Landsat AP changed +0.011916/+0.004392. Matched-FPR recall was
+unchanged at 0.906780 with FPR 0.071263. The physical-site paired AP interval
+was [+0.001255,+0.021951].
+
+The compact report SHA-256 is
+`f3228425fe595c2363d5b3d17831aee103b022f775088bfd8ac0c4d96075b57f`.
+This pass authorizes a separately frozen folds-0/1-excluding adapter, label-free
+feature extraction, and one-shot confirmation of exactly shrinkage 0.50. It does
+not authorize fold-2 reuse or external/exact-paper access.
