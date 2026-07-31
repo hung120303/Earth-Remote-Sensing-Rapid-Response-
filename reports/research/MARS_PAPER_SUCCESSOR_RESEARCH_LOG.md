@@ -3966,3 +3966,30 @@ Uniform shrinkage and the entire two-feature dense-residual family are retired.
 The development gains did not generalize across independently trained adapter
 seeds and physical-site folds. Folds 0, 1, and 2 may not be reused for selection;
 fresh and exact-paper inputs remain inaccessible.
+
+### 2026-07-31: Counterfactual temporal-physics representation frozen
+
+The dense residual failure retires calibration on adapter-specific embeddings.
+The next hypothesis instead changes the observable evidence: genuine methane
+attenuation should be directional in time, whereas persistent facility texture
+and many land-cover artifacts should remain under a same-scene control. A new
+label-free extractor therefore scores each fold-3/4 scene with the frozen
+released MARS-S2L U-Net in four views: factual target/reference, swapped
+reference/target, target/target, and reference/reference. It records the spatial
+response of every view plus explicit factual-minus-control maps.
+
+The representation also adds two-way low-frequency Fourier-amplitude alignment
+on pooled bitemporal reflectance, high-pass SWIR change, gas-specific B12-minus-
+B11 change, and nuisance magnitudes. This is a fixed physical input transform
+inspired by FeaSpect (CVPR 2025), whose central finding is that aligning
+low-frequency amplitude can suppress environment-driven pseudo-change; it is
+not presented as a reproduction of that paper's trainable latent module. The
+released 16-channel mixed Sentinel-2/Landsat contract remains intact upstream.
+
+The frozen extractor emits 28x64x64 float16 maps. Its four-row CUDA smoke covered
+both labels and sensors, produced finite 4x28x64x64 values, and did not write a
+cache. The full extraction is restricted to folds 3 and 4; folds 0/1/2,
+exact-paper data, and fresh external data are forbidden. The eventual ranker
+must improve the already frozen spatial-Prithvi ensemble, not an obsolete weaker
+scene head. Bulk outputs remain ignored and only a compact hashed receipt will
+be committed.

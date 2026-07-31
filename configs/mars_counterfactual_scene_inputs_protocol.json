@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_synthetic_transform_smoke_before_real_development_extraction",
+  "scope": "label-free counterfactual and frequency-aligned scene representation on development folds 3 and 4 only",
+  "extractor": {
+    "path": "tools/extract_mars_counterfactual_scene_inputs.py",
+    "sha256": "37180d9679ce19f883fdab3e340a2d9fbd4c8f3b9ee7d1263525c8dd36dc935f"
+  },
+  "inputs": {
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_acquisition_receipt"
+    },
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "acquisition_receipt": {
+      "path": "reports/acquisition/mars_s2l_paper_v3_development_download.json",
+      "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "released_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+      "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"
+    }
+  },
+  "folds": [3, 4],
+  "representation": {
+    "output_shape": [28, 64, 64],
+    "counterfactual_views": [
+      "factual target/reference",
+      "swapped reference/target",
+      "target/target same-date control",
+      "reference/reference same-date control"
+    ],
+    "teacher": "released MARS-S2L U-Net frozen by checkpoint SHA-256",
+    "frequency_alignment": {
+      "method": "replace the centered low-frequency Fourier amplitude box of one date with its paired date while retaining source phase",
+      "fraction": 0.1,
+      "application": "64x64 pooled six-band reflectance tensors in both temporal directions",
+      "research_basis": "FeaSpect, CVPR 2025; fixed physical input transform only, not a claim to reproduce its trainable latent module"
+    },
+    "highpass": "9x9 local-mean removal on pooled temporal differences",
+    "label_use": "none in image transforms or frozen-teacher inference; labels are copied to ignored metadata for later fold-restricted evaluation"
+  },
+  "runtime": {
+    "batch_size": 8,
+    "workers": 2,
+    "device": "CUDA",
+    "autocast": "float16 teacher; float32 counterfactual and Fourier transforms"
+  },
+  "outputs": {
+    "images": "outputs/mars_counterfactual_scene_inputs_folds34.npy",
+    "metadata": "outputs/mars_counterfactual_scene_inputs_folds34_metadata.npz",
+    "receipt": "reports/acquisition/mars_counterfactual_scene_inputs_folds34.json"
+  },
+  "invariants": [
+    "Only development folds 3 and 4 are eligible for this extraction.",
+    "The three controls are derived from each scene itself and require no new label.",
+    "The same frozen released U-Net scores all four temporal views.",
+    "No fold 0/1/2, exact-paper, or fresh-external image or label may be loaded.",
+    "Bulk image and metadata caches remain Git-ignored; only the compact receipt is committed.",
+    "A later ranker must compare against the already frozen spatial-Prithvi score, not an earlier weaker head."
+  ]
+}
