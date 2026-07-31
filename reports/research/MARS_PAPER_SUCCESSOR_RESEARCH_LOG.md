@@ -4778,3 +4778,43 @@ dense-MIL statistic is retired for scene ranking. The next scene architecture
 must obtain a transportable image-level signal independently of this mask
 surrogate, rather than applying another weight, route, seed, or strength search
 to the same failed evidence.
+### 2026-07-31: DINO scene ranking retired; physics-guided bi-temporal branch selected
+
+The frozen three-seed DINOv3 confirmation rejected the transformer-derived
+scene signal: at the selected 0.1 residual strength, average precision changed
+by -0.001832 with a paired-site 95% interval of [-0.003701,-0.000176]. Dense
+mask IoU still improved by +0.002462 [0.000765,0.003941], so the result does not
+show that foundation features are intrinsically useless; it specifically rules
+out this DINOv3 scene-ranking family under its predeclared contract. DINO is
+therefore retired from the scene path and remains only a possible mask-side
+ablation.
+
+The next architecture is fixed conceptually before outcome scoring. It uses a
+single shared six-band encoder for target and reference observations; explicit
+target/reference NDMI, NDMI change, MBMP, normalized band changes, and temporal
+log-ratios; multi-scale cross-date fusion; and bounded change-guided feature
+modulation. Its dense path modulates the frozen released MARS-S2L U-Net through
+zero-initialized gates, giving exact released-mask identity before training. An
+independent 8x8 patch/MIL head is supervised directly for scene presence rather
+than deriving every scene decision from a post-hoc top-k mask statistic. Initial
+scene experiments route learned evidence only to Sentinel-2 because both new
+source-disjoint cohorts are Sentinel-2; Landsat scene scores remain exact
+identities while its dense path remains supported and trained on MARS.
+
+This design is inspired by, but is not a reproduction of, Xu et al.'s 2026
+N-BPMSNet. That paper reports an NDMI-guided shared-weight dual-date encoder,
+cross-channel fusion, and change-guided attention, with F1 0.8858 and AUC
+0.9856 on its own 11,494-sample, 44-site Sentinel-2 dataset. Those numbers are
+not directly comparable to MARS-S2L's exact 43,529-image benchmark; the present
+work will continue to use the MARS-S2L v3 comparator, site-block bootstrap, and
+mixed-sensor views as its only superiority contract. The acquired 135 UNEP
+positive scenes and 367 CloudSEN12+ clear negatives are auxiliary training data;
+their separate development cohorts remain unopened until the original MARS
+development gates pass.
+
+Primary literature: [Xu et al., *IEEE TGRS*
+2026](https://doi.org/10.1109/TGRS.2026.3689118);
+[Kumar et al., *MethaneMapper*, CVPR
+2023](https://openaccess.thecvf.com/content/CVPR2023/html/Kumar_MethaneMapper_Spectral_Absorption_Aware_Hyperspectral_Transformer_for_Methane_Detection_CVPR_2023_paper.html);
+[Quintero et al., *Methane-Plume Segmentation From Hyperspectral Satellite
+Imagery Via Multimodal Deep Learning*](https://arxiv.org/abs/2606.26416).
