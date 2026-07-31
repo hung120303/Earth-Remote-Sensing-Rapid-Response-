@@ -3574,3 +3574,23 @@ a cross-fitted, strongly regularized linear residual ranker over domain-rank
 normalized dense features, with equal physical-site weighting and a separately
 rank-normalized held-fold output. This replaces the failed equal-weight
 assumption while retaining the invariant representation contract.
+
+### 2026-07-30: Invariant site-balanced linear ranker frozen
+
+The learned replacement is deliberately sparse and cross-fitted. All 669
+authorized dense representation columns are rank/inverse-normal normalized
+independently within each fold x sensor. For each candidate, an L1 logistic model
+fit only on fold 4 predicts fold 3 and a separate model fit only on fold 3 predicts
+fold 4. Each held decision function is rank normalized again within its fold x
+sensor before it can perturb the exact current-score logit.
+
+The frozen search contains five regularization strengths, three physical-site
+weighting rules, and six residual strengths (90 candidates). The weighting rules
+give every site equal total training influence, optionally equalizing label or
+sensor x label cells within each site. The 5% low-prevalence cohort is used only
+for evaluation gates, never as a feature or route. Promotion retains the same
++0.005 low-prevalence AP minimum, all fold/sensor/recall safeguards, and strict
+positive whole and low-prevalence paired-site AP lower bounds over 10,000
+replicates. A 32-feature smoke run exercised both honest fits, both candidate
+strengths, and both bootstrap views without warnings or output artifacts. Fold 2
+and all external evaluation inputs remain untouched.
