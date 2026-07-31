@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_sparse-ensemble_smoke_before_full_development_search",
+  "scope": "equal-weight top-k ensemble of the five invariant univariate survivors on folds 3 and 4",
+  "explorer": {
+    "path": "tools/explore_mars_dense_sparse_invariant_ensemble.py",
+    "sha256": "bff75a82cb359b6e8de39f68fa4e6559524b32132c392f83595328ddfafd75ca"
+  },
+  "code_dependencies": [
+    {
+      "path": "tools/explore_mars_dense_invariant_univariate.py",
+      "sha256": "91232a20bb34af8b1b0de53525bbb9f83f03089fbb9896f7938eb69ddf7d1b9f"
+    },
+    {
+      "path": "tools/train_mars_dense_ap_residual_ranker.py",
+      "sha256": "85eabe43bb7dad38221d413e5f003a4845df8c35726bfc6c7bd2fe2158ea0bfd"
+    },
+    {
+      "path": "tools/train_mars_oof_scene_ensemble_v2.py",
+      "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"
+    },
+    {
+      "path": "tools/train_mars_scene_ranker.py",
+      "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"
+    },
+    {
+      "path": "tools/train_mars_unseen_low_prevalence_router.py",
+      "sha256": "2007b4b8b048bd0247f53d43a763bfa6e0a98934c6a8326663f9948189533630"
+    }
+  ],
+  "inputs": {
+    "features": {
+      "path": "outputs/mars_dense_prithvi_crossfit_scene_features_folds34.npy",
+      "sha256": "f45de57bda41ba083b4a981cbbcafa3c1e537ff7178eedae2c2ae2567987f78e"
+    },
+    "metadata": {
+      "path": "outputs/mars_dense_prithvi_crossfit_scene_features_folds34_metadata.npz",
+      "sha256": "5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d"
+    },
+    "receipt": {
+      "path": "reports/acquisition/mars_dense_prithvi_crossfit_scene_features_folds34.json",
+      "sha256": "00615a0805e4b0d22389c4380fc60a53a71028cc2a29583c916c18bc42f892e6"
+    },
+    "univariate_report": {
+      "path": "reports/experiments/mars_dense_invariant_univariate_exploration.json",
+      "sha256": "217bc3484bcc75a826b2630186b7ead271d7115cb4577dbd7f979a20826d2ef1"
+    }
+  },
+  "folds": [
+    3,
+    4
+  ],
+  "feature_order": [
+    51,
+    47,
+    644,
+    335,
+    156
+  ],
+  "feature_names": {
+    "51": "scene_head_input_49",
+    "47": "scene_head_input_45",
+    "644": "scene_embedding_57",
+    "335": "scene_head_input_333",
+    "156": "scene_head_input_154"
+  },
+  "feature_order_rule": "unique univariate all-gate survivors ordered by descending paired-site AP lower bound",
+  "ensemble": {
+    "normalization": "unlabeled empirical-rank inverse-normal transform within each fold x sensor",
+    "orientation": "feature direction learned only from the opposite fold",
+    "aggregation": "unweighted arithmetic mean of the first top-k normalized oriented residuals",
+    "base": "exact float64 current scene score in logit space"
+  },
+  "top_k": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "strengths": [
+    0.025,
+    0.05,
+    0.1,
+    0.2,
+    0.4
+  ],
+  "target_domain": {
+    "name": "low-prevalence physical-location proxy for the official test-only-site view",
+    "maximum_site_positive_rate": 0.05,
+    "membership": "all rows from physical_location_id groups whose combined folds-3/4 positive rate is <=0.05",
+    "use": "development stress view only; it is not a substitute for the untouched official test-only-site benchmark"
+  },
+  "gates": {
+    "minimum_whole_pooled_ap_delta": 0.001,
+    "minimum_each_whole_fold_ap_delta": 0.0,
+    "minimum_each_whole_sensor_ap_delta": 0.0,
+    "minimum_whole_matched_fpr_recall_delta": 0.0,
+    "minimum_low_prevalence_pooled_ap_delta": 0.005,
+    "minimum_each_low_prevalence_fold_ap_delta": 0.0,
+    "minimum_each_low_prevalence_sensor_ap_delta": 0.0,
+    "minimum_low_prevalence_matched_fpr_recall_delta": 0.0,
+    "whole_paired_site_ap_lower_bound_strictly_positive": true,
+    "low_prevalence_paired_site_ap_lower_bound_strictly_positive": true
+  },
+  "bootstrap": {
+    "top_k": 15,
+    "replicates": 10000,
+    "whole_seed": 20265000,
+    "low_prevalence_seed": 20265100,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "output": "reports/experiments/mars_dense_sparse_invariant_ensemble_exploration.json",
+  "invariants": [
+    "The candidate feature set and order are frozen from the already committed univariate report.",
+    "Every feature value came from an adapter that excluded the represented sample's fold.",
+    "Unlabeled normalization is computed separately within each fold and sensor.",
+    "Each feature direction is learned only from the opposite fold.",
+    "Only equal-weight prefixes and the predeclared scalar strengths are searched.",
+    "Only point-gate survivors can consume paired-site bootstrap computation.",
+    "Both whole-development and low-prevalence paired-site AP lower bounds must be strictly positive.",
+    "A development pass can only authorize a separately frozen fold-2 protocol.",
+    "Fold 2, fresh data, and exact-paper inputs are never loaded."
+  ]
+}

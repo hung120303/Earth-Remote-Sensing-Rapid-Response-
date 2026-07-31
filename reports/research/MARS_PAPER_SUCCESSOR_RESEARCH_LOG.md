@@ -3535,3 +3535,22 @@ columns 51, 47, 644, 335, and 156. Before opening fold 2, the next experiment wi
 freeze simple equal-weight top-k ensembles over only these survivors and add a
 strict low-prevalence-site gate. No fold-2, fresh, or exact-paper input was
 accessed.
+
+### 2026-07-30: Sparse invariant ensemble protocol frozen
+
+The next development experiment is limited to equal-weight prefixes of the five
+univariate survivors, ordered by descending individual paired-site AP lower
+bound: columns 51, 47, 644, 335, and 156. It searches top-k values 1 through 5
+and logit-residual strengths 0.025, 0.05, 0.10, 0.20, and 0.40. Every feature is
+rank/inverse-normal normalized within its own fold x sensor domain and oriented
+using only the opposite fold.
+
+Promotion now requires the earlier whole-development AP, fold, sensor, and
+matched-FPR recall gates plus a deliberately demanding low-prevalence proxy:
+11,344 rows, 118 positives, and 199 physical locations whose folds-3/4 site
+positive rate is at most 5%. The low-prevalence pooled AP gain must be at least
++0.005, with no fold, sensor, or matched-FPR recall regression. Both the whole
+and low-prevalence paired-site AP 95% lower bounds must be strictly positive
+across 10,000 replicates. A smoke run exercised all four point candidates and
+both bootstrap paths without writing an output. Fold 2 and external inputs
+remain inaccessible to this protocol.
