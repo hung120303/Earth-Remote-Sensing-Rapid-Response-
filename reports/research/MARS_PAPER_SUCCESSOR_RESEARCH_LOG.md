@@ -4309,3 +4309,26 @@ The cache embeds the pinned checkpoint, foundation revision/receipt, manifest,
 fold protocol, wavelength lists, and radiometric multiplier. Its compact
 receipt is committed before any projected feature or outcome metric is
 computed. Folds 0/1/2 and paper-test outcomes remain excluded.
+
+### 2026-07-31: DOFA-v2 point gates pass; projection stability confirmation frozen
+
+The first frozen DOFA-v2 selection evaluates 45 predeclared feature-family,
+regularization, and blend combinations. Its selected `change_extreme`, C=0.01,
+0.05-blend probe is the first new representation in this research phase to pass
+every pooled point, fold, sensor, and recall gate. Relative to the current
+spatial-Prithvi score, pooled AP rises +0.001087 with unchanged matched-FPR
+recall. AP changes are +0.000910/+0.000964 on folds 3/4 and
++0.001266/+0.000887 on Landsat/Sentinel-2. The paired-site AP estimate is
++0.001113, but its 95% interval [-0.000223,+0.002588] crosses zero. The result
+is therefore promising but not sufficient to touch fold 2.
+
+One variance-control confirmation is frozen before observing any further model
+outcomes. It holds the selected feature family, C, 0.05 blend, 2,048-dimensional
+sparse projection, cross-fit, and all gates fixed. Five entirely new projection
+seeds are averaged in log-odds space; the favorable seed used during selection
+is deliberately excluded. Individual seeds are diagnostics only, and exactly
+one five-seed aggregate is eligible. Passing still requires every original
+point/fold/sensor/recall gate plus a strictly positive lower bound from 10,000
+paired physical-site bootstrap replicates. Failure rejects the branch without
+extracting fold 2. The frozen contract is
+`configs/mars_dofa_v2_projection_ensemble_protocol.json`.
