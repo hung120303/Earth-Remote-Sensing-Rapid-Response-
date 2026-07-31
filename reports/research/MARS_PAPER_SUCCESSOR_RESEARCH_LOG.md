@@ -4033,3 +4033,30 @@ nonnegative matched-FPR recall, and nonnegative AP in every fold and sensor.
 The 16-row GPU smoke covered all four label x sensor strata, completed a finite
 epoch, and produced finite scores. Folds 0/1/2, exact-paper inputs, and fresh
 external inputs remain inaccessible.
+
+### 2026-07-31: Observational counterfactual ranker rejected
+
+No frozen ablation passed. At its least harmful 0.05 blend, directional-teacher
+evidence improved whole-view AP by +0.000909 but reduced matched-FPR recall by
+-0.001969; its paired-site interval was [-0.000159,+0.001647]. Fold 3 and
+Landsat AP were slightly negative. More importantly, the low-prevalence proxy
+changed -0.000458 AP with interval [-0.006864,+0.006634].
+
+The complete counterfactual-physics model changed whole AP +0.000745 and rare
+AP -0.002243; physics without teacher responses changed +0.000741/-0.002407.
+Larger blends increased whole AP to as much as +0.002725 but progressively
+harmed rare-site AP (down to -0.010195), so attenuation cannot repair the target
+domain. Report SHA-256 is
+`faae5ec16a0caa740564073ca5f7cdbbe8d65a1692dec552662e95c5cfa3b76f`;
+the ignored cross-fit score cache SHA-256 is
+`1fcf35fa2e61976bac038ff7797ac5ce4f502c3fdb74698e2c960751ced41f40`.
+No artifact was written and folds 0/1/2 or external data were not accessed.
+
+This rejects observational counterfactual features as sufficient, but not the
+causal hypothesis. The missing intervention is a paired positive on the same
+no-plume background. The next experiment will use the paper-compatible,
+wind-matched MODTRAN-LUT simulator to inject fit-fold plume fields into fit-fold
+no-plume scenes, then train the directional ranker with those same-background
+positive interventions. Each cross-fit branch must keep both source plumes and
+backgrounds inside its fitting fold. This targets the rare-site failure directly
+by breaking the association between facility appearance and plume labels.
