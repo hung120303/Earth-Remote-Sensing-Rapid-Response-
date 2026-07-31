@@ -4649,3 +4649,25 @@ gradient both for a base score below the protection gate (0.203125 at 0.05) and
 above it (0.444091796875 at 0.75). Peak CUDA allocation is 3.16 GB. The output
 paths are distinct `*_all_score_scene` artifacts/reports, and no held-fold
 outcome was read before hashing this contract.
+
+### 2026-07-31: All-score DINOv3 scene objective rejected
+
+Training on raw additive logits increases the learned scene residual by more
+than an order of magnitude (epoch-2 L2 0.1628/0.1092), but it does not improve
+protected cross-fit ranking. The selected strength 0.10 changes pooled AP
+-0.000113 with paired-site interval [-0.000437,+0.000319], including fold
+changes -0.000065/-0.000229 and sensor changes -0.000027 Landsat/-0.000226
+Sentinel-2. Recall and operating counts remain identical. Higher strengths
+worsen pooled and fold AP. Result SHA-256 is
+`e43151c2ce8df8192a3acc1828204084615ef36b8ebf5df01b0a9ba94df1dc08`;
+no artifact is written.
+
+The mask result repeats a third time: strength 0.10 improves pooled IoU
++0.002786 with paired-site interval [+0.000789,+0.004293] and positive fold
+changes (+0.004575/+0.001449). Strength 0.25 again gives the larger point gain
+(+0.004920) with a positive lower bound (+0.000508), although the protocol's
+joint rank correctly selects 0.10 because all scene variants fail. The DINOv3
+methane-gated branch is therefore retained as a validated segmentation research
+direction, while its learned scene head is retired. It will not be forced into
+the current scene score or evaluated on fold 2/external/test data without a new
+independent scene rationale.
