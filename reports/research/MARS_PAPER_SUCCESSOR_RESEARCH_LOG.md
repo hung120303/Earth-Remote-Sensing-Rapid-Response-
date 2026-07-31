@@ -4225,3 +4225,29 @@ canonical manifest in exact order. Fold counts are 8,799/8,946; label counts
 are 16,221 no-plume and 1,524 plume; sensor counts are 14,963 Sentinel-2 and
 2,782 Landsat. The compact acquisition receipt is committed before any probe
 metric is computed. Folds 0/1/2 and paper-test outcomes remain excluded.
+
+### 2026-07-31: Physical-radiometry Prithvi probe rejected
+
+None of the 45 predeclared candidates passes the fold-3/4 promotion gates. The
+least harmful candidate uses temporal-change features, C=0.01, and the minimum
+0.025 logit blend. It changes pooled AP versus the current spatial-Prithvi
+score by only +0.000091 and leaves matched-FPR recall unchanged. Its paired-site
+AP interval is [-0.000299,+0.000601], so the effect is not distinguishable from
+zero. Fold 3 AP changes -0.000050 while fold 4 changes +0.000106; pooled
+Sentinel-2/Landsat AP changes are both positive but only
++0.000094/+0.000117. The candidate therefore fails the +0.001 pooled point
+floor, the both-fold sign gate, and the positive bootstrap lower-bound gate.
+
+A reporting-only replay of that exact selected specification against the
+legacy 2x-radiometry cache gives +0.000238 AP but -0.000656 recall, with fold 3
+again negative. Correct physical scaling removes the small recall loss but does
+not unlock a useful representation. This preserves an important paper caveat:
+the earlier Prithvi results used an erroneous radiometric transfer, yet fixing
+it does not alter the architectural conclusion because the probe remains almost
+perfectly redundant with the current score.
+
+The compact selection report SHA-256 is
+`f12a36af99d6b399f2292d45d68cd93e446220388aedea0f9936315bf76e2bcd`.
+No candidate is promoted and fold 2 is not extracted. The next representation
+branch can now test a wavelength-conditioned foundation model rather than
+another Prithvi scalar head.
