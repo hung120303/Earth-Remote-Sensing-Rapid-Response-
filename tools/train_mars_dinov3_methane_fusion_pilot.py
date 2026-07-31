@@ -627,6 +627,7 @@ def main() -> int:
     torch.cuda.reset_peak_memory_stats()
 
     if args.smoke:
+        seed_everything(int(spec["seed"]))
         fit = smoke_subset(
             [row for row in records if group_to_fold[str(row["group_id"])] == 3], 2
         )
@@ -668,6 +669,23 @@ def main() -> int:
             )
         if identity_pixel != 0.0 or identity_scene != 0.0 or identity_score != 0.0:
             raise ValueError("DINOv3 fusion initialization is not exact identity")
+        model.zero_grad(set_to_none=True)
+        with torch.amp.autocast("cuda", dtype=torch.float16):
+            probe = model(
+                first["inputs"],
+                first["observable"],
+                first["sensor_index"],
+                first["prithvi_tokens"],
+                torch.full_like(first["base_scene_score"], 0.75),
+            )
+            probe_loss = F.binary_cross_entropy_with_logits(
+                probe["scene_logit"], first["presence"]
+            )
+        probe_loss.backward()
+        scene_gradient = float(model.scene_output.weight.grad.abs().max())
+        if not np.isfinite(scene_gradient) or scene_gradient <= 0.0:
+            raise ValueError("Protected scene path has no gradient at identity")
+        model.zero_grad(set_to_none=True)
         started = time.perf_counter()
         history = train_endpoint(model, loader, spec, device, 1)
         elapsed = time.perf_counter() - started
@@ -679,6 +697,7 @@ def main() -> int:
                     "identity_pixel_max_abs": identity_pixel,
                     "identity_scene_max_abs": identity_scene,
                     "identity_score_max_abs": identity_score,
+                    "scene_gradient_probe_max_abs": scene_gradient,
                     "elapsed_seconds": elapsed,
                     "peak_cuda_bytes": int(torch.cuda.max_memory_allocated()),
                     "trainable_parameters": model.trainable_parameter_count(),
@@ -708,6 +727,9 @@ def main() -> int:
         ]
         weights, request_mass = balanced_request_weights(fit_records)
         endpoint_seed = int(spec["seed"]) + held_fold
+        seed_everything(endpoint_seed)
+        endpoint_spec = dict(spec)
+        endpoint_spec["seed"] = endpoint_seed
         train_dataset = DinoMethaneDataset(
             paths["metadata_root"],
             fit_records,
@@ -765,7 +787,7 @@ def main() -> int:
         if any(value != 0.0 for value in identity.values()):
             raise ValueError(f"Endpoint {held_fold} is not exact identity: {identity}")
         history = train_endpoint(
-            model, train_loader, spec, device, int(spec["epochs"])
+            model, train_loader, endpoint_spec, device, int(spec["epochs"])
         )
         raw_parts.append(
             collect_predictions(model, held_loader, strengths, device, held_fold)

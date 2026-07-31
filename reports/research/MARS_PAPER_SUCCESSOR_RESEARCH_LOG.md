@@ -4591,3 +4591,16 @@ so initialization remains exact, while the first term retains its derivative.
 All folds, inputs, sampling, epochs, losses, strengths, and promotion gates will
 remain fixed in a separately hashed rerun. Fold 2 and external/test data remain
 unauthorized.
+
+### 2026-07-31: Scene-gradient correction frozen reproducibly
+
+The corrected protected-score expression retains bit-exact identity for pixel
+logits, scene deltas, and scene scores (all maximum errors 0.0) while producing
+a nonzero scene-output gradient of 0.265380859375 in three repeated GPU probes.
+The training smoke moves the scene residual away from zero and remains finite.
+Model initialization, worker state, sampling, and dropout are now seeded before
+construction for each cross-fit endpoint; the prior implementation seeded only
+after random adapter weights had been created. Peak smoke allocation is 3.16
+GB. The corrected trainer/model hashes and unchanged scientific contract are
+frozen in the same versioned protocol path; outputs use the distinct
+`*_gradient_fix` names so the failed result cannot be overwritten.

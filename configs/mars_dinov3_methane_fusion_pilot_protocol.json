@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "status": "frozen_after_exact_identity_full_batch_gpu_smoke",
+  "status": "frozen_after_seeded_exact_identity_nonzero_scene_gradient_gpu_smoke",
   "scope": "two-fold DINOv3 semantic-change and counterfactual-methane spatial fusion pilot",
   "trainer": {
     "path": "tools/train_mars_dinov3_methane_fusion_pilot.py",
-    "sha256": "8516930c53701c638216c8ff53c84c7c450a189b3f1b06d82fcd9494f1fec0f7"
+    "sha256": "3cfdcb2df7701167d6cce5ac57ce1dea4a27493831e8bc1d6dae8a290352209a"
   },
   "code_dependencies": [
     {
       "path": "EarthRemoteSensingRapidResponse/mars_dinov3_methane_fusion.py",
-      "sha256": "16a71d99cb2eb92855e71e8713c4f2d5e864cf1058008c2ba4fa72cbb37a9f47"
+      "sha256": "182ae07db4bc25bd4ac5cdfe7fdc4c1de6a7d7520414e561e5d9276e8c649719"
     },
     {
       "path": "EarthRemoteSensingRapidResponse/mars_physics_guided_teacher.py",
@@ -109,15 +109,22 @@
     "scene_identity": "zero final residual reproduces the current cross-fitted spatial-Prithvi score exactly",
     "scene_protection": "scores below 0.50 are unchanged; higher scores are adjusted in local log-odds coordinates and remain above 0.50"
   },
+  "correction": {
+    "reason": "replace the exact-identity zero-gradient branch with an algebraically exact identity residual that retains the scene derivative, and seed before model/loader construction",
+    "scientific_changes": "none: data, folds, architecture tensors, loss weights, epochs, sampling, strengths, and gates remain fixed",
+    "prior_result_sha256": "81da27897942b0f78f3234ca64892bb4dde83e78a1774956ed4446298b342149"
+  },
   "smoke": {
-    "scope": "two full batches from a balanced fold-3-only development subset; no held-out scoring",
+    "scope": "two repeated full-batch runs from a balanced fold-3-only development subset plus a high-score gradient probe; no held-out scoring",
     "identity_pixel_max_abs": 0.0,
     "identity_scene_delta_max_abs": 0.0,
     "identity_scene_score_max_abs": 0.0,
+    "scene_gradient_probe_max_abs_both_runs": 0.265380859375,
     "finite_optimization": true,
+    "post_step_scene_delta_l2": 7.763982239339384e-07,
     "batch_size": 8,
     "trainable_parameters": 8540787,
-    "peak_cuda_bytes": 2228345344,
+    "peak_cuda_bytes": 3160960512,
     "device": "NVIDIA GeForce RTX 5070"
   },
   "training": {
@@ -177,12 +184,12 @@
     "pass_action": "freeze a separately seeded confirmation; no fold-2, external, or official-test scoring"
   },
   "outputs": {
-    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_dinov3_methane_fusion_crossfit.pt",
-    "json": "reports/experiments/mars_dinov3_methane_fusion_pilot.json",
-    "markdown": "reports/experiments/MARS_DINOV3_METHANE_FUSION_PILOT.md"
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_dinov3_methane_fusion_gradient_fix_crossfit.pt",
+    "json": "reports/experiments/mars_dinov3_methane_fusion_gradient_fix.json",
+    "markdown": "reports/experiments/MARS_DINOV3_METHANE_FUSION_GRADIENT_FIX.md"
   },
   "invariants": [
-    "The draft protocol permits only an identity/finite GPU smoke; outcome evaluation requires frozen hashes.",
+    "The draft protocol permits only an identity/finite/nonzero-scene-gradient GPU smoke; outcome evaluation requires frozen hashes.",
     "Both cross-fit endpoints train on exactly one of development folds 3/4 and predict the other.",
     "No fold-2, external, or sealed official-test input or label is loaded.",
     "DINOv3 and the released MARS-S2L U-Net remain frozen.",

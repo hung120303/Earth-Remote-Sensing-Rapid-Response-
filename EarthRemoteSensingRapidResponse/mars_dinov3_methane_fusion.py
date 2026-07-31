@@ -226,10 +226,12 @@ class DinoMethaneFusionAdapter(PhysicsGuidedTeacherAdapter):
 
         gate = SCENE_PROTECTION_GATE
         local = ((base_score.float() - gate) / (1.0 - gate)).clamp(1e-6, 1.0 - 1e-6)
-        adjusted = gate + (1.0 - gate) * torch.sigmoid(
-            torch.logit(local) + float(strength) * delta_logit.float()
+        local_logit = torch.logit(local)
+        adjustment = (1.0 - gate) * (
+            torch.sigmoid(local_logit + float(strength) * delta_logit.float())
+            - torch.sigmoid(local_logit)
         )
-        adjusted = torch.where(delta_logit.float() == 0.0, base_score.float(), adjusted)
+        adjusted = base_score.float() + adjustment
         return torch.where(base_score.float() < gate, base_score.float(), adjusted)
 
     def _semantic_change(self, values: torch.Tensor) -> torch.Tensor:
