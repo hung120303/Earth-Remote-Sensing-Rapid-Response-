@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_train_fitted_normalization_outcomes",
+  "scope": "deployment-safe normalization confirmation on MARS physical-site folds 3 and 4",
+  "hypothesis": "The protected DOFA-v2 AP gain survives when every normalization statistic is learned from fit-fold rows and applied unchanged to held rows, eliminating test-cohort adaptation.",
+  "selection_folds": [3, 4],
+  "excluded_from_all_access": {
+    "folds": [0, 1, 2],
+    "external_outcomes": true,
+    "paper_test_outcomes": true
+  },
+  "fixed_candidate": {
+    "feature_set": "change_extreme",
+    "C": 0.01,
+    "projection_dimension": 2048,
+    "projection_seeds": [20260780, 20260781, 20260782, 20260783, 20260784],
+    "aggregation": "mean_logit",
+    "gate": 0.5,
+    "weight": 0.05
+  },
+  "normalization_modes": [
+    "global_train_fitted",
+    "sensor_train_fitted"
+  ],
+  "normalization_contract": {
+    "first_stage": "fit raw-feature mean/std on fit-fold rows globally or per known sensor; apply unchanged to held rows",
+    "projection": "fixed 2048-dimensional sparse random projection",
+    "second_stage": "fit projected-feature mean/std on fit-fold rows globally or per known sensor; apply unchanged to held rows",
+    "epsilon": 0.0001,
+    "held_feature_statistics_forbidden": true,
+    "held_labels_forbidden_during_fit": true
+  },
+  "eligible_candidates": 2,
+  "selection_rule": "Rank by all-gates pass, point-gate stability, paired-site AP lower bound, minimum fold AP, minimum sensor AP, pooled AP, then prefer global normalization.",
+  "bootstrap": {
+    "unit": "physical_site_group",
+    "paired": true,
+    "replicates": 10000,
+    "confidence": 0.95,
+    "seed": 2026073200,
+    "same_draws_for_both_candidates": true
+  },
+  "promotion_gates": {
+    "pooled_ap_delta_vs_current_minimum": 0.001,
+    "pooled_recall_delta_at_fpr_0_0713_minimum": 0.0,
+    "pooled_operating_confusion_counts_identical_to_current": true,
+    "each_fold_ap_delta_vs_current_strictly_positive": true,
+    "each_fold_recall_delta_at_fpr_0_0713_minimum": -0.002,
+    "each_sensor_ap_delta_vs_current_minimum": 0.0,
+    "paired_site_ap_delta_vs_current_95pct_lower_strictly_positive": true,
+    "ap_and_recall_vs_released_primary_strictly_positive": true
+  },
+  "dependencies": {
+    "dofa_cache": "outputs/mars_dofa_v2_scene_features_folds34.npz",
+    "dofa_cache_sha256": "2c43352e92f96549d64188c78318fe606d55552aa9587aace1a195e8dfba66fe",
+    "protected_report": "reports/experiments/mars_dofa_v2_protected_fusion_folds34.json",
+    "protected_report_sha256": "95f292353d6f9e4d0d2416e78d46aaf3a7003e9c3d0ec23a2d499fbfa2b0a044"
+  },
+  "interpretation": "Passing authorizes a separately frozen one-shot fold-2 extraction/evaluation using fit-fold normalization only. Failure rejects the DOFA-v2 fusion as non-deployable without target-cohort adaptation."
+}

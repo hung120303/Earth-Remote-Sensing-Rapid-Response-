@@ -4397,3 +4397,20 @@ on test-set composition. The protected fusion itself is sample-wise, but its
 upstream DOFA probability is not yet. Therefore this passing result is retained
 as a transductive ablation and does not authorize fold-2 access. A train-fitted
 normalization confirmation must pass the same gates first.
+
+### 2026-07-31: Train-fitted DOFA-v2 normalization confirmation frozen
+
+The deployment audit produces one new two-candidate protocol before outcomes.
+Both candidates hold the selected change-extreme features, C=0.01, five new
+projection seeds, mean-logit aggregation, gate=0.50, and DOFA weight=0.05 fixed.
+The only choice is whether fit-fold statistics are global or stratified by the
+known sensor family. At both the raw-feature and projected-feature stages, the
+mean and standard deviation are learned exclusively from the fit fold and
+applied unchanged to the held fold. Neither held feature statistics nor held
+labels enter fitting.
+
+Promotion repeats every point/fold/sensor/bootstrap and operating-count gate.
+The selection rule prioritizes a passing paired-site lower bound, with global
+normalization preferred only as the final tie-break. This is the last required
+deployment-equivalence check before any DOFA fold-2 access. The frozen contract
+is `configs/mars_dofa_v2_train_fitted_normalization_protocol.json`.
