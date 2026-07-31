@@ -3631,3 +3631,27 @@ low-score, or high-score scenes, while global perturbations create the observed
 between-site variance. All whole/low-prevalence point and paired-site gates remain
 unchanged. A one-feature/two-transform smoke run exercised four candidates and
 both bootstrap views. Fold 2 and external evaluation data remain prohibited.
+
+### 2026-07-30: Single-feature nonlinear residuals rejected, complementary pair identified
+
+Four of 240 candidates passed all point gates, but none passed both paired-site
+intervals. The strongest anchor was column 644 (`scene_embedding_57`) with a tanh
+transform at strength 0.20: whole AP improved +0.003258 with interval
+[+0.000010,+0.005919], both folds and sensors improved, and recall was unchanged.
+Its low-prevalence AP improved +0.008006 and recall +0.008475, but the low-site
+interval remained [-0.002562,+0.019664].
+
+The most important near-survivor was independently direction-stable column 156
+(`scene_head_input_154`) with high-score weighting. At strength 0.10 it improved
+low-prevalence AP +0.018270, including fold deltas +0.020036/+0.016834 and
+Sentinel-2/Landsat deltas +0.028378/+0.002230, with unchanged recall. Whole AP
+improved +0.002013 and both sensors improved, but fold 3 regressed -0.000833 while
+fold 4 improved +0.002019. At strength 0.05 its whole fold deltas were both
+positive, but low-prevalence Landsat AP was -0.001597.
+
+These residuals have complementary failures: the column-644 tanh anchor supplies
+stable whole-view and Landsat evidence, while the column-156 high-score residual
+supplies the missing rare-site magnitude. The next experiment will freeze a
+two-component additive logit residual using only these already screened transforms
+and small independent strengths. It remains development exploration requiring a
+separate fold-2 confirmation; no protected input was accessed.
