@@ -3364,3 +3364,21 @@ did not train on fold 3 and fold-4 features from an adapter that did not train o
 fold 4. Only those honest cross-fitted representations may select a residual head
 for the existing folds-3+4 -> fold-2 adapter. This correction is also the required
 design for later five-fold paper-grade training.
+
+### 2026-07-30: Honest dense-representation cross-fit frozen
+
+The next experiment corrects the representation leakage directly. One adapter is
+fit only on fold 4 and will encode fold 3; an independently initialized adapter is
+fit only on fold 3 and will encode fold 4. Folds 0, 1, and 2 remain completely
+outside both jobs. Each endpoint uses the same fixed three 24,576-sample epochs as
+the preserved dense adapter and is saved only as an ignored intermediate
+representation artifact. Descriptive mask metrics do not promote or reject these
+endpoints; their purpose is to create honest out-of-fold ViT representations.
+
+The two-job CUDA smoke passed before freezing. Both branches reproduced the
+released model exactly at initialization (maximum absolute pixel and scene-score
+differences both 0.0), completed a finite training epoch, and sampled all four
+label-by-sensor strata with equal requested mass. The frozen protocol binds the
+trainer and every model, manifest, fold, checkpoint, feature, and score input by
+SHA-256. The full run may now train the two endpoints, after which feature
+extraction and AP-head selection must use only each adapter's held-out fold.
