@@ -4060,3 +4060,22 @@ no-plume scenes, then train the directional ranker with those same-background
 positive interventions. Each cross-fit branch must keep both source plumes and
 backgrounds inside its fitting fold. This targets the rare-site failure directly
 by breaking the association between facility appearance and plume labels.
+
+### 2026-07-31: Same-background methane interventions frozen
+
+The simulator cache is fixed at 4,096 positives: 1,024 Sentinel-2 and 1,024
+Landsat interventions from each of folds 3 and 4. Every intervention uses a
+clear, onshore, <=9 m/s no-plume background and a real CH4 field from the same
+fitting fold. Source and target wind speed must differ by <=1.5 m/s with no
+nearest-neighbor fallback; the plume is rotated to target wind, scaled uniformly
+0.5-1.5x, and injected into B11/B12 through the released integrated-
+transmittance LUT. At least half of injected plume pixels must remain observable.
+
+The four-row CUDA smoke accepted one example per fold x sensor stratum. Maximum
+wind-speed mismatch was 1.4029 m/s and minimum visible fraction was 1.0. All
+four simulations passed through the same frozen U-Net and 28-channel
+counterfactual transform as real data. One attempted sample failed closed on an
+expected simulation exception and was replaced before inference. The generator,
+all code/data/LUT hashes, sample counts, and deterministic seeds are now frozen
+before the full cache is created. Folds 0/1/2 and external inputs remain
+inaccessible.

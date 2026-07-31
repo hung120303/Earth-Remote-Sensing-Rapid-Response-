@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_fit-fold-only_simulation_smoke",
+  "scope": "wind-matched same-background methane interventions for fold-3/fold-4 cross-fit scene ranking",
+  "extractor": {
+    "path": "tools/extract_mars_counterfactual_simulation_inputs.py",
+    "sha256": "7255b0145d53fd5a108951cf48725158818d40a0b918a2d144e085bfea0d1a57"
+  },
+  "code_dependencies": [
+    {
+      "path": "tools/extract_mars_counterfactual_scene_inputs.py",
+      "sha256": "37180d9679ce19f883fdab3e340a2d9fbd4c8f3b9ee7d1263525c8dd36dc935f"
+    },
+    {
+      "path": "tools/train_mars_v4.py",
+      "sha256": "e046212e11f05ba1e6f7a1f651e26a0c43b61e303f9bac2625257e1a388f291f"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_v4_simulation.py",
+      "sha256": "0a2bf48dcf1f214b72cd9f0b5c425de03ec7a2baba387155ee9bd052cf0d7e09"
+    }
+  ],
+  "inputs": {
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_acquisition_receipt"
+    },
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "acquisition_receipt": {
+      "path": "reports/acquisition/mars_s2l_paper_v3_development_download.json",
+      "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "released_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+      "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"
+    },
+    "metadata_csv": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/validated_images_all.csv",
+      "sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2"
+    },
+    "transmittance_lut": {
+      "path": "configs/mars_s2_integrated_transmittances.json",
+      "sha256": "1c11ef3f84a9d2a8ce65fc7301166ce20517bb57425ed3f5dca5a313a876c03f"
+    }
+  },
+  "fit_folds": [3, 4],
+  "samples_per_fit_fold_per_sensor": 1024,
+  "seed": 20267500,
+  "maximum_attempt_multiplier": 20,
+  "simulation": {
+    "positive_source": "real CH4 enhancement and mask from a positive scene in the same fitting fold",
+    "background": "clear, onshore, no-plume scene from the same fitting fold and requested sensor",
+    "source_target_wind_speed_maximum_delta_m_s": 1.5,
+    "target_wind_maximum_m_s": 9.0,
+    "minimum_visible_plume_fraction": 0.5,
+    "uniform_enhancement_scale": [0.5, 1.5],
+    "orientation": "rotate source plume from source wind vector to target wind vector",
+    "spectral_method": "released MARS-S2L MODTRAN integrated-transmittance LUT attenuating target B11/B12",
+    "sensor_balance": "exactly 1024 Sentinel-2 and 1024 Landsat interventions per fitting fold"
+  },
+  "runtime": {
+    "batch_size": 64,
+    "device": "CUDA",
+    "teacher_autocast": "float16",
+    "simulation": "serial deterministic generation with batched four-view frozen-teacher inference"
+  },
+  "outputs": {
+    "images": "outputs/mars_counterfactual_simulation_inputs_folds34.npy",
+    "metadata": "outputs/mars_counterfactual_simulation_inputs_folds34_metadata.npz",
+    "receipt": "reports/acquisition/mars_counterfactual_simulation_inputs_folds34.json"
+  },
+  "invariants": [
+    "The fold-3 cache uses only fold-3 plume fields and fold-3 no-plume backgrounds; likewise for fold 4.",
+    "No held-fold label or imagery enters the opposite branch's fitting cache.",
+    "Wind matching is strictly <=1.5 m/s; unlike the earlier fallback implementation, a farther nearest plume is never accepted.",
+    "The same frozen released U-Net and 28-channel counterfactual transform encode real and simulated scenes.",
+    "The upstream 16-channel mixed Sentinel-2/Landsat contract is preserved.",
+    "Folds 0, 1, and 2 and all exact-paper or fresh-external inputs are forbidden.",
+    "Bulk simulation arrays remain Git-ignored and only a compact receipt is committed."
+  ]
+}
