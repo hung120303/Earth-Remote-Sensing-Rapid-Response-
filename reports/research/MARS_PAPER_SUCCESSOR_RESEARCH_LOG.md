@@ -4105,3 +4105,29 @@ spatial transform with a +0.5 logit margin. Two fixed seeds are mean-logit
 ensembled. The GPU smoke completed finite actual, simulation, and causal-pair
 losses and finite scores while rechecking the strict 1.499951 m/s cache bound.
 Full selection remains restricted to folds 3/4 and the prior whole/rare gates.
+
+### 2026-07-31: Standalone causal classifier rejected; causal signal retained
+
+Neither intervention strength passed the joint gates. At blend 0.05,
+`causal_weak` changed whole AP -0.000085 and rare-site AP +0.003243. The rare
+gain was consistent by fold (+0.002150/+0.004289) and sensor
+(+0.003609/+0.003247), and rare matched-FPR recall improved +0.008475, but its
+paired-site interval still crossed zero [-0.000363,+0.007216]. Whole matched-FPR
+recall fell -0.001312 and the whole interval was
+[-0.000653,+0.000500]. Raising the blend to 0.10 passed the rare point floor at
++0.005441 but further harmed whole ranking and recall.
+
+`causal_balanced` changed whole/rare AP +0.000478/+0.000451 at blend 0.05,
+with both intervals crossing zero. No artifact was written. Report SHA-256 is
+`2a3c5ade34816d88567bfe7c467e817fef7dff3ee33cbfb6fe38199290209b6f`;
+the ignored cross-fit scores have SHA-256
+`3faa53ac49c4eb21e47b0033de6a97a4d353fae9766487a08780446b42302bcc`.
+
+The intervention is the first new representation to improve rare AP, recall,
+both folds, and both sensors together, so the causal signal is not retired. The
+failure is architectural: treating it as a complete probability classifier and
+logit-blending it with the much stronger current score discards hard-boundary
+ordering. The next controlled model will be zero-initialized and learn only a
+bounded residual around each OOF current logit, while the same-background pairs
+supervise the residual direction. This preserves the current ranker as the
+explicit floor instead of asking a weaker standalone head to relearn it.
