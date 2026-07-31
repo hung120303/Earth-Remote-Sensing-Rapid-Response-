@@ -4690,3 +4690,31 @@ an unchanged zero learned-scene residual. Peak CUDA allocation is 2.23 GB. Data,
 folds, endpoint seeds, epochs, sampling, pixel losses, three residual strengths,
 and all joint AP/IoU gates remain fixed. The contract was hashed before any new
 held-fold outcome.
+
+### 2026-07-31: Dense-surrogate pilot is directionally positive but rejected
+
+The deterministic dense-MIL residual is the first DINO scene mechanism to
+improve pooled AP without a learned scene head. At strength 0.50, AP changes
++0.000739 with unchanged recall and positive fold changes
+(+0.000544/+0.000227), but it misses the +0.001 point floor and its paired-site
+interval [-0.000155,+0.002062] crosses zero. Sentinel-2 AP improves +0.001275;
+Landsat changes -0.000725 and fails the sensor gate. Mask IoU changes +0.005569,
+but its lower bound -0.000842 also crosses zero at this largest strength.
+
+Strength 0.25 gives +0.000701 AP and +0.005316 IoU; its IoU interval is
+strictly positive [+0.001374,+0.008109], but fold-3 AP is effectively zero
+(-0.000011), Landsat AP is negative, and AP uncertainty crosses zero. Strength
+0.10 retains strong IoU evidence but weaker AP. No candidate passes and no
+artifact is written. Result SHA-256 is
+`7f7f2fdb7aa80d35d0ec5fb7a08d1b579155efc82b05007c8d694b795343e72b`.
+
+The direction justifies one variance-control confirmation, not a free numeric
+search. Three entirely new endpoint seeds will average only the deterministic
+dense-scene evidence; the first seed supplies the fixed mask endpoint. Because
+all three learned DINO scene variants and the dense surrogate consistently show
+the only AP regression on Landsat, whose resolution/spectral transfer differs
+from Sentinel-2, the confirmation will leave Landsat scene scores exactly on
+the current model while retaining the mixed-sensor mask correction. The scene
+evidence weight is fixed at 0.50 (twice the deliberately conservative pilot
+weight) before new outcomes. The same three pixel strengths and all AP/IoU/
+recall/site gates remain; folds 0/1/2 and external/test inputs stay excluded.
