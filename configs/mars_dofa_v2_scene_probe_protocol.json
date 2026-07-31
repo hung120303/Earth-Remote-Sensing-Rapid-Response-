@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_exact-architecture_and_stratified_gpu_smoke_before_outcome_bearing_feature_extraction",
+  "scope": "development-only sensor-aware DOFA-v2 scene representation selection on MARS physical-site folds 3 and 4",
+  "hypothesis": "A wavelength-conditioned 105M-parameter Earth-observation ViT can capture target-reference change that is complementary to the current MARS U-Net plus Prithvi score, especially across the mixed Sentinel-2/Landsat contract.",
+  "research_basis": {
+    "paper": "https://arxiv.org/abs/2403.15356",
+    "official_repository": "https://github.com/zhu-xlab/DOFA",
+    "official_model": "https://huggingface.co/earthflow/DOFA",
+    "paper_claim_used": "DOFA dynamically generates wavelength-conditioned patch embeddings and reports transfer to sensors unseen during multimodal pretraining",
+    "important_limit": "DOFA pretraining includes five EO modalities/sensors but not native Landsat; Landsat is an explicitly unseen-sensor transfer rather than a claimed pretrained domain",
+    "dofa_v2_limit": "the public v2 checkpoint postdates the cited DOFA paper and has no separate peer-reviewed architecture paper in the pinned sources"
+  },
+  "foundation": {
+    "receipt": {
+      "path": "reports/acquisition/dofa_v2_base.json",
+      "sha256": "6c693fee0299739dbc7d9733358c5ea3bb3a9c9d3bd12ee5162a7ba411d04e8b"
+    },
+    "backbone": {
+      "path": "EarthRemoteSensingRapidResponse/dofa_v2_backbone.py",
+      "sha256": "a005d69019be8121db0cb0100b2815f4f8abd5ef44a4c700bc659b20bf1a96da"
+    },
+    "checkpoint": {
+      "path": ".research/foundation_models/dofa/checkpoints/dofav2_vit_base_e150.pth",
+      "bytes": 421811730,
+      "sha256": "e1be9d50fb3e4e3640e337d098b92d67797eaf2a579de3b7a1e363095885314d",
+      "model_revision": "7a5219e48d2f8848511b0fabea7920a8836bc480",
+      "model_card_license": "CC-BY-4.0",
+      "tracked": false
+    },
+    "architecture": {
+      "parameters": 105433856,
+      "state_tensors": 196,
+      "strict_load": true,
+      "missing_keys": [],
+      "unexpected_keys": [],
+      "official_equivalence": "four intermediate maps are bit-identical to official historical dofa_v2.py for a fixed six-channel tensor",
+      "official_map_shapes": [[2, 768, 16, 16], [2, 768, 16, 16], [2, 768, 16, 16], [2, 768, 16, 16]],
+      "official_map_max_absolute_differences": [0.0, 0.0, 0.0, 0.0]
+    }
+  },
+  "radiometric_and_sensor_contract": {
+    "upstream_mars_contract": "full 16-channel MARS tensor is preserved; DOFA consumes only target/reference B02/B03/B04/NIR/SWIR1/SWIR2 subsets",
+    "physical_conversion": "MARS spectral values are raw DN /5000; multiply by 0.5 to recover physical reflectance and by 255 for official DOFA byte-scale normalization",
+    "mars_to_dofa_multiplier": 127.5,
+    "normalization": "official DOFA Sentinel-2 means/std reordered to MARS blue, green, red, NIR, SWIR1, SWIR2; the same physical optical scale is used for Landsat",
+    "sentinel_2_wavelengths_micrometers": [0.49, 0.56, 0.665, 0.842, 1.61, 2.19],
+    "landsat_wavelengths_micrometers": [0.482, 0.561, 0.655, 0.865, 1.609, 2.201],
+    "frame_order": "reference and target encoded independently in chronological order",
+    "resize": "200x200 to 224x224 bilinear",
+    "invalid_policy": "target observable mask applied to both frames after normalization"
+  },
+  "extractor": {
+    "path": "tools/extract_mars_dofa_v2_scene_features.py",
+    "sha256": "ed8ad97c94da23ede880f44fdd57078a36c130c85f90b23cc705abebb8f55e2e",
+    "output": "outputs/mars_dofa_v2_scene_features_folds34.npz",
+    "output_tracked": false,
+    "feature_count": 10752,
+    "feature_schema": "final reference/target spatial means plus four-depth absolute-difference mean, signed-difference std, and signed max-absolute difference",
+    "precision": "float16 cache; float32 probe input",
+    "runtime": {"batch_size": 256, "workers": 0, "measured_peak_cuda_gib": 5.402191638946533}
+  },
+  "selection_partition": {
+    "folds": [3, 4],
+    "crossfit": "fit fold 3 and score fold 4; fit fold 4 and score fold 3",
+    "excluded_from_selection": [0, 1, 2],
+    "paper_test_loaded": false
+  },
+  "probe": {
+    "path": "tools/train_mars_dofa_v2_scene_probe.py",
+    "sha256": "62eaefe3ea087bfabeac415af5cba8f18809320b93f43a12b51b97d950f34cb7",
+    "feature_sets": ["change_extreme", "change_full", "context_change"],
+    "sparse_random_projection_dimension": 2048,
+    "projection_seeds": [20260760, 20260761, 20260762],
+    "regularization_C": [0.001, 0.01, 0.1],
+    "current_logit_blends": [0.01, 0.025, 0.05, 0.1, 0.2],
+    "normalization": "fit and held folds use their own unlabeled per-feature moments before and after fixed random projection; held labels are excluded",
+    "class_weight": "sqrt(number of fit negatives / number of fit positives) for positives",
+    "selection_order": [
+      "all stability gates",
+      "minimum fold AP delta versus current",
+      "minimum sensor AP delta versus current",
+      "pooled AP delta versus current",
+      "pooled recall delta versus current",
+      "smaller blend"
+    ]
+  },
+  "promotion_gates": {
+    "minimum_pooled_ap_delta_vs_current": 0.001,
+    "minimum_pooled_recall_delta_at_fpr_0_0713_vs_current": 0.0,
+    "minimum_each_fold_ap_delta_vs_current": 0.0,
+    "minimum_each_fold_recall_delta_vs_current": -0.002,
+    "minimum_each_sensor_ap_delta_vs_current": 0.0,
+    "paired_site_bootstrap_replicates": 10000,
+    "paired_site_ap_delta_95pct_lower_vs_current": 0.0,
+    "next_step_if_passed": "freeze feature set, projection seed, C, and blend before one-shot fold-2 extraction",
+    "next_step_if_failed": "reject before fold-2 extraction"
+  },
+  "frozen_inputs": {
+    "development_manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "development_acquisition_receipt": {
+      "path": "reports/acquisition/mars_s2l_paper_v3_development_download.json",
+      "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"
+    },
+    "current_scores": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7",
+      "tracked": false
+    },
+    "scene_features_folds234": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89",
+      "tracked": false
+    },
+    "scene_features_fold0": {
+      "path": "outputs/mars_scene_features_fold0.npz",
+      "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7",
+      "tracked": false
+    },
+    "scene_features_fold1": {
+      "path": "outputs/mars_scene_features_fold1_crossfit.npz",
+      "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108",
+      "tracked": false
+    }
+  },
+  "verification_before_freeze": {
+    "unit_tests": "4 passed",
+    "ruff": "all checks passed",
+    "stratified_gpu_smoke": {
+      "rows": 4,
+      "label_by_sensor_cells": 4,
+      "folds": [3, 4],
+      "features": 10752,
+      "finite": true,
+      "minimum": -683.5,
+      "maximum": 310.0,
+      "output_sha256": "78e572d490fcedb7b026342022870f79db47988a78a517f15dc4e24490942b00"
+    }
+  },
+  "invariants": [
+    "No fold-2, fold-0, fold-1, or paper-test outcome may affect folds-3/4 selection.",
+    "The current spatial-Prithvi score is the floor and zero blend reproduces it exactly.",
+    "Sentinel-2 and Landsat use distinct wavelength lists without changing the upstream 16-channel contract.",
+    "Bulk checkpoint, source clone, features, and model artifacts remain ignored; only compact protocols and reports are committed."
+  ]
+}

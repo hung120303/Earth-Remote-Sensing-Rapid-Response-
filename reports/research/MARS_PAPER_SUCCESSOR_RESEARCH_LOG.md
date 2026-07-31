@@ -4251,3 +4251,44 @@ The compact selection report SHA-256 is
 No candidate is promoted and fold 2 is not extracted. The next representation
 branch can now test a wavelength-conditioned foundation model rather than
 another Prithvi scalar head.
+
+### 2026-07-31: Exact DOFA-v2 sensor-aware representation frozen
+
+The next branch changes the upstream representation rather than fitting another
+head over Prithvi. DOFA's peer-reviewed design uses a wavelength-conditioned
+hypernetwork to generate a patch embedding for arbitrary channel sets and was
+jointly pretrained across five Earth-observation modalities/sensors. The paper
+reports transfer to unseen sensors (<https://arxiv.org/abs/2403.15356>), which
+directly targets the mixed Sentinel-2/Landsat weakness. Landsat was not a native
+pretraining sensor in the published five-source mixture, so this remains an
+explicit unseen-sensor hypothesis rather than an assumed in-domain advantage.
+
+The official 421,811,730-byte DOFA-v2 ViT-base checkpoint is pinned at model
+revision `7a5219e48d2f8848511b0fabea7920a8836bc480`, with SHA-256
+`e1be9d50fb3e4e3640e337d098b92d67797eaf2a579de3b7a1e363095885314d`.
+The public v2 architecture had been removed from the current source tree, so it
+was recovered from official commit `c850a1623413d4c1fc1134202641e3059fe4ab50`
+and paired with the corrected wavelength layer at current pinned commit
+`0cfb7e1099f4d4c4022946ff7862c7cd7b8411b9`. The local 105,433,856-parameter
+implementation loads all 196 checkpoint tensors strictly with no missing or
+unexpected keys. On a fixed six-channel tensor, all four 768x16x16 maps are
+bit-identical to the official historical source. Code is MIT licensed; the
+checkpoint model card is CC-BY-4.0.
+
+Each target/reference frame is converted from the MARS U-Net scale back to
+physical reflectance, then to the official DOFA 0-255 normalization scale.
+Sentinel-2 and Landsat receive distinct six-band center-wavelength lists; the
+full upstream 16-channel contract remains unchanged. The 10,752 frozen scene
+features contain final reference/target context and four-depth temporal-change
+magnitudes, dispersion, and signed extremes. Three predeclared feature views
+are mapped to 2,048 dimensions by fixed sparse random projections and scored by
+regularized linear probes in an honest fold-3/fold-4 cross-fit. Promotion is
+against the current spatial-Prithvi score with the same strict point, fold,
+sensor, recall, and paired-site interval gates.
+
+The official-equivalence audit, four focused tests, and static checks pass. A
+four-row CUDA smoke covers every label x sensor cell and both folds with finite
+features. Batch 256 with a single loader process is frozen after using 5.40 GiB
+peak CUDA allocation; larger batch 384 was slower and used 8.30 GiB. The full
+protocol is `configs/mars_dofa_v2_scene_probe_protocol.json`. Folds 0/1/2,
+external outcomes, and paper-test outcomes remain inaccessible.

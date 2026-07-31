@@ -1,0 +1,37 @@
+{
+  "bulk_policy": "source clone and checkpoint remain beneath ignored .research",
+  "files": [
+    {
+      "bytes": 421811730,
+      "path": ".research/foundation_models/dofa/checkpoints/dofav2_vit_base_e150.pth",
+      "sha256": "e1be9d50fb3e4e3640e337d098b92d67797eaf2a579de3b7a1e363095885314d",
+      "tracked": false
+    }
+  ],
+  "generated_at_utc": "2026-07-31T16:57:24.393553+00:00",
+  "schema_version": 1,
+  "scope": "external DOFA-v2 base foundation-model acquisition",
+  "source": {
+    "architecture_revision": "c850a1623413d4c1fc1134202641e3059fe4ab50",
+    "checkpoint_model_card_license": "CC-BY-4.0",
+    "code_license": "MIT",
+    "code_repository": "https://github.com/zhu-xlab/DOFA.git",
+    "code_revision": "0cfb7e1099f4d4c4022946ff7862c7cd7b8411b9",
+    "model_repository": "earthflow/DOFA",
+    "model_revision": "7a5219e48d2f8848511b0fabea7920a8836bc480",
+    "paper": "https://arxiv.org/abs/2403.15356",
+    "provider": "DOFA authors / EarthFlow"
+  },
+  "source_audit": {
+    "local_backbone_path": "EarthRemoteSensingRapidResponse/dofa_v2_backbone.py",
+    "local_backbone_sha256": "a005d69019be8121db0cb0100b2815f4f8abd5ef44a4c700bc659b20bf1a96da",
+    "missing_keys": [],
+    "official_dofa_v2_py_sha256": "cd106459dc9dc8ea3e7824b708052c507b96acbb5d54ac79379d1cc5e522458d",
+    "official_wave_dynamic_layer_sha256": "e36c138d7d0e6e9ab1c52eb3e96260dd41194ab48d6de8a3006e297dc25afc60",
+    "parameters": 105433856,
+    "state_tensors": 196,
+    "strict_load": true,
+    "unexpected_keys": []
+  },
+  "transport": "git clone at pinned revision plus huggingface_hub download at pinned model revision"
+}
