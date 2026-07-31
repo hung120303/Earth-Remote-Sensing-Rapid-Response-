@@ -3838,3 +3838,22 @@ lower bounds in both views. The four-candidate smoke exercised label-free routin
 coverage checks, candidate scoring, and both bootstrap paths. Fold 2 is referenced
 only through its committed failure report and is not reloaded; folds 0/1 and
 external inputs remain untouched.
+
+### 2026-07-30: Uniform global shrinkage protocol frozen
+
+The next experiment removes site-conditioned weighting entirely and applies one
+global scalar to the fixed pair's logit residual. The frozen grid is 0.125, 0.25,
+0.375, 0.50, 0.625, and 0.75. Zero is excluded because it is the unchanged
+current-score control; one is excluded because the full-strength pair failed the
+independent whole fold-2 view. Selection maximizes the smaller of the whole and
+low-prevalence paired-site AP lower bounds after all point gates pass.
+
+The two-value smoke exercised hash validation, exact fixed-pair reconstruction,
+uniform logit shrinkage, fold/sensor/recall gates, and paired site bootstraps.
+At shrinkage 0.25, development AP improved +0.001476 overall and +0.005908 on
+the low-prevalence proxy. Every fold and sensor delta was positive, matched-FPR
+recall changed +0.000656/0.000000, and the preliminary 100-replicate site
+interval lower bounds were +0.000315/+0.000475. These smoke numbers are not
+promotion evidence; the committed protocol requires 10,000 replicates over all
+six candidates. Fold 2 remains report-only, and folds 0/1 and external inputs
+remain untouched.
