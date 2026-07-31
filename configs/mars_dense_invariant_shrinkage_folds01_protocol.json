@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_exact_development-reproduction_smoke_before_folds01_extraction",
+  "scope": "one-shot folds-0/1 confirmation of the fixed globally shrunken invariant residual pair",
+  "evaluator": {
+    "path": "tools/evaluate_mars_dense_invariant_shrinkage_folds01.py",
+    "sha256": "04b63c48324df7f1fc4af11e20a40b27f54d86ffe55e230752ca6f5eda8e90e5"
+  },
+  "extractor": {
+    "path": "tools/extract_mars_dense_prithvi_folds01_scene_features.py",
+    "sha256": "da6ce9b87c6b17abfce933aa8a604b69c7bb1ff205ae6a7352c624c49e1f59f3"
+  },
+  "code_dependencies": [
+    {
+      "path": "tools/evaluate_mars_dense_invariant_pair_fold2.py",
+      "sha256": "c86424b7591a4d3688747bac6198234bf2ef652b26e3ee9e9c50af7317452907"
+    },
+    {
+      "path": "tools/explore_mars_dense_invariant_nonlinear_residuals.py",
+      "sha256": "660fece599143358285a4c01cac5d83469d38809a3a25745145cbec31520a1d8"
+    },
+    {
+      "path": "tools/explore_mars_dense_invariant_univariate.py",
+      "sha256": "91232a20bb34af8b1b0de53525bbb9f83f03089fbb9896f7938eb69ddf7d1b9f"
+    },
+    {
+      "path": "tools/explore_mars_dense_sparse_invariant_ensemble.py",
+      "sha256": "bff75a82cb359b6e8de39f68fa4e6559524b32132c392f83595328ddfafd75ca"
+    },
+    {
+      "path": "tools/train_mars_dense_ap_residual_ranker.py",
+      "sha256": "85eabe43bb7dad38221d413e5f003a4845df8c35726bfc6c7bd2fe2158ea0bfd"
+    },
+    {
+      "path": "tools/train_mars_oof_scene_ensemble_v2.py",
+      "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"
+    },
+    {
+      "path": "tools/train_mars_scene_ranker.py",
+      "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"
+    },
+    {
+      "path": "tools/train_mars_unseen_low_prevalence_router.py",
+      "sha256": "2007b4b8b048bd0247f53d43a763bfa6e0a98934c6a8326663f9948189533630"
+    }
+  ],
+  "inputs": {
+    "extractor_protocol": {
+      "path": "configs/mars_dense_prithvi_folds01_scene_feature_protocol.json",
+      "sha256": "45f29c64da880f2a841e3020ce79a4876ea8afae047a01d0fc95379fad9ec247"
+    },
+    "adapter_report": {
+      "path": "reports/experiments/mars_dense_prithvi_folds01_excluding_adapter.json",
+      "sha256": "a435292b1eb52f2efb94ab543e0fb4ec0903767d601f5de7c77b08baa331f702"
+    },
+    "development_protocol": {
+      "path": "configs/mars_dense_invariant_global_shrinkage_protocol.json",
+      "sha256": "c1142d76fd153e7be01b9d630bfaf945f41e26eec38852cfc257e107782c7afb"
+    },
+    "development_report": {
+      "path": "reports/experiments/mars_dense_invariant_global_shrinkage.json",
+      "sha256": "f3228425fe595c2363d5b3d17831aee103b022f775088bfd8ac0c4d96075b57f"
+    },
+    "development_features": {
+      "path": "outputs/mars_dense_prithvi_crossfit_scene_features_folds34.npy",
+      "sha256": "f45de57bda41ba083b4a981cbbcafa3c1e537ff7178eedae2c2ae2567987f78e"
+    },
+    "development_metadata": {
+      "path": "outputs/mars_dense_prithvi_crossfit_scene_features_folds34_metadata.npz",
+      "sha256": "5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d"
+    }
+  },
+  "folds01_cache": {
+    "receipt": "reports/acquisition/mars_dense_prithvi_folds01_scene_features.json",
+    "features": "outputs/mars_dense_prithvi_folds01_scene_features.npy",
+    "metadata": "outputs/mars_dense_prithvi_folds01_scene_features_metadata.npz",
+    "adapter_sha256": "e8dde7a07fd93db3185891d63955e1c9c6a9681fe44c98208ec53661d5ced460",
+    "binding": "the evaluator verifies future cache paths and hashes from a receipt whose protocol hash equals the frozen extractor protocol"
+  },
+  "candidate": {
+    "development_key": "shrinkage0.5",
+    "components": {
+      "anchor": {
+        "feature_index": 644,
+        "feature_name": "scene_embedding_57",
+        "direction": -1,
+        "transform": "tanh"
+      },
+      "booster": {
+        "feature_index": 156,
+        "feature_name": "scene_head_input_154",
+        "direction": 1,
+        "transform": "high_score_weighted"
+      }
+    },
+    "anchor_strength": 0.2,
+    "booster_strength": 0.05,
+    "shrinkage": 0.5,
+    "effective_anchor_strength": 0.1,
+    "effective_booster_strength": 0.025,
+    "winsor_limit": 1.5,
+    "normalization": "each raw feature is unlabeled rank/inverse-normal normalized within held fold x sensor; each transformed component is unlabeled mean-zero/unit-variance standardized within held fold x sensor",
+    "composition": "exact current-score logit plus 0.50 times the complete fixed-pair logit residual",
+    "no_refit": true
+  },
+  "target_domain": {
+    "name": "folds-0/1 low-prevalence physical-location confirmation view",
+    "maximum_site_positive_rate": 0.05,
+    "membership": "all folds-0/1 rows from physical_location_id groups whose folds-0/1 scene-positive rate is <=0.05",
+    "use": "evaluation and gating only; membership never enters candidate scoring"
+  },
+  "gates": {
+    "minimum_whole_pooled_ap_delta": 0.001,
+    "minimum_each_whole_fold_ap_delta": 0.0,
+    "minimum_each_whole_sensor_ap_delta": 0.0,
+    "minimum_whole_matched_fpr_recall_delta": 0.0,
+    "minimum_low_prevalence_pooled_ap_delta": 0.005,
+    "minimum_each_low_prevalence_fold_ap_delta": 0.0,
+    "minimum_each_low_prevalence_sensor_ap_delta": 0.0,
+    "minimum_low_prevalence_matched_fpr_recall_delta": 0.0,
+    "fpr_absolute_tolerance": 0.0,
+    "whole_paired_site_ap_lower_bound_strictly_positive": true,
+    "low_prevalence_paired_site_ap_lower_bound_strictly_positive": true
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "whole_seed": 20267000,
+    "low_prevalence_seed": 20267100,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "smoke": {
+    "mode": "recompute the exact fixed shrinkage on folds 3+4 and compare to the committed selected result without folds-0/1 access",
+    "absolute_tolerance": 1e-12
+  },
+  "output": "reports/experiments/mars_dense_invariant_shrinkage_folds01.json",
+  "invariants": [
+    "The feature indices, directions, transforms, full-strength component weights, and global shrinkage are fixed from the committed development selection.",
+    "The evaluator reproduces the committed folds-3/4 candidate before folds-0/1 extraction is allowed.",
+    "Folds-0/1 feature extraction is label-free and uses only the adapter trained on folds 3+4.",
+    "The evaluator verifies the dynamic cache hashes through the frozen extractor receipt and protocol identity.",
+    "No hyperparameter, threshold, feature, transform, shrinkage, or gate can change after folds-0/1 extraction.",
+    "Both the complete folds-0/1 view and its low-prevalence stress view must improve AP with strictly positive paired-site lower bounds.",
+    "Each held fold and sensor must have nonnegative AP delta.",
+    "Matched-FPR recall must not decrease and actual matched false-positive rate must not increase in either view.",
+    "The evaluator refuses to overwrite or repeat an existing folds-0/1 report.",
+    "Fold 2 is not reaccessed, and fresh and exact-paper inputs remain inaccessible regardless of outcome."
+  ]
+}

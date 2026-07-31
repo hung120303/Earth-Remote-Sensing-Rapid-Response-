@@ -3914,3 +3914,24 @@ forbidden_folds=[0,1,2], seed 20266800, mask strength 0.5, scene strength
 The compact fit report SHA-256 is
 `a435292b1eb52f2efb94ab543e0fb4ec0903767d601f5de7c77b08baa331f702`.
 Folds 0/1/2 and external inputs remain unopened.
+
+### 2026-07-30: One-shot folds-0/1 extraction and evaluator frozen
+
+The extractor binds both held folds to the same folds-3/4 adapter and enforces
+the artifact's held_folds=[0,1], forbidden_folds=[0,1,2], fit_folds=[3,4],
+protocol identity, mask strength 0.5, and exact scene-score floor. Its smoke
+validated both job contracts and the 671-feature schema while constructing zero
+held records and accessing zero held labels.
+
+The evaluator fixes column 644 direction -1 with tanh, column 156 direction +1
+with high-score weighting, full strengths 0.20/0.05, and global shrinkage 0.50.
+Its development-only smoke exactly reproduced whole AP 0.9067981487096828,
+low-prevalence AP 0.7188508777014572, both recall deltas, the candidate key, and
+effective strengths 0.10/0.025 within 1e-12.
+
+The one-shot gates require pooled AP gains >=0.001 whole and >=0.005
+low-prevalence, nonnegative fold and sensor AP deltas, nondecreasing matched-FPR
+recall, no actual FPR increase, and strictly positive 10,000-replicate paired
+physical-site AP lower bounds in both views. The evaluator refuses to repeat or
+overwrite its report. Fold 2 is not reaccessed, and fresh/exact-paper inputs
+remain inaccessible.
