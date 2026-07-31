@@ -1,0 +1,87 @@
+{
+  "bulk_policy": "checkpoint and support files remain beneath ignored .research",
+  "files": [
+    {
+      "bytes": 86362376,
+      "path": ".research/foundation_models/dinov3/checkpoints/model.safetensors",
+      "sha256": "2a1ec16ae28ffa07bc0ead0241ee7df9fc26451fe6f9f839b7b3afa0a906b040",
+      "tracked": false
+    },
+    {
+      "bytes": 7503,
+      "path": ".research/foundation_models/dinov3/checkpoints/LICENSE.md",
+      "sha256": "25d122eb8f5b880fd23c736fb6ea8018ee45c12237e00b8a86d14c653904999e",
+      "tracked": false
+    },
+    {
+      "bytes": 7892,
+      "path": ".research/foundation_models/dinov3/checkpoints/README.md",
+      "sha256": "14a645d8a6a71f5658e86e2d21778beb207af79cffe44d8e48b0ef9c8b7e761f",
+      "tracked": false
+    },
+    {
+      "bytes": 670,
+      "path": ".research/foundation_models/dinov3/checkpoints/config.json",
+      "sha256": "8eb1eeb3a94a3faddfcdd9ae693607a9cd9c8b91c34381578f7f0a48ce454eef",
+      "tracked": false
+    }
+  ],
+  "generated_at_utc": "2026-07-31T19:09:42.736567+00:00",
+  "model_audit": {
+    "finite_zero_input_forward": true,
+    "intermediate_blocks": [
+      2,
+      5,
+      8,
+      11
+    ],
+    "intermediate_shapes": [
+      [
+        1,
+        384,
+        16,
+        16
+      ],
+      [
+        1,
+        384,
+        16,
+        16
+      ],
+      [
+        1,
+        384,
+        16,
+        16
+      ],
+      [
+        1,
+        384,
+        16,
+        16
+      ]
+    ],
+    "missing_keys": [],
+    "parameters": 21586944,
+    "state_tensors": 162,
+    "strict_load": true,
+    "unexpected_keys": []
+  },
+  "runtime": {
+    "timm": "1.0.28",
+    "torch": "2.11.0+cu128"
+  },
+  "schema_version": 1,
+  "scope": "external DINOv3 ViT-S/16 foundation-model acquisition",
+  "source": {
+    "model_license": "DINOv3 License",
+    "model_name": "vit_small_patch16_dinov3.lvd1689m",
+    "model_repository": "timm/vit_small_patch16_dinov3.lvd1689m",
+    "model_revision": "3bf4720a82ec2066db88137180ff1f83a675cef0",
+    "official_repository": "https://github.com/facebookresearch/dinov3",
+    "paper": "https://arxiv.org/abs/2508.10104",
+    "provider": "Meta AI checkpoint redistributed by timm",
+    "timm_code_license": "Apache-2.0"
+  },
+  "transport": "huggingface_hub download at a pinned immutable model revision"
+}

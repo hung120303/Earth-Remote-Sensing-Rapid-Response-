@@ -4491,3 +4491,40 @@ scene-probe iteration as the next best use of compute. The subsequent branch
 must learn a transferable spatial plume representation or add genuinely new,
 source-disjoint supervision rather than post-hoc blending another frozen scene
 summary.
+
+### 2026-07-31: Spatial DINOv3 methane-gated branch selected for development
+
+The fold-2 DOFA result closes the scalar-probe branch. The next experiment is a
+spatial, identity-safe adapter whose semantic stream is a frozen DINOv3
+ViT-S/16 and whose methane stream retains the MARS temporal/spectral physics.
+Target and reference visible bands will be encoded separately at transformer
+blocks 2, 5, 8, and 11. Signed and absolute temporal feature differences keep
+the 16x16 token geometry; a small methane-enhancement network will gate those
+features before a residual segmentation and scene head. Both heads must be
+zero-initialized so an untrained candidate reproduces the current segmentation
+logits and cross-fitted scene score exactly.
+
+This choice is grounded in three complementary primary sources. DINOv3 reports
+dense pretrained visual features and exposes intermediate transformer maps
+([Siméoni et al., 2025](https://arxiv.org/abs/2508.10104)). Quintero et al.'s
+multimodal methane segmentation model combines intermediate DINOv3 features
+with a learned methane-enhancement gate and a SegFormer-style decoder
+([Quintero et al., 2026](https://arxiv.org/abs/2606.26416)). The scene objective
+will emphasize the benchmark's low-FPR region using a pairwise partial-AUC
+surrogate, following the distributionally robust pAUC formulation of
+[Zhu et al., 2022](https://proceedings.mlr.press/v162/zhu22g.html). These papers
+motivate the components; they do not establish performance on the MARS-S2L
+contract, so promotion still requires the preregistered physical-site gates.
+
+The exact `vit_small_patch16_dinov3.lvd1689m` checkpoint was acquired from the
+official timm Hugging Face repository at immutable revision
+`3bf4720a82ec2066db88137180ff1f83a675cef0`. The 86,362,376-byte safetensors
+file has SHA-256
+`2a1ec16ae28ffa07bc0ead0241ee7df9fc26451fe6f9f839b7b3afa0a906b040`.
+A strict load accounts for all 162 tensors and 21,586,944 parameters; blocks
+2/5/8/11 each produce a finite 384x16x16 map for a 256x256 input. The checkpoint
+and its support files remain under ignored `.research/`; only the acquisition
+script and compact receipt are tracked. The DINOv3 license permits this use and
+requires acknowledgment in any publication, which is now an explicit paper
+requirement. No fold-2, external, or sealed official-test label is authorized
+for this architecture's selection.
