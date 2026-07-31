@@ -4374,3 +4374,26 @@ pooled operating confusion counts. All candidates reuse the five new projection
 seeds and must first reproduce the prior unconstrained result to 1e-14. The
 frozen contract is `configs/mars_dofa_v2_protected_fusion_protocol.json`; folds
 0/1/2 and external/paper-test outcomes remain untouched.
+
+### 2026-07-31: Protected fusion passes development gates; held for normalization audit
+
+The selected gate=0.50, DOFA-weight=0.05 protected fusion passes every frozen
+fold-3/4 numerical gate. It improves AP by +0.001208 over the current score,
+with paired-site mean +0.001215 and 95% interval
+[+0.000362,+0.002204]. Fold AP changes are +0.000543/+0.001331 and sensor AP
+changes are +0.000933 Landsat/+0.001084 Sentinel-2. The pooled and both
+fold-local operating confusion matrices are identical to the current model, so
+matched-FPR recall changes exactly zero. Six of nine predeclared candidates
+pass; the fixed stability-first rule selects 0.50/0.05 by the highest bootstrap
+lower bound. The result report SHA-256 is
+`95f292353d6f9e4d0d2416e78d46aaf3a7003e9c3d0ec23a2d499fbfa2b0a044`.
+
+A deployment-equivalence audit before opening fold 2 finds that the inherited
+DOFA probe normalizes each held cohort with that cohort's own unlabeled mean and
+standard deviation, both before and after sparse projection. This is label-free
+but transductive test-cohort adaptation: a single production scene cannot be
+scored without a cohort distribution, and an official-test result would depend
+on test-set composition. The protected fusion itself is sample-wise, but its
+upstream DOFA probability is not yet. Therefore this passing result is retained
+as a transductive ablation and does not authorize fold-2 access. A train-fitted
+normalization confirmation must pass the same gates first.
