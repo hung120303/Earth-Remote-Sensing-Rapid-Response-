@@ -4604,3 +4604,32 @@ after random adapter weights had been created. Peak smoke allocation is 3.16
 GB. The corrected trainer/model hashes and unchanged scientific contract are
 frozen in the same versioned protocol path; outputs use the distinct
 `*_gradient_fix` names so the failed result cannot be overwritten.
+
+### 2026-07-31: Corrected protected-scene pilot rejected; spatial gain repeats
+
+The seeded, differentiable rerun confirms that the implementation correction
+worked: scene-delta L2 is 0.0071-0.0116 across endpoints/epochs instead of
+exactly zero. The selected strength 0.10 nevertheless improves pooled AP by
+only +0.000086, below the +0.001 floor, with paired-site 95% interval
+[-0.000016,+0.000188]. Recall and all operating confusion counts remain exactly
+unchanged. Sentinel-2 AP rises +0.000129, but Landsat changes -0.000020; fold 3
+rises +0.000022 while fold 4 changes -0.000013. Larger strengths increase the
+pooled point estimate monotonically (+0.000191/+0.000396) but worsen the same
+transport asymmetry and still cross zero under site bootstrap. Result SHA-256
+is `e60c8bd49d3309ac8592958d295a3f633fe765b610a6adf79c1f4ba29b174949`.
+
+The spatial conclusion is independently repeatable. Strength 0.10 raises mask
+IoU +0.002874 with paired-site interval [+0.000938,+0.004254] and positive fold
+changes (+0.004610/+0.001576). Strength 0.25 raises IoU +0.005740 with interval
+[+0.001372,+0.008621], again positive on both folds. No artifact is written
+because the joint AP/IoU gate fails.
+
+The diagnostic is now architectural: protected inference is appropriate for
+the low-FPR operating guarantee, but using that protected score inside the
+training losses removes all scene supervision below 0.50. The next bounded
+variant will train the residual representation against the raw additive scene
+logit for every development row while still applying the unchanged protected
+mapping at evaluation and deployment. This uses no new outcome-dependent
+threshold, strength, fold, or loss weight; it corrects the mismatch between the
+training objective and inference safety rule. Fold 2 and all external/test
+assets remain untouched.
