@@ -4528,3 +4528,35 @@ script and compact receipt are tracked. The DINOv3 license permits this use and
 requires acknowledgment in any publication, which is now an explicit paper
 requirement. No fold-2, external, or sealed official-test label is authorized
 for this architecture's selection.
+
+### 2026-07-31: DINOv3 methane-fusion pilot frozen before held-fold outcomes
+
+The implemented pilot preserves the complete 16-channel mixed-sensor contract.
+It encodes shared-contrast-stretched target/reference RGB with frozen DINOv3
+blocks 2/5/8/11, then represents signed change, absolute change, and temporal
+context at each depth. A second spatial stream consumes the already frozen
+28-channel counterfactual cache: factual/swapped/self released-model maps,
+MBMP and SWIR changes, frequency-aligned residuals, cloud, and observability.
+A learned methane gate modulates the semantic stream before three deep
+identity gates inject it into the released U-Net. The scene head is also an
+identity-initialized residual around the current spatial-Prithvi score. Scores
+below 0.50 are exactly untouched, while higher scores are adjusted in local
+log-odds coordinates that cannot cross below 0.50.
+
+Two GPU smokes were used only to establish feasibility, never to inspect a
+held-fold outcome. At the frozen batch size of 8, two balanced fold-3-only
+batches reproduce both released pixel logits and current scene scores with
+maximum absolute error 0.0, complete a finite backward/optimizer step, and use
+2,228,345,344 bytes peak CUDA memory. The adapter has 8,540,787 trainable
+parameters; both DINOv3 and the released U-Net remain frozen.
+
+The outcome protocol is now immutable in
+`configs/mars_dinov3_methane_fusion_pilot_protocol.json`. It trains two
+cross-fit endpoints (fold 3 to predict fold 4 and vice versa), each for exactly
+two epochs of 4,096 site/label/sensor-balanced requests. The scene objective
+adds a top-negative partial-AUC pair loss. Only residual strengths
+0.10/0.25/0.50 are eligible. Promotion requires at least +0.001 pooled AP,
+nonnegative AP on both sensors and both folds, unchanged operating confusion
+counts, positive pooled and per-fold IoU changes, and strictly positive
+physical-site bootstrap lower bounds for both AP and IoU. Failure cannot create
+an artifact or authorize fold-2/external scoring.
