@@ -3724,3 +3724,23 @@ SHA-256
 The trainer constructed zero held-fold records and reports no fold-2 label, fresh,
 or exact-paper access. This endpoint can now be hash-bound into a separately
 committed fold-2 extractor and fixed-candidate evaluator.
+
+### 2026-07-30: One-shot fold-2 extraction and evaluator frozen
+
+The fold-2 extractor is hash-bound to the folds-3+4 adapter and will write an
+ignored 671-column cache plus a compact receipt. The evaluator is committed
+before extraction and verifies the future cache paths and hashes through that
+receipt's frozen extractor-protocol identity. It fixes column 644 direction -1
+with tanh at strength 0.20 and column 156 direction +1 with high-score weighting
+at strength 0.05. Rank normalization and transform standardization are unlabeled
+within fold 2 x sensor.
+
+The first development-reproduction smoke correctly rejected a draft that had
+encoded the anchor sign as +1; the committed development report shows column 644
+has negative effects in both folds. This was corrected before any fold-2 cache
+existed. The final smoke reproduced the selected folds-3/4 whole AP
+0.9084121516710161, low-prevalence AP 0.7265114771853518, and both recall deltas
+within 1e-12. The full fold-2 gates require AP gains >=0.001 whole and >=0.005
+low-prevalence, nonnegative sensor AP and matched-FPR recall, no actual FPR
+increase, and strictly positive 10,000-replicate paired-site AP lower bounds in
+both views. The evaluator refuses to overwrite or repeat its report.
