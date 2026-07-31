@@ -3744,3 +3744,32 @@ within 1e-12. The full fold-2 gates require AP gains >=0.001 whole and >=0.005
 low-prevalence, nonnegative sensor AP and matched-FPR recall, no actual FPR
 increase, and strictly positive 10,000-replicate paired-site AP lower bounds in
 both views. The evaluator refuses to overwrite or repeat its report.
+
+### 2026-07-30: Complementary pair rejected on one-shot fold 2
+
+The frozen extractor encoded 8,833 unique fold-2 rows with the folds-3+4 adapter.
+The ignored feature and metadata caches have SHA-256
+`9f57ac352fa794f3e21ba7e28cb95cc61fa2e7d0289feb7599f28e4e2d5297c7`
+and
+`d3db1430dde0771e23d37026bdc37cfd02400492323960f1945b903783c714e3`.
+The evaluator then ran exactly once.
+
+The complete fold failed: AP changed 0.916603 -> 0.914441
+(-0.002162), Sentinel-2/Landsat AP changed -0.002572/-0.000484, and
+matched-FPR recall changed 0.956085 -> 0.949812 (-0.006274) at identical FPR
+0.071180. The paired-site AP interval was [-0.006129,+0.000513].
+
+The preregistered low-prevalence view replicated positively on 5,816 rows, 62
+positives, and 137 sites. AP changed 0.678808 -> 0.686947 (+0.008138),
+Sentinel-2/Landsat AP improved +0.008321/+0.015713, recall was unchanged at
+0.951613, FPR was unchanged at 0.071255, and the paired-site AP interval was
+[+0.002192,+0.016814]. Thus the rare-site mechanism is independently real, but
+applying it to every unseen fold-2 site is unsafe.
+
+The fixed pair is retired before fresh or exact-paper access, and fold 2 will not
+be reused for model selection. The failure motivates a narrower deployment
+architecture: preserve the validated current score bitwise for known training
+sites and route the invariant pair only to label-free unseen-site cohorts whose
+score-history statistics match the rare official test-only mixture. Any such
+router must be selected again on folds 3+4 and confirmed on still-unused folds
+0/1 before external access.
