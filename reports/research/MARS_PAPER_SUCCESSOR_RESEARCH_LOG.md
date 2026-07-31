@@ -4000,3 +4000,36 @@ was deleted without producing a receipt. A label-free 128-row benchmark then
 processed batch 64 at 1,561 rows/minute with 5.67 GiB peak CUDA allocation. The
 runtime-only contract is re-frozen at batch 64 and eight loader workers; the
 eligible folds, transforms, model, and representation are unchanged.
+
+### 2026-07-31: Counterfactual cache finalized and ranker selection frozen
+
+The accelerated extraction completed all 17,745 fold-3/4 rows, but the process
+encountered the known WSL DrvFS visibility race after atomically renaming the
+final files: Windows exposed both outputs while the process's immediate
+`stat()` failed, so it wrote no receipt. A separately committed finalizer bound
+the generator commit, re-hashed every frozen input, scanned every value, and
+matched every sample, physical site, label, sensor, and fold to manifest order.
+
+The ignored 17,745x28x64x64 float16 cache is 4,070,277,248 bytes with SHA-256
+`f2698d01f034a8836afe82f27857da5bdc9657a269d933dde4c5c5cb08a9d27a`;
+metadata SHA-256 is
+`8fcc864ae81ba48e2057ffd4f167f73ed11310fc6a9f2db274818806cb069463`.
+All values are finite in [-3.099609375, 9.0], folds contain 8,799/8,946 rows,
+and the labels contain 16,221 no-plume and 1,524 plume scenes. The compact
+receipt SHA-256 is
+`19b21e05e9bbde4cc70ececcd7ef2440ee59843787f8d21a25a15b8594b07955`.
+
+Ranker selection is now frozen before any full optimization. Three scientific
+ablations isolate directional frozen-teacher evidence, the complete
+counterfactual-physics representation, and physics without teacher responses.
+Each uses a compact residual spatial encoder, site-cell weighting, BCE plus
+hard-pair ranking, two fixed seeds, and honest fold-3-to-4/fold-4-to-3 scoring.
+Only four predeclared logit-blend weights may supplement the current strongest
+spatial-Prithvi score (exact AP 0.676102 full and 0.467027 test-only).
+
+Promotion requires positive paired-site AP interval lower bounds in both the
+whole and <=5% site-prevalence views, >=0.001/>=0.005 point AP gains,
+nonnegative matched-FPR recall, and nonnegative AP in every fold and sensor.
+The 16-row GPU smoke covered all four label x sensor strata, completed a finite
+epoch, and produced finite scores. Folds 0/1/2, exact-paper inputs, and fresh
+external inputs remain inaccessible.

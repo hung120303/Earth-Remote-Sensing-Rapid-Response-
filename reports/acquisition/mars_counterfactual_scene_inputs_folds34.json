@@ -1,0 +1,52 @@
+{
+  "dtype": "float16",
+  "external_inputs_accessed": false,
+  "finalizer_git_commit": "12690c949fba9d173f3a50025215454d7ef35a4a",
+  "finalizer_sha256": "c3c215c3a89ae273310d85b1c7073b1df573b4fc8893a819e6a8d6050fc1cade",
+  "finite_range": [
+    -3.099609375,
+    9.0
+  ],
+  "fold_counts": {
+    "3": 8799,
+    "4": 8946
+  },
+  "generated_at_utc": "2026-07-31T14:37:13.403807+00:00",
+  "generator_extractor_sha256": "37180d9679ce19f883fdab3e340a2d9fbd4c8f3b9ee7d1263525c8dd36dc935f",
+  "generator_git_commit": "7f339caacf5009af776853516221ce0cb81335d1",
+  "invariants": [
+    "All 17,745 selected rows and every float16 value were validated.",
+    "Every sample, site, label, sensor, and fold matches the frozen manifest order.",
+    "Only development folds 3 and 4 are present.",
+    "No fold 0/1/2, exact-paper, or fresh-external input was accessed."
+  ],
+  "label_counts": {
+    "NO_PLUME": 16221,
+    "PLUME": 1524
+  },
+  "outputs": {
+    "images": {
+      "bytes": 4070277248,
+      "path": "outputs/mars_counterfactual_scene_inputs_folds34.npy",
+      "sha256": "f2698d01f034a8836afe82f27857da5bdc9657a269d933dde4c5c5cb08a9d27a",
+      "tracked": false
+    },
+    "metadata": {
+      "bytes": 569909,
+      "path": "outputs/mars_counterfactual_scene_inputs_folds34_metadata.npz",
+      "sha256": "8fcc864ae81ba48e2057ffd4f167f73ed11310fc6a9f2db274818806cb069463",
+      "tracked": false
+    }
+  },
+  "protocol_sha256": "f70e349d8950d5f06ff72c0ab8a5010f87024b8b24d2da0edf27efbcae53a39d",
+  "rows": 17745,
+  "schema_version": 1,
+  "scope": "development folds 3/4 label-free counterfactual feature extraction",
+  "shape": [
+    17745,
+    28,
+    64,
+    64
+  ],
+  "status": "validated after transient DrvFS post-rename stat visibility failure"
+}

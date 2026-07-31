@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_complete_cache_finalization_before_crossfit_selection",
+  "scope": "honest fold-3/fold-4 cross-fit of the counterfactual representation against the frozen spatial-Prithvi score",
+  "trainer": {
+    "path": "tools/train_mars_counterfactual_scene_ranker.py",
+    "sha256": "74c7dcdf5c0f53275b5e2c49234c9b4a7b2d767c02ad5a20b0f36c6d162a5d2a"
+  },
+  "inputs": {
+    "images": {
+      "path": "outputs/mars_counterfactual_scene_inputs_folds34.npy",
+      "sha256": "f2698d01f034a8836afe82f27857da5bdc9657a269d933dde4c5c5cb08a9d27a"
+    },
+    "metadata": {
+      "path": "outputs/mars_counterfactual_scene_inputs_folds34_metadata.npz",
+      "sha256": "8fcc864ae81ba48e2057ffd4f167f73ed11310fc6a9f2db274818806cb069463"
+    },
+    "receipt": {
+      "path": "reports/acquisition/mars_counterfactual_scene_inputs_folds34.json",
+      "sha256": "19b21e05e9bbde4cc70ececcd7ef2440ee59843787f8d21a25a15b8594b07955"
+    },
+    "inner": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"
+    },
+    "fold0": {
+      "path": "outputs/mars_scene_features_fold0.npz",
+      "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"
+    },
+    "fold1": {
+      "path": "outputs/mars_scene_features_fold1_crossfit.npz",
+      "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"
+    },
+    "score_cache": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    },
+    "spatial_scores": {
+      "path": "outputs/mars_site_relative_spatial_development_scores.npz",
+      "sha256": "186ab5946790798a4a81274130ba5756ab3e5316b7b42238c2772d36805152a1"
+    },
+    "prithvi_scores": {
+      "path": "outputs/mars_adaptive_prithvi_development_scores.npz",
+      "sha256": "672ab43155280de950ac529f197b5084bb0b0ab76f17361b60ac99fc65ba1208"
+    },
+    "ensemble_artifact": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/mars_spatial_prithvi_ensemble.joblib",
+      "sha256": "0a3be48f5eda659aaaa7cf91c259acd230f81340677e5a6fc5fab83ba048420b"
+    }
+  },
+  "current_comparator": {
+    "name": "frozen site-relative spatial plus adaptive Prithvi ensemble",
+    "prithvi_weight": 0.75,
+    "selection_report": "reports/experiments/mars_spatial_prithvi_ensemble.json",
+    "exact_full_ap": 0.6761017274570647,
+    "exact_test_only_ap": 0.4670265430645243
+  },
+  "selection_folds": [3, 4],
+  "models": [
+    {
+      "feature_set": "directional_teacher",
+      "epochs": 8,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.001,
+      "dropout": 0.2,
+      "weighting": "site_cell",
+      "batch_size": 128,
+      "pair_weight": 0.2
+    },
+    {
+      "feature_set": "counterfactual_physics",
+      "epochs": 8,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.001,
+      "dropout": 0.2,
+      "weighting": "site_cell",
+      "batch_size": 128,
+      "pair_weight": 0.2
+    },
+    {
+      "feature_set": "physics_without_teacher",
+      "epochs": 8,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.001,
+      "dropout": 0.2,
+      "weighting": "site_cell",
+      "batch_size": 128,
+      "pair_weight": 0.2
+    }
+  ],
+  "seeds": [20267100, 20267200],
+  "blend_weights": [0.05, 0.1, 0.2, 0.3],
+  "target_view": {
+    "name": "low-prevalence physical-site proxy for the official test-only-site view",
+    "maximum_site_positive_rate": 0.05,
+    "membership": "all fold-3/4 rows from physical sites whose observed fold-3/4 positive rate is <= 0.05",
+    "use": "evaluation and gating only; no site rate enters model features or inference"
+  },
+  "gates": {
+    "whole_ap_delta": 0.001,
+    "rare_ap_delta": 0.005,
+    "each_view_requires_nonnegative_matched_fpr_recall": true,
+    "each_fold_and_sensor_ap_delta_nonnegative": true,
+    "each_view_paired_site_ap_interval_lower_strictly_positive": true,
+    "all_required": true
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "confidence": 0.95,
+    "unit": "physical_location_id",
+    "whole_seed": 20267300,
+    "rare_seed": 20267400
+  },
+  "selection_rule": "first require every gate; then maximize rare-site AP interval lower bound, whole-view lower bound, rare and whole point AP, and prefer the smaller blend",
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_counterfactual_scene_ranker_folds34.pt",
+    "crossfit_scores": "outputs/mars_counterfactual_scene_ranker_folds34_scores.npz",
+    "json": "reports/experiments/mars_counterfactual_scene_ranker_folds34.json",
+    "markdown": "reports/experiments/MARS_COUNTERFACTUAL_SCENE_RANKER_FOLDS34.md"
+  },
+  "invariants": [
+    "Every selected scene is encoded by the frozen released model without label-dependent representation fitting.",
+    "A fold-3 scene is scored only by heads trained on fold 4 and a fold-4 scene only by heads trained on fold 3.",
+    "Both training seeds are fixed and combined by mean logit.",
+    "The current comparator is the strongest frozen spatial-Prithvi development score, not the older ExtraTrees score.",
+    "Low-prevalence membership affects evaluation only and is never a model feature.",
+    "Folds 0, 1, and 2 are forbidden during selection.",
+    "No exact-paper or fresh-external image, score, or label may be loaded.",
+    "Failure retires this family; success can authorize only a separately frozen fold-2 confirmation."
+  ]
+}
