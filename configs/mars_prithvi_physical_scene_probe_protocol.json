@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_four-row_gpu_smoke_before_outcome_bearing_feature_extraction",
+  "scope": "development-only correction of the Prithvi radiometric transfer contract on physical-site folds 3 and 4",
+  "hypothesis": "The prior Prithvi path received MARS reflectance at twice the physical radiometric scale. Restoring raw reflectance DN before applying the pinned HLS statistics should make the frozen temporal ViT representation more complementary to the current spatial-Prithvi score.",
+  "radiometric_derivation": {
+    "mars_loader": "raw uint16 reflectance DN / 5000, clipped to [0,2]",
+    "prithvi_statistics": "mean/std in reflectance x10000 digital-number units",
+    "correct_conversion": "MARS normalized spectral value x5000 = original raw reflectance DN",
+    "legacy_transfer_conversion": "MARS normalized spectral value x10000 = 2 x original raw reflectance DN",
+    "candidate_multiplier": 5000.0,
+    "legacy_multiplier": 10000.0,
+    "non_radiometric_contract": "unchanged reference-target chronology, 128x128 bilinear resize, HLS band slots, time/location coordinates, and invalid-pixel zeroing"
+  },
+  "selection_partition": {
+    "folds": [3, 4],
+    "crossfit": "fit fold 3 and score fold 4; fit fold 4 and score fold 3",
+    "excluded_from_selection": [0, 1, 2],
+    "paper_test_loaded": false
+  },
+  "extractor": {
+    "path": "tools/extract_mars_prithvi_physical_scene_features.py",
+    "sha256": "55ddc9d8e7a481a097e4101b9d413f442f7a0c341a7d05d25bcd2aef0adfeaa9",
+    "output": "outputs/mars_prithvi_eo_2_tiny_tl_physical_features_folds34.npz",
+    "output_tracked": false,
+    "feature_count": 3072,
+    "precision": "float16 cache; float32 probe input"
+  },
+  "probe": {
+    "path": "tools/train_mars_prithvi_physical_scene_probe.py",
+    "sha256": "f97070512a8e9de14e5f50573a92afa1b08451461d479b4eecf27d3137b38258",
+    "feature_sets": ["cls", "temporal_change", "all"],
+    "regularization_C": [0.001, 0.01, 0.1],
+    "current_logit_blends": [0.025, 0.05, 0.1, 0.2, 0.3],
+    "normalization": "fit and held folds use their own unlabeled per-feature mean/std; held labels are excluded",
+    "class_weight": "sqrt(number of fit negatives / number of fit positives) for positives",
+    "selection_order": [
+      "all stability gates",
+      "minimum fold AP delta versus current",
+      "minimum sensor AP delta versus current",
+      "pooled AP delta versus current",
+      "pooled recall delta versus current",
+      "smaller blend"
+    ]
+  },
+  "promotion_gates": {
+    "minimum_pooled_ap_delta_vs_current": 0.001,
+    "minimum_pooled_recall_delta_at_fpr_0_0713_vs_current": 0.0,
+    "minimum_each_fold_ap_delta_vs_current": 0.0,
+    "minimum_each_fold_recall_delta_vs_current": -0.002,
+    "minimum_each_sensor_ap_delta_vs_current": 0.0,
+    "paired_site_bootstrap_replicates": 10000,
+    "paired_site_ap_delta_95pct_lower_vs_current": 0.0,
+    "next_step_if_passed": "freeze selected feature set, C, and blend before one-shot fold-2 feature extraction",
+    "next_step_if_failed": "reject before fold-2 feature extraction"
+  },
+  "frozen_inputs": {
+    "development_manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "development_acquisition_receipt": {
+      "path": "reports/acquisition/mars_s2l_paper_v3_development_download.json",
+      "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"
+    },
+    "mars_loader": {
+      "path": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py",
+      "sha256": "6c82aecd58918567b34f422e4c6f4e817e5578a6bc24ea284791f3d44b63fd36"
+    },
+    "foundation_config": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/config.json",
+      "sha256": "d7f9e36d2253cb82d296bfd95a9a651f2af455c0cfe8a5ea775b2e3d196ad170"
+    },
+    "foundation_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/Prithvi_EO_V2_tiny_TL.pt",
+      "sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70",
+      "tracked": false
+    },
+    "foundation_receipt": {
+      "path": "reports/acquisition/prithvi_eo_2_tiny_tl.json",
+      "sha256": "ddc2dec982320ab23f9963b5221b8ce8752c04f01b0b84a018bb70ba84d518f3"
+    },
+    "current_scores": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7",
+      "tracked": false
+    },
+    "scene_features_folds234": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89",
+      "tracked": false
+    },
+    "scene_features_fold0": {
+      "path": "outputs/mars_scene_features_fold0.npz",
+      "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7",
+      "tracked": false
+    },
+    "scene_features_fold1": {
+      "path": "outputs/mars_scene_features_fold1_crossfit.npz",
+      "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108",
+      "tracked": false
+    },
+    "legacy_prithvi_cache": {
+      "path": "outputs/mars_prithvi_eo_2_tiny_tl_features_all_folds.npz",
+      "sha256": "e3e52a9453426e5e048cd753daf2597d59cbe820a18ae584c61a2de7ae405f23",
+      "tracked": false
+    }
+  },
+  "verification_before_freeze": {
+    "unit_tests": "2 passed",
+    "ruff": "all checks passed",
+    "gpu_smoke": {
+      "rows": 4,
+      "features": 3072,
+      "finite": true,
+      "output_sha256": "d6b5ac1d4bfaa8af9f835e787e5132e518bf6487fcf80f48b8b8d9d183e58136"
+    }
+  },
+  "invariants": [
+    "No fold-2, fold-0, fold-1, or paper-test outcome may affect folds-3/4 selection.",
+    "The current spatial-Prithvi score is the floor and zero blend reproduces it exactly.",
+    "The NIR spectral-response mismatch remains explicit and unchanged.",
+    "Bulk features and model artifacts remain ignored; only compact protocols and reports are committed."
+  ]
+}

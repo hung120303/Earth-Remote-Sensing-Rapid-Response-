@@ -4175,3 +4175,35 @@ background interventions remain useful mechanistic evidence, but their learned
 score does not improve the already strong spatial-Prithvi ordering. Any further
 use must alter representation learning upstream or add genuinely new label
 support; another scalar blend or bounded correction is not justified.
+
+### 2026-07-31: Physical-radiometry Prithvi correction frozen
+
+The upstream-representation audit found a concrete preprocessing mismatch in
+all earlier Prithvi transfer experiments. The released MARS loader converts its
+uint16 reflectance digital numbers to U-Net inputs by dividing by 5,000. The
+pinned Prithvi configuration, however, supplies means and standard deviations
+in reflectance-times-10,000 digital-number units. The earlier transfer extractor
+multiplied the MARS tensor by 10,000, which reconstructed twice the original
+digital number. The physically correct inverse conversion is multiplication by
+5,000. This conclusion follows directly from the pinned local MARS loader,
+upstream MARS-S2L loader, Prithvi configuration, and raw-data unit contract; it
+does not use labels or performance outcomes.
+
+A versioned extractor now changes only that multiplier. It keeps the frozen
+Prithvi-EO-2.0 tiny temporal ViT, reference-then-target chronology, 128-pixel
+resize, HLS band slots, temporal/location coordinates, invalid-pixel policy,
+and 3,072-feature schema unchanged. The Sentinel-2 B08 versus HLS narrow-NIR
+transfer mismatch remains explicit. Earlier caches and reports are preserved
+as valid evidence for the legacy 2x-radiometry transfer contract rather than
+silently rewritten.
+
+Selection is frozen to a two-way fold-3/fold-4 physical-site cross-fit before
+the outcome-bearing cache is generated. Three predeclared feature views (CLS,
+temporal change, and all Prithvi features), three logistic regularizations, and
+five small logit blends may supplement the current spatial-Prithvi score.
+Promotion requires at least +0.001 pooled AP, nonnegative pooled recall and
+per-sensor AP, positive AP on both folds, and a positive lower bound from a
+10,000-replicate paired-site AP bootstrap. A four-row CUDA smoke produced
+finite 3,072-wide features; two focused tests and static checks pass. Folds
+0/1/2, external data, and the paper test remain excluded. The complete frozen
+contract is `configs/mars_prithvi_physical_scene_probe_protocol.json`.
