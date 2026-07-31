@@ -3319,3 +3319,27 @@ metadata is 1,537,400 bytes with SHA-256
 Both remain ignored. The compact receipt records generator commit
 `8e3d0807650fc21215c19f43a9d702e692930212`, finalizer commit
 `3f06447e1f140f16104ab08fa5ae45560cf27c0b`, and no external input access.
+
+### 2026-07-30: AP-focused dense residual selected internally
+
+The rejected end-to-end BCE scene residual was excluded. A new 67k-parameter
+zero-initialized MLP instead learns a bounded residual around the exact float64
+current score from 670 frozen features. Preprocessing uses only each fit split's
+median and normalized IQR; absolute sentinel values >=1000 are treated as missing
+and replaced with the fit median. The objective directly combines a differentiable
+SmoothAP listwise surrogate with current-difficulty-weighted pair ranking, light
+BCE, and residual L2.
+
+Before any fold-2 evaluation, two seeds trained on fold 3 and predicted fold 4,
+and two seeds trained on fold 4 and predicted fold 3. All five predeclared residual
+strengths passed the internal point/domain/site gates. Improvements increased
+through strength 0.80, which is now frozen: pooled AP +0.007277, matched-FPR recall
++0.012467, Sentinel-2 AP +0.004609, Landsat AP +0.005862, fold-3 AP +0.009844,
+fold-4 AP +0.007054, and paired-site AP interval lower +0.002105.
+
+These folds also trained the frozen representation, so this is architecture
+selection evidence rather than unbiased confirmation. Fold 2 has not been scored.
+The trainer, two final seeds, 1,500-step endpoint, strength 0.80, feature hashes,
+exact current-score cache, and +0.001 held-fold AP floor are now committed before
+fitting on folds 3+4 and evaluating the reused architecture fold once. Failure
+writes no artifact and cannot authorize external scoring.

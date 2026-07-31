@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_fit-fold_internal_selection_before_fold2_evaluation",
+  "scope": "AP-focused residual ranker over frozen dense-Prithvi development features",
+  "trainer": {
+    "path": "tools/train_mars_dense_ap_residual_ranker.py",
+    "sha256": "85eabe43bb7dad38221d413e5f003a4845df8c35726bfc6c7bd2fe2158ea0bfd"
+  },
+  "code_dependencies": [
+    {
+      "path": "tools/train_mars_oof_scene_ensemble_v2.py",
+      "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"
+    },
+    {
+      "path": "tools/train_mars_scene_ranker.py",
+      "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"
+    }
+  ],
+  "inputs": {
+    "features": {
+      "path": "outputs/mars_dense_prithvi_scene_features_all_folds.npy",
+      "sha256": "cb44c6957be7fb2df9b95652dcf8f099775e244d87ddfea91d15679cc62400cc"
+    },
+    "metadata": {
+      "path": "outputs/mars_dense_prithvi_scene_features_all_folds_metadata.npz",
+      "sha256": "533300f8ec7760b645b7e30c23a569dcc6c5522d6bc1c64ee7ad485623cffb32"
+    },
+    "receipt": {
+      "path": "reports/acquisition/mars_dense_prithvi_scene_features.json",
+      "sha256": "a9abbc004179ca59b57e537b6519b9358acd669d0d5944a45a55586c2d1d6743"
+    },
+    "score_cache": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    }
+  },
+  "folds": {
+    "fit": [
+      3,
+      4
+    ],
+    "held": 2,
+    "unit": "physical_location_id",
+    "selection_order": "cross-predict 3 from 4 and 4 from 3; freeze strength; only then fit 3+4 and evaluate 2"
+  },
+  "architecture": {
+    "floor": "exact float64 current cross-fitted scene probability converted to logit",
+    "inputs": "670 features: current score plus all frozen dense representation/mask statistics except the already rejected BCE scene residual",
+    "scaling": "training-only median and normalized IQR; sentinel absolute values >=1000 treated as missing; clipped to [-8,8]",
+    "head": "670 -> 96 -> 32 -> bounded scalar logit residual, LayerNorm/GELU/dropout, zero-initialized output",
+    "objective": "SmoothAP listwise surrogate plus current-difficulty-weighted positive-negative pair loss, BCE, and residual L2",
+    "identity": "zero residual exactly reproduces the current ranker"
+  },
+  "internal_seeds": [
+    20263400,
+    20263500
+  ],
+  "final_seeds": [
+    20263600,
+    20263700
+  ],
+  "training": {
+    "hidden": [
+      96,
+      32
+    ],
+    "dropout": 0.15,
+    "steps": 1500,
+    "positive_per_batch": 64,
+    "negative_per_batch": 448,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.01,
+    "gradient_clip": 2.0,
+    "smooth_ap_tau": 0.25,
+    "smooth_ap_weight": 1.0,
+    "pair_margin": 0.5,
+    "pair_weight": 0.25,
+    "bce_weight": 0.1,
+    "residual_l2_weight": 0.02,
+    "prediction_batch_size": 4096,
+    "endpoint_rule": "fixed 1500 steps for every seed and fold; no held-fold early stopping"
+  },
+  "search": {
+    "strengths": [
+      0.05,
+      0.1,
+      0.2,
+      0.4,
+      0.8
+    ],
+    "candidate_count": 5,
+    "selection_scope": "fit folds 3 and 4 only"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20263800,
+    "confidence": 0.95,
+    "unit": "physical_location_id",
+    "minimum_ap_delta": 0.001
+  },
+  "frozen_internal_selection": {
+    "strength": 0.8,
+    "selection_rows": 17745,
+    "average_precision_delta": 0.007276922661129226,
+    "matched_fpr_recall_delta": 0.01246719160104992,
+    "sensor_average_precision_delta": {
+      "Sentinel-2": 0.0046087794435683005,
+      "Landsat": 0.005862226771039092
+    },
+    "fold_average_precision_delta": {
+      "3": 0.009843597179151953,
+      "4": 0.007053770243006796
+    },
+    "paired_site_ap_lower": 0.002105311086471254,
+    "rule": "highest preregistered strength passing pooled, both-fold, both-sensor, matched-recall, and paired-site gates"
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.001,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "each_sensor_ap_delta_minimum": 0.0,
+    "each_fold_ap_delta_minimum": 0.0,
+    "paired_site_ap_lower_bound_strictly_positive": true,
+    "pass_action": "fit the same two-seed endpoint on folds 3+4 and evaluate reused fold 2 once; success still requires later independent full-development cross-fitting"
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_dense_ap_residual_ranker_pilot.pt",
+    "json": "reports/experiments/mars_dense_ap_residual_ranker.json",
+    "markdown": "reports/experiments/MARS_DENSE_AP_RESIDUAL_RANKER.md"
+  },
+  "invariants": [
+    "The exact current score cache, not its float16 feature copy, defines the residual floor and all comparisons.",
+    "The rejected end-to-end BCE residual feature is excluded.",
+    "Internal selection uses only folds 3 and 4; fold 2 cannot be evaluated until the selected strength is committed.",
+    "Every random module initialization and sampling generator is seed-bound.",
+    "No exact-paper or fresh external input is loaded.",
+    "Failure writes no artifact; any artifact remains Git-ignored."
+  ]
+}
