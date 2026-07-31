@@ -4332,3 +4332,25 @@ point/fold/sensor/recall gate plus a strictly positive lower bound from 10,000
 paired physical-site bootstrap replicates. Failure rejects the branch without
 extracting fold 2. The frozen contract is
 `configs/mars_dofa_v2_projection_ensemble_protocol.json`.
+
+### 2026-07-31: DOFA-v2 projection ensemble rejected on pooled recall
+
+The fixed five-new-seed mean-logit ensemble makes the DOFA AP effect stronger
+and statistically distinguishable from zero. Pooled AP changes +0.001251 versus
+the current spatial-Prithvi score; the paired-site estimate is +0.001240 with a
+95% interval of [+0.000216,+0.002410]. AP remains positive on folds 3/4
+(+0.000516/+0.001314) and both sensors (Landsat +0.000965, Sentinel-2
++0.001084). This is the first DOFA result to pass the strict AP uncertainty
+gate, and it is +0.030042 AP above the released primary scene score.
+
+It nevertheless fails the preregistered no-recall-regression gate. At the
+pooled FPR=0.0713 operating point, recall falls by 0.001312, exactly two of the
+1,524 positive scenes, despite fold-local recall increasing on both fold 3 and
+fold 4. Four of five individual new projections also lose between one and four
+pooled positives. This pattern exposes a cross-fit score-calibration/ranking
+problem rather than evidence for a uniformly better decision rule. The branch
+is rejected as frozen; fold 2 remains untouched. The JSON result was written
+successfully at experimental commit `f69e8107` before a Markdown-only field-path
+error stopped the command. The formatter is corrected without recomputing or
+altering the recorded outcome; result SHA-256 is
+`540c5d509b1340ae0a07bd0b89a07bca70b3ce85b8d8e9d865066ab122efdb96`.

@@ -99,7 +99,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         "|---:|---:|---:|:---:|",
     ]
     for item in report["individual_seed_diagnostics"]:
-        local = item["evaluation"]["versus_current"]["delta"]
+        local = item["evaluation"]["delta_vs_current"]
         lines.append(
             f"| {item['seed']} | {local['average_precision']:+.6f} | "
             f"{local['recall_at_fpr_0_0713']:+.6f} | "
