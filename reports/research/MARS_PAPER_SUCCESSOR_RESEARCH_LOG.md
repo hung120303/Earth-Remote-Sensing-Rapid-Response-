@@ -4750,3 +4750,31 @@ tensors, optimization, seeds, endpoints, or evaluation. The trainer is
 re-hashed as
 `904e3b1e16b9eb9092cda8cf241e2070712cefa9e519ef2b22e8349ee04048cc`
 and recommitted before restarting the same frozen experiment.
+
+### 2026-07-31: Multi-seed DINO scene confirmation rejected
+
+All six predeclared endpoints completed and aligned across 17,745 development
+rows (fold 3: 8,799; fold 4: 8,946). The routing assertion proves every
+Landsat candidate score is exactly the current spatial-Prithvi score. Despite
+that protection, the three-seed averaged Sentinel-2 evidence fails decisively.
+At selected strength 0.10, pooled AP changes -0.001832 with paired-site 95%
+interval [-0.003701,-0.000176]. Sentinel-2 AP changes -0.000623, Landsat is
+exactly 0.0, and fold AP changes are -0.000344/-0.002304. Recall and operating
+confusion counts are unchanged. Strengths 0.25 and 0.50 worsen AP further
+(-0.004248 and -0.005877), with entirely negative paired-site intervals.
+
+The first-seed mask endpoint again transports. Strength 0.10 improves pooled
+IoU +0.002462 with paired-site interval [+0.000765,+0.003941] and positive fold
+changes (+0.004324/+0.001060). Strength 0.25 improves IoU +0.004742 with
+interval [+0.001059,+0.007708] and positive fold changes, while 0.50 has a
+larger point gain but an interval crossing zero. No scene candidate passes, no
+artifact is written, and fold 2, source-disjoint inputs, and official-test data
+remain untouched. Result SHA-256 is
+`38e0718c51fb6025fba6a733a3d7e86f11d9a329c39a956b2185dab6d07c098f`.
+
+This exhausts the one promised variance-control confirmation. DINOv3 dense
+features are retained only as a reproducible mask-improvement candidate; their
+dense-MIL statistic is retired for scene ranking. The next scene architecture
+must obtain a transportable image-level signal independently of this mask
+surrogate, rather than applying another weight, route, seed, or strength search
+to the same failed evidence.
