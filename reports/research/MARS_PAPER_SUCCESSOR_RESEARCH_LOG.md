@@ -3655,3 +3655,19 @@ supplies the missing rare-site magnitude. The next experiment will freeze a
 two-component additive logit residual using only these already screened transforms
 and small independent strengths. It remains development exploration requiring a
 separate fold-2 confirmation; no protected input was accessed.
+
+### 2026-07-30: Complementary anchor-plus-booster protocol frozen
+
+The complementary experiment fixes the anchor to column 644 with tanh and the
+booster to column 156 with high-score weighting. It searches four small anchor
+strengths (0.10-0.25) and four booster strengths (0.025-0.10), for 16 additive
+logit residuals. No feature, transform, routing rule, or gate is reopened.
+
+The one-candidate smoke path (anchor 0.10, booster 0.025) cleared every point gate:
+whole AP +0.002722 with fold deltas +0.000307/+0.001782 and
+Sentinel-2/Landsat deltas +0.003671/+0.000586; low-prevalence AP +0.010664 with
+fold deltas +0.018570/+0.009332 and sensor deltas +0.011916/+0.004392. Recall was
+unchanged in both views. Its 100-replicate smoke lower bounds were +0.000746
+whole and +0.000430 low-prevalence. These smoke intervals are not inferential
+evidence. The committed full protocol requires the unchanged 10,000-replicate
+paired-site gates before fold 2 can be considered.
