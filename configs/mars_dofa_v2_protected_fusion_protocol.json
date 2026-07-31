@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_recall_protected_fusion_outcomes",
+  "scope": "development-only protected DOFA-v2 fusion selection on MARS physical-site folds 3 and 4",
+  "hypothesis": "The replicated DOFA-v2 representation improves plume-scene ranking but perturbs two decisions near the pooled no-plume operating point. Restricting fusion to a disjoint high-confidence region can retain complementary AP gains while mathematically preserving the current decision region.",
+  "selection_folds": [3, 4],
+  "excluded_from_all_access": {
+    "folds": [0, 1, 2],
+    "external_outcomes": true,
+    "paper_test_outcomes": true
+  },
+  "fixed_representation": {
+    "feature_set": "change_extreme",
+    "C": 0.01,
+    "projection_dimension": 2048,
+    "projection_seeds": [20260780, 20260781, 20260782, 20260783, 20260784],
+    "aggregation": "mean_logit"
+  },
+  "reproduction_blend": 0.05,
+  "fusion": "For current scores below gate, output current exactly. Above gate, rescale current to [0,1], blend its logit with the fixed DOFA probability, then map the result back to [gate,1].",
+  "candidate_grid": {
+    "gates": [0.25, 0.5, 0.75],
+    "weights": [0.05, 0.1, 0.2]
+  },
+  "eligible_candidates": 9,
+  "minimum_gate_margin_above_current_operating_threshold": 0.05,
+  "bootstrap": {
+    "unit": "physical_site_group",
+    "paired": true,
+    "replicates": 10000,
+    "confidence": 0.95,
+    "seed": 2026073190,
+    "same_draws_for_all_candidates": true
+  },
+  "promotion_gates": {
+    "pooled_ap_delta_vs_current_minimum": 0.001,
+    "pooled_recall_delta_at_fpr_0_0713_minimum": 0.0,
+    "pooled_operating_confusion_counts_identical_to_current": true,
+    "each_fold_ap_delta_vs_current_strictly_positive": true,
+    "each_fold_recall_delta_at_fpr_0_0713_minimum": -0.002,
+    "each_sensor_ap_delta_vs_current_minimum": 0.0,
+    "paired_site_ap_delta_vs_current_95pct_lower_strictly_positive": true,
+    "ap_and_recall_vs_released_primary_strictly_positive": true
+  },
+  "selection_rule": "Rank candidates by all-gates pass, point-gate stability, paired-site AP lower bound, minimum fold AP delta, minimum sensor AP delta, pooled AP delta, then prefer the smaller gate and weight.",
+  "dependencies": {
+    "dofa_cache": "outputs/mars_dofa_v2_scene_features_folds34.npz",
+    "dofa_cache_sha256": "2c43352e92f96549d64188c78318fe606d55552aa9587aace1a195e8dfba66fe",
+    "ensemble_report": "reports/experiments/mars_dofa_v2_projection_ensemble_folds34.json",
+    "ensemble_report_sha256": "540c5d509b1340ae0a07bd0b89a07bca70b3ce85b8d8e9d865066ab122efdb96"
+  },
+  "interpretation": "Passing authorizes only one-shot fold-2 DOFA feature extraction and frozen confirmation. Failure rejects the protected fusion branch without accessing fold 2."
+}

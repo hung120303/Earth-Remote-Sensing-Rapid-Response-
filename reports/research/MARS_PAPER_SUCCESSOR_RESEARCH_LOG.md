@@ -4354,3 +4354,23 @@ successfully at experimental commit `f69e8107` before a Markdown-only field-path
 error stopped the command. The formatter is corrected without recomputing or
 altering the recorded outcome; result SHA-256 is
 `540c5d509b1340ae0a07bd0b89a07bca70b3ce85b8d8e9d865066ab122efdb96`.
+
+### 2026-07-31: Recall-protected DOFA-v2 fusion frozen
+
+The new-seed ensemble establishes that DOFA contributes a real AP signal but
+also shows why an unconstrained global blend is unsafe: it perturbs examples at
+the no-plume decision boundary. The next architecture changes the fusion rule,
+not the representation or labels. Below a fixed current-model confidence gate,
+the output is exactly the current score. Above the gate, the current score is
+rescaled locally, blended with the fixed five-seed DOFA probability in log-odds
+space, and mapped back above the same gate. This is a sample-wise deployable
+function; no batch ranks, test distribution, or labels enter inference.
+
+Three fixed gates (0.25, 0.50, 0.75) and three fixed DOFA weights (0.05, 0.10,
+0.20) define nine eligible development candidates. Every gate must remain at
+least 0.05 above the current fold-3/4 matched-FPR threshold. Promotion requires
+the original point/fold/sensor/bootstrap gates plus exact preservation of the
+pooled operating confusion counts. All candidates reuse the five new projection
+seeds and must first reproduce the prior unconstrained result to 1e-14. The
+frozen contract is `configs/mars_dofa_v2_protected_fusion_protocol.json`; folds
+0/1/2 and external/paper-test outcomes remain untouched.
