@@ -3554,3 +3554,23 @@ and low-prevalence paired-site AP 95% lower bounds must be strictly positive
 across 10,000 replicates. A smoke run exercised all four point candidates and
 both bootstrap paths without writing an output. Fold 2 and external inputs
 remain inaccessible to this protocol.
+
+### 2026-07-30: Sparse invariant ensemble rejected
+
+Only one of 25 frozen candidates cleared every point gate:
+`scene_head_input_49` alone at strength 0.20. It improved whole-development AP
++0.002118 and matched-FPR recall +0.000656, with positive AP deltas in both folds
+and both sensors. On the low-prevalence view it improved pooled AP +0.006841,
+fold AP +0.006674/+0.007683, Sentinel-2/Landsat AP +0.006870/+0.000844, and
+left matched-FPR recall unchanged.
+
+The paired-site evidence rejected it. The whole-development AP interval was
+[-0.000170,+0.003612], and the low-prevalence interval was
+[-0.004742,+0.019381]. No multi-feature equal-weight prefix survived the point
+gates. This separates two findings: the invariant feature itself has useful
+rare-site signal, but equal-weight aggregation does not reduce its between-site
+variance. No fold-2, fresh, or exact-paper input was accessed. The next path is
+a cross-fitted, strongly regularized linear residual ranker over domain-rank
+normalized dense features, with equal physical-site weighting and a separately
+rank-normalized held-fold output. This replaces the failed equal-weight
+assumption while retaining the invariant representation contract.

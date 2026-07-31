@@ -1,0 +1,236 @@
+{
+  "decision": "Retire this sparse invariant ensemble family before fold 2 or external access.",
+  "direction_effects": {
+    "156": {
+      "3": 0.6208952019168871,
+      "4": 0.4362874138450155
+    },
+    "335": {
+      "3": 1.5412408998711045,
+      "4": 0.4609920620437534
+    },
+    "47": {
+      "3": 1.67627944581273,
+      "4": 0.06576088789453982
+    },
+    "51": {
+      "3": 1.1596392469621037,
+      "4": 0.5497309282047145
+    },
+    "644": {
+      "3": -1.4209650833271146,
+      "4": -0.5291353771307649
+    }
+  },
+  "evaluated_candidates": [
+    {
+      "bootstrap_checks": {
+        "low_prevalence_paired_site_ap_lower_strictly_positive": false,
+        "whole_paired_site_ap_lower_strictly_positive": false
+      },
+      "feature_indices": [
+        51
+      ],
+      "feature_names": [
+        "scene_head_input_49"
+      ],
+      "key": "top1_strength0.2",
+      "low_prevalence": {
+        "average_precision": {
+          "folds": {
+            "3": 0.7638889607258281,
+            "4": 0.6908651890546357
+          },
+          "pooled": 0.7150271706595825,
+          "sensors": {
+            "0": 0.6364188005820965,
+            "1": 0.8771874311821882
+          }
+        },
+        "average_precision_delta": {
+          "folds": {
+            "3": 0.006673827009307076,
+            "4": 0.00768250140513016
+          },
+          "pooled": 0.006840566617844601,
+          "sensors": {
+            "0": 0.006870480025564785,
+            "1": 0.0008442778970000342
+          }
+        },
+        "matched_fpr_metrics": {
+          "accuracy": 0.9285084626234132,
+          "auroc": 0.9669856899993057,
+          "average_precision": 0.7150271706595825,
+          "false_positive_rate": 0.07126313914127917,
+          "fn": 11.0,
+          "fp": 800.0,
+          "negative_predictive_value": 0.9989460572961579,
+          "operating_point": {
+            "false_positive_rate": 0.07126313914127917,
+            "precision": 0.11797133406835722,
+            "recall": 0.9067796610169492,
+            "target_fpr": 0.0713,
+            "threshold": 0.06043400695660763
+          },
+          "precision": 0.11797133406835722,
+          "recall": 0.9067796610169492,
+          "sensor_average_precision": {
+            "Landsat": 0.8771874311821882,
+            "Sentinel-2": 0.6364188005820965
+          },
+          "specificity": 0.9287368608587209,
+          "tn": 10426.0,
+          "tp": 107.0
+        },
+        "matched_fpr_recall_delta": 0.0,
+        "positive": 118,
+        "rows": 11344
+      },
+      "paired_site_ap_delta": {
+        "low_prevalence": {
+          "confidence": 0.95,
+          "groups": 199,
+          "lower": -0.004741651998614507,
+          "mean": 0.006310646162931467,
+          "replicates": 10000,
+          "upper": 0.019381295082749984
+        },
+        "whole": {
+          "confidence": 0.95,
+          "groups": 250,
+          "lower": -0.00017048814002648395,
+          "mean": 0.0018686673840985846,
+          "replicates": 10000,
+          "upper": 0.003611981170183723
+        }
+      },
+      "passed": false,
+      "passed_point_gates": true,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": true
+      },
+      "strength": 0.2,
+      "top_k": 1,
+      "whole": {
+        "average_precision": {
+          "folds": {
+            "3": 0.9307173516516655,
+            "4": 0.8918007474529619
+          },
+          "pooled": 0.9061942975643166,
+          "sensors": {
+            "0": 0.8749747320002836,
+            "1": 0.975772082205656
+          }
+        },
+        "average_precision_delta": {
+          "folds": {
+            "3": 0.0004006921512126338,
+            "4": 0.0007852082553927442
+          },
+          "pooled": 0.0021184553387597616,
+          "sensors": {
+            "0": 0.0026050655641360887,
+            "1": 0.0008539808581503605
+          }
+        },
+        "matched_fpr_metrics": {
+          "accuracy": 0.9316427162581009,
+          "auroc": 0.9860273961963373,
+          "average_precision": 0.9061942975643166,
+          "false_positive_rate": 0.07126564330189261,
+          "fn": 57.0,
+          "fp": 1156.0,
+          "negative_predictive_value": 0.9962306573204602,
+          "operating_point": {
+            "false_positive_rate": 0.07126564330189261,
+            "precision": 0.5592832634388105,
+            "recall": 0.9625984251968503,
+            "target_fpr": 0.0713,
+            "threshold": 0.17732248989114643
+          },
+          "precision": 0.5592832634388105,
+          "recall": 0.9625984251968503,
+          "sensor_average_precision": {
+            "Landsat": 0.975772082205656,
+            "Sentinel-2": 0.8749747320002836
+          },
+          "specificity": 0.9287343566981074,
+          "tn": 15065.0,
+          "tp": 1467.0
+        },
+        "matched_fpr_recall_delta": 0.0006561679790025865,
+        "positive": 1524,
+        "rows": 17745
+      }
+    }
+  ],
+  "exact_paper_inputs_accessed": false,
+  "feature_names": {
+    "156": "scene_head_input_154",
+    "335": "scene_head_input_333",
+    "47": "scene_head_input_45",
+    "51": "scene_head_input_49",
+    "644": "scene_embedding_57"
+  },
+  "feature_order": [
+    51,
+    47,
+    644,
+    335,
+    156
+  ],
+  "fold2_accessed": false,
+  "fresh_inputs_accessed": false,
+  "generated_at_utc": "2026-07-31T03:05:47.477290+00:00",
+  "provenance": {
+    "explorer_sha256": "bff75a82cb359b6e8de39f68fa4e6559524b32132c392f83595328ddfafd75ca",
+    "features_sha256": "f45de57bda41ba083b4a981cbbcafa3c1e537ff7178eedae2c2ae2567987f78e",
+    "git_commit": "2887c5acf79f7afa0b95e0e1161d2e6aa54052ea",
+    "metadata_sha256": "5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d",
+    "numpy": "2.4.4",
+    "protocol_sha256": "bfdf254f13b913cff7f3c0b89cc681e18a94b2051530ffc7fdee6c6605ef775a",
+    "univariate_report_sha256": "217bc3484bcc75a826b2630186b7ead271d7115cb4577dbd7f979a20826d2ef1"
+  },
+  "schema_version": 1,
+  "scope": "exploratory sparse invariant ensemble on honest dense-Prithvi development features",
+  "status": "rejected_before_fold2",
+  "summary": {
+    "bootstrapped_candidates": 1,
+    "candidate_count": 25,
+    "passing_candidates": 0,
+    "point_gate_candidates": 1,
+    "selected": null
+  },
+  "target_domain": {
+    "definition": {
+      "maximum_site_positive_rate": 0.05,
+      "membership": "all rows from physical_location_id groups whose combined folds-3/4 positive rate is <=0.05",
+      "name": "low-prevalence physical-location proxy for the official test-only-site view",
+      "use": "development stress view only; it is not a substitute for the untouched official test-only-site benchmark"
+    },
+    "folds": {
+      "3": {
+        "positive": 42,
+        "rows": 5601,
+        "sites": 122
+      },
+      "4": {
+        "positive": 76,
+        "rows": 5743,
+        "sites": 77
+      }
+    },
+    "positive": 118,
+    "rows": 11344,
+    "sites": 199
+  }
+}
