@@ -4149,3 +4149,29 @@ prevalence feature exists. The smoke verified exact zero initialization, finite
 post-update residuals, finite actual/simulation/pair/L2 losses, and no artifact
 creation. The full run retains the strict whole and rare-site gates and cannot
 access folds 0/1/2 or external inputs.
+
+### 2026-07-31: Baseline-preserving causal residual rejected
+
+The two-seed honest fold-3-to-4/fold-4-to-3 run rejects the residual family. At
+the minimum strength 0.10, whole-view AP changed -0.000222, matched-FPR recall
+changed -0.001312, and the paired-site interval was
+[-0.000685,+0.000033]. Both held folds and both sensor strata lost AP. The
+rare-site view changed -0.001485 AP with tied recall and interval
+[-0.004714,+0.002408].
+
+Increasing the residual strength made the ordering progressively worse. At
+strengths 0.25/0.50/1.00, whole AP changed
+-0.000636/-0.001622/-0.004444, and rare AP changed
+-0.003154/-0.009761/-0.026820. The whole-view paired interval was strictly
+negative by strength 0.50. No candidate passed, no artifact was written, and
+folds 0/1/2, external inputs, and exact-paper inputs remained inaccessible.
+
+The compact report SHA-256 is
+`8c816b02401f234f4b3b30cc15ee94383daa9acc92d1fe7ff3dbc0cdf93e74d2`;
+the ignored score-cache SHA-256 is
+`08900f3868661fe24ecf368e9955db74d1b2b8a58119a8742d0eceaf6abcc605`.
+The result retires zero-initialized post-hoc causal residual ranking. Same-
+background interventions remain useful mechanistic evidence, but their learned
+score does not improve the already strong spatial-Prithvi ordering. Any further
+use must alter representation learning upstream or add genuinely new label
+support; another scalar blend or bounded correction is not justified.
