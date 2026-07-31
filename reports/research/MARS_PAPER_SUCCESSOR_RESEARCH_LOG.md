@@ -3594,3 +3594,23 @@ positive whole and low-prevalence paired-site AP lower bounds over 10,000
 replicates. A 32-feature smoke run exercised both honest fits, both candidate
 strengths, and both bootstrap views without warnings or output artifacts. Fold 2
 and all external evaluation inputs remain untouched.
+
+### 2026-07-30: Invariant site-balanced linear ranker rejected
+
+None of 90 frozen candidates cleared the point gates, so no bootstrap or artifact
+was produced. The best-screened model was site-equal L1 logistic regression at
+C=0.01 and residual strength 0.20. Its low-prevalence fold AP deltas were
++0.011540/+0.003415 and recall improved +0.008475, but pooled low-prevalence AP
+changed -0.004393 because Sentinel-2 AP regressed -0.007083. Whole-development
+AP regressed -0.008885 and recall -0.001969.
+
+The coefficient diagnostics identify the failure mechanism. Across the two
+opposite-fold fits, the best model selected 34 unique features but only five in
+both fits; union sign agreement was 11.8% and coefficient cosine similarity was
+0.159. Most other regularization/weighting combinations had zero to 17 shared
+features and near-zero sign agreement. Domain-rank normalization removed marginal
+offsets, but it could not make unconstrained multivariate feature axes stable.
+No fold-2 or external input was accessed. The next experiment will therefore
+exclude all direction-unstable columns and use only the five univariate survivors,
+testing label-free nonlinear residual gates rather than learning high-dimensional
+supervised weights.
