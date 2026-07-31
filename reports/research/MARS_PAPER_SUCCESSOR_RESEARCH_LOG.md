@@ -3881,3 +3881,18 @@ The compact report SHA-256 is
 This pass authorizes a separately frozen folds-0/1-excluding adapter, label-free
 feature extraction, and one-shot confirmation of exactly shrinkage 0.50. It does
 not authorize fold-2 reuse or external/exact-paper access.
+
+### 2026-07-30: Folds-0/1-excluding representation fit frozen
+
+The one-shot confirmation representation will use a new dense-Prithvi adapter
+trained only on folds 3 and 4. Folds 0 and 1 are the held confirmation set, and
+fold 2 is explicitly forbidden because its labels already influenced the
+architecture decision. The fixed endpoint remains three 24,576-sample epochs,
+batch size 8, mask strength 0.5, exact zero scene/pixel correction at
+initialization, and balanced 0.25 request mass for each plume x sensor stratum.
+
+The 32-sample GPU smoke constructed only folds-3/4 records, reported exact
+identity maxima 0.0/0.0, balanced all four request strata at 0.25, completed one
+finite epoch, and did not create an artifact or report. The frozen artifact will
+record fit_folds=[3,4], held_folds=[0,1], and forbidden_folds=[0,1,2].
+Folds 0/1/2, fresh inputs, and exact-paper inputs remain unopened.
