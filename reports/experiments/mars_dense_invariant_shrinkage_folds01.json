@@ -1,0 +1,341 @@
+{
+  "all_promotion_gates_pass": false,
+  "baseline": {
+    "low_prevalence": {
+      "average_precision": {
+        "folds": {
+          "0": 0.7334741278133146,
+          "1": 0.6331877969601731
+        },
+        "pooled": 0.6911293291948717,
+        "sensors": {
+          "0": 0.6620153625292734,
+          "1": 0.8410626746646199
+        }
+      },
+      "matched_fpr_metrics": {
+        "accuracy": 0.9286147974672565,
+        "auroc": 0.9523301220121878,
+        "average_precision": 0.6911293291948717,
+        "false_positive_rate": 0.07122782364307044,
+        "fn": 12.0,
+        "fp": 811.0,
+        "negative_predictive_value": 0.9988665344290167,
+        "operating_point": {
+          "false_positive_rate": 0.07122782364307044,
+          "precision": 0.13906581740976645,
+          "recall": 0.916083916083916,
+          "target_fpr": 0.0713,
+          "threshold": 0.044920921937192645
+        },
+        "precision": 0.13906581740976645,
+        "recall": 0.916083916083916,
+        "sensor_average_precision": {
+          "Landsat": 0.8410626746646199,
+          "Sentinel-2": 0.6620153625292734
+        },
+        "specificity": 0.9287721763569295,
+        "tn": 10575.0,
+        "tp": 131.0
+      }
+    },
+    "whole": {
+      "average_precision": {
+        "folds": {
+          "0": 0.9142944101308648,
+          "1": 0.8966125506805795
+        },
+        "pooled": 0.903158206777342,
+        "sensors": {
+          "0": 0.8647538626233001,
+          "1": 0.9842363871556924
+        }
+      },
+      "matched_fpr_metrics": {
+        "accuracy": 0.9309530503233061,
+        "auroc": 0.9830258386172726,
+        "average_precision": 0.903158206777342,
+        "false_positive_rate": 0.07124884934028843,
+        "fn": 67.0,
+        "fp": 1161.0,
+        "negative_predictive_value": 0.9955923952371555,
+        "operating_point": {
+          "false_positive_rate": 0.07124884934028843,
+          "precision": 0.5506965944272446,
+          "recall": 0.9550335570469799,
+          "target_fpr": 0.0713,
+          "threshold": 0.2149660960639152
+        },
+        "precision": 0.5506965944272446,
+        "recall": 0.9550335570469799,
+        "sensor_average_precision": {
+          "Landsat": 0.9842363871556924,
+          "Sentinel-2": 0.8647538626233001
+        },
+        "specificity": 0.9287511506597116,
+        "tn": 15134.0,
+        "tp": 1423.0
+      }
+    }
+  },
+  "candidate": {
+    "anchor_strength": 0.2,
+    "booster_strength": 0.05,
+    "components": {
+      "anchor": {
+        "direction": -1,
+        "feature_index": 644,
+        "feature_name": "scene_embedding_57",
+        "transform": "tanh"
+      },
+      "booster": {
+        "direction": 1,
+        "feature_index": 156,
+        "feature_name": "scene_head_input_154",
+        "transform": "high_score_weighted"
+      }
+    },
+    "composition": "exact current-score logit plus 0.50 times the complete fixed-pair logit residual",
+    "development_key": "shrinkage0.5",
+    "effective_anchor_strength": 0.1,
+    "effective_booster_strength": 0.025,
+    "no_refit": true,
+    "normalization": "each raw feature is unlabeled rank/inverse-normal normalized within held fold x sensor; each transformed component is unlabeled mean-zero/unit-variance standardized within held fold x sensor",
+    "shrinkage": 0.5,
+    "winsor_limit": 1.5
+  },
+  "candidate_metrics": {
+    "low_prevalence": {
+      "average_precision": {
+        "folds": {
+          "0": 0.7366446593096141,
+          "1": 0.6247196686192508
+        },
+        "pooled": 0.6909313758090273,
+        "sensors": {
+          "0": 0.6627195158899941,
+          "1": 0.8411217942889568
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "0": 0.0031705314962995335,
+          "1": -0.008468128340922365
+        },
+        "pooled": -0.00019795338584438493,
+        "sensors": {
+          "0": 0.0007041533607207162,
+          "1": 5.911962433691187e-05
+        }
+      },
+      "matched_fpr_metrics": {
+        "accuracy": 0.9286147974672565,
+        "auroc": 0.9522619484853808,
+        "average_precision": 0.6909313758090273,
+        "false_positive_rate": 0.07122782364307044,
+        "fn": 12.0,
+        "fp": 811.0,
+        "negative_predictive_value": 0.9988665344290167,
+        "operating_point": {
+          "false_positive_rate": 0.07122782364307044,
+          "precision": 0.13906581740976645,
+          "recall": 0.916083916083916,
+          "target_fpr": 0.0713,
+          "threshold": 0.04801820732834052
+        },
+        "precision": 0.13906581740976645,
+        "recall": 0.916083916083916,
+        "sensor_average_precision": {
+          "Landsat": 0.8411217942889568,
+          "Sentinel-2": 0.6627195158899941
+        },
+        "specificity": 0.9287721763569295,
+        "tn": 10575.0,
+        "tp": 131.0
+      },
+      "matched_fpr_recall_delta": 0.0,
+      "positive": 143,
+      "rows": 11529
+    },
+    "whole": {
+      "average_precision": {
+        "folds": {
+          "0": 0.9142470304405506,
+          "1": 0.8967148378377808
+        },
+        "pooled": 0.9030858430673618,
+        "sensors": {
+          "0": 0.8645144066316199,
+          "1": 0.9844644611727764
+        }
+      },
+      "average_precision_delta": {
+        "folds": {
+          "0": -4.7379690314208744e-05,
+          "1": 0.00010228715720128623
+        },
+        "pooled": -7.236370998020547e-05,
+        "sensors": {
+          "0": -0.00023945599168018195,
+          "1": 0.00022807401708402342
+        }
+      },
+      "matched_fpr_metrics": {
+        "accuracy": 0.9309530503233061,
+        "auroc": 0.9830276508419638,
+        "average_precision": 0.9030858430673618,
+        "false_positive_rate": 0.07124884934028843,
+        "fn": 67.0,
+        "fp": 1161.0,
+        "negative_predictive_value": 0.9955923952371555,
+        "operating_point": {
+          "false_positive_rate": 0.07124884934028843,
+          "precision": 0.5506965944272446,
+          "recall": 0.9550335570469799,
+          "target_fpr": 0.0713,
+          "threshold": 0.23485169579663281
+        },
+        "precision": 0.5506965944272446,
+        "recall": 0.9550335570469799,
+        "sensor_average_precision": {
+          "Landsat": 0.9844644611727764,
+          "Sentinel-2": 0.8645144066316199
+        },
+        "specificity": 0.9287511506597116,
+        "tn": 15134.0,
+        "tp": 1423.0
+      },
+      "matched_fpr_recall_delta": 0.0,
+      "positive": 1490,
+      "rows": 17785
+    }
+  },
+  "decision": "Retire this shrinkage before fresh or exact-paper access and resume research without reusing folds 0/1/2.",
+  "exact_paper_inputs_accessed": false,
+  "extraction_receipt": {
+    "exact_paper_inputs_accessed": false,
+    "extractor_sha256": "da6ce9b87c6b17abfce933aa8a604b69c7bb1ff205ae6a7352c624c49e1f59f3",
+    "feature_count": 671,
+    "feature_identity": {
+      "feature_dtype": "float16",
+      "feature_shape": [
+        44363,
+        768,
+        8,
+        8
+      ],
+      "fold_counts": {
+        "0": 8987,
+        "1": 8798,
+        "2": 8833,
+        "3": 8799,
+        "4": 8946
+      },
+      "fold_protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+      "foundation_checkpoint_sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70",
+      "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+      "rows": 44363,
+      "sample_id_sha256": "ae21523a46e8c7d783a2ee5aa8a7c52f8903ce6d2f37f0d3852ece0070b18219"
+    },
+    "features": {
+      "bytes": 23867598,
+      "path": "outputs/mars_dense_prithvi_folds01_scene_features.npy",
+      "sha256": "5683cb10a535ad1f4d83fb8108502f897b19a48bcd47a42667c4a13f0d630ad6"
+    },
+    "fold2_accessed": false,
+    "folds": [
+      0,
+      1
+    ],
+    "fresh_inputs_accessed": false,
+    "generated_at_utc": "2026-07-31T05:57:01.041484+00:00",
+    "git_commit": "cb39cd65f3e57919b0aae84a0e8e962152b45efd",
+    "jobs": [
+      {
+        "artifact_sha256": "e8dde7a07fd93db3185891d63955e1c9c6a9681fe44c98208ec53661d5ced460",
+        "fit_folds": [
+          3,
+          4
+        ],
+        "held_fold": 0,
+        "rows": 8987
+      },
+      {
+        "artifact_sha256": "e8dde7a07fd93db3185891d63955e1c9c6a9681fe44c98208ec53661d5ced460",
+        "fit_folds": [
+          3,
+          4
+        ],
+        "held_fold": 1,
+        "rows": 8798
+      }
+    ],
+    "metadata": {
+      "bytes": 705407,
+      "path": "outputs/mars_dense_prithvi_folds01_scene_features_metadata.npz",
+      "sha256": "2041dae9edf3aa203b6dfdce21938e8b93f35716b290ce995752c3dc1addb09e"
+    },
+    "protocol_sha256": "45f29c64da880f2a841e3020ce79a4876ea8afae047a01d0fc95379fad9ec247",
+    "rows": 17785,
+    "schema_version": 1,
+    "scope": "one-shot folds-0/1 dense-Prithvi representation cache"
+  },
+  "fold2_reaccessed": false,
+  "folds01_accessed": true,
+  "fresh_inputs_accessed": false,
+  "generated_at_utc": "2026-07-31T05:58:40.037924+00:00",
+  "paired_site_ap_delta": {
+    "low_prevalence": {
+      "confidence": 0.95,
+      "groups": 164,
+      "lower": -0.00854278407569764,
+      "mean": -0.0006865642404255543,
+      "replicates": 10000,
+      "upper": 0.0050331767422905314
+    },
+    "whole": {
+      "confidence": 0.95,
+      "groups": 215,
+      "lower": -0.0007807830556111088,
+      "mean": 3.5669339780540986e-06,
+      "replicates": 10000,
+      "upper": 0.0008971697576767354
+    }
+  },
+  "promotion_checks": {
+    "low_each_fold_ap_nondecreasing": false,
+    "low_each_sensor_ap_nondecreasing": true,
+    "low_matched_fpr_recall_nondecreasing": true,
+    "low_pooled_ap_delta": false,
+    "low_prevalence_fpr_no_worse": true,
+    "low_prevalence_paired_site_ap_lower_strictly_positive": false,
+    "whole_each_fold_ap_nondecreasing": false,
+    "whole_each_sensor_ap_nondecreasing": false,
+    "whole_fpr_no_worse": true,
+    "whole_matched_fpr_recall_nondecreasing": true,
+    "whole_paired_site_ap_lower_strictly_positive": false,
+    "whole_pooled_ap_delta": false
+  },
+  "provenance": {
+    "development_report_sha256": "f3228425fe595c2363d5b3d17831aee103b022f775088bfd8ac0c4d96075b57f",
+    "evaluator_sha256": "04b63c48324df7f1fc4af11e20a40b27f54d86ffe55e230752ca6f5eda8e90e5",
+    "extraction_receipt_sha256": "534aa3f1f117f708c8d1d68820f5c2787e407093fc74061b6099bf2b43a703d4",
+    "extractor_protocol_sha256": "45f29c64da880f2a841e3020ce79a4876ea8afae047a01d0fc95379fad9ec247",
+    "features_sha256": "5683cb10a535ad1f4d83fb8108502f897b19a48bcd47a42667c4a13f0d630ad6",
+    "git_commit": "cb39cd65f3e57919b0aae84a0e8e962152b45efd",
+    "metadata_sha256": "2041dae9edf3aa203b6dfdce21938e8b93f35716b290ce995752c3dc1addb09e",
+    "numpy": "2.4.4",
+    "protocol_sha256": "c22b0e8e4d8792bb4bbfc06ea2a7b12dc4324af249f0b3d5c0b93f5a581a7c5b"
+  },
+  "rows": {
+    "low_prevalence": 11529,
+    "low_prevalence_positive": 143,
+    "low_prevalence_sites": 164,
+    "whole": 17785,
+    "whole_positive": 1490,
+    "whole_sites": 215
+  },
+  "schema_version": 1,
+  "scope": "one-shot fixed-shrinkage folds-0/1 confirmation",
+  "status": "rejected_on_folds01_confirmation"
+}

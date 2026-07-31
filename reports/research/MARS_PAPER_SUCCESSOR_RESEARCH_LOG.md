@@ -3935,3 +3935,34 @@ recall, no actual FPR increase, and strictly positive 10,000-replicate paired
 physical-site AP lower bounds in both views. The evaluator refuses to repeat or
 overwrite its report. Fold 2 is not reaccessed, and fresh/exact-paper inputs
 remain inaccessible.
+
+### 2026-07-30: Global shrinkage rejected on one-shot folds 0/1
+
+The frozen extractor encoded all 17,785 unique held rows (8,987 fold 0 and
+8,798 fold 1) into the ignored 671-column cache. Feature and metadata SHA-256
+values are
+`5683cb10a535ad1f4d83fb8108502f897b19a48bcd47a42667c4a13f0d630ad6`
+and
+`2041dae9edf3aa203b6dfdce21938e8b93f35716b290ce995752c3dc1addb09e`.
+The compact receipt SHA-256 is
+`534aa3f1f117f708c8d1d68820f5c2787e407093fc74061b6099bf2b43a703d4`.
+The fixed evaluator then ran exactly once.
+
+On the complete held view, AP changed 0.903158 -> 0.903086
+(-0.000072). Fold-0/fold-1 deltas were -0.000047/+0.000102 and
+Sentinel-2/Landsat deltas were -0.000239/+0.000228. Matched-FPR recall and FPR
+were unchanged; the paired physical-site AP interval was
+[-0.000781,+0.000897].
+
+On the 11,529-row, 143-positive, 164-site low-prevalence view, AP changed
+0.691129 -> 0.690931 (-0.000198). Fold-0/fold-1 deltas were
++0.003171/-0.008468, while both sensor deltas remained slightly positive.
+Recall and FPR were unchanged; the paired-site interval was
+[-0.008543,+0.005033].
+
+The evaluator report SHA-256 is
+`7e921fa2f7134bd5bd82477ab76c345eefbccc4053eadf2815b265f3754a63eb`.
+Uniform shrinkage and the entire two-feature dense-residual family are retired.
+The development gains did not generalize across independently trained adapter
+seeds and physical-site folds. Folds 0, 1, and 2 may not be reused for selection;
+fresh and exact-paper inputs remain inaccessible.
