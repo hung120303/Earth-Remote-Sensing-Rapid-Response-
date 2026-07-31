@@ -3614,3 +3614,20 @@ No fold-2 or external input was accessed. The next experiment will therefore
 exclude all direction-unstable columns and use only the five univariate survivors,
 testing label-free nonlinear residual gates rather than learning high-dimensional
 supervised weights.
+
+### 2026-07-30: Direction-stable nonlinear residual search frozen
+
+The next experiment holds the representation and feature selection fixed and
+changes only where the invariant residual is allowed to act. Each of the five
+all-gate univariate survivors is tested alone under eight label-free transforms:
+symmetric, positive-only, negative-only, uncertainty-weighted, low-score-weighted,
+high-score-weighted, tanh-bounded, and winsorized. Non-symmetric transforms are
+mean-zero/unit-variance standardized within each fold x sensor using no labels.
+Six frozen strengths produce 240 candidates.
+
+This tests a specific causal hypothesis from the preceding failures: useful
+direction-stable evidence may be concentrated in positive, negative, uncertain,
+low-score, or high-score scenes, while global perturbations create the observed
+between-site variance. All whole/low-prevalence point and paired-site gates remain
+unchanged. A one-feature/two-transform smoke run exercised four candidates and
+both bootstrap views. Fold 2 and external evaluation data remain prohibited.

@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_nonlinear-residual_smoke_before_full_development_search",
+  "scope": "label-free nonlinear gates over the five direction-stable dense-Prithvi residuals on folds 3 and 4",
+  "explorer": {
+    "path": "tools/explore_mars_dense_invariant_nonlinear_residuals.py",
+    "sha256": "660fece599143358285a4c01cac5d83469d38809a3a25745145cbec31520a1d8"
+  },
+  "code_dependencies": [
+    {
+      "path": "tools/explore_mars_dense_invariant_univariate.py",
+      "sha256": "91232a20bb34af8b1b0de53525bbb9f83f03089fbb9896f7938eb69ddf7d1b9f"
+    },
+    {
+      "path": "tools/explore_mars_dense_sparse_invariant_ensemble.py",
+      "sha256": "bff75a82cb359b6e8de39f68fa4e6559524b32132c392f83595328ddfafd75ca"
+    },
+    {
+      "path": "tools/train_mars_dense_ap_residual_ranker.py",
+      "sha256": "85eabe43bb7dad38221d413e5f003a4845df8c35726bfc6c7bd2fe2158ea0bfd"
+    },
+    {
+      "path": "tools/train_mars_oof_scene_ensemble_v2.py",
+      "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"
+    },
+    {
+      "path": "tools/train_mars_scene_ranker.py",
+      "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"
+    },
+    {
+      "path": "tools/train_mars_unseen_low_prevalence_router.py",
+      "sha256": "2007b4b8b048bd0247f53d43a763bfa6e0a98934c6a8326663f9948189533630"
+    }
+  ],
+  "inputs": {
+    "features": {
+      "path": "outputs/mars_dense_prithvi_crossfit_scene_features_folds34.npy",
+      "sha256": "f45de57bda41ba083b4a981cbbcafa3c1e537ff7178eedae2c2ae2567987f78e"
+    },
+    "metadata": {
+      "path": "outputs/mars_dense_prithvi_crossfit_scene_features_folds34_metadata.npz",
+      "sha256": "5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d"
+    },
+    "receipt": {
+      "path": "reports/acquisition/mars_dense_prithvi_crossfit_scene_features_folds34.json",
+      "sha256": "00615a0805e4b0d22389c4380fc60a53a71028cc2a29583c916c18bc42f892e6"
+    },
+    "linear_ranker_report": {
+      "path": "reports/experiments/mars_dense_invariant_site_linear_ranker.json",
+      "sha256": "a2324364e2e0961a70ec75b40484a18759909d8b1fac388f082e1d227b12588d"
+    }
+  },
+  "folds": [
+    3,
+    4
+  ],
+  "feature_indices": [
+    51,
+    47,
+    644,
+    335,
+    156
+  ],
+  "feature_names": {
+    "51": "scene_head_input_49",
+    "47": "scene_head_input_45",
+    "644": "scene_embedding_57",
+    "335": "scene_head_input_333",
+    "156": "scene_head_input_154"
+  },
+  "feature_rule": "only unique univariate candidates whose fold, sensor, recall, and paired-site gates all passed",
+  "base_residual": {
+    "normalization": "unlabeled empirical-rank inverse-normal transform within each fold x sensor",
+    "orientation": "positive direction learned only from the opposite fold",
+    "base_score": "exact float64 current scene score in logit space"
+  },
+  "transforms": [
+    "symmetric",
+    "positive_only",
+    "negative_only",
+    "uncertainty_weighted",
+    "low_score_weighted",
+    "high_score_weighted",
+    "tanh",
+    "winsorized"
+  ],
+  "transform_definitions": {
+    "symmetric": "the original oriented invariant residual without further scaling",
+    "positive_only": "retain only positive residual evidence",
+    "negative_only": "retain only negative residual evidence",
+    "uncertainty_weighted": "multiply by 4*p*(1-p), concentrating changes near uncertain current scores",
+    "low_score_weighted": "multiply by 1-p, emphasizing recovery among lower current scores",
+    "high_score_weighted": "multiply by p, emphasizing refinement among higher current scores",
+    "tanh": "bound residual outliers with tanh",
+    "winsorized": "clip the residual symmetrically to the frozen winsor limit"
+  },
+  "transform_parameters": {
+    "winsor_limit": 1.5,
+    "post_transform_normalization": "all transforms except symmetric are unlabeled mean-zero/unit-variance standardized within each fold x sensor"
+  },
+  "strengths": [
+    0.01,
+    0.025,
+    0.05,
+    0.1,
+    0.2,
+    0.4
+  ],
+  "target_domain": {
+    "name": "low-prevalence physical-location proxy for the official test-only-site view",
+    "maximum_site_positive_rate": 0.05,
+    "membership": "all rows from physical_location_id groups whose combined folds-3/4 positive rate is <=0.05",
+    "use": "evaluation and gating only; no site prevalence or labels enter a transform"
+  },
+  "gates": {
+    "minimum_whole_pooled_ap_delta": 0.001,
+    "minimum_each_whole_fold_ap_delta": 0.0,
+    "minimum_each_whole_sensor_ap_delta": 0.0,
+    "minimum_whole_matched_fpr_recall_delta": 0.0,
+    "minimum_low_prevalence_pooled_ap_delta": 0.005,
+    "minimum_each_low_prevalence_fold_ap_delta": 0.0,
+    "minimum_each_low_prevalence_sensor_ap_delta": 0.0,
+    "minimum_low_prevalence_matched_fpr_recall_delta": 0.0,
+    "whole_paired_site_ap_lower_bound_strictly_positive": true,
+    "low_prevalence_paired_site_ap_lower_bound_strictly_positive": true
+  },
+  "bootstrap": {
+    "top_k": 20,
+    "replicates": 10000,
+    "whole_seed": 20265500,
+    "low_prevalence_seed": 20265600,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "reporting": {
+    "top_screening_candidates": 60
+  },
+  "output": "reports/experiments/mars_dense_invariant_nonlinear_residuals.json",
+  "invariants": [
+    "Every represented sample comes from a dense adapter that excluded that sample's fold.",
+    "Every selected feature previously passed both fold directions, both sensors, recall, and paired-site gates.",
+    "Feature orientation is learned only from the opposite fold.",
+    "Every transform uses only the invariant residual and the exact current score.",
+    "Post-transform centering and scaling are unlabeled and confined to each fold x sensor.",
+    "The low-prevalence definition affects evaluation only.",
+    "Only point-gate survivors can consume paired-site bootstrap computation.",
+    "Both whole-development and low-prevalence paired-site AP lower bounds must be strictly positive.",
+    "A development pass can only authorize a separately frozen fold-2 confirmation.",
+    "Fold 2, fresh data, and exact-paper inputs are never loaded."
+  ]
+}
