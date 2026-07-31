@@ -3429,3 +3429,19 @@ label leakage. No endpoint is promoted for segmentation. The next inexpensive
 gate is label-free extraction followed by honest fold-3/4 AP-head cross-prediction;
 failure there will retire the dense scene-representation branch before another
 held-fold or external evaluation. No fresh or exact-paper input was accessed.
+
+### 2026-07-30: Honest dense-feature extraction frozen
+
+The extractor maps each fold-3 scene through only the fold-4-trained endpoint and
+each fold-4 scene through only the fold-3-trained endpoint. It exports the same
+671-feature schema as the preserved adapter cache, separately retains the exact
+float64 current score as the residual floor, and binds both artifact schemas,
+their training protocol, the endpoint report, released checkpoint, Prithvi token
+cache, manifest, and fold assignments by SHA-256.
+
+The two-artifact CUDA smoke encoded eight scenes from each held fold into a finite
+16x671 matrix. Both artifact hashes and fold contracts matched, the float16 score
+feature agreed with the exact floor under the frozen tolerance, and all 16 sample
+identities mapped to the 44,363-row Prithvi cache. The full 17,745-row extraction
+is label-free; labels are copied only into ignored development metadata for the
+subsequent ranker. No fold 0/1/2, fresh, or exact-paper row is selected.
