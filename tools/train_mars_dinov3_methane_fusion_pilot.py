@@ -669,22 +669,27 @@ def main() -> int:
             )
         if identity_pixel != 0.0 or identity_scene != 0.0 or identity_score != 0.0:
             raise ValueError("DINOv3 fusion initialization is not exact identity")
-        model.zero_grad(set_to_none=True)
-        with torch.amp.autocast("cuda", dtype=torch.float16):
-            probe = model(
-                first["inputs"],
-                first["observable"],
-                first["sensor_index"],
-                first["prithvi_tokens"],
-                torch.full_like(first["base_scene_score"], 0.75),
-            )
-            probe_loss = F.binary_cross_entropy_with_logits(
-                probe["scene_logit"], first["presence"]
-            )
-        probe_loss.backward()
-        scene_gradient = float(model.scene_output.weight.grad.abs().max())
-        if not np.isfinite(scene_gradient) or scene_gradient <= 0.0:
-            raise ValueError("Protected scene path has no gradient at identity")
+        scene_gradients: dict[str, float] = {}
+        for name, score in (("low", 0.05), ("high", 0.75)):
+            model.zero_grad(set_to_none=True)
+            with torch.amp.autocast("cuda", dtype=torch.float16):
+                probe = model(
+                    first["inputs"],
+                    first["observable"],
+                    first["sensor_index"],
+                    first["prithvi_tokens"],
+                    torch.full_like(first["base_scene_score"], score),
+                )
+                probe_loss = F.binary_cross_entropy_with_logits(
+                    probe["scene_logit"], first["presence"]
+                )
+            probe_loss.backward()
+            scene_gradients[name] = float(model.scene_output.weight.grad.abs().max())
+        if any(
+            not np.isfinite(value) or value <= 0.0
+            for value in scene_gradients.values()
+        ):
+            raise ValueError("Raw all-score scene path has no gradient at identity")
         model.zero_grad(set_to_none=True)
         started = time.perf_counter()
         history = train_endpoint(model, loader, spec, device, 1)
@@ -697,7 +702,7 @@ def main() -> int:
                     "identity_pixel_max_abs": identity_pixel,
                     "identity_scene_max_abs": identity_scene,
                     "identity_score_max_abs": identity_score,
-                    "scene_gradient_probe_max_abs": scene_gradient,
+                    "scene_gradient_probe_max_abs": scene_gradients,
                     "elapsed_seconds": elapsed,
                     "peak_cuda_bytes": int(torch.cuda.max_memory_allocated()),
                     "trainable_parameters": model.trainable_parameter_count(),

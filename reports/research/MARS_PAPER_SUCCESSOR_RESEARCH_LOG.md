@@ -4633,3 +4633,19 @@ mapping at evaluation and deployment. This uses no new outcome-dependent
 threshold, strength, fold, or loss weight; it corrects the mismatch between the
 training objective and inference safety rule. Fold 2 and all external/test
 assets remain untouched.
+
+### 2026-07-31: All-score scene objective frozen
+
+The next bounded variant changes only the coordinate system used by the scene
+losses. Scene BCE and the top-negative partial-AUC pair loss now see the raw
+`base_logit + residual` for every training row; deployment and evaluation still
+use the same 0.50-protected mapping. Pixel loss, architecture tensors, folds,
+seeds, sampling, epochs, loss weights, residual strengths, and promotion gates
+are unchanged.
+
+The frozen GPU smoke again gives exact 0.0 pixel/scene identity and finite
+optimization. Crucially, the raw scene objective produces a scene-output
+gradient both for a base score below the protection gate (0.203125 at 0.05) and
+above it (0.444091796875 at 0.75). Peak CUDA allocation is 3.16 GB. The output
+paths are distinct `*_all_score_scene` artifacts/reports, and no held-fold
+outcome was read before hashing this contract.

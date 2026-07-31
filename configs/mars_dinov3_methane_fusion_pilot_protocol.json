@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
-  "status": "frozen_after_seeded_exact_identity_nonzero_scene_gradient_gpu_smoke",
+  "status": "frozen_after_exact_identity_all_score_scene_gradient_gpu_smoke",
   "scope": "two-fold DINOv3 semantic-change and counterfactual-methane spatial fusion pilot",
   "trainer": {
     "path": "tools/train_mars_dinov3_methane_fusion_pilot.py",
-    "sha256": "3cfdcb2df7701167d6cce5ac57ce1dea4a27493831e8bc1d6dae8a290352209a"
+    "sha256": "9d1da768567f3d351e8873c6409f9a7ecaaf016b62dfd828efd5e62c9e91af63"
   },
   "code_dependencies": [
     {
       "path": "EarthRemoteSensingRapidResponse/mars_dinov3_methane_fusion.py",
-      "sha256": "182ae07db4bc25bd4ac5cdfe7fdc4c1de6a7d7520414e561e5d9276e8c649719"
+      "sha256": "475f95643872bd0248715be376c7924095dcb74141ecf495e437050e32b52b55"
     },
     {
       "path": "EarthRemoteSensingRapidResponse/mars_physics_guided_teacher.py",
@@ -110,21 +110,24 @@
     "scene_protection": "scores below 0.50 are unchanged; higher scores are adjusted in local log-odds coordinates and remain above 0.50"
   },
   "correction": {
-    "reason": "replace the exact-identity zero-gradient branch with an algebraically exact identity residual that retains the scene derivative, and seed before model/loader construction",
-    "scientific_changes": "none: data, folds, architecture tensors, loss weights, epochs, sampling, strengths, and gates remain fixed",
-    "prior_result_sha256": "81da27897942b0f78f3234ca64892bb4dde83e78a1774956ed4446298b342149"
+    "reason": "train scene BCE and partial-AUC losses in raw additive logit coordinates for every row while retaining the fixed protected mapping at inference",
+    "scientific_changes": "scene objective coordinates only; data, folds, architecture tensors, loss weights, epochs, sampling, strengths, inference mapping, and gates remain fixed",
+    "prior_result_sha256": "e60c8bd49d3309ac8592958d295a3f633fe765b610a6adf79c1f4ba29b174949"
   },
   "smoke": {
-    "scope": "two repeated full-batch runs from a balanced fold-3-only development subset plus a high-score gradient probe; no held-out scoring",
+    "scope": "two full batches from a balanced fold-3-only development subset plus low/high raw-logit gradient probes; no held-out scoring",
     "identity_pixel_max_abs": 0.0,
     "identity_scene_delta_max_abs": 0.0,
     "identity_scene_score_max_abs": 0.0,
-    "scene_gradient_probe_max_abs_both_runs": 0.265380859375,
+    "scene_gradient_probe_max_abs": {
+      "base_score_0_05": 0.203125,
+      "base_score_0_75": 0.444091796875
+    },
     "finite_optimization": true,
-    "post_step_scene_delta_l2": 7.763982239339384e-07,
+    "post_step_scene_delta_l2": 5.185062263990403e-07,
     "batch_size": 8,
     "trainable_parameters": 8540787,
-    "peak_cuda_bytes": 3160960512,
+    "peak_cuda_bytes": 3162351104,
     "device": "NVIDIA GeForce RTX 5070"
   },
   "training": {
@@ -184,12 +187,12 @@
     "pass_action": "freeze a separately seeded confirmation; no fold-2, external, or official-test scoring"
   },
   "outputs": {
-    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_dinov3_methane_fusion_gradient_fix_crossfit.pt",
-    "json": "reports/experiments/mars_dinov3_methane_fusion_gradient_fix.json",
-    "markdown": "reports/experiments/MARS_DINOV3_METHANE_FUSION_GRADIENT_FIX.md"
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_dinov3_methane_fusion_all_score_scene_crossfit.pt",
+    "json": "reports/experiments/mars_dinov3_methane_fusion_all_score_scene.json",
+    "markdown": "reports/experiments/MARS_DINOV3_METHANE_FUSION_ALL_SCORE_SCENE.md"
   },
   "invariants": [
-    "The draft protocol permits only an identity/finite/nonzero-scene-gradient GPU smoke; outcome evaluation requires frozen hashes.",
+    "The draft protocol permits only an identity/finite/nonzero-low-and-high-score-gradient GPU smoke; outcome evaluation requires frozen hashes.",
     "Both cross-fit endpoints train on exactly one of development folds 3/4 and predict the other.",
     "No fold-2, external, or sealed official-test input or label is loaded.",
     "DINOv3 and the released MARS-S2L U-Net remain frozen.",

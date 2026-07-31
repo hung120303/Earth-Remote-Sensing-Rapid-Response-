@@ -346,7 +346,13 @@ class DinoMethaneFusionAdapter(PhysicsGuidedTeacherAdapter):
             "base_scene_logit": base_scene_logit,
             "scene_delta_logit": scene_delta,
             "scene_score": scene_score,
-            "scene_logit": torch.logit(scene_score.clamp(1e-6, 1.0 - 1e-6)),
+            # Train the representation on every row in ordinary score-logit
+            # coordinates. Deployment/evaluation continue to use scene_score,
+            # whose protected mapping leaves the low-FPR region untouched.
+            "scene_logit": base_scene_logit + scene_delta,
+            "protected_scene_logit": torch.logit(
+                scene_score.clamp(1e-6, 1.0 - 1e-6)
+            ),
         }
 
     def trainable_state(self) -> dict[str, torch.Tensor]:
