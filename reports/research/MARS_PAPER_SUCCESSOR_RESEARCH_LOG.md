@@ -3708,3 +3708,19 @@ The 16-row CUDA smoke used only folds 3+4, reproduced exact zero pixel and scene
 corrections at initialization, maintained the required 0.25 request mass in each
 label x sensor cell, completed a finite training epoch, and wrote no artifact.
 The full trainer and its hashes will be committed before the endpoint is fit.
+
+### 2026-07-30: Fold-2-excluding dense adapter trained
+
+The frozen fit-only job completed on 17,745 folds-3/4 rows. Epoch loss decreased
+monotonically 0.328333 -> 0.249191 -> 0.220884. The ignored 21,926,411-byte
+artifact has SHA-256
+`8855cb52d48c197d3831351b129ca49718f9e9caa3a3bc6b06cd17565c633d73`.
+Independent loading verified 122 finite state tensors and the embedded contract:
+kind `mars_dense_prithvi_crossfit_representation`, fit folds [3,4], held fold 2,
+seed 20265900, mask strength 0.5, scene strength 0.0, and training-protocol
+SHA-256
+`506a210c4de33d8911be4827d073586e7dc3ef38650ae5a2e68191530e904385`.
+
+The trainer constructed zero held-fold records and reports no fold-2 label, fresh,
+or exact-paper access. This endpoint can now be hash-bound into a separately
+committed fold-2 extractor and fixed-candidate evaluator.
