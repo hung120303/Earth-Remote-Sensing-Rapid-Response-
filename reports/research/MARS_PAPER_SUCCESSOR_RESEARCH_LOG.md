@@ -4079,3 +4079,29 @@ expected simulation exception and was replaced before inference. The generator,
 all code/data/LUT hashes, sample counts, and deterministic seeds are now frozen
 before the full cache is created. Folds 0/1/2 and external inputs remain
 inaccessible.
+
+### 2026-07-31: Causal intervention cache completed; paired training frozen
+
+All 4,096 same-background interventions completed in 10.8 minutes. Each fitting
+fold contributes exactly 2,048 examples, split equally between Sentinel-2 and
+Landsat. The maximum source-target wind-speed mismatch is 1.499951 m/s,
+minimum visible plume fraction is 0.503289, and realized scale range is
+[0.500021,1.499948]. Forty-nine attempts failed the wind/visibility gate and 20
+failed closed on simulation exceptions; accepted rows never relaxed a gate.
+
+The ignored 939,524,224-byte image cache SHA-256 is
+`1486c272422454431bea712bd3214426d7e7356784f0f3c5f0301e070a49cf35`;
+metadata SHA-256 is
+`7b44c99b2dc851cd453d67bf1b4f276263bd624a933b1125911235d96c533ece`;
+receipt SHA-256 is
+`79a599bfd611a2a4fbf6376445f650f85b7d24994a7f4f33393ea4bdb1c079fe`.
+
+The paired trainer fixes two intervention strengths. Both retain the previously
+best directional-teacher feature set and actual-data hard ranking. `causal_weak`
+uses 96 actual/32 simulated examples per step with 0.25 synthetic BCE and pair
+weights; `causal_balanced` uses 64/64 with 0.50/0.50 weights. Every simulated
+positive is compared against its exact real no-plume background after the same
+spatial transform with a +0.5 logit margin. Two fixed seeds are mean-logit
+ensembled. The GPU smoke completed finite actual, simulation, and causal-pair
+losses and finite scores while rechecking the strict 1.499951 m/s cache bound.
+Full selection remains restricted to folds 3/4 and the prior whole/rare gates.

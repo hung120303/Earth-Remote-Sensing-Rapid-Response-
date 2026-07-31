@@ -1,0 +1,61 @@
+{
+  "fit_fold_counts": {
+    "3": 2048,
+    "4": 2048
+  },
+  "generated_at_utc": "2026-07-31T15:08:27.093484+00:00",
+  "invariants": [
+    "Each branch uses only plume fields and no-plume backgrounds from its fitting fold.",
+    "Each sensor contributes exactly half of each fitting-fold cache.",
+    "Source and target wind speeds differ by no more than 1.5 m/s.",
+    "Target wind exceeds neither 9 m/s nor the clear/onshore gate.",
+    "No fold 0/1/2, exact-paper, or fresh-external input was accessed."
+  ],
+  "outputs": {
+    "images": {
+      "bytes": 939524224,
+      "path": "outputs/mars_counterfactual_simulation_inputs_folds34.npy",
+      "sha256": "1486c272422454431bea712bd3214426d7e7356784f0f3c5f0301e070a49cf35",
+      "tracked": false
+    },
+    "metadata": {
+      "bytes": 532608,
+      "path": "outputs/mars_counterfactual_simulation_inputs_folds34_metadata.npz",
+      "sha256": "7b44c99b2dc851cd453d67bf1b4f276263bd624a933b1125911235d96c533ece",
+      "tracked": false
+    }
+  },
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "56545d436fd456e9e58cd3c4a6a30e7267970f3d",
+    "numpy": "2.4.4",
+    "protocol_sha256": "7e5f5ac5597546ce4905d129075c864fe0eff495605f8aab98968cfd173e08f3",
+    "script_sha256": "7255b0145d53fd5a108951cf48725158818d40a0b918a2d144e085bfea0d1a57",
+    "torch": "2.11.0+cu128"
+  },
+  "rows": 4096,
+  "schema_version": 1,
+  "scope": "fit-fold-only wind-matched methane interventions for scene-ranker training",
+  "sensor_counts": {
+    "Landsat": 2048,
+    "Sentinel-2": 2048
+  },
+  "shape": [
+    4096,
+    28,
+    64,
+    64
+  ],
+  "simulation": {
+    "failure_counts": {
+      "exception": 20,
+      "wind_or_visibility": 49
+    },
+    "maximum_wind_speed_delta": 1.499950910339769,
+    "minimum_visible_fraction": 0.5032894736842105,
+    "scale_range": [
+      0.500020575417289,
+      1.4999481609317864
+    ]
+  }
+}

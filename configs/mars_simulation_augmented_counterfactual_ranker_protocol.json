@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_complete_same-background_simulation_cache_before_training_smoke",
+  "scope": "honest folds-3/4 causal ranker cross-fit using fit-fold-only same-background methane interventions",
+  "trainer": {
+    "path": "tools/train_mars_simulation_augmented_counterfactual_ranker.py",
+    "sha256": "d2d24021c98b304025fe60e8a06caef8693c72b02c4233ff8c6836232f1bbc43"
+  },
+  "code_dependencies": [
+    {
+      "path": "tools/train_mars_counterfactual_scene_ranker.py",
+      "sha256": "74c7dcdf5c0f53275b5e2c49234c9b4a7b2d767c02ad5a20b0f36c6d162a5d2a"
+    },
+    {
+      "path": "tools/extract_mars_counterfactual_scene_inputs.py",
+      "sha256": "37180d9679ce19f883fdab3e340a2d9fbd4c8f3b9ee7d1263525c8dd36dc935f"
+    }
+  ],
+  "inputs": {
+    "real_images": {
+      "path": "outputs/mars_counterfactual_scene_inputs_folds34.npy",
+      "sha256": "f2698d01f034a8836afe82f27857da5bdc9657a269d933dde4c5c5cb08a9d27a"
+    },
+    "real_metadata": {
+      "path": "outputs/mars_counterfactual_scene_inputs_folds34_metadata.npz",
+      "sha256": "8fcc864ae81ba48e2057ffd4f167f73ed11310fc6a9f2db274818806cb069463"
+    },
+    "simulation_images": {
+      "path": "outputs/mars_counterfactual_simulation_inputs_folds34.npy",
+      "sha256": "1486c272422454431bea712bd3214426d7e7356784f0f3c5f0301e070a49cf35"
+    },
+    "simulation_metadata": {
+      "path": "outputs/mars_counterfactual_simulation_inputs_folds34_metadata.npz",
+      "sha256": "7b44c99b2dc851cd453d67bf1b4f276263bd624a933b1125911235d96c533ece"
+    },
+    "simulation_receipt": {
+      "path": "reports/acquisition/mars_counterfactual_simulation_inputs_folds34.json",
+      "sha256": "79a599bfd611a2a4fbf6376445f650f85b7d24994a7f4f33393ea4bdb1c079fe"
+    },
+    "inner": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"
+    },
+    "fold0": {
+      "path": "outputs/mars_scene_features_fold0.npz",
+      "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"
+    },
+    "fold1": {
+      "path": "outputs/mars_scene_features_fold1_crossfit.npz",
+      "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"
+    },
+    "score_cache": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    },
+    "spatial_scores": {
+      "path": "outputs/mars_site_relative_spatial_development_scores.npz",
+      "sha256": "186ab5946790798a4a81274130ba5756ab3e5316b7b42238c2772d36805152a1"
+    },
+    "prithvi_scores": {
+      "path": "outputs/mars_adaptive_prithvi_development_scores.npz",
+      "sha256": "672ab43155280de950ac529f197b5084bb0b0ab76f17361b60ac99fc65ba1208"
+    },
+    "ensemble_artifact": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/mars_spatial_prithvi_ensemble.joblib",
+      "sha256": "0a3be48f5eda659aaaa7cf91c259acd230f81340677e5a6fc5fab83ba048420b"
+    }
+  },
+  "current_comparator": {
+    "name": "frozen site-relative spatial plus adaptive Prithvi ensemble",
+    "prithvi_weight": 0.75,
+    "exact_full_ap": 0.6761017274570647,
+    "exact_test_only_ap": 0.4670265430645243
+  },
+  "simulation_contract": {
+    "rows": 4096,
+    "per_fit_fold": 2048,
+    "per_fit_fold_per_sensor": 1024,
+    "maximum_observed_wind_speed_delta_m_s": 1.499950910339769,
+    "minimum_observed_visible_fraction": 0.5032894736842105,
+    "source_and_background_membership": "same fitting fold only",
+    "pairing": "each simulated positive is trained against the exact real no-plume background scene"
+  },
+  "models": [
+    {
+      "model_key": "causal_weak",
+      "feature_set": "directional_teacher",
+      "epochs": 8,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.001,
+      "dropout": 0.2,
+      "weighting": "site_cell",
+      "actual_batch_size": 96,
+      "simulation_batch_size": 32,
+      "actual_hard_pair_weight": 0.2,
+      "simulation_loss_weight": 0.25,
+      "causal_pair_weight": 0.25,
+      "causal_margin": 0.5
+    },
+    {
+      "model_key": "causal_balanced",
+      "feature_set": "directional_teacher",
+      "epochs": 8,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.001,
+      "dropout": 0.2,
+      "weighting": "site_cell",
+      "actual_batch_size": 64,
+      "simulation_batch_size": 64,
+      "actual_hard_pair_weight": 0.2,
+      "simulation_loss_weight": 0.5,
+      "causal_pair_weight": 0.5,
+      "causal_margin": 0.5
+    }
+  ],
+  "seeds": [20267600, 20267700],
+  "blend_weights": [0.05, 0.1, 0.2, 0.3],
+  "target_view": {
+    "name": "low-prevalence physical-site proxy for official test-only sites",
+    "maximum_site_positive_rate": 0.05,
+    "use": "evaluation and gating only"
+  },
+  "gates": {
+    "whole_ap_delta": 0.001,
+    "rare_ap_delta": 0.005,
+    "each_view_requires_nonnegative_matched_fpr_recall": true,
+    "each_fold_and_sensor_ap_delta_nonnegative": true,
+    "each_view_paired_site_ap_interval_lower_strictly_positive": true,
+    "all_required": true
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "confidence": 0.95,
+    "unit": "physical_location_id",
+    "whole_seed": 20267800,
+    "rare_seed": 20267900
+  },
+  "selection_rule": "require every gate, then maximize rare and whole paired-site AP lower bounds, rare and whole point AP, and prefer the smaller blend",
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_simulation_augmented_counterfactual_ranker_folds34.pt",
+    "crossfit_scores": "outputs/mars_simulation_augmented_counterfactual_ranker_folds34_scores.npz",
+    "json": "reports/experiments/mars_simulation_augmented_counterfactual_ranker_folds34.json",
+    "markdown": "reports/experiments/MARS_SIMULATION_AUGMENTED_COUNTERFACTUAL_RANKER_FOLDS34.md"
+  },
+  "invariants": [
+    "Each held fold is scored only by heads trained on the opposite real fold and simulations whose plume fields and backgrounds both belong to that fitting fold.",
+    "The exact real background is evaluated beside every synthetic positive under the same spatial augmentation and a fixed causal ranking margin.",
+    "Simulation labels never enter validation and no simulated row is scored as held evidence.",
+    "The current comparator is the strongest frozen spatial-Prithvi score.",
+    "Folds 0, 1, and 2 and all exact-paper or fresh-external inputs are forbidden.",
+    "Failure retires this causal-training family; success authorizes only a separately frozen fold-2 confirmation."
+  ]
+}
