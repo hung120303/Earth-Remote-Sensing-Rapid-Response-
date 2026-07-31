@@ -1,0 +1,2594 @@
+{
+  "decision": "Freeze the selected router for independent folds-0/1 confirmation.",
+  "evaluated_candidates": [
+    {
+      "bootstrap_checks": {
+        "low_prevalence_paired_site_ap_lower_strictly_positive": true,
+        "whole_paired_site_ap_lower_strictly_positive": true
+      },
+      "coverage": {
+        "low_prevalence_row_fraction": 1.0,
+        "low_prevalence_rows": 11344,
+        "low_prevalence_site_fraction": 1.0,
+        "low_prevalence_sites": 199,
+        "whole_row_fraction": 1.0,
+        "whole_rows": 17745,
+        "whole_site_fraction": 1.0,
+        "whole_sites": 250
+      },
+      "key": "maxsize1000000_maxrate1",
+      "low_prevalence": {
+        "average_precision": {
+          "folds": {
+            "3": 0.7821709334607115,
+            "4": 0.7004425107419013
+          },
+          "pooled": 0.7265114771853518,
+          "sensors": {
+            "0": 0.6481715734234721,
+            "1": 0.8857497257240814
+          }
+        },
+        "average_precision_delta": {
+          "folds": {
+            "3": 0.024955799744190488,
+            "4": 0.01725982309239582
+          },
+          "pooled": 0.018324873143613862,
+          "sensors": {
+            "0": 0.018623252866940332,
+            "1": 0.009406572438893201
+          }
+        },
+        "matched_fpr_metrics": {
+          "accuracy": 0.9285966149506347,
+          "auroc": 0.9676401936183254,
+          "average_precision": 0.7265114771853518,
+          "false_positive_rate": 0.07126313914127917,
+          "fn": 10.0,
+          "fp": 800.0,
+          "negative_predictive_value": 0.9990417784591797,
+          "operating_point": {
+            "false_positive_rate": 0.07126313914127917,
+            "precision": 0.11894273127753303,
+            "recall": 0.9152542372881356,
+            "target_fpr": 0.0713,
+            "threshold": 0.06707698236626985
+          },
+          "precision": 0.11894273127753303,
+          "recall": 0.9152542372881356,
+          "sensor_average_precision": {
+            "Landsat": 0.8857497257240814,
+            "Sentinel-2": 0.6481715734234721
+          },
+          "specificity": 0.9287368608587209,
+          "tn": 10426.0,
+          "tp": 108.0
+        },
+        "matched_fpr_recall_delta": 0.008474576271186418,
+        "positive": 118,
+        "rows": 11344
+      },
+      "maximum_predicted_positive_rate": 1.0,
+      "maximum_site_size": 1000000,
+      "paired_site_ap_delta": {
+        "low_prevalence": {
+          "confidence": 0.95,
+          "groups": 199,
+          "lower": 0.0011696427631523315,
+          "mean": 0.01755048772212626,
+          "replicates": 10000,
+          "upper": 0.03729585564366426
+        },
+        "whole": {
+          "confidence": 0.95,
+          "groups": 250,
+          "lower": 0.000488532666586561,
+          "mean": 0.00391815077716084,
+          "replicates": 10000,
+          "upper": 0.007257422560446659
+        }
+      },
+      "passed": true,
+      "passed_point_gates": true,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_row_coverage": true,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": true
+      },
+      "whole": {
+        "average_precision": {
+          "folds": {
+            "3": 0.9304828958469339,
+            "4": 0.8937638696091151
+          },
+          "pooled": 0.9084121516710161,
+          "sensors": {
+            "0": 0.8781737382109496,
+            "1": 0.976076217371509
+          }
+        },
+        "average_precision_delta": {
+          "folds": {
+            "3": 0.00016623634648105234,
+            "4": 0.002748330411545985
+          },
+          "pooled": 0.004336309445459263,
+          "sensors": {
+            "0": 0.005804071774802022,
+            "1": 0.0011581160240032862
+          }
+        },
+        "matched_fpr_metrics": {
+          "accuracy": 0.9316990701606086,
+          "auroc": 0.9862795724605073,
+          "average_precision": 0.9084121516710161,
+          "false_positive_rate": 0.07126564330189261,
+          "fn": 56.0,
+          "fp": 1156.0,
+          "negative_predictive_value": 0.9962965412340453,
+          "operating_point": {
+            "false_positive_rate": 0.07126564330189261,
+            "precision": 0.5594512195121951,
+            "recall": 0.963254593175853,
+            "target_fpr": 0.0713,
+            "threshold": 0.1777955533639904
+          },
+          "precision": 0.5594512195121951,
+          "recall": 0.963254593175853,
+          "sensor_average_precision": {
+            "Landsat": 0.976076217371509,
+            "Sentinel-2": 0.8781737382109496
+          },
+          "specificity": 0.9287343566981074,
+          "tn": 15065.0,
+          "tp": 1468.0
+        },
+        "matched_fpr_recall_delta": 0.001312335958005284,
+        "positive": 1524,
+        "rows": 17745
+      }
+    }
+  ],
+  "exact_paper_inputs_accessed": false,
+  "fold2_cache_or_labels_reloaded": false,
+  "fold2_post_failure_diagnostic_referenced": true,
+  "folds01_accessed": false,
+  "fresh_inputs_accessed": false,
+  "generated_at_utc": "2026-07-31T04:41:14.772591+00:00",
+  "provenance": {
+    "development_pair_report_sha256": "997642cf21c5957d97760d76d6674526b6615882f55d93b44884fce617bf2a9a",
+    "explorer_sha256": "ea8b2f8a32ff1636499550ea1c9b39a2c2002091d6f2c1da86ce1ad1d23c94b3",
+    "features_sha256": "f45de57bda41ba083b4a981cbbcafa3c1e537ff7178eedae2c2ae2567987f78e",
+    "fold2_report_sha256": "f3554d9675c0415ebfc90029d1faaf8d7cb90163b0b92fbd35938c916be067bb",
+    "git_commit": "b3aca4ddc7dba127f33f08863be5fd4818d0bf95",
+    "metadata_sha256": "5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d",
+    "numpy": "2.4.4",
+    "protocol_sha256": "06d6a55ce3348939a6e1a13fdfb84dcf8edb0beff2e2a9a82a9d5a367e845c2c"
+  },
+  "routing": {
+    "deployment_order": [
+      "if physical_location_id appeared in model training, return the exact current score",
+      "otherwise compute site size and predicted-positive rate from current scores only",
+      "apply the fixed invariant pair only when both frozen site gates pass",
+      "return the exact current score for every other unseen site"
+    ],
+    "development_interpretation": "each held fold's physical sites are unseen to the opposite-fold representation and all are eligible for the label-free gate",
+    "label_use": "none",
+    "predicted_positive_rate": "fraction of a physical site's current scene scores >= scene_threshold",
+    "scene_threshold": 0.16728139929966007,
+    "scene_threshold_source": "frozen current-score matched-FPR threshold on folds 3+4 before router search"
+  },
+  "schema_version": 1,
+  "scope": "post-fold2-failure development-only label-free unseen-site routing on folds 3+4",
+  "screening_candidates": [
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 1.0,
+        "low_prevalence_rows": 11344,
+        "low_prevalence_site_fraction": 1.0,
+        "low_prevalence_sites": 199,
+        "whole_row_fraction": 1.0,
+        "whole_rows": 17745,
+        "whole_site_fraction": 1.0,
+        "whole_sites": 250
+      },
+      "key": "maxsize1000000_maxrate1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.024955799744190488,
+          "4": 0.01725982309239582
+        },
+        "pooled": 0.018324873143613862,
+        "sensors": {
+          "0": 0.018623252866940332,
+          "1": 0.009406572438893201
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.008474576271186418,
+      "maximum_predicted_positive_rate": 1.0,
+      "maximum_site_size": 1000000,
+      "passed_point_gates": true,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_row_coverage": true,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": true
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 0.00016623634648105234,
+          "4": 0.002748330411545985
+        },
+        "pooled": 0.004336309445459263,
+        "sensors": {
+          "0": 0.005804071774802022,
+          "1": 0.0011581160240032862
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.001312335958005284
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 1.0,
+        "low_prevalence_rows": 11344,
+        "low_prevalence_site_fraction": 1.0,
+        "low_prevalence_sites": 199,
+        "whole_row_fraction": 0.9298957452803607,
+        "whole_rows": 16501,
+        "whole_site_fraction": 0.96,
+        "whole_sites": 240
+      },
+      "key": "maxsize1000000_maxrate0.5",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.024955799744190488,
+          "4": 0.01725982309239582
+        },
+        "pooled": 0.018324873143613862,
+        "sensors": {
+          "0": 0.018623252866940332,
+          "1": 0.009406572438893201
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.008474576271186418,
+      "maximum_predicted_positive_rate": 0.5,
+      "maximum_site_size": 1000000,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_row_coverage": true,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.006169953479068346,
+          "4": 0.0034937890225513746
+        },
+        "pooled": 0.0006280831184842794,
+        "sensors": {
+          "0": 0.0006237338683879878,
+          "1": 0.00012058065532993822
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.9988540197461213,
+        "low_prevalence_rows": 11331,
+        "low_prevalence_site_fraction": 0.9949748743718593,
+        "low_prevalence_sites": 198,
+        "whole_row_fraction": 0.8164553395322626,
+        "whole_rows": 14488,
+        "whole_site_fraction": 0.912,
+        "whole_sites": 228
+      },
+      "key": "maxsize1000000_maxrate0.3",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.024955799744190488,
+          "4": 0.015517059119153576
+        },
+        "pooled": 0.017690401258981914,
+        "sensors": {
+          "0": 0.01703230638268949,
+          "1": 0.009406572438893201
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.008474576271186418,
+      "maximum_predicted_positive_rate": 0.3,
+      "maximum_site_size": 1000000,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_row_coverage": true,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.006331140601510854,
+          "4": 0.002550680850479048
+        },
+        "pooled": 0.00022559088062679145,
+        "sensors": {
+          "0": 0.00030872162452300067,
+          "1": -0.000128905061429041
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.997796191819464,
+        "low_prevalence_rows": 11319,
+        "low_prevalence_site_fraction": 0.9798994974874372,
+        "low_prevalence_sites": 195,
+        "whole_row_fraction": 0.7535643843336151,
+        "whole_rows": 13372,
+        "whole_site_fraction": 0.864,
+        "whole_sites": 216
+      },
+      "key": "maxsize1000000_maxrate0.2",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.02491620721194543,
+          "4": 0.015506854332637654
+        },
+        "pooled": 0.018618634594137373,
+        "sensors": {
+          "0": 0.01702252415373584,
+          "1": 0.011426774459095235
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.008474576271186418,
+      "maximum_predicted_positive_rate": 0.2,
+      "maximum_site_size": 1000000,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_row_coverage": true,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.003845696522537745,
+          "4": 0.002291558861454157
+        },
+        "pooled": 0.0003532095052410922,
+        "sensors": {
+          "0": 0.00019207411445154587,
+          "1": 0.0004290284323713589
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.9112306064880112,
+        "low_prevalence_rows": 10337,
+        "low_prevalence_site_fraction": 0.9547738693467337,
+        "low_prevalence_sites": 190,
+        "whole_row_fraction": 0.6621020005635391,
+        "whole_rows": 11749,
+        "whole_site_fraction": 0.804,
+        "whole_sites": 201
+      },
+      "key": "maxsize1000000_maxrate0.1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.02491620721194543,
+          "4": 0.009229035726873835
+        },
+        "pooled": 0.013858796569279463,
+        "sensors": {
+          "0": 0.01430577155783641,
+          "1": 0.006409133259762667
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.008474576271186418,
+      "maximum_predicted_positive_rate": 0.1,
+      "maximum_site_size": 1000000,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_row_coverage": true,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.003278712637753811,
+          "4": 0.0012871484311985926
+        },
+        "pooled": -0.00016695860148130404,
+        "sensors": {
+          "0": -0.0002813810418762497,
+          "1": 0.00020427138334022654
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.15638222849083216,
+        "low_prevalence_rows": 1774,
+        "low_prevalence_site_fraction": 0.8341708542713567,
+        "low_prevalence_sites": 166,
+        "whole_row_fraction": 0.14054663285432517,
+        "whole_rows": 2494,
+        "whole_site_fraction": 0.784,
+        "whole_sites": 196
+      },
+      "key": "maxsize60_maxrate1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.005556777902268606,
+          "4": 0.0038623686939032176
+        },
+        "pooled": 0.0027595465278471565,
+        "sensors": {
+          "0": 0.006264886079888288,
+          "1": -0.0025820536513094794
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 1.0,
+      "maximum_site_size": 60,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.00026306646615636975,
+          "4": 0.0009294430034328949
+        },
+        "pooled": 0.0007066679023084443,
+        "sensors": {
+          "0": 0.0009901532945302272,
+          "1": -0.0002536199306135689
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.15638222849083216,
+        "low_prevalence_rows": 1774,
+        "low_prevalence_site_fraction": 0.8341708542713567,
+        "low_prevalence_sites": 166,
+        "whole_row_fraction": 0.137447168216399,
+        "whole_rows": 2439,
+        "whole_site_fraction": 0.768,
+        "whole_sites": 192
+      },
+      "key": "maxsize60_maxrate0.5",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.005556777902268606,
+          "4": 0.0038623686939032176
+        },
+        "pooled": 0.0027595465278471565,
+        "sensors": {
+          "0": 0.006264886079888288,
+          "1": -0.0025820536513094794
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.5,
+      "maximum_site_size": 60,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0004019303212188241,
+          "4": 0.0007462600669897457
+        },
+        "pooled": 0.000499297737553972,
+        "sensors": {
+          "0": 0.0007674500757222091,
+          "1": -0.0003602854512356757
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.20125176304654444,
+        "low_prevalence_rows": 2283,
+        "low_prevalence_site_fraction": 0.864321608040201,
+        "low_prevalence_sites": 172,
+        "whole_row_fraction": 0.18827838827838828,
+        "whole_rows": 3341,
+        "whole_site_fraction": 0.824,
+        "whole_sites": 206
+      },
+      "key": "maxsize100_maxrate1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.006687523980881571,
+          "4": 0.0031527357009148993
+        },
+        "pooled": 0.0024655917378859638,
+        "sensors": {
+          "0": 0.00533626327849368,
+          "1": -0.001468025472434853
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 1.0,
+      "maximum_site_size": 100,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": true
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 0.00038886908788593466,
+          "4": 0.0006478217556411536
+        },
+        "pooled": 0.0010622832535523985,
+        "sensors": {
+          "0": 0.0010617121157011633,
+          "1": 0.0002565213801031252
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.20125176304654444,
+        "low_prevalence_rows": 2283,
+        "low_prevalence_site_fraction": 0.864321608040201,
+        "low_prevalence_sites": 172,
+        "whole_row_fraction": 0.1814595660749507,
+        "whole_rows": 3220,
+        "whole_site_fraction": 0.804,
+        "whole_sites": 201
+      },
+      "key": "maxsize100_maxrate0.5",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.006687523980881571,
+          "4": 0.0031527357009148993
+        },
+        "pooled": 0.0024655917378859638,
+        "sensors": {
+          "0": 0.00533626327849368,
+          "1": -0.001468025472434853
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.5,
+      "maximum_site_size": 100,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.00041179538639091184,
+          "4": 0.00046674565592708106
+        },
+        "pooled": 0.00042696962831367813,
+        "sensors": {
+          "0": 0.0005004143269577987,
+          "1": -6.910471856014233e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.13831100141043723,
+        "low_prevalence_rows": 1569,
+        "low_prevalence_site_fraction": 0.7788944723618091,
+        "low_prevalence_sites": 155,
+        "whole_row_fraction": 0.08954635108481263,
+        "whole_rows": 1589,
+        "whole_site_fraction": 0.624,
+        "whole_sites": 156
+      },
+      "key": "maxsize60_maxrate0.05",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.005610677111891227,
+          "4": 0.0012158415333775041
+        },
+        "pooled": 0.0018854550803002468,
+        "sensors": {
+          "0": 0.002607302847944082,
+          "1": -1.77511437481348e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.05,
+      "maximum_site_size": 60,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 3.6355249065755935e-05,
+          "4": 7.151399187288465e-05
+        },
+        "pooled": 4.614766000887727e-05,
+        "sensors": {
+          "0": 2.244069436196927e-05,
+          "1": 5.143922155781411e-06
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.15523624823695345,
+        "low_prevalence_rows": 1761,
+        "low_prevalence_site_fraction": 0.8291457286432161,
+        "low_prevalence_sites": 165,
+        "whole_row_fraction": 0.13034657650042267,
+        "whole_rows": 2313,
+        "whole_site_fraction": 0.744,
+        "whole_sites": 186
+      },
+      "key": "maxsize60_maxrate0.3",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.005556777902268606,
+          "4": 0.0011984464538870032
+        },
+        "pooled": 0.001766775485680605,
+        "sensors": {
+          "0": 0.004045751266094633,
+          "1": -0.0025820536513094794
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.3,
+      "maximum_site_size": 60,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.00046853306678695805,
+          "4": 0.000596345375300289
+        },
+        "pooled": 0.0002670197994859569,
+        "sensors": {
+          "0": 0.00045052682855162285,
+          "1": -0.00031777785689690585
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.1541784203102962,
+        "low_prevalence_rows": 1749,
+        "low_prevalence_site_fraction": 0.8140703517587939,
+        "low_prevalence_sites": 162,
+        "whole_row_fraction": 0.11659622428853197,
+        "whole_rows": 2069,
+        "whole_site_fraction": 0.704,
+        "whole_sites": 176
+      },
+      "key": "maxsize60_maxrate0.2",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.005503339401966678,
+          "4": 0.001188931785241265
+        },
+        "pooled": 0.0029043744317905906,
+        "sensors": {
+          "0": 0.004033659909266296,
+          "1": -5.680112605699339e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.2,
+      "maximum_site_size": 60,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 7.632094105791687e-05,
+          "4": 0.0003393955412840377
+        },
+        "pooled": 0.00021422859802977534,
+        "sensors": {
+          "0": 0.00016563576656869472,
+          "1": 0.0001432895671955592
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.15320874471086038,
+        "low_prevalence_rows": 1738,
+        "low_prevalence_site_fraction": 0.8040201005025126,
+        "low_prevalence_sites": 160,
+        "whole_row_fraction": 0.1054945054945055,
+        "whole_rows": 1872,
+        "whole_site_fraction": 0.664,
+        "whole_sites": 166
+      },
+      "key": "maxsize60_maxrate0.1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.005503339401966678,
+          "4": 0.0011888870977564414
+        },
+        "pooled": 0.0029046745696252874,
+        "sensors": {
+          "0": 0.004033659909266296,
+          "1": -1.4844014886716828e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.1,
+      "maximum_site_size": 60,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 1.4424255155076615e-05,
+          "4": 8.395614828771158e-05
+        },
+        "pooled": 6.905562680903365e-05,
+        "sensors": {
+          "0": 4.47444889312143e-05,
+          "1": -4.715216341821815e-07
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.12870239774330042,
+        "low_prevalence_rows": 1460,
+        "low_prevalence_site_fraction": 0.7989949748743719,
+        "low_prevalence_sites": 159,
+        "whole_row_fraction": 0.10656522964215272,
+        "whole_rows": 1891,
+        "whole_site_fraction": 0.732,
+        "whole_sites": 183
+      },
+      "key": "maxsize40_maxrate1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.0008535818185493316,
+          "4": 0.002888176631591355
+        },
+        "pooled": 0.00048524626882007205,
+        "sensors": {
+          "0": 0.0013958092076710171,
+          "1": -0.0025530102021711354
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 1.0,
+      "maximum_site_size": 40,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 0.00016428074691510197,
+          "4": 0.0006970893288997804
+        },
+        "pooled": 0.0005713878041441189,
+        "sensors": {
+          "0": 0.0006001989962648446,
+          "1": 0.00018891522533659444
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.12870239774330042,
+        "low_prevalence_rows": 1460,
+        "low_prevalence_site_fraction": 0.7989949748743719,
+        "low_prevalence_sites": 159,
+        "whole_row_fraction": 0.10346576500422654,
+        "whole_rows": 1836,
+        "whole_site_fraction": 0.716,
+        "whole_sites": 179
+      },
+      "key": "maxsize40_maxrate0.5",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.0008535818185493316,
+          "4": 0.002888176631591355
+        },
+        "pooled": 0.00048524626882007205,
+        "sensors": {
+          "0": 0.0013958092076710171,
+          "1": -0.0025530102021711354
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.5,
+      "maximum_site_size": 40,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 4.868565002602576e-05,
+          "4": 0.0005101908047117076
+        },
+        "pooled": 0.0003655634415616893,
+        "sensors": {
+          "0": 0.0003767379447056074,
+          "1": 0.00011166891731206885
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.12755641748942173,
+        "low_prevalence_rows": 1447,
+        "low_prevalence_site_fraction": 0.7939698492462312,
+        "low_prevalence_sites": 158,
+        "whole_row_fraction": 0.10188785573400957,
+        "whole_rows": 1808,
+        "whole_site_fraction": 0.7,
+        "whole_sites": 175
+      },
+      "key": "maxsize40_maxrate0.3",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.0008535818185493316,
+          "4": 0.0011641101935395692
+        },
+        "pooled": -0.0001271950821352119,
+        "sensors": {
+          "0": 0.00027549514417157805,
+          "1": -0.0025530102021711354
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.3,
+      "maximum_site_size": 40,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 4.868565002602576e-05,
+          "4": 0.00036077135234025004
+        },
+        "pooled": 0.00029478491695122955,
+        "sensors": {
+          "0": 0.00033859534936930835,
+          "1": 6.42812348531363e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.11900564174894217,
+        "low_prevalence_rows": 1350,
+        "low_prevalence_site_fraction": 0.7537688442211056,
+        "low_prevalence_sites": 150,
+        "whole_row_fraction": 0.07720484643561566,
+        "whole_rows": 1370,
+        "whole_site_fraction": 0.604,
+        "whole_sites": 151
+      },
+      "key": "maxsize40_maxrate0.05",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.0008534074089693311,
+          "4": 0.0011781813555672427
+        },
+        "pooled": 0.0007089347198867557,
+        "sensors": {
+          "0": 0.00028049581578248883,
+          "1": 1.1530135450077417e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.05,
+      "maximum_site_size": 40,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 1.2223596907889878e-05,
+          "4": 7.277876297029362e-05
+        },
+        "pooled": 3.892070430477901e-05,
+        "sensors": {
+          "0": 2.60414915576046e-06,
+          "1": 4.0665311820564654e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.12552891396332863,
+        "low_prevalence_rows": 1424,
+        "low_prevalence_site_fraction": 0.7688442211055276,
+        "low_prevalence_sites": 153,
+        "whole_row_fraction": 0.08779938010707242,
+        "whole_rows": 1558,
+        "whole_site_fraction": 0.636,
+        "whole_sites": 159
+      },
+      "key": "maxsize40_maxrate0.1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.0007993336440003107,
+          "4": 0.001154486662252041
+        },
+        "pooled": 0.0006816309872701432,
+        "sensors": {
+          "0": 0.0002633712605900618,
+          "1": 1.1530135450077417e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.1,
+      "maximum_site_size": 40,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -3.0720929231176086e-05,
+          "4": 7.160095474190165e-05
+        },
+        "pooled": 3.305044798151968e-05,
+        "sensors": {
+          "0": -2.062569589278418e-05,
+          "1": 4.0021387372690675e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.12649858956276447,
+        "low_prevalence_rows": 1435,
+        "low_prevalence_site_fraction": 0.7788944723618091,
+        "low_prevalence_sites": 155,
+        "whole_row_fraction": 0.09371653987038603,
+        "whole_rows": 1663,
+        "whole_site_fraction": 0.668,
+        "whole_sites": 167
+      },
+      "key": "maxsize40_maxrate0.2",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.0007993336440003107,
+          "4": 0.001154531236592149
+        },
+        "pooled": 0.0006813289286191626,
+        "sensors": {
+          "0": 0.0002633712605900618,
+          "1": -2.7757676918649388e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.2,
+      "maximum_site_size": 40,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 3.132978882658399e-05,
+          "4": 0.00011844164896368525
+        },
+        "pooled": 9.143791284105252e-05,
+        "sensors": {
+          "0": 6.0844098776269284e-05,
+          "1": 5.7609204563324745e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.1831805359661495,
+        "low_prevalence_rows": 2078,
+        "low_prevalence_site_fraction": 0.8090452261306532,
+        "low_prevalence_sites": 161,
+        "whole_row_fraction": 0.1182304874612567,
+        "whole_rows": 2098,
+        "whole_site_fraction": 0.648,
+        "whole_sites": 162
+      },
+      "key": "maxsize100_maxrate0.05",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.006740613224541336,
+          "4": 0.0005061917621517198
+        },
+        "pooled": 0.0016015408517874308,
+        "sensors": {
+          "0": 0.0017260504679360578,
+          "1": 0.001096267096224568
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.05,
+      "maximum_site_size": 100,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -5.012289851991092e-05,
+          "4": -1.0804433000388691e-05
+        },
+        "pooled": -1.1033884009470363e-05,
+        "sensors": {
+          "0": -7.365361723432606e-05,
+          "1": 4.031663031522914e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.20010578279266572,
+        "low_prevalence_rows": 2270,
+        "low_prevalence_site_fraction": 0.8592964824120602,
+        "low_prevalence_sites": 171,
+        "whole_row_fraction": 0.16934347703578473,
+        "whole_rows": 3005,
+        "whole_site_fraction": 0.776,
+        "whole_sites": 194
+      },
+      "key": "maxsize100_maxrate0.3",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.006687523980881571,
+          "4": 0.0004888052561325962
+        },
+        "pooled": 0.0014728195055518922,
+        "sensors": {
+          "0": 0.0031171253020358947,
+          "1": -0.001468025472434853
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.3,
+      "maximum_site_size": 100,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0004778586089777548,
+          "4": 0.0005077096392892555
+        },
+        "pooled": 0.00026181224061516684,
+        "sensors": {
+          "0": 0.0003964658121637932,
+          "1": -0.0001800315970214017
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.19904795486600846,
+        "low_prevalence_rows": 2258,
+        "low_prevalence_site_fraction": 0.8442211055276382,
+        "low_prevalence_sites": 168,
+        "whole_row_fraction": 0.15559312482389406,
+        "whole_rows": 2761,
+        "whole_site_fraction": 0.736,
+        "whole_sites": 184
+      },
+      "key": "maxsize100_maxrate0.2",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.006634877162065678,
+          "4": 0.00047929058748696907
+        },
+        "pooled": 0.002610482904317535,
+        "sensors": {
+          "0": 0.0031050972273102273,
+          "1": 0.001057227052817744
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.2,
+      "maximum_site_size": 100,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 6.707435444230914e-05,
+          "4": 0.0002504894936612434
+        },
+        "pooled": 0.00020655279936454551,
+        "sensors": {
+          "0": 0.00011115753214863133,
+          "1": 0.00023235848355929178
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.19807827926657265,
+        "low_prevalence_rows": 2247,
+        "low_prevalence_site_fraction": 0.8341708542713567,
+        "low_prevalence_sites": 166,
+        "whole_row_fraction": 0.13902507748661594,
+        "whole_rows": 2467,
+        "whole_site_fraction": 0.692,
+        "whole_sites": 173
+      },
+      "key": "maxsize100_maxrate0.1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.006634877162065678,
+          "4": 0.00047924542389765623
+        },
+        "pooled": 0.0026107817603653327,
+        "sensors": {
+          "0": 0.0031050972273102273,
+          "1": 0.0010991841639880207
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.1,
+      "maximum_site_size": 100,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 5.180713282260108e-06,
+          "4": 1.6382243871460034e-06
+        },
+        "pooled": 7.092486097226569e-05,
+        "sensors": {
+          "0": 2.8754263326047358e-05,
+          "1": 7.028985589807579e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.09379407616361073,
+        "low_prevalence_rows": 1064,
+        "low_prevalence_site_fraction": 0.7085427135678392,
+        "low_prevalence_sites": 141,
+        "whole_row_fraction": 0.05996055226824457,
+        "whole_rows": 1064,
+        "whole_site_fraction": 0.564,
+        "whole_sites": 141
+      },
+      "key": "maxsize30_maxrate0.02",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -4.5486821356077733e-05,
+          "4": -1.2129286818152174e-05
+        },
+        "pooled": -1.63112185280756e-05,
+        "sensors": {
+          "0": -1.2879677734334294e-05,
+          "1": -6.403244011232712e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.02,
+      "maximum_site_size": 30,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -1.9729966309389724e-05,
+          "4": -5.053732676674194e-06
+        },
+        "pooled": -7.514644035366835e-06,
+        "sensors": {
+          "0": -7.723294464190289e-06,
+          "1": -1.9689590703975135e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.10278561354019747,
+        "low_prevalence_rows": 1166,
+        "low_prevalence_site_fraction": 0.7236180904522613,
+        "low_prevalence_sites": 144,
+        "whole_row_fraction": 0.06570865032403495,
+        "whole_rows": 1166,
+        "whole_site_fraction": 0.576,
+        "whole_sites": 144
+      },
+      "key": "maxsize40_maxrate0.02",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -4.5660939950287194e-05,
+          "4": -1.2383085114753278e-05
+        },
+        "pooled": -1.6616545668646232e-05,
+        "sensors": {
+          "0": -1.2887312483611524e-05,
+          "1": -6.403244011243814e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.02,
+      "maximum_site_size": 40,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -1.976848099816131e-05,
+          "4": -5.522360575715979e-06
+        },
+        "pooled": -8.04002072851695e-06,
+        "sensors": {
+          "0": -7.932797887466592e-06,
+          "1": -2.3941268183946818e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.06946403385049366,
+        "low_prevalence_rows": 788,
+        "low_prevalence_site_fraction": 0.6482412060301508,
+        "low_prevalence_sites": 129,
+        "whole_row_fraction": 0.04440687517610595,
+        "whole_rows": 788,
+        "whole_site_fraction": 0.516,
+        "whole_sites": 129
+      },
+      "key": "maxsize20_maxrate0.02",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -4.600874166083013e-05,
+          "4": -3.9933782861600875e-06
+        },
+        "pooled": -1.4834676104080735e-05,
+        "sensors": {
+          "0": -1.241823953102017e-05,
+          "1": -6.981708361930572e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.02,
+      "maximum_site_size": 20,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -2.1255966978883656e-05,
+          "4": -3.922813687773363e-06
+        },
+        "pooled": -6.644166570368704e-06,
+        "sensors": {
+          "0": -6.204460812897494e-06,
+          "1": -2.4621512196842943e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.06946403385049366,
+        "low_prevalence_rows": 788,
+        "low_prevalence_site_fraction": 0.6482412060301508,
+        "low_prevalence_sites": 129,
+        "whole_row_fraction": 0.04553395322626092,
+        "whole_rows": 808,
+        "whole_site_fraction": 0.52,
+        "whole_sites": 130
+      },
+      "key": "maxsize20_maxrate0.05",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -4.600874166083013e-05,
+          "4": -3.9933782861600875e-06
+        },
+        "pooled": -1.4834676104080735e-05,
+        "sensors": {
+          "0": -1.241823953102017e-05,
+          "1": -6.981708361930572e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.05,
+      "maximum_site_size": 20,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -2.1255966978883656e-05,
+          "4": -1.4113346584965214e-05
+        },
+        "pooled": -7.052440284427419e-06,
+        "sensors": {
+          "0": -2.5815601445655645e-05,
+          "1": 4.9616192774215584e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.07052186177715092,
+        "low_prevalence_rows": 800,
+        "low_prevalence_site_fraction": 0.6532663316582915,
+        "low_prevalence_sites": 130,
+        "whole_row_fraction": 0.04767540152155537,
+        "whole_rows": 846,
+        "whole_site_fraction": 0.532,
+        "whole_sites": 133
+      },
+      "key": "maxsize20_maxrate0.1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -4.600874166083013e-05,
+          "4": -3.9933782861600875e-06
+        },
+        "pooled": -2.026279043088053e-05,
+        "sensors": {
+          "0": -1.8574592339004603e-05,
+          "1": -6.981708361930572e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.1,
+      "maximum_site_size": 20,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -2.1707458080832964e-05,
+          "4": 3.1946883595201925e-06
+        },
+        "pooled": -8.292372719598262e-07,
+        "sensors": {
+          "0": -2.736628392008278e-05,
+          "1": 4.9616192774326606e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.07149153737658674,
+        "low_prevalence_rows": 811,
+        "low_prevalence_site_fraction": 0.6633165829145728,
+        "low_prevalence_sites": 132,
+        "whole_row_fraction": 0.05088757396449704,
+        "whole_rows": 903,
+        "whole_site_fraction": 0.556,
+        "whole_sites": 139
+      },
+      "key": "maxsize20_maxrate0.2",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -4.600874166083013e-05,
+          "4": -3.949084935173097e-06
+        },
+        "pooled": -2.0565841607922408e-05,
+        "sensors": {
+          "0": -1.8574592339004603e-05,
+          "1": -0.00010776750526997336
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.2,
+      "maximum_site_size": 20,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -1.2775964364553083e-05,
+          "4": 3.69261247793462e-05
+        },
+        "pooled": 2.8891588191193307e-05,
+        "sensors": {
+          "0": 2.6792876317016656e-05,
+          "1": 2.9765229658806902e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.0736953455571227,
+        "low_prevalence_rows": 836,
+        "low_prevalence_site_fraction": 0.6834170854271356,
+        "low_prevalence_sites": 136,
+        "whole_row_fraction": 0.05331079177233023,
+        "whole_rows": 946,
+        "whole_site_fraction": 0.592,
+        "whole_sites": 148
+      },
+      "key": "maxsize20_maxrate1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -4.600874166083013e-05,
+          "4": 0.002925990810882184
+        },
+        "pooled": -0.0002295261662984549,
+        "sensors": {
+          "0": 0.001103438094502085,
+          "1": -0.005387840967161606
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 1.0,
+      "maximum_site_size": 20,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -9.911633021830735e-05,
+          "4": 0.0002200662757756433
+        },
+        "pooled": 8.795743447942428e-05,
+        "sensors": {
+          "0": 6.940820449741203e-05,
+          "1": 3.085358146526218e-06
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.0736953455571227,
+        "low_prevalence_rows": 836,
+        "low_prevalence_site_fraction": 0.6834170854271356,
+        "low_prevalence_sites": 136,
+        "whole_row_fraction": 0.05314173006480699,
+        "whole_rows": 943,
+        "whole_site_fraction": 0.584,
+        "whole_sites": 146
+      },
+      "key": "maxsize20_maxrate0.5",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -4.600874166083013e-05,
+          "4": 0.002925990810882184
+        },
+        "pooled": -0.0002295261662984549,
+        "sensors": {
+          "0": 0.001103438094502085,
+          "1": -0.005387840967161606
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.5,
+      "maximum_site_size": 20,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -9.911633021830735e-05,
+          "4": 0.00019569809058728183
+        },
+        "pooled": 6.961546729122858e-05,
+        "sensors": {
+          "0": 6.940820449741203e-05,
+          "1": -2.513692052019678e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.072549365303244,
+        "low_prevalence_rows": 823,
+        "low_prevalence_site_fraction": 0.678391959798995,
+        "low_prevalence_sites": 135,
+        "whole_row_fraction": 0.05156382079459002,
+        "whole_rows": 915,
+        "whole_site_fraction": 0.568,
+        "whole_sites": 142
+      },
+      "key": "maxsize20_maxrate0.3",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -4.600874166083013e-05,
+          "4": 5.760418848477222e-06
+        },
+        "pooled": -0.001281475186380221,
+        "sensors": {
+          "0": -1.2368404098128671e-05,
+          "1": -0.005387840967161606
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.3,
+      "maximum_site_size": 20,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -9.911633021830735e-05,
+          "4": 4.089178898558643e-05
+        },
+        "pooled": -1.278649697455947e-06,
+        "sensors": {
+          "0": 2.8755492591736598e-05,
+          "1": -7.295713264976467e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.12147390691114246,
+        "low_prevalence_rows": 1378,
+        "low_prevalence_site_fraction": 0.7437185929648241,
+        "low_prevalence_sites": 148,
+        "whole_row_fraction": 0.07765567765567766,
+        "whole_rows": 1378,
+        "whole_site_fraction": 0.592,
+        "whole_sites": 148
+      },
+      "key": "maxsize100_maxrate0.02",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -6.833351697066448e-05,
+          "4": -9.728263160702078e-06
+        },
+        "pooled": -2.1586331541589843e-05,
+        "sensors": {
+          "0": -9.929028564559239e-06,
+          "1": -9.468758432096269e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.02,
+      "maximum_site_size": 100,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -3.138388060253128e-05,
+          "4": -9.19442765356937e-06
+        },
+        "pooled": -1.4121022049118359e-05,
+        "sensors": {
+          "0": -9.860975105469016e-06,
+          "1": -6.050491041609263e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.11468617771509168,
+        "low_prevalence_rows": 1301,
+        "low_prevalence_site_fraction": 0.7386934673366834,
+        "low_prevalence_sites": 147,
+        "whole_row_fraction": 0.07331642716258101,
+        "whole_rows": 1301,
+        "whole_site_fraction": 0.588,
+        "whole_sites": 147
+      },
+      "key": "maxsize60_maxrate0.02",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -6.833351697066448e-05,
+          "4": -1.0488916560635886e-05
+        },
+        "pooled": -2.1824400532000077e-05,
+        "sensors": {
+          "0": -1.0109906734223628e-05,
+          "1": -9.468758432096269e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.02,
+      "maximum_site_size": 60,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -3.138388060253128e-05,
+          "4": -9.20839516116434e-06
+        },
+        "pooled": -1.3639156810962838e-05,
+        "sensors": {
+          "0": -9.881245840004382e-06,
+          "1": -5.671334691781382e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.09987658674188998,
+        "low_prevalence_rows": 1133,
+        "low_prevalence_site_fraction": 0.7236180904522613,
+        "low_prevalence_sites": 144,
+        "whole_row_fraction": 0.0649760495914342,
+        "whole_rows": 1153,
+        "whole_site_fraction": 0.58,
+        "whole_sites": 145
+      },
+      "key": "maxsize30_maxrate0.05",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -0.00021738082886657573,
+          "4": -1.1584423743382644e-05
+        },
+        "pooled": -3.353491220492444e-05,
+        "sensors": {
+          "0": -1.2529242912839855e-05,
+          "1": -6.403244011243814e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.05,
+      "maximum_site_size": 30,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -4.1954590881077e-05,
+          "4": 2.7245778487894334e-05
+        },
+        "pooled": 1.0892277610974332e-06,
+        "sensors": {
+          "0": -2.770606085578109e-05,
+          "1": 3.5376002765930004e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.10093441466854725,
+        "low_prevalence_rows": 1145,
+        "low_prevalence_site_fraction": 0.7286432160804021,
+        "low_prevalence_sites": 145,
+        "whole_row_fraction": 0.06835728374189913,
+        "whole_rows": 1213,
+        "whole_site_fraction": 0.596,
+        "whole_sites": 149
+      },
+      "key": "maxsize30_maxrate0.1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -0.00021738082886657573,
+          "4": -1.1584423743382644e-05
+        },
+        "pooled": -3.896302653172423e-05,
+        "sensors": {
+          "0": -1.868559572082429e-05,
+          "1": -6.403244011243814e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.1,
+      "maximum_site_size": 30,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -4.157873945420665e-05,
+          "4": 4.4506876299865716e-05
+        },
+        "pooled": 9.451355665546224e-06,
+        "sensors": {
+          "0": -2.5224513012345184e-05,
+          "1": 3.968604189430458e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.10190409026798307,
+        "low_prevalence_rows": 1156,
+        "low_prevalence_site_fraction": 0.7386934673366834,
+        "low_prevalence_sites": 147,
+        "whole_row_fraction": 0.07427444350521274,
+        "whole_rows": 1318,
+        "whole_site_fraction": 0.628,
+        "whole_sites": 157
+      },
+      "key": "maxsize30_maxrate0.2",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -0.00021738082886657573,
+          "4": -1.1539924594683448e-05
+        },
+        "pooled": -3.92660357374508e-05,
+        "sensors": {
+          "0": -1.868559572082429e-05,
+          "1": -0.00010198286176310578
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.2,
+      "maximum_site_size": 30,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 2.2439833354037653e-05,
+          "4": 9.1397592253184e-05
+        },
+        "pooled": 6.807769915961881e-05,
+        "sensors": {
+          "0": 5.682527106609658e-05,
+          "1": 5.7288599246807514e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.10410789844851905,
+        "low_prevalence_rows": 1181,
+        "low_prevalence_site_fraction": 0.7587939698492462,
+        "low_prevalence_sites": 151,
+        "whole_row_fraction": 0.08526345449422372,
+        "whole_rows": 1513,
+        "whole_site_fraction": 0.688,
+        "whole_sites": 172
+      },
+      "key": "maxsize30_maxrate1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -0.00021738082886657573,
+          "4": 0.002918404125120788
+        },
+        "pooled": -0.0002482239020498156,
+        "sensors": {
+          "0": 0.001103327113644914,
+          "1": -0.005382056323654738
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 1.0,
+      "maximum_site_size": 30,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 0.0001479297773704369,
+          "4": 0.0006744873081594438
+        },
+        "pooled": 0.0005326213284970738,
+        "sensors": {
+          "0": 0.0006053862736613569,
+          "1": 9.982953345777368e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.10410789844851905,
+        "low_prevalence_rows": 1181,
+        "low_prevalence_site_fraction": 0.7587939698492462,
+        "low_prevalence_sites": 151,
+        "whole_row_fraction": 0.08216398985629755,
+        "whole_rows": 1458,
+        "whole_site_fraction": 0.672,
+        "whole_sites": 168
+      },
+      "key": "maxsize30_maxrate0.5",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -0.00021738082886657573,
+          "4": 0.002918404125120788
+        },
+        "pooled": -0.0002482239020498156,
+        "sensors": {
+          "0": 0.001103327113644914,
+          "1": -0.005382056323654738
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.5,
+      "maximum_site_size": 30,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 3.478738289974803e-05,
+          "4": 0.00048643823654803686
+        },
+        "pooled": 0.0003275226672624365,
+        "sensors": {
+          "0": 0.0003835826544588139,
+          "1": 2.201357336262255e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.10296191819464035,
+        "low_prevalence_rows": 1168,
+        "low_prevalence_site_fraction": 0.7537688442211056,
+        "low_prevalence_sites": 150,
+        "whole_row_fraction": 0.08058608058608059,
+        "whole_rows": 1430,
+        "whole_site_fraction": 0.656,
+        "whole_sites": 164
+      },
+      "key": "maxsize30_maxrate0.3",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -0.00021738082886657573,
+          "4": -1.8304208110331288e-06
+        },
+        "pooled": -0.0013001753319162868,
+        "sensors": {
+          "0": -1.2479384955410566e-05,
+          "1": -0.005382056323654738
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.3,
+      "maximum_site_size": 30,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": false,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": 3.478738289974803e-05,
+          "4": 0.00033619181698441025
+        },
+        "pooled": 0.00025678830294861843,
+        "sensors": {
+          "0": 0.0003457906087024343,
+          "1": -2.5589389638036586e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.231311706629055,
+        "low_prevalence_rows": 2624,
+        "low_prevalence_site_fraction": 0.7688442211055276,
+        "low_prevalence_sites": 153,
+        "whole_row_fraction": 0.1478726401803325,
+        "whole_rows": 2624,
+        "whole_site_fraction": 0.612,
+        "whole_sites": 153
+      },
+      "key": "maxsize1000000_maxrate0.02",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -0.005138252513037234,
+          "4": -1.640744066444544e-05
+        },
+        "pooled": -0.0015475711096620826,
+        "sensors": {
+          "0": -0.0020435613790937834,
+          "1": -0.00012944663385616728
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.02,
+      "maximum_site_size": 1000000,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": false,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.00042246537291923403,
+          "4": -7.374617190580857e-06
+        },
+        "pooled": -0.0001783509047219578,
+        "sensors": {
+          "0": -0.00021813009597382305,
+          "1": -0.00014994756127173492
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.0006561679790025865
+    },
+    {
+      "coverage": {
+        "low_prevalence_row_fraction": 0.5665550070521862,
+        "low_prevalence_rows": 6427,
+        "low_prevalence_site_fraction": 0.8894472361809045,
+        "low_prevalence_sites": 177,
+        "whole_row_fraction": 0.3633136094674556,
+        "whole_rows": 6447,
+        "whole_site_fraction": 0.712,
+        "whole_sites": 178
+      },
+      "key": "maxsize1000000_maxrate0.05",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -0.02421817001647031,
+          "4": 0.0010804180149127651
+        },
+        "pooled": -0.009050747170731732,
+        "sensors": {
+          "0": -0.010956900799058533,
+          "1": -0.008301804574545213
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "maximum_predicted_positive_rate": 0.05,
+      "maximum_site_size": 1000000,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_row_coverage": true,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0029238804771214433,
+          "4": 0.00016702298437676344
+        },
+        "pooled": -0.0009274480894124748,
+        "sensors": {
+          "0": -0.0012816528923608184,
+          "1": -0.0002256881261474275
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.001312335958005284
+    }
+  ],
+  "status": "candidate_found_for_independent_folds01_confirmation",
+  "summary": {
+    "bootstrapped_candidates": 1,
+    "candidate_count": 42,
+    "passing_candidates": 1,
+    "point_gate_candidates": 1,
+    "selected": {
+      "bootstrap_checks": {
+        "low_prevalence_paired_site_ap_lower_strictly_positive": true,
+        "whole_paired_site_ap_lower_strictly_positive": true
+      },
+      "coverage": {
+        "low_prevalence_row_fraction": 1.0,
+        "low_prevalence_rows": 11344,
+        "low_prevalence_site_fraction": 1.0,
+        "low_prevalence_sites": 199,
+        "whole_row_fraction": 1.0,
+        "whole_rows": 17745,
+        "whole_site_fraction": 1.0,
+        "whole_sites": 250
+      },
+      "key": "maxsize1000000_maxrate1",
+      "low_prevalence": {
+        "average_precision": {
+          "folds": {
+            "3": 0.7821709334607115,
+            "4": 0.7004425107419013
+          },
+          "pooled": 0.7265114771853518,
+          "sensors": {
+            "0": 0.6481715734234721,
+            "1": 0.8857497257240814
+          }
+        },
+        "average_precision_delta": {
+          "folds": {
+            "3": 0.024955799744190488,
+            "4": 0.01725982309239582
+          },
+          "pooled": 0.018324873143613862,
+          "sensors": {
+            "0": 0.018623252866940332,
+            "1": 0.009406572438893201
+          }
+        },
+        "matched_fpr_metrics": {
+          "accuracy": 0.9285966149506347,
+          "auroc": 0.9676401936183254,
+          "average_precision": 0.7265114771853518,
+          "false_positive_rate": 0.07126313914127917,
+          "fn": 10.0,
+          "fp": 800.0,
+          "negative_predictive_value": 0.9990417784591797,
+          "operating_point": {
+            "false_positive_rate": 0.07126313914127917,
+            "precision": 0.11894273127753303,
+            "recall": 0.9152542372881356,
+            "target_fpr": 0.0713,
+            "threshold": 0.06707698236626985
+          },
+          "precision": 0.11894273127753303,
+          "recall": 0.9152542372881356,
+          "sensor_average_precision": {
+            "Landsat": 0.8857497257240814,
+            "Sentinel-2": 0.6481715734234721
+          },
+          "specificity": 0.9287368608587209,
+          "tn": 10426.0,
+          "tp": 108.0
+        },
+        "matched_fpr_recall_delta": 0.008474576271186418,
+        "positive": 118,
+        "rows": 11344
+      },
+      "maximum_predicted_positive_rate": 1.0,
+      "maximum_site_size": 1000000,
+      "paired_site_ap_delta": {
+        "low_prevalence": {
+          "confidence": 0.95,
+          "groups": 199,
+          "lower": 0.0011696427631523315,
+          "mean": 0.01755048772212626,
+          "replicates": 10000,
+          "upper": 0.03729585564366426
+        },
+        "whole": {
+          "confidence": 0.95,
+          "groups": 250,
+          "lower": 0.000488532666586561,
+          "mean": 0.00391815077716084,
+          "replicates": 10000,
+          "upper": 0.007257422560446659
+        }
+      },
+      "passed": true,
+      "passed_point_gates": true,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_row_coverage": true,
+        "minimum_low_prevalence_site_coverage": true,
+        "minimum_whole_row_coverage": true,
+        "whole_each_fold_ap_nondecreasing": true,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": true
+      },
+      "whole": {
+        "average_precision": {
+          "folds": {
+            "3": 0.9304828958469339,
+            "4": 0.8937638696091151
+          },
+          "pooled": 0.9084121516710161,
+          "sensors": {
+            "0": 0.8781737382109496,
+            "1": 0.976076217371509
+          }
+        },
+        "average_precision_delta": {
+          "folds": {
+            "3": 0.00016623634648105234,
+            "4": 0.002748330411545985
+          },
+          "pooled": 0.004336309445459263,
+          "sensors": {
+            "0": 0.005804071774802022,
+            "1": 0.0011581160240032862
+          }
+        },
+        "matched_fpr_metrics": {
+          "accuracy": 0.9316990701606086,
+          "auroc": 0.9862795724605073,
+          "average_precision": 0.9084121516710161,
+          "false_positive_rate": 0.07126564330189261,
+          "fn": 56.0,
+          "fp": 1156.0,
+          "negative_predictive_value": 0.9962965412340453,
+          "operating_point": {
+            "false_positive_rate": 0.07126564330189261,
+            "precision": 0.5594512195121951,
+            "recall": 0.963254593175853,
+            "target_fpr": 0.0713,
+            "threshold": 0.1777955533639904
+          },
+          "precision": 0.5594512195121951,
+          "recall": 0.963254593175853,
+          "sensor_average_precision": {
+            "Landsat": 0.976076217371509,
+            "Sentinel-2": 0.8781737382109496
+          },
+          "specificity": 0.9287343566981074,
+          "tn": 15065.0,
+          "tp": 1468.0
+        },
+        "matched_fpr_recall_delta": 0.001312335958005284,
+        "positive": 1524,
+        "rows": 17745
+      }
+    }
+  },
+  "target_domain": {
+    "definition": {
+      "maximum_site_positive_rate": 0.05,
+      "membership": "all folds-3/4 rows from physical_location_id groups whose scene-positive rate is <=0.05",
+      "name": "low-prevalence physical-location proxy for the official test-only-site view",
+      "use": "evaluation and gating only; true site prevalence never enters routing"
+    },
+    "positive": 118,
+    "rows": 11344,
+    "sites": 199
+  }
+}

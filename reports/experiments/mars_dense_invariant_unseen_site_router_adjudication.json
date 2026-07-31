@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "scope": "cross-experiment promotion adjudication for the label-free unseen-site router",
+  "source_report": {
+    "path": "reports/experiments/mars_dense_invariant_unseen_site_router.json",
+    "sha256": "6564bd0ff88b0b2df3f58f2b03bcee4eb56773421620055e59cf7f82005f8185"
+  },
+  "source_result": {
+    "point_gate_candidates": 1,
+    "passing_candidates": 1,
+    "selected_key": "maxsize1000000_maxrate1",
+    "selected_whole_row_fraction": 1.0,
+    "selected_whole_site_fraction": 1.0,
+    "selected_low_prevalence_row_fraction": 1.0,
+    "selective_router_found": false
+  },
+  "independent_contrary_evidence": {
+    "path": "reports/experiments/mars_dense_invariant_pair_fold2.json",
+    "sha256": "f3554d9675c0415ebfc90029d1faaf8d7cb90163b0b92fbd35938c916be067bb",
+    "status": "rejected_on_fold2_confirmation",
+    "whole_ap_delta": -0.0021615266051500104,
+    "whole_matched_fpr_recall_delta": -0.006273525721455453
+  },
+  "promotion_authorized": false,
+  "decision": "Reject the router family: its only development passer routes every unseen site and is exactly the fixed pair already rejected on independent fold 2.",
+  "folds01_accessed": false,
+  "fresh_inputs_accessed": false,
+  "exact_paper_inputs_accessed": false
+}

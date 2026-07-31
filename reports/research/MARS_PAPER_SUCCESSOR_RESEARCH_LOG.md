@@ -3774,6 +3774,22 @@ score-history statistics match the rare official test-only mixture. Any such
 router must be selected again on folds 3+4 and confirmed on still-unused folds
 0/1 before external access.
 
+### 2026-07-30: Hard unseen-site router rejected
+
+Only one of 42 candidates passed: the control with maximum size 1,000,000 and
+maximum predicted-positive rate 1.0. It routes 100% of rows and sites and is
+therefore exactly the already retired fixed pair, not a selective router. The
+separate adjudication report denies promotion because independent fold 2 showed
+that same all-site candidate regressed whole AP -0.002162 and recall -0.006274.
+
+Every genuinely selective rate-only gate retained the rare-site benefit but
+regressed fold-3 whole AP; adding a hard history limit routed only 8%-20% of rows,
+missed the >=50% rare-site coverage requirement, and produced rare-site AP gains
+below +0.003. No folds-0/1 or external access is authorized. The next router will
+replace discontinuous site inclusion with a smooth label-free trust weight based
+on current-score predicted-positive rate, continuously shrinking the fixed
+residual as a site looks less like the rare target mixture.
+
 ### 2026-07-30: Label-free unseen-site router frozen
 
 The next development experiment keeps the failed fold-2 pair entirely fixed and
