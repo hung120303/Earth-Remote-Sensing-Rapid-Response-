@@ -4414,3 +4414,22 @@ The selection rule prioritizes a passing paired-site lower bound, with global
 normalization preferred only as the final tie-break. This is the last required
 deployment-equivalence check before any DOFA fold-2 access. The frozen contract
 is `configs/mars_dofa_v2_train_fitted_normalization_protocol.json`.
+
+### 2026-07-31: Train-fitted DOFA-v2 normalization passes
+
+Both deployment-safe normalization candidates pass every frozen fold-3/4 gate.
+The selected global train-fitted mode improves pooled AP by +0.001412 with
+unchanged pooled and fold-local operating recall/counts. Its paired-site mean is
++0.001421 with 95% interval [+0.000526,+0.002462]. AP changes are
++0.000591/+0.001414 on folds 3/4 and +0.000949/+0.001400 on
+Landsat/Sentinel-2. Sensor-train-fitted scaling independently passes at
++0.001225 AP with interval [+0.000347,+0.002109], making the conclusion robust
+to the deployment-safe normalization choice.
+
+Global scaling wins the preregistered stability ranking and is now the frozen
+candidate: change-extreme DOFA-v2 features, C=0.01, five new projection seeds,
+mean-logit aggregation, gate=0.50, weight=0.05, with every scaler fit on
+training rows only. Result SHA-256 is
+`23e9124a5f0b5a9a788a46a6fd07753501a8b83c880b0a4e3f24e680c92074b2`.
+This pass authorizes a separately frozen one-shot fold-2 extraction/evaluation;
+fold 2 remains unaccessed at this point.
