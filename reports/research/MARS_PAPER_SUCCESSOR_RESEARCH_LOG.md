@@ -4433,3 +4433,23 @@ training rows only. Result SHA-256 is
 `23e9124a5f0b5a9a788a46a6fd07753501a8b83c880b0a4e3f24e680c92074b2`.
 This pass authorizes a separately frozen one-shot fold-2 extraction/evaluation;
 fold 2 remains unaccessed at this point.
+
+### 2026-07-31: One-shot DOFA-v2 fold-2 package frozen
+
+The exact global-train-fitted candidate is now bound into a one-shot fold-2
+protocol before any fold-2 DOFA feature or outcome access. A dedicated wrapper
+invokes the already verified sensor-aware extractor for fold 2 only, validates
+the 10,752-feature schema and all provenance invariants, and writes a compact
+hash receipt while leaving the bulk cache ignored. Extraction computations do
+not use labels; labels copied for later alignment remain inaccessible until the
+evaluator is frozen.
+
+The separately hashed evaluator first has to recompute the fixed folds-3/4
+candidate and match its pooled, fold, and sensor deltas to 1e-14. Only then may
+it consume the receipt, fit five projection/scaler/probe stacks on folds 3+4,
+and score fold 2 once. Promotion requires at least +0.001 AP, nonnegative AP on
+both sensors, identical operating confusion counts, higher AP and recall than
+the released primary score, and a strictly positive paired-site AP lower bound.
+It refuses to overwrite an existing result. The package is frozen in
+`configs/mars_dofa_v2_fold2_protocol.json`; fold 2 is still untouched pending a
+successful development-only reproduction smoke.

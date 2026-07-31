@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_development_reproduction_smoke_and_fold2_access",
+  "scope": "one-shot fold-2 confirmation of the fixed train-fitted protected DOFA-v2 fusion",
+  "evaluator": {
+    "path": "tools/evaluate_mars_dofa_v2_fold2.py",
+    "sha256": "d19a9d425920604d33ea99f218055f18a14537b59d65f014df451f9a0537cade"
+  },
+  "extractor": {
+    "path": "tools/extract_mars_dofa_v2_fold2_features.py",
+    "sha256": "b0ba7d6ac623e2fca21ed4ff556854091504f746ed345798deca93d2f8ab3170"
+  },
+  "base_extractor": {
+    "path": "tools/extract_mars_dofa_v2_scene_features.py",
+    "sha256": "ed8ad97c94da23ede880f44fdd57078a36c130c85f90b23cc705abebb8f55e2e"
+  },
+  "code_dependencies": [
+    {"path": "tools/extract_mars_dofa_v2_scene_features.py", "sha256": "ed8ad97c94da23ede880f44fdd57078a36c130c85f90b23cc705abebb8f55e2e"},
+    {"path": "tools/confirm_mars_dofa_v2_train_fitted_normalization.py", "sha256": "59b3cdd8a85d5bd54d1174acaa3dfc4d62cc6ca8cc613cb1be29f33a5697ce44"},
+    {"path": "tools/train_mars_dofa_v2_protected_fusion.py", "sha256": "14390520c1bf0b39ecd6ac98591aaf7e40914651a925e504c2d27dad8c4cdb19"},
+    {"path": "tools/confirm_mars_dofa_v2_projection_ensemble.py", "sha256": "e7175c5d1b66e9de80d0da42d4e7b28adc4fb575e1ca81e445115feaa6668969"},
+    {"path": "tools/train_mars_dofa_v2_scene_probe.py", "sha256": "62eaefe3ea087bfabeac415af5cba8f18809320b93f43a12b51b97d950f34cb7"},
+    {"path": "tools/train_mars_oof_scene_ensemble_v2.py", "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"},
+    {"path": "tools/train_mars_scene_ranker.py", "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"}
+  ],
+  "inputs": {
+    "development_report": {"path": "reports/experiments/mars_dofa_v2_train_fitted_normalization_folds34.json", "sha256": "23e9124a5f0b5a9a788a46a6fd07753501a8b83c880b0a4e3f24e680c92074b2"},
+    "dofa_development": {"path": "outputs/mars_dofa_v2_scene_features_folds34.npz", "sha256": "2c43352e92f96549d64188c78318fe606d55552aa9587aace1a195e8dfba66fe"},
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "score": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "manifest": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl", "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"},
+    "fold_protocol": {"path": "configs/mars_paper_v3_group_folds.json", "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"},
+    "acquisition_receipt": {"path": "reports/acquisition/mars_s2l_paper_v3_development_download.json", "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"}
+  },
+  "development_authorization": {
+    "all_promotion_gates_pass": true,
+    "result_sha256": "23e9124a5f0b5a9a788a46a6fd07753501a8b83c880b0a4e3f24e680c92074b2"
+  },
+  "candidate": {
+    "feature_set": "change_extreme",
+    "C": 0.01,
+    "projection_dimension": 2048,
+    "projection_seeds": [20260780, 20260781, 20260782, 20260783, 20260784],
+    "aggregation": "mean_logit",
+    "normalization_mode": "global_train_fitted",
+    "gate": 0.5,
+    "weight": 0.05,
+    "fit_folds": [3, 4],
+    "held_fold": 2
+  },
+  "runtime": {
+    "batch_size": 256,
+    "workers": 0,
+    "device": "CUDA",
+    "autocast": "float16"
+  },
+  "fold2_cache": {
+    "features": "outputs/mars_dofa_v2_scene_features_fold2.npz",
+    "receipt": "reports/acquisition/mars_dofa_v2_scene_features_fold2.json",
+    "tracked": false
+  },
+  "gates": {
+    "minimum_ap_delta_vs_current": 0.001,
+    "recall_delta_at_fpr_0_0713_minimum": 0.0,
+    "false_positive_rate_no_worse": true,
+    "operating_confusion_counts_identical": true,
+    "each_sensor_ap_delta_vs_current_minimum": 0.0,
+    "paired_site_ap_delta_95pct_lower_strictly_positive": true,
+    "ap_and_recall_vs_released_primary_strictly_positive": true
+  },
+  "bootstrap": {
+    "unit": "physical_site_group",
+    "paired": true,
+    "replicates": 10000,
+    "confidence": 0.95,
+    "seed": 2026073210
+  },
+  "smoke": {
+    "mode": "recompute the fixed candidate on folds 3/4 and compare to the committed selected result without fold-2 access",
+    "absolute_tolerance": 1e-14
+  },
+  "output": {
+    "json": "reports/experiments/mars_dofa_v2_fold2.json",
+    "markdown": "reports/experiments/MARS_DOFA_V2_FOLD2.md"
+  },
+  "invariants": [
+    "The evaluator and extractor hashes are frozen and committed before fold-2 extraction.",
+    "The evaluator must reproduce all selected fold-3/4 pooled, fold, and sensor deltas before fold-2 extraction.",
+    "DOFA feature extraction is label-free; labels copied into the ignored cache are inaccessible until the evaluator is frozen.",
+    "Every normalization statistic and linear probe is fit only on folds 3/4 and applied unchanged to fold 2.",
+    "No hyperparameter, seed, feature, transform, fusion gate, weight, or promotion gate can change after fold-2 extraction.",
+    "The evaluator refuses to overwrite or repeat an existing fold-2 result.",
+    "Fold 0/1, external, and exact-paper outcomes remain inaccessible regardless of fold-2 outcome.",
+    "Bulk feature caches remain Git-ignored; only compact receipt and reports are committed."
+  ]
+}
