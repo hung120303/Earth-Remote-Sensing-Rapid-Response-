@@ -3790,6 +3790,20 @@ replace discontinuous site inclusion with a smooth label-free trust weight based
 on current-score predicted-positive rate, continuously shrinking the fixed
 residual as a site looks less like the rare target mixture.
 
+### 2026-07-30: Smooth unseen-site trust protocol frozen
+
+The smooth router preserves the known-site current score and, for unseen sites,
+maps the current-score predicted-positive rate to a residual multiplier in [0,1].
+It tests linear cutoff, exponential decay, and inverse-decay families over 16
+frozen scales. A weight of zero is exactly the current score; one is the complete
+fixed pair. No all-sites trust-one control is included.
+
+Promotion requires mean trust >=0.5 on low-prevalence rows, at least half of those
+rows receiving trust >=0.5, all prior whole/rare-site AP/fold/sensor/recall
+gates, and positive paired-site AP lower bounds in both views. The two-candidate
+smoke exercised smooth weighting, exact logit residual scaling, trust checks, and
+both bootstrap paths. Fold 2 remains report-only and folds 0/1 remain untouched.
+
 ### 2026-07-30: Label-free unseen-site router frozen
 
 The next development experiment keeps the failed fold-2 pair entirely fixed and
