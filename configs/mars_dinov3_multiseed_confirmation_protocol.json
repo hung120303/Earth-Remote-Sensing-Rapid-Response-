@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "status": "frozen_after_identity_routing_finite_gpu_smoke",
+  "status": "frozen_after_logging_only_refreeze",
   "scope": "three-seed DINOv3 dense-evidence confirmation with Sentinel-2-only scene routing",
   "trainer": {
     "path": "tools/train_mars_dinov3_multiseed_confirmation.py",
-    "sha256": "cf102754c3fe2a53a5b43dfc59e7bd2b75edd9e434035db88b699d830b686f84"
+    "sha256": "904e3b1e16b9eb9092cda8cf241e2070712cefa9e519ef2b22e8349ee04048cc"
   },
   "code_dependencies": [
     {
@@ -165,6 +165,10 @@
     "endpoint_rule": "fixed epoch 2 for every seed and fold direction; no held-fold epoch selection",
     "sampling": "equal request mass for each label x sensor stratum, then equal physical-site mass within stratum",
     "augmentation": "joint quarter-turn and reflection transforms across 200x200 MARS tensors and 64x64 counterfactual maps"
+  },
+  "logging": {
+    "progress_every_batches": 64,
+    "scientific_effect": "none; wraps the existing loader and emits elapsed time without changing order, sampling, tensors, optimization, or RNG state"
   },
   "search": {
     "strengths": [

@@ -57,6 +57,41 @@ from train_mars_physics_guided_teacher_pilot import seed_everything  # noqa: E40
 DEFAULT_PROTOCOL = Path("configs/mars_dinov3_multiseed_confirmation_protocol.json")
 
 
+class ProgressLoader:
+    """Expose batch timing without changing the wrapped loader or its order."""
+
+    def __init__(self, loader: DataLoader[dict[str, Any]], label: str, every: int) -> None:
+        self.loader = loader
+        self.label = label
+        self.every = every
+        self.epoch = 0
+
+    def __iter__(self):
+        self.epoch += 1
+        started = time.perf_counter()
+        print(
+            json.dumps(
+                {"progress": "epoch_start", "endpoint": self.label, "epoch": self.epoch}
+            ),
+            flush=True,
+        )
+        for batch_index, batch in enumerate(self.loader, start=1):
+            if batch_index % self.every == 0:
+                print(
+                    json.dumps(
+                        {
+                            "progress": "training_batch",
+                            "endpoint": self.label,
+                            "epoch": self.epoch,
+                            "batch": batch_index,
+                            "elapsed_seconds": time.perf_counter() - started,
+                        }
+                    ),
+                    flush=True,
+                )
+            yield batch
+
+
 def verify_protocol(
     protocol_path: Path, protocol: dict[str, Any], *, smoke: bool
 ) -> dict[str, Path]:
@@ -346,6 +381,7 @@ def main() -> int:
     evidence_weight = float(protocol["search"]["scene_evidence_weight"])
     batch_size = int(spec["batch_size"])
     workers = int(spec["loader_workers"])
+    progress_every = int(protocol["logging"]["progress_every_batches"])
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if device.type != "cuda":
         raise RuntimeError("DINOv3 methane fusion requires CUDA")
@@ -423,7 +459,13 @@ def main() -> int:
         started = time.perf_counter()
         endpoint_spec = dict(spec)
         endpoint_spec["seed"] = smoke_seed
-        history = train_endpoint(model, loader, endpoint_spec, device, 1)
+        history = train_endpoint(
+            model,
+            ProgressLoader(loader, "smoke", progress_every),
+            endpoint_spec,
+            device,
+            1,
+        )
         elapsed = time.perf_counter() - started
         finite = all(
             torch.isfinite(value).all() for value in model.trainable_state().values()
@@ -524,8 +566,13 @@ def main() -> int:
                 raise ValueError(
                     f"Endpoint fold={held_fold} seed={endpoint_seed} is not identity"
                 )
+            endpoint_label = f"held_fold={held_fold},seed={endpoint_seed}"
             history = train_endpoint(
-                model, train_loader, endpoint_spec, device, int(spec["epochs"])
+                model,
+                ProgressLoader(train_loader, endpoint_label, progress_every),
+                endpoint_spec,
+                device,
+                int(spec["epochs"]),
             )
             seed_parts.append(
                 collect_seed_evidence(

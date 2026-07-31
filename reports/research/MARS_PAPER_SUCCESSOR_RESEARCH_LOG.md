@@ -4739,3 +4739,14 @@ trainer SHA-256 is
 The three residual strengths (0.10/0.25/0.50), epoch-2 endpoint, sampling,
 loss, bootstrap, and promotion gates are unchanged. Fold 2, source-disjoint
 inputs, and official-test inputs and labels remain inaccessible to this run.
+
+The first execution was stopped before its first epoch completed because the
+shell wrapper had detached the still-running WSL trainer and its loader workers,
+leaving no observable output. Process inspection showed that most elapsed time
+was input hashing and only about eight minutes was training; no fold metric or
+prediction report had been produced. A logging-only wrapper now emits progress
+every 64 batches. It does not query RNG state or alter loader order, samples,
+tensors, optimization, seeds, endpoints, or evaluation. The trainer is
+re-hashed as
+`904e3b1e16b9eb9092cda8cf241e2070712cefa9e519ef2b22e8349ee04048cc`
+and recommitted before restarting the same frozen experiment.
