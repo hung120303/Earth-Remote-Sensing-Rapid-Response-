@@ -4131,3 +4131,21 @@ ordering. The next controlled model will be zero-initialized and learn only a
 bounded residual around each OOF current logit, while the same-background pairs
 supervise the residual direction. This preserves the current ranker as the
 explicit floor instead of asking a weaker standalone head to relearn it.
+
+### 2026-07-31: Baseline-preserving causal residual frozen
+
+The residual architecture reuses only the empirically supported `causal_weak`
+intervention schedule and directional-teacher channels. Its final linear layer
+is exactly zero-initialized, so before optimization candidate scores equal the
+current spatial-Prithvi OOF scores bit-for-bit in mathematical precision. Actual
+training BCE/hard-pair loss operates on `logit(current)+residual`; simulation
+positives and exact backgrounds supervise residual direction with the prior
+0.25/0.25 weights and +0.5 causal margin. A 0.01 residual L2 penalty makes
+preservation explicit.
+
+Two fixed seeds will produce honest fold-3-to-4 and fold-4-to-3 residuals. Only
+four uniform strengths [0.10,0.25,0.50,1.00] are eligible; no site router or
+prevalence feature exists. The smoke verified exact zero initialization, finite
+post-update residuals, finite actual/simulation/pair/L2 losses, and no artifact
+creation. The full run retains the strict whole and rare-site gates and cannot
+access folds 0/1/2 or external inputs.
