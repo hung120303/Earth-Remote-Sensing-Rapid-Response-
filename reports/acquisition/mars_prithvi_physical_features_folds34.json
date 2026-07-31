@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "scope": "finalized development-only physical-radiometry Prithvi features for folds 3 and 4",
+  "generated_at_utc": "2026-07-31T16:45:53.2579599Z",
+  "result": {
+    "ok": true,
+    "all_values_finite": true,
+    "all_manifest_alignment_checks_pass": true,
+    "rows": 17745,
+    "shape": [17745, 3072],
+    "dtype": "float16",
+    "minimum": -21.0625,
+    "maximum": 22.3125,
+    "mean": 0.2089521735906601,
+    "standard_deviation": 0.7574225664138794,
+    "unique_sample_ids": 17745,
+    "fold_counts": {"3": 8799, "4": 8946},
+    "label_counts": {"NO_PLUME": 16221, "PLUME": 1524},
+    "sensor_counts": {"Sentinel-2": 14963, "Landsat": 2782},
+    "identity_checks": {
+      "sample_ids": true,
+      "groups": true,
+      "labels": true,
+      "sensors": true,
+      "folds": true
+    }
+  },
+  "output": {
+    "path": "outputs/mars_prithvi_eo_2_tiny_tl_physical_features_folds34.npz",
+    "bytes": 99828149,
+    "sha256": "fefbe31fabda56fac01d6acefe0b3d8d8034c98496f6312d70e22dd3c6518108",
+    "tracked": false
+  },
+  "radiometric_contract": {
+    "mars_loader_divisor": 5000.0,
+    "prithvi_reflectance_scale": 10000.0,
+    "mars_to_prithvi_multiplier": 5000.0,
+    "description": "MARS normalized spectral values x5000 restore original reflectance x10000 digital numbers before pinned Prithvi mean/std"
+  },
+  "provenance": {
+    "generator": {
+      "path": "tools/extract_mars_prithvi_physical_scene_features.py",
+      "sha256": "55ddc9d8e7a481a097e4101b9d413f442f7a0c341a7d05d25bcd2aef0adfeaa9"
+    },
+    "protocol": {
+      "path": "configs/mars_prithvi_physical_scene_probe_protocol.json",
+      "sha256": "d15217cec94de3b7cf8b65398ee66f68a5c03830e4467b5b0bb800c3de119395"
+    },
+    "generator_commit": "df62235990602fc571c2442d3f7fd838d96a40f2",
+    "checkpoint_sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70",
+    "foundation_receipt_sha256": "ddc2dec982320ab23f9963b5221b8ce8752c04f01b0b84a018bb70ba84d518f3",
+    "development_manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "fold_protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "execution": {
+      "device": "NVIDIA GeForce RTX 5070",
+      "batch_size": 256,
+      "data_loader_workers": 0,
+      "elapsed_seconds": 1502.08,
+      "peak_host_kib": 4822540
+    }
+  },
+  "data_policy": {
+    "selection_folds_only": [3, 4],
+    "excluded_folds": [0, 1, 2],
+    "paper_test_loaded": false,
+    "bulk_output_ignored": true
+  }
+}

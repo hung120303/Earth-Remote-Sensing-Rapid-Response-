@@ -4207,3 +4207,21 @@ per-sensor AP, positive AP on both folds, and a positive lower bound from a
 finite 3,072-wide features; two focused tests and static checks pass. Folds
 0/1/2, external data, and the paper test remain excluded. The complete frozen
 contract is `configs/mars_prithvi_physical_scene_probe_protocol.json`.
+
+### 2026-07-31: Physical-radiometry Prithvi cache finalized
+
+The corrected extractor completed all 17,745 fold-3/4 rows in 1,502 seconds
+with a single-process loader. Two faster multiprocess launches failed before
+writing output because WSL's 16 GB host-memory limit killed duplicated raster
+workers; the safe run changed only batch/loader execution settings and used the
+identical frozen feature transform. A 512-row cross-check had already shown
+byte-identical output between worker configurations.
+
+The ignored 17,745x3,072 float16 cache is 99,828,149 bytes with SHA-256
+`fefbe31fabda56fac01d6acefe0b3d8d8034c98496f6312d70e22dd3c6518108`.
+Every feature is finite in [-21.0625, 22.3125]. Independent finalization matches
+all 17,745 sample IDs, physical groups, labels, sensors, and folds to the
+canonical manifest in exact order. Fold counts are 8,799/8,946; label counts
+are 16,221 no-plume and 1,524 plume; sensor counts are 14,963 Sentinel-2 and
+2,782 Landsat. The compact acquisition receipt is committed before any probe
+metric is computed. Folds 0/1/2 and paper-test outcomes remain excluded.
