@@ -4453,3 +4453,18 @@ the released primary score, and a strictly positive paired-site AP lower bound.
 It refuses to overwrite an existing result. The package is frozen in
 `configs/mars_dofa_v2_fold2_protocol.json`; fold 2 is still untouched pending a
 successful development-only reproduction smoke.
+
+### 2026-07-31: Fold-2 DOFA-v2 features finalized
+
+The pre-access evaluator smoke reproduces all six frozen pooled, sensor, and
+fold development deltas exactly. The authorized fold-2 extractor then processes
+8,833 scenes from 153 physical groups in 929.7 seconds. The cache contains 797
+plume and 8,036 no-plume rows, split across 7,444 Sentinel-2 and 1,389 Landsat
+scenes. All 8,833x10,752 float16 features are finite in [-725.0,721.5]. Peak
+CUDA allocation is 6.20 GiB.
+
+The 175,383,631-byte cache remains ignored and has SHA-256
+`9ead8028d98112bd9a9d494a08104700fa580b2258c7c2c15bb4a38a0d6723ab`.
+Its compact receipt is committed before outcome evaluation. No fold-2 label was
+used by feature extraction or model fitting; the already-frozen evaluator may
+now perform the single authorized outcome read.
