@@ -3382,3 +3382,50 @@ label-by-sensor strata with equal requested mass. The frozen protocol binds the
 trainer and every model, manifest, fold, checkpoint, feature, and score input by
 SHA-256. The full run may now train the two endpoints, after which feature
 extraction and AP-head selection must use only each adapter's held-out fold.
+
+### 2026-07-30: Primary-literature architecture cross-check
+
+The June 2026 multimodal methane-segmentation study
+<https://arxiv.org/abs/2606.26416> uses intermediate DINOv3 transformer blocks
+2/5/8/11, a separate ResNet-18 methane-enhancement encoder, multiplicative
+methane-guided fusion at four semantic scales, and a SegFormer decoder. On its
+4,172-scene EMIT-derived MPDataset it reports 82.15% mean IoU, 90.07% mean
+precision, and 76.93% plume recall, improving its MPSUNet comparator by
+0.92/0.87/1.01 percentage points respectively. Its benchmark and metrics are not
+comparable to MARS-S2L, but its ablation-motivated pattern independently supports
+the present architecture: intermediate Prithvi blocks 3/6/9/12 provide semantic
+context, the spectral-change physics pyramid provides methane evidence, and
+zero-initialized scale/shift gates fuse them at three deep released-U-Net levels.
+
+The May 2026 MethaneSAT study <https://arxiv.org/abs/2605.24273> reports that Mask
+R-CNN improved pixel F1 over U-Net by 10.49 points on MethaneAIR and 5.48 points on
+MethaneSAT. Its physics-informed morphological filtering and proximity merging
+then trade sensitivity for precision. This supports keeping object consistency
+and post-processing in the research space, but the local controlled object branch
+already proved redundant for scene AP and harmful to pixel IoU. The current
+decision therefore remains evidence-led: retain transformer/physics fusion for
+the mask, and require a separately cross-fitted ranker to improve plume/no-plume
+ordering. Neither external paper supplied data or labels to the running endpoint.
+
+### 2026-07-30: Honest dense-representation endpoints completed
+
+Both checksum-bound jobs completed all three fixed 24,576-sample epochs with
+finite parameters and exact released-model identity at initialization. The
+fold-4-only endpoint's loss fell 0.321839 -> 0.228765 -> 0.207340; the fold-3-only
+endpoint fell 0.259684 -> 0.184310 -> 0.156027. Their ignored 21,926,411-byte
+artifacts have SHA-256 values
+`8fae4288edeae4aa74438356385992860c4a8e2af2e340cf1b3155f6503313e8`
+and
+`b35cef6d577286376f0ed5630c6967cd91db0dc33cd4d24c7e1a2d228ea388f2`
+for held folds 3 and 4 respectively.
+
+The descriptive strength-0.50 mask transfer was negative: IoU changed -0.007476
+on fold 3 and -0.005995 on fold 4, with both paired-site lower bounds negative.
+This contrasts with the +0.009969 fold-2 gain from the folds-3+4 adapter and shows
+that a one-source-fold mask adapter is not itself a transferable mask model. It
+does not invalidate the preregistered representation purpose: every endpoint is
+retained unconditionally so its held fold can be encoded without representation
+label leakage. No endpoint is promoted for segmentation. The next inexpensive
+gate is label-free extraction followed by honest fold-3/4 AP-head cross-prediction;
+failure there will retire the dense scene-representation branch before another
+held-fold or external evaluation. No fresh or exact-paper input was accessed.

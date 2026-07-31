@@ -1,0 +1,312 @@
+{
+  "external_inputs_accessed": false,
+  "feature_identity": {
+    "feature_dtype": "float16",
+    "feature_shape": [
+      44363,
+      768,
+      8,
+      8
+    ],
+    "fold_counts": {
+      "0": 8987,
+      "1": 8798,
+      "2": 8833,
+      "3": 8799,
+      "4": 8946
+    },
+    "fold_protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "foundation_checkpoint_sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70",
+    "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "rows": 44363,
+    "sample_id_sha256": "ae21523a46e8c7d783a2ee5aa8a7c52f8903ce6d2f37f0d3852ece0070b18219"
+  },
+  "generated_at_utc": "2026-07-31T02:22:52.688490+00:00",
+  "jobs": [
+    {
+      "artifact": {
+        "bytes": 21926411,
+        "path": "EarthRemoteSensingRapidResponse/artifacts/mars_dense_prithvi_representation_holdout3.pt",
+        "sha256": "8fae4288edeae4aa74438356385992860c4a8e2af2e340cf1b3155f6503313e8"
+      },
+      "evaluation_identity": {
+        "rows": 8799,
+        "sample_id_sha256": "3ed93b89e06666d5ae84fa7f36cf429249bf252f2456a25ba0f28cb2ed9389b9",
+        "scene_score_identity_max_abs": 5.960464477539063e-08
+      },
+      "finite": true,
+      "fit_folds": [
+        4
+      ],
+      "fit_rows": 8946,
+      "held_fold": 3,
+      "held_rows": 8799,
+      "history": [
+        {
+          "correction_l2": 1.0036509573192613,
+          "dice": 0.2465144755963896,
+          "epoch": 1,
+          "focal": 0.061701726330763464,
+          "loss": 0.3218393901944789,
+          "negative_upward": 0.04022535297824644,
+          "pair": 0.0447620276374702,
+          "patch": 0.1232303696985279,
+          "positive_downward": 0.028565566980091366,
+          "scene": 0.18743739706659804,
+          "scene_delta_l2": 0.1653329976039847
+        },
+        {
+          "correction_l2": 1.2236704418319277,
+          "dice": 0.17879535743850283,
+          "epoch": 2,
+          "focal": 0.029138218500280828,
+          "loss": 0.22876539502029422,
+          "negative_upward": 0.011600496301658344,
+          "pair": 0.031768153452107185,
+          "patch": 0.06145049534126201,
+          "positive_downward": 0.039635999738321416,
+          "scene": 0.15634001352710433,
+          "scene_delta_l2": 0.21798188395924475
+        },
+        {
+          "correction_l2": 1.3675498241597477,
+          "dice": 0.15468350566152367,
+          "epoch": 3,
+          "focal": 0.0223591336822479,
+          "loss": 0.20734027965174087,
+          "negative_upward": 0.0073345656400361685,
+          "pair": 0.030102038906019462,
+          "patch": 0.042238292274532796,
+          "positive_downward": 0.040325226403764236,
+          "scene": 0.15557132880229574,
+          "scene_delta_l2": 0.24025519133148995
+        }
+      ],
+      "identity_pixel_max_abs": 0.0,
+      "identity_scene_max_abs": 0.0,
+      "mask_result_descriptive": {
+        "baseline": {
+          "fn": 289238,
+          "fp": 145851,
+          "intersection_over_union": 0.5948639254031676,
+          "precision": 0.8141303308928947,
+          "recall": 0.6883486588469553,
+          "tp": 638844
+        },
+        "candidate": {
+          "fn": 294753,
+          "fp": 150131,
+          "intersection_over_union": 0.5873876497500957,
+          "precision": 0.8083743905240854,
+          "recall": 0.6824062959953969,
+          "tp": 633329
+        },
+        "iou_delta": -0.007476275653071851,
+        "paired_site_iou_delta": {
+          "confidence": 0.95,
+          "groups": 146,
+          "lower": -0.01728698909807421,
+          "mean": -0.00770794586314127,
+          "replicates": 10000,
+          "upper": 0.0023567681439049045
+        },
+        "retained_true_positive_pixel_fraction": 0.9913672195402946,
+        "sensors": {
+          "Landsat": {
+            "baseline": {
+              "fn": 81974,
+              "fp": 38843,
+              "intersection_over_union": 0.6670322916695375,
+              "precision": 0.8617071651090342,
+              "recall": 0.7469985123732277,
+              "tp": 242032
+            },
+            "candidate": {
+              "fn": 82124,
+              "fp": 42395,
+              "intersection_over_union": 0.660156495206072,
+              "precision": 0.8508672878917394,
+              "recall": 0.7465355579834941,
+              "tp": 241882
+            },
+            "iou_delta": -0.006875796463465478
+          },
+          "Sentinel-2": {
+            "baseline": {
+              "fn": 207264,
+              "fp": 107008,
+              "intersection_over_union": 0.5580381502044766,
+              "precision": 0.7876066849271566,
+              "recall": 0.6568908547931055,
+              "tp": 396812
+            },
+            "candidate": {
+              "fn": 212629,
+              "fp": 107736,
+              "intersection_over_union": 0.5499303186796514,
+              "precision": 0.7841753425096608,
+              "recall": 0.648009521980678,
+              "tp": 391447
+            },
+            "iou_delta": -0.008107831524825193
+          }
+        }
+      },
+      "name": "fit-fold4_predict-fold3",
+      "request_mass": {
+        "NO_PLUME|Landsat": 0.24999999999999958,
+        "NO_PLUME|Sentinel-2": 0.2499999999999932,
+        "PLUME|Landsat": 0.24999999999999975,
+        "PLUME|Sentinel-2": 0.24999999999999964
+      }
+    },
+    {
+      "artifact": {
+        "bytes": 21926411,
+        "path": "EarthRemoteSensingRapidResponse/artifacts/mars_dense_prithvi_representation_holdout4.pt",
+        "sha256": "b35cef6d577286376f0ed5630c6967cd91db0dc33cd4d24c7e1a2d228ea388f2"
+      },
+      "evaluation_identity": {
+        "rows": 8946,
+        "sample_id_sha256": "d8d75929313715d389e84b3ed8923984aba3d121dd3bb11ea7ea4e091d3ab335",
+        "scene_score_identity_max_abs": 5.960464477539063e-08
+      },
+      "finite": true,
+      "fit_folds": [
+        3
+      ],
+      "fit_rows": 8799,
+      "held_fold": 4,
+      "held_rows": 8946,
+      "history": [
+        {
+          "correction_l2": 0.7902713685497625,
+          "dice": 0.23678308586143734,
+          "epoch": 1,
+          "focal": 0.049779000608604886,
+          "loss": 0.2596837616938501,
+          "negative_upward": 0.03408923605541029,
+          "pair": 0.025394302298528904,
+          "patch": 0.10510154264026521,
+          "positive_downward": 0.027146547430293395,
+          "scene": 0.11854342310031522,
+          "scene_delta_l2": 0.10101240065190502
+        },
+        {
+          "correction_l2": 1.0399685338876832,
+          "dice": 0.17407249680885192,
+          "epoch": 2,
+          "focal": 0.027267039211307752,
+          "loss": 0.1843103227173136,
+          "negative_upward": 0.011065280344640863,
+          "pair": 0.016328974296766375,
+          "patch": 0.05503623003429917,
+          "positive_downward": 0.03880249758804976,
+          "scene": 0.0910450406882622,
+          "scene_delta_l2": 0.15673390302500442
+        },
+        {
+          "correction_l2": 1.1911029688587103,
+          "dice": 0.1470813019623165,
+          "epoch": 3,
+          "focal": 0.01966311843353278,
+          "loss": 0.15602682940122273,
+          "negative_upward": 0.006296471721886891,
+          "pair": 0.012936743996096215,
+          "patch": 0.03699271009753602,
+          "positive_downward": 0.03703635134326803,
+          "scene": 0.08277080252652998,
+          "scene_delta_l2": 0.16875464142692445
+        }
+      ],
+      "identity_pixel_max_abs": 0.0,
+      "identity_scene_max_abs": 0.0,
+      "mask_result_descriptive": {
+        "baseline": {
+          "fn": 296325,
+          "fp": 285218,
+          "intersection_over_union": 0.5929217725598462,
+          "precision": 0.7480969359321635,
+          "recall": 0.7408296599496221,
+          "tp": 847035
+        },
+        "candidate": {
+          "fn": 303817,
+          "fp": 287045,
+          "intersection_over_union": 0.5869267794785393,
+          "precision": 0.745208541188083,
+          "recall": 0.7342770431010356,
+          "tp": 839543
+        },
+        "iou_delta": -0.00599499308130691,
+        "paired_site_iou_delta": {
+          "confidence": 0.95,
+          "groups": 104,
+          "lower": -0.012215735823926623,
+          "mean": -0.005783765531697887,
+          "replicates": 10000,
+          "upper": 0.0014091880233646362
+        },
+        "retained_true_positive_pixel_fraction": 0.9911550290129688,
+        "sensors": {
+          "Landsat": {
+            "baseline": {
+              "fn": 61401,
+              "fp": 50828,
+              "intersection_over_union": 0.7358142797620589,
+              "precision": 0.8601359346193005,
+              "recall": 0.8358187404240299,
+              "tp": 312582
+            },
+            "candidate": {
+              "fn": 66810,
+              "fp": 49500,
+              "intersection_over_union": 0.7253490695021996,
+              "precision": 0.8612174176346401,
+              "recall": 0.8213555161598255,
+              "tp": 307173
+            },
+            "iou_delta": -0.010465210259859359
+          },
+          "Sentinel-2": {
+            "baseline": {
+              "fn": 234924,
+              "fp": 234390,
+              "intersection_over_union": 0.5324472711296546,
+              "precision": 0.6951393197310765,
+              "recall": 0.6946568457336261,
+              "tp": 534453
+            },
+            "candidate": {
+              "fn": 237007,
+              "fp": 237545,
+              "intersection_over_union": 0.52871026752817,
+              "precision": 0.6914659410454401,
+              "recall": 0.6919494604075765,
+              "tp": 532370
+            },
+            "iou_delta": -0.0037370036014846564
+          }
+        }
+      },
+      "name": "fit-fold3_predict-fold4",
+      "request_mass": {
+        "NO_PLUME|Landsat": 0.24999999999999944,
+        "NO_PLUME|Sentinel-2": 0.25000000000000766,
+        "PLUME|Landsat": 0.25000000000000017,
+        "PLUME|Sentinel-2": 0.24999999999999897
+      }
+    }
+  ],
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "8b7cca33642d3e5f4402dcdd308889e59b5e1f00",
+    "numpy": "2.4.4",
+    "protocol_sha256": "7dc3caddbd176ccf5aee0610f536f9f9583813075ffe6cff953cf143e5e61fe0",
+    "torch": "2.11.0+cu128",
+    "trainer_sha256": "c944a987d94697b83bfecbd2fb39f20b0a7877eb057dc4a54512f6cbe09c6b79"
+  },
+  "schema_version": 1,
+  "scope": "honest fold-3/4 crossfit dense-Prithvi representation endpoints",
+  "status": "intermediate representation artifacts; not promoted scene or mask models"
+}
