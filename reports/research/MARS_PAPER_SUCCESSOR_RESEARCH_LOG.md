@@ -3896,3 +3896,21 @@ identity maxima 0.0/0.0, balanced all four request strata at 0.25, completed one
 finite epoch, and did not create an artifact or report. The frozen artifact will
 record fit_folds=[3,4], held_folds=[0,1], and forbidden_folds=[0,1,2].
 Folds 0/1/2, fresh inputs, and exact-paper inputs remain unopened.
+
+### 2026-07-30: Folds-0/1-excluding dense adapter endpoint recorded
+
+The frozen RTX 5070 fit completed all three epochs on 17,745 folds-3/4 rows.
+Loss changed 0.331513 -> 0.242505 -> 0.227087. Exact initialization
+corrections were 0.0 for both pixel and scene outputs, all 122 saved tensors are
+finite, and the four plume x sensor request strata each retained 0.25 mass.
+No held-fold record was constructed.
+
+The ignored artifact is 21,926,603 bytes with SHA-256
+`e8dde7a07fd93db3185891d63955e1c9c6a9681fe44c98208ec53661d5ced460`.
+Its embedded contract records fit_folds=[3,4], held_folds=[0,1],
+forbidden_folds=[0,1,2], seed 20266800, mask strength 0.5, scene strength
+0.0, and training-protocol SHA-256
+`55bb893d2d4949490707079828f01d7a7b8066ba9f13c1096f12667fcacfd229`.
+The compact fit report SHA-256 is
+`a435292b1eb52f2efb94ab543e0fb4ec0903767d601f5de7c77b08baa331f702`.
+Folds 0/1/2 and external inputs remain unopened.

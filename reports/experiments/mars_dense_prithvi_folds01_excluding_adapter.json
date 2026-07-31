@@ -1,0 +1,110 @@
+{
+  "artifact": {
+    "bytes": 21926603,
+    "path": "EarthRemoteSensingRapidResponse/artifacts/mars_dense_prithvi_representation_holdout01.pt",
+    "sha256": "e8dde7a07fd93db3185891d63955e1c9c6a9681fe44c98208ec53661d5ced460",
+    "tracked": false
+  },
+  "exact_paper_inputs_accessed": false,
+  "feature_identity": {
+    "feature_dtype": "float16",
+    "feature_shape": [
+      44363,
+      768,
+      8,
+      8
+    ],
+    "fold_counts": {
+      "0": 8987,
+      "1": 8798,
+      "2": 8833,
+      "3": 8799,
+      "4": 8946
+    },
+    "fold_protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "foundation_checkpoint_sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70",
+    "manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "rows": 44363,
+    "sample_id_sha256": "ae21523a46e8c7d783a2ee5aa8a7c52f8903ce6d2f37f0d3852ece0070b18219"
+  },
+  "finite": true,
+  "fit_folds": [
+    3,
+    4
+  ],
+  "fit_rows": 17745,
+  "fold2_inputs_or_labels_accessed": false,
+  "folds01_labels_accessed": false,
+  "forbidden_folds": [
+    0,
+    1,
+    2
+  ],
+  "fresh_inputs_accessed": false,
+  "generated_at_utc": "2026-07-31T05:41:20.864262+00:00",
+  "held_folds": [
+    0,
+    1
+  ],
+  "held_records_loaded": 0,
+  "history": [
+    {
+      "correction_l2": 0.8403421218884356,
+      "dice": 0.26656357560689986,
+      "epoch": 1,
+      "focal": 0.07107886653662944,
+      "loss": 0.3315128733402162,
+      "negative_upward": 0.0523098041551151,
+      "pair": 0.04062247744656557,
+      "patch": 0.13778976838739254,
+      "positive_downward": 0.02013005366591884,
+      "scene": 0.16852535964725726,
+      "scene_delta_l2": 0.12356820568856193
+    },
+    {
+      "correction_l2": 1.0400495885599714,
+      "dice": 0.21025908114340078,
+      "epoch": 2,
+      "focal": 0.03642819411032381,
+      "loss": 0.24250526443878093,
+      "negative_upward": 0.019610306176074326,
+      "pair": 0.02579267445136017,
+      "patch": 0.08191071352014963,
+      "positive_downward": 0.02937689456787096,
+      "scene": 0.13866202801902242,
+      "scene_delta_l2": 0.17322797644338075
+    },
+    {
+      "correction_l2": 1.0233452190974883,
+      "dice": 0.19074468264686098,
+      "epoch": 3,
+      "focal": 0.0325418042754629,
+      "loss": 0.2270867640806197,
+      "negative_upward": 0.011401950068841296,
+      "pair": 0.026481183974625178,
+      "patch": 0.06275506477057509,
+      "positive_downward": 0.034712943377290806,
+      "scene": 0.13885582706821728,
+      "scene_delta_l2": 0.20225350301226777
+    }
+  ],
+  "identity_pixel_max_abs": 0.0,
+  "identity_scene_max_abs": 0.0,
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "f90f132199f3f02299a501959bb36a6c89f5206e",
+    "numpy": "2.4.4",
+    "protocol_sha256": "55bb893d2d4949490707079828f01d7a7b8066ba9f13c1096f12667fcacfd229",
+    "torch": "2.11.0+cu128",
+    "trainer_sha256": "31c74873213fa0b7eaabcea9204b16d5dc2cb994aa21ac1ba489dbe961402f9e"
+  },
+  "request_mass": {
+    "NO_PLUME|Landsat": 0.24999999999999928,
+    "NO_PLUME|Sentinel-2": 0.2500000000000079,
+    "PLUME|Landsat": 0.2499999999999998,
+    "PLUME|Sentinel-2": 0.2500000000000012
+  },
+  "schema_version": 1,
+  "scope": "fit-only dense-Prithvi adapter on folds 3+4 for one-shot folds-0/1 feature extraction",
+  "status": "intermediate folds-0/1-excluding representation endpoint"
+}
