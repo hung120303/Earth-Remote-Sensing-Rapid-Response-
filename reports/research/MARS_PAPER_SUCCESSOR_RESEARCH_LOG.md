@@ -3481,3 +3481,21 @@ and the cross-domain final-fit path for two steps each, and produced finite
 32-row outputs with 670 features. Every model passed its exact-zero residual
 initialization assertion. Internal selection may use only folds 3 and 4; fold 2,
 fresh data, and exact-paper data remain unavailable to it.
+
+### 2026-07-30: Honest dense AP ranker rejected internally
+
+All four fixed 1,500-step heads completed, but none of the seven preregistered
+strengths passed. Strength 0.025 was safest: pooled AP +0.000989 and paired-site
+lower bound +0.000055, but matched-FPR recall fell 0.000656, Landsat AP fell
+0.000130, and fold-3 AP fell 0.000002. The largest pooled AP gain was +0.006242
+at strength 0.40, but both within-fold AP values, matched-FPR recall, Landsat AP,
+and the paired-site lower bound were negative.
+
+This is a Simpson's-paradox failure: pooled AP improves because the head shifts
+score levels between folds, while ordering within each fold does not improve at
+any strength. The honest representation correction therefore changed the prior
+apparent +0.007277 gain into evidence that the dense scene head is learning domain
+offsets rather than transferable plume evidence. Fold 2 was not evaluated, no
+artifact was written, and no fresh or exact-paper input was accessed. The dense
+adapter remains the independently supported mask branch, but this scene-ranking
+family is retired.

@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "scope": "internal-only AP residual ranker selection on honest fold-3/4 dense-Prithvi features",
+  "status": "rejected_before_fold2",
+  "decision": "Retire this dense scene-ranker branch. Do not evaluate fold 2, write an artifact, start five-fold refitting, or access external inputs.",
+  "generated_at_utc": "2026-07-31T02:44:23.2483241Z",
+  "command": ".venv/bin/python tools/train_mars_dense_ap_honest_crossfit_ranker.py --internal-only",
+  "exit_code": 1,
+  "provenance": {
+    "git_commit": "06dda99295cf92d1ee10d3ded7189bfdc0f3d97a",
+    "protocol_sha256": "ccbe4dc1732a5b26bd52adb0baeb1b96008d649282de2da1849eaf5b263e9102",
+    "trainer_sha256": "7de8ef6d8de8b53a57149b17a4946a648ac55cb92a5df14f65043b4c215a7737",
+    "honest_features_sha256": "f45de57bda41ba083b4a981cbbcafa3c1e537ff7178eedae2c2ae2567987f78e",
+    "honest_metadata_sha256": "5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d"
+  },
+  "rows": 17745,
+  "folds": [
+    3,
+    4
+  ],
+  "input_features": 670,
+  "seeds_per_direction": 2,
+  "steps_per_model": 1500,
+  "current_average_precision": 0.9040758422255568,
+  "candidates": [
+    {
+      "strength": 0.025,
+      "average_precision_delta": 0.0009886123380463685,
+      "matched_fpr_recall_delta": -0.0006561679790025865,
+      "sentinel2_ap_delta": 0.0014883264942904262,
+      "landsat_ap_delta": -0.00012975354275324147,
+      "fold3_ap_delta": -1.7619375700661521e-06,
+      "fold4_ap_delta": 1.799924509438e-08,
+      "paired_site_ap_lower": 5.482081853755728e-05,
+      "passed": false
+    },
+    {
+      "strength": 0.05,
+      "average_precision_delta": 0.0019092538044966911,
+      "matched_fpr_recall_delta": -0.0006561679790025865,
+      "sentinel2_ap_delta": 0.002876904512677636,
+      "landsat_ap_delta": -0.00033019881176310495,
+      "fold3_ap_delta": -3.125315643059956e-06,
+      "fold4_ap_delta": -4.018839791952722e-05,
+      "paired_site_ap_lower": -2.4839111996576683e-06,
+      "passed": false
+    },
+    {
+      "strength": 0.1,
+      "average_precision_delta": 0.0034793090395598414,
+      "matched_fpr_recall_delta": -0.0019685039370078705,
+      "sentinel2_ap_delta": 0.0052562861069487266,
+      "landsat_ap_delta": -0.000531927035378521,
+      "fold3_ap_delta": -3.549530953605995e-05,
+      "fold4_ap_delta": -8.506769288896265e-05,
+      "paired_site_ap_lower": -0.0004608677249977956,
+      "passed": false
+    },
+    {
+      "strength": 0.2,
+      "average_precision_delta": 0.0057185463872369,
+      "matched_fpr_recall_delta": -0.001312335958005284,
+      "sentinel2_ap_delta": 0.00894897631928937,
+      "landsat_ap_delta": -0.0015011344329602938,
+      "fold3_ap_delta": -9.001429653943127e-05,
+      "fold4_ap_delta": -0.000180952460582251,
+      "paired_site_ap_lower": -0.0023297378604777512,
+      "passed": false
+    },
+    {
+      "strength": 0.4,
+      "average_precision_delta": 0.006242350808879693,
+      "matched_fpr_recall_delta": -0.0019685039370078705,
+      "sentinel2_ap_delta": 0.011314330760892277,
+      "landsat_ap_delta": -0.004645327049760617,
+      "fold3_ap_delta": -0.0002575070783120692,
+      "fold4_ap_delta": -0.00042533839764558046,
+      "paired_site_ap_lower": -0.012543409148781683,
+      "passed": false
+    },
+    {
+      "strength": 0.8,
+      "average_precision_delta": -0.008129088755609692,
+      "matched_fpr_recall_delta": -0.0059055118110236116,
+      "sentinel2_ap_delta": -0.00420036627156839,
+      "landsat_ap_delta": -0.01589536461063934,
+      "fold3_ap_delta": -0.0012260027671929796,
+      "fold4_ap_delta": -0.0014545198278644866,
+      "paired_site_ap_lower": -0.052795689304244525,
+      "passed": false
+    },
+    {
+      "strength": 1.0,
+      "average_precision_delta": -0.0227306218163833,
+      "matched_fpr_recall_delta": -0.013123359580052507,
+      "sentinel2_ap_delta": -0.021463648637898847,
+      "landsat_ap_delta": -0.022652057994803187,
+      "fold3_ap_delta": -0.00174493335235959,
+      "fold4_ap_delta": -0.0020726092357902237,
+      "paired_site_ap_lower": -0.0836827792152209,
+      "passed": false
+    }
+  ],
+  "best_gate_ranked_strength": 0.025,
+  "best_point_ap_strength": 0.4,
+  "failure_analysis": "Pooled AP gains coexist with non-positive within-fold AP at every strength. The head primarily learns a cross-fold score offset (Simpson's paradox), while matched-FPR recall and Landsat AP regress. This is not a transferable plume-ranking improvement.",
+  "fold2_accessed": false,
+  "artifact_written": false,
+  "fresh_inputs_accessed": false,
+  "exact_paper_inputs_accessed": false
+}
