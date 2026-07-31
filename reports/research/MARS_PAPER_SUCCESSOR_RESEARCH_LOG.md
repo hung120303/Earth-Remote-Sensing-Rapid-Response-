@@ -4718,3 +4718,24 @@ the current model while retaining the mixed-sensor mask correction. The scene
 evidence weight is fixed at 0.50 (twice the deliberately conservative pilot
 weight) before new outcomes. The same three pixel strengths and all AP/IoU/
 recall/site gates remain; folds 0/1/2 and external/test inputs stay excluded.
+
+### 2026-07-31: Multi-seed Sentinel-2 confirmation frozen
+
+The variance-control confirmation is now immutable before development-outcome
+access. It trains six fixed endpoints: three entirely new seed bases
+(`20263500`, `20263550`, and `20263600`) in both directions across development
+folds 3/4. Scene evidence is the arithmetic mean of the three dense-MIL
+residuals. It is applied at predeclared weight 0.50 only to Sentinel-2 scores
+inside the existing >=0.50 protected coordinate system; every Landsat scene
+score is asserted to remain exactly equal to the current spatial-Prithvi
+ranker. The first seed supplies the single fixed mixed-sensor mask endpoint.
+
+The GPU smoke proves exact zero-initialized pixel and scene identity, exact
+synthetic Landsat routing identity, a positive change only for an eligible
+Sentinel-2 synthetic score, and finite segmentation-only optimization. Peak
+CUDA allocation is 2.23 GB for 8,540,787 trainable adapter parameters. The
+trainer SHA-256 is
+`cf102754c3fe2a53a5b43dfc59e7bd2b75edd9e434035db88b699d830b686f84`.
+The three residual strengths (0.10/0.25/0.50), epoch-2 endpoint, sampling,
+loss, bootstrap, and promotion gates are unchanged. Fold 2, source-disjoint
+inputs, and official-test inputs and labels remain inaccessible to this run.
