@@ -39,6 +39,15 @@ def git(*arguments: str) -> str:
     ).stdout.strip()
 
 
+def git_bytes(*arguments: str) -> bytes:
+    return subprocess.run(
+        ["git", *arguments],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--protocol", default=DEFAULT_PROTOCOL.as_posix())
@@ -50,10 +59,10 @@ def main() -> int:
         raise ValueError("Generator extractor differs from the frozen protocol")
     if git("cat-file", "-t", GENERATOR_GIT_COMMIT) != "commit":
         raise ValueError("Recorded generator commit is not available")
-    generator_blob = git(
+    generator_blob = git_bytes(
         "show",
         f"{GENERATOR_GIT_COMMIT}:{protocol['extractor']['path']}",
-    ).encode()
+    )
     if hashlib.sha256(generator_blob).hexdigest() != protocol["extractor"]["sha256"]:
         raise ValueError("Generator commit does not contain the frozen extractor")
 
