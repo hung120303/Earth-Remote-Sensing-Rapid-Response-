@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_honest-crossfit_and-cross-domain_gpu_smoke_before_internal_selection",
+  "scope": "AP residual ranker over honest dense-Prithvi crossfit features",
+  "trainer": {
+    "path": "tools/train_mars_dense_ap_honest_crossfit_ranker.py",
+    "sha256": "7de8ef6d8de8b53a57149b17a4946a648ac55cb92a5df14f65043b4c215a7737"
+  },
+  "code_dependencies": [
+    {
+      "path": "tools/train_mars_dense_ap_residual_ranker.py",
+      "sha256": "85eabe43bb7dad38221d413e5f003a4845df8c35726bfc6c7bd2fe2158ea0bfd"
+    },
+    {
+      "path": "tools/train_mars_oof_scene_ensemble_v2.py",
+      "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"
+    },
+    {
+      "path": "tools/train_mars_scene_ranker.py",
+      "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"
+    }
+  ],
+  "inputs": {
+    "honest_features": {
+      "path": "outputs/mars_dense_prithvi_crossfit_scene_features_folds34.npy",
+      "sha256": "f45de57bda41ba083b4a981cbbcafa3c1e537ff7178eedae2c2ae2567987f78e"
+    },
+    "honest_metadata": {
+      "path": "outputs/mars_dense_prithvi_crossfit_scene_features_folds34_metadata.npz",
+      "sha256": "5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d"
+    },
+    "honest_receipt": {
+      "path": "reports/acquisition/mars_dense_prithvi_crossfit_scene_features_folds34.json",
+      "sha256": "00615a0805e4b0d22389c4380fc60a53a71028cc2a29583c916c18bc42f892e6"
+    },
+    "final_features": {
+      "path": "outputs/mars_dense_prithvi_scene_features_all_folds.npy",
+      "sha256": "cb44c6957be7fb2df9b95652dcf8f099775e244d87ddfea91d15679cc62400cc"
+    },
+    "final_metadata": {
+      "path": "outputs/mars_dense_prithvi_scene_features_all_folds_metadata.npz",
+      "sha256": "533300f8ec7760b645b7e30c23a569dcc6c5522d6bc1c64ee7ad485623cffb32"
+    },
+    "final_receipt": {
+      "path": "reports/acquisition/mars_dense_prithvi_scene_features.json",
+      "sha256": "a9abbc004179ca59b57e537b6519b9358acd669d0d5944a45a55586c2d1d6743"
+    },
+    "score_cache": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    }
+  },
+  "folds": {
+    "fit": [
+      3,
+      4
+    ],
+    "held": 2,
+    "unit": "physical_location_id",
+    "selection_order": "cross-predict folds 3/4 using individually out-of-fit representations; freeze strength; only then train on both honest feature folds and evaluate fold 2"
+  },
+  "architecture": {
+    "floor": "exact float64 current cross-fitted scene probability converted to logit",
+    "inputs": "670 features: current score plus all dense representation/mask statistics except the rejected BCE scene residual",
+    "representation_contract": "every fit sample is encoded by an adapter that excluded its fold; fold 2 is encoded by the preserved folds-3+4 adapter",
+    "scaling": "training-only median and normalized IQR; sentinel absolute values >=1000 treated as missing; clipped to [-8,8]",
+    "head": "670 -> 96 -> 32 -> bounded scalar logit residual, LayerNorm/GELU/dropout, zero-initialized output",
+    "objective": "SmoothAP listwise surrogate plus current-difficulty-weighted positive-negative pair loss, BCE, and residual L2",
+    "identity": "zero residual exactly reproduces the current ranker"
+  },
+  "internal_seeds": [
+    20264300,
+    20264400
+  ],
+  "final_seeds": [
+    20264500,
+    20264600
+  ],
+  "training": {
+    "hidden": [
+      96,
+      32
+    ],
+    "dropout": 0.15,
+    "steps": 1500,
+    "positive_per_batch": 64,
+    "negative_per_batch": 448,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.01,
+    "gradient_clip": 2.0,
+    "smooth_ap_tau": 0.25,
+    "smooth_ap_weight": 1.0,
+    "pair_margin": 0.5,
+    "pair_weight": 0.25,
+    "bce_weight": 0.1,
+    "residual_l2_weight": 0.02,
+    "prediction_batch_size": 4096,
+    "endpoint_rule": "fixed 1500 steps for every seed and fold; no held-fold early stopping"
+  },
+  "search": {
+    "strengths": [
+      0.025,
+      0.05,
+      0.1,
+      0.2,
+      0.4,
+      0.8,
+      1.0
+    ],
+    "candidate_count": 7,
+    "selection_scope": "fit folds 3 and 4 only"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20264700,
+    "confidence": 0.95,
+    "unit": "physical_location_id",
+    "minimum_ap_delta": 0.001
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.001,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "each_sensor_ap_delta_minimum": 0.0,
+    "each_fold_ap_delta_minimum": 0.0,
+    "paired_site_ap_lower_bound_strictly_positive": true,
+    "pass_action": "commit the selected strength before fitting folds 3+4 and evaluating reused fold 2 once"
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_dense_ap_honest_crossfit_ranker_pilot.pt",
+    "json": "reports/experiments/mars_dense_ap_honest_crossfit_ranker.json",
+    "markdown": "reports/experiments/MARS_DENSE_AP_HONEST_CROSSFIT_RANKER.md"
+  },
+  "invariants": [
+    "The exact current score cache, not a float16 copy, defines the residual floor and comparisons.",
+    "The rejected end-to-end BCE residual feature is excluded.",
+    "Every fold-3/4 feature was generated by an adapter that excluded that sample's fold.",
+    "Internal selection cannot evaluate fold 2.",
+    "Every random module initialization and sampling generator is seed-bound.",
+    "No exact-paper or fresh external input is loaded.",
+    "Failure writes no artifact; any artifact remains Git-ignored."
+  ]
+}

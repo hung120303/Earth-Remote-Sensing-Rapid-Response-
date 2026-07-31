@@ -3463,3 +3463,21 @@ The separately stored exact float64 score floor is finite over
 tolerance. The compact receipt binds generator commit
 `b206ebb4af6c13a904da127aa46812877fbab009`, both endpoint hashes, output hashes,
 and `external_inputs_accessed=false`.
+
+### 2026-07-30: Honest-crossfit AP ranker frozen
+
+The AP-focused head is unchanged in capacity and objective from the rejected
+in-sample-representation experiment: 670 inputs, 96/32 hidden units, bounded
+zero-initialized logit residual, SmoothAP plus hard-pair/BCE/L2 losses, two seeds,
+and a fixed 1,500-step endpoint. The material correction is the input contract.
+Internal fold-3/4 training now uses only individually out-of-fit representation
+features; a later fold-2 prediction, if authorized, will use the preserved
+folds-3+4 adapter. The exact float64 current score remains the identity floor.
+
+Seven residual strengths (0.025/0.05/0.10/0.20/0.40/0.80/1.00) and all promotion
+gates were fixed before internal training. The CUDA smoke used a balanced
+32-row fold/label/sensor grid, trained both internal cross-prediction directions
+and the cross-domain final-fit path for two steps each, and produced finite
+32-row outputs with 670 features. Every model passed its exact-zero residual
+initialization assertion. Internal selection may use only folds 3 and 4; fold 2,
+fresh data, and exact-paper data remain unavailable to it.
