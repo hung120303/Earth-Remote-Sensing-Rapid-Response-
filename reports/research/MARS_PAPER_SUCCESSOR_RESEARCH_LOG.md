@@ -3773,3 +3773,22 @@ sites and route the invariant pair only to label-free unseen-site cohorts whose
 score-history statistics match the rare official test-only mixture. Any such
 router must be selected again on folds 3+4 and confirmed on still-unused folds
 0/1 before external access.
+
+### 2026-07-30: Label-free unseen-site router frozen
+
+The next development experiment keeps the failed fold-2 pair entirely fixed and
+adds only an inference-time route. Known training physical locations remain
+bitwise on the current score. For an unseen site, the router computes two
+label-free statistics from current scores: number of available scenes and the
+fraction exceeding the already frozen folds-3/4 matched-FPR threshold
+0.1672813993. The pair applies only when both a maximum-history and
+maximum-predicted-positive-rate gate pass.
+
+Six maximum sizes and seven predicted-positive-rate limits define 42 candidates.
+True <=5% site prevalence remains evaluation-only. Candidates must route at least
+10% of all rows and 50% of low-prevalence rows/sites, retain all earlier whole/
+rare-site fold, sensor, AP, and recall gates, and obtain positive paired-site AP
+lower bounds in both views. The four-candidate smoke exercised label-free routing,
+coverage checks, candidate scoring, and both bootstrap paths. Fold 2 is referenced
+only through its committed failure report and is not reloaded; folds 0/1 and
+external inputs remain untouched.
