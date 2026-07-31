@@ -3281,3 +3281,21 @@ The next mask step is a preregistered multi-seed cross-fit over all development
 folds, with pooled and per-sensor paired-site IoU gates. The scene branch remains
 the unchanged current ranker until a separately validated representation-level
 ranking improvement is found.
+
+### 2026-07-30: Frozen dense scene-representation extraction
+
+The preserved mask adapter will now be used as a frozen feature generator, not as
+a scene classifier. For every development scene, the extractor records the
+585-dimensional pre-MLP scene pooling vector, its 64-dimensional learned
+embedding, the rejected scalar scene residual as an explicitly labeled feature,
+and 20 observable-region statistics from released probabilities, strength-0.50
+adapted probabilities, logit corrections, and 8x8 patch logits. The unchanged
+current cross-fitted score is included as the exact residual floor. This produces
+671 float16 features per scene.
+
+The extractor binds the 21.9 MB adapter, released checkpoint, 4.36 GB Prithvi
+token cache, current score cache, manifest, and fold protocol by SHA-256. Its
+16-row CUDA smoke produced a finite 16x671 matrix with exact sample/fold alignment.
+Extraction is label-free; labels are copied only into ignored development metadata
+for the later ranker. The bulk cache will remain ignored and only its compact
+receipt will be committed. No exact-paper or fresh external input is in scope.
