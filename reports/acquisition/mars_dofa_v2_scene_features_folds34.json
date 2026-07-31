@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "scope": "finalized development-only sensor-aware DOFA-v2 scene features for folds 3 and 4",
+  "generated_at_utc": "2026-07-31T17:58:43.3707514Z",
+  "result": {
+    "ok": true,
+    "all_values_finite": true,
+    "all_manifest_alignment_checks_pass": true,
+    "rows": 17745,
+    "shape": [17745, 10752],
+    "dtype": "float16",
+    "minimum": -722.0,
+    "maximum": 720.5,
+    "mean": 0.7261643409729004,
+    "standard_deviation": 8.732409477233887,
+    "unique_sample_ids": 17745,
+    "fold_counts": {"3": 8799, "4": 8946},
+    "label_counts": {"NO_PLUME": 16221, "PLUME": 1524},
+    "sensor_counts": {"Sentinel-2": 14963, "Landsat": 2782},
+    "identity_checks": {
+      "sample_ids": true,
+      "groups": true,
+      "labels": true,
+      "sensors": true,
+      "folds": true
+    }
+  },
+  "output": {
+    "path": "outputs/mars_dofa_v2_scene_features_folds34.npz",
+    "bytes": 352234214,
+    "sha256": "2c43352e92f96549d64188c78318fe606d55552aa9587aace1a195e8dfba66fe",
+    "tracked": false
+  },
+  "sensor_contract": {
+    "mars_to_dofa_multiplier": 127.5,
+    "sentinel_2_wavelengths_micrometers": [0.49, 0.56, 0.665, 0.842, 1.61, 2.19],
+    "landsat_wavelengths_micrometers": [0.482, 0.561, 0.655, 0.865, 1.609, 2.201],
+    "description": "reference and target encoded independently after physical-reflectance conversion and official reordered Sentinel-2 normalization"
+  },
+  "provenance": {
+    "generator": {
+      "path": "tools/extract_mars_dofa_v2_scene_features.py",
+      "sha256": "ed8ad97c94da23ede880f44fdd57078a36c130c85f90b23cc705abebb8f55e2e"
+    },
+    "protocol": {
+      "path": "configs/mars_dofa_v2_scene_probe_protocol.json",
+      "sha256": "9de00d7db75494d8c12111194af359d0239b1090591f9259e9e110e0e0d65e4a"
+    },
+    "generator_commit": "9802d5a9fd44b5566cba2b09f8ac3bbd762eadb0",
+    "checkpoint_sha256": "e1be9d50fb3e4e3640e337d098b92d67797eaf2a579de3b7a1e363095885314d",
+    "foundation_model_revision": "7a5219e48d2f8848511b0fabea7920a8836bc480",
+    "foundation_receipt_sha256": "6c693fee0299739dbc7d9733358c5ea3bb3a9c9d3bd12ee5162a7ba411d04e8b",
+    "development_manifest_sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e",
+    "fold_protocol_sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873",
+    "execution": {
+      "device": "NVIDIA GeForce RTX 5070",
+      "batch_size": 256,
+      "data_loader_workers": 0,
+      "elapsed_seconds": 1966.63,
+      "peak_cuda_gib": 6.308559894561768,
+      "peak_host_kib": 5138332
+    }
+  },
+  "data_policy": {
+    "selection_folds_only": [3, 4],
+    "excluded_folds": [0, 1, 2],
+    "paper_test_loaded": false,
+    "bulk_output_ignored": true
+  }
+}

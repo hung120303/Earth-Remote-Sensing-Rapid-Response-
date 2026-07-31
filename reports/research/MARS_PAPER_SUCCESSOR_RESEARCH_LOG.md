@@ -4292,3 +4292,20 @@ features. Batch 256 with a single loader process is frozen after using 5.40 GiB
 peak CUDA allocation; larger batch 384 was slower and used 8.30 GiB. The full
 protocol is `configs/mars_dofa_v2_scene_probe_protocol.json`. Folds 0/1/2,
 external outcomes, and paper-test outcomes remain inaccessible.
+
+### 2026-07-31: DOFA-v2 folds-3/4 cache finalized
+
+The frozen sensor-aware extractor completed all 17,745 authorized rows in
+1,966.63 seconds with batch 256 and a single loader process. Mixed-sensor peak
+CUDA allocation was 6.31 GiB and peak host use was 5,138,332 KiB. The ignored
+17,745x10,752 float16 cache is 352,234,214 bytes with SHA-256
+`2c43352e92f96549d64188c78318fe606d55552aa9587aace1a195e8dfba66fe`.
+
+Independent finalization scans every value as finite in [-722.0,720.5] and
+matches all sample IDs, physical groups, labels, sensors, and folds to the
+canonical manifest in exact order. Counts remain 8,799/8,946 by fold,
+16,221/1,524 by no-plume/plume label, and 14,963/2,782 by Sentinel-2/Landsat.
+The cache embeds the pinned checkpoint, foundation revision/receipt, manifest,
+fold protocol, wavelength lists, and radiometric multiplier. Its compact
+receipt is committed before any projected feature or outcome metric is
+computed. Folds 0/1/2 and paper-test outcomes remain excluded.
