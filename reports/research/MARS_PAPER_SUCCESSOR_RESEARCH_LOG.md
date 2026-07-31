@@ -4468,3 +4468,26 @@ The 175,383,631-byte cache remains ignored and has SHA-256
 Its compact receipt is committed before outcome evaluation. No fold-2 label was
 used by feature extraction or model fitting; the already-frozen evaluator may
 now perform the single authorized outcome read.
+
+### 2026-07-31: Protected DOFA-v2 fusion rejected on one-shot fold 2
+
+The frozen train-fitted candidate preserves the fold-2 operating point exactly
+but does not transport its development AP gain. Candidate AP is 0.916801 versus
+current 0.916603, a delta of only +0.000198; the 153-site paired estimate is
++0.000203 with 95% interval [-0.000343,+0.000933]. The effect is positive but
+fails both the +0.001 point floor and positive-lower-bound gate. Recall remains
+0.956085 with the identical 762 TP, 35 FN, 572 FP, and 7,464 TN. Sensor AP
+deltas are also merely +0.000067 Landsat and +0.000276 Sentinel-2.
+
+The candidate still exceeds the released primary scene score on fold 2 by
++0.036202 AP and +0.030113 matched-FPR recall, but the comparison that governs
+promotion is the stronger current spatial-Prithvi score. The fixed branch is
+retired before external or official-test evaluation, and fold 2 will not be
+reused for DOFA selection. Result SHA-256 is
+`b6bd52fed2cf8444ac9fccb05011f8daddc285db706e791ee93f3fd9c5b505dd`.
+
+Together with earlier dense and causal failures, this rules out another scalar
+scene-probe iteration as the next best use of compute. The subsequent branch
+must learn a transferable spatial plume representation or add genuinely new,
+source-disjoint supervision rather than post-hoc blending another frozen scene
+summary.
