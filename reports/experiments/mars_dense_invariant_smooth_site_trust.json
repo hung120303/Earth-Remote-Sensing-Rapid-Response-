@@ -1,0 +1,903 @@
+{
+  "decision": "Retire smooth site-trust routing before folds 0/1 or external access.",
+  "evaluated_candidates": [],
+  "exact_paper_inputs_accessed": false,
+  "fold2_cache_or_labels_reloaded": false,
+  "fold2_post_failure_diagnostic_referenced": true,
+  "folds01_accessed": false,
+  "fresh_inputs_accessed": false,
+  "generated_at_utc": "2026-07-31T04:46:43.531115+00:00",
+  "provenance": {
+    "explorer_sha256": "1be783152cc6424486f58a827ac941d0fa24834e08ac8ae30269723a989164ab",
+    "features_sha256": "f45de57bda41ba083b4a981cbbcafa3c1e537ff7178eedae2c2ae2567987f78e",
+    "fold2_report_sha256": "f3554d9675c0415ebfc90029d1faaf8d7cb90163b0b92fbd35938c916be067bb",
+    "git_commit": "74bd84c5ad6070ef0edd2bf566ac61b4421f345a",
+    "hard_router_adjudication_sha256": "5656e4df41309d14ebed06404cadbf54c8089341b0ea4d66517de5e9ee822ee1",
+    "metadata_sha256": "5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d",
+    "numpy": "2.4.4",
+    "protocol_sha256": "bb3689435407074afc3472435f4185ec35bee433a682ef63dc9b114835fe4c78"
+  },
+  "routing": {
+    "deployment_order": [
+      "if physical_location_id appeared in model training, return the exact current score",
+      "otherwise compute the site's predicted-positive rate from frozen current scores",
+      "convert that rate to a smooth trust weight in [0,1]",
+      "multiply the fixed pair's logit residual by trust and add it to the exact current-score logit"
+    ],
+    "label_use": "none",
+    "predicted_positive_rate": "fraction of a physical site's current scene scores >= scene_threshold",
+    "scene_threshold": 0.16728139929966007,
+    "trust_interpretation": "zero returns the exact current score; one applies the complete fixed pair"
+  },
+  "schema_version": 1,
+  "scope": "post-fold2-failure smooth label-free site trust on the fixed invariant pair using folds 3+4 only",
+  "screening_candidates": [
+    {
+      "family": "linear",
+      "key": "linear_scale1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.023808395677854644,
+          "4": 0.01474106360621863
+        },
+        "pooled": 0.016909200891632836,
+        "sensors": {
+          "0": 0.01639687420512914,
+          "1": 0.009315386849746088
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.008474576271186418,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": true
+      },
+      "scale": 1.0,
+      "trust": {
+        "low_prevalence_row_mean": 0.9506346967559943,
+        "low_prevalence_row_median": 0.9620253164556962,
+        "low_prevalence_rows_at_least_half": 1.0,
+        "low_prevalence_site_mean": 0.9816449958294112,
+        "whole_row_mean": 0.852240067624683,
+        "whole_row_median": 0.9296636085626911,
+        "whole_rows_at_least_half": 0.9298957452803607,
+        "whole_site_mean": 0.9219144360049276
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.004318789095098197,
+          "4": 0.0028405378978932916
+        },
+        "pooled": 0.0010432407530128751,
+        "sensors": {
+          "0": 0.0011088030934014448,
+          "1": 0.0004868754694263844
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0006561679790025865
+    },
+    {
+      "family": "inverse",
+      "key": "inverse_scale0.4",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.02380636478224596,
+          "4": 0.014403261905753029
+        },
+        "pooled": 0.015042040909204801,
+        "sensors": {
+          "0": 0.014512820990445374,
+          "1": 0.0071073731948601004
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.008474576271186418,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": true
+      },
+      "scale": 0.4,
+      "trust": {
+        "low_prevalence_row_mean": 0.8975654414941143,
+        "low_prevalence_row_median": 0.9132947976878613,
+        "low_prevalence_rows_at_least_half": 1.0,
+        "low_prevalence_site_mean": 0.9649866404234596,
+        "whole_row_mean": 0.7917800200270252,
+        "whole_row_median": 0.8504551365409623,
+        "whole_rows_at_least_half": 0.8936601859678783,
+        "whole_site_mean": 0.8947418399208213
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.002504671185932783,
+          "4": 0.00248668412717834
+        },
+        "pooled": 0.0017923056821680383,
+        "sensors": {
+          "0": 0.0023107452011419394,
+          "1": 0.0003971193290943642
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "family": "exponential",
+      "key": "exponential_scale0.4",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.02380636478224596,
+          "4": 0.01405566673017622
+        },
+        "pooled": 0.015350467068470985,
+        "sensors": {
+          "0": 0.014240987181340148,
+          "1": 0.009363060948509472
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.008474576271186418,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.4,
+      "trust": {
+        "low_prevalence_row_mean": 0.8888474496325383,
+        "low_prevalence_row_median": 0.9094304915386554,
+        "low_prevalence_rows_at_least_half": 0.9988540197461213,
+        "low_prevalence_site_mean": 0.9609638139135523,
+        "whole_row_mean": 0.7528137194903064,
+        "whole_row_median": 0.8387513521524588,
+        "whole_rows_at_least_half": 0.8059735136658214,
+        "whole_site_mean": 0.8738631912428603
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0035105216055737465,
+          "4": 0.0023776133270121402
+        },
+        "pooled": 0.0009526537213648822,
+        "sensors": {
+          "0": 0.0011225493876885206,
+          "1": 0.00021272278371453623
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.0006561679790025865
+    },
+    {
+      "family": "linear",
+      "key": "linear_scale0.5",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.02380636478224596,
+          "4": 0.013072990807589169
+        },
+        "pooled": 0.015365671349701682,
+        "sensors": {
+          "0": 0.014749886365841958,
+          "1": 0.009363060948509472
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.008474576271186418,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.5,
+      "trust": {
+        "low_prevalence_row_mean": 0.9012693935119888,
+        "low_prevalence_row_median": 0.9240506329113924,
+        "low_prevalence_rows_at_least_half": 0.9988540197461213,
+        "low_prevalence_site_mean": 0.9632899916588225,
+        "whole_row_mean": 0.7322062552831784,
+        "whole_row_median": 0.8593272171253823,
+        "whole_rows_at_least_half": 0.8059735136658214,
+        "whole_site_mean": 0.861427917634471
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.004322298164491034,
+          "4": 0.002467203759243808
+        },
+        "pooled": 0.00046168652782463404,
+        "sensors": {
+          "0": 0.00048631795751530316,
+          "1": 0.00012165598732161165
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.0006561679790025865
+    },
+    {
+      "family": "inverse",
+      "key": "inverse_scale0.2",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.02357838187074912,
+          "4": 0.012260705025650798
+        },
+        "pooled": 0.013967519211725121,
+        "sensors": {
+          "0": 0.014044852804621422,
+          "1": 0.0071073731948601004
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": true
+      },
+      "scale": 0.2,
+      "trust": {
+        "low_prevalence_row_mean": 0.8226647785284305,
+        "low_prevalence_row_median": 0.8404255319148937,
+        "low_prevalence_rows_at_least_half": 0.997796191819464,
+        "low_prevalence_site_mean": 0.9417595227920127,
+        "whole_row_mean": 0.689587473992191,
+        "whole_row_median": 0.7398190045248868,
+        "whole_rows_at_least_half": 0.7535643843336151,
+        "whole_site_mean": 0.846171294283135
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0025705141489626993,
+          "4": 0.0020651825150387326
+        },
+        "pooled": 0.0011910763704855443,
+        "sensors": {
+          "0": 0.0014723207068310096,
+          "1": 0.00016914244345189733
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.0006561679790025865
+    },
+    {
+      "family": "linear",
+      "key": "linear_scale0.3",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.023538885393234454,
+          "4": 0.010887696586284079
+        },
+        "pooled": 0.013658324670572708,
+        "sensors": {
+          "0": 0.01221598699485349,
+          "1": 0.009271875359362358
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.3,
+      "trust": {
+        "low_prevalence_row_mean": 0.8354783732957218,
+        "low_prevalence_row_median": 0.8734177215189873,
+        "low_prevalence_rows_at_least_half": 0.9201339915373766,
+        "low_prevalence_site_mean": 0.9389455021397848,
+        "whole_row_mean": 0.6267305344228421,
+        "whole_row_median": 0.7655453618756372,
+        "whole_rows_at_least_half": 0.7003663003663003,
+        "whole_site_mean": 0.8099884639657765
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0033702876927311776,
+          "4": 0.001576422207583028
+        },
+        "pooled": 0.00012578542397145842,
+        "sensors": {
+          "0": 5.389142688805304e-05,
+          "1": 1.756280534837007e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.0006561679790025865
+    },
+    {
+      "family": "exponential",
+      "key": "exponential_scale0.2",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.020609107960549267,
+          "4": 0.010799368884376825
+        },
+        "pooled": 0.01186259537826373,
+        "sensors": {
+          "0": 0.01228511557958234,
+          "1": 0.005629646197702232
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.2,
+      "trust": {
+        "low_prevalence_row_mean": 0.798002954448822,
+        "low_prevalence_row_median": 0.8270638189402405,
+        "low_prevalence_rows_at_least_half": 0.9201339915373766,
+        "low_prevalence_site_mean": 0.9320159268294276,
+        "whole_row_mean": 0.6233480697849836,
+        "whole_row_median": 0.7035038307375779,
+        "whole_rows_at_least_half": 0.6937165398703861,
+        "whole_site_mean": 0.8117485155454289
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0032878275900617426,
+          "4": 0.0017961316695729312
+        },
+        "pooled": 0.0003132612489102904,
+        "sensors": {
+          "0": 0.0002531957302422949,
+          "1": -2.6015943382917683e-06
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "family": "inverse",
+      "key": "inverse_scale0.1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.016169026689006882,
+          "4": 0.008549150587128462
+        },
+        "pooled": 0.01019288565663734,
+        "sensors": {
+          "0": 0.009256464940651021,
+          "1": 0.005419626744202377
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": true,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.1,
+      "trust": {
+        "low_prevalence_row_mean": 0.7162971463596659,
+        "low_prevalence_row_median": 0.7247706422018348,
+        "low_prevalence_rows_at_least_half": 0.9112306064880112,
+        "low_prevalence_site_mean": 0.9103521095139081,
+        "whole_row_mean": 0.5701018231118806,
+        "whole_row_median": 0.5870736086175943,
+        "whole_rows_at_least_half": 0.6621020005635391,
+        "whole_site_mean": 0.7918711320148707
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.002244935415404048,
+          "4": 0.0015887062464314816
+        },
+        "pooled": 0.0007125878511123895,
+        "sensors": {
+          "0": 0.0008310443669691248,
+          "1": 1.2409773182731065e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "family": "inverse",
+      "key": "inverse_scale0.05",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.01293546337646645,
+          "4": 0.008467624707282462
+        },
+        "pooled": 0.007539094034638483,
+        "sensors": {
+          "0": 0.007534949348490083,
+          "1": 0.00029270021628724496
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": true,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.05,
+      "trust": {
+        "low_prevalence_row_mean": 0.5866861898597457,
+        "low_prevalence_row_median": 0.5683453237410072,
+        "low_prevalence_rows_at_least_half": 0.5665550070521862,
+        "low_prevalence_site_mean": 0.8731749239014567,
+        "whole_row_mean": 0.44534349562674747,
+        "whole_row_median": 0.4155019059720457,
+        "whole_rows_at_least_half": 0.3633136094674556,
+        "whole_site_mean": 0.7377580799378965
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0018985717027033555,
+          "4": 0.001073407490484568
+        },
+        "pooled": 0.0003279867896127664,
+        "sensors": {
+          "0": 0.00033067418848808927,
+          "1": -3.404916478544351e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": 0.0
+    },
+    {
+      "family": "exponential",
+      "key": "exponential_scale0.1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.015695602243678053,
+          "4": 0.008073784718177102
+        },
+        "pooled": 0.007955271304570966,
+        "sensors": {
+          "0": 0.00718102270274712,
+          "1": 0.002736955879713343
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.1,
+      "trust": {
+        "low_prevalence_row_mean": 0.6591665663230918,
+        "low_prevalence_row_median": 0.6840345606000149,
+        "low_prevalence_rows_at_least_half": 0.7301657263751763,
+        "low_prevalence_site_mean": 0.8914400868599397,
+        "whole_row_mean": 0.4765019123746139,
+        "whole_row_median": 0.4949176398624467,
+        "whole_rows_at_least_half": 0.4837418991265145,
+        "whole_site_mean": 0.745547133234361
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.002395923584987081,
+          "4": 0.0010964594668810834
+        },
+        "pooled": -3.464468620484329e-05,
+        "sensors": {
+          "0": -0.0001635050441545216,
+          "1": -1.82458198250135e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.0006561679790025865
+    },
+    {
+      "family": "linear",
+      "key": "linear_scale0.2",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.020624753018633424,
+          "4": 0.0076812649908049035
+        },
+        "pooled": 0.010197217126911573,
+        "sensors": {
+          "0": 0.009442928372878634,
+          "1": 0.005419626744202377
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": true,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.2,
+      "trust": {
+        "low_prevalence_row_mean": 0.7540550070521862,
+        "low_prevalence_row_median": 0.810126582278481,
+        "low_prevalence_rows_at_least_half": 0.9112306064880112,
+        "low_prevalence_site_mean": 0.9146996602448532,
+        "whole_row_mean": 0.5411101718794027,
+        "whole_row_median": 0.6483180428134556,
+        "whole_rows_at_least_half": 0.6621020005635391,
+        "whole_site_mean": 0.7684649118936838
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.002689150316198652,
+          "4": 0.0011554357651719638
+        },
+        "pooled": -9.189399880482618e-05,
+        "sensors": {
+          "0": -0.0002641368418712098,
+          "1": 0.00010897199831816362
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.0006561679790025865
+    },
+    {
+      "family": "inverse",
+      "key": "inverse_scale0.02",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.009750720383998712,
+          "4": 0.005384425546934746
+        },
+        "pooled": 0.0043346562241243225,
+        "sensors": {
+          "0": 0.004232915245920843,
+          "1": 0.00028288846706092663
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": true,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_half_trust_coverage": false,
+        "minimum_low_prevalence_mean_trust": false,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.02,
+      "trust": {
+        "low_prevalence_row_mean": 0.4133866650692093,
+        "low_prevalence_row_median": 0.3449781659388646,
+        "low_prevalence_rows_at_least_half": 0.231311706629055,
+        "low_prevalence_site_mean": 0.8240456335701026,
+        "whole_row_mean": 0.2979396707215786,
+        "whole_row_median": 0.22139471902505076,
+        "whole_rows_at_least_half": 0.1478726401803325,
+        "whole_site_mean": 0.6766722545620406
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0011756305842268722,
+          "4": 0.000572114541428137
+        },
+        "pooled": 0.0001090690255662885,
+        "sensors": {
+          "0": 0.00011776133591256954,
+          "1": -1.6917253915060826e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.0006561679790025865
+    },
+    {
+      "family": "linear",
+      "key": "linear_scale0.1",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.004973528170371111,
+          "4": 0.0055497071118195684
+        },
+        "pooled": 0.002381497657660492,
+        "sensors": {
+          "0": 0.0017518188670422319,
+          "1": -0.002730288041985496
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_half_trust_coverage": true,
+        "minimum_low_prevalence_mean_trust": true,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.1,
+      "trust": {
+        "low_prevalence_row_mean": 0.5612658674188998,
+        "low_prevalence_row_median": 0.620253164556962,
+        "low_prevalence_rows_at_least_half": 0.5665550070521862,
+        "low_prevalence_site_mean": 0.8644879343153392,
+        "whole_row_mean": 0.3735700197238659,
+        "whole_row_median": 0.29663608562691135,
+        "whole_rows_at_least_half": 0.3633136094674556,
+        "whole_site_mean": 0.6980653163443272
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.002028448517754966,
+          "4": 0.0005424916567934313
+        },
+        "pooled": -0.0003558280911324374,
+        "sensors": {
+          "0": -0.0005441190710964161,
+          "1": -6.885576717063913e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.001312335958005284
+    },
+    {
+      "family": "exponential",
+      "key": "exponential_scale0.05",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": 0.006677996113583551,
+          "4": 0.00497033002406011
+        },
+        "pooled": 0.0028044695385150975,
+        "sensors": {
+          "0": 0.0015099922495445117,
+          "1": -0.001412258491244045
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": true,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_half_trust_coverage": false,
+        "minimum_low_prevalence_mean_trust": false,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.05,
+      "trust": {
+        "low_prevalence_row_mean": 0.4836025084221128,
+        "low_prevalence_row_median": 0.4679032800952555,
+        "low_prevalence_rows_at_least_half": 0.4393511988716502,
+        "low_prevalence_site_mean": 0.8432513610225495,
+        "whole_row_mean": 0.3285417476227062,
+        "whole_row_median": 0.24494347024701452,
+        "whole_rows_at_least_half": 0.2808678500986193,
+        "whole_site_mean": 0.6843573489605482
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0016010624097624326,
+          "4": 0.0004743238014507378
+        },
+        "pooled": -0.00021895046478226377,
+        "sensors": {
+          "0": -0.0003600861570463021,
+          "1": -5.275062902743155e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.0006561679790025865
+    },
+    {
+      "family": "exponential",
+      "key": "exponential_scale0.02",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -9.285961252170072e-05,
+          "4": 0.0017792652489198035
+        },
+        "pooled": 0.00037358563690825797,
+        "sensors": {
+          "0": -0.0009216308815159779,
+          "1": -5.82082434876785e-05
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_half_trust_coverage": false,
+        "minimum_low_prevalence_mean_trust": false,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.02,
+      "trust": {
+        "low_prevalence_row_mean": 0.2694639113590595,
+        "low_prevalence_row_median": 0.14975806646676265,
+        "low_prevalence_rows_at_least_half": 0.19534555712270804,
+        "low_prevalence_site_mean": 0.7836480413563724,
+        "whole_row_mean": 0.17390025391595923,
+        "whole_row_median": 0.029693723904063093,
+        "whole_rows_at_least_half": 0.12488024795717104,
+        "whole_site_mean": 0.6250614191732882
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.0006063733835574014,
+          "4": 8.425443854864767e-05
+        },
+        "pooled": -0.00017159730418359054,
+        "sensors": {
+          "0": -0.0002313965679715535,
+          "1": -9.158432979372577e-05
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.001312335958005284
+    },
+    {
+      "family": "linear",
+      "key": "linear_scale0.05",
+      "low_prevalence_average_precision_delta": {
+        "folds": {
+          "3": -0.004807528907905145,
+          "4": 0.002089292016104416
+        },
+        "pooled": -0.0021254571031814606,
+        "sensors": {
+          "0": -0.0028656969517413255,
+          "1": -0.003175458498279271
+        }
+      },
+      "low_prevalence_matched_fpr_recall_delta": 0.0,
+      "passed_point_gates": false,
+      "point_checks": {
+        "low_each_fold_ap_nondecreasing": false,
+        "low_each_sensor_ap_nondecreasing": false,
+        "low_matched_fpr_recall_nondecreasing": true,
+        "low_pooled_ap_delta": false,
+        "minimum_low_prevalence_half_trust_coverage": false,
+        "minimum_low_prevalence_mean_trust": false,
+        "minimum_whole_mean_trust": true,
+        "whole_each_fold_ap_nondecreasing": false,
+        "whole_each_sensor_ap_nondecreasing": false,
+        "whole_matched_fpr_recall_nondecreasing": false,
+        "whole_pooled_ap_delta": false
+      },
+      "scale": 0.05,
+      "trust": {
+        "low_prevalence_row_mean": 0.32678067700987307,
+        "low_prevalence_row_median": 0.2405063291139241,
+        "low_prevalence_rows_at_least_half": 0.33339210155148097,
+        "low_prevalence_site_mean": 0.8018816207480051,
+        "whole_row_mean": 0.2089039165962243,
+        "whole_row_median": 0.0,
+        "whole_rows_at_least_half": 0.21313045928430543,
+        "whole_site_mean": 0.638297770115412
+      },
+      "whole_average_precision_delta": {
+        "folds": {
+          "3": -0.001093837097298156,
+          "4": 4.6126041441385546e-05
+        },
+        "pooled": -0.0003618419510564852,
+        "sensors": {
+          "0": -0.0004734753840609507,
+          "1": -0.0001478613895845582
+        }
+      },
+      "whole_matched_fpr_recall_delta": -0.001312335958005284
+    }
+  ],
+  "status": "rejected_before_folds01",
+  "summary": {
+    "bootstrapped_candidates": 0,
+    "candidate_count": 16,
+    "passing_candidates": 0,
+    "point_gate_candidates": 0,
+    "selected": null
+  },
+  "target_domain": {
+    "definition": {
+      "maximum_site_positive_rate": 0.05,
+      "membership": "all folds-3/4 rows from physical_location_id groups whose true scene-positive rate is <=0.05",
+      "name": "low-prevalence physical-location proxy for the official test-only-site view",
+      "use": "evaluation and gating only; true prevalence never enters trust"
+    },
+    "positive": 118,
+    "rows": 11344,
+    "sites": 199
+  }
+}

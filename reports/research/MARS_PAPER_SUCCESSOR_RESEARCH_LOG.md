@@ -3804,6 +3804,22 @@ gates, and positive paired-site AP lower bounds in both views. The two-candidate
 smoke exercised smooth weighting, exact logit residual scaling, trust checks, and
 both bootstrap paths. Fold 2 remains report-only and folds 0/1 remain untouched.
 
+### 2026-07-30: Smooth unseen-site trust rejected
+
+None of 16 smooth trust candidates cleared the point gates. The strongest
+candidate, linear scale 1.0, retained 95.1% mean trust on low-prevalence rows and
+improved low-prevalence AP +0.016909, but fold-3 whole AP regressed -0.004319
+while fold 4 improved +0.002841. Inverse scale 0.4 improved pooled whole AP
++0.001792 and low-prevalence AP +0.015042 but still regressed fold 3 -0.002505.
+All site-varying weights produced the same split-specific cross-site calibration
+failure, so both hard and smooth site-conditioned routing are retired.
+
+The next regularization path is uniform global shrinkage of the fixed pair's
+logit residual. This preserves all cross-site ordering induced by attenuation,
+excludes the failed full-strength control, and tests whether the independently
+observed rare-site signal survives at a safer magnitude. Selection remains
+folds 3+4; any pass must be confirmed on untouched folds 0/1.
+
 ### 2026-07-30: Label-free unseen-site router frozen
 
 The next development experiment keeps the failed fold-2 pair entirely fixed and
