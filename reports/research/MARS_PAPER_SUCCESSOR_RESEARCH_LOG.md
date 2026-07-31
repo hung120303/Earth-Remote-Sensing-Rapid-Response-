@@ -3445,3 +3445,21 @@ feature agreed with the exact floor under the frozen tolerance, and all 16 sampl
 identities mapped to the 44,363-row Prithvi cache. The full 17,745-row extraction
 is label-free; labels are copied only into ignored development metadata for the
 subsequent ranker. No fold 0/1/2, fresh, or exact-paper row is selected.
+
+### 2026-07-30: Honest dense-feature cache completed and audited
+
+All 17,745 selected scenes were encoded: 8,799 from fold 3 and 8,946 from fold 4.
+The 17,745x671 float16 matrix is 23,813,918 bytes with SHA-256
+`f45de57bda41ba083b4a981cbbcafa3c1e537ff7178eedae2c2ae2567987f78e`;
+its 706,101-byte metadata has SHA-256
+`5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d`.
+Both remain ignored.
+
+An independent full scan found all 11,906,895 cached values finite, verified the
+17,745 unique sample identifiers and exact fold counts, and confirmed 16,221
+negative/1,524 positive scenes across 14,963 Sentinel-2 and 2,782 Landsat scenes.
+The separately stored exact float64 score floor is finite over
+[0.0000166513, 0.9999570152] and matches the float16 feature copy under the frozen
+tolerance. The compact receipt binds generator commit
+`b206ebb4af6c13a904da127aa46812877fbab009`, both endpoint hashes, output hashes,
+and `external_inputs_accessed=false`.
