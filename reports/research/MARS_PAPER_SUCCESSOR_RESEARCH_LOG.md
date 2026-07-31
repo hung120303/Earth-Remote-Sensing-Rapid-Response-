@@ -3499,3 +3499,20 @@ offsets rather than transferable plume evidence. Fold 2 was not evaluated, no
 artifact was written, and no fresh or exact-paper input was accessed. The dense
 adapter remains the independently supported mask branch, but this scene-ranking
 family is retired.
+
+### 2026-07-30: Invariant sparse dense-signal audit frozen
+
+Before discarding the 669 non-floor dense features entirely, a final cheap audit
+tests them one at a time under a transformation that cannot exploit raw
+fold/sensor offsets. Each feature is empirical-rank normalized and inverse-normal
+transformed separately within each fold x sensor domain. Missing sentinels use
+only the unlabeled domain median. Its plume direction is estimated on the
+opposite fold and must agree in both folds before any residual strength is tested.
+
+Seven small fixed logit strengths are evaluated against the exact current score.
+Promotion requires +0.001 pooled AP, nonnegative AP within both folds and both
+sensors, nonnegative matched-FPR recall, and a positive paired-site AP lower bound.
+Only the top 20 point-gate survivors may be bootstrapped. The eight-feature smoke
+found five direction-agreeing features, exercised the no-survivor path cleanly,
+and wrote no output. This is an exploratory development audit; any discovery
+would require a separately committed fold-2 protocol.
