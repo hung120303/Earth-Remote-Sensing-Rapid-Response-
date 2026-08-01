@@ -5317,3 +5317,25 @@ scores. Full-model external transfer is useful dense evidence but not a
 standalone scene-ranker solution. No artifact is written and all unopened
 cohorts remain closed. Result SHA-256 is
 `1d870c08e27111859e03d10c0479bf15297e19203c4837f687027dd4b7f0cba1`.
+
+### 2026-08-01: protected bi-sensor routing reveals a small stable signal
+
+One same-seed mechanistic replay changes only the rejected parent's scene
+fusion. Current scores below 0.25 stay bit-identical; higher scores are reranked
+in local logit space, mapped back above 0.25, and receive teacher-student evidence
+for both sensors. The fixed gate therefore preserves all operating confusion
+counts. Four strengths and unchanged gates were frozen at `060859fd`.
+
+All strengths improve AP on both folds and both sensors with exactly zero recall
+and FPR change. Strength 0.10 changes AP +0.000237 with paired-site interval
+[+0.000022,+0.000542], and IoU +0.002698 with interval
+[+0.000410,+0.004497]; only the +0.002 AP floor fails. The frozen selector picks
+0.50: AP +0.000881, recall 0, and IoU +0.006130, but AP and IoU intervals cross
+zero and fold-4 IoU is -0.000190. Strength 1.0 reaches +0.001220 AP but remains
+uncertain and changes IoU -0.000642.
+
+This confirms that the parent pooled reversal was partly a sensor-calibration
+artifact. The corrected ranking signal is direction-stable but too small to
+promote alone, and stronger dense interpolation overfits fold 4. No artifact is
+written. Result SHA-256 is
+`0c3e2f2253316c714f1b58f39092bf6cc9e5b445823a46be27a5b1e1ebd818af`.

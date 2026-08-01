@@ -465,3 +465,29 @@ complementary scene-ranking solution. Any reuse must preserve cross-sensor score
 pair the dense branch with stronger site-general scene evidence. Compact result:
 `reports/experiments/mars_anchored_full_finetune_pilot.json` (SHA-256
 `1d870c08e27111859e03d10c0479bf15297e19203c4837f687027dd4b7f0cba1`).
+
+## 2026-08-01: protected bi-sensor anchored fusion rejected
+
+The parent result showed positive within-Sentinel ranking and dense evidence but adverse pooled
+calibration. A single mechanistic follow-up retained the same model, data, losses, and parent seeds,
+then changed only scene fusion. Scores below 0.25 remained exact current-score identities; scores
+above the gate were locally reranked and mapped back above 0.25. Teacher-student evidence applied
+to both Sentinel-2 and Landsat. This structurally preserves the development operating confusion
+counts. Four strengths were frozen at commit `060859fd` before the reused folds were rescored.
+
+The routing correction works but is insufficient. Every strength has positive AP on both folds and
+both sensors with exactly unchanged recall and FPR. At strength 0.10, AP changes +0.000237 with
+paired-site interval [+0.000022, +0.000542], while IoU changes +0.002698 with interval
+[+0.000410, +0.004497]; it passes every gate except the preregistered +0.002 AP point floor.
+The selector chooses strength 0.50 by its worst-fold-first rank: AP +0.000881, recall 0, and IoU
++0.006130, but both paired intervals cross zero and fold-4 IoU changes -0.000190. Strength 1.0
+raises AP to +0.001220 but remains below the point floor, has AP interval
+[-0.000436, +0.003151], and changes IoU -0.000642.
+
+Thus protected bi-sensor routing resolves the parent calibration reversal and establishes a small,
+direction-stable complementary scene signal. It does not supply the magnitude or joint uncertainty
+needed alone. No artifact was written. A future ensemble may use only independently confirmed
+high-confidence ranking evidence and a separately conservative dense strength; simply increasing
+this branch is contradicted by the IoU curve. Compact result:
+`reports/experiments/mars_protected_bisensor_finetune_pilot.json` (SHA-256
+`0c3e2f2253316c714f1b58f39092bf6cc9e5b445823a46be27a5b1e1ebd818af`).
