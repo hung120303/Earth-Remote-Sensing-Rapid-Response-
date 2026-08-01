@@ -318,3 +318,40 @@ Still required for the final package:
 4. visually inspect the generated HTML in a local browser (automated browser preview was blocked
    by the local-file URL policy; structural and content checks are automated);
 5. run the final requirement-by-requirement audit.
+
+## 2026-07-31: physics-contrast Gaussian ViT full-bank audit
+
+The successor path now uses a 10.58 M-parameter Vision Transformer with a convolutional decoder.
+Its external contract remains the exact 16-channel mixed Sentinel-2/Landsat MARS-S2L input. Inside
+the network, fixed formulas add MBMP evidence, six temporal log changes, all 15 temporal log-ratio
+changes, wind, cloud, observability, and a learned sensor embedding. No cohort or test statistics are
+used by those formulas.
+
+Synthetic positives are not Gaussian noise images. A physically parameterized anisotropic Gaussian
+plume is injected into real MARS backgrounds through the affected spectral channels. Every positive
+has a no-plume twin with the same source background and augmentation. Independent deterministic
+random streams control background selection, plume parameters, and augmentation; a paired sampler
+keeps twins adjacent while covering each template once per epoch. A direct audit confirmed identical
+backgrounds, zero protected-channel change, changes only in channels 0, 5, and 6, a nonempty positive
+mask, and an empty negative mask.
+
+After two deliberately small learnability studies, the schedule was frozen by a full-bank audit:
+
+- 16,000 training templates, producing 32,000 matched positive/negative requests per epoch;
+- 2,000 separately seeded validation templates, producing 4,000 requests;
+- 10 epochs, batch size 24, AdamW learning rate 0.001, BF16;
+- 320,000 total training requests;
+- checkpoint selection by validation mask IoU, then AP, then earliest epoch;
+- gates fixed at AP >= 0.80, IoU >= 0.25, and pixel recall >= 0.30.
+
+Epoch 9 was selected with dense-evidence AP 0.927611, AUROC 0.911105, mask IoU 0.261063, and pixel
+recall 0.579037. Epoch 10 was lower on the primary selection metric (IoU 0.241686). All three frozen
+gates passed. Peak CUDA allocation was 4.30 GB. The compact result is
+`reports/experiments/mars_gaussian_contrast_full_bank.json` with SHA-256
+`689b806228abda20e433af180f25a2e722bd71a1a2c213a9fb51c0f082f162f3`.
+
+This result establishes synthetic representation learnability only. It is not a comparison with
+MARS-S2L and cannot support a paper-performance claim. The selected nine-epoch pretraining schedule
+must now be applied independently to the two authorized real development endpoints (held folds 3
+and 4), followed by the already-frozen paired site bootstrap gates. Folds 0, 1, 2 and the official
+2024 test remain unavailable for architecture selection.
