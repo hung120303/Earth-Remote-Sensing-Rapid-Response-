@@ -5394,7 +5394,7 @@ The conservative strength 0.10 remains the statistically stable point: AP
 the effect materially. Strength 1.0 reaches AP +0.001301 yet remains uncertain
 and nearly eliminates the dense gain. No candidate reaches the fixed +0.002 AP
 floor; no artifact is written. Result SHA-256 is
-`3e70513986192dda3b7aadc8feed6a5b12ce6e11eaaf2691e9deb7859efc96c`.
+`3e70513986192dda3b7aadc8feed6a5b12ce6e11eaaef2691e9deb7859efc96c`.
 
 This controlled null result is still useful: additional temporal positives in
 the same representation do not solve the site-general ranking gap. The stable
@@ -5457,3 +5457,26 @@ authorizes exactly one fold-2 confirmation of strength 0.50 / multiplier 1.0;
 it does not authorize fold 0/1, external, or official-test evaluation. Result
 SHA-256 is
 `85d5959061cc77d4b2a32f12609c7852af545ff8df6923273d6ae245d020eec1`.
+
+### 2026-08-01: protected ensemble fold-2 confirmation preregistered
+
+The passing folds-3/4 ensemble is now sealed as one exact fold-2 candidate:
+anchored scene strength 0.50 with multiplier 1.0, fixed train-fitted DOFA at
+gate 0.50 / weight 0.05, and a final identity gate at 0.25. Its independently
+scored dense path remains anchored strength 0.10. The anchored endpoint uses a
+new seed, fits only the union of folds 3 and 4, and will score fold 2 once. The
+DOFA probes likewise fit folds 3 and 4 and reuse their already frozen five
+projection seeds. There is no fold-2 grid or endpoint selection.
+
+The confirmation requires AP improvement of at least +0.001 versus the current
+spatial-Prithvi system, a strictly positive 10,000-replicate paired-site AP
+lower bound, positive AP changes for Sentinel-2 and Landsat, unchanged operating
+confusion counts and no worse recall/FPR, positive dense IoU with a positive
+paired-site lower bound, and positive AP/recall versus the released primary
+model. Evaluator, dependencies, inputs, bootstrap seed 20264330, formula, and
+gates are recorded in
+`configs/mars_dofa_anchored_protected_fold2_protocol.json` before either future
+anchored score or result file exists. After generation, only those two exact
+SHA-256 placeholders and the frozen status may change before the one-shot
+evaluation. Folds 0/1, external outcomes, and official-test inputs remain out
+of scope.

@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "status": "preregistered_before_anchored_fold2_cache_generation",
+  "scope": "one-shot fold-2 confirmation of the exact protected DOFA plus expanded-UNEP anchored-U-Net ensemble selected on folds 3 and 4",
+  "evaluator": {
+    "path": "tools/evaluate_mars_dofa_anchored_protected_fold2.py",
+    "sha256": "2c86ad122e9c552fb9ec0a960f36e1fb443b432a77675b99c907d638929f1e1a"
+  },
+  "code_dependencies": [
+    {"path": "tools/evaluate_mars_dofa_anchored_protected_ensemble.py", "sha256": "b224268547c5ad6eb6f3bcce9c147b98326a3a1204ea49ce8e8b8573d36d917f"},
+    {"path": "tools/evaluate_mars_dofa_v2_fold2.py", "sha256": "d19a9d425920604d33ea99f218055f18a14537b59d65f014df451f9a0537cade"},
+    {"path": "tools/confirm_mars_dofa_v2_projection_ensemble.py", "sha256": "e7175c5d1b66e9de80d0da42d4e7b28adc4fb575e1ca81e445115feaa6668969"},
+    {"path": "tools/confirm_mars_dofa_v2_train_fitted_normalization.py", "sha256": "59b3cdd8a85d5bd54d1174acaa3dfc4d62cc6ca8cc613cb1be29f33a5697ce44"},
+    {"path": "tools/train_mars_dofa_v2_protected_fusion.py", "sha256": "14390520c1bf0b39ecd6ac98591aaf7e40914651a925e504c2d27dad8c4cdb19"},
+    {"path": "tools/train_mars_dofa_v2_scene_probe.py", "sha256": "62eaefe3ea087bfabeac415af5cba8f18809320b93f43a12b51b97d950f34cb7"},
+    {"path": "tools/train_mars_crossfold_bagged_scene_head.py", "sha256": "ac3e58d54477b67219c66200180a715591e75f25baebe7350edc61b7af3253b3"},
+    {"path": "tools/train_mars_oof_scene_ensemble_v2.py", "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"},
+    {"path": "tools/train_mars_scene_ranker.py", "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"}
+  ],
+  "inputs": {
+    "selection_result": {"path": "reports/experiments/mars_dofa_anchored_protected_ensemble_folds34.json", "sha256": "85d5959061cc77d4b2a32f12609c7852af545ff8df6923273d6ae245d020eec1"},
+    "dofa_development": {"path": "outputs/mars_dofa_v2_scene_features_folds34.npz", "sha256": "2c43352e92f96549d64188c78318fe606d55552aa9587aace1a195e8dfba66fe"},
+    "dofa_fold2": {"path": "outputs/mars_dofa_v2_scene_features_fold2.npz", "sha256": "9ead8028d98112bd9a9d494a08104700fa580b2258c7c2c15bb4a38a0d6723ab"},
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "current_scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "anchored_scores": {"path": "outputs/mars_protected_bisensor_expanded_unep_fold2_scores.npz", "sha256": "PENDING_EXACT_HASH_AFTER_GENERATION"},
+    "anchored_result": {"path": "reports/experiments/mars_protected_bisensor_expanded_unep_fold2_cache.json", "sha256": "PENDING_EXACT_HASH_AFTER_GENERATION"}
+  },
+  "anchored_cache_protocol_sha256": "646d6a3f64c26d7df50d584c546997bb6118af7b05123785b7044f52949a471f",
+  "candidate": {
+    "anchored_strength": 0.5,
+    "anchored_multiplier": 1.0,
+    "final_gate": 0.25,
+    "dense_strength": 0.1,
+    "dofa_feature_set": "change_extreme",
+    "dofa_C": 0.01,
+    "dofa_projection_seeds": [20260780, 20260781, 20260782, 20260783, 20260784],
+    "dofa_gate": 0.5,
+    "dofa_weight": 0.05,
+    "fit_folds": [3, 4],
+    "held_fold": 2
+  },
+  "architecture": {
+    "scene_formula": "above final gate 0.25 in local-logit coordinates: current + 1.0*(anchored_strength_0.50-current) + (fixed_DOFA-current); below 0.25 exact identity",
+    "dense_formula": "released pixel logit plus 0.10 times the independently trained anchored endpoint correction",
+    "fit_contract": "the anchored endpoint and all DOFA probes fit folds 3 and 4 only and score fold 2 once",
+    "selection_source": "exact single candidate passed the preregistered folds-3/4 gates; no fold-2 search"
+  },
+  "bootstrap": {
+    "unit": "physical_site_group",
+    "paired": true,
+    "replicates": 10000,
+    "confidence": 0.95,
+    "seed": 20264330
+  },
+  "gates": {
+    "minimum_ap_delta_vs_current": 0.001,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "false_positive_rate_no_worse": true,
+    "operating_confusion_counts_identical": true,
+    "each_sensor_ap_delta_vs_current_strictly_positive": true,
+    "paired_site_ap_delta_95pct_lower_strictly_positive": true,
+    "dense_pixel_iou_delta_strictly_positive": true,
+    "dense_paired_site_iou_lower_strictly_positive": true,
+    "ap_and_recall_vs_released_primary_strictly_positive": true,
+    "pass_action": "authorize a separately preregistered new-seed and multi-fold confirmation; official test remains closed"
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_dofa_anchored_protected_fold2.json",
+    "markdown": "reports/experiments/MARS_DOFA_ANCHORED_PROTECTED_FOLD2.md"
+  },
+  "invariants": [
+    "The exact candidate, code, input set, bootstrap seed, and gates are committed before the anchored fold-2 score cache exists.",
+    "After anchored cache generation, only its score/report SHA-256 placeholders and status may change before evaluation.",
+    "The evaluator validates that the candidate exactly matches the passed folds-3/4 selection report.",
+    "The evaluator refuses to overwrite or repeat an existing one-shot fold-2 report.",
+    "No hyperparameter, feature, seed, fusion rule, selection rule, or gate changes after fold-2 cache generation.",
+    "Folds 0/1, external outcomes, and the official test are not evaluation inputs.",
+    "Bulk feature, score, and state caches remain Git-ignored; only compact protocols and reports are committed."
+  ]
+}

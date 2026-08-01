@@ -12,6 +12,7 @@ for path in (ROOT / "tools", ROOT / "EarthRemoteSensingRapidResponse"):
         sys.path.insert(0, str(path))
 
 from train_mars_anchored_full_finetune_pilot import (  # noqa: E402
+    resolve_fold_contract,
     write_endpoint_state_cache,
     write_scene_prediction_cache,
 )
@@ -66,3 +67,21 @@ def test_endpoint_state_cache_is_marked_research_only(tmp_path: Path) -> None:
     assert payload["research_only_until_downstream_gates_pass"] is True
     assert payload["protocol_sha256"] == "c" * 64
     assert receipt["tracked"] is False
+
+
+def test_explicit_single_holdout_fit_contract() -> None:
+    evaluation, authorized, mapping = resolve_fold_contract(
+        {"folds": [2], "fit_folds_by_held": {"2": [3, 4]}}
+    )
+    assert evaluation == {2}
+    assert authorized == {2, 3, 4}
+    assert mapping == {2: {3, 4}}
+
+
+@pytest.mark.parametrize(
+    "mapping",
+    ({"3": [3, 4]}, {"2": []}, {"3": [4]}),
+)
+def test_invalid_explicit_fit_contract_is_rejected(mapping: dict[str, list[int]]) -> None:
+    with pytest.raises(ValueError):
+        resolve_fold_contract({"folds": [2], "fit_folds_by_held": mapping})

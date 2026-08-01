@@ -55,6 +55,30 @@ from train_mars_physics_guided_teacher_pilot import seed_everything  # noqa: E40
 DEFAULT_PROTOCOL = Path("configs/mars_anchored_full_finetune_pilot_protocol.json")
 
 
+def resolve_fold_contract(
+    protocol: dict[str, Any],
+) -> tuple[set[int], set[int], dict[int, set[int]]]:
+    """Return evaluation folds, authorized rows, and per-endpoint fit folds."""
+    evaluation = set(map(int, protocol["folds"]))
+    if not evaluation:
+        raise ValueError("At least one evaluation fold is required")
+    configured = protocol.get("fit_folds_by_held")
+    if configured is None:
+        mapping = {held: evaluation - {held} for held in evaluation}
+    else:
+        mapping = {
+            int(held): set(map(int, fit_folds))
+            for held, fit_folds in configured.items()
+        }
+        if set(mapping) != evaluation:
+            raise ValueError("Fit-fold mapping keys must equal evaluation folds")
+    for held, fit_folds in mapping.items():
+        if not fit_folds or held in fit_folds:
+            raise ValueError(f"Invalid fit folds for held fold {held}")
+    authorized = evaluation | set().union(*mapping.values())
+    return evaluation, authorized, mapping
+
+
 def write_scene_prediction_cache(
     path: Path,
     raw: dict[str, Any],
@@ -284,11 +308,11 @@ def main() -> int:
         for row in fold_protocol["assignments"]
     }
     all_records = list(iter_development_manifest(paths["manifest"]))
-    selected_folds = set(map(int, protocol["folds"]))
+    selected_folds, authorized_folds, fit_folds_by_held = resolve_fold_contract(protocol)
     records = [
         row
         for row in all_records
-        if group_to_fold[str(row["group_id"])] in selected_folds
+        if group_to_fold[str(row["group_id"])] in authorized_folds
     ]
     unep_records = iter_jsonl(paths["unep_auxiliary_manifest"])
     cloudsen_records = iter_jsonl(paths["cloudsen_auxiliary_manifest"])
@@ -310,7 +334,13 @@ def main() -> int:
 
     if args.smoke:
         seed_everything(int(spec["seed"]))
-        mars_smoke = smoke_subset(records, 2)
+        smoke_fit_folds = set().union(*fit_folds_by_held.values())
+        smoke_pool = [
+            row
+            for row in records
+            if group_to_fold[str(row["group_id"])] in smoke_fit_folds
+        ]
+        mars_smoke = smoke_subset(smoke_pool, 2)
         unep_smoke = smoke_records(unep_records, 4)
         cloudsen_smoke = smoke_records(cloudsen_records, 4)
         datasets = (
@@ -370,7 +400,7 @@ def main() -> int:
     prediction_parts: list[dict[str, Any]] = []
     endpoint_states: dict[str, Any] = {}
     for held_fold in sorted(selected_folds):
-        fit_folds = selected_folds - {held_fold}
+        fit_folds = fit_folds_by_held[held_fold]
         fit_records = [
             row for row in records if group_to_fold[str(row["group_id"])] in fit_folds
         ]
