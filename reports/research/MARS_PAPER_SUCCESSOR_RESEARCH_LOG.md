@@ -5067,3 +5067,12 @@ finite `[2,1,200,200]` masks and two scene logits. An actual 24-example training
 batch peaked at 3,831,370,752 CUDA bytes on the RTX 5070. The held-fold outcome
 grid is still unopened; hashes, endpoints, strengths, and promotion gates must
 be committed before cross-fit scoring.
+
+The first full launch stopped after 64 synthetic-pretraining batches and before
+any held-fold scoring because one indexed plume had zero observable target
+pixels. The deterministic data path was tightened to search fit-fold background
+crops with at least 90% observable support and to accept a generated plume only
+when at least half of its mask is observable. A 1,024-positive-template stress
+test across both sensors then produced 1,024 non-empty masks. The trainer hash
+was refrozen and committed before the cross-fit restart; no metric, checkpoint,
+or candidate outcome from the aborted launch exists.

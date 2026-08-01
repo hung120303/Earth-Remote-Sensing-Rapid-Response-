@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "status": "frozen_after_mixed_synthetic_real_and_full_scene_smoke",
+  "status": "frozen_after_visibility_stress_before_held_scoring",
   "scope": "fold-3/fold-4 cross-fit of an analytical-Gaussian-pretrained full-scene ViT-U-Net under the exact mixed-sensor MARS contract",
   "trainer": {
     "path": "tools/train_mars_gaussian_vit_pilot.py",
-    "sha256": "7213e8a3a5b82558b0cb26f1feb29f2c00d31e7d83b6ef01d029066d6c450aa5"
+    "sha256": "7d57895e20f09757adaf249d9a9d57a7d38d3811de4c92b40f915fa2fa2fc2e2"
   },
   "code_dependencies": [
     {
@@ -178,7 +178,8 @@
     "full_scene_logit_shape": [2],
     "parameter_count": 9907262,
     "peak_cuda_bytes": 3831370752,
-    "device": "NVIDIA GeForce RTX 5070"
+    "device": "NVIDIA GeForce RTX 5070",
+    "visibility_stress": "1024 deterministic positive templates across both sensors; every mask non-empty after requiring >=90% observable background crops and >=50% observable plume support"
   },
   "search": {
     "strengths": [0.1, 0.25, 0.5, 1.0],
@@ -214,6 +215,7 @@
   "invariants": [
     "The synthetic bank, architecture, endpoint, losses, strengths, seeds, and gates were frozen after smoke and before held-fold scoring.",
     "Every endpoint fits the opposite development fold and fit-fold synthetic backgrounds only.",
+    "A rare pre-outcome visibility failure triggered only a deterministic training-input retry; 1024 indexed positives then passed before hashes were refrozen.",
     "Synthetic positives and real unchanged negatives are sensor balanced.",
     "Synthetic template train/validation/diagnostic index ranges never overlap.",
     "Failure writes no model artifact.",

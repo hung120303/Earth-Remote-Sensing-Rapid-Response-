@@ -177,14 +177,49 @@ class GaussianSyntheticSceneDataset(Dataset[dict[str, Any]]):
         sensor_index = template_index % 2
         rng = np.random.default_rng(self.seed + template_index * 104729)
         pool = self.pools[sensor_index]
-        record = pool[int(rng.integers(len(pool)))]
-        sample = load_sample(self.metadata_root, record, require_enhancement=False)
-        maximum_y = sample.raw_pair.shape[-2] - self.crop_size
-        maximum_x = sample.raw_pair.shape[-1] - self.crop_size
-        if maximum_y < 0 or maximum_x < 0:
-            raise ValueError("Synthetic background is smaller than the training crop")
-        y = int(rng.integers(0, maximum_y + 1))
-        x = int(rng.integers(0, maximum_x + 1))
+        selected_background: tuple[dict[str, Any], Any, int, int, float] | None = None
+        for _ in range(32):
+            candidate_record = pool[int(rng.integers(len(pool)))]
+            candidate_sample = load_sample(
+                self.metadata_root, candidate_record, require_enhancement=False
+            )
+            maximum_y = candidate_sample.raw_pair.shape[-2] - self.crop_size
+            maximum_x = candidate_sample.raw_pair.shape[-1] - self.crop_size
+            if maximum_y < 0 or maximum_x < 0:
+                continue
+            local_best: tuple[int, int, float] | None = None
+            for _ in range(16):
+                candidate_y = int(rng.integers(0, maximum_y + 1))
+                candidate_x = int(rng.integers(0, maximum_x + 1))
+                fraction = float(
+                    np.mean(
+                        candidate_sample.observable_mask[
+                            candidate_y : candidate_y + self.crop_size,
+                            candidate_x : candidate_x + self.crop_size,
+                        ]
+                    )
+                )
+                if local_best is None or fraction > local_best[2]:
+                    local_best = (candidate_y, candidate_x, fraction)
+                if fraction >= 0.95:
+                    break
+            assert local_best is not None
+            candidate = (
+                candidate_record,
+                candidate_sample,
+                local_best[0],
+                local_best[1],
+                local_best[2],
+            )
+            if selected_background is None or candidate[4] > selected_background[4]:
+                selected_background = candidate
+            if candidate[4] >= 0.95:
+                break
+        if selected_background is None or selected_background[4] < 0.90:
+            raise ValueError(
+                "Synthetic template could not find a >=90% observable fit-fold background crop"
+            )
+        record, sample, y, x, _ = selected_background
         region = np.s_[..., y : y + self.crop_size, x : x + self.crop_size]
         raw_pair = sample.raw_pair[region].copy()
         cloud = (sample.cloud_classes[y : y + self.crop_size, x : x + self.crop_size] > 0).astype(np.float32)
@@ -193,22 +228,34 @@ class GaussianSyntheticSceneDataset(Dataset[dict[str, Any]]):
         mask = np.zeros((self.crop_size, self.crop_size), dtype=np.float32)
         wind = (float(record["wind_u"]), float(record["wind_v"]))
         if positive:
-            parameters = sample_gaussian_parameters(
-                (self.crop_size, self.crop_size), wind, rng
-            )
-            simulated = self.simulator().simulate(
-                raw_pair[:6],
-                satellite=str(record["satellite"]),
-                solar_zenith_degrees=float(record["solar_zenith_angle"]),
-                view_zenith_degrees=float(record["view_zenith_angle"]),
-                resolution_m=10.0,
-                parameters=parameters,
-                rng=rng,
-            )
-            raw_pair[:6] = simulated.target
-            mask = simulated.mask.astype(np.float32) * observable
-            if not np.any(mask):
-                raise ValueError("Synthetic plume has no observable pixels")
+            accepted = None
+            for _ in range(16):
+                parameters = sample_gaussian_parameters(
+                    (self.crop_size, self.crop_size), wind, rng
+                )
+                simulated = self.simulator().simulate(
+                    raw_pair[:6],
+                    satellite=str(record["satellite"]),
+                    solar_zenith_degrees=float(record["solar_zenith_angle"]),
+                    view_zenith_degrees=float(record["view_zenith_angle"]),
+                    resolution_m=10.0,
+                    parameters=parameters,
+                    rng=rng,
+                )
+                visible = simulated.mask & (observable > 0.5)
+                visible_fraction = float(
+                    np.count_nonzero(visible)
+                    / max(np.count_nonzero(simulated.mask), 1)
+                )
+                if visible_fraction >= 0.5:
+                    accepted = simulated
+                    mask = visible.astype(np.float32)
+                    break
+            if accepted is None:
+                raise ValueError(
+                    "Synthetic plume failed the 50% observable-support gate after 16 deterministic attempts"
+                )
+            raw_pair[:6] = accepted.target
         if self.augment:
             raw_pair, cloud, clear, observable, mask, wind = augment_arrays(
                 raw_pair, cloud, clear, observable, mask, wind, rng
