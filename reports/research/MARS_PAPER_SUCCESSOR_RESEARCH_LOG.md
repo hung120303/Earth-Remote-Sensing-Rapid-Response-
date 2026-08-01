@@ -5356,3 +5356,22 @@ artifact. The corrected ranking signal is direction-stable but too small to
 promote alone, and stronger dense interpolation overfits fold 4. No artifact is
 written. Result SHA-256 is
 `0c3e2f2253316c714f1b58f39092bf6cc9e5b445823a46be27a5b1e1ebd818af`.
+
+### 2026-08-01: expanded-real-data protected transfer frozen
+
+The append-only UNEP refresh increases the verified real-positive auxiliary
+manifest from 135 scenes / 27 groups to 160 scenes / 28 groups. A controlled
+repeat will isolate that data change: architecture, released initialization,
+folds 3/4, deterministic endpoint seeds, three epochs, source masses, optimizer,
+losses, protection gate, four interpolation strengths, bootstrap, and promotion
+gates are identical to the preceding protected pilot. Group-balanced sampling
+means repeated temporal views add within-site variation rather than extra site
+mass; the one genuinely new group adds one site unit.
+
+The mixed-source CUDA smoke begins at exact pixel-logit identity, completes two
+BF16 optimization batches with finite gradients, moves the anchored student,
+and peaks at 6,781,294,592 allocated bytes. No held-fold outcome was computed.
+The protocol is frozen at
+`configs/mars_protected_bisensor_expanded_unep_protocol.json`; UNEP/CloudSEN
+development rows, MARS fold 2, folds 0/1, and all official-test inputs remain
+closed.
