@@ -16,7 +16,7 @@ from typing import Any
 import numpy as np
 import torch
 from sklearn.metrics import average_precision_score, roc_auc_score
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Sampler
 
 ROOT = Path(__file__).resolve().parents[1]
 MODEL_ROOT = ROOT / "EarthRemoteSensingRapidResponse"
@@ -33,6 +33,25 @@ from train_methanes2cm_v5 import segmentation_first_loss  # noqa: E402
 
 
 DEFAULT_PROTOCOL = Path("configs/mars_gaussian_contrast_full_bank_protocol.json")
+
+
+class PairShuffleSampler(Sampler[int]):
+    """Shuffle templates while keeping each positive/unchanged twin adjacent."""
+
+    def __init__(self, template_count: int, seed: int) -> None:
+        self.template_count = int(template_count)
+        self.seed = int(seed)
+        self.epoch = 0
+
+    def __iter__(self):
+        order = np.random.default_rng(self.seed + self.epoch).permutation(self.template_count)
+        self.epoch += 1
+        for template_index in order:
+            yield int(template_index) * 2
+            yield int(template_index) * 2 + 1
+
+    def __len__(self) -> int:
+        return self.template_count * 2
 
 
 def verify_protocol(protocol: dict[str, Any]) -> dict[str, Path]:
@@ -70,11 +89,14 @@ def make_loader(
     workers: int,
     shuffle: bool,
     seed: int,
+    pair_shuffle: bool = False,
 ) -> DataLoader[dict[str, Any]]:
+    sampler = PairShuffleSampler(dataset.template_count, seed) if pair_shuffle else None
     return DataLoader(
         dataset,
         batch_size=batch_size,
-        shuffle=shuffle,
+        shuffle=shuffle and sampler is None,
+        sampler=sampler,
         generator=torch.Generator().manual_seed(seed),
         num_workers=workers,
         pin_memory=True,
@@ -224,6 +246,7 @@ def main() -> int:
         workers=0 if args.smoke else int(spec["loader_workers"]),
         shuffle=True,
         seed=int(spec["loader_seed"]),
+        pair_shuffle=True,
     )
     validation_loader = make_loader(
         validation_dataset,

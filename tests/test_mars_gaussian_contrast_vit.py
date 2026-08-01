@@ -16,6 +16,12 @@ from mars_gaussian_contrast_vit import (  # noqa: E402
     methane_contrast_features,
 )
 
+TOOLS_ROOT = ROOT / "tools"
+if str(TOOLS_ROOT) not in sys.path:
+    sys.path.insert(0, str(TOOLS_ROOT))
+
+from train_mars_gaussian_contrast_full_bank import PairShuffleSampler  # noqa: E402
+
 
 def test_contrast_frontend_amplifies_temporal_b12_absorption() -> None:
     inputs = torch.full((1, 16, 32, 32), 0.3)
@@ -46,3 +52,16 @@ def test_contrast_vit_preserves_training_and_native_shapes() -> None:
         assert output["scene_logit"].shape == (2,)
         assert torch.isfinite(output["segmentation_logits"]).all()
         assert torch.isfinite(output["scene_logit"]).all()
+
+
+def test_pair_shuffle_keeps_twins_adjacent_and_covers_epoch() -> None:
+    sampler = PairShuffleSampler(template_count=17, seed=42)
+    first = list(sampler)
+    second = list(sampler)
+    assert sorted(first) == list(range(34))
+    assert sorted(second) == list(range(34))
+    assert first != second
+    for values in (first, second):
+        for offset in range(0, len(values), 2):
+            assert values[offset] % 2 == 0
+            assert values[offset + 1] == values[offset] + 1

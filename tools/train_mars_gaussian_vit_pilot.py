@@ -10,7 +10,7 @@ import os
 import subprocess
 import sys
 import time
-from collections import Counter
+from collections import Counter, OrderedDict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -188,6 +188,8 @@ class GaussianSyntheticSceneDataset(Dataset[dict[str, Any]]):
         if any(not values for values in self.pools.values()):
             raise ValueError("Synthetic training requires no-plume backgrounds from both sensors")
         self._simulator: MarsGaussianPlumeSimulator | None = None
+        self._sample_cache: OrderedDict[str, Any] = OrderedDict()
+        self._sample_cache_capacity = 64
 
     def __len__(self) -> int:
         return self.template_count * 2
@@ -197,18 +199,33 @@ class GaussianSyntheticSceneDataset(Dataset[dict[str, Any]]):
             self._simulator = MarsGaussianPlumeSimulator(self.lut_path)
         return self._simulator
 
+    def load_background(self, record: dict[str, Any]) -> Any:
+        """Keep paired/repeated Windows-mounted backgrounds local to each worker."""
+
+        key = str(record["sample_id"])
+        if key in self._sample_cache:
+            sample = self._sample_cache.pop(key)
+            self._sample_cache[key] = sample
+            return sample
+        sample = load_sample(self.metadata_root, record, require_enhancement=False)
+        self._sample_cache[key] = sample
+        while len(self._sample_cache) > self._sample_cache_capacity:
+            self._sample_cache.popitem(last=False)
+        return sample
+
     def __getitem__(self, index: int) -> dict[str, Any]:
         template_index = self.template_start + index // 2
         positive = index % 2 == 0
         sensor_index = template_index % 2
-        rng = np.random.default_rng(self.seed + template_index * 104729)
+        template_seed = self.seed + template_index * 104729
+        rng = np.random.default_rng(template_seed)
+        plume_rng = np.random.default_rng(template_seed + 15485863)
+        augment_rng = np.random.default_rng(template_seed + 32452843)
         pool = self.pools[sensor_index]
         selected_background: tuple[dict[str, Any], Any, int, int, float] | None = None
         for _ in range(32):
             candidate_record = pool[int(rng.integers(len(pool)))]
-            candidate_sample = load_sample(
-                self.metadata_root, candidate_record, require_enhancement=False
-            )
+            candidate_sample = self.load_background(candidate_record)
             maximum_y = candidate_sample.raw_pair.shape[-2] - self.crop_size
             maximum_x = candidate_sample.raw_pair.shape[-1] - self.crop_size
             if maximum_y < 0 or maximum_x < 0:
@@ -257,7 +274,7 @@ class GaussianSyntheticSceneDataset(Dataset[dict[str, Any]]):
             accepted = None
             for _ in range(16):
                 parameters = sample_gaussian_parameters(
-                    (self.crop_size, self.crop_size), wind, rng
+                    (self.crop_size, self.crop_size), wind, plume_rng
                 )
                 simulated = self.simulator().simulate(
                     raw_pair[:6],
@@ -266,7 +283,7 @@ class GaussianSyntheticSceneDataset(Dataset[dict[str, Any]]):
                     view_zenith_degrees=float(record["view_zenith_angle"]),
                     resolution_m=10.0,
                     parameters=parameters,
-                    rng=rng,
+                    rng=plume_rng,
                 )
                 visible = simulated.mask & (observable > 0.5)
                 visible_fraction = float(
@@ -284,7 +301,7 @@ class GaussianSyntheticSceneDataset(Dataset[dict[str, Any]]):
             raw_pair[:6] = accepted.target
         if self.augment:
             raw_pair, cloud, clear, observable, mask, wind = augment_arrays(
-                raw_pair, cloud, clear, observable, mask, wind, rng
+                raw_pair, cloud, clear, observable, mask, wind, augment_rng
             )
         return {
             "inputs": torch.from_numpy(build_input(raw_pair, cloud, wind)),

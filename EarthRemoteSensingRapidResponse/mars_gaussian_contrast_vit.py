@@ -194,7 +194,6 @@ class GaussianContrastViTUNet(nn.Module):
             "segmentation_logits": logits,
             "scene_logit": scene_logit,
             "top_evidence": top_evidence,
-            "contrast_features": contrast,
         }
 
     def artifact_metadata(self) -> dict[str, Any]:

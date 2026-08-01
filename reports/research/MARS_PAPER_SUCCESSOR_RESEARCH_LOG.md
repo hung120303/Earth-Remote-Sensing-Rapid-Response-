@@ -5217,3 +5217,22 @@ candidate, open fold 2, or justify official-test access. The next protocol must
 use all 16,000 reserved training templates and the 2,000 reserved validation
 templates, retain BF16 and the physics-contrast front end, and prove full-bank
 dense transfer before a separately frozen fold-3/fold-4 real cross-fit.
+
+The first full-bank launch was stopped before epoch 1 completed and before any
+validation checkpoint or outcome report existed. Direct throughput measurement
+on the Windows-mounted source tiles projected more than four hours for ten
+epochs, exceeding the frozen process window. The data path selected each paired
+positive and negative from the same background/crop but shuffled their requests
+independently, causing duplicate file reads and allowing the positive's plume
+RNG consumption to alter its augmentation orientation.
+
+A deterministic performance/invariance repair is refrozen before restart.
+Templates are shuffled while their positive/unchanged twins remain adjacent;
+each worker holds a bounded 64-sample LRU cache, making the second twin a cache
+hit. Background/crop, plume, and augmentation now use independent deterministic
+RNG streams, so paired twins receive exactly the same geometric transform and
+wind-vector transform. The optimizer still sees one random template order per
+epoch, every index exactly once. Removing an unused returned contrast tensor
+reduces validation memory without changing forward values or gradients. Twelve
+focused tests pass, including pair adjacency and full epoch coverage. No bank,
+loss, model parameter, epoch count, gate, or outcome-dependent setting changes.
