@@ -5116,3 +5116,34 @@ scale of 1,024 with a 1,000-step growth interval and retains its strict
 non-finite loss and gradient assertions. This is a numerical-stability repair;
 the bank, model, optimizer, epochs, checkpoints, and learnability gates are
 unchanged and were not scored by the aborted launch.
+
+### 2026-07-31: raw-input Gaussian ViT learnability audit fails
+
+The numerically stabilized audit completed all fixed checkpoints without a
+non-finite tensor, loss, or gradient. The exact raw-input architecture cannot
+memorize 64 positive/unchanged-negative template pairs in 20 epochs (160
+updates): train scene AP changes only 0.5004 to 0.5042 and train mask IoU at
+0.5 changes 0.0522 to 0.0530. The 64 index-disjoint templates likewise remain
+near chance: validation AP changes 0.5010 to 0.5129 and IoU 0.0437 to 0.0456.
+Both frozen gates fail, and no checkpoint is retained. Result SHA-256 is
+`9ac1ce127ad273f46caf100ff4f58bc02dae7baf234e2c5cdf465083110fcd7b`.
+
+A direct paired-tensor audit rules out an injection no-op. Across 16 sampled
+pairs, the median in-mask signed MBMP change is -0.00551; B11 and B12 target
+channels change while all reference, wind, and cloud channels remain exact.
+The median maximum absolute MBMP change is 0.03968. A one-pair optimization
+probe then reaches 0.918 mask IoU and 0.974 scene-logit separation by update
+50, proving that the computation graph can learn the signal but needs far more
+exposure across heterogeneous backgrounds. A later backward overflow at update
+88 also confirms that FP16 is an unnecessarily fragile format for this branch.
+
+The final Nature methods use batch 64, an initial learning rate of 1e-3, ten
+epochs, and best-validation checkpointing over 1,235,000 unique training
+samples. The associated primary preprint describes inputs as normalized
+temporal differences of band ratios. The present raw 16-channel patch stream,
+2e-4 learning rate, and 342 synthetic-pretraining updates therefore test a much
+weaker training regime, not the paper mechanism at credible scale. The next
+architecture will retain the exact external MARS 16-channel interface but
+derive normalized temporal log-ratio and relative-change channels internally,
+train in BF16, and first repeat the disjoint learnability gate before any real
+held-fold score is opened.
