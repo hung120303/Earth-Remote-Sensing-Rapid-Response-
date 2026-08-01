@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_outcomes",
+  "scope": "full 16000/2000-template Gaussian physics-contrast ViT dense pretraining and validation audit",
+  "trainer_sha256": "69bad70e083307cf2c6bf873cb2adc22aa1e8ab8ca232f90db15c157f48ad043",
+  "authorized_folds": [3, 4],
+  "selection_rule": "maximum validation pixel IoU, then dense-evidence AP, then earliest epoch",
+  "code_dependencies": [
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_gaussian_contrast_vit.py",
+      "sha256": "8a0a7c62df0bed19503e18e0ebd383197eeeda821f712ae36036815bf0dcd753"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_gaussian_vit.py",
+      "sha256": "d587a49b7c1d40bfc12152febed6ed31f56c4ca2225d5b89b3eedffa8be8fd11"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_gaussian_plume.py",
+      "sha256": "9ec8d0b11ba934d65ffcf014e0b2ba29d0b62d21006bd70f2db093dbeec0eaca"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py",
+      "sha256": "6c82aecd58918567b34f422e4c6f4e817e5578a6bc24ea284791f3d44b63fd36"
+    },
+    {
+      "path": "tools/train_mars_gaussian_vit_pilot.py",
+      "sha256": "7d473a9aba4755941158c1612bc853306d48f52a07df4743c170d5a0fb6eb7a2"
+    },
+    {
+      "path": "tools/train_methanes2cm_v5.py",
+      "sha256": "73fcb67a0ff15a467ac9aa9d92f248eabb0b3fd08ee2d4586269c558b736c461"
+    }
+  ],
+  "inputs": {
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_acquisition_receipt"
+    },
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "transmittance_lut": {
+      "path": "configs/mars_s2_integrated_transmittances.json",
+      "sha256": "1c11ef3f84a9d2a8ce65fc7301166ce20517bb57425ed3f5dca5a313a876c03f"
+    },
+    "morphology_audit": {
+      "path": "reports/experiments/mars_gaussian_plume_morphology_audit.json",
+      "sha256": "96e43dd8827f300e7c57642a6ca0ce8d2367d6ea1de8b6db97e91d700af01469"
+    },
+    "bank_audit": {
+      "path": "reports/experiments/mars_gaussian_plume_bank_audit.json",
+      "sha256": "1e952cb7bf8906aa99b72b33300e3a1f5822a783c858edfec49f5f20481c3d25"
+    }
+  },
+  "bank": {
+    "train_start": 0,
+    "train_template_count": 16000,
+    "validation_start": 16000,
+    "validation_template_count": 2000,
+    "diagnostic_indices_closed": [18000, 19999],
+    "positive_negative_pairing": "one analytical positive and its unchanged real-background negative per template"
+  },
+  "model": {
+    "dimension": 256,
+    "depth": 8,
+    "heads": 8,
+    "mlp_ratio": 4,
+    "dropout": 0.05,
+    "patch_size": 16,
+    "reference_grid": 13
+  },
+  "training": {
+    "seed": 20268240,
+    "data_seed": 20268241,
+    "loader_seed": 20268242,
+    "crop_size": 160,
+    "epochs": 10,
+    "batch_size": 24,
+    "evaluation_batch_size": 24,
+    "loader_workers": 4,
+    "augment": true,
+    "precision": "bf16",
+    "learning_rate": 0.001,
+    "weight_decay": 0.02,
+    "gradient_clip": 2.0,
+    "hard_negative_fraction": 0.02,
+    "progress_every_batches": 256
+  },
+  "gates": {
+    "validation_dense_ap_min": 0.80,
+    "validation_pixel_iou_min": 0.25,
+    "validation_pixel_recall_min": 0.30
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_gaussian_contrast_full_bank.json",
+    "markdown": "reports/experiments/MARS_GAUSSIAN_CONTRAST_FULL_BANK.md"
+  },
+  "closed_data": [
+    "synthetic diagnostic template indices 18000-19999",
+    "MARS folds 0, 1, and 2",
+    "external development outcomes",
+    "official 2024 test inputs and labels"
+  ]
+}
