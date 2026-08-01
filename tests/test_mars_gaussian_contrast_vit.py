@@ -21,6 +21,9 @@ if str(TOOLS_ROOT) not in sys.path:
     sys.path.insert(0, str(TOOLS_ROOT))
 
 from train_mars_gaussian_contrast_full_bank import PairShuffleSampler  # noqa: E402
+from train_mars_gaussian_contrast_crossfit import (  # noqa: E402
+    TransferGaussianContrastViTUNet,
+)
 
 
 def test_contrast_frontend_amplifies_temporal_b12_absorption() -> None:
@@ -78,3 +81,19 @@ def test_pair_shuffle_keeps_twins_adjacent_and_covers_epoch() -> None:
         for offset in range(0, len(values), 2):
             assert values[offset] % 2 == 0
             assert values[offset + 1] == values[offset] + 1
+
+
+def test_transfer_scene_protection_gate_is_exact_below_gate() -> None:
+    model = TransferGaussianContrastViTUNet(
+        dimension=64,
+        depth=1,
+        heads=4,
+        reference_grid=10,
+        scene_protection_gate=0.25,
+    )
+    baseline = torch.tensor([0.10, 0.50])
+    correction = torch.tensor([4.0, 4.0])
+    fused = model.fuse_scene_score(baseline, correction, strength=1.0)
+    assert torch.equal(fused[:1], baseline[:1])
+    assert fused[1] > baseline[1]
+    assert model.artifact_metadata()["scene_protection_gate"] == 0.25

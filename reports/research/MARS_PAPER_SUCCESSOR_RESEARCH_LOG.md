@@ -5511,3 +5511,27 @@ candidate decision, but future confirmation evaluators must use a restricted
 fold loader so the field can be literal. The next architecture may be selected
 on folds 3/4, but it must use a fresh untouched confirmation fold rather than
 retuning against this failed fold-2 outcome.
+
+### 2026-08-01: scene-aligned Gaussian ViT correction frozen
+
+The prior Gaussian-ViT cross-fit exposed a specific mismatch with the published
+large-scale synthetic task: all 288,000 synthetic requests per endpoint trained
+the dense mask path with scene loss disabled. Its scene head was trained only
+during the later 12,288-request joint phase. That experiment therefore proved
+dense synthetic transfer but was not a strong test of synthetic scene-ranking
+pretraining. The next controlled run keeps the same 16,000-template bank,
+positive/unchanged-negative pairing, model capacity, optimizer, nine-epoch
+exposure, endpoint seeds, and three real-joint epochs, while enabling scene BCE
+and partial-AUC throughout synthetic pretraining. A fixed 0.25 protection gate
+leaves low-score operating decisions exact.
+
+The CUDA smoke gives direct evidence that the corrected path is active:
+synthetic scene BCE is 0.709939, synthetic partial-AUC loss 1.012344, and the
+scene-head parameter update has maximum absolute magnitude 0.001020. The real
+joint step and native 200x200 mask/scene outputs are finite; peak allocation is
+1,461,616,640 bytes for the 10,575,102-parameter ViT-U-Net. Five focused tests
+pass, including exact identity below the protection gate. No held metric or
+future result/artifact exists. The full folds-3/4 cross-fit is frozen at
+`configs/mars_gaussian_scene_aligned_crossfit_protocol.json`; fold 2 will not be
+reused, and folds 0/1, external outcomes, and the official test remain outside
+this selection run.

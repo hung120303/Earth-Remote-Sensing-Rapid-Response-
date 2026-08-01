@@ -63,15 +63,32 @@ DEFAULT_PROTOCOL = Path("configs/mars_gaussian_contrast_crossfit_protocol.json")
 class TransferGaussianContrastViTUNet(GaussianContrastViTUNet):
     """Contrast model with the frozen bounded-residual scene-score contract."""
 
-    @staticmethod
+    def __init__(self, *, scene_protection_gate: float = 0.0, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        if not 0.0 <= float(scene_protection_gate) < 1.0:
+            raise ValueError("Scene protection gate must lie in [0, 1)")
+        self.scene_protection_gate = float(scene_protection_gate)
+
     def fuse_scene_score(
+        self,
         baseline_score: torch.Tensor,
         scene_logit: torch.Tensor,
         strength: float,
     ) -> torch.Tensor:
         baseline = torch.logit(baseline_score.clamp(1e-6, 1 - 1e-6))
         correction = 2.0 * torch.tanh(scene_logit / 2.0)
-        return torch.sigmoid(baseline + float(strength) * correction)
+        candidate = torch.sigmoid(baseline + float(strength) * correction)
+        return torch.where(
+            baseline_score >= self.scene_protection_gate,
+            candidate,
+            baseline_score,
+        )
+
+    def artifact_metadata(self) -> dict[str, Any]:
+        return {
+            **super().artifact_metadata(),
+            "scene_protection_gate": self.scene_protection_gate,
+        }
 
 
 def finite_tensors(values: dict[str, Any], *, phase: str) -> None:
@@ -346,15 +363,27 @@ def main() -> int:
             seed=int(spec["pretrain_loader_seed"]),
             sampler=PairShuffleSampler(4, int(spec["pretrain_loader_seed"])),
         )
+        scene_head_before = {
+            name: value.detach().clone()
+            for name, value in model.scene_head.named_parameters()
+        }
         history = train_phase(
             model,
             pretrain_loader,
             pretrain_optimizer,
             spec,
             device,
-            phase="smoke_dense_pretrain",
+            phase=(
+                "smoke_scene_aligned_pretrain"
+                if bool(spec.get("synthetic_scene_supervision", False))
+                else "smoke_dense_pretrain"
+            ),
             epochs=1,
-            dense_only=True,
+            dense_only=not bool(spec.get("synthetic_scene_supervision", False)),
+        )
+        scene_head_update_max_abs = max(
+            float((value.detach() - scene_head_before[name]).abs().max())
+            for name, value in model.scene_head.named_parameters()
         )
         real = RealCropDataset(
             MarsPaperDataset(paths["metadata_root"], smoke_records, augment=True, seed=seed),
@@ -407,6 +436,7 @@ def main() -> int:
                     "model": model.artifact_metadata(),
                     "full_scene_mask_shape": list(output["segmentation_logits"].shape),
                     "full_scene_logit_shape": list(output["scene_logit"].shape),
+                    "scene_head_update_max_abs": scene_head_update_max_abs,
                     "peak_cuda_bytes": int(torch.cuda.max_memory_allocated()),
                     "device": torch.cuda.get_device_name(device),
                     "history": history,
@@ -468,9 +498,13 @@ def main() -> int:
             pretrain_optimizer,
             spec,
             device,
-            phase="gaussian_contrast_pretrain",
+            phase=(
+                "gaussian_scene_aligned_pretrain"
+                if bool(spec.get("synthetic_scene_supervision", False))
+                else "gaussian_contrast_pretrain"
+            ),
             epochs=int(spec["synthetic_pretrain_epochs"]),
-            dense_only=True,
+            dense_only=not bool(spec.get("synthetic_scene_supervision", False)),
         )
         real = RealCropDataset(
             MarsPaperDataset(paths["metadata_root"], fit_records, augment=True, seed=seed),
