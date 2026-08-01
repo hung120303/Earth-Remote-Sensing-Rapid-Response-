@@ -1,0 +1,93 @@
+{
+  "artifacts": {
+    "auxiliary_training": {
+      "bytes": 12613233,
+      "path": ".research/methanes2cm_mars_disjoint/model_auxiliary_training.jsonl",
+      "sha256": "f014e97339c6bfc25032c924a92bb5cc4feee21c08e6a67088934eb4d58391ba",
+      "tracked": false
+    },
+    "development": {
+      "bytes": 9736070,
+      "path": ".research/methanes2cm_mars_disjoint/model_development.jsonl",
+      "sha256": "d0efcd5c280cfa7238df8d2994efc209d4bde8d68b309b0214bfcb62280f6145",
+      "tracked": false
+    }
+  },
+  "generated_at_utc": "2026-08-01T00:56:29.486512+00:00",
+  "inputs": {
+    "license": "CC-BY-NC-4.0",
+    "mars_metadata": {
+      "columns_accessed": [
+        "split_name",
+        "id_location",
+        "lat",
+        "lon"
+      ],
+      "labels_accessed": false,
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L-paper-source/validated_images_all_20251129.csv",
+      "sha256": "5075a5c6bbb5ad0587d1334e3588f03fc914ff23a63454b3dbe560dcb322d024"
+    },
+    "packed_data": {
+      "bytes": 4249375485,
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_train_packed.h5",
+      "sha256": "f75ea0c35bba240d56e8deae8828722253c5b82fb59b515d8627fb4106951ca4",
+      "tracked": false
+    },
+    "source_dataset": "H1deaki/MethaneS2CM L2A location split train",
+    "source_manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_train_development_manifest.jsonl",
+      "sha256": "6f2137a0cf33bcae80a9ecee57d62cd9b37d4121903808bcdc7e7951a82558e3"
+    },
+    "source_revision": "ee9a96d4994ca6bc45725c1e92d7a06258131eaf"
+  },
+  "invariants": [
+    "No MARS paper-test model target, image, mask, prediction, or label is read.",
+    "Every selected MethaneS2CM exact location is strictly farther than 25 km from every MARS paper-test physical location.",
+    "MethaneS2CM's existing 25 km group-held source-development boundary is preserved.",
+    "The 4.25 GB packed HDF5 and generated row manifests remain ignored and are not committed."
+  ],
+  "provenance": {
+    "git_commit": "823f48ba744579295edfcf5cfe61238938ade167",
+    "script": "tools/build_methanes2cm_mars_disjoint_manifest.py",
+    "script_sha256": "abe167b05419c80b1c85f725e8aa3eddc315b2b37464b45869e3d7aab6c2d5a9"
+  },
+  "schema_version": 1,
+  "selection": {
+    "distance": "great-circle haversine distance between physical-location centroids",
+    "mars_scope": "all 1,289 physical locations in the exact MARS-S2L v3 43,529-row paper test",
+    "minimum_distance_from_mars_test_km": 25.0,
+    "source_role_policy": {
+      "internal_development": "development",
+      "internal_fitting": "auxiliary_training"
+    },
+    "strict_comparison": ">"
+  },
+  "status": "complete; imagery already local; loader manifests remain ignored",
+  "summary": {
+    "by_label": {
+      "0": 13060,
+      "1": 13277
+    },
+    "by_role": {
+      "auxiliary_training": 14859,
+      "development": 11478
+    },
+    "exact_locations_by_role": {
+      "auxiliary_training": 769,
+      "development": 578
+    },
+    "excluded_exact_locations": 2113,
+    "excluded_rows": 53880,
+    "groups_by_role": {
+      "auxiliary_training": 147,
+      "development": 48
+    },
+    "mars_test_sites": 1289,
+    "maximum_excluded_distance_km": 24.74473032470311,
+    "minimum_selected_distance_km": 26.0990252537972,
+    "selected_exact_locations": 1347,
+    "selected_rows": 26337,
+    "source_exact_locations": 3460,
+    "source_rows": 80217
+  }
+}

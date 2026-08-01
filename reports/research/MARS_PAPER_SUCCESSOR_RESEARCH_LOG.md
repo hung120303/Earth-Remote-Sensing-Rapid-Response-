@@ -4884,3 +4884,48 @@ patch aggregation is therefore retired. The next scene experiment must first
 expand or improve source-disjoint positive-site supervision and explicitly
 address domain/site invariance. Result SHA-256 is
 `ab76b2f66d6a3f96a23aff6b54e22653a566520b0cfd460b706d5f86d23d9b08`.
+
+### 2026-07-31: external-data provenance audit and spatially disjoint MethaneS2CM cohort
+
+The newly released MethaneSET collection initially appeared to supply 3,612
+verified Sentinel-2 plume scenes plus 57,291 Sentinel-2 and 21,926 Landsat
+plume-free scenes. A pinned metadata-only audit against the exact MARS corpus
+shows that it is a repackaging rather than independent supervision. Exact MARS
+image identifiers account for 3,612/3,612 S2 finetune rows, 57,290/57,291 S2
+pretraining rows, 1,547/1,548 Landsat finetune rows, and 21,924/21,926 Landsat
+pretraining rows. Those matches include respectively 1,053, 23,250, 714, and
+16,311 exact official-test observations. No MethaneSET image archives were
+downloaded, and none may be used in this campaign. This prevents a large but
+subtle test-leakage error while preserving MethaneSET as a useful distribution
+format citation.
+
+The already acquired MethaneS2CM L2A location-split training corpus is not an
+exact MARS repackaging, but its CarbonMapper sites overlap MARS geography. A
+label-blind spatial audit used only the 1,289 official MARS test location IDs
+and centroids. Of 3,460 MethaneS2CM exact locations, 2,113 lie within 25 km and
+are excluded. The remaining 1,347 locations are strictly farther than 25 km
+(minimum 26.099 km), yielding 26,337 crops: 13,277 plume and 13,060 no-plume.
+The existing MethaneS2CM 25 km group-held roles are preserved, leaving 14,859
+auxiliary-training crops across 769 exact locations/147 groups and 11,478 held
+source-development crops across 578 locations/48 groups. The 4.25 GB HDF5 and
+generated manifests remain ignored; compact checksummed receipts are tracked.
+
+This changes the next experiment materially. The scene bottleneck will be
+tested with a shared physical-scale local detector: direct 32x32, 20 m
+MethaneS2CM crops provide source-disjoint positive/no-plume supervision, while
+approximately 640 m windows from MARS are resampled to the same physical field
+of view. Training must mix source-balanced batches and discourage source-domain
+separation; whole-scene output remains a bounded residual on the frozen current
+score and Landsat remains identity until independent Landsat-positive
+supervision exists. The held MethaneS2CM development images, MARS fold 2, and
+the official test remain closed during the first cross-fit.
+
+Metadata-only review also found the June 2026 MethaneUnion upload (168,832
+rows in its original-scale geographic split and 764 GB of imagery). It has no
+paper, acquisition timestamps, source crosswalk, or provenance discussion in
+its dataset card. Its imagery is therefore not acquired or used; scale alone is
+not acceptable evidence of independence.
+
+Primary data sources: [MethaneSET](https://huggingface.co/datasets/tacofoundation/methaneset),
+[MethaneS2CM](https://huggingface.co/datasets/H1deaki/MethaneS2CM), and
+[MethaneUnion](https://huggingface.co/datasets/yuyao42/MethaneUnion).

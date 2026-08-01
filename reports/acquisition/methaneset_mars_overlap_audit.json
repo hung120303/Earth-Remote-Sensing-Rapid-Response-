@@ -1,0 +1,157 @@
+{
+  "datasets": {
+    "methaneset-l89-finetune": {
+      "exact_mars_id_overlap": 1547,
+      "mars_split_of_exact_matches": {
+        "test_2023": 714,
+        "train_2023": 810,
+        "val_2023": 23
+      },
+      "metadata": {
+        "bytes": 441847,
+        "path": ".research/methaneset_multisensor_audit/methaneset-l89-finetune/.tacocat/level0.parquet",
+        "sha256": "11934f5dffe17f785037c76e8e669b54d4b84a15f9ff87aa94997ec866bde45b"
+      },
+      "not_in_mars_metadata": 1,
+      "official_test_exact_matches": 714,
+      "readme": {
+        "bytes": 8761,
+        "path": ".research/methaneset_multisensor_audit/methaneset-l89-finetune/README.md",
+        "sha256": "33ee0021ff3d3fb7f1875f3486836a44bd3b1c43c4ac71c37a030c864908bef1"
+      },
+      "rows": 1548,
+      "source_split": {
+        "test": 715,
+        "train": 810,
+        "validation": 23
+      },
+      "split_crosswalk": {
+        "test->test_2023": 714,
+        "train->train_2023": 810,
+        "validation->val_2023": 23
+      },
+      "unique_ids": 1548
+    },
+    "methaneset-l89-pretraining": {
+      "exact_mars_id_overlap": 21924,
+      "mars_split_of_exact_matches": {
+        "test_2023": 16311,
+        "train_2023": 5423,
+        "val_2023": 190
+      },
+      "metadata": {
+        "bytes": 1491717,
+        "path": ".research/methaneset_multisensor_audit/methaneset-l89-pretraining/.tacocat/level0.parquet",
+        "sha256": "f1a403e70e68fea89357ab472a54d78721bf3846ccb58417d41be9b38ce5b9bc"
+      },
+      "not_in_mars_metadata": 2,
+      "official_test_exact_matches": 16311,
+      "readme": {
+        "bytes": 8731,
+        "path": ".research/methaneset_multisensor_audit/methaneset-l89-pretraining/README.md",
+        "sha256": "7db656b52c95ac0b39c2ed0a30da51ecc483ddc5c27e233197e11e6289bd8ee5"
+      },
+      "rows": 21926,
+      "source_split": {
+        "test": 16312,
+        "train": 5424,
+        "validation": 190
+      },
+      "split_crosswalk": {
+        "test->test_2023": 16311,
+        "train->train_2023": 5423,
+        "validation->val_2023": 190
+      },
+      "unique_ids": 21926
+    },
+    "methaneset-s2-finetune": {
+      "exact_mars_id_overlap": 3612,
+      "mars_split_of_exact_matches": {
+        "test_2023": 1053,
+        "train_2023": 2366,
+        "val_2023": 193
+      },
+      "metadata": {
+        "bytes": 1177807,
+        "path": ".research/methaneset_s2_finetune_audit/methaneset-s2-finetune/.tacocat/level0.parquet",
+        "sha256": "dd27b2f61cfd447727eb31142363279b1842769452208b0c04f1c329e2c376bc"
+      },
+      "not_in_mars_metadata": 0,
+      "official_test_exact_matches": 1053,
+      "readme": {
+        "bytes": 8755,
+        "path": ".research/methaneset_s2_finetune_audit/methaneset-s2-finetune/README.md",
+        "sha256": "c0d4453342904b71864d04c94680978632cba754cffa561e8dc5d603e07cc003"
+      },
+      "rows": 3612,
+      "source_split": {
+        "test": 1053,
+        "train": 2366,
+        "validation": 193
+      },
+      "split_crosswalk": {
+        "test->test_2023": 1053,
+        "train->train_2023": 2366,
+        "validation->val_2023": 193
+      },
+      "unique_ids": 3612
+    },
+    "methaneset-s2-pretraining": {
+      "exact_mars_id_overlap": 57290,
+      "mars_split_of_exact_matches": {
+        "test_2023": 23250,
+        "train_2023": 28624,
+        "val_2023": 5416
+      },
+      "metadata": {
+        "bytes": 3578665,
+        "path": ".research/methaneset_multisensor_audit/methaneset-s2-pretraining/.tacocat/level0.parquet",
+        "sha256": "65a667ad22265f726f84131f90e6dbf62d8fad5bb765c50943dbddc9adc42274"
+      },
+      "not_in_mars_metadata": 1,
+      "official_test_exact_matches": 23250,
+      "readme": {
+        "bytes": 8725,
+        "path": ".research/methaneset_multisensor_audit/methaneset-s2-pretraining/README.md",
+        "sha256": "c5cc20ff5b4bce3f1ec9bb45e648ae933939b4526fa6fd98ff9fc1b507295630"
+      },
+      "rows": 57291,
+      "source_split": {
+        "test": 23251,
+        "train": 28624,
+        "validation": 5416
+      },
+      "split_crosswalk": {
+        "test->test_2023": 23250,
+        "train->train_2023": 28624,
+        "validation->val_2023": 5416
+      },
+      "unique_ids": 57291
+    }
+  },
+  "decision": "Do not acquire or train on MethaneSET multispectral imagery for the exact MARS successor campaign. It is a repackaging of the comparator corpus, not an independent external cohort.",
+  "generated_at_utc": "2026-08-01T00:55:03.527852+00:00",
+  "mars": {
+    "columns_accessed": [
+      "id_loc_image",
+      "split_name"
+    ],
+    "labels_accessed": false,
+    "metadata_path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L-paper-source/validated_images_all_20251129.csv",
+    "metadata_sha256": "5075a5c6bbb5ad0587d1334e3588f03fc914ff23a63454b3dbe560dcb322d024",
+    "rows": 93539
+  },
+  "provenance": {
+    "git_commit": "823f48ba744579295edfcf5cfe61238938ade167",
+    "script": "tools/audit_methaneset_mars_overlap.py",
+    "script_sha256": "df0ed67a70b5ab0c70c34ebcffa8ca0b7391bb5243dbea7cd5c5e5a30fc90474"
+  },
+  "schema_version": 1,
+  "source": {
+    "image_files_downloaded": 0,
+    "repo_id": "tacofoundation/methaneset",
+    "revision": "f7dc01e166d7a2f4ae659a7046b2c5a3c49ab7be",
+    "url": "https://huggingface.co/datasets/tacofoundation/methaneset"
+  },
+  "status": "complete; metadata-only acquisition; all imagery rejected as duplicate/leaking"
+}
