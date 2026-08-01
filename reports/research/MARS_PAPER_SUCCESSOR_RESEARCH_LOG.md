@@ -5562,3 +5562,32 @@ Gaussian residuals with independently learned protected DOFA/anchored evidence,
 using a final local-logit gate that mathematically keeps every affected score
 above 0.25. That combination must be preregistered before any per-scene Gaussian
 cache is generated.
+
+### 2026-08-01: conservative Gaussian-ViT plus DOFA ensemble preregistered
+
+The next experiment tests whether two independently learned, individually
+stable scene-ranking residuals are complementary. The first is the fixed DOFA
+change/extreme probe previously selected with fit-fold-only normalization
+(five fixed random projections, C=0.01, gate 0.50, weight 0.05). The second is
+the scene-aligned 10,575,102-parameter physics-contrast ViT trained with
+288,000 analytical Gaussian positive/unchanged-negative requests and 12,288
+real/synthetic joint requests per cross-fit endpoint. Only Gaussian strengths
+0.05 and 0.10 are eligible because both retained unchanged pooled recall and a
+positive paired-site AP lower bound in the completed standalone experiment.
+
+Both residuals are added in local-logit coordinates only where the current
+score is at least 0.25; lower scores remain bitwise identical and every changed
+score remains above the protection gate. The dense mask remains the separately
+fixed anchored strength-0.10 path, which has positive point and paired-lower
+IoU changes on folds 3/4 and the earlier one-shot fold 2. Promotion requires at
+least +0.002 AP, unchanged operating confusion counts, positive AP on both
+folds and sensors, a positive 10,000-replicate paired-site AP lower bound, and
+the fixed dense evidence.
+
+The raw Gaussian logits were not retained after the rejected standalone run,
+so an exact deterministic replay is frozen first. It must reproduce the
+committed pooled AP, recall, and per-sensor AP deltas within 1e-9 before its
+ignored cache is accepted. The ensemble grid, code hashes, components,
+bootstrap seed, and gates are frozen before that cache exists. The restricted
+evaluator uses only folds 3/4 from the shared folds-2/3/4 cache and does not open
+the separate fold-0/fold-1 files. Fold 2 and the official test remain closed.

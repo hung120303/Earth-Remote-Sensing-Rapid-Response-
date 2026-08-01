@@ -551,3 +551,20 @@ paired-site intervals crossed zero for AP [-0.001290,+0.005322] and IoU
 below the fixed +0.002 floor. The finding supports conservative Gaussian scene evidence as an
 ensemble component, not a standalone higher-weight successor. Compact result SHA-256:
 `6963e5ac8832011a4c39899d3097ff23afb3222ab6f1d2bbbc67cdc325190358`.
+
+## 2026-08-01: conservative Gaussian-ViT + DOFA ensemble frozen before cache
+
+The next development-only test combines the fixed DOFA residual with Gaussian
+scene strengths 0.05/0.10 above an exact 0.25 protection gate. These are the
+only Gaussian strengths whose completed standalone result had unchanged pooled
+recall and a positive paired-site AP lower bound. The exact-replay protocol is
+`configs/mars_gaussian_scene_aligned_cache_replay_protocol.json`; it repeats
+the deterministic folds-3/4 training path and must reproduce the committed
+standalone deltas within 1e-9 before retaining raw scene logits. The ensemble
+protocol is `configs/mars_dofa_gaussian_protected_ensemble_protocol.json`.
+
+Selection requires AP delta at least +0.002, unchanged operating counts,
+positive AP in each fold and sensor, positive paired-site AP lower bound, and
+the already fixed positive dense IoU evidence at anchored strength 0.10. Both
+protocols precede the future ignored cache. Fold 2, the separate fold-0/fold-1
+files, external outcomes, and the official test are not selection inputs.

@@ -23,6 +23,8 @@ if str(TOOLS_ROOT) not in sys.path:
 from train_mars_gaussian_contrast_full_bank import PairShuffleSampler  # noqa: E402
 from train_mars_gaussian_contrast_crossfit import (  # noqa: E402
     TransferGaussianContrastViTUNet,
+    merge_scene_logits,
+    replay_scene_scores,
 )
 
 
@@ -97,3 +99,40 @@ def test_transfer_scene_protection_gate_is_exact_below_gate() -> None:
     assert torch.equal(fused[:1], baseline[:1])
     assert fused[1] > baseline[1]
     assert model.artifact_metadata()["scene_protection_gate"] == 0.25
+
+
+def test_scene_cache_replay_matches_transfer_fusion() -> None:
+    baseline = torch.tensor([0.10, 0.50], dtype=torch.float64)
+    raw = torch.tensor([4.0, -0.75], dtype=torch.float64)
+    model = TransferGaussianContrastViTUNet(
+        dimension=64,
+        depth=1,
+        heads=4,
+        reference_grid=10,
+        scene_protection_gate=0.25,
+    )
+    expected = model.fuse_scene_score(baseline, raw, strength=0.1).detach().numpy()
+    observed = replay_scene_scores(
+        baseline.numpy(), raw.numpy(), strength=0.1, gate=0.25
+    )
+    assert torch.allclose(
+        torch.from_numpy(observed), torch.from_numpy(expected), rtol=0.0, atol=1e-12
+    )
+
+
+def test_merge_scene_logits_rejects_duplicate_ids() -> None:
+    part = {
+        "labels": [0, 1],
+        "sensors": [0, 1],
+        "groups": ["a", "b"],
+        "sample_ids": ["duplicate", "duplicate"],
+        "folds": [3, 3],
+        "base_scores": [0.1, 0.9],
+        "raw_scene_logits": [-1.0, 1.0],
+    }
+    try:
+        merge_scene_logits([part])
+    except ValueError as exc:
+        assert "unique" in str(exc)
+    else:
+        raise AssertionError("Duplicate scene-cache identities were accepted")

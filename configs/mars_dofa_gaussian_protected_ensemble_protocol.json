@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "status": "preregistered_before_gaussian_scene_cache_generation",
+  "scope": "development-only folds-3/4 selection of an exact protected residual ensemble combining the fixed DOFA scene probe with a conservative Gaussian-synthetic ViT scene head",
+  "evaluator": {
+    "path": "tools/evaluate_mars_dofa_gaussian_protected_ensemble.py",
+    "sha256": "9053ba6d54a386d00f0939a52644ce7774d65032eb274f33ec3669a6acc1201e"
+  },
+  "code_dependencies": [
+    {"path": "tools/evaluate_mars_dofa_anchored_protected_ensemble.py", "sha256": "b224268547c5ad6eb6f3bcce9c147b98326a3a1204ea49ce8e8b8573d36d917f"},
+    {"path": "tools/confirm_mars_dofa_v2_projection_ensemble.py", "sha256": "e7175c5d1b66e9de80d0da42d4e7b28adc4fb575e1ca81e445115feaa6668969"},
+    {"path": "tools/confirm_mars_dofa_v2_train_fitted_normalization.py", "sha256": "59b3cdd8a85d5bd54d1174acaa3dfc4d62cc6ca8cc613cb1be29f33a5697ce44"},
+    {"path": "tools/train_mars_dofa_v2_protected_fusion.py", "sha256": "14390520c1bf0b39ecd6ac98591aaf7e40914651a925e504c2d27dad8c4cdb19"},
+    {"path": "tools/train_mars_dofa_v2_scene_probe.py", "sha256": "62eaefe3ea087bfabeac415af5cba8f18809320b93f43a12b51b97d950f34cb7"},
+    {"path": "tools/train_mars_oof_scene_ensemble_v2.py", "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"},
+    {"path": "tools/train_mars_scene_ranker.py", "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"}
+  ],
+  "inputs": {
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "current_scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "dofa_features": {"path": "outputs/mars_dofa_v2_scene_features_folds34.npz", "sha256": "2c43352e92f96549d64188c78318fe606d55552aa9587aace1a195e8dfba66fe"},
+    "dofa_result": {"path": "reports/experiments/mars_dofa_v2_train_fitted_normalization_folds34.json", "sha256": "23e9124a5f0b5a9a788a46a6fd07753501a8b83c880b0a4e3f24e680c92074b2"},
+    "gaussian_scene_cache": {"path": "outputs/mars_gaussian_scene_aligned_folds34_raw_logits.npz", "sha256": "pending_cache_generation"},
+    "gaussian_cache_result": {"path": "reports/experiments/mars_gaussian_scene_aligned_cache_replay.json", "sha256": "pending_cache_generation"},
+    "anchored_development_result": {"path": "reports/experiments/mars_protected_bisensor_expanded_unep.json", "sha256": "3e70513986192dda3b7aadc8feed6a5b12ce6e11eaaef2691e9deb7859efc96c"},
+    "anchored_fold2_result": {"path": "reports/experiments/mars_protected_bisensor_expanded_unep_fold2_cache.json", "sha256": "a801b317c3f7690cca5d1afad283c77a95700ade435738378fa859afb4ac5b26"}
+  },
+  "gaussian_cache_protocol_sha256": "a981d848681b6a62fc228ea1cd6a9531a325cdd391b0976e81dd1cd0bfef49a4",
+  "fixed_dofa": {
+    "feature_set": "change_extreme",
+    "C": 0.01,
+    "projection_seeds": [20260780, 20260781, 20260782, 20260783, 20260784],
+    "normalization_mode": "global_train_fitted",
+    "gate": 0.5,
+    "weight": 0.05,
+    "source": "passed train-fitted DOFA folds-3/4 selection; no refit or search"
+  },
+  "fixed_dense": {
+    "strength": 0.1,
+    "source": "expanded-UNEP anchored dense residual already positive on folds 3/4 and independently positive on protected fold 2",
+    "role": "mask path only; scene ensemble selection cannot change it"
+  },
+  "architecture": {
+    "base": "current spatial-Prithvi scene score",
+    "gaussian_component": "scene-aligned physics-contrast Vision Transformer trained on analytical wind-aligned Gaussian plume/unchanged-background pairs plus authorized real fit folds",
+    "dofa_component": "fixed five-projection DOFA change/extreme-feature logistic residual with fit-fold-only global normalization",
+    "final_protection_gate": 0.25,
+    "formula": "inside local-logit coordinates above 0.25, add the conservative Gaussian-ViT residual and the fixed DOFA residual to current; below 0.25 preserve current exactly",
+    "dense_formula": "released MARS pixel logit plus fixed 0.10 independently trained anchored endpoint correction"
+  },
+  "search": {
+    "gaussian_strengths": [0.05, 0.1],
+    "candidate_count": 2,
+    "selection_rule": "all gates, then worst-fold AP, paired-site AP lower bound, worst-sensor AP, pooled AP, and smaller Gaussian strength",
+    "source": "only conservative strengths with exact pooled recall preservation in the already completed Gaussian experiment"
+  },
+  "bootstrap": {
+    "unit": "physical_site_group",
+    "paired": true,
+    "replicates": 10000,
+    "confidence": 0.95,
+    "seed": 20268470
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.002,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "operating_confusion_counts_identical": true,
+    "each_fold_ap_delta_strictly_positive": true,
+    "each_sensor_ap_delta_strictly_positive": true,
+    "paired_site_ap_delta_95pct_lower_strictly_positive": true,
+    "dense_development_and_fold2_iou_point_and_lower_strictly_positive": true,
+    "pass_action": "freeze a genuinely external or new-cohort confirmation; do not reopen fold 2 or the official test"
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_dofa_gaussian_protected_ensemble.json",
+    "markdown": "reports/experiments/MARS_DOFA_GAUSSIAN_PROTECTED_ENSEMBLE.md"
+  },
+  "invariants": [
+    "This exact two-candidate grid, evaluator, components, protection gate, bootstrap, and gates are committed before the raw Gaussian scene cache exists.",
+    "After cache generation, only the two pending cache/result hashes and protocol status may change before evaluation.",
+    "The evaluator opens only the shared folds-2/3/4 feature file long enough to select folds 3/4; it does not open separate fold-0 or fold-1 feature files.",
+    "Fold 2 labels/outcomes and the official test are not accessed for scene selection.",
+    "The fixed dense path is supported only by compact prior receipts and cannot influence scene candidate ranking.",
+    "Bulk logits and feature caches remain Git-ignored; only compact reproducibility artifacts are committed.",
+    "A pass authorizes a separately frozen independent confirmation and is not itself a claim about the official test."
+  ]
+}

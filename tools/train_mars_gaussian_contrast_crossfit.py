@@ -54,6 +54,7 @@ from train_mars_physics_guided_teacher_balanced_pilot import (  # noqa: E402
     balanced_request_weights,
 )
 from train_mars_physics_guided_teacher_pilot import seed_everything  # noqa: E402
+from train_mars_scene_ranker import comparison, metric_summary  # noqa: E402
 from train_methanes2cm_v5 import segmentation_first_loss  # noqa: E402
 
 
@@ -119,6 +120,105 @@ def make_loader(
         pin_memory=True,
         persistent_workers=workers > 0,
     )
+
+
+@torch.no_grad()
+def collect_scene_logits(
+    model: TransferGaussianContrastViTUNet,
+    loader: DataLoader[dict[str, Any]],
+    base_scores: dict[str, float],
+    device: torch.device,
+    fold: int,
+) -> dict[str, Any]:
+    """Collect compact raw scene evidence without dense candidate accounting."""
+    model.eval()
+    rows: dict[str, list[Any]] = {
+        "labels": [],
+        "sensors": [],
+        "groups": [],
+        "sample_ids": [],
+        "folds": [],
+        "base_scores": [],
+        "raw_scene_logits": [],
+    }
+    for batch_index, batch in enumerate(loader, start=1):
+        sample_ids = [str(value) for value in batch["sample_id"]]
+        local_base = np.asarray([base_scores[value] for value in sample_ids], dtype=np.float64)
+        batch = move_batch(batch, device)
+        with torch.amp.autocast("cuda", dtype=torch.float16):
+            output = model(batch["inputs"], batch["observable"], batch["sensor_index"])
+        finite_tensors(output, phase="scene_cache_inference")
+        rows["labels"].extend(int(value) for value in batch["presence"].cpu().numpy())
+        rows["sensors"].extend(int(value) for value in batch["sensor_index"].cpu().numpy())
+        rows["groups"].extend(str(value) for value in batch["group_id"])
+        rows["sample_ids"].extend(sample_ids)
+        rows["folds"].extend([fold] * len(sample_ids))
+        rows["base_scores"].extend(float(value) for value in local_base)
+        rows["raw_scene_logits"].extend(
+            float(value) for value in output["scene_logit"].float().cpu().numpy()
+        )
+        if batch_index % 64 == 0:
+            print(
+                json.dumps(
+                    {"progress": "scene_cache_inference", "fold": fold, "batch": batch_index}
+                ),
+                flush=True,
+            )
+    return rows
+
+
+def merge_scene_logits(parts: list[dict[str, Any]]) -> dict[str, np.ndarray]:
+    if not parts:
+        raise ValueError("At least one scene-logit part is required")
+    merged = {
+        "labels": np.concatenate([np.asarray(part["labels"], dtype=np.uint8) for part in parts]),
+        "sensors": np.concatenate([np.asarray(part["sensors"], dtype=np.uint8) for part in parts]),
+        "groups": np.concatenate([np.asarray(part["groups"], dtype=str) for part in parts]),
+        "sample_ids": np.concatenate([np.asarray(part["sample_ids"], dtype=str) for part in parts]),
+        "folds": np.concatenate([np.asarray(part["folds"], dtype=np.uint8) for part in parts]),
+        "base_scores": np.concatenate(
+            [np.asarray(part["base_scores"], dtype=np.float64) for part in parts]
+        ),
+        "raw_scene_logits": np.concatenate(
+            [np.asarray(part["raw_scene_logits"], dtype=np.float32) for part in parts]
+        ),
+    }
+    size = merged["labels"].size
+    if any(values.size != size for values in merged.values()):
+        raise ValueError("Scene-logit cache vectors do not align")
+    if len(set(merged["sample_ids"].tolist())) != size:
+        raise ValueError("Scene-logit cache identities are not unique")
+    if not np.isfinite(merged["base_scores"]).all() or not np.isfinite(
+        merged["raw_scene_logits"]
+    ).all():
+        raise ValueError("Scene-logit cache contains non-finite values")
+    return merged
+
+
+def replay_scene_scores(
+    base_scores: np.ndarray,
+    raw_scene_logits: np.ndarray,
+    *,
+    strength: float,
+    gate: float,
+) -> np.ndarray:
+    baseline = np.asarray(base_scores, dtype=np.float64)
+    correction = 2.0 * np.tanh(np.asarray(raw_scene_logits, dtype=np.float64) / 2.0)
+    clipped = np.clip(baseline, 1e-6, 1.0 - 1e-6)
+    logits = np.log(clipped / (1.0 - clipped)) + float(strength) * correction
+    candidate = np.where(
+        logits >= 0.0,
+        1.0 / (1.0 + np.exp(-logits)),
+        np.exp(logits) / (1.0 + np.exp(logits)),
+    )
+    return np.where(baseline >= float(gate), candidate, baseline)
+
+
+def atomic_npz(path: Path, **values: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(".tmp.npz")
+    np.savez_compressed(temporary, **values)
+    os.replace(temporary, path)
 
 
 def train_phase(
@@ -309,6 +409,7 @@ def main() -> int:
     args = parser.parse_args()
     protocol_path = (ROOT / args.protocol).resolve()
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    scene_cache_replay = bool(protocol.get("scene_cache_replay", False))
     paths = verify_protocol(protocol, protocol_path=protocol_path, smoke=args.smoke)
     fold_protocol = json.loads(paths["fold_protocol"].read_text(encoding="utf-8"))
     group_to_fold = {
@@ -446,7 +547,16 @@ def main() -> int:
         )
         return 0 if finite else 1
 
-    teacher = _load_released_teacher(paths["released_checkpoint"], device)
+    if scene_cache_replay:
+        for key in ("scene_cache", "endpoint_state_cache", "json", "markdown"):
+            output = (ROOT / protocol["outputs"][key]).resolve()
+            if output.exists():
+                raise FileExistsError(f"Refusing to overwrite scene-cache replay output: {key}")
+    teacher = (
+        None
+        if scene_cache_replay
+        else _load_released_teacher(paths["released_checkpoint"], device)
+    )
     prediction_parts: list[dict[str, Any]] = []
     endpoints: list[dict[str, Any]] = []
     endpoint_states: dict[str, Any] = {}
@@ -558,11 +668,18 @@ def main() -> int:
             workers=int(spec["loader_workers"]),
             seed=seed + 30,
         )
-        prediction_parts.append(
-            collect_predictions(
-                model, teacher, held_loader, base_scores, strengths, device, held_fold
+        if scene_cache_replay:
+            prediction_parts.append(
+                collect_scene_logits(model, held_loader, base_scores, device, held_fold)
             )
-        )
+        else:
+            if teacher is None:
+                raise RuntimeError("Dense evaluation requires the released teacher")
+            prediction_parts.append(
+                collect_predictions(
+                    model, teacher, held_loader, base_scores, strengths, device, held_fold
+                )
+            )
         endpoints.append(
             {
                 "held_fold": held_fold,
@@ -579,6 +696,152 @@ def main() -> int:
         endpoint_states[str(held_fold)] = _artifact_state(model)
         del model, pretrain_optimizer, joint_optimizer, pretrain_loader, joint_loader, held_loader
         torch.cuda.empty_cache()
+
+    if scene_cache_replay:
+        raw_scene = merge_scene_logits(prediction_parts)
+        reference = json.loads(paths["reference_result"].read_text(encoding="utf-8"))
+        tolerance = float(protocol["replay_validation"]["absolute_tolerance"])
+        replay_rows = []
+        for strength in strengths:
+            scores = replay_scene_scores(
+                raw_scene["base_scores"],
+                raw_scene["raw_scene_logits"],
+                strength=strength,
+                gate=float(protocol["architecture"]["model"]["scene_protection_gate"]),
+            )
+            observed = comparison(
+                metric_summary(raw_scene["labels"], scores, raw_scene["sensors"]),
+                metric_summary(
+                    raw_scene["labels"], raw_scene["base_scores"], raw_scene["sensors"]
+                ),
+            )["delta"]
+            expected_row = next(
+                row for row in reference["candidates"] if float(row["strength"]) == strength
+            )
+            expected = expected_row["versus_current"]["delta"]
+            checks = {
+                "average_precision": abs(
+                    float(observed["average_precision"])
+                    - float(expected["average_precision"])
+                )
+                <= tolerance,
+                "recall": abs(
+                    float(observed["recall_at_fpr_0_0713"])
+                    - float(expected["recall_at_fpr_0_0713"])
+                )
+                <= tolerance,
+                "sensor_average_precision": all(
+                    abs(
+                        float(observed["sensor_average_precision"][sensor])
+                        - float(expected["sensor_average_precision"][sensor])
+                    )
+                    <= tolerance
+                    for sensor in expected["sensor_average_precision"]
+                ),
+            }
+            if not all(checks.values()):
+                raise RuntimeError(f"Scene-cache replay differs at strength {strength}: {checks}")
+            replay_rows.append(
+                {
+                    "strength": strength,
+                    "delta": observed,
+                    "reference_delta": expected,
+                    "checks": checks,
+                }
+            )
+        cache_path = (ROOT / protocol["outputs"]["scene_cache"]).resolve()
+        state_path = (ROOT / protocol["outputs"]["endpoint_state_cache"]).resolve()
+        atomic_npz(
+            cache_path,
+            schema_version=np.asarray(1, dtype=np.int64),
+            protocol_sha256=np.asarray(sha256(protocol_path)),
+            **raw_scene,
+        )
+        state_path.parent.mkdir(parents=True, exist_ok=True)
+        temporary_state = state_path.with_suffix(".tmp.pt")
+        torch.save(
+            {
+                "schema_version": 1,
+                "research_only": True,
+                "protocol_sha256": sha256(protocol_path),
+                "states_by_held_fold": endpoint_states,
+            },
+            temporary_state,
+        )
+        os.replace(temporary_state, state_path)
+        report = {
+            "schema_version": 1,
+            "status": "completed_exact_scene_cache_replay",
+            "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+            "scope": protocol["scope"],
+            "protocol": protocol_path.relative_to(ROOT).as_posix(),
+            "protocol_sha256": sha256(protocol_path),
+            "git_commit": subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+            ).strip(),
+            "rows": int(raw_scene["labels"].size),
+            "fold_counts": {
+                str(fold): int(np.sum(raw_scene["folds"] == fold))
+                for fold in sorted(set(map(int, raw_scene["folds"])))
+            },
+            "replay_validation": replay_rows,
+            "all_replay_checks_pass": True,
+            "scene_cache": {
+                "path": protocol["outputs"]["scene_cache"],
+                "bytes": cache_path.stat().st_size,
+                "sha256": sha256(cache_path),
+                "tracked": False,
+            },
+            "endpoint_state_cache": {
+                "path": protocol["outputs"]["endpoint_state_cache"],
+                "bytes": state_path.stat().st_size,
+                "sha256": sha256(state_path),
+                "tracked": False,
+            },
+            "endpoint_summaries": [
+                {
+                    "held_fold": endpoint["held_fold"],
+                    "fit_folds": endpoint["fit_folds"],
+                    "fit_rows": endpoint["fit_rows"],
+                    "held_rows": endpoint["held_rows"],
+                    "seed": endpoint["seed"],
+                    "final_phase_losses": {
+                        phase: next(
+                            row for row in reversed(endpoint["history"]) if row["phase"] == phase
+                        )["loss"]
+                        for phase in ("gaussian_scene_aligned_pretrain", "real_synthetic_joint")
+                    },
+                }
+                for endpoint in endpoints
+            ],
+            "external_or_official_test_accessed": False,
+        }
+        json_path = (ROOT / protocol["outputs"]["json"]).resolve()
+        markdown_path = (ROOT / protocol["outputs"]["markdown"]).resolve()
+        json_path.parent.mkdir(parents=True, exist_ok=True)
+        temporary_json = json_path.with_suffix(".tmp.json")
+        temporary_json.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        os.replace(temporary_json, json_path)
+        markdown_path.write_text(
+            "# Gaussian scene-aligned cache replay\n\n"
+            f"- Rows: **{report['rows']:,}**\n"
+            f"- Exact replay checks pass: **{report['all_replay_checks_pass']}**\n"
+            f"- Scene cache SHA-256: `{report['scene_cache']['sha256']}`\n"
+            f"- Endpoint-state SHA-256: `{report['endpoint_state_cache']['sha256']}`\n",
+            encoding="utf-8",
+        )
+        print(
+            json.dumps(
+                {
+                    "ok": True,
+                    "rows": report["rows"],
+                    "scene_cache_sha256": report["scene_cache"]["sha256"],
+                    "state_cache_sha256": report["endpoint_state_cache"]["sha256"],
+                },
+                sort_keys=True,
+            )
+        )
+        return 0
 
     raw = merge_predictions(prediction_parts, strengths)
     candidates, identity = summarize_predictions(
