@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_held_fold_outcomes",
+  "scope": "robust label-free same-site temporal template ranker cross-fitted only on MARS folds 3 and 4",
+  "rationale": "The full-bank Gaussian contrast ViT transferred dense localization but not complementary scene ordering. The current official failure is confined to unseen-site AP/recall uncertainty, and the earlier site-relative model used a mean template. Median and interquartile residuals directly suppress transient plume contamination and normalize site-specific variability without labels.",
+  "trainer": {
+    "path": "tools/train_mars_robust_site_template_ranker.py",
+    "sha256": "7279da537faf10dcdc70958e3f58267383abf75c20582c76269d811ee5fa0a79"
+  },
+  "code_dependencies": [
+    {
+      "path": "tools/train_mars_spatial_scene_classifier.py",
+      "sha256": "ba7b8631a3790686ab6a9a1698d85ef4a204e74833846fd8d82572c9193764b3"
+    },
+    {
+      "path": "tools/train_mars_scene_ranker.py",
+      "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"
+    },
+    {
+      "path": "tools/train_mars_oof_scene_ensemble_v2.py",
+      "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"
+    }
+  ],
+  "inputs": {
+    "images": {
+      "path": "outputs/mars_spatial_scene_inputs_all_folds.npy",
+      "sha256": "6530fa2d07d94bd57ba1ac757039dedd18745227e7a476fb0d69f78f996134a5",
+      "access": "only rows aligned to the folds34 manifest are indexed"
+    },
+    "spatial_metadata": {
+      "path": "outputs/mars_spatial_scene_inputs_all_folds_metadata.npz",
+      "sha256": "0160ed93371396a487b819dd170a682f55756d285f0ba94d0f0d093ba51a8d01",
+      "columns_accessed": [
+        "sample_ids",
+        "groups",
+        "channel_names"
+      ],
+      "labels_accessed": false
+    },
+    "folds34": {
+      "path": "outputs/mars_dense_prithvi_crossfit_scene_features_folds34_metadata.npz",
+      "sha256": "5c4c9930b9e4fdbd295ffbd17d621db23f2aa33f98e88f87b2496c0f93d4805d",
+      "rows": 17745,
+      "folds": [
+        3,
+        4
+      ],
+      "current_score": "exact_base_scores: frozen spatial-Prithvi development score"
+    },
+    "current_result": {
+      "path": "reports/experiments/mars_gaussian_contrast_crossfit.json",
+      "sha256": "728e9a1f69a608cf09816114ed50fc785953f6dc5937ddae370e87f990d85f55",
+      "identity_ap": 0.9040758422255568,
+      "identity_recall_at_fpr": 0.9619422572178478,
+      "identity_fpr": 0.07126564330189261
+    }
+  },
+  "architecture": {
+    "base_maps": [
+      "released_probability_meanpool",
+      "released_probability_maxpool",
+      "mbmp_centered",
+      "target_reference_B11_difference",
+      "target_reference_B12_difference",
+      "target_reference_B11_normalized_difference",
+      "target_reference_B12_normalized_difference",
+      "cloud_fraction",
+      "observable_fraction"
+    ],
+    "template": "per physical site and pixel/channel, compute q25, median, and q75 across all label-free eligible observations",
+    "feature_sets": [
+      "original maps plus clipped (original-median)/max(IQR,fixed floor)",
+      "original maps plus median plus signed original-median residual"
+    ],
+    "iqr_floors": [
+      0.02,
+      0.02,
+      0.02,
+      0.01,
+      0.01,
+      0.02,
+      0.02,
+      0.05,
+      0.05
+    ],
+    "robust_standardized_clip": [
+      -8.0,
+      8.0
+    ],
+    "ranker": "974,034-parameter compact residual spatial CNN for the 18-channel robust feature set; sensor embedding and attention/mean/max pooling",
+    "current_identity_floor": "candidate=logit_blend(current, ranker, weight); mathematical identity at weight 0"
+  },
+  "training": {
+    "crossfit": [
+      {
+        "fit_fold": 4,
+        "held_fold": 3,
+        "seed": 20268403
+      },
+      {
+        "fit_fold": 3,
+        "held_fold": 4,
+        "seed": 20268404
+      }
+    ],
+    "candidate_feature_sets": [
+      "original_robust_residual",
+      "original_median_residual"
+    ],
+    "weighting": [
+      "group",
+      "site_cell"
+    ],
+    "epochs": 8,
+    "batch_size": 128,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.001,
+    "dropout": 0.2,
+    "positive_weight": "sqrt(weighted negatives / weighted positives), capped at 4",
+    "augmentation": "joint right-angle rotations and horizontal/vertical reflections",
+    "determinism": "torch deterministic algorithms and deterministic cuDNN",
+    "final_fit_seed_if_promoted": 20268480
+  },
+  "search": {
+    "blend_weights": [
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.4
+    ],
+    "candidate_count": 20,
+    "selection_rank": "all gates, worst-fold AP, worst-fold recall, worst-sensor AP, paired-site AP lower bound, pooled AP, then smaller blend"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "confidence": 0.95,
+    "unit": "physical_location_id",
+    "seed_range": [
+      20268450,
+      20268469
+    ]
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.002,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "each_fold_ap_delta_strictly_positive": true,
+    "each_fold_recall_delta_minimum": -0.002,
+    "each_sensor_ap_delta_minimum": 0.0,
+    "paired_site_ap_lower_bound_strictly_positive": true,
+    "no_worse_fpr": true,
+    "pass_action": "freeze a new-seed fold-2 confirmation; do not open folds 0/1 or official outcomes"
+  },
+  "preheld_verification": {
+    "focused_tests": {
+      "path": "tests/test_mars_robust_site_template_ranker.py",
+      "sha256": "0132b05c38f14bcb648405b83401d8db3693e19e5ed3aaf28048956a0cb7b088",
+      "result": "2 passed"
+    },
+    "synthetic_gpu_smoke": {
+      "device": "NVIDIA GeForce RTX 5070",
+      "rows": 16,
+      "site_groups": 8,
+      "finite": true,
+      "output_shape": [
+        16
+      ],
+      "parameter_count": 974034,
+      "held_outcome_accessed": false
+    }
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_robust_site_template_ranker.pt",
+    "json": "reports/experiments/mars_robust_site_template_ranker.json",
+    "markdown": "reports/experiments/MARS_ROBUST_SITE_TEMPLATE_RANKER.md"
+  },
+  "invariants": [
+    "Only folds 3 and 4 labels, sensors, groups, and current scores are loaded.",
+    "The all-fold spatial metadata contributes identities, groups, and channel names only; its labels are never read.",
+    "Each held score is produced by a ranker fitted only on the opposite fold.",
+    "Site templates are label-free and every physical site belongs wholly to one fold.",
+    "Fold 2, folds 0/1, external development outcomes, and official-test outcomes are unavailable for selection.",
+    "Failure writes no artifact.",
+    "Bulk arrays and model artifacts remain ignored."
+  ]
+}
