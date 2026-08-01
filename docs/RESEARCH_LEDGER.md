@@ -355,3 +355,49 @@ MARS-S2L and cannot support a paper-performance claim. The selected nine-epoch p
 must now be applied independently to the two authorized real development endpoints (held folds 3
 and 4), followed by the already-frozen paired site bootstrap gates. Folds 0, 1, 2 and the official
 2024 test remain unavailable for architecture selection.
+
+## 2026-08-01: physics-contrast Gaussian ViT real-development cross-fit
+
+The nine-epoch full-bank schedule was applied independently in both authorized development
+directions. The model holding fold 3 fit only fold 4 (8,946 real scenes; 7,872 eligible synthetic
+backgrounds; seed 20268303). The model holding fold 4 fit only fold 3 (8,799 real scenes; 7,728
+eligible backgrounds; seed 20268304). Each endpoint consumed 288,000 paired synthetic pretraining
+requests and 12,288 fixed joint real/synthetic requests. Final pretraining losses were 1.274510 and
+1.348589; final joint losses were 1.827474 and 1.833775.
+
+The first execution attempt stopped after endpoint-1 pretraining and before any held prediction
+because a fully unobservable real crop exposed a numerical defect in the scene reducer: masked
+pixels used BF16's finite minimum value, which overflowed the scene head. The reducer was changed to
+use negative infinity, discard non-finite top-k entries, and divide by the valid selected count.
+The exact repair, zero-observability regression test, lack of outcome exposure, and new hashes were
+recorded in the frozen protocol and committed before restarting. Seven focused tests and the full
+smoke passed. A later desktop-wrapper timeout killed a second attempt during pretraining, also before
+joint training or held prediction; the final clean run started from scratch in an independent WSL
+session and reused no partial state.
+
+The clean 17,745-scene cross-fit rejected the architecture. The current spatial-Prithvi baseline had
+AP 0.904076, recall 0.961942 at FPR 0.071266, and pixel IoU 0.595146. The predeclared rank selected
+fusion strength 0.05, which produced:
+
+- AP 0.904345, delta +0.000269, paired-site 95% CI [-0.000467, +0.000797];
+- recall 0.961286 at the same FPR, delta -0.000656;
+- Landsat AP delta -0.000029 and Sentinel-2 AP delta +0.000412;
+- pixel IoU 0.596406, delta +0.001260, paired-site 95% CI
+  [-0.000248, +0.002782].
+
+Strength 0.10 was the most useful diagnostic candidate: it preserved pooled recall and FPR and
+achieved pixel-IoU delta +0.001806 with a strictly positive paired-site lower bound (+0.000251), but
+its AP delta was only +0.000326 and its paired AP lower bound was -0.001077. Strengths 0.25, 0.50,
+and 1.00 progressively degraded AP; the two strongest also degraded IoU. The selected candidate
+failed the minimum AP, matched-recall, each-sensor AP, paired AP, and paired IoU gates. No model
+artifact was written, and fold 2, folds 0/1, and the official test stayed closed.
+
+This experiment supports a narrow conclusion: physics-contrast Gaussian pretraining transfers a
+small amount of dense localization information to real scenes, but its learned scene head is not
+complementary enough to the high-performing spatial-Prithvi ranking baseline. The next development
+path should preserve the validated dense branch while replacing scene fusion with real-scene,
+site-balanced hard-negative and error-correcting evidence. More Gaussian exposure or stronger
+fusion is contradicted by the observed strength curve.
+
+Compact evidence: `reports/experiments/mars_gaussian_contrast_crossfit.json` (SHA-256
+`728e9a1f69a608cf09816114ed50fc785953f6dc5937ddae370e87f990d85f55`).
