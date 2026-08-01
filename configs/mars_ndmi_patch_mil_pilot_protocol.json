@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_identity_and_mixed_source_smoke",
+  "scope": "fold-3/fold-4 cross-fit of patch-local NDMI bi-temporal scene evidence with source-disjoint auxiliary training",
+  "trainer": {
+    "path": "tools/train_mars_ndmi_patch_mil_pilot.py",
+    "sha256": "0631082fb21dde13a790cf6ea33a76810833837f7a280cb461b8842004786ea6"
+  },
+  "code_dependencies": [
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_ndmi_patch_mil_fusion.py",
+      "sha256": "83d9814039c38afdc526162a4a66552426e08fe595fceb97d589fc8774398915"
+    },
+    {
+      "path": "tools/train_mars_ndmi_bitemporal_fusion_pilot.py",
+      "sha256": "072a45394ed2d9a409a05ba03521eb9d9ff88c1d513003dd77c2095e71347b3f"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_ndmi_bitemporal_fusion.py",
+      "sha256": "c6af4d82eff9a7d7bd0308d57004954100426d2d6806e61b85c14b8a71a0f629"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_paper_model.py",
+      "sha256": "f9cc65b3bb764ed83a4aa67209cccdbad2b6c80826b0915711392ca8b10a0486"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_physics_guided_teacher.py",
+      "sha256": "f3a0253243448429bdb4cc4fea766af962729d01af0e8685a27581ab9e8b4a32"
+    },
+    {
+      "path": "tools/train_mars_dense_prithvi_teacher_pilot.py",
+      "sha256": "a827afc5b9d76856a7358d7de5488e7a23ed8cbacae7475d30b18547dcc8d331"
+    },
+    {
+      "path": "tools/train_mars_dinov3_methane_fusion_pilot.py",
+      "sha256": "3d1aa56264e7e5c4f12b9cf6902b8694a23170ef0aefe7fae7ee0724eba4e575"
+    },
+    {
+      "path": "tools/train_mars_paper_residual.py",
+      "sha256": "cdbe9313f3d532cbe435a7302f543b55387c7b29e4e1fedafccb3193556a6874"
+    },
+    {
+      "path": "tools/train_mars_physics_guided_teacher_balanced_pilot.py",
+      "sha256": "88e8afce95d62f8c425e9c604aae8ed3fe91db79e75befe710141c1a76299938"
+    },
+    {
+      "path": "tools/train_mars_physics_guided_teacher_pilot.py",
+      "sha256": "73e5161fa03eec45b637d64998ff0ed116fc0496f2af32a8f72d74f546dbb376"
+    },
+    {
+      "path": "tools/analyze_mars_mask_routing.py",
+      "sha256": "257267dc0c2678c98f0c39262aafcc0ab5e062a04531e167e70f8a3dc540f779"
+    },
+    {
+      "path": "tools/analyze_mars_mask_thresholds.py",
+      "sha256": "2b2d1d4c5a869ebb8a8acb0e03f4db46c5cdbcf8dba6179184a95f1a4613e6ff"
+    },
+    {
+      "path": "tools/train_mars_oof_scene_ensemble_v2.py",
+      "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"
+    },
+    {
+      "path": "tools/train_mars_scene_ranker.py",
+      "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"
+    }
+  ],
+  "inputs": {
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_acquisition_receipt"
+    },
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "acquisition_receipt": {
+      "path": "reports/acquisition/mars_s2l_paper_v3_development_download.json",
+      "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "released_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+      "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"
+    },
+    "score_cache": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    },
+    "unep_auxiliary_manifest": {
+      "path": ".research/unep_mars_post2024/model_auxiliary_training.jsonl",
+      "sha256": "2971ebad317c7f709a677e5c6431a75804fce4026bbcf28fa50ce5bb4cc89300"
+    },
+    "cloudsen_auxiliary_manifest": {
+      "path": ".research/cloudsen12_spatial_pilot/model_auxiliary_training.jsonl",
+      "sha256": "eab58d320d53d1b1937b148d9efc2c5b4f0f17618dfe60e13f5351481bafb377"
+    }
+  },
+  "folds": [3, 4],
+  "architecture": {
+    "teacher": "exact released MARS-S2L U-Net, frozen",
+    "dense_branch": "unchanged NDMI-guided shared-weight target/reference encoder and zero-initialized multi-scale gates",
+    "scene": "deterministic 0.75*mean(top-8)+0.25*max over directly mask-supervised 8x8 patch logits",
+    "global_context_scene_features": false,
+    "routing": "learned scene evidence modifies Sentinel-2 only; Landsat scene scores remain exact current spatial-Prithvi identities",
+    "fixed_change_from_rejected_parent": "remove attentive/mean/max global context head and make scene supervision flow through patch-local logits"
+  },
+  "smoke": {
+    "scope": "two real mixed-source training batches; no held-fold outcome scoring",
+    "identity_pixel_max_abs": 0.0,
+    "finite_optimization": true,
+    "request_mass": {
+      "mars": 0.75,
+      "unep_positive": 0.125,
+      "cloudsen_negative": 0.125,
+      "mars:NO_PLUME|Landsat": 0.1875,
+      "mars:NO_PLUME|Sentinel-2": 0.1875,
+      "mars:PLUME|Landsat": 0.1875,
+      "mars:PLUME|Sentinel-2": 0.1875
+    },
+    "trainable_parameters": 4481889,
+    "peak_cuda_bytes": 3929779200,
+    "device": "NVIDIA GeForce RTX 5070"
+  },
+  "parent_result": {
+    "path": "reports/experiments/mars_ndmi_bitemporal_fusion_pilot.json",
+    "sha256": "0c8bebeace840acbb0a27450919d47e852cb3166ea171d9344701e2ba90d3177",
+    "reason": "parent dense path transported on both folds, while its global context scene signal was weak and uncertain"
+  },
+  "sampling": {
+    "source_mass": {
+      "mars": 0.75,
+      "unep_positive": 0.125,
+      "cloudsen_negative": 0.125
+    },
+    "mars_rule": "equal label x sensor request mass, then equal physical-site mass within stratum",
+    "external_rule": "equal physical-site mass within each fixed single-label source",
+    "resulting_label_mass": "0.5 positive and 0.5 negative; no external development rows"
+  },
+  "training": {
+    "seed": 20263800,
+    "epochs": 3,
+    "samples_per_epoch": 6144,
+    "batch_size": 8,
+    "loader_workers": 2,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "gradient_clip": 2.0,
+    "positive_pixel_weight": 10.0,
+    "focal_gamma": 2.0,
+    "dice_weight": 0.5,
+    "patch_positive_weight": 5.0,
+    "patch_weight": 0.2,
+    "scene_weight": 0.25,
+    "pair_weight": 0.1,
+    "pair_margin": 0.5,
+    "partial_auc_weight": 0.35,
+    "partial_auc_negative_fraction": 0.125,
+    "partial_auc_margin": 0.5,
+    "negative_upward_weight": 0.1,
+    "positive_downward_weight": 0.05,
+    "correction_l2_weight": 0.002,
+    "scene_delta_l2_weight": 0.001,
+    "progress_every_batches": 64,
+    "endpoint_rule": "fixed epoch 3 for both new-seed cross-fit directions; no held-fold epoch selection",
+    "augmentation": "joint quarter-turn and reflection transforms with wind-vector rotation"
+  },
+  "search": {
+    "strengths": [0.1, 0.25, 0.5],
+    "candidate_count": 3,
+    "scene_formula": "sigmoid(logit(current spatial-Prithvi score) + strength * 2*tanh(patch_MIL_logit/2)) on Sentinel-2; exact identity on Landsat",
+    "mask_formula": "released logit + strength * zero-initialized dense correction",
+    "selection_rule": "all gates, then worst-fold AP, worst-fold recall, worst-sensor AP, paired-site AP lower bound, paired-site IoU lower bound, pooled AP, smallest strength"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20263850,
+    "confidence": 0.95,
+    "unit": "physical_location_id"
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.002,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "each_sensor_ap_delta_minimum": 0.0,
+    "each_fold_ap_delta_minimum": 0.0,
+    "each_fold_recall_delta_minimum": -0.002,
+    "paired_site_ap_lower_bound_strictly_positive": true,
+    "pixel_iou_delta_strictly_positive": true,
+    "each_fold_pixel_iou_strictly_positive": true,
+    "paired_site_pixel_iou_lower_bound_strictly_positive": true,
+    "no_worse_fpr": true,
+    "pass_action": "freeze a new-seed source-disjoint confirmation; do not open external development, fold 2, or official test"
+  },
+  "outputs": {
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_ndmi_patch_mil_pilot.pt",
+    "json": "reports/experiments/mars_ndmi_patch_mil_pilot.json",
+    "markdown": "reports/experiments/MARS_NDMI_PATCH_MIL_PILOT.md"
+  },
+  "invariants": [
+    "Draft status permits only identity and finite-optimization smoke tests; outcome scoring requires frozen hashes.",
+    "Each endpoint fits only the opposite MARS development fold plus fixed source-disjoint auxiliary manifests.",
+    "UNEP and CloudSEN12 development manifests, fold 2, folds 0/1, and official-test inputs are not loaded.",
+    "The patch aggregation, new seeds, source masses, endpoint, strengths, loss, routing, and gates are fixed before held-fold scoring.",
+    "The released U-Net remains frozen and the dense adapter starts as exact released-logit identity.",
+    "Failure writes no model artifact.",
+    "Bulk data, model artifacts, and prediction caches remain Git-ignored."
+  ]
+}
