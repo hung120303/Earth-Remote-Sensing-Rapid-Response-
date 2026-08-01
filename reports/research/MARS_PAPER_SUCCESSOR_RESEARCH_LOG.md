@@ -4968,3 +4968,33 @@ hash, seeds 20263903/20263904 for the fold-3/fold-4 endpoints, strengths
 0.10/0.25/0.50, and the existing 10,000-replicate physical-site bootstrap
 gates. MethaneS2CM development, MARS fold 2, folds 0/1, and official-test
 outcomes remain closed.
+
+### 2026-07-31: physical-scale cross-domain detector rejected
+
+Both fixed endpoints completed the two external-pretraining and three joint
+epochs, then scored all 17,745 held fold-3/fold-4 scenes through 36 overlapping
+physical tiles. Training was finite and the source adversary remained active,
+but the new signal did not improve the stronger current spatial-Prithvi ranker.
+
+At the selected minimum strength 0.10, pooled AP changes -0.000172 and
+matched-FPR recall changes -0.001312. The paired-site AP interval is
+[-0.000501,+0.000171]. Sentinel-2 AP changes only +0.000023 while Landsat
+remains an exact scene-score identity; cross-sensor pooling accounts for the
+slightly negative overall AP. Fold AP changes are -0.000004/-0.000042, and
+fold 4 loses one matched-FPR positive. Strengths 0.25 and 0.50 worsen AP
+monotonically (-0.000490/-0.001226).
+
+The mask change is small and uncertain. Strength 0.10 raises aggregate IoU
++0.000284 with positive point changes on both folds, but its paired-site
+interval [-0.000238,+0.000690] crosses zero. Larger strengths raise the point
+gain to +0.000543/+0.000842 while widening negative uncertainty. This contrasts
+with the consistently positive NDMI and frozen-transformer dense adapters:
+matching physical crop scale alone does not make the MethaneS2CM representation
+transport to MARS L1C masks or scene ordering.
+
+No artifact is written. MethaneS2CM development, MARS fold 2, folds 0/1, and
+the official paper test remain closed. Result SHA-256 is
+`4a0425da9c6186a7b803c3543bb94d1c3bdb286baedc874e7f9be1aa0888e117`.
+The result retires direct S2CM/MARS local-domain alignment as an isolated lever.
+Any further external-data path must use exact MARS-domain radiometry or a causal
+physics generator rather than another L2A-to-L1C feature alignment objective.
