@@ -5430,3 +5430,9 @@ The research-only two-endpoint state cache is 108,855,455 bytes with SHA-256
 `657a79945f788439f9ccd312dedee6d77931439c83e56489e0453fc9b6e369ac`.
 Both are ignored. Schema, row count, and protocol binding were inspected; no
 combined DOFA+anchored metric was computed before this hash-only freeze.
+
+The first ensemble command failed closed during input verification because the
+anchored-result SHA had one omitted `e` in its manual transcription. No feature
+or score array was loaded and no candidate metric was computed. Only the
+63-to-64-character receipt correction was made before retrying; the candidate
+grid, formulas, seeds, gates, and cache hashes are unchanged.
