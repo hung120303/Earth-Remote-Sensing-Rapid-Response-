@@ -12,6 +12,7 @@ for path in (ROOT / "tools", ROOT / "EarthRemoteSensingRapidResponse"):
         sys.path.insert(0, str(path))
 
 from train_mars_anchored_full_finetune_pilot import (  # noqa: E402
+    write_endpoint_state_cache,
     write_scene_prediction_cache,
 )
 
@@ -49,3 +50,19 @@ def test_scene_cache_rejects_misaligned_candidate(tmp_path: Path) -> None:
         write_scene_prediction_cache(
             tmp_path / "scores.npz", values, [0.1, 0.5], protocol_sha256="b" * 64
         )
+
+
+def test_endpoint_state_cache_is_marked_research_only(tmp_path: Path) -> None:
+    import torch
+
+    path = tmp_path / "states.pt"
+    receipt = write_endpoint_state_cache(
+        path,
+        {"3": {"weight": torch.tensor([1.0])}},
+        strengths=[0.1, 0.5],
+        protocol_sha256="c" * 64,
+    )
+    payload = torch.load(path, map_location="cpu", weights_only=False)
+    assert payload["research_only_until_downstream_gates_pass"] is True
+    assert payload["protocol_sha256"] == "c" * 64
+    assert receipt["tracked"] is False

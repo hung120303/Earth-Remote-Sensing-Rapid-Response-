@@ -106,6 +106,43 @@ def write_scene_prediction_cache(
     }
 
 
+def write_endpoint_state_cache(
+    path: Path,
+    endpoint_states: dict[str, Any],
+    *,
+    strengths: list[float],
+    protocol_sha256: str,
+) -> dict[str, Any]:
+    """Persist ignored cross-fit endpoint states for a downstream frozen fusion."""
+    if not endpoint_states:
+        raise ValueError("Endpoint state cache cannot be empty")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    torch.save(
+        {
+            "schema_version": 1,
+            "model": AnchoredMarsFullFinetune().artifact_metadata(),
+            "states_by_held_fold": endpoint_states,
+            "strengths": list(strengths),
+            "protocol_sha256": protocol_sha256,
+            "research_only_until_downstream_gates_pass": True,
+        },
+        temporary,
+    )
+    os.replace(temporary, path)
+    try:
+        receipt_path = path.relative_to(ROOT).as_posix()
+    except ValueError:
+        receipt_path = path.as_posix()
+    return {
+        "path": receipt_path,
+        "bytes": path.stat().st_size,
+        "sha256": sha256(path),
+        "tracked": False,
+        "research_only_until_downstream_gates_pass": True,
+    }
+
+
 def train_endpoint(
     model: AnchoredMarsFullFinetune,
     loader: torch.utils.data.DataLoader[dict[str, Any]],
@@ -388,6 +425,14 @@ def main() -> int:
             strengths,
             protocol_sha256=sha256(protocol_path),
         )
+    endpoint_state_cache = None
+    if protocol["outputs"].get("endpoint_state_cache"):
+        endpoint_state_cache = write_endpoint_state_cache(
+            (ROOT / protocol["outputs"]["endpoint_state_cache"]).resolve(),
+            endpoint_states,
+            strengths=strengths,
+            protocol_sha256=sha256(protocol_path),
+        )
     candidates, identity = summarize_predictions(
         raw, strengths, protocol["bootstrap"], protocol["gates"]
     )
@@ -418,6 +463,7 @@ def main() -> int:
         "all_promotion_gates_pass": passed,
         "artifact": artifact,
         "scene_cache": scene_cache,
+        "endpoint_state_cache": endpoint_state_cache,
         "peak_cuda_bytes": int(torch.cuda.max_memory_allocated()),
         "device": torch.cuda.get_device_name(device),
         "decision": "Freeze a new-seed source-disjoint confirmation; external development and official test remain closed." if passed else "Reject this architecture before external development, fold 2, or official-test scoring.",

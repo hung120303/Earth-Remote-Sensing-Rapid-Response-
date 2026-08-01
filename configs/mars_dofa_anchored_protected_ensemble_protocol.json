@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "status": "preregistered_before_anchored_cache_generation",
+  "scope": "fold-3/fold-4 protected ensemble of independently learned train-fitted DOFA-v2 and expanded-real-data anchored-U-Net scene residuals with fixed significant dense transport",
+  "trainer": {
+    "path": "tools/evaluate_mars_dofa_anchored_protected_ensemble.py",
+    "sha256": "b224268547c5ad6eb6f3bcce9c147b98326a3a1204ea49ce8e8b8573d36d917f"
+  },
+  "code_dependencies": [
+    {"path": "tools/confirm_mars_dofa_v2_projection_ensemble.py", "sha256": "e7175c5d1b66e9de80d0da42d4e7b28adc4fb575e1ca81e445115feaa6668969"},
+    {"path": "tools/confirm_mars_dofa_v2_train_fitted_normalization.py", "sha256": "59b3cdd8a85d5bd54d1174acaa3dfc4d62cc6ca8cc613cb1be29f33a5697ce44"},
+    {"path": "tools/train_mars_dofa_v2_protected_fusion.py", "sha256": "14390520c1bf0b39ecd6ac98591aaf7e40914651a925e504c2d27dad8c4cdb19"},
+    {"path": "tools/train_mars_dofa_v2_scene_probe.py", "sha256": "62eaefe3ea087bfabeac415af5cba8f18809320b93f43a12b51b97d950f34cb7"},
+    {"path": "tools/train_mars_crossfold_bagged_scene_head.py", "sha256": "ac3e58d54477b67219c66200180a715591e75f25baebe7350edc61b7af3253b3"},
+    {"path": "tools/train_mars_oof_scene_ensemble_v2.py", "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"},
+    {"path": "tools/train_mars_scene_ranker.py", "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"}
+  ],
+  "inputs": {
+    "dofa_features": {"path": "outputs/mars_dofa_v2_scene_features_folds34.npz", "sha256": "2c43352e92f96549d64188c78318fe606d55552aa9587aace1a195e8dfba66fe"},
+    "dofa_result": {"path": "reports/experiments/mars_dofa_v2_train_fitted_normalization_folds34.json", "sha256": "23e9124a5f0b5a9a788a46a6fd07753501a8b83c880b0a4e3f24e680c92074b2"},
+    "inner": {"path": "outputs/mars_scene_features_folds234.npz", "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"},
+    "fold0": {"path": "outputs/mars_scene_features_fold0.npz", "sha256": "372e152734db1314417ed385b099af54acd182bf758b1d2eabcedfeb64a709e7"},
+    "fold1": {"path": "outputs/mars_scene_features_fold1_crossfit.npz", "sha256": "2b62e03215047d6a49639fdaead7e9d3cf7939b8eda26fb9442210b49c3ba108"},
+    "current_scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "anchored_scores": {"path": "outputs/mars_protected_bisensor_expanded_unep_folds34_scores.npz", "sha256": "bind_exact_generated_hash_without_reading_combined_metrics"},
+    "anchored_result": {"path": "reports/experiments/mars_protected_bisensor_expanded_unep.json", "sha256": "3e70513986192dda3b7aadc8feed6a5b12ce6e11eaaf2691e9deb7859efc96c"}
+  },
+  "anchored_cache_protocol_sha256": "06f0d382372e0269157070883c26630cb4e03caf7abd79da18ae9aded111d99e",
+  "fixed_dofa": {
+    "feature_set": "change_extreme",
+    "C": 0.01,
+    "projection_dimension": 2048,
+    "projection_seeds": [20260780, 20260781, 20260782, 20260783, 20260784],
+    "aggregation": "mean_logit",
+    "normalization_mode": "global_train_fitted",
+    "gate": 0.5,
+    "weight": 0.05,
+    "source": "previously passed deployment-safe folds-3/4 candidate; not retuned"
+  },
+  "fixed_dense": {
+    "source": "expanded-UNEP anchored result strength 0.10",
+    "strength": 0.1,
+    "pixel_iou_delta": 0.0026305114137864516,
+    "paired_site_95pct_lower": 0.0003692611953793281,
+    "fold3_iou_delta": 0.00445577059825808,
+    "fold4_iou_delta": 0.0012693509387734503,
+    "selection_rule": "fixed before scene ensemble; dense strength is never selected by ensemble AP"
+  },
+  "architecture": {
+    "final_protection_gate": 0.25,
+    "formula": "in local-logit coordinates above 0.25: current + anchored_multiplier*(anchored-current) + (fixed_DOFA-current); below 0.25 exact identity",
+    "operating_region_guarantee": "all scores below 0.25 remain exact and all affected scores remain at or above 0.25; every development operating threshold lies below 0.25",
+    "independence": "DOFA-v2 uses frozen wavelength-conditioned foundation features and regularized linear probes; anchored-U-Net uses supervised full-scene convolutional adaptation",
+    "dense_path": "anchored strength 0.10 only; DOFA scene fusion does not change masks"
+  },
+  "search": {
+    "anchored_strengths": [0.25, 0.5, 1.0],
+    "anchored_multipliers": [0.5, 1.0],
+    "dofa_multiplier": 1.0,
+    "candidate_count": 6,
+    "selection_rule": "all gates, then minimum fold AP, paired-site AP lower bound, minimum sensor AP, pooled AP, and least anchored intervention"
+  },
+  "bootstrap": {
+    "unit": "physical_location_id",
+    "paired": true,
+    "replicates": 10000,
+    "confidence": 0.95,
+    "seed": 20264310,
+    "same_draws_for_all_candidates": true
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.002,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "operating_confusion_counts_identical": true,
+    "each_fold_ap_delta_strictly_positive": true,
+    "each_sensor_ap_delta_strictly_positive": true,
+    "paired_site_ap_lower_bound_strictly_positive": true,
+    "fixed_dense_pixel_iou_delta_strictly_positive": true,
+    "fixed_dense_each_fold_iou_delta_strictly_positive": true,
+    "fixed_dense_paired_site_iou_lower_bound_strictly_positive": true,
+    "pass_action": "freeze exactly one candidate for new fold-2 confirmation; do not access folds 0/1, external outcomes, or official test"
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_dofa_anchored_protected_ensemble_folds34.json",
+    "markdown": "reports/experiments/MARS_DOFA_ANCHORED_PROTECTED_ENSEMBLE_FOLDS34.md"
+  },
+  "invariants": [
+    "The six-candidate grid and all gates are committed before the anchored score cache exists.",
+    "After cache generation, only its exact SHA-256 and the frozen status may change before evaluation.",
+    "No fold-2, fold-0, fold-1, external, or official-test row is accessed during selection.",
+    "A passing folds-3/4 result is insufficient for promotion; it authorizes only a fixed fold-2 confirmation."
+  ]
+}

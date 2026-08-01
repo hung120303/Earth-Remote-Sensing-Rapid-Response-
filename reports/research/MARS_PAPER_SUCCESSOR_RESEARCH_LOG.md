@@ -5401,3 +5401,21 @@ the same representation do not solve the site-general ranking gap. The stable
 protected signal should next be combined with an independently learned
 foundation representation while decoupling scene strength from the already
 positive strength-0.10 dense interpolation.
+
+### 2026-08-01: independent protected ensemble preregistered
+
+The next candidate combines the deployment-safe train-fitted DOFA-v2 scene
+residual (+0.001412 AP on folds 3/4) with the independently learned expanded-
+UNEP anchored residual. Both are expressed in local-logit coordinates above a
+final 0.25 gate; scores below 0.25 remain exact, so the operating confusion
+counts cannot change. DOFA remains fixed at its prior gate 0.50 / weight 0.05.
+Only three already evaluated anchored source strengths (0.25/0.50/1.0) and two
+residual multipliers (0.5/1.0) form the six-candidate grid.
+
+Scene selection requires AP +0.002, a strictly positive paired-site lower
+bound, positive AP in both folds and both sensors, and exact operating counts.
+Dense prediction is not retuned: anchored strength 0.10 is fixed because its
+IoU change is +0.002631 with paired lower +0.000369 and positive fold changes
++0.004456/+0.001269. A passing result authorizes only a new fold-2 confirmation.
+The grid and evaluator are committed before the anchored score cache exists;
+after generation, only the cache SHA-256 and frozen status may be filled.
