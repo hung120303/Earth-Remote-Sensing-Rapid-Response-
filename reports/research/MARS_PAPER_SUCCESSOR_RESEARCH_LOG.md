@@ -5480,3 +5480,34 @@ anchored score or result file exists. After generation, only those two exact
 SHA-256 placeholders and the frozen status may change before the one-shot
 evaluation. Folds 0/1, external outcomes, and official-test inputs remain out
 of scope.
+
+### 2026-08-01: protected ensemble fold-2 confirmation rejected
+
+The fixed candidate was evaluated once from hash-binding commit `3c12fca2` on
+all 8,833 fold-2 scenes (797 positives, 153 physical-site groups). Candidate
+AP is 0.916916, only +0.000313 above the current spatial-Prithvi score. The
+10,000-replicate paired-site interval is [-0.000541,+0.001131], so both the
+fixed +0.001 minimum and positive-lower-bound gates fail. Sentinel-2 and
+Landsat AP changes are positive but very small (+0.000145/+0.000166).
+The complete operating confusion matrix is preserved: recall remains 0.956085
+at FPR 0.071180. Relative to the released primary model, AP is +0.036317 and
+matched-FPR recall +0.030113, but that does not rescue the failed improvement
+over the stronger current model.
+
+The independent dense path does generalize: anchored strength 0.10 improves
+pixel IoU by +0.004367 with paired-site lower bound +0.002352. The scene path,
+not segmentation, is therefore the failed mechanism. No artifact is promoted,
+and folds 0/1, external outcomes, and the official test are not scored. Compact
+result SHA-256 is
+`4a55afb2dad0306f56ebad82289a06157f3855be18a22a4a3e567395c60fa138`.
+
+Post-run access audit: the common `load_development` helper opened the existing
+fold-0 and fold-1 feature-cache files while constructing a shared schema/index,
+even though the estimator then masked all training arrays to folds 3/4 and all
+prediction, label, and metric arrays to fold 2. Thus the generated report's
+`folds_0_1_accessed: false` field must be interpreted as *not used for fitting
+or scoring*, not as *files never opened*. This does not change any metric or
+candidate decision, but future confirmation evaluators must use a restricted
+fold loader so the field can be literal. The next architecture may be selected
+on folds 3/4, but it must use a fresh untouched confirmation fold rather than
+retuning against this failed fold-2 outcome.
