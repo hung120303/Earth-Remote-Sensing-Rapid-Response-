@@ -457,7 +457,7 @@ matched-FPR recall/FPR exactly zero, and IoU +0.006395. Paired-site intervals cr
 [-0.000034,+0.002236] and IoU [-0.002502,+0.013529]. The conservative strength 0.10 has positive
 AP and IoU lower bounds but only +0.000257 AP, well below the fixed +0.002 floor. The branch is
 rejected with no artifact. Compact result SHA-256:
-`3e70513986192dda3b7aadc8feed6a5b12ce6e11eaaf2691e9deb7859efc96c`.
+`3e70513986192dda3b7aadc8feed6a5b12ce6e11eaaef2691e9deb7859efc96c`.
 
 ## 2026-08-01: protected independent-signal ensemble passes selection
 
@@ -523,3 +523,31 @@ high-confidence ranking evidence and a separately conservative dense strength; s
 this branch is contradicted by the IoU curve. Compact result:
 `reports/experiments/mars_protected_bisensor_finetune_pilot.json` (SHA-256
 `0c3e2f2253316c714f1b58f39092bf6cc9e5b445823a46be27a5b1e1ebd818af`).
+
+## 2026-08-01: protected independent-signal ensemble fails fold-2 confirmation
+
+The exact strength-0.50 anchored residual plus fixed DOFA ensemble was frozen and committed before
+a new endpoint fit folds 3+4 and scored all 8,833 fold-2 scenes. AP improved only +0.000313 over
+the current spatial-Prithvi comparator, with paired-site 95% interval
+[-0.000541,+0.001131]. The complete operating confusion matrix was unchanged. The independent
+dense strength-0.10 path did generalize, improving IoU +0.004367 with paired lower +0.002352.
+Scene-ranking magnitude and certainty failed, so no model was promoted and the official test was
+not reopened. Compact result SHA-256:
+`4a55afb2dad0306f56ebad82289a06157f3855be18a22a4a3e567395c60fa138`.
+
+## 2026-08-01: Gaussian scene-supervision ablation
+
+The earlier full-bank Gaussian ViT trained dense masks but disabled scene loss throughout its
+288,000-request synthetic phase. A controlled same-seed ablation enabled paired synthetic scene
+BCE and partial-AUC while retaining the 16,000-template bank, 10,575,102-parameter mixed-sensor
+ViT-U-Net, nine pretraining epochs, three joint epochs, and real-only folds-3/4 evaluation.
+Synthetic scene BCE fell 0.639803 to 0.379344 and 0.656790 to 0.412188 in the two directions.
+
+Strength 0.25 improved pooled AP +0.002507, fold AP +0.002487/+0.001137, and
+Sentinel-2/Landsat AP +0.003459/+0.001538. Pixel IoU improved +0.002996. It was rejected because
+paired-site intervals crossed zero for AP [-0.001290,+0.005322] and IoU
+[-0.000915,+0.005762], and fold-4 matched-FPR recall lost one positive. Conservative strengths
+0.05/0.10 retained positive paired-site AP lower bounds but produced only +0.000949/+0.001597 AP,
+below the fixed +0.002 floor. The finding supports conservative Gaussian scene evidence as an
+ensemble component, not a standalone higher-weight successor. Compact result SHA-256:
+`6963e5ac8832011a4c39899d3097ff23afb3222ab6f1d2bbbc67cdc325190358`.

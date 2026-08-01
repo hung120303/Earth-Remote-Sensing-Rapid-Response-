@@ -5535,3 +5535,30 @@ future result/artifact exists. The full folds-3/4 cross-fit is frozen at
 `configs/mars_gaussian_scene_aligned_crossfit_protocol.json`; fold 2 will not be
 reused, and folds 0/1, external outcomes, and the official test remain outside
 this selection run.
+
+### 2026-08-01: scene-aligned Gaussian ViT improves ranking but is rejected
+
+Both fixed endpoints completed 288,000 paired synthetic requests and 12,288
+joint requests. Synthetic scene learning is real rather than nominal: scene BCE
+fell 0.639803 to 0.379344 for the model holding fold 3 and 0.656790 to 0.412188
+for the model holding fold 4; partial-AUC loss fell 0.932021 to 0.550931 and
+0.957253 to 0.586192. This corrects the prior dense-only pretraining omission.
+
+At strength 0.25, pooled AP improves +0.002507, fold-3/fold-4 AP
++0.002487/+0.001137, and Sentinel-2/Landsat AP +0.003459/+0.001538. Pixel IoU
+improves +0.002996. The candidate nevertheless fails: paired-site AP interval
+[-0.001290,+0.005322] and IoU interval [-0.000915,+0.005762] cross zero, and
+fold-4 matched-FPR recall loses one true positive (-0.001305). No artifact is
+written. Compact result SHA-256 is
+`6963e5ac8832011a4c39899d3097ff23afb3222ab6f1d2bbbc67cdc325190358`.
+
+The strength curve supplies a narrower positive finding. Strengths 0.05 and
+0.10 have strictly positive paired-site AP lower bounds (+0.000149 and
++0.000082) with unchanged pooled recall, but their point gains (+0.000949 and
++0.001597) remain below the preregistered +0.002 floor. Increasing Gaussian
+weight is therefore retired: it trades stable small evidence for between-site
+variance. The next development experiment may combine only these conservative
+Gaussian residuals with independently learned protected DOFA/anchored evidence,
+using a final local-logit gate that mathematically keeps every affected score
+above 0.25. That combination must be preregistered before any per-scene Gaussian
+cache is generated.
