@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
-  "status": "catalog_refresh_audited; bulk_archives_and_manifest_gitignored",
-  "generated_at_utc": "2026-08-01T16:57:01.180878+00:00",
+  "schema_version": 2,
+  "status": "catalog_refresh_reconciled_and_nonsealed_exact_sentinel2_additions_acquired",
+  "generated_at_utc": "2026-08-01T18:43:02.1195642Z",
   "source": {
     "publisher": "United Nations Environment Programme International Methane Emissions Observatory",
     "catalog_page": "https://data.unep.org/methane",
@@ -29,18 +29,32 @@
       "Sentinel-2": 178,
       "Landsat": 91
     },
-    "by_frozen_role": {
+    "raw_recomputed_roles_superseded": {
       "auxiliary_training": 216,
       "development": 40,
+      "sealed_external": 13,
+      "reason": "Catalog growth changed connected-component hashes and would have reassigned 18 immutable July identities. These counts are not authorized research roles."
+    },
+    "append_only_reconciled_roles": {
+      "auxiliary_training": 247,
+      "development": 9,
       "sealed_external": 13
     },
-    "eligible_manifest_sha256": "e8ad1282b0cc8312b8c6aa89736c774c73ac778b5d92f9cafbae9f7b17e08a15"
+    "reconciled_manifest": {
+      "path": ".research/unep_mars_post2024_refresh_20260801/eligible_manifest_reconciled.jsonl",
+      "bytes": 533787,
+      "sha256": "82a1f5ff0b20b15127fa987b67e9a08df83588ca577fa4de21763ea5d371a663"
+    },
+    "role_reconciliation_receipt_sha256": "9e4209e7f1e8ef3c1fd49ff5e2e0b7f3400d3b3399a3b3a6ad65984aa54f0f8b",
+    "old_identity_group_or_role_changes_after_reconciliation": 0,
+    "quarantined_components": 0
   },
   "paper_test_exclusion": {
     "paper_test_locations": 1289,
     "paper_test_targets": 13393,
     "paper_test_sha256": "add125547e0e0066216070ed61a8544e76e84f062f636390be5d2ef1808dbfaa",
-    "minimum_distance_km": 25.631477
+    "minimum_distance_km": 25.631477,
+    "official_test_images_or_labels_accessed_during_refresh": false
   },
   "versus_2026_07_catalog": {
     "eligible_samples": {
@@ -50,13 +64,13 @@
     },
     "auxiliary_training": {
       "before": 215,
-      "after": 216,
-      "delta": 1
+      "after": 247,
+      "delta": 32
     },
     "development": {
       "before": 9,
-      "after": 40,
-      "delta": 31
+      "after": 9,
+      "delta": 0
     },
     "sealed_external": {
       "before": 13,
@@ -64,5 +78,50 @@
       "delta": 0
     }
   },
-  "decision": "Do not revise the frozen training roles or claim a meaningful auxiliary expansion. The refresh adds only one auxiliary-training scene; retain the 31 new development scenes for a future independently frozen confirmation after a candidate passes the existing fold-3/fold-4 gates."
+  "exact_product_resolution": {
+    "nonsealed_rows": 256,
+    "resolved": 192,
+    "unresolved": 64,
+    "by_role": {
+      "auxiliary_training": {"resolved": 187, "unresolved": 60, "total": 247},
+      "development": {"resolved": 5, "unresolved": 4, "total": 9}
+    },
+    "by_sensor": {
+      "Sentinel-2": {"resolved": 166, "unresolved": 2, "total": 168},
+      "Landsat": {"resolved": 26, "unresolved": 62, "total": 88}
+    },
+    "receipt_sha256": "0525cdab0b29dbb892f257f0c629cbf8a408ed4ff1a278166c8eb9605c8a3d18"
+  },
+  "new_identity_acquisition": {
+    "resolved_auxiliary_diff": {"rows": 52, "groups": 15, "Sentinel-2": 26, "Landsat": 26},
+    "selection_receipt_sha256": "d469cf2c1458a78608a890ce67acbcda70d72568313ef43eaadddb243e05a6b5",
+    "crop_result": {
+      "acquired": 26,
+      "errors": 26,
+      "sensor_acquired": "Sentinel-2",
+      "raster_bytes": 16954844,
+      "receipt_sha256": "1ff202a62f3544d8965710afeaedc5bebfb065cccaa7e54a98793bae0b271b62"
+    },
+    "landsat_pending": {
+      "rows": 26,
+      "reason": "The exact Landsat Collection 2 Level-1 LandsatLook URLs redirect to USGS EROS authentication and therefore return HTML to GDAL without an authenticated EROS session. No product substitution was made."
+    },
+    "cloudsen12_gate": {
+      "processed": 26,
+      "passed": 25,
+      "failed": 1,
+      "errors": 0,
+      "receipt_sha256": "6e9a277575d2995ffbb6a9a2df7991caf5b527838dab8bc9865c3bd42d977657"
+    }
+  },
+  "combined_model_auxiliary_manifest": {
+    "prior_rows": 135,
+    "new_rows": 25,
+    "rows": 160,
+    "groups": 28,
+    "path": ".research/unep_mars_post2024_refresh_20260801/model_auxiliary_combined.jsonl",
+    "sha256": "8c42b4350ccc0abbd2fec727abba435fca2af8f29289e837d52e7151553d861b",
+    "receipt_sha256": "2eb60545d03dedac20e01dbd854a6f8043ee271f4cbfac3edfefc9b6396bd1a2"
+  },
+  "decision": "Use the 25 newly verified exact-product Sentinel-2 auxiliary positives in the next development-only experiment. Keep the 26 exact Landsat additions pending authenticated acquisition; do not substitute a different product, alter any frozen role, or commit bulk pixels."
 }

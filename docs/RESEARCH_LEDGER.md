@@ -425,18 +425,27 @@ large, site-general anomaly ordering needed for the official test-only AP/recall
 Compact evidence: `reports/experiments/mars_robust_site_template_ranker.json` (SHA-256
 `16a3928c9ea7dcc3f25e2ba3c62fededc231655e0436c3d35d6eb2e4006e8a88`).
 
-## 2026-08-01: current UNEP catalog refresh
+## 2026-08-01: current UNEP catalog refresh and append-only correction
 
 The official UNEP/IMEO detected-plume CSV and GeoJSON archives were downloaded again and audited
 with the already frozen exact-product and 25 km paper-test exclusion rules. The 27,403-row catalog
 contains 269 eligible positives from 43 physical groups: 178 Sentinel-2 and 91 Landsat. The closest
 eligible location remains 25.631477 km from an official paper-test location.
 
-Relative to the July audit, eligible rows increase from 237 to 269, but the frozen role split shows
-that 31 of the 32 additions are development rows. Auxiliary training changes only from 215 to 216;
-the sealed role remains 13. Roles were not reassigned after seeing the counts, no imagery was added
-to Git, and the new development rows remain reserved for a future independently frozen
-confirmation. Compact provenance and archive hashes are recorded in
+Relative to the July audit, eligible rows increase from 237 to 269. A raw full-catalog regrouping
+initially reported 216 auxiliary / 40 development / 13 sealed, but catalog growth had changed 36
+component hashes and would have reassigned 18 immutable July auxiliary identities. An append-only
+reconciler now freezes every prior identity, group, and role, inherits the one prior role for an
+expanded component, and quarantines ambiguous multi-group merges. The corrected split is 247
+auxiliary / 9 development / 13 sealed: all 32 additions are auxiliary, with zero prior identity
+changes and zero quarantines.
+
+Exact resolution produced 52 new auxiliary candidates (26 Sentinel-2 and 26 Landsat). All 26
+Sentinel-2 crops were acquired; CloudSEN12 retained 25 and rejected one. The verified real-positive
+training manifest therefore grows from 135 scenes / 27 groups to 160 scenes / 28 groups, SHA-256
+`8c42b4350ccc0abbd2fec727abba435fca2af8f29289e837d52e7151553d861b`. The 26 Landsat scenes remain
+pending USGS EROS authentication, with no product substitution. No imagery was added to Git.
+Compact provenance and archive hashes are recorded in
 `reports/acquisition/unep_mars_post2024_refresh_20260801.json`.
 
 ## 2026-08-01: weight-anchored released-U-Net fine-tune rejected

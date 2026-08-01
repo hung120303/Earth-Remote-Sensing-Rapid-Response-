@@ -5284,15 +5284,32 @@ learn a stronger product-matched representation or add genuinely independent,
 contemporaneous positive supervision. Result SHA-256 is
 `16a3928c9ea7dcc3f25e2ba3c62fededc231655e0436c3d35d6eb2e4006e8a88`.
 
-### 2026-08-01: official UNEP refresh adds development, not training mass
+### 2026-08-01: official UNEP refresh — raw role recomputation corrected
 
 Fresh official UNEP/IMEO CSV and GeoJSON archives contain 27,403 plume rows and
-yield 269 exact-product, paper-test-disjoint positives under the already frozen
-audit. This is 32 more eligible rows than July, but role preservation assigns
-31 additions to development and only one to auxiliary training (216 now versus
-215). The sealed cohort remains 13 and the minimum official-test distance is
-25.631477 km. No roles were revised and no bulk archive was committed. Receipt:
-`reports/acquisition/unep_mars_post2024_refresh_20260801.json`.
+yield 269 exact-product, paper-test-disjoint positives under the frozen audit,
+32 more than July. The first raw rerun reported roles 216 auxiliary / 40
+development / 13 sealed, but this was not a valid frozen-role comparison:
+catalog growth changed 36 connected-component hashes and would have moved 18
+previously frozen auxiliary identities into development.
+
+An append-only reconciliation now treats every July identity, group, and role
+as immutable. Expanded components inherit their one prior group and role; new
+components keep their prospective assignment; merges of multiple prior groups
+are quarantined. The audit reports zero old identity changes and zero
+quarantines. Correct roles are 247 auxiliary / 9 development / 13 sealed, so
+all 32 additions are auxiliary and none alter the frozen development or sealed
+cohorts.
+
+Exact-product resolution found 52 new auxiliary identities absent from the old
+135-row model manifest: 26 Sentinel-2 and 26 Landsat across 15 groups. All 26
+Sentinel-2 crops were acquired; the frozen CloudSEN12 gate retained 25 and
+rejected one, producing a combined 160-row, 28-group real-positive training
+manifest with SHA-256
+`8c42b4350ccc0abbd2fec727abba435fca2af8f29289e837d52e7151553d861b`.
+The 26 LandsatLook requests redirected to USGS EROS authentication and remain
+pending without product substitution. Bulk data remain ignored. Corrected
+receipt: `reports/acquisition/unep_mars_post2024_refresh_20260801.json`.
 
 ### 2026-08-01: anchored full released-U-Net transfer rejected
 
