@@ -4854,3 +4854,33 @@ The next bounded hypothesis removes the global context classifier and makes
 scene evidence a deterministic top-patch MIL aggregation of directly
 mask-supervised patch logits. It must use new seeds and the same closed-data
 boundary.
+
+### 2026-07-31: NDMI patch-MIL scene pilot rejected; mask conclusion replicated
+
+The precommitted patch-local variant removed the learned global scene context
+head and computed its Sentinel-2 scene correction only from the top eight
+directly mask-supervised patch logits. It used new seeds and otherwise retained
+the same cross-fit, source-balanced auxiliary data, three-epoch budget, routing,
+strength grid, and 10,000-replicate paired-site promotion contract. External
+development, fold 2, and the official test remained unopened.
+
+At selected strength 0.10, pooled AP changes only +0.000694 and matched-FPR
+recall changes -0.002625. The paired-site AP interval is
+[-0.000680,+0.001764]. Fold 3 improves AP +0.002024, while fold 4 changes
+-0.000294; Sentinel-2 AP changes +0.001488 and Landsat remains an exact
+identity. Strength 0.25 increases pooled AP by only +0.000721 and has a wider
+interval crossing zero; strength 0.50 lowers AP. The candidate therefore fails
+the minimum AP, recall, each-fold, and paired-site AP gates and writes no model
+artifact.
+
+The dense result again transports: strength 0.10 improves pooled IoU +0.002552
+with paired-site interval [+0.000509,+0.004217], and both held folds improve.
+Strength 0.25 raises IoU +0.005488 with a still-positive interval but does not
+rescue scene ranking. Two independently specified architectures now reproduce
+the same separation: explicit NDMI/change features provide a statistically
+positive mask-side signal, while deriving an image-level correction from the
+dense representation does not provide stable site-general scene ranking. More
+patch aggregation is therefore retired. The next scene experiment must first
+expand or improve source-disjoint positive-site supervision and explicitly
+address domain/site invariance. Result SHA-256 is
+`ab76b2f66d6a3f96a23aff6b54e22653a566520b0cfd460b706d5f86d23d9b08`.
