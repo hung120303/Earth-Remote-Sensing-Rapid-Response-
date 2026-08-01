@@ -96,6 +96,7 @@ def evaluate(
     model.eval()
     labels: list[float] = []
     scores: list[float] = []
+    dense_scores: list[float] = []
     mbmp_scores: list[float] = []
     intersection = 0
     union = 0
@@ -117,11 +118,13 @@ def evaluate(
         predicted_pixels += int(prediction[positives].sum().item())
         labels.extend(float(value) for value in batch["presence"].cpu())
         scores.extend(float(value) for value in output["scene_logit"].float().cpu())
+        dense_scores.extend(float(value) for value in output["top_evidence"].float().cpu())
         mbmp = batch["inputs"][:, 0].flatten(1).float()
         top_count = max(1, int(np.ceil(mbmp.shape[1] * 0.01)))
         mbmp_scores.extend(float(value) for value in torch.topk(mbmp, top_count, dim=1).values.mean(1).cpu())
     labels_array = np.asarray(labels, dtype=np.int64)
     scores_array = np.asarray(scores, dtype=np.float64)
+    dense_array = np.asarray(dense_scores, dtype=np.float64)
     mbmp_array = np.asarray(mbmp_scores, dtype=np.float64)
     positive_scores = scores_array[labels_array == 1]
     negative_scores = scores_array[labels_array == 0]
@@ -132,6 +135,8 @@ def evaluate(
         "scene_positive_logit_mean": float(positive_scores.mean()),
         "scene_negative_logit_mean": float(negative_scores.mean()),
         "scene_logit_separation": float(positive_scores.mean() - negative_scores.mean()),
+        "dense_top1pct_average_precision": float(average_precision_score(labels_array, dense_array)),
+        "dense_top1pct_auroc": float(roc_auc_score(labels_array, dense_array)),
         "mbmp_top1pct_average_precision": float(average_precision_score(labels_array, mbmp_array)),
         "pixel_iou_at_0_5": float(intersection / max(union, 1)),
         "pixel_recall_at_0_5": float(intersection / max(true_pixels, 1)),
@@ -157,6 +162,8 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"- Disjoint-validation gate: **{report['gates']['validation_transfer']}**",
         f"- Train scene AP: **{initial['train']['scene_average_precision']:.4f} -> {final['train']['scene_average_precision']:.4f}**",
         f"- Validation scene AP: **{initial['validation']['scene_average_precision']:.4f} -> {final['validation']['scene_average_precision']:.4f}**",
+        f"- Train dense-evidence AP: **{initial['train']['dense_top1pct_average_precision']:.4f} -> {final['train']['dense_top1pct_average_precision']:.4f}**",
+        f"- Validation dense-evidence AP: **{initial['validation']['dense_top1pct_average_precision']:.4f} -> {final['validation']['dense_top1pct_average_precision']:.4f}**",
         f"- Train pixel IoU: **{initial['train']['pixel_iou_at_0_5']:.4f} -> {final['train']['pixel_iou_at_0_5']:.4f}**",
         f"- Validation pixel IoU: **{initial['validation']['pixel_iou_at_0_5']:.4f} -> {final['validation']['pixel_iou_at_0_5']:.4f}**",
         "",
@@ -300,17 +307,39 @@ def main() -> int:
 
     initial, final = checkpoints[0], checkpoints[-1]
     thresholds = protocol["gates"]
-    gates = {
-        "memorization": bool(
-            final["train"]["scene_average_precision"] >= float(thresholds["train_scene_ap_min"])
-            and final["train"]["pixel_iou_at_0_5"] >= float(thresholds["train_pixel_iou_min"])
-        ),
-        "validation_transfer": bool(
-            final["validation"]["scene_average_precision"] >= float(thresholds["validation_scene_ap_min"])
-            and final["validation"]["pixel_iou_at_0_5"] - initial["validation"]["pixel_iou_at_0_5"]
-            >= float(thresholds["validation_pixel_iou_gain_min"])
-        ),
-    }
+    gate_mode = protocol.get("gate_mode", "scene_and_dense")
+    if gate_mode == "dense_only":
+        gates = {
+            "memorization": bool(
+                final["train"]["dense_top1pct_average_precision"]
+                >= float(thresholds["train_dense_ap_min"])
+                and final["train"]["pixel_iou_at_0_5"]
+                >= float(thresholds["train_pixel_iou_min"])
+            ),
+            "validation_transfer": bool(
+                final["validation"]["dense_top1pct_average_precision"]
+                >= float(thresholds["validation_dense_ap_min"])
+                and final["validation"]["pixel_iou_at_0_5"]
+                >= float(thresholds["validation_pixel_iou_min"])
+                and final["validation"]["pixel_iou_at_0_5"]
+                - initial["validation"]["pixel_iou_at_0_5"]
+                >= float(thresholds["validation_pixel_iou_gain_min"])
+            ),
+        }
+    elif gate_mode == "scene_and_dense":
+        gates = {
+            "memorization": bool(
+                final["train"]["scene_average_precision"] >= float(thresholds["train_scene_ap_min"])
+                and final["train"]["pixel_iou_at_0_5"] >= float(thresholds["train_pixel_iou_min"])
+            ),
+            "validation_transfer": bool(
+                final["validation"]["scene_average_precision"] >= float(thresholds["validation_scene_ap_min"])
+                and final["validation"]["pixel_iou_at_0_5"] - initial["validation"]["pixel_iou_at_0_5"]
+                >= float(thresholds["validation_pixel_iou_gain_min"])
+            ),
+        }
+    else:
+        raise ValueError(f"Unknown gate mode: {gate_mode}")
     if not gates["memorization"]:
         decision = "Stop: architecture/loss path cannot memorize the bounded synthetic bank."
     elif not gates["validation_transfer"]:
@@ -325,6 +354,8 @@ def main() -> int:
         "title": protocol.get("title", "Gaussian-ViT synthetic learnability audit"),
         "architecture_family": architecture_family,
         "precision": precision,
+        "gate_mode": gate_mode,
+        "training_objective": protocol.get("training_objective", "joint_dense_scene"),
         "protocol": protocol_path.relative_to(ROOT).as_posix(),
         "protocol_sha256": sha256(protocol_path),
         "git_commit": subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.strip(),
