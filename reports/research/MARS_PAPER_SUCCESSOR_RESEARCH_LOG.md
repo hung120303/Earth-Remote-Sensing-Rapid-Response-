@@ -4929,3 +4929,42 @@ not acceptable evidence of independence.
 Primary data sources: [MethaneSET](https://huggingface.co/datasets/tacofoundation/methaneset),
 [MethaneS2CM](https://huggingface.co/datasets/H1deaki/MethaneS2CM), and
 [MethaneUnion](https://huggingface.co/datasets/yuyao42/MethaneUnion).
+
+### 2026-07-31: physical-scale cross-domain detector protocol frozen
+
+The next pilot is frozen before any held-fold outcome is computed. Its common
+field of view is 640 m: each native 32x32 MethaneS2CM crop at 20 m is compared
+with a 64x64 MARS crop at 10 m that is area-pooled to 32x32. MARS reflectance
+is pooled before MBMP is recomputed; plume masks are max-pooled, while clear
+and observable masks require both contributing pixels. This avoids the earlier
+error of treating equal pixel dimensions as equal plume physics.
+
+The 9,450,995-parameter detector uses one shared six-band encoder across the
+target, 90-day reference, and 365-day reference. MARS has one historical frame,
+so that frame and its recomputed MBMP are duplicated explicitly rather than
+inventing a second observation. Five fusion scales consume signed/absolute
+change, two MBMP maps, wind, cloud, observability, and sensor identity. A U-Net
+decoder produces the local plume mask. Local scene evidence is a fixed equal
+blend of mask-top-1% evidence and a small bottleneck context head. At full-scene
+inference, 36 overlapping crops cover every 200x200 MARS pixel and scene evidence
+is the predeclared `0.75*mean(top four)+0.25*maximum` tile-logit aggregation.
+
+To discourage L2A/L1C source formatting from becoming the classifier, a
+gradient-reversal head predicts MARS versus MethaneS2CM from pooled Sentinel-2
+representations. Training first uses two fixed epochs of the 14,859 disjoint
+MethaneS2CM auxiliary crops, then three fixed joint epochs with 50% MARS and
+50% MethaneS2CM request mass. MARS mass remains equal across label by sensor;
+MethaneS2CM mass is equal by label and then by frozen 25 km group. MARS plume
+crops are plume-centered with fixed probability 0.85 and otherwise random,
+so the local classifier also sees within-positive-scene background.
+
+The real-data smoke covered two mixed-source optimization batches and two full
+MARS scenes without reporting any candidate metric. All losses and both
+released/stiched 200x200 outputs were finite. Peak CUDA allocation was
+754,310,144 bytes on the RTX 5070. Unit tests prove the 20-channel transform,
+edge-aligned full-scene coverage, source-routing identity, output shapes, and
+gradient-reversal sign. The protocol pins every outcome-affecting code/input
+hash, seeds 20263903/20263904 for the fold-3/fold-4 endpoints, strengths
+0.10/0.25/0.50, and the existing 10,000-replicate physical-site bootstrap
+gates. MethaneS2CM development, MARS fold 2, folds 0/1, and official-test
+outcomes remain closed.
