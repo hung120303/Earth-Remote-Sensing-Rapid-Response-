@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "status": "catalog_refresh_audited; bulk_archives_and_manifest_gitignored",
+  "generated_at_utc": "2026-08-01T16:57:01.180878+00:00",
+  "source": {
+    "publisher": "United Nations Environment Programme International Methane Emissions Observatory",
+    "catalog_page": "https://data.unep.org/methane",
+    "csv_archive_url": "https://unepazeconomyadlsstorage.blob.core.windows.net/public/unep_methanedata_detected_plumes_csv.zip",
+    "geojson_archive_url": "https://unepazeconomyadlsstorage.blob.core.windows.net/public/unep_methanedata_detected_plumes_geojson.zip",
+    "license": "CC BY-NC-SA"
+  },
+  "ignored_workspace": ".research/unep_mars_post2024_refresh_20260801",
+  "archives": {
+    "csv": {
+      "bytes": 9735367,
+      "sha256": "431c1e979554f2771a3e588b1815d66a79c614ba210111d42b1d22e21d3cbfee"
+    },
+    "geojson": {
+      "bytes": 49797154,
+      "sha256": "cc539e494671727ad27ff629bddd4cbe1a60dd25b237cdad84eb510cb0f933f3"
+    }
+  },
+  "catalog": {
+    "plume_rows": 27403,
+    "eligible_exact_product_positive_samples": 269,
+    "physical_groups": 43,
+    "sources": 88,
+    "by_sensor": {
+      "Sentinel-2": 178,
+      "Landsat": 91
+    },
+    "by_frozen_role": {
+      "auxiliary_training": 216,
+      "development": 40,
+      "sealed_external": 13
+    },
+    "eligible_manifest_sha256": "e8ad1282b0cc8312b8c6aa89736c774c73ac778b5d92f9cafbae9f7b17e08a15"
+  },
+  "paper_test_exclusion": {
+    "paper_test_locations": 1289,
+    "paper_test_targets": 13393,
+    "paper_test_sha256": "add125547e0e0066216070ed61a8544e76e84f062f636390be5d2ef1808dbfaa",
+    "minimum_distance_km": 25.631477
+  },
+  "versus_2026_07_catalog": {
+    "eligible_samples": {
+      "before": 237,
+      "after": 269,
+      "delta": 32
+    },
+    "auxiliary_training": {
+      "before": 215,
+      "after": 216,
+      "delta": 1
+    },
+    "development": {
+      "before": 9,
+      "after": 40,
+      "delta": 31
+    },
+    "sealed_external": {
+      "before": 13,
+      "after": 13,
+      "delta": 0
+    }
+  },
+  "decision": "Do not revise the frozen training roles or claim a meaningful auxiliary expansion. The refresh adds only one auxiliary-training scene; retain the 31 new development scenes for a future independently frozen confirmation after a candidate passes the existing fold-3/fold-4 gates."
+}
