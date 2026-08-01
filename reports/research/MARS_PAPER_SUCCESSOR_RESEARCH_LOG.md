@@ -5419,3 +5419,14 @@ IoU change is +0.002631 with paired lower +0.000369 and positive fold changes
 +0.004456/+0.001269. A passing result authorizes only a new fold-2 confirmation.
 The grid and evaluator are committed before the anchored score cache exists;
 after generation, only the cache SHA-256 and frozen status may be filled.
+
+The same-seed cache replication completed from preregistration commit
+`dcf8c2af`. Its isolated selected signal remains rejected (AP +0.000987,
+recall exact, IoU +0.006091), so it does not alter the ensemble grid. The
+pickle-free scene cache contains 17,745 aligned rows and four candidate vectors,
+is 932,951 bytes, and has SHA-256
+`c872ba9e92f2af17fa83a1fdac1d161f56a0278ca309ad2db3cfce5bfbe3dadb`.
+The research-only two-endpoint state cache is 108,855,455 bytes with SHA-256
+`657a79945f788439f9ccd312dedee6d77931439c83e56489e0453fc9b6e369ac`.
+Both are ignored. Schema, row count, and protocol binding were inspected; no
+combined DOFA+anchored metric was computed before this hash-only freeze.
