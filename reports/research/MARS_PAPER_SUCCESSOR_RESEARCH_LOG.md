@@ -5436,3 +5436,24 @@ anchored-result SHA had one omitted `e` in its manual transcription. No feature
 or score array was loaded and no candidate metric was computed. Only the
 63-to-64-character receipt correction was made before retrying; the candidate
 grid, formulas, seeds, gates, and cache hashes are unchanged.
+
+### 2026-08-01: protected DOFA + anchored ensemble passes folds 3/4
+
+The frozen six-candidate ensemble selects anchored source strength 0.50 with
+multiplier 1.0 beside the unchanged train-fitted DOFA residual. AP changes
++0.002230 with paired-site mean +0.002257 and 95% interval
+[+0.000678,+0.004151], clearing the fixed +0.002 floor. Fold-3/fold-4 AP
+changes are +0.001143/+0.001682 and Sentinel-2/Landsat changes are
++0.002246/+0.001396. The final 0.25 protection gate preserves the complete
+operating confusion matrix, so matched-FPR recall and FPR remain exact.
+
+Dense evidence is independently fixed at anchored strength 0.10: IoU changes
++0.002631 with paired lower +0.000369 and fold changes
++0.004456/+0.001269. Thus every preregistered scene and dense selection gate
+passes. The result is mechanistically stronger than either component alone:
+DOFA contributes wavelength-conditioned global representation while the
+anchored U-Net contributes supervised spatial plume evidence. This pass
+authorizes exactly one fold-2 confirmation of strength 0.50 / multiplier 1.0;
+it does not authorize fold 0/1, external, or official-test evaluation. Result
+SHA-256 is
+`85d5959061cc77d4b2a32f12609c7852af545ff8df6923273d6ae245d020eec1`.

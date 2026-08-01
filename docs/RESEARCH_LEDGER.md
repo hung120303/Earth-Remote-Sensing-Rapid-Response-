@@ -459,6 +459,18 @@ AP and IoU lower bounds but only +0.000257 AP, well below the fixed +0.002 floor
 rejected with no artifact. Compact result SHA-256:
 `3e70513986192dda3b7aadc8feed6a5b12ce6e11eaaf2691e9deb7859efc96c`.
 
+## 2026-08-01: protected independent-signal ensemble passes selection
+
+A preregistered six-candidate local-logit ensemble combines the previously deployment-safe
+DOFA-v2 residual with the expanded-UNEP anchored-U-Net residual above a final 0.25 protection
+gate. Selected anchored strength 0.50 × multiplier 1.0 improves folds-3/4 AP +0.002230 with
+paired-site 95% interval [+0.000678,+0.004151]. Fold AP changes +0.001143/+0.001682 and
+Sentinel-2/Landsat changes +0.002246/+0.001396. Operating recall/FPR counts remain exact. The
+separately fixed strength-0.10 dense path improves IoU +0.002631 with paired lower +0.000369 and
+positive changes in both folds. Every selection gate passes; only a fixed fold-2 confirmation is
+authorized. Compact result SHA-256:
+`85d5959061cc77d4b2a32f12609c7852af545ff8df6923273d6ae245d020eec1`.
+
 ## 2026-08-01: weight-anchored released-U-Net fine-tune rejected
 
 The next external-transfer experiment tested a mechanism not covered by the two frozen-teacher

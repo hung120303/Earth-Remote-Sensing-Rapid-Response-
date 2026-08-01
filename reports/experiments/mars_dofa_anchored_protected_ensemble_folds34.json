@@ -1,0 +1,469 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "generated_at_utc": "2026-08-01T20:15:24.420976+00:00",
+  "scope": "fold-3/fold-4 protected ensemble of independently learned train-fitted DOFA-v2 and expanded-real-data anchored-U-Net scene residuals with fixed significant dense transport",
+  "protocol": "configs/mars_dofa_anchored_protected_ensemble_protocol.json",
+  "protocol_sha256": "96449e3231acf5bc8cc64c41e5ca641652ef86801f2479ad45bfef14b6d59e21",
+  "git_commit": "46af9416e8c38651f70b546891791784e6fd9eaf",
+  "fixed_dofa": {
+    "feature_set": "change_extreme",
+    "C": 0.01,
+    "projection_dimension": 2048,
+    "projection_seeds": [
+      20260780,
+      20260781,
+      20260782,
+      20260783,
+      20260784
+    ],
+    "aggregation": "mean_logit",
+    "normalization_mode": "global_train_fitted",
+    "gate": 0.5,
+    "weight": 0.05,
+    "source": "previously passed deployment-safe folds-3/4 candidate; not retuned"
+  },
+  "fixed_dense_evidence": {
+    "strength": 0.1,
+    "pixel_iou_delta": 0.0026305114137864516,
+    "paired_site_lower": 0.0003692611953793281,
+    "fold_iou_delta": {
+      "3": 0.00445577059825808,
+      "4": 0.0012693509387734503
+    }
+  },
+  "candidate_summaries": [
+    {
+      "anchored_strength": 0.25,
+      "anchored_multiplier": 0.5,
+      "ap_delta": 0.0016565652171540712,
+      "recall_delta": 0.0,
+      "fold_ap_delta": {
+        "3": 0.0008044606833388368,
+        "4": 0.0014929636731414453
+      },
+      "sensor_ap_delta": {
+        "Sentinel-2": 0.0016588207223192653,
+        "Landsat": 0.0010986100613439298
+      },
+      "ap_interval": {
+        "replicates": 10000,
+        "groups": 250,
+        "confidence": 0.95,
+        "mean": 0.0016396260319893237,
+        "lower": 0.000691455415475456,
+        "upper": 0.0029013447685119955
+      },
+      "passed": false
+    },
+    {
+      "anchored_strength": 0.25,
+      "anchored_multiplier": 1.0,
+      "ap_delta": 0.0018905298136711046,
+      "recall_delta": 0.0,
+      "fold_ap_delta": {
+        "3": 0.0009716589138082377,
+        "4": 0.0015841940732492787
+      },
+      "sensor_ap_delta": {
+        "Sentinel-2": 0.0018788500031711175,
+        "Landsat": 0.0012737436570209315
+      },
+      "ap_interval": {
+        "replicates": 10000,
+        "groups": 250,
+        "confidence": 0.95,
+        "mean": 0.0018644967087226955,
+        "lower": 0.0007548086749350871,
+        "upper": 0.0033728380707705786
+      },
+      "passed": false
+    },
+    {
+      "anchored_strength": 0.5,
+      "anchored_multiplier": 0.5,
+      "ap_delta": 0.0018905298136711046,
+      "recall_delta": 0.0,
+      "fold_ap_delta": {
+        "3": 0.0009716589138082377,
+        "4": 0.0015841940732492787
+      },
+      "sensor_ap_delta": {
+        "Sentinel-2": 0.0018788500031711175,
+        "Landsat": 0.0012737436570209315
+      },
+      "ap_interval": {
+        "replicates": 10000,
+        "groups": 250,
+        "confidence": 0.95,
+        "mean": 0.0018644967108856906,
+        "lower": 0.0007548086749350871,
+        "upper": 0.0033728380707705786
+      },
+      "passed": false
+    },
+    {
+      "anchored_strength": 0.5,
+      "anchored_multiplier": 1.0,
+      "ap_delta": 0.0022297810008752306,
+      "recall_delta": 0.0,
+      "fold_ap_delta": {
+        "3": 0.001142703624706809,
+        "4": 0.0016817175129852924
+      },
+      "sensor_ap_delta": {
+        "Sentinel-2": 0.002246228409993112,
+        "Landsat": 0.0013960279876700232
+      },
+      "ap_interval": {
+        "replicates": 10000,
+        "groups": 250,
+        "confidence": 0.95,
+        "mean": 0.002171780700358466,
+        "lower": 0.0006782001973730523,
+        "upper": 0.0041505299030538175
+      },
+      "passed": true
+    },
+    {
+      "anchored_strength": 1.0,
+      "anchored_multiplier": 0.5,
+      "ap_delta": 0.0022287615194080956,
+      "recall_delta": 0.0,
+      "fold_ap_delta": {
+        "3": 0.0011371842954498446,
+        "4": 0.0016817175129852924
+      },
+      "sensor_ap_delta": {
+        "Sentinel-2": 0.0022440987688918668,
+        "Landsat": 0.0013960279876700232
+      },
+      "ap_interval": {
+        "replicates": 10000,
+        "groups": 250,
+        "confidence": 0.95,
+        "mean": 0.0021709425315715692,
+        "lower": 0.0006782001973730523,
+        "upper": 0.0041505299030538175
+      },
+      "passed": true
+    },
+    {
+      "anchored_strength": 1.0,
+      "anchored_multiplier": 1.0,
+      "ap_delta": 0.002422305763733257,
+      "recall_delta": 0.0,
+      "fold_ap_delta": {
+        "3": 0.0011410278229142534,
+        "4": 0.0013613795015334773
+      },
+      "sensor_ap_delta": {
+        "Sentinel-2": 0.0023223660823594727,
+        "Landsat": 0.001603385384907785
+      },
+      "ap_interval": {
+        "replicates": 10000,
+        "groups": 250,
+        "confidence": 0.95,
+        "mean": 0.002300719796638911,
+        "lower": 6.754559041548566e-05,
+        "upper": 0.004982748960746777
+      },
+      "passed": true
+    }
+  ],
+  "selected": {
+    "anchored_strength": 0.5,
+    "anchored_multiplier": 1.0,
+    "evaluation": {
+      "versus_current": {
+        "metrics": {
+          "tp": 1466.0,
+          "tn": 15065.0,
+          "fp": 1156.0,
+          "fn": 58.0,
+          "recall": 0.9619422572178478,
+          "specificity": 0.9287343566981074,
+          "false_positive_rate": 0.07126564330189261,
+          "precision": 0.559115179252479,
+          "negative_predictive_value": 0.9961647821199497,
+          "accuracy": 0.9315863623555931,
+          "auroc": 0.9860136830501144,
+          "average_precision": 0.906305623226432,
+          "operating_point": {
+            "target_fpr": 0.0713,
+            "threshold": 0.16728139929966007,
+            "recall": 0.9619422572178478,
+            "false_positive_rate": 0.07126564330189261,
+            "precision": 0.559115179252479
+          },
+          "sensor_average_precision": {
+            "Sentinel-2": 0.8746158948461407,
+            "Landsat": 0.9763141293351757
+          }
+        },
+        "delta": {
+          "average_precision": 0.0022297810008752306,
+          "recall_at_fpr_0_0713": 0.0,
+          "sensor_average_precision": {
+            "Sentinel-2": 0.002246228409993112,
+            "Landsat": 0.0013960279876700232
+          }
+        },
+        "checks": {
+          "ap_higher": true,
+          "recall_at_fpr_0_0713_higher": false,
+          "no_material_sensor_ap_regression": true
+        },
+        "rank": [
+          0.0,
+          0.0022297810008752306,
+          0.0022297810008752306
+        ]
+      },
+      "versus_primary": {
+        "metrics": {
+          "tp": 1466.0,
+          "tn": 15065.0,
+          "fp": 1156.0,
+          "fn": 58.0,
+          "recall": 0.9619422572178478,
+          "specificity": 0.9287343566981074,
+          "false_positive_rate": 0.07126564330189261,
+          "precision": 0.559115179252479,
+          "negative_predictive_value": 0.9961647821199497,
+          "accuracy": 0.9315863623555931,
+          "auroc": 0.9860136830501144,
+          "average_precision": 0.906305623226432,
+          "operating_point": {
+            "target_fpr": 0.0713,
+            "threshold": 0.16728139929966007,
+            "recall": 0.9619422572178478,
+            "false_positive_rate": 0.07126564330189261,
+            "precision": 0.559115179252479
+          },
+          "sensor_average_precision": {
+            "Sentinel-2": 0.8746158948461407,
+            "Landsat": 0.9763141293351757
+          }
+        },
+        "delta": {
+          "average_precision": 0.03102122856628209,
+          "recall_at_fpr_0_0713": 0.009842519685039353,
+          "sensor_average_precision": {
+            "Sentinel-2": 0.03490939307269614,
+            "Landsat": 0.013936214058116292
+          }
+        },
+        "checks": {
+          "ap_higher": true,
+          "recall_at_fpr_0_0713_higher": true,
+          "no_material_sensor_ap_regression": true
+        },
+        "rank": [
+          0.009842519685039353,
+          0.04086374825132144,
+          0.03102122856628209
+        ]
+      },
+      "per_fold": {
+        "3": {
+          "versus_current": {
+            "metrics": {
+              "tp": 737.0,
+              "tn": 7468.0,
+              "fp": 573.0,
+              "fn": 21.0,
+              "recall": 0.9722955145118733,
+              "specificity": 0.9287402064419849,
+              "false_positive_rate": 0.07125979355801518,
+              "precision": 0.5625954198473282,
+              "negative_predictive_value": 0.9971958873013753,
+              "accuracy": 0.9324923286737129,
+              "auroc": 0.9906411369961139,
+              "average_precision": 0.9314593631251596,
+              "operating_point": {
+                "target_fpr": 0.0713,
+                "threshold": 0.09085834226827576,
+                "recall": 0.9722955145118733,
+                "false_positive_rate": 0.07125979355801518,
+                "precision": 0.5625954198473282
+              },
+              "sensor_average_precision": {
+                "Sentinel-2": 0.911884577426232,
+                "Landsat": 0.9756165870557588
+              }
+            },
+            "delta": {
+              "average_precision": 0.001142703624706809,
+              "recall_at_fpr_0_0713": 0.0,
+              "sensor_average_precision": {
+                "Sentinel-2": 0.0005450508954645272,
+                "Landsat": 0.0009660470615545647
+              }
+            },
+            "checks": {
+              "ap_higher": true,
+              "recall_at_fpr_0_0713_higher": false,
+              "no_material_sensor_ap_regression": true
+            },
+            "rank": [
+              0.0,
+              0.001142703624706809,
+              0.001142703624706809
+            ]
+          },
+          "versus_primary": {
+            "metrics": {
+              "tp": 737.0,
+              "tn": 7468.0,
+              "fp": 573.0,
+              "fn": 21.0,
+              "recall": 0.9722955145118733,
+              "specificity": 0.9287402064419849,
+              "false_positive_rate": 0.07125979355801518,
+              "precision": 0.5625954198473282,
+              "negative_predictive_value": 0.9971958873013753,
+              "accuracy": 0.9324923286737129,
+              "auroc": 0.9906411369961139,
+              "average_precision": 0.9314593631251596,
+              "operating_point": {
+                "target_fpr": 0.0713,
+                "threshold": 0.09085834226827576,
+                "recall": 0.9722955145118733,
+                "false_positive_rate": 0.07125979355801518,
+                "precision": 0.5625954198473282
+              },
+              "sensor_average_precision": {
+                "Sentinel-2": 0.911884577426232,
+                "Landsat": 0.9756165870557588
+              }
+            },
+            "delta": {
+              "average_precision": 0.034286225663536674,
+              "recall_at_fpr_0_0713": 0.01187335092348285,
+              "sensor_average_precision": {
+                "Sentinel-2": 0.040144918984607814,
+                "Landsat": 0.017610797244435483
+              }
+            },
+            "checks": {
+              "ap_higher": true,
+              "recall_at_fpr_0_0713_higher": true,
+              "no_material_sensor_ap_regression": true
+            },
+            "rank": [
+              0.01187335092348285,
+              0.046159576587019524,
+              0.034286225663536674
+            ]
+          }
+        },
+        "4": {
+          "versus_current": {
+            "metrics": {
+              "tp": 726.0,
+              "tn": 7597.0,
+              "fp": 583.0,
+              "fn": 40.0,
+              "recall": 0.9477806788511749,
+              "specificity": 0.9287286063569682,
+              "false_positive_rate": 0.07127139364303178,
+              "precision": 0.5546218487394958,
+              "negative_predictive_value": 0.9947623412334686,
+              "accuracy": 0.9303599374021909,
+              "auroc": 0.9819334235574253,
+              "average_precision": 0.8926972567105544,
+              "operating_point": {
+                "target_fpr": 0.0713,
+                "threshold": 0.25759994983673096,
+                "recall": 0.9477806788511749,
+                "false_positive_rate": 0.07127139364303178,
+                "precision": 0.5546218487394958
+              },
+              "sensor_average_precision": {
+                "Sentinel-2": 0.8562715453624737,
+                "Landsat": 0.9740705089200311
+              }
+            },
+            "delta": {
+              "average_precision": 0.0016817175129852924,
+              "recall_at_fpr_0_0713": 0.0,
+              "sensor_average_precision": {
+                "Sentinel-2": 0.001579390504561573,
+                "Landsat": 0.0014604311183332719
+              }
+            },
+            "checks": {
+              "ap_higher": true,
+              "recall_at_fpr_0_0713_higher": false,
+              "no_material_sensor_ap_regression": true
+            },
+            "rank": [
+              0.0,
+              0.0016817175129852924,
+              0.0016817175129852924
+            ]
+          },
+          "versus_primary": {
+            "metrics": {
+              "tp": 726.0,
+              "tn": 7597.0,
+              "fp": 583.0,
+              "fn": 40.0,
+              "recall": 0.9477806788511749,
+              "specificity": 0.9287286063569682,
+              "false_positive_rate": 0.07127139364303178,
+              "precision": 0.5546218487394958,
+              "negative_predictive_value": 0.9947623412334686,
+              "accuracy": 0.9303599374021909,
+              "auroc": 0.9819334235574253,
+              "average_precision": 0.8926972567105544,
+              "operating_point": {
+                "target_fpr": 0.0713,
+                "threshold": 0.25759994983673096,
+                "recall": 0.9477806788511749,
+                "false_positive_rate": 0.07127139364303178,
+                "precision": 0.5546218487394958
+              },
+              "sensor_average_precision": {
+                "Sentinel-2": 0.8562715453624737,
+                "Landsat": 0.9740705089200311
+              }
+            },
+            "delta": {
+              "average_precision": 0.03323544895704822,
+              "recall_at_fpr_0_0713": 0.010443864229764954,
+              "sensor_average_precision": {
+                "Sentinel-2": 0.03993068777726061,
+                "Landsat": 0.01183940765841851
+              }
+            },
+            "checks": {
+              "ap_higher": true,
+              "recall_at_fpr_0_0713_higher": true,
+              "no_material_sensor_ap_regression": true
+            },
+            "rank": [
+              0.010443864229764954,
+              0.04367931318681317,
+              0.03323544895704822
+            ]
+          }
+        }
+      },
+      "operating_counts_preserved": true
+    },
+    "paired_site_ap_delta": {
+      "replicates": 10000,
+      "groups": 250,
+      "confidence": 0.95,
+      "mean": 0.002171780700358466,
+      "lower": 0.0006782001973730523,
+      "upper": 0.0041505299030538175
+    },
+    "passed": true
+  },
+  "all_promotion_gates_pass": true,
+  "decision": "Freeze the selected ensemble for a new fold-2 confirmation; folds 0/1 and official test remain closed."
+}
