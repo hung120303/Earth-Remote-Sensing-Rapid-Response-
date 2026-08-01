@@ -424,3 +424,44 @@ mean and robust site histories can improve or preserve spatial context, but neit
 large, site-general anomaly ordering needed for the official test-only AP/recall confidence gates.
 Compact evidence: `reports/experiments/mars_robust_site_template_ranker.json` (SHA-256
 `16a3928c9ea7dcc3f25e2ba3c62fededc231655e0436c3d35d6eb2e4006e8a88`).
+
+## 2026-08-01: current UNEP catalog refresh
+
+The official UNEP/IMEO detected-plume CSV and GeoJSON archives were downloaded again and audited
+with the already frozen exact-product and 25 km paper-test exclusion rules. The 27,403-row catalog
+contains 269 eligible positives from 43 physical groups: 178 Sentinel-2 and 91 Landsat. The closest
+eligible location remains 25.631477 km from an official paper-test location.
+
+Relative to the July audit, eligible rows increase from 237 to 269, but the frozen role split shows
+that 31 of the 32 additions are development rows. Auxiliary training changes only from 215 to 216;
+the sealed role remains 13. Roles were not reassigned after seeing the counts, no imagery was added
+to Git, and the new development rows remain reserved for a future independently frozen
+confirmation. Compact provenance and archive hashes are recorded in
+`reports/acquisition/unep_mars_post2024_refresh_20260801.json`.
+
+## 2026-08-01: weight-anchored released-U-Net fine-tune rejected
+
+The next external-transfer experiment tested a mechanism not covered by the two frozen-teacher
+NDMI adapters: direct movement of all 13,579,393 released-U-Net convolutional parameters. An
+immutable released teacher supplied exact baseline logits; the student began at the identical
+checkpoint, retained all released BatchNorm affine values and running state, used discriminative
+1e-5/5e-5 learning rates, and incurred normalized L2-SP plus logit-direction penalties. Every
+endpoint mixed 75% opposite-fold MARS requests with 12.5% exact-L1C UNEP positives and 12.5%
+CloudSEN negatives. BF16, three epochs, four interpolation strengths, and all gates were committed
+at `8733b8d0` before held scoring.
+
+Both cross-fit endpoints completed, covering 17,745 scenes. At the selected weakest strength 0.05,
+the candidate changed AP -0.000448, matched-FPR recall -0.001312, and pixel IoU +0.001431. The
+paired-site 95% intervals were [-0.001151, +0.000003] for AP and [+0.000223, +0.002352] for IoU.
+Fold-3 AP/recall/IoU changed +0.000063/+0.001319/+0.002506, while fold 4 changed
+-0.000554/-0.002611/+0.000629. No artifact was written.
+
+The strength curve separates the tasks. Sentinel-2-only AP improved monotonically from +0.000180
+to +0.000925, and pooled IoU improved from +0.001431 to +0.006284. Nevertheless pooled AP worsened
+monotonically to -0.004205 because modifying only Sentinel-2 absolute scores disturbed their
+calibration against unchanged Landsat scores; fold-4 recall also remained adverse. The experiment
+therefore supports direct external fine-tuning as dense localization evidence, not as the missing
+complementary scene-ranking solution. Any reuse must preserve cross-sensor score calibration and
+pair the dense branch with stronger site-general scene evidence. Compact result:
+`reports/experiments/mars_anchored_full_finetune_pilot.json` (SHA-256
+`1d870c08e27111859e03d10c0479bf15297e19203c4837f687027dd4b7f0cba1`).

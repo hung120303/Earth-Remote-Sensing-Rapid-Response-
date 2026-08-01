@@ -5283,3 +5283,37 @@ not a more robust temporal background statistic; the next architecture must
 learn a stronger product-matched representation or add genuinely independent,
 contemporaneous positive supervision. Result SHA-256 is
 `16a3928c9ea7dcc3f25e2ba3c62fededc231655e0436c3d35d6eb2e4006e8a88`.
+
+### 2026-08-01: official UNEP refresh adds development, not training mass
+
+Fresh official UNEP/IMEO CSV and GeoJSON archives contain 27,403 plume rows and
+yield 269 exact-product, paper-test-disjoint positives under the already frozen
+audit. This is 32 more eligible rows than July, but role preservation assigns
+31 additions to development and only one to auxiliary training (216 now versus
+215). The sealed cohort remains 13 and the minimum official-test distance is
+25.631477 km. No roles were revised and no bulk archive was committed. Receipt:
+`reports/acquisition/unep_mars_post2024_refresh_20260801.json`.
+
+### 2026-08-01: anchored full released-U-Net transfer rejected
+
+A new 13.58M-parameter candidate directly fine-tuned every released-U-Net
+convolution while freezing all released BatchNorm state and retaining an
+immutable released teacher. The student began at exact logit identity and used
+BF16, discriminative 1e-5/5e-5 learning rates, normalized L2-SP anchoring,
+three fixed epochs, and the same 75/12.5/12.5 MARS/UNEP/CloudSEN request mass.
+Its protocol and four strengths were frozen at `8733b8d0` before held scoring.
+
+At selected strength 0.05, AP changes -0.000448, matched-FPR recall -0.001312,
+and IoU +0.001431. Paired-site 95% intervals are
+[-0.001151,+0.000003] for AP and [+0.000223,+0.002352] for IoU. Fold 3 changes
++0.000063 AP, +0.001319 recall, and +0.002506 IoU; fold 4 changes -0.000554,
+-0.002611, and +0.000629 respectively. All stronger strengths worsen pooled AP,
+reaching -0.004205, while IoU rises to +0.006284.
+
+Within Sentinel-2, AP actually improves monotonically from +0.000180 to
++0.000925; Landsat is exact scene-score identity. The pooled reversal therefore
+identifies cross-sensor calibration damage from moving only Sentinel-2 absolute
+scores. Full-model external transfer is useful dense evidence but not a
+standalone scene-ranker solution. No artifact is written and all unopened
+cohorts remain closed. Result SHA-256 is
+`1d870c08e27111859e03d10c0479bf15297e19203c4837f687027dd4b7f0cba1`.
