@@ -5173,3 +5173,24 @@ contrast architecture only on dense positive/hard-negative/Dice losses, record
 top-mask evidence AP, and extend to 100 epochs (800 cached updates). Real scene
 ranking, development folds, and the current spatial-Prithvi residual remain
 closed until dense synthetic transfer is demonstrated.
+
+### 2026-07-31: dense exposure curve rejected at fixed final checkpoint
+
+The 100-epoch dense-only BF16 curve is finite and establishes that the
+paper-aligned dense mechanism is learnable. At the frozen epoch-100 endpoint,
+train dense-evidence AP is 0.9664 and train IoU 0.2836, while index-disjoint
+validation AP is 0.7294 and IoU 0.1271. The final endpoint misses the train-IoU
+and validation-IoU gates, so both promotion booleans are false and no checkpoint
+is retained. Result SHA-256 is
+`8dd879acac0411257363dfc905bb37aab726bb892be53a8a0ba8e60ca299a6cf`.
+
+The fixed curve reveals classical small-bank overfitting rather than failure to
+learn. Epoch 50, which was a predeclared diagnostic checkpoint but not an
+eligible endpoint, has train AP/IoU 0.9134/0.3450 and disjoint validation
+AP/IoU 0.7578/0.2301; those values exceed every numerical gate. By epoch 100,
+train AP rises while validation IoU collapses. Epoch 50 is not promoted post
+hoc. Instead, the next confirmation adopts the final paper's stated
+best-validation-model rule before rerunning, uses entirely new template ranges,
+and increases both train and validation banks fourfold. Checkpoint selection is
+by highest synthetic-validation IoU with dense AP as a tie-break; all selected
+checkpoint AP/IoU gates remain mandatory. No real held outcome is involved.
