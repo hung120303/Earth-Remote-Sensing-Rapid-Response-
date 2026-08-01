@@ -5194,3 +5194,26 @@ best-validation-model rule before rerunning, uses entirely new template ranges,
 and increases both train and validation banks fourfold. Checkpoint selection is
 by highest synthetic-validation IoU with dense AP as a tie-break; all selected
 checkpoint AP/IoU gates remain mandatory. No real held outcome is involved.
+
+### 2026-07-31: new-bank dense Gaussian-ViT confirmation passes
+
+The fourfold larger confirmation uses 256 entirely new training templates and
+256 new validation templates, with no index overlap with the earlier 64-pair
+audits. All 80 BF16 epochs and nine predeclared checkpoints are finite. The
+paper-aligned selection rule chooses epoch 70 by maximum validation pixel IoU,
+with dense-evidence AP and earliest epoch as tie-breaks.
+
+Both frozen gates pass. Selected train dense-evidence AP is 0.9195 and mask IoU
+is 0.3204. On the new index-disjoint validation bank, dense-evidence AP is
+0.8092 and mask IoU is 0.2711, up from initialization IoU 0.0521. The selected
+validation pixel recall is 0.3382. Peak CUDA allocation is 4,368,115,200 bytes.
+The result independently confirms that the normalized temporal-contrast ViT
+learns a transferable Gaussian plume mask and that synthetic validation can
+identify overfitting without any real held label. Result SHA-256 is
+`20c6b05f4cec5b17b516522bb4037c9eaaa4706d6e3c28b16534b4b3483c9667`.
+
+This pass authorizes full-bank scaling only. It does not promote a real MARS
+candidate, open fold 2, or justify official-test access. The next protocol must
+use all 16,000 reserved training templates and the 2,000 reserved validation
+templates, retain BF16 and the physics-contrast front end, and prove full-bank
+dense transfer before a separately frozen fold-3/fold-4 real cross-fit.
