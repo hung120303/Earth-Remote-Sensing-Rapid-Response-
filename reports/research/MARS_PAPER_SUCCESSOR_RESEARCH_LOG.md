@@ -5236,3 +5236,50 @@ epoch, every index exactly once. Removing an unused returned contrast tensor
 reduces validation memory without changing forward values or gradients. Twelve
 focused tests pass, including pair adjacency and full epoch coverage. No bank,
 loss, model parameter, epoch count, gate, or outcome-dependent setting changes.
+
+### 2026-07-31: full-bank Gaussian contrast pretraining passes
+
+The optimized paired loader completed all 16,000 training templates (32,000
+matched positive/unchanged-negative requests per epoch) and 2,000 disjoint
+validation templates for ten BF16 epochs. Synthetic-validation mask IoU selected
+epoch 9. Its dense-evidence AP is 0.927611, mask IoU 0.261063, and pixel recall
+0.579037, clearing the frozen 0.80/0.25/0.30 gates. This establishes large-bank
+synthetic learnability, not real-scene superiority. Compact result SHA-256 is
+`689b806228abda20e433af180f25a2e722bd71a1a2c213a9fb51c0f082f162f3`.
+
+### 2026-08-01: Gaussian contrast real cross-fit rejected
+
+Both authorized endpoints completed nine full-bank pretraining epochs and three
+joint real/synthetic epochs, then scored all 17,745 fold-3/fold-4 scenes. At the
+selected 0.05 residual strength, AP changes +0.000269 with paired-site interval
+[-0.000467,+0.000797], recall changes -0.000656 at unchanged FPR, and IoU
+changes +0.001260 with interval [-0.000248,+0.002782]. Strength 0.10 preserves
+pooled recall and yields a significant +0.001806 IoU change (paired lower
++0.000251), but AP remains only +0.000326 and uncertain. Stronger fusion harms
+both tasks. No candidate passes and no artifact is written. Result SHA-256 is
+`728e9a1f69a608cf09816114ed50fc785953f6dc5937ddae370e87f990d85f55`.
+
+### 2026-08-01: robust temporal site-template ranker rejected
+
+The unseen-site architecture replaced the earlier label-free pixelwise mean with
+per-site q25, median, and q75 spatial maps. Two predeclared feature contracts fed
+either an IQR-normalized median anomaly or explicit original/median/residual maps
+to the established residual spatial CNN. Four models (two feature contracts by
+group or site-cell weighting), five current-score blends, deterministic seeds,
+and every promotion gate were committed at `37c7de00` before held scoring.
+
+The 17,745-scene, 250-site fold-3/fold-4 cross-fit rejects the family. The best
+pooled AP point change anywhere in the fixed grid is only +0.000019, accompanied
+by recall change -0.002625 and paired-site AP lower bound -0.000710. The frozen
+worst-fold-first selector chooses the group-weighted IQR-normalized model at
+blend 0.05: AP changes -0.000099, matched-FPR recall -0.001969, and its paired
+AP lower bound is -0.000787. Stronger blends monotonically worsen AP, reaching
+-0.016126. No artifact is written and fold 2, folds 0/1, external-development,
+and official-test outcomes remain unopened.
+
+Together with the earlier site-mean replay, this closes scalar and spatial
+same-site template aggregation as a sufficient solution. The missing signal is
+not a more robust temporal background statistic; the next architecture must
+learn a stronger product-matched representation or add genuinely independent,
+contemporaneous positive supervision. Result SHA-256 is
+`16a3928c9ea7dcc3f25e2ba3c62fededc231655e0436c3d35d6eb2e4006e8a88`.

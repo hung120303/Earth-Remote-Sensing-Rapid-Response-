@@ -401,3 +401,26 @@ fusion is contradicted by the observed strength curve.
 
 Compact evidence: `reports/experiments/mars_gaussian_contrast_crossfit.json` (SHA-256
 `728e9a1f69a608cf09816114ed50fc785953f6dc5937ddae370e87f990d85f55`).
+
+## 2026-08-01: robust temporal site templates rejected
+
+The next unseen-site hypothesis replaced the earlier label-free pixelwise site mean with per-site
+q25, median, and q75 maps. Two fixed feature contracts used either an IQR-normalized median anomaly
+or explicit original/median/residual maps, followed by the established compact spatial CNN. Four
+cross-fitted rankers and five small blends were frozen at commit `37c7de00` before fold-3/fold-4
+outcomes were computed. The experiment covered 17,745 scenes and 250 physical sites; the median site
+history contained 13 observations (range 1-714).
+
+No candidate supplied complementary ranking. The largest pooled AP change anywhere in the fixed
+grid was only +0.000019, but its matched-FPR recall changed -0.002625 and its paired-site AP interval
+lower bound was -0.000710. The preregistered worst-fold-first selector chose the group-weighted
+IQR-normalized model at blend 0.05; it changed AP -0.000099, recall -0.001969, and had paired-site AP
+interval lower bound -0.000787. Increasing blend strength worsened AP monotonically, reaching
+-0.016126 in the strongest site-cell median candidate. No artifact was written; fold 2, folds 0/1,
+external-development outcomes, and official-test outcomes were not accessed.
+
+This result retires robust same-site median/IQR templating as an isolated scene-ranking lever. Both
+mean and robust site histories can improve or preserve spatial context, but neither produces the
+large, site-general anomaly ordering needed for the official test-only AP/recall confidence gates.
+Compact evidence: `reports/experiments/mars_robust_site_template_ranker.json` (SHA-256
+`16a3928c9ea7dcc3f25e2ba3c62fededc231655e0436c3d35d6eb2e4006e8a88`).
