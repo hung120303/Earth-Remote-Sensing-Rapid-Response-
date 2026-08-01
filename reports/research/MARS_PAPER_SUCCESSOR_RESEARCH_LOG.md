@@ -4818,3 +4818,39 @@ Primary literature: [Xu et al., *IEEE TGRS*
 2023](https://openaccess.thecvf.com/content/CVPR2023/html/Kumar_MethaneMapper_Spectral_Absorption_Aware_Hyperspectral_Transformer_for_Methane_Detection_CVPR_2023_paper.html);
 [Quintero et al., *Methane-Plume Segmentation From Hyperspectral Satellite
 Imagery Via Multimodal Deep Learning*](https://arxiv.org/abs/2606.26416).
+
+### 2026-07-31: NDMI bi-temporal context-scene pilot rejected, dense path retained
+
+The fixed fold-3/fold-4 cross-fit trained two 4.61M-parameter endpoints on
+MARS plus the source-disjoint auxiliary cohorts. Each training request stream
+used exactly 75% MARS, 12.5% UNEP positives, and 12.5% CloudSEN12+ negatives,
+with balanced labels and physical sites. The held external development cohorts,
+fold 2, and official test stayed closed. Both endpoints were finite and all
+scene, partial-AUC, patch, and dense losses decreased through the fixed third
+epoch.
+
+At the selected strength 0.10, the candidate improves pooled AP +0.000756,
+matched-FPR recall +0.000656, and IoU +0.002426. Both held folds improve AP
+(+0.001328/+0.001037), recall (+0.001319/+0.001305), and IoU
+(+0.003352/+0.001738); Sentinel-2 AP improves +0.000923 and Landsat remains an
+exact scene-score identity. Mask transport is statistically positive, with a
+paired-site IoU interval of [+0.000465,+0.003671]. Scene evidence is not:
+paired-site AP spans [-0.000725,+0.003139], and the point gain is below the
+predeclared +0.002 minimum. Strength 0.25 raises recall +0.002625 and IoU
++0.005075, but AP is only +0.000534 with a wider interval; strength 0.50 lowers
+AP. The architecture is therefore rejected and writes no artifact. Result
+SHA-256 is `0c8bebeace840acbb0a27450919d47e852cb3166ea171d9344701e2ba90d3177`.
+
+The result separates two hypotheses. Explicit NDMI/change fusion consistently
+helps the dense mask, whereas the global attentive/mean/max context head adds
+only weak scene ranking and may exploit source/background context. This agrees
+with N-BPMSNet's ablation discussion: cross-channel fusion mainly improves
+pixel metrics and can slightly reduce scene F1/recall, while NDMI-guided change
+localization carries the strongest dense benefit. N-BPMSNet uses BCE plus
+Lovasz-hinge (weight 0.75), 500 epochs, and best-validation-IoU selection on its
+own 160x160 Sentinel-2 benchmark; those training numbers are documented as a
+future dense-loss ablation, not imported post hoc into this failed protocol.
+The next bounded hypothesis removes the global context classifier and makes
+scene evidence a deterministic top-patch MIL aggregation of directly
+mask-supervised patch logits. It must use new seeds and the same closed-data
+boundary.
