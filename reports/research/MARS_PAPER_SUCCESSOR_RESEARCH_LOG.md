@@ -5375,3 +5375,29 @@ The protocol is frozen at
 `configs/mars_protected_bisensor_expanded_unep_protocol.json`; UNEP/CloudSEN
 development rows, MARS fold 2, folds 0/1, and all official-test inputs remain
 closed.
+
+### 2026-08-01: expanded-real-data protected transfer rejected
+
+The controlled 160-row UNEP repeat completed both endpoints and all 17,745
+fold-3/fold-4 scores from frozen commit `ee5ca224`. It moves every candidate in
+the expected positive direction but does not create a promotion-scale effect.
+The selector again chooses strength 0.50: AP changes +0.000941, matched-FPR
+recall and FPR are exact identities, and IoU changes +0.006395. Paired-site
+intervals are [-0.000034,+0.002236] for AP and
+[-0.002502,+0.013529] for IoU. Fold-3/fold-4 AP changes
++0.000773/+0.000577; IoU changes +0.014878/+0.000093.
+
+The conservative strength 0.10 remains the statistically stable point: AP
++0.000257 with lower bound +0.000026 and IoU +0.002631 with lower bound
++0.000369. Relative to the 135-row run, those changes were +0.000237 and
++0.002698, so the new real scenes slightly improve ranking but do not enlarge
+the effect materially. Strength 1.0 reaches AP +0.001301 yet remains uncertain
+and nearly eliminates the dense gain. No candidate reaches the fixed +0.002 AP
+floor; no artifact is written. Result SHA-256 is
+`3e70513986192dda3b7aadc8feed6a5b12ce6e11eaaf2691e9deb7859efc96c`.
+
+This controlled null result is still useful: additional temporal positives in
+the same representation do not solve the site-general ranking gap. The stable
+protected signal should next be combined with an independently learned
+foundation representation while decoupling scene strength from the already
+positive strength-0.10 dense interpolation.

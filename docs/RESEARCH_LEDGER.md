@@ -448,6 +448,17 @@ pending USGS EROS authentication, with no product substitution. No imagery was a
 Compact provenance and archive hashes are recorded in
 `reports/acquisition/unep_mars_post2024_refresh_20260801.json`.
 
+## 2026-08-01: expanded UNEP controlled transfer
+
+The 160-row UNEP manifest was substituted into the previously frozen protected bi-sensor
+fine-tune with every model, fold, seed, training, sampling, fusion, bootstrap, and gate setting
+unchanged. On all 17,745 fold-3/fold-4 rows, selected strength 0.50 changes AP +0.000941,
+matched-FPR recall/FPR exactly zero, and IoU +0.006395. Paired-site intervals cross zero for AP
+[-0.000034,+0.002236] and IoU [-0.002502,+0.013529]. The conservative strength 0.10 has positive
+AP and IoU lower bounds but only +0.000257 AP, well below the fixed +0.002 floor. The branch is
+rejected with no artifact. Compact result SHA-256:
+`3e70513986192dda3b7aadc8feed6a5b12ce6e11eaaf2691e9deb7859efc96c`.
+
 ## 2026-08-01: weight-anchored released-U-Net fine-tune rejected
 
 The next external-transfer experiment tested a mechanism not covered by the two frozen-teacher
