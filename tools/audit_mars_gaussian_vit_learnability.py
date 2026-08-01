@@ -25,6 +25,7 @@ for path in (MODEL_ROOT, ROOT / "tools"):
         sys.path.insert(0, str(path))
 
 from acquire_mars_metadata import sha256  # noqa: E402
+from mars_gaussian_contrast_vit import GaussianContrastViTUNet  # noqa: E402
 from mars_gaussian_vit import GaussianPretrainedViTUNet  # noqa: E402
 from train_mars_dinov3_methane_fusion_pilot import partial_auc_pair_loss  # noqa: E402
 from train_mars_gaussian_vit_pilot import GaussianSyntheticSceneDataset  # noqa: E402
@@ -62,6 +63,10 @@ def verify_protocol(protocol_path: Path, protocol: dict[str, Any]) -> dict[str, 
         raise ValueError("Learnability audit must be frozen before outcomes")
     if sha256(Path(__file__).resolve()) != protocol["trainer_sha256"]:
         raise ValueError("Frozen learnability trainer hash mismatch")
+    for dependency in protocol.get("code_dependencies", []):
+        path = (ROOT / dependency["path"]).resolve()
+        if not path.is_file() or sha256(path) != dependency["sha256"]:
+            raise ValueError(f"Code dependency hash mismatch: {dependency['path']}")
     paths: dict[str, Path] = {}
     for name, contract in protocol["inputs"].items():
         path = (ROOT / contract["path"]).resolve()
@@ -82,10 +87,11 @@ def finite_batch(batch: dict[str, Any], *, phase: str) -> None:
 
 @torch.no_grad()
 def evaluate(
-    model: GaussianPretrainedViTUNet,
+    model: torch.nn.Module,
     dataset: Dataset[dict[str, Any]],
     batch_size: int,
     device: torch.device,
+    autocast_dtype: torch.dtype,
 ) -> dict[str, float]:
     model.eval()
     labels: list[float] = []
@@ -98,7 +104,7 @@ def evaluate(
     for batch in DataLoader(dataset, batch_size=batch_size, shuffle=False, num_workers=0):
         finite_batch(batch, phase="evaluation_input")
         batch = move_batch(batch, device)
-        with torch.amp.autocast("cuda", dtype=torch.float16):
+        with torch.amp.autocast("cuda", dtype=autocast_dtype):
             output = model(batch["inputs"], batch["observable"], batch["sensor_index"])
         finite_batch(output, phase="evaluation_output")
         probability = torch.sigmoid(output["segmentation_logits"].float())
@@ -145,7 +151,7 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
     initial = report["checkpoints"][0]
     final = report["checkpoints"][-1]
     lines = [
-        "# Gaussian-ViT synthetic learnability audit",
+        f"# {report['title']}",
         "",
         f"- Memorization gate: **{report['gates']['memorization']}**",
         f"- Disjoint-validation gate: **{report['gates']['validation_transfer']}**",
@@ -208,14 +214,26 @@ def main() -> int:
     if device.type != "cuda":
         raise RuntimeError("Gaussian-ViT learnability audit requires CUDA")
     torch.cuda.reset_peak_memory_stats()
-    model = GaussianPretrainedViTUNet(**protocol["model"]).to(device)
+    model_classes = {
+        "raw_16_channel": GaussianPretrainedViTUNet,
+        "physics_contrast": GaussianContrastViTUNet,
+    }
+    architecture_family = protocol.get("architecture_family", "raw_16_channel")
+    if architecture_family not in model_classes:
+        raise ValueError(f"Unknown architecture family: {architecture_family}")
+    model = model_classes[architecture_family](**protocol["model"]).to(device)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=float(spec["learning_rate"]), weight_decay=float(spec["weight_decay"])
     )
+    precision = str(spec.get("precision", "fp16"))
+    if precision not in {"fp16", "bf16"}:
+        raise ValueError(f"Unsupported precision: {precision}")
+    autocast_dtype = torch.float16 if precision == "fp16" else torch.bfloat16
     scaler = torch.amp.GradScaler(
         "cuda",
-        init_scale=float(spec["amp_initial_scale"]),
-        growth_interval=int(spec["amp_growth_interval"]),
+        enabled=precision == "fp16",
+        init_scale=float(spec.get("amp_initial_scale", 1.0)),
+        growth_interval=int(spec.get("amp_growth_interval", 1000)),
     )
     generator = torch.Generator().manual_seed(int(spec["loader_seed"]))
     loader = DataLoader(
@@ -228,8 +246,8 @@ def main() -> int:
         checkpoints.append({
             "epoch": epoch,
             "history": history,
-            "train": evaluate(model, train_bank, int(spec["evaluation_batch_size"]), device),
-            "validation": evaluate(model, validation_bank, int(spec["evaluation_batch_size"]), device),
+            "train": evaluate(model, train_bank, int(spec["evaluation_batch_size"]), device, autocast_dtype),
+            "validation": evaluate(model, validation_bank, int(spec["evaluation_batch_size"]), device, autocast_dtype),
         })
         print(json.dumps({"progress": "checkpoint", "epoch": epoch, "train_ap": checkpoints[-1]["train"]["scene_average_precision"], "validation_ap": checkpoints[-1]["validation"]["scene_average_precision"]}), flush=True)
 
@@ -244,7 +262,7 @@ def main() -> int:
             finite_batch(batch, phase=f"train_epoch_{epoch}_input")
             batch = move_batch(batch, device)
             optimizer.zero_grad(set_to_none=True)
-            with torch.amp.autocast("cuda", dtype=torch.float16):
+            with torch.amp.autocast("cuda", dtype=autocast_dtype):
                 output = model(batch["inputs"], batch["observable"], batch["sensor_index"])
                 finite_batch(output, phase=f"train_epoch_{epoch}_output")
                 base, _ = segmentation_first_loss(
@@ -304,6 +322,9 @@ def main() -> int:
         "status": "completed",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "scope": protocol["scope"],
+        "title": protocol.get("title", "Gaussian-ViT synthetic learnability audit"),
+        "architecture_family": architecture_family,
+        "precision": precision,
         "protocol": protocol_path.relative_to(ROOT).as_posix(),
         "protocol_sha256": sha256(protocol_path),
         "git_commit": subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.strip(),
