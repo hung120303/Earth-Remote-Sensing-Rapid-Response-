@@ -154,10 +154,11 @@ def atomic_json(path: Path, value: dict[str, Any]) -> None:
 
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
     initial = report["checkpoints"][0]
-    final = report["checkpoints"][-1]
+    final = report.get("selected_checkpoint", report["checkpoints"][-1])
     lines = [
         f"# {report['title']}",
         "",
+        f"- Selected epoch: **{final['epoch']}**",
         f"- Memorization gate: **{report['gates']['memorization']}**",
         f"- Disjoint-validation gate: **{report['gates']['validation_transfer']}**",
         f"- Train scene AP: **{initial['train']['scene_average_precision']:.4f} -> {final['train']['scene_average_precision']:.4f}**",
@@ -305,7 +306,21 @@ def main() -> int:
         if epoch in checkpoint_epochs:
             snapshot(epoch, history)
 
-    initial, final = checkpoints[0], checkpoints[-1]
+    initial = checkpoints[0]
+    selection_rule = protocol.get("selection_rule", "fixed_final_epoch")
+    if selection_rule == "fixed_final_epoch":
+        final = checkpoints[-1]
+    elif selection_rule == "max_validation_pixel_iou_then_dense_ap_then_earliest":
+        final = max(
+            checkpoints[1:],
+            key=lambda row: (
+                row["validation"]["pixel_iou_at_0_5"],
+                row["validation"]["dense_top1pct_average_precision"],
+                -int(row["epoch"]),
+            ),
+        )
+    else:
+        raise ValueError(f"Unknown selection rule: {selection_rule}")
     thresholds = protocol["gates"]
     gate_mode = protocol.get("gate_mode", "scene_and_dense")
     if gate_mode == "dense_only":
@@ -356,6 +371,7 @@ def main() -> int:
         "precision": precision,
         "gate_mode": gate_mode,
         "training_objective": protocol.get("training_objective", "joint_dense_scene"),
+        "selection_rule": selection_rule,
         "protocol": protocol_path.relative_to(ROOT).as_posix(),
         "protocol_sha256": sha256(protocol_path),
         "git_commit": subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.strip(),
@@ -363,6 +379,7 @@ def main() -> int:
         "peak_cuda_bytes": int(torch.cuda.max_memory_allocated()),
         "eligible_backgrounds": len(negatives),
         "checkpoints": checkpoints,
+        "selected_checkpoint": final,
         "gates": gates,
         "decision": decision,
         "artifact": None,
