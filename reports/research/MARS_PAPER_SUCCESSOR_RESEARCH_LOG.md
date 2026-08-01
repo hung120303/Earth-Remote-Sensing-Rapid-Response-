@@ -5107,3 +5107,12 @@ and improve on an index-disjoint synthetic validation bank, then estimate the
 exposure curve before committing to a paper-scale pretraining run. Result
 SHA-256 is
 `cba9a42cf1c5b10bf8969cbf7f56cf3785cc6f9864947f7f05a6d1dfa8834ff0`.
+
+The first synthetic-only audit launch stopped before its first optimizer update
+and before writing any outcome report. All cached inputs, forward outputs, and
+the scalar loss were finite, but the default FP16 GradScaler initial scale of
+65,536 overflowed the first backward pass. The audit now freezes an initial
+scale of 1,024 with a 1,000-step growth interval and retains its strict
+non-finite loss and gradient assertions. This is a numerical-stability repair;
+the bank, model, optimizer, epochs, checkpoints, and learnability gates are
+unchanged and were not scored by the aborted launch.

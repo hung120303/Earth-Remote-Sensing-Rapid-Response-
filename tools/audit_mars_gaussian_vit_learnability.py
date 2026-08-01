@@ -212,7 +212,11 @@ def main() -> int:
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=float(spec["learning_rate"]), weight_decay=float(spec["weight_decay"])
     )
-    scaler = torch.amp.GradScaler("cuda")
+    scaler = torch.amp.GradScaler(
+        "cuda",
+        init_scale=float(spec["amp_initial_scale"]),
+        growth_interval=int(spec["amp_growth_interval"]),
+    )
     generator = torch.Generator().manual_seed(int(spec["loader_seed"]))
     loader = DataLoader(
         train_bank, batch_size=int(spec["batch_size"]), shuffle=True,
@@ -269,6 +273,7 @@ def main() -> int:
             batches += 1
         history = {
             "seconds": time.perf_counter() - started,
+            "amp_scale": float(scaler.get_scale()),
             **{key: value / max(batches, 1) for key, value in sums.items()},
         }
         print(json.dumps({"progress": "epoch", "epoch": epoch, **history}), flush=True)

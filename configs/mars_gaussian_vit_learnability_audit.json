@@ -2,7 +2,7 @@
   "schema_version": 1,
   "status": "frozen_before_outcomes",
   "scope": "synthetic-only memorization and index-disjoint transfer audit for the exact Gaussian-pretrained mixed-sensor ViT-U-Net",
-  "trainer_sha256": "12f610b728cea0a31d7ac84a02ad636be4a3ea6402b6a342651018fc210c2afb",
+  "trainer_sha256": "4748b5c30ffd713e519cf2b691d122c9ce7f8a951d1d132021d6fe8147fcc9b2",
   "authorized_folds": [3, 4],
   "inputs": {
     "metadata_root": {
@@ -47,6 +47,8 @@
     "checkpoint_epochs": [1, 2, 5, 10, 20],
     "batch_size": 16,
     "evaluation_batch_size": 16,
+    "amp_initial_scale": 1024.0,
+    "amp_growth_interval": 1000,
     "learning_rate": 0.0002,
     "weight_decay": 0.02,
     "gradient_clip": 2.0,
