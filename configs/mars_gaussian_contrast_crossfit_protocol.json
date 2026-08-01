@@ -10,7 +10,7 @@
   "code_dependencies": [
     {
       "path": "EarthRemoteSensingRapidResponse/mars_gaussian_contrast_vit.py",
-      "sha256": "bd697769d181ddc4f4ca3002963a8ecce2d19da6a0840535d651f376eda0452d"
+      "sha256": "92ca3507b88f7196e3c49d84ccc2e889ca9433caecd5ac8ab159eb79efb8a268"
     },
     {
       "path": "EarthRemoteSensingRapidResponse/mars_gaussian_plume.py",
@@ -190,6 +190,14 @@
     "device": "NVIDIA GeForce RTX 5070",
     "finite": true
   },
+  "preheld_numerical_repair": {
+    "trigger": "the first joint-training batch after endpoint-1 pretraining produced a non-finite scene logit for a fully unobservable crop",
+    "outcome_exposure": "none; failure occurred before any held-fold inference or candidate metric",
+    "repair": "mask invalid top-evidence pixels with negative infinity, replace non-finite top-k entries by zero, and divide by the number of valid selected entries clamped to at least one",
+    "scope": "numerical definition for zero/low-observability inputs only; architecture, data, seeds, epoch counts, strengths, gates, and selection rule unchanged",
+    "regression_test": "tests/test_mars_gaussian_contrast_vit.py::test_contrast_vit_scene_head_is_finite_without_observable_pixels",
+    "regression_test_status": "passed"
+  },
   "outputs": {
     "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_gaussian_contrast_crossfit.pt",
     "json": "reports/experiments/mars_gaussian_contrast_crossfit.json",
@@ -199,6 +207,7 @@
     "The architecture and nine-epoch synthetic schedule were selected without real held-fold or official-test outcomes.",
     "Each endpoint sees only the opposite authorized development fold and synthetic backgrounds drawn only from that fit fold.",
     "Fold 3 and fold 4 predictions are emitted only after this protocol, code, strengths, seeds, and gates are frozen and committed.",
+    "A pre-held numerical failure was repaired and refrozen before any held prediction; the exact repair and test are recorded in this protocol.",
     "Fold 2 is reserved for a new-seed confirmation only if every cross-fit promotion gate passes.",
     "Folds 0/1, external development outcomes, and the official 2024 test are unavailable for selection.",
     "Failure writes no model artifact.",

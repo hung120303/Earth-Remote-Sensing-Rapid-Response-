@@ -146,10 +146,15 @@ class GaussianContrastViTUNet(nn.Module):
     def _top_fraction(values: torch.Tensor, observable: torch.Tensor, fraction: float = 0.01) -> torch.Tensor:
         flattened = values.flatten(1)
         valid = observable.flatten(1) > 0.5
-        flattened = flattened.masked_fill(~valid, torch.finfo(flattened.dtype).min)
+        flattened = flattened.masked_fill(~valid, float("-inf"))
         count = max(1, int(math.ceil(flattened.shape[1] * fraction)))
         selected = torch.topk(flattened, k=count, dim=1).values
-        return torch.where(torch.isfinite(selected), selected, torch.zeros_like(selected)).mean(dim=1)
+        selected_valid = torch.isfinite(selected)
+        selected_sum = torch.where(
+            selected_valid, selected, torch.zeros_like(selected)
+        ).sum(dim=1)
+        selected_count = selected_valid.sum(dim=1).clamp_min(1)
+        return selected_sum / selected_count
 
     def forward(
         self,

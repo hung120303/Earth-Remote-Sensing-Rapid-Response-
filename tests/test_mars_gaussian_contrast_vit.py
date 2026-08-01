@@ -54,6 +54,19 @@ def test_contrast_vit_preserves_training_and_native_shapes() -> None:
         assert torch.isfinite(output["scene_logit"]).all()
 
 
+def test_contrast_vit_scene_head_is_finite_without_observable_pixels() -> None:
+    model = GaussianContrastViTUNet(
+        dimension=64, depth=2, heads=4, reference_grid=10
+    )
+    inputs = torch.rand(2, 16, 160, 160)
+    inputs[:, 13:15] = 0.0
+    inputs[:, 15] = 1.0
+    observable = torch.zeros(2, 1, 160, 160)
+    output = model(inputs, observable, torch.tensor([0, 1]))
+    assert torch.equal(output["top_evidence"], torch.zeros(2))
+    assert torch.isfinite(output["scene_logit"]).all()
+
+
 def test_pair_shuffle_keeps_twins_adjacent_and_covers_epoch() -> None:
     sampler = PairShuffleSampler(template_count=17, seed=42)
     first = list(sampler)
