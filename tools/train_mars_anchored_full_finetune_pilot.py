@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import torch
 from torch.utils.data import ConcatDataset, WeightedRandomSampler
 
@@ -52,6 +53,57 @@ from train_mars_paper_residual import (  # noqa: E402
 from train_mars_physics_guided_teacher_pilot import seed_everything  # noqa: E402
 
 DEFAULT_PROTOCOL = Path("configs/mars_anchored_full_finetune_pilot_protocol.json")
+
+
+def write_scene_prediction_cache(
+    path: Path,
+    raw: dict[str, Any],
+    strengths: list[float],
+    *,
+    protocol_sha256: str,
+) -> dict[str, Any]:
+    """Write the compact, identity-aligned scene outputs needed by later fusion."""
+    rows = len(raw["sample_ids"])
+    aligned_keys = ("labels", "sensors", "groups", "sample_ids", "folds", "base_scores")
+    if any(len(raw[key]) != rows for key in aligned_keys):
+        raise ValueError("Scene prediction cache fields are not row-aligned")
+    candidates = {
+        f"candidate_{index}": np.asarray(
+            raw["candidate_scores"][str(strength)], dtype=np.float64
+        )
+        for index, strength in enumerate(strengths)
+    }
+    if any(values.shape != (rows,) for values in candidates.values()):
+        raise ValueError("Candidate scene scores are not row-aligned")
+    arrays = {
+        "schema_version": np.asarray(1, dtype=np.uint8),
+        "protocol_sha256": np.asarray(protocol_sha256),
+        "strengths": np.asarray(strengths, dtype=np.float64),
+        "labels": np.asarray(raw["labels"], dtype=np.uint8),
+        "sensors": np.asarray(raw["sensors"], dtype=np.uint8),
+        "groups": np.asarray(raw["groups"]),
+        "sample_ids": np.asarray(raw["sample_ids"]),
+        "folds": np.asarray(raw["folds"], dtype=np.uint8),
+        "base_scores": np.asarray(raw["base_scores"], dtype=np.float64),
+        **candidates,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("wb") as handle:
+        np.savez_compressed(handle, **arrays)
+    os.replace(temporary, path)
+    try:
+        receipt_path = path.relative_to(ROOT).as_posix()
+    except ValueError:
+        receipt_path = path.as_posix()
+    return {
+        "path": receipt_path,
+        "rows": rows,
+        "bytes": path.stat().st_size,
+        "sha256": sha256(path),
+        "tracked": False,
+        "contains_dense_pixels": False,
+    }
 
 
 def train_endpoint(
@@ -328,6 +380,14 @@ def main() -> int:
         torch.cuda.empty_cache()
 
     raw = merge_predictions(prediction_parts, strengths)
+    scene_cache = None
+    if protocol["outputs"].get("scene_cache"):
+        scene_cache = write_scene_prediction_cache(
+            (ROOT / protocol["outputs"]["scene_cache"]).resolve(),
+            raw,
+            strengths,
+            protocol_sha256=sha256(protocol_path),
+        )
     candidates, identity = summarize_predictions(
         raw, strengths, protocol["bootstrap"], protocol["gates"]
     )
@@ -357,6 +417,7 @@ def main() -> int:
         "selected": selected,
         "all_promotion_gates_pass": passed,
         "artifact": artifact,
+        "scene_cache": scene_cache,
         "peak_cuda_bytes": int(torch.cuda.max_memory_allocated()),
         "device": torch.cuda.get_device_name(device),
         "decision": "Freeze a new-seed source-disjoint confirmation; external development and official test remain closed." if passed else "Reject this architecture before external development, fold 2, or official-test scoring.",
