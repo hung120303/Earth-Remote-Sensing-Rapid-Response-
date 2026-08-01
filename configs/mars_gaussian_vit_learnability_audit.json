@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_outcomes",
+  "scope": "synthetic-only memorization and index-disjoint transfer audit for the exact Gaussian-pretrained mixed-sensor ViT-U-Net",
+  "trainer_sha256": "12f610b728cea0a31d7ac84a02ad636be4a3ea6402b6a342651018fc210c2afb",
+  "authorized_folds": [3, 4],
+  "inputs": {
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_acquisition_receipt"
+    },
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "transmittance_lut": {
+      "path": "configs/mars_s2_integrated_transmittances.json",
+      "sha256": "1c11ef3f84a9d2a8ce65fc7301166ce20517bb57425ed3f5dca5a313a876c03f"
+    }
+  },
+  "bank": {
+    "train_start": 0,
+    "validation_start": 16000,
+    "template_count": 64,
+    "pairing": "one analytical positive and its unchanged real-background negative per template",
+    "augmentation": false
+  },
+  "model": {
+    "dimension": 256,
+    "depth": 8,
+    "heads": 8,
+    "mlp_ratio": 4,
+    "dropout": 0.05,
+    "patch_size": 16,
+    "reference_grid": 13
+  },
+  "training": {
+    "seed": 20268200,
+    "data_seed": 20268201,
+    "loader_seed": 20268202,
+    "crop_size": 160,
+    "epochs": 20,
+    "checkpoint_epochs": [1, 2, 5, 10, 20],
+    "batch_size": 16,
+    "evaluation_batch_size": 16,
+    "learning_rate": 0.0002,
+    "weight_decay": 0.02,
+    "gradient_clip": 2.0,
+    "hard_negative_fraction": 0.02,
+    "scene_weight": 0.5,
+    "partial_auc_weight": 0.25,
+    "partial_auc_negative_fraction": 0.125,
+    "partial_auc_margin": 0.5
+  },
+  "gates": {
+    "train_scene_ap_min": 0.98,
+    "train_pixel_iou_min": 0.25,
+    "validation_scene_ap_min": 0.65,
+    "validation_pixel_iou_gain_min": 0.02
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_gaussian_vit_learnability_audit.json",
+    "markdown": "reports/experiments/MARS_GAUSSIAN_VIT_LEARNABILITY_AUDIT.md"
+  },
+  "closed_data": [
+    "MARS folds 0, 1, and 2",
+    "external development outcomes",
+    "official 2024 test inputs and labels"
+  ]
+}

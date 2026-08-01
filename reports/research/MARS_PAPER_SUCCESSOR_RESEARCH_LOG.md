@@ -5076,3 +5076,34 @@ when at least half of its mask is observable. A 1,024-positive-template stress
 test across both sensors then produced 1,024 non-empty masks. The trainer hash
 was refrozen and committed before the cross-fit restart; no metric, checkpoint,
 or candidate outcome from the aborted launch exists.
+
+### 2026-07-31: short-exposure Gaussian-pretrained ViT-U-Net rejected
+
+The frozen fold-3/fold-4 cross-fit completed both analytical-Gaussian
+pretraining endpoints, three joint real/synthetic epochs, and all 17,745 held
+development scenes. It did not promote. At the selected minimum residual
+strength 0.10, AP changes -0.000010 versus the current spatial-Prithvi score,
+matched-FPR recall is unchanged, and dense-mask IoU changes -0.000098. The
+10,000-replicate paired-site intervals are [-0.000123,+0.000153] for AP and
+[-0.001242,+0.000632] for IoU. Strengths 0.25, 0.50, and 1.00 worsen AP
+monotonically; the result is therefore an inert representation rather than a
+fusion-strength miss. No checkpoint is written, and fold 2, folds 0/1, external
+development outcomes, and the official test remain closed.
+
+This pilot is not a negative test of the published large-scale Gaussian-data
+hypothesis. Each endpoint received only 8,192 synthetic requests before joint
+training, whereas Rouet-Leduc and Hulbert report 1,235,000 training pairs for
+ten epochs. Synthetic scene BCE remained near chance (0.6977 to 0.6951 and
+0.6975 to 0.6943 across the two endpoints), and Dice loss remained near 0.91,
+showing that the 9.9M-parameter model had not learned the synthetic task before
+real-data fusion. One joint epoch aggregate on the fold-3 endpoint contained a
+transient non-finite batch; mixed-precision scaling skipped the affected update
+and subsequent training/evaluation were finite, but any reuse must add an
+explicit finite-batch assertion and identify the offending input path.
+
+The next Gaussian decision is therefore gated by a synthetic-only learnability
+audit: first prove that the exact architecture can memorize a small fixed bank
+and improve on an index-disjoint synthetic validation bank, then estimate the
+exposure curve before committing to a paper-scale pretraining run. Result
+SHA-256 is
+`cba9a42cf1c5b10bf8969cbf7f56cf3785cc6f9864947f7f05a6d1dfa8834ff0`.

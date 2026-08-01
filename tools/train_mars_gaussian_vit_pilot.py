@@ -59,7 +59,6 @@ from train_mars_paper_residual import (  # noqa: E402
     smoke_subset,
     verify_acquisition_receipt,
 )
-from train_mars_physical_patch_transfer_pilot import write_markdown  # noqa: E402
 from train_mars_physics_guided_teacher_balanced_pilot import (  # noqa: E402
     balanced_request_weights,
 )
@@ -68,6 +67,33 @@ from train_methanes2cm_v5 import segmentation_first_loss  # noqa: E402
 
 
 DEFAULT_PROTOCOL = Path("configs/mars_gaussian_vit_pilot_protocol.json")
+
+
+def write_markdown(path: Path, report: dict[str, Any]) -> None:
+    """Write the compact Gaussian-ViT decision record."""
+
+    selected = report["selected"]
+    delta = selected["versus_current"]["delta"]
+    ap = selected["paired_site_ap_delta"]
+    iou = selected["paired_site_pixel_iou_delta"]
+    lines = [
+        "# Gaussian-pretrained mixed-sensor ViT-U-Net pilot",
+        "",
+        f"- Promotion gates pass: **{report['all_promotion_gates_pass']}**",
+        f"- Selected fusion strength: **{selected['strength']}**",
+        f"- AP delta versus current spatial-Prithvi score: **{delta['average_precision']:+.6f}**",
+        f"- Matched-FPR recall delta: **{delta['recall_at_fpr_0_0713']:+.6f}**",
+        f"- Paired-site AP interval: **[{ap['lower']:+.6f}, {ap['upper']:+.6f}]**",
+        f"- Dense-mask IoU delta: **{selected['pixel_iou_delta']:+.6f}**",
+        f"- Paired-site IoU interval: **[{iou['lower']:+.6f}, {iou['upper']:+.6f}]**",
+        "",
+        report["decision"],
+        "",
+    ]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text("\n".join(lines), encoding="utf-8")
+    os.replace(temporary, path)
 
 
 def rotate_wind(
