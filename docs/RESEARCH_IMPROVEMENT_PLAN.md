@@ -254,7 +254,7 @@ All currently unmet:
   (multi-band multi-pass, uses B11 as a surface proxy to correct B12), and a hybrid.
   Detection limit ~3–5 t/hr at optimum pixels. **This is the baseline every S2 methane DL
   paper is measured against.** Replicate it.
-- **Rouet-Leduc & Hulbert 2024, *Nature Communications* 15, 3997** — **the closest analog
+- **Rouet-Leduc & Hulbert 2024, *Nature Communications* 15, 3801** — **the closest analog
   to this project.** A ViT on S2, trained on **physics-shaped synthetic plumes** injected
   onto plume-free tiles, with a two-timestep stacked input. Reported ~10× detection
   improvement over MBMP, detecting plumes down to ~200–300 kg/hr. Code capsule published.
@@ -318,8 +318,13 @@ route (a) only if a teammate is fluent in PyTorch.
 
 - **S2MetNet (Radman et al. 2023)** — WRF-LES-generated synthetic plumes composited onto S2
   tiles; shows synthetic-only training transfers to real plumes.
-- **MethaNet (Groshenry et al., arXiv:2211.15429)** — Gaussian-plume injection
-  methodology; public and simple to reimplement.
+- **Rouet-Leduc & Hulbert (Nature Communications 2024)** — about 20,000 analytical
+  Gaussian plumes with 2-D colored turbulence noise, embedded into real Sentinel-2 L1C
+  backgrounds with Beer-Lambert attenuation; a ViT-U-Net is trained with unchanged real
+  negatives. This is the directly relevant Gaussian-synthesis precedent.
+- **Groshenry et al. (arXiv:2211.15429)** — transposes high-resolution PRISMA plume
+  retrievals into Sentinel-2 scenes; it is a real-plume transfer method, not the source of
+  the Gaussian generator previously attributed to it here.
 - **Hybrid (field best practice):** WRF-LES for shape realism + Gaussian for wind sweeps →
   controllable flux labels + addresses class imbalance. **Most cost-effective path to a
   large labeled training set** — scale to thousands of synthetic chips per flux bucket.
@@ -357,12 +362,13 @@ the data-starvation bottleneck and gives a clean "we beat MBMP" headline. **Effo
 (~2–3 wks). Expected lift: order-of-magnitude sensitivity gain.** This is what makes the
 paper publishable.
 
-**Concrete first step:** reimplement MethaNet-style Gaussian injection — sample a plume
-orientation from a wind distribution, a flux from a log-uniform source distribution, render
-the plume as a 2D Gaussian cone, and additively blend it into the B11/B12 SWIR channels of
-plume-free tiles (the CH4 absorption signature is a fractional reflectance change in SWIR).
-Pair every synthetic plume with its mask + flux label. Target ~5,000–10,000 synthetic
-chips spanning flux buckets from sub-t/hr to tens of t/hr.
+**Concrete first step:** reproduce the Rouet-Leduc/Hulbert design principles with an
+analytical wind-aligned Gaussian column plume, 2-D colored turbulence noise, and real
+unchanged negatives. For MARS-S2L, attenuate B11/B12 through the released sensor-specific
+MODTRAN lookup for Sentinel-2 and Landsat rather than additive blending. Because the public
+MARS enhancement assets have a documented ppm/ppb metadata conflict, do not claim physical
+flux labels until units are reconciled; parameterize spectral strength in LUT input units and
+freeze its range from authorized fit-fold statistics. Keep template banks disjoint by split.
 
 #### 4.2 Leakage-proof evaluation protocol (gates every other result)
 Before claiming any improvement: restructure the split to **prevent spatial/temporal
@@ -525,10 +531,10 @@ science reproducible.
 
 **Sentinel-2 methane detection**
 - Varon, D.J. et al. (2021). *High-frequency monitoring of anomalous methane point sources with Sentinel-2.* AMT 14, 2771. https://amt.copernicus.org/articles/14/2771/2021/
-- Rouet-Leduc, B. & Hulbert, C. (2024). *Automated methane plume detection with Sentinel-2.* Nature Communications 15, 3997. https://www.nature.com/articles/s41467-024-47754-y
+- Rouet-Leduc, B. & Hulbert, C. (2024). *Automatic detection of methane emissions in multispectral satellite imagery using a vision transformer.* Nature Communications 15, 3801. https://www.nature.com/articles/s41467-024-47754-y
 - Allen, A. et al. (2024). *CH4Net: Deep learning for Sentinel-2 methane plume detection.* AMT 17, 2583. https://amt.copernicus.org/articles/17/2583/2024/
 - *Robust Small Methane Plume Segmentation* (2025), arXiv:2508.16282. https://arxiv.org/abs/2508.16282
-- Groshenry et al. *MethaNet*, arXiv:2211.15429 (synthetic Gaussian-injection methodology).
+- Groshenry et al. arXiv:2211.15429 (real PRISMA plume transposition into Sentinel-2 imagery; not Gaussian synthesis).
 
 **EMIT and flux quantification**
 - Thorpe, A.K. et al. (2023). *Attribution of individual methane and carbon dioxide emission sources using EMIT observations from space.* Science Advances 9, eadh2391. https://www.science.org/doi/10.1126/sciadv.adh2391

@@ -4998,3 +4998,72 @@ the official paper test remain closed. Result SHA-256 is
 The result retires direct S2CM/MARS local-domain alignment as an isolated lever.
 Any further external-data path must use exact MARS-domain radiometry or a causal
 physics generator rather than another L2A-to-L1C feature alignment objective.
+
+### 2026-07-31: Gaussian-plume ViT source audit and fit-fold parameterization
+
+The next causal representation branch is grounded in the final published
+methods of Rouet-Leduc and Hulbert rather than the earlier roadmap's incorrect
+attribution to Groshenry/MethaNet. The Nature Communications study generates
+about 20,000 analytical Gaussian plumes, adds two-dimensional colored noise,
+embeds them in Sentinel-2 B12 with Beer-Lambert attenuation, and keeps the
+template train/validation/test sets disjoint. Half of its image pairs are
+synthetic positives and half are unchanged real negatives. Its ViT-B/16
+encoder and convolutional U-Net decoder are trained from scratch on 1,235,000
+two-time Sentinel-2 examples for ten epochs. The paper explicitly identifies
+large-scale synthetic exposure, temporal reference imagery, and transformer
+long-range context as the three main performance mechanisms. Primary source:
+[Rouet-Leduc & Hulbert 2024](https://www.nature.com/articles/s41467-024-47754-y).
+
+The MARS adaptation preserves those mechanisms but not the single-sensor
+shortcut. It generates a vertically integrated, wind-aligned Gaussian column
+field with widening crosswind variance, exponential finite residence length,
+and correlated log-normal turbulence. The exact released MARS integrated-
+transmittance LUT attenuates B11 and B12 separately for S2A/S2B/S2C and the
+supported Landsat platforms. It never reports synthetic flux: public MARS
+enhancement assets retain a documented ppm/ppb metadata conflict. Instead,
+peak enhancement is sampled in LUT input units and audited against unitless
+same-scene MBMP contrast.
+
+Only development folds 3 and 4 parameterized the morphology. Among 1,524
+scene-positive rows, 1,518 have non-empty masks and six producer-positive rows
+have empty pixel masks; the latter are retained for scene learning but excluded
+from geometry. The non-empty cohort covers 81 physical sites, 1,139 Sentinel-2
+and 379 Landsat scenes, all at 10 m. Real q05/q50/q95 anchors are 327/1,008/3,603
+mask pixels, 314/704/1,303 m major-axis four-sigma extent, 124/206/492 m
+minor-axis extent, and 1.52/2.81/4.71 moment aspect ratio. Median major-axis
+alignment with published wind is 0.952, while its q05 is 0.335; this supports a
+predeclared heavy-tailed wind-direction mismatch rather than unrealistically
+perfect alignment. Real median MBMP absorption contrast is 0.00501 and robust
+SNR is 1.218, with q05/q95 contrast 0.00097/0.01868.
+
+The deterministic bank reserves 20,000 indexed templates: 16,000 training,
+2,000 validation, and 2,000 diagnostic, with no index overlap. A 5,000-template
+audit passed every frozen distribution gate. The common family contributes 88%
+and a broad morphology tail 12%; all generated masks are exactly one connected
+component. Across q05/q25/q50/q75/q95, the maximum relative discrepancy is at
+most 20% for area, major/minor extent, and aspect ratio, while wind alignment is
+within 0.05 absolute. Peak LUT input strength is log-uniform from 500 to 10,000;
+an independent fit-fold radiometric anchor sweep maps roughly 2,000 to the real
+median contrast and roughly 8,000 to its upper tail.
+
+### 2026-07-31: full-scene Gaussian-pretrained ViT-U-Net smoke passed
+
+The candidate is an actual vision transformer rather than a transformer-feature
+probe or convolution-only patch detector. It keeps the exact 16-channel MARS
+target/reference/MBMP/wind/cloud input. A 16-pixel patch embedding feeds eight
+256-dimensional, eight-head transformer blocks; four convolutional skip scales
+feed a U-Net decoder. Learned sensor embeddings condition Sentinel-2 versus
+Landsat. Training uses 160x160 crops (1.6 km at 10 m), while interpolated
+position embeddings and reflection padding preserve native 200x200 inference.
+The 9,907,262-parameter model returns both a dense mask correction and a scene
+correction derived from mean/max global tokens plus top-1% dense evidence.
+
+The mixed smoke exercised both same-background Gaussian positive/unchanged-
+negative pairs and genuine MARS crops with the protected spatial-Prithvi
+residual objective. All segmentation, scene, partial-AUC, residual, and
+direction losses were finite. A real batch activated the residual BCE and both
+correction-direction penalties. Full 200x200 mixed-sensor inference returned
+finite `[2,1,200,200]` masks and two scene logits. An actual 24-example training
+batch peaked at 3,831,370,752 CUDA bytes on the RTX 5070. The held-fold outcome
+grid is still unopened; hashes, endpoints, strengths, and promotion gates must
+be committed before cross-fit scoring.

@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_distribution_audit",
+  "scope": "fit-fold-only analytical Gaussian bank geometry audit",
+  "code_dependencies": [
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_gaussian_plume.py",
+      "sha256": "9ec8d0b11ba934d65ffcf014e0b2ba29d0b62d21006bd70f2db093dbeec0eaca"
+    },
+    {
+      "path": "tools/audit_mars_gaussian_plume_morphology.py",
+      "sha256": "8a13d066f7275acc3218c3437fef6a5d45a9475c22a5c7cddd6a0dbeca8aaa0d"
+    }
+  ],
+  "inputs": {
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "real_morphology_audit": {
+      "path": "reports/experiments/mars_gaussian_plume_morphology_audit.json",
+      "sha256": "96e43dd8827f300e7c57642a6ca0ce8d2367d6ea1de8b6db97e91d700af01469"
+    }
+  },
+  "allowed_folds": [3, 4],
+  "bank": {
+    "capacity": 20000,
+    "train_indices": [0, 15999],
+    "validation_indices": [16000, 17999],
+    "diagnostic_indices": [18000, 19999],
+    "audited_members": 5000,
+    "audit_seed": 20268010,
+    "spectral_strength": "log-uniform peak delta-CH4 from 500 to 10000 in released LUT input units",
+    "morphology": "88% common and 12% broad-tail geometry with colored 2-D noise and bounded wind-direction mismatch"
+  },
+  "gates": {
+    "geometry_maximum_absolute_relative_delta": 0.20,
+    "alignment_maximum_absolute_delta": 0.05,
+    "all_masks_exactly_one_component": true
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_gaussian_plume_bank_audit.json",
+    "markdown": "reports/experiments/MARS_GAUSSIAN_PLUME_BANK_AUDIT.md"
+  },
+  "invariants": [
+    "No candidate outcome is used to fit the bank distribution.",
+    "The bank is fixed from real geometry on MARS folds 3 and 4 only.",
+    "Synthetic partitions are index-disjoint before training.",
+    "Folds 0, 1, and 2 and official-test data remain forbidden."
+  ]
+}

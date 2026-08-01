@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "frozen_fit_fold_parameterization_audit",
+  "scope": "fit-fold-only real-plume morphology anchors for an analytical Gaussian synthetic bank",
+  "inputs": {
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_acquisition_receipt"
+    },
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    }
+  },
+  "allowed_folds": [3, 4],
+  "outputs": {
+    "json": "reports/experiments/mars_gaussian_plume_morphology_audit.json",
+    "markdown": "reports/experiments/MARS_GAUSSIAN_PLUME_MORPHOLOGY_AUDIT.md"
+  },
+  "invariants": [
+    "Only fit-fold positive masks with pixel truth may be opened.",
+    "No model prediction or held-fold outcome is part of this audit.",
+    "Folds 0, 1, and 2 and all official-test data are forbidden.",
+    "Synthetic ranges derived here must be frozen before cross-fitted candidate scoring."
+  ]
+}

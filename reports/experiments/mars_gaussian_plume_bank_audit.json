@@ -1,0 +1,283 @@
+{
+  "all_distribution_gates_pass": true,
+  "bank": {
+    "audit_seed": 20268010,
+    "audited_members": 5000,
+    "capacity": 20000,
+    "diagnostic_indices": [
+      18000,
+      19999
+    ],
+    "morphology": "88% common and 12% broad-tail geometry with colored 2-D noise and bounded wind-direction mismatch",
+    "spectral_strength": "log-uniform peak delta-CH4 from 500 to 10000 in released LUT input units",
+    "train_indices": [
+      0,
+      15999
+    ],
+    "validation_indices": [
+      16000,
+      17999
+    ]
+  },
+  "comparison": {
+    "area_pixels": {
+      "maximum_absolute_relative_delta": 0.09424603174603174,
+      "relative_deltas": {
+        "q05": 0.03105400030595067,
+        "q25": 0.0892,
+        "q50": 0.09424603174603174,
+        "q75": 0.021606254442075336,
+        "q95": 0.08150039549825934
+      }
+    },
+    "major_4sigma_m": {
+      "maximum_absolute_relative_delta": 0.06144963445423379,
+      "relative_deltas": {
+        "q05": -0.006273603190964058,
+        "q25": 0.01196362387189582,
+        "q50": -0.02044933702411731,
+        "q75": -0.06144963445423379,
+        "q95": -0.02298130784423237
+      }
+    },
+    "major_axis_wind_alignment": {
+      "absolute_deltas": {
+        "q05": 0.02529605625631709,
+        "q25": -0.022507985707720723,
+        "q50": -0.007863509748550435,
+        "q75": -0.001858714521822069,
+        "q95": -0.00010151175962658243
+      },
+      "maximum_absolute_delta": 0.02529605625631709
+    },
+    "minor_4sigma_m": {
+      "maximum_absolute_relative_delta": 0.06866636111229826,
+      "relative_deltas": {
+        "q05": -0.02536321242136438,
+        "q25": 0.06007512462124844,
+        "q50": 0.056625153075259234,
+        "q75": -0.003072823006678551,
+        "q95": 0.06866636111229826
+      }
+    },
+    "moment_aspect_ratio": {
+      "maximum_absolute_relative_delta": 0.0837111030083884,
+      "relative_deltas": {
+        "q05": -0.056145711833513925,
+        "q25": -0.0837111030083884,
+        "q50": -0.05203296007142527,
+        "q75": -0.008635198768882326,
+        "q95": 0.031038401842423135
+      }
+    }
+  },
+  "gates": {
+    "alignment_maximum_absolute_delta": 0.05,
+    "all_masks_exactly_one_component": true,
+    "geometry_maximum_absolute_relative_delta": 0.2
+  },
+  "generated_at_utc": "2026-08-01T02:35:47.720870+00:00",
+  "invariants": [
+    "Only fit-fold wind metadata and the committed real morphology summary were used.",
+    "No candidate model, prediction, loss, or outcome was constructed.",
+    "The 20,000 indexed template capacity is partitioned before training.",
+    "Train, validation, and diagnostic index ranges never overlap.",
+    "Folds 0, 1, and 2 and all official-test data remain closed."
+  ],
+  "provenance": {
+    "generator_sha256": "9ec8d0b11ba934d65ffcf014e0b2ba29d0b62d21006bd70f2db093dbeec0eaca",
+    "protocol_sha256": "09a19e817fd80f03156f26d62925a2d63d2563ecf14e4b137060cc403ab743df",
+    "real_morphology_audit_sha256": "96e43dd8827f300e7c57642a6ca0ce8d2367d6ea1de8b6db97e91d700af01469",
+    "script_sha256": "7a0e58abb172335942edc56843a29e2290edd919c9759a2a2a73d325ab3e8258"
+  },
+  "real_cohort": {
+    "empty_positive_masks": 6,
+    "fold_counts": {
+      "3": 758,
+      "4": 760
+    },
+    "folds": [
+      3,
+      4
+    ],
+    "nonempty_masks": 1518,
+    "positive_scenes": 1524,
+    "resolution_m_counts": {
+      "10": 1518
+    },
+    "sensor_counts": {
+      "Landsat": 379,
+      "Sentinel-2": 1139
+    },
+    "sites": 81
+  },
+  "schema_version": 1,
+  "scope": "fit-fold-only analytical Gaussian bank distribution audit before model scoring",
+  "synthetic_geometry": {
+    "area_m2": {
+      "count": 5000,
+      "maximum": 1173800.0,
+      "mean": 146189.02,
+      "minimum": 5900.0,
+      "q01": 19800.0,
+      "q05": 33700.0,
+      "q10": 43090.0,
+      "q25": 68075.0,
+      "q50": 110300.0,
+      "q75": 179675.0,
+      "q90": 289210.00000000006,
+      "q95": 389670.00000000023,
+      "q99": 661342.0000000009
+    },
+    "area_pixels": {
+      "count": 5000,
+      "maximum": 11738.0,
+      "mean": 1461.8902,
+      "minimum": 59.0,
+      "q01": 198.0,
+      "q05": 337.0,
+      "q10": 430.90000000000003,
+      "q25": 680.75,
+      "q50": 1103.0,
+      "q75": 1796.75,
+      "q90": 2892.1000000000004,
+      "q95": 3896.7000000000025,
+      "q99": 6613.420000000009
+    },
+    "bbox_height_m": {
+      "count": 5000,
+      "maximum": 1690.0,
+      "mean": 530.888,
+      "minimum": 60.0,
+      "q01": 150.0,
+      "q05": 200.0,
+      "q10": 230.0,
+      "q25": 320.0,
+      "q50": 480.0,
+      "q75": 690.0,
+      "q90": 910.0,
+      "q95": 1060.5000000000018,
+      "q99": 1330.0
+    },
+    "bbox_occupancy": {
+      "count": 5000,
+      "maximum": 0.9264705882352942,
+      "mean": 0.5277232660863443,
+      "minimum": 0.1438953488372093,
+      "q01": 0.23415254767742466,
+      "q05": 0.2943390301791345,
+      "q10": 0.3333333333333333,
+      "q25": 0.4210578529657477,
+      "q50": 0.5303546000279213,
+      "q75": 0.639362282878412,
+      "q90": 0.7128871838590509,
+      "q95": 0.7516330881276534,
+      "q99": 0.8207637456279813
+    },
+    "bbox_width_m": {
+      "count": 5000,
+      "maximum": 1780.0,
+      "mean": 535.106,
+      "minimum": 70.0,
+      "q01": 150.0,
+      "q05": 200.0,
+      "q10": 230.0,
+      "q25": 320.0,
+      "q50": 480.0,
+      "q75": 690.0,
+      "q90": 920.0,
+      "q95": 1070.0,
+      "q99": 1330.0
+    },
+    "component_count": {
+      "count": 5000,
+      "maximum": 1.0,
+      "mean": 1.0,
+      "minimum": 1.0,
+      "q01": 1.0,
+      "q05": 1.0,
+      "q10": 1.0,
+      "q25": 1.0,
+      "q50": 1.0,
+      "q75": 1.0,
+      "q90": 1.0,
+      "q95": 1.0,
+      "q99": 1.0
+    },
+    "largest_component_fraction": {
+      "count": 5000,
+      "maximum": 1.0,
+      "mean": 1.0,
+      "minimum": 1.0,
+      "q01": 1.0,
+      "q05": 1.0,
+      "q10": 1.0,
+      "q25": 1.0,
+      "q50": 1.0,
+      "q75": 1.0,
+      "q90": 1.0,
+      "q95": 1.0,
+      "q99": 1.0
+    },
+    "major_4sigma_m": {
+      "count": 5000,
+      "maximum": 2013.636419484757,
+      "mean": 732.3328233124582,
+      "minimum": 107.27800931555853,
+      "q01": 220.0359359184907,
+      "q05": 312.2647689482852,
+      "q10": 379.36976009842203,
+      "q25": 515.4353709404484,
+      "q50": 689.8417169328558,
+      "q75": 915.3431413348408,
+      "q90": 1141.1496786948223,
+      "q95": 1273.350611292614,
+      "q99": 1527.0342098516267
+    },
+    "major_axis_wind_alignment": {
+      "count": 5000,
+      "maximum": 0.9999999978534888,
+      "mean": 0.854756199629977,
+      "minimum": 0.004380745422009877,
+      "q01": 0.1167041559762395,
+      "q05": 0.36048488832532316,
+      "q10": 0.561802460006429,
+      "q25": 0.813747538362759,
+      "q50": 0.9439562129898802,
+      "q75": 0.9878306654079974,
+      "q90": 0.997934002380084,
+      "q95": 0.9995062765808306,
+      "q99": 0.9999849565234878
+    },
+    "minor_4sigma_m": {
+      "count": 5000,
+      "maximum": 1024.7123519903168,
+      "mean": 249.23344037493183,
+      "minimum": 52.5886504118993,
+      "q01": 94.55871180291193,
+      "q05": 120.77827827215236,
+      "q10": 137.37623595363274,
+      "q25": 171.63573158579322,
+      "q50": 217.17455092319543,
+      "q75": 283.99763159357406,
+      "q90": 401.66373879299164,
+      "q95": 526.3038498379368,
+      "q99": 698.6425189886605
+    },
+    "moment_aspect_ratio": {
+      "count": 5000,
+      "maximum": 7.740766780963992,
+      "mean": 2.8454015806701842,
+      "minimum": 1.019884478283685,
+      "q01": 1.2020089552298552,
+      "q05": 1.4326971393440424,
+      "q10": 1.6342937501195915,
+      "q25": 2.0496033461375625,
+      "q50": 2.6626129387522446,
+      "q75": 3.47294318758414,
+      "q90": 4.318832027163424,
+      "q95": 4.860053806355254,
+      "q99": 5.869632888523204
+    }
+  }
+}
