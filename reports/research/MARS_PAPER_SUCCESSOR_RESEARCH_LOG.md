@@ -5147,3 +5147,29 @@ architecture will retain the exact external MARS 16-channel interface but
 derive normalized temporal log-ratio and relative-change channels internally,
 train in BF16, and first repeat the disjoint learnability gate before any real
 held-fold score is opened.
+
+### 2026-07-31: physics-contrast ViT learns dense transfer but fails scene gate
+
+The frozen normalized-contrast audit completes in BF16 with no numerical
+failure. At the same 64-train/64-disjoint-template, 160-update budget, the
+learned scene head still fails: train AP changes 0.5073 to 0.5265 and validation
+AP 0.5063 to 0.5159. The strict memorization and validation gates therefore
+remain false.
+
+The dense result is qualitatively different from the raw-input model. Train
+mask IoU rises from 0.0202 to 0.1353 and index-disjoint validation IoU from
+0.0216 to 0.1240. The close train/validation values show that fixed MBMP,
+per-band log change, and all 15 temporal log-ratio changes expose a transferable
+synthetic plume representation; the raw model ended at only 0.0530/0.0456.
+This is a 2.55x train and 2.72x validation final-IoU improvement without using
+another scene, template index, or held label. Result SHA-256 is
+`b19f3e348105b4d1c681c0a06edb5208c1e3646c7c99120374ffbcaba8bdfb56`.
+
+The outcome changes the next objective rather than relaxing the failed gate.
+The primary paper trains a plume mask and derives detection from its dense
+output; it does not require a separately supervised global token head during
+synthetic pretraining. A new fixed exposure curve will therefore train the same
+contrast architecture only on dense positive/hard-negative/Dice losses, record
+top-mask evidence AP, and extend to 100 epochs (800 cached updates). Real scene
+ranking, development folds, and the current spatial-Prithvi residual remain
+closed until dense synthetic transfer is demonstrated.
