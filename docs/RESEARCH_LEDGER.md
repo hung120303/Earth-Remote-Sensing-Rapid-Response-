@@ -595,3 +595,15 @@ logits remain ignored; cache SHA-256 is
 `68aaf9d5b0e6d650bfc70d8ea511f5a4d3838bbc353811ce11462214f96faa02`.
 The compact receipt and cache hashes are bound into the already preregistered
 Gaussian+DOFA evaluator before selection.
+
+## 2026-08-01: protected Gaussian-ViT + DOFA ensemble passes development
+
+Selected Gaussian strength 0.10 plus the fixed DOFA residual improves
+folds-3/4 AP +0.002449 with paired-site interval
+[+0.000489,+0.004068]. Fold changes are +0.001722/+0.001968 and
+Sentinel-2/Landsat changes +0.002942/+0.001692. Operating counts are identical.
+Versus released MARS-S2L, AP is +0.031241 and matched-FPR recall +0.009843.
+The fixed dense path retains positive IoU point/lower bounds on development and
+the earlier fold-2 dense confirmation. All gates pass; compact result SHA-256:
+`9473bc039e43bfc15d97b8eca0228fce66b31dffc8c487f8b3a4351c3280e1b5`.
+Only a separately frozen external/new-cohort confirmation is authorized.

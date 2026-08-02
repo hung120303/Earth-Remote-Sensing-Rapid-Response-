@@ -129,6 +129,12 @@ Use the paper's scene score: the maximum probability threshold supporting at lea
 9. Paired site-bootstrap deltas and superiority decisions.
 10. Sensor, geography, plume-size, cloud, wind, and onshore/offshore error strata.
 
+The development ablation table must include the bounded-reproducibility
+Gaussian-ViT + fixed-DOFA ensemble: AP +0.002449 with paired-site 95% interval
+[+0.000489,+0.004068], identical operating counts, and fixed dense IoU evidence.
+It must also show the rejected exact replay and explain why bounded stochastic
+replicate gates were frozen before retaining logits.
+
 ## Planned figures
 
 1. Data boundary, site-fold, ensemble-freeze, and one-shot test flow.

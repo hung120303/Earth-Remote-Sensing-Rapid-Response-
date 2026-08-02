@@ -5633,3 +5633,24 @@ The compact receipt SHA-256 is
 Both hashes, and only the predeclared hash/status placeholders, are now bound
 into the protected Gaussian+DOFA ensemble protocol before its one-shot
 two-candidate evaluation.
+
+### 2026-08-01: protected Gaussian-ViT plus DOFA ensemble passes development
+
+The one-shot two-candidate evaluator selected Gaussian strength 0.10 combined
+with the fixed DOFA change/extreme residual. On all 17,745 folds-3/4 scenes,
+candidate AP is 0.906525, a +0.002449 improvement over the current
+spatial-Prithvi score. The 10,000-replicate paired-site AP interval is
+[+0.000489,+0.004068]. Fold-3/fold-4 AP changes are
++0.001722/+0.001968; Sentinel-2/Landsat changes are
++0.002942/+0.001692. The complete operating confusion matrix is preserved
+(1,466 TP, 1,156 FP, 15,065 TN, 58 FN), so matched-FPR recall remains
+0.961942 and FPR 0.071266.
+
+Relative to the released MARS-S2L primary score, AP is +0.031241 and
+matched-FPR recall +0.009843. The independently fixed dense path also remains
+supported: IoU delta/lower bound are +0.002631/+0.000369 on development and
++0.004367/+0.002352 on the already completed fold-2 dense confirmation. Every
+predeclared gate passes. Compact result SHA-256 is
+`9473bc039e43bfc15d97b8eca0228fce66b31dffc8c487f8b3a4351c3280e1b5`.
+This authorizes only a separately frozen external/new-cohort confirmation; it
+does not authorize reopening fold 2 or the official test.
