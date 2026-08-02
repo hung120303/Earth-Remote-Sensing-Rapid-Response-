@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_64_row_smoke_before_full_feature_extraction",
+  "scope": "label-independent Prithvi-EO-2.0-100M-TL multiscale CLS extraction on MARS folds 3/4",
+  "extractor": {
+    "path": "tools/extract_mars_prithvi_100m_cls_features.py",
+    "sha256": "54524eefe4b252a8c0204cdd883f269e0dca2e9c0aef6de585286f3f19bc6fe7"
+  },
+  "acquisition": {
+    "script": "tools/acquire_prithvi_eo_2_100m_tl.py",
+    "script_sha256": "82d72b9aadd41a1968ef0274b54c1f0d3dffe079f51082719a86a5387959bc02",
+    "receipt": "reports/acquisition/prithvi_eo_2_100m_tl.json",
+    "receipt_sha256": "165ea6d7c4354c34ea4ceff6a18d6cc94fd6e25926e34ccafb3d9f92a9794153",
+    "repository": "ibm-nasa-geospatial/Prithvi-EO-2.0-100M-TL",
+    "revision": "2c84e383194986040f883cc43d7869002c425e1b",
+    "checkpoint_sha256": "d45406d5fc51af1d9657d48f2e2c3ff077408a2e1113f9a242889a4fe4469b17"
+  },
+  "inputs": {
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "folds": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    }
+  },
+  "feature_contract": {
+    "folds": [3, 4],
+    "input_size": 128,
+    "frames": ["reference", "target"],
+    "bands": ["B02", "B03", "B04", "broad_NIR_to_HLS_narrow_NIR_slot", "B11", "B12"],
+    "physical_scale": "reflectance multiplied by 10000 before official Prithvi normalization",
+    "blocks": [3, 6, 9, 12],
+    "pooling": "CLS token only",
+    "embed_dim": 768,
+    "feature_count": 3072,
+    "dtype": "float16",
+    "batch_size": 64,
+    "workers": 0,
+    "decoder": "strictly loaded then discarded before inference"
+  },
+  "smoke": {
+    "rows": 64,
+    "fold": 3,
+    "finite": true,
+    "cache_sha256": "e15d0fa9927404da680004c6a78cfb43686172ec3d3ec3a04b3de0fee6f1fab5",
+    "outcomes_used_for_selection": false
+  },
+  "output": {
+    "path": "outputs/mars_prithvi_eo_2_100m_tl_cls_folds34.npz",
+    "tracked": false,
+    "expected_rows": 17745
+  },
+  "invariants": [
+    "Feature extraction is deterministic, label-independent, and cannot select a model or strength.",
+    "Only MARS development folds 3/4 are read; fold 2, folds 0/1, external held cohorts, and official test are not opened.",
+    "The broad-NIR versus HLS narrow-NIR mismatch is explicit and unchanged from the tiny-Prithvi transfer path.",
+    "The full cache remains ignored by Git; only its eventual compact receipt is tracked."
+  ]
+}

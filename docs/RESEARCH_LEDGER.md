@@ -682,3 +682,20 @@ corrections are anti-complementary to the Gaussian+DOFA champion. V6.1 is
 retired without a second seed, dense training, or external outcome access.
 The ignored raw-logit cache is retained by SHA-256 in the compact report for
 reproducibility and future non-outcome diagnostics.
+
+## 2026-08-01: 100M Prithvi representation path acquired and frozen
+
+After rejecting both v6 scene objectives, the next test changes the foundation
+representation rather than the residual head. The official
+Prithvi-EO-2.0-100M-TL checkpoint was downloaded at immutable revision
+`2c84e383194986040f883cc43d7869002c425e1b`. Its 454,660,610-byte checkpoint
+strictly loads 112,639,492 parameters (86,237,186 encoder parameters) with no
+missing or unexpected keys. All model files remain ignored.
+
+The frozen development extractor uses the same two-frame physical-reflectance
+contract as the tiny model, retains only block 3/6/9/12 CLS tokens, and emits
+3,072 float16 features per scene. A 64-row real-scene smoke passed. Full
+extraction is restricted to folds 3/4 and is label-independent; the MARS
+broad-NIR to HLS narrow-NIR mismatch remains explicitly disclosed. Candidate
+probe/fusion choices will be frozen separately after the cache identity exists
+and before any model score is computed.

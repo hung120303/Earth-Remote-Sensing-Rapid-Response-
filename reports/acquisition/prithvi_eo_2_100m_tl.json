@@ -1,0 +1,107 @@
+{
+  "bulk_policy": "all model files remain beneath the ignored artifacts/foundation directory",
+  "files": [
+    {
+      "bytes": 776,
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_100m_tl/config.json",
+      "sha256": "76a4ff07481a6dfddcfe0bbbcfa2fcaef92fb742cf2c98eef63eac0658a01c58",
+      "tracked": false
+    },
+    {
+      "bytes": 16455,
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_100m_tl/inference.py",
+      "sha256": "5135bb929813d9fd295926a6baffcd0ca9b019a35765e8078bb6368ce70a02bd",
+      "tracked": false
+    },
+    {
+      "bytes": 30027,
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_100m_tl/prithvi_mae.py",
+      "sha256": "9cee9a8cb17c3859d6365a7e58f723e0f4c08e3e29aa4b8e6523506db70321da",
+      "tracked": false
+    },
+    {
+      "bytes": 7987,
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_100m_tl/README.md",
+      "sha256": "25c147c6ce14b1f7f535f49e4252db8cb02bdd667067f071656d0bcfa4ac4b71",
+      "tracked": false
+    },
+    {
+      "bytes": 454660610,
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_100m_tl/Prithvi_EO_V2_100M_TL.pt",
+      "sha256": "d45406d5fc51af1d9657d48f2e2c3ff077408a2e1113f9a242889a4fe4469b17",
+      "tracked": false
+    }
+  ],
+  "generated_at_utc": "2026-08-02T04:54:51.804941+00:00",
+  "schema_version": 1,
+  "scope": "external foundation-model acquisition for MARS representation research",
+  "selection_rationale": "The 100M temporal/location encoder is the smallest substantially larger official Prithvi-EO-2.0 checkpoint. It tests whether the tiny encoder, rather than residual head capacity, limits geographically transferable methane-scene representation.",
+  "source": {
+    "license": "Apache-2.0",
+    "paper": "https://arxiv.org/abs/2412.02732",
+    "pretraining": "4.2M global HLS V2 time-series samples; six bands; 30 m granularity",
+    "provider": "IBM-NASA Geospatial",
+    "repository": "ibm-nasa-geospatial/Prithvi-EO-2.0-100M-TL",
+    "repository_url": "https://huggingface.co/ibm-nasa-geospatial/Prithvi-EO-2.0-100M-TL",
+    "revision": "2c84e383194986040f883cc43d7869002c425e1b"
+  },
+  "strict_model_audit": {
+    "encoder_parameters": 86237186,
+    "missing_keys": [],
+    "parameters": 112639492,
+    "pretrained_config": {
+      "bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "coords_encoding": [
+        "time",
+        "location"
+      ],
+      "coords_scale_learn": true,
+      "decoder_depth": 8,
+      "decoder_embed_dim": 512,
+      "decoder_num_heads": 16,
+      "depth": 12,
+      "embed_dim": 768,
+      "img_size": 224,
+      "in_chans": 6,
+      "mask_ratio": 0.75,
+      "mean": [
+        1087.0,
+        1342.0,
+        1433.0,
+        2734.0,
+        1958.0,
+        1363.0
+      ],
+      "mlp_ratio": 4,
+      "norm_pix_loss": false,
+      "num_frames": 4,
+      "num_heads": 12,
+      "origin_url": "https://huggingface.co/ibm-nasa-geospatial/Prithvi-EO-2.0-tiny",
+      "paper_ids": "arXiv:2412.02732",
+      "patch_size": [
+        1,
+        16,
+        16
+      ],
+      "std": [
+        2248.0,
+        2179.0,
+        2178.0,
+        1850.0,
+        1242.0,
+        1049.0
+      ]
+    },
+    "state_tensors": 258,
+    "strict_load": true,
+    "unexpected_keys": []
+  },
+  "transport": "huggingface_hub downloads pinned to the immutable model revision"
+}
