@@ -607,3 +607,26 @@ The fixed dense path retains positive IoU point/lower bounds on development and
 the earlier fold-2 dense confirmation. All gates pass; compact result SHA-256:
 `9473bc039e43bfc15d97b8eca0228fce66b31dffc8c487f8b3a4351c3280e1b5`.
 Only a separately frozen external/new-cohort confirmation is authorized.
+
+## V6 architecture decision and preregistered viability test
+
+The first v6 implementation uses separate rank-8 Prithvi-Tiny-TL adapters for
+scene ranking and dense segmentation. A fixed source-specific transform first
+restores physical reflectance, after which bounded learned L1C/L2A/Landsat
+corrections, product/sensor embeddings, and explicit missing-reference flags
+handle product semantics. Separate adapters and harmonizers prevent the
+validated Gaussian dense objective from changing the scene representation.
+
+The unified cohort audit binds 33,131 authorized training rows and a 48-group,
+11,478-row untouched MethaneS2CM source-development resource. That resource is
+prepartitioned into 24 calibration and 24 confirmation groups. The risk method
+controls the expected within-group negative-crop FPR under exchangeability via
+the finite-sample CRC correction; shifted-product/geography results are
+transport tests, not guarantees.
+
+Before dense-v6 training, a lower-cost scene viability gate compares the new
+residual directly with the passed Gaussian+DOFA champion on cross-fit folds
+3/4. It must improve AP by at least 0.003 with positive fold, sensor, and paired
+site-bootstrap evidence and non-worse matched-FPR recall. A pass requires a
+second seed; a failure retires this schedule without opening any external or
+official outcome.

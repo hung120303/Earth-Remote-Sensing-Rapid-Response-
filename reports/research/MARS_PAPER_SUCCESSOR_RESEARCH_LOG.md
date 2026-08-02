@@ -5654,3 +5654,68 @@ predeclared gate passes. Compact result SHA-256 is
 `9473bc039e43bfc15d97b8eca0228fce66b31dffc8c487f8b3a4351c3280e1b5`.
 This authorizes only a separately frozen external/new-cohort confirmation; it
 does not authorize reopening fold 2 or the official test.
+
+### 2026-08-01: external multi-cohort recommendation audited
+
+The proposed unified-cohort direction is retained, but four claims were
+corrected before implementation. The local foundation is the 5M-parameter
+Prithvi-EO-2.0-tiny-TL checkpoint, not a 23M model. Its six-band HLS V2
+pretraining uses 4.2 million 30 m samples, and the MARS broad B08 input is not
+an exact match to the HLS narrow-NIR slot. The proposed 30-channel count was
+internally inconsistent. Finally, a negative-score quantile does not guarantee
+geographic-transfer FPR: conformal risk control bounds expected monotone loss
+only under its exchangeability assumptions.
+
+The audited training boundary contains 33,131 rows: 17,745 MARS folds-3/4
+scenes, 14,859 MARS-test-disjoint MethaneS2CM crops, 160 UNEP positives, and
+367 CloudSEN negatives. The untouched MethaneS2CM source-development partition
+contains 11,478 rows and 48 groups. Before any v6 score exists, its groups are
+hash-sorted into 24 risk-calibration groups (5,050 rows) and 24 confirmation
+groups (6,428 rows). The partition, cohort counts, source hashes, licenses, and
+prohibited resources are bound in
+`reports/acquisition/mars_v6_unified_cohort.json`.
+
+### 2026-08-01: product-aware dual-adapter Prithvi v6 implemented
+
+V6 converts every product to physical DN/10,000 reflectance before applying a
+bounded near-identity product correction. MARS tensors require a fixed 0.5
+conversion because the released loader stores DN/5,000; MethaneS2CM L2A is
+already DN/10,000. The canonical input contains target, 90-day reference,
+365-day reference, observability, and two explicit availability flags.
+Missing frames use a learned bounded product-specific imputation residual.
+
+Scene and dense branches use separate rank-8 LoRA Prithvi encoders, product
+harmonizers, and embeddings. The dense path uses a declared 47-channel physics
+contract, four down/up stages, token fusion, and identity-initialized MBMP
+gates. The scene path uses CLS, mean, and learned top-k patch pooling and adds a
+bounded residual around the frozen champion. This makes objective decoupling
+literal: synthetic data can update only the dense branch. Ten focused tests
+cover physical equivalence, missing-frame behavior, channel count, branch
+shapes, phase isolation, frozen-base preservation, protected identity, and
+group-level risk calibration.
+
+The real-checkpoint smoke found and corrected a phase-toggle bug that would
+have unfrozen the Prithvi base. The corrected 14,193,203-parameter model has
+338,502 trainable scene parameters and 2,586,601 trainable dense parameters.
+Four real MARS/MethaneS2CM scene/dense updates are finite, exact below the 0.25
+protection gate, and peak at 185,997,312 CUDA bytes. A separate mixed-source
+scene smoke is finite at 214,051,840 bytes. No held-fold outcome was computed.
+
+### 2026-08-01: v6 scene viability pilot frozen
+
+Before any v6 held score exists, the one-seed scene pilot is frozen at
+`configs/mars_v6_scene_pilot_protocol.json`. Each endpoint fits only the
+opposite MARS fold plus fixed MethaneS2CM, UNEP-positive, and CloudSEN-negative
+auxiliary cohorts. Four fixed epochs use 4,096 MARS-compatible and 4,096
+MethaneS2CM requests each; the last epoch doubles the top-decile champion hard
+negatives. Dense parameters and synthetic scene supervision are disabled.
+
+The comparator is not the older spatial-Prithvi score. The already-selected
+Gaussian-strength-0.10 plus DOFA champion was deterministically materialized
+as a 17,745-row ignored cache with SHA-256
+`988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424`.
+The pilot searches only residual strengths 0.025, 0.05, and 0.10 and requires
++0.003 AP, positive fold/sensor changes, non-worse matched-FPR recall, and a
+strictly positive 10,000-replicate paired-site lower bound. Only a pass may
+authorize a second seed and dense-v6 investment. MARS fold 2, folds 0/1,
+official test, and held external outcomes remain closed.

@@ -158,6 +158,14 @@ The current runs fix Python/NumPy/PyTorch seeds but do not promise bitwise CUDA 
 paper should describe the three seeds as stochastic replicates and disclose the runtime versions
 recorded in the primary JSON.
 
+The v6 manuscript extension should add a methods subsection separating fixed
+physical radiometry from learned product correction, a dual-adapter diagram
+showing disjoint scene/dense gradients, and a calibration subsection stating
+the exchangeable-group CRC estimand exactly. The data table must distinguish
+the 33,131 authorized training rows, 5,050 MethaneS2CM risk-calibration rows,
+and 6,428 untouched confirmation rows. The Gaussian+DOFA result remains the
+scene comparator; it is not replaced by the weaker spatial-Prithvi baseline.
+
 ## Candidate venues
 
 The present evidence best fits a remote-sensing methods/benchmark paper emphasizing spatial

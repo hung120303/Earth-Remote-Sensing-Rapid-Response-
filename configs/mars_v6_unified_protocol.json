@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "status": "draft_after_real_mixed_source_smoke_before_full_endpoint_implementation",
+  "scope": "two-seed folds-3/4 cross-fit of product-aware dual-adapter Prithvi v6 with spatially disjoint MethaneS2CM and fixed external auxiliary data",
+  "trainer": {
+    "path": "tools/train_mars_v6_unified.py",
+    "sha256": "1a558918dc83a65106faf3916594b70c91fdc41617da5667236c2e51b605cee8"
+  },
+  "code_dependencies": [
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_v6_product_model.py",
+      "sha256": "be8eb86434d45132a7335eae038d167c20a3f2e6c08c3974877eda2bef2a9b57"
+    },
+    {
+      "path": "tools/calibrate_mars_v6_group_risk.py",
+      "sha256": "5e9d530361c81d9522fec2d8d9d4f35f0293d13346f22e5360d1d480d97cffc9"
+    },
+    {
+      "path": "tools/build_unified_cohort.py",
+      "sha256": "f8c94a05be6211c2ca30e91db92232f15ed4f391156af32692ed88e8c94caea3"
+    }
+  ],
+  "inputs": {
+    "mars_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_existing_acquisition_receipt"
+    },
+    "mars_manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "mars_folds": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "methanes2cm_packed": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_train_packed.h5",
+      "sha256": "f75ea0c35bba240d56e8deae8828722253c5b82fb59b515d8627fb4106951ca4"
+    },
+    "methanes2cm_auxiliary": {
+      "path": ".research/methanes2cm_mars_disjoint/model_auxiliary_training.jsonl",
+      "sha256": "f014e97339c6bfc25032c924a92bb5cc4feee21c08e6a67088934eb4d58391ba"
+    },
+    "methanes2cm_development": {
+      "path": ".research/methanes2cm_mars_disjoint/model_development.jsonl",
+      "sha256": "d0efcd5c280cfa7238df8d2994efc209d4bde8d68b309b0214bfcb62280f6145"
+    },
+    "unep_auxiliary": {
+      "path": ".research/unep_mars_post2024_refresh_20260801/model_auxiliary_combined.jsonl",
+      "sha256": "8c42b4350ccc0abbd2fec727abba435fca2af8f29289e837d52e7151553d861b"
+    },
+    "cloudsen_auxiliary": {
+      "path": ".research/cloudsen12_spatial_pilot/model_auxiliary_training.jsonl",
+      "sha256": "eab58d320d53d1b1937b148d9efc2c5b4f0f17618dfe60e13f5351481bafb377"
+    },
+    "unified_cohort_receipt": {
+      "path": "reports/acquisition/mars_v6_unified_cohort.json",
+      "sha256": "aef447a2783da546ce239e29568c78d85338c3abf6553fed9ca4683c92bf1b2b"
+    },
+    "foundation_receipt": {
+      "path": "reports/acquisition/prithvi_eo_2_tiny_tl.json",
+      "sha256": "ddc2dec982320ab23f9963b5221b8ce8752c04f01b0b84a018bb70ba84d518f3"
+    },
+    "foundation_config": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/config.json",
+      "sha256": "d7f9e36d2253cb82d296bfd95a9a651f2af455c0cfe8a5ea775b2e3d196ad170"
+    },
+    "foundation_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/Prithvi_EO_V2_tiny_TL.pt",
+      "sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70"
+    },
+    "current_score_cache": {
+      "path": "outputs/mars_scene_domain_routing_development_scores.npz",
+      "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"
+    },
+    "gaussian_scene_cache": {
+      "path": "outputs/mars_gaussian_scene_aligned_replicate_folds34_raw_logits.npz",
+      "sha256": "68aaf9d5b0e6d650bfc70d8ea511f5a4d3838bbc353811ce11462214f96faa02"
+    }
+  },
+  "cohort": {
+    "authorized_training_rows": 33131,
+    "mars_folds_3_4_rows": 17745,
+    "methanes2cm_auxiliary_rows": 14859,
+    "unep_positive_rows": 160,
+    "cloudsen_negative_rows": 367,
+    "methanes2cm_held_rows": 11478,
+    "methanes2cm_risk_calibration_rows": 5050,
+    "methanes2cm_confirmation_rows": 6428,
+    "training_group_rule": "25 km physical groups; each MARS endpoint fits only the opposite fold; external auxiliary groups fixed",
+    "held_partition_rule": "sort SHA256('ersrr-v6-risk-calibration|' + group_id); first 24 groups calibrate risk, remaining 24 confirm"
+  },
+  "smoke": {
+    "scope": "four real finite-optimization steps: MARS scene/dense and MethaneS2CM scene/dense; no held outcome",
+    "finite_optimization": true,
+    "scene_trainable_parameters": 338502,
+    "dense_trainable_parameters": 2586601,
+    "total_parameters": 14193203,
+    "peak_cuda_bytes": 185997312,
+    "protected_identity_below_gate_exact": true,
+    "device": "NVIDIA GeForce RTX 5070"
+  },
+  "architecture": {
+    "foundation": "Prithvi-EO-2.0-tiny-TL, 5M encoder, HLS V2 six-band pretraining",
+    "adapter": {
+      "last_blocks": 4,
+      "rank": 8,
+      "alpha": 16.0,
+      "lora_dropout": 0.05
+    },
+    "product_embedding_dim": 8,
+    "sensor_embedding_dim": 4,
+    "scene_hidden": 256,
+    "scene_topk": 4,
+    "physical_contract": "three six-band frames in DN/10000 reflectance; MARS tensors multiplied by 0.5, MethaneS2CM unchanged",
+    "dense_contract": "47 fixed physics channels plus learned 8D product and 4D sensor maps",
+    "missing_frame_contract": "two explicit availability flags and bounded learned product-specific imputation residuals",
+    "optimization_decoupling": "separate Prithvi encoders, rank-8 adapters, product harmonizers, embeddings, and alternating trainable phases",
+    "protection_gate": 0.25,
+    "scene_contract": "bounded residual around the frozen protected Gaussian+DOFA development champion on MARS; direct calibrated logit on external products",
+    "dense_contract_detail": "four down/up stages, Prithvi pair-token fusion, identity-initialized MBMP gated residual at every decoder stage"
+  },
+  "training": {
+    "seeds": [20269010, 20269020],
+    "precision": "CUDA BF16",
+    "synthetic_dense_pretraining_epochs": 9,
+    "synthetic_requests_per_epoch": 32000,
+    "synthetic_scene_supervision": false,
+    "real_dense_epochs": 6,
+    "real_dense_requests_per_epoch": 12288,
+    "real_scene_epochs": 6,
+    "real_scene_requests_per_epoch": 24576,
+    "hard_negative_scene_epochs": 3,
+    "hard_negative_fraction": 0.10,
+    "dense_learning_rate": 0.0001,
+    "scene_learning_rate": 0.0001,
+    "lora_learning_rate": 0.00005,
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "scheduler": "cosine annealing within each phase",
+    "dense_loss": "weighted BCE (4x plume pixels) + 0.3 Dice",
+    "scene_loss": "focal BCE plus partial-AUC pair loss on group/label-balanced real batches",
+    "augmentation": "joint quarter-turn and reflection; product identity and temporal availability unchanged"
+  },
+  "search": {
+    "strengths": [0.025, 0.05, 0.1],
+    "candidate_count": 3,
+    "endpoint_rule": "fixed final epoch per phase; no held-fold epoch selection",
+    "selection_rule": "all gates, then worst-fold AP, paired-site AP lower bound, worst-sensor AP, pooled AP, smaller strength"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seeds": [20269050, 20269051],
+    "unit": "25 km physical group",
+    "confidence": 0.95
+  },
+  "risk_control": {
+    "alphas": [0.01, 0.025, 0.05, 0.075, 0.1, 0.15, 0.2],
+    "primary_loss": "within-group negative-crop false-positive fraction",
+    "correction": "(n * empirical group risk + 1) / (n + 1)",
+    "mondrian_minimum_negative_groups": 25,
+    "guarantee": "expected group-balanced FPR for future exchangeable 25 km groups only",
+    "shift_policy": "product/geographic transfer is an empirical test, never a distribution-free guarantee"
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.005,
+    "each_fold_average_precision_delta_strictly_positive": true,
+    "each_sensor_average_precision_delta_strictly_positive": true,
+    "paired_site_average_precision_lower_bound_strictly_positive": true,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "false_positive_rate_delta_maximum": 0.0,
+    "dense_iou_delta_strictly_positive": true,
+    "paired_site_dense_iou_lower_bound_strictly_positive": true,
+    "two_seed_reproduction_required": true,
+    "pass_action": "freeze one-shot MethaneS2CM calibration/confirmation; do not reopen MARS fold 2, folds 0/1, or official test"
+  },
+  "outputs": {
+    "smoke": "reports/experiments/mars_v6_unified_smoke.json",
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_v6_unified.pt",
+    "development_scores": "outputs/mars_v6_unified_folds34_scores.npz",
+    "json": "reports/experiments/mars_v6_unified.json",
+    "markdown": "reports/experiments/MARS_V6_UNIFIED.md"
+  },
+  "invariants": [
+    "Draft status permits only real mixed-source finite-optimization smoke; no held-fold metrics.",
+    "Synthetic requests update only the dense branch.",
+    "Scene and dense optimization phases have disjoint trainable parameter sets.",
+    "MethaneS2CM held development, MARS fold 2, folds 0/1, official test, UNEP sealed, and CloudSEN fresh test are not loaded during selection.",
+    "MethaneS2CM risk calibration and confirmation groups are fixed before any v6 score exists.",
+    "Bulk data, checkpoints, and prediction caches remain Git-ignored."
+  ]
+}

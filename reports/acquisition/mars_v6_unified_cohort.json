@@ -1,0 +1,212 @@
+{
+  "authorized_training_rows": 33131,
+  "boundaries": {
+    "held_confirmation": [
+      "methanes2cm_held_development"
+    ],
+    "prohibited": [
+      "MARS fold 2",
+      "MARS folds 0/1",
+      "official MARS test",
+      "MethaneS2CM location test",
+      "UNEP sealed positives",
+      "CloudSEN fresh test",
+      "EMIT V002 outcomes",
+      "MethaneSET"
+    ],
+    "training": [
+      "mars_folds_3_4",
+      "methanes2cm_auxiliary_training",
+      "unep_auxiliary_positive",
+      "cloudsen_auxiliary_negative"
+    ]
+  },
+  "cohorts": {
+    "cloudsen_auxiliary_negative": {
+      "exact_locations": 362,
+      "groups": 362,
+      "negatives": 367,
+      "positives": 0,
+      "product_counts": {
+        "L1C": 367
+      },
+      "rows": 367,
+      "sensor_counts": {
+        "Sentinel-2": 367
+      }
+    },
+    "mars_folds_3_4": {
+      "exact_locations": 250,
+      "fold_rows": {
+        "3": 8799,
+        "4": 8946
+      },
+      "groups": 250,
+      "negatives": 16221,
+      "positives": 1524,
+      "product_counts": {
+        "Collection 2 TOA": 2782,
+        "L1C": 14963
+      },
+      "rows": 17745,
+      "sensor_counts": {
+        "Landsat": 2782,
+        "Sentinel-2": 14963
+      }
+    },
+    "methanes2cm_auxiliary_training": {
+      "exact_locations": 769,
+      "groups": 147,
+      "negatives": 7374,
+      "positives": 7485,
+      "product_counts": {
+        "L2A": 14859
+      },
+      "rows": 14859,
+      "sensor_counts": {
+        "Sentinel-2": 14859
+      }
+    },
+    "methanes2cm_held_development": {
+      "exact_locations": 578,
+      "groups": 48,
+      "negatives": 5686,
+      "positives": 5792,
+      "product_counts": {
+        "L2A": 11478
+      },
+      "rows": 11478,
+      "sensor_counts": {
+        "Sentinel-2": 11478
+      }
+    },
+    "unep_auxiliary_positive": {
+      "exact_locations": 28,
+      "groups": 28,
+      "negatives": 0,
+      "positives": 160,
+      "product_counts": {
+        "L1C": 160
+      },
+      "rows": 160,
+      "sensor_counts": {
+        "Sentinel-2": 160
+      }
+    }
+  },
+  "generated_at_utc": "2026-08-02T03:23:24.709729+00:00",
+  "held_confirmation_rows": 11478,
+  "inputs": {
+    "cloudsen_auxiliary": {
+      "bytes": 561306,
+      "path": ".research/cloudsen12_spatial_pilot/model_auxiliary_training.jsonl",
+      "sha256": "eab58d320d53d1b1937b148d9efc2c5b4f0f17618dfe60e13f5351481bafb377"
+    },
+    "mars_folds": {
+      "bytes": 47595,
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "mars_manifest": {
+      "bytes": 111304171,
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "methanes2cm_auxiliary": {
+      "bytes": 12613233,
+      "path": ".research/methanes2cm_mars_disjoint/model_auxiliary_training.jsonl",
+      "sha256": "f014e97339c6bfc25032c924a92bb5cc4feee21c08e6a67088934eb4d58391ba"
+    },
+    "methanes2cm_development": {
+      "bytes": 9736070,
+      "path": ".research/methanes2cm_mars_disjoint/model_development.jsonl",
+      "sha256": "d0efcd5c280cfa7238df8d2994efc209d4bde8d68b309b0214bfcb62280f6145"
+    },
+    "methanes2cm_receipt": {
+      "bytes": 3635,
+      "path": "reports/acquisition/methanes2cm_mars_disjoint_model_manifest.json",
+      "sha256": "dffb2ca56bec55101675ff7a9fdf1f1dc992fdf67483cb51808bc4b74b6cd8cf"
+    },
+    "prithvi_receipt": {
+      "bytes": 2376,
+      "path": "reports/acquisition/prithvi_eo_2_tiny_tl.json",
+      "sha256": "ddc2dec982320ab23f9963b5221b8ce8752c04f01b0b84a018bb70ba84d518f3"
+    },
+    "unep_auxiliary": {
+      "bytes": 218895,
+      "path": ".research/unep_mars_post2024_refresh_20260801/model_auxiliary_combined.jsonl",
+      "sha256": "8c42b4350ccc0abbd2fec727abba435fca2af8f29289e837d52e7151553d861b"
+    },
+    "unep_receipt": {
+      "bytes": 4908,
+      "path": "reports/acquisition/unep_mars_post2024_refresh_20260801.json",
+      "sha256": "ca939f1a8db254c8cb3bc7ff1f13dd98d956954eb7f49dd55ffba3179fa8676d"
+    }
+  },
+  "invariants": [
+    "MARS training endpoints cross-fit folds 3 and 4; a held fold never fits itself.",
+    "MethaneS2CM auxiliary and held-development 25 km groups are disjoint.",
+    "Every selected MethaneS2CM location is strictly farther than 25 km from official MARS test locations.",
+    "UNEP contributes positives only and CloudSEN contributes negatives only.",
+    "Bulk imagery, HDF5, manifests, and future checkpoints remain ignored."
+  ],
+  "methanes2cm_confirmation_partition": {
+    "algorithm": "sort SHA256('ersrr-v6-risk-calibration|' + group_id); first 24 calibration, remaining 24 confirmation",
+    "confirmation_groups": [
+      "geo25_f0e0d626322bb98d",
+      "geo25_99c3cd059bc55e70",
+      "geo25_749c16055441ae82",
+      "geo25_f11deb46578b8dfb",
+      "geo25_e101ee02c0b61d47",
+      "geo25_e015a7febaedffd1",
+      "geo25_39c1757b84025e43",
+      "geo25_14793426afd3f479",
+      "geo25_2adc870ae6909878",
+      "geo25_6de41bfbac0b270d",
+      "geo25_7177127723489035",
+      "geo25_6c30dad52e46b538",
+      "geo25_6c780e73ac1d77f3",
+      "geo25_db9eed2d23f1ea56",
+      "geo25_e42fe03ec4886622",
+      "geo25_ad44bb0a138cf721",
+      "geo25_71271b809f6c73e7",
+      "geo25_1d4086e5be4affe8",
+      "geo25_dcc07bab9e0e4618",
+      "geo25_c76996bcef100a6f",
+      "geo25_c11d96b1ed3870fe",
+      "geo25_0fd9f9be72b0fb53",
+      "geo25_c2449132d58b762e",
+      "geo25_e9de8c456c7a6f39"
+    ],
+    "confirmation_rows": 6428,
+    "risk_calibration_groups": [
+      "geo25_72250df5907de549",
+      "geo25_9d91e1bfaaa88b9e",
+      "geo25_981b31b33c6465ad",
+      "geo25_5d76be68d4838800",
+      "geo25_090bcf55761ca8b3",
+      "geo25_3266291acb33cd6d",
+      "geo25_c0d4affdac80d122",
+      "geo25_0cc7884699484fbb",
+      "geo25_6fe441f3eaf62de9",
+      "geo25_6bb0e56fd01311b7",
+      "geo25_1eb82d455fad6abc",
+      "geo25_71285e22de7ab43a",
+      "geo25_44f4c6003a471957",
+      "geo25_eece120a00700657",
+      "geo25_26b097778f090858",
+      "geo25_7f5e29b3ae04088b",
+      "geo25_8f3889ed557d6d1f",
+      "geo25_3644b30ed2e38196",
+      "geo25_64fb991f1b9229d8",
+      "geo25_00a925d044568ee3",
+      "geo25_2f41ca59e9406dc5",
+      "geo25_e6daa51c7d191cc5",
+      "geo25_16d8efb04c26472f",
+      "geo25_4a6ca069c324d3e7"
+    ],
+    "risk_calibration_rows": 5050
+  },
+  "schema_version": 1,
+  "scope": "identity-only v6 unified-cohort audit; no imagery or outcomes copied"
+}
