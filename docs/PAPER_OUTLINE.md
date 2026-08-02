@@ -179,6 +179,12 @@ protected inference strength, with an entirely negative paired-site interval.
 Together these runs support an information/complementarity ceiling, not an
 optimizer-capacity explanation.
 
+Add the frozen-encoder scale ablation: Prithvi-EO-2.0-100M-TL at 3,072
+multiscale CLS features produced -0.000288 AP at its weakest fusion and no
+passing candidate. This closes the simple claim that the 5M Prithvi encoder
+alone caused the plateau; it does not compare dense decoders or full
+fine-tuning of the 100M checkpoint.
+
 ## Candidate venues
 
 The present evidence best fits a remote-sensing methods/benchmark paper emphasizing spatial

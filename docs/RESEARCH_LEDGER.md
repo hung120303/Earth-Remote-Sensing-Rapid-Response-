@@ -715,3 +715,19 @@ feature moments, and L2 logistic regression. The frozen grid is C
 promotion requires +0.003 pooled AP, positive AP in both folds and sensors, a
 positive 10,000-replicate paired-site lower bound, and non-worse matched-FPR
 recall. A pass authorizes only separate folds-0/1 extraction/confirmation.
+
+## 2026-08-01: 100M Prithvi CLS probe rejected
+
+All six cross-fold logistic fits converged within 203 iterations. Every one of
+the 12 fixed fusions reduced pooled AP, and degradation increased with blend
+strength. The selected C=0.001, blend=0.025 candidate changed AP -0.000288,
+matched-FPR recall -0.000656 (one positive), fold-3/fold-4 AP
+-0.000084/-0.000433, Sentinel-2 AP -0.000451, and Landsat AP +0.000114. Its
+paired-site interval was [-0.000666,+0.000083].
+
+The 100M representation therefore fails every promotion gate. Larger frozen
+foundation capacity does not add complementary scene-ranking information to
+the champion under this two-frame HLS-transfer contract. Folds 0/1, fold 2,
+external held cohorts, and the official test remain unopened. The cache is
+retained as an ignored negative-result artifact; no classifier artifact is
+promoted.

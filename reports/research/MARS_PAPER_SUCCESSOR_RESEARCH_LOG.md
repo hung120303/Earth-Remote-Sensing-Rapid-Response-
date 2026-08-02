@@ -5787,3 +5787,19 @@ Before probe outcomes, three L2 values and four conservative champion blend
 weights are fixed, together with the worst-fold-first rank and +0.003 AP
 promotion gate. Target-fold normalization uses no target labels; training is
 site/label balanced. The finite probe smoke accesses no held metric.
+
+### 2026-08-01: Prithvi-100M CLS probe rejected
+
+All six cross-fold logistic fits converged. The complete 12-candidate grid was
+monotone-degrading with blend strength. The worst-fold-first selector chose
+C=0.001 and blend 0.025, but AP changed -0.000288, matched-FPR recall lost one
+positive (-0.000656), and both folds regressed. Sentinel-2 changed -0.000451
+AP while Landsat changed +0.000114. The 10,000-replicate paired-site interval
+[-0.000666,+0.000083] crosses zero.
+
+No promotion gate passes, so no folds-0/1 extraction, external scoring, or
+official replay is authorized. Compact result SHA-256:
+`d5cd5ad6457d0234f186ac42b638c61886df77c3c9003eb566a7f4e1897ad6e9`.
+This negative result separates representation scale from the remaining
+ranking ceiling: a 20x larger nominal Prithvi encoder does not improve the
+champion under the same two-frame physical contract.
