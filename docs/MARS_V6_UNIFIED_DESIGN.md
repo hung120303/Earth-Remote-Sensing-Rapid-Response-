@@ -124,3 +124,20 @@ Primary sources: the MARS-S2L manuscript (arXiv:2408.04745), the
 Prithvi-EO-2.0 report (arXiv:2412.02732), the pinned IBM/NASA Tiny-TL model
 card, the MethaneS2CM KDD 2025 dataset card/paper citation, and Conformal Risk
 Control (ICLR 2024; arXiv:2208.02814).
+
+## Post-design outcome
+
+The scene branch is retired after two bounded experiments. The protected v6
+pilot added only +0.000182 AP with a paired-site interval crossing zero; the
+unconstrained v6.1 residual degraded AP monotonically. A separate frozen
+Prithvi-100M CLS probe also degraded ranking. These results rule out the claim
+that product tokens, more residual freedom, or nominal foundation scale alone
+break the current scene-ranking ceiling.
+
+The group-CRC layer was then evaluated honestly across folds. At alpha 0.075,
+fold 4 -> 3 achieved 0.071509 held crop FPR, but fold 3 -> 4 reached 0.165159;
+the corresponding group-balanced FPR was 0.042708 versus 0.083104. CRC remains
+valid only under exchangeability and is not promoted as a geographic-transfer
+guarantee. The architecture path now prioritizes new exact-product real groups
+and independent calibration/confirmation cohorts rather than more head or
+foundation-model search.

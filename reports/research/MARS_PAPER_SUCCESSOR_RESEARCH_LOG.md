@@ -5803,3 +5803,38 @@ official replay is authorized. Compact result SHA-256:
 This negative result separates representation scale from the remaining
 ranking ceiling: a 20x larger nominal Prithvi encoder does not improve the
 champion under the same two-frame physical contract.
+
+### 2026-08-02: honest group conformal-risk transfer audit rejected
+
+The external recommendation's calibration claim was tested in its corrected
+form rather than as a negative-score quantile. For each direction, bounded
+within-25 km-group false-positive losses calibrated a threshold on one cross-fit
+fold and that fixed threshold was evaluated on the other. The finite-sample
+CRC correction was `(n * empirical risk + 1) / (n + 1)`; its claim remains
+limited to expected group-balanced risk for future exchangeable groups.
+
+At the preregistered alpha 0.075 target, fold 4 -> fold 3 transferred: held
+crop FPR was 0.071509, group-balanced FPR 0.042708, and recall 0.972296.
+Fold 3 -> fold 4 did not: held crop FPR rose to 0.165159 and group-balanced FPR
+to 0.083104, despite a calibration bound of 0.074963; Sentinel-2 crop FPR was
+0.182782 while Landsat was 0.062552. The pooled cross-fit group FPR of
+0.059485 hides that directional failure, while pooled crop FPR is 0.118735 and
+recall 0.974409.
+
+Group CRC is therefore retained only for exchangeability-scoped curves and
+empirical transport diagnostics. It is rejected as an operational substitute
+for the current threshold and cannot be described as a geographic-transfer
+FPR guarantee. This is direct evidence that product/geographic data coverage,
+not a threshold formula, remains the primary bottleneck. The result used only
+folds 3/4 and accessed no fold 2, folds 0/1, external held outcome, or official
+test. Compact result SHA-256 is
+`aa717d6500efeddcecfb05c6db3ee4ec6d3875ec8c92c66b971a1e7a67cf449c`.
+
+### 2026-08-02: Earthdata/USGS acquisition boundary verified
+
+The user's authenticated Earthdata browser session is valid, but the exact
+Landsat Collection 2 Level-1 LandsatLook asset redirects independently to the
+USGS EROS Registration System. The public USGS STAC item confirms the exact
+same product and its requester-pays `s3://usgs-landsat` alternate, but this
+machine has no AWS account/profile. An EROS sign-in tab is left for user
+handoff. No alternate Landsat product, tier, or processing level is used.

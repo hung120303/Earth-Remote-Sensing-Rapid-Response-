@@ -162,3 +162,17 @@ Only if every primary gate passes may the abstract say that ERSRR outperformed r
 ## Reproducibility bundle
 
 Release code, exact commits, environment versions, compact protocols, hashes, commands, metric JSON, bootstrap seeds, reports, and the final HTML dossier. Exclude third-party bulk imagery, credentials, signed URLs, model checkpoints, and prediction caches unless redistribution rights and size justify inclusion.
+
+## 2026-08-02 calibration result for the manuscript
+
+An honest fold-3/fold-4 threshold-transfer experiment tests group-level
+conformal risk control at a preregistered 7.5% target. Fold 4 -> 3 transfers at
+7.15% crop FPR and 4.27% group-balanced FPR, but fold 3 -> 4 rises to 16.52%
+crop FPR and 8.31% group-balanced FPR. Pooled recall remains 97.44%, so the
+failure is calibration transport rather than complete detector collapse.
+
+Paper framing: CRC supplies an exchangeability-scoped expected-risk curve, not
+a distribution-free guarantee under geographic or product shift. Directional
+results must be shown rather than hidden behind the pooled 5.95% group FPR.
+This negative result strengthens the data-diversity thesis and prevents an
+overclaim present in the external recommendation.
