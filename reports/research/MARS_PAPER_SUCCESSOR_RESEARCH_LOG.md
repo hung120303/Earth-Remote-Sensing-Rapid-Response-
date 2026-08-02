@@ -5735,3 +5735,18 @@ also missed the preregistered +0.003 floor by an order of magnitude. The
 experiment is rejected without a second seed or dense-v6 phase. It accessed no
 external held outcome and did not reopen MARS fold 2, folds 0/1, or the
 official test.
+
+### 2026-08-01: unconstrained error-correction objective frozen
+
+Post-run code inspection identified a mechanistic limitation in the rejected
+v6 schedule: the MARS training loss saw only a strength-0.10 bounded protected
+correction, limiting its effective local-logit change while also reducing the
+pairwise gradient. The follow-up changes the fitting objective, not the held
+data: protected MARS rows optimize `logit(champion) + residual`, while UNEP,
+CloudSEN, and MethaneS2CM auxiliary rows retain direct scene logits. A small
+L2 term regularizes only protected residuals.
+
+At evaluation the residual is again bounded and applied only above the exact
+0.25 gate. The four strengths and all promotion gates are fixed before
+cross-fit scoring. Twelve focused tests pass, and the real mixed-source smoke
+is finite at 214,051,840 peak CUDA bytes with no held outcome accessed.

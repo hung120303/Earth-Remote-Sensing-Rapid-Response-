@@ -648,3 +648,20 @@ experiment. The specific product-aware rank-8 scene-adapter schedule is
 retired. This negative result strengthens the conclusion that simply adding
 the auxiliary cohorts to a protected residual learner does not break the
 current scene-ranking ceiling.
+
+## 2026-08-01: v6.1 error-correcting residual pilot frozen
+
+The v6 rejection revealed that its MARS training path itself bounded the
+candidate to roughly +/-0.2 local log-odds at the fixed strength 0.10. Focal
+and partial-AUC losses therefore optimized only tiny changes around an already
+strong champion. V6.1 keeps the identical product-aware rank-8 Prithvi scene
+architecture and cohorts but fits an unconstrained additive residual to the
+champion logit. The exact 0.25 protection gate is applied only at inference:
+scores below it remain bitwise identical and changed scores map back above it.
+
+The one-seed protocol searches protected strengths 0.10/0.25/0.50/1.00 and
+retains the same +0.003 AP, positive fold/sensor, positive paired-site lower
+bound, and non-worse matched-FPR recall gates. A real-checkpoint mixed-source
+smoke is finite (loss 0.254646, gradient norm 1.622571, peak CUDA 214,051,840
+bytes) and accessed no held outcome. Trainer, dependency, input, and smoke
+hashes are frozen before the new cross-fit.

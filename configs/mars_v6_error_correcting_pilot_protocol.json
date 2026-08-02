@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_unconstrained_residual_smoke_before_outcomes",
+  "scope": "one-seed folds-3/4 cross-fit viability test of unconstrained v6 error correction followed by protected inference",
+  "trainer": {
+    "path": "tools/train_mars_v6_error_correcting_pilot.py",
+    "sha256": "b2040a7d852a9105d240d560879fe33b1c5de7731b9aab63e84372c344fa080f"
+  },
+  "code_dependencies": [
+    {
+      "path": "tools/train_mars_v6_scene_pilot.py",
+      "sha256": "4d977e6b1801db771062a3bc9a855201b3ada1c00e9269da4a53a55ce7cb62e7"
+    },
+    {
+      "path": "tools/train_mars_v6_unified.py",
+      "sha256": "1a558918dc83a65106faf3916594b70c91fdc41617da5667236c2e51b605cee8"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_v6_product_model.py",
+      "sha256": "be8eb86434d45132a7335eae038d167c20a3f2e6c08c3974877eda2bef2a9b57"
+    }
+  ],
+  "inputs": {
+    "mars_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_existing_acquisition_receipt"
+    },
+    "mars_manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "mars_folds": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "methanes2cm_packed": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_train_packed.h5",
+      "sha256": "f75ea0c35bba240d56e8deae8828722253c5b82fb59b515d8627fb4106951ca4"
+    },
+    "methanes2cm_auxiliary": {
+      "path": ".research/methanes2cm_mars_disjoint/model_auxiliary_training.jsonl",
+      "sha256": "f014e97339c6bfc25032c924a92bb5cc4feee21c08e6a67088934eb4d58391ba"
+    },
+    "unep_auxiliary": {
+      "path": ".research/unep_mars_post2024_refresh_20260801/model_auxiliary_combined.jsonl",
+      "sha256": "8c42b4350ccc0abbd2fec727abba435fca2af8f29289e837d52e7151553d861b"
+    },
+    "cloudsen_auxiliary": {
+      "path": ".research/cloudsen12_spatial_pilot/model_auxiliary_training.jsonl",
+      "sha256": "eab58d320d53d1b1937b148d9efc2c5b4f0f17618dfe60e13f5351481bafb377"
+    },
+    "unified_cohort_receipt": {
+      "path": "reports/acquisition/mars_v6_unified_cohort.json",
+      "sha256": "aef447a2783da546ce239e29568c78d85338c3abf6553fed9ca4683c92bf1b2b"
+    },
+    "champion_cache": {
+      "path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz",
+      "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424"
+    },
+    "champion_cache_receipt": {
+      "path": "reports/experiments/mars_dofa_gaussian_champion_cache.json",
+      "sha256": "11132fc140769e68dcbf743cfd0980617a92ae97ed22c0c973a2130528c005f7"
+    },
+    "foundation_receipt": {
+      "path": "reports/acquisition/prithvi_eo_2_tiny_tl.json",
+      "sha256": "ddc2dec982320ab23f9963b5221b8ce8752c04f01b0b84a018bb70ba84d518f3"
+    },
+    "foundation_config": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/config.json",
+      "sha256": "d7f9e36d2253cb82d296bfd95a9a651f2af455c0cfe8a5ea775b2e3d196ad170"
+    },
+    "foundation_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/Prithvi_EO_V2_tiny_TL.pt",
+      "sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70"
+    }
+  },
+  "folds": [3, 4],
+  "smoke": {
+    "scope": "one real MARS-compatible and MethaneS2CM batch under the unconstrained fitting objective",
+    "finite_optimization": true,
+    "loss": 0.2546464931219816,
+    "focal_loss": 0.11850467696785927,
+    "partial_auc_pair_loss": 0.5445551015436649,
+    "residual_l2": 0.0030495300889015198,
+    "gradient_norm_before_clip": 1.6225714683532715,
+    "peak_cuda_bytes": 214051840,
+    "device": "NVIDIA GeForce RTX 5070",
+    "held_outcomes_accessed": false,
+    "receipt_sha256": "8e02681d3215f56fb5ef232f17cb4ff8d42622619ea18fabb2c8a98d60c5e93b"
+  },
+  "architecture": {
+    "foundation": "Prithvi-EO-2.0-tiny-TL 5M encoder",
+    "adapter": {
+      "last_blocks": 4,
+      "rank": 8,
+      "alpha": 16.0,
+      "lora_dropout": 0.05
+    },
+    "product_embedding_dim": 8,
+    "sensor_embedding_dim": 4,
+    "scene_hidden": 256,
+    "scene_topk": 4,
+    "protection_gate": 0.25,
+    "training_objective": "unconstrained champion-logit plus learned residual for protected MARS rows; direct logit for external auxiliary rows",
+    "inference_objective": "bounded tanh residual only above the exact 0.25 gate",
+    "baseline": "already-selected strength-0.10 Gaussian+DOFA protected champion",
+    "dense_branch": "present but entirely frozen and unexecuted"
+  },
+  "sampling": {
+    "mars_compatible_source_mass": {
+      "mars": 0.75,
+      "unep_positive": 0.125,
+      "cloudsen_negative": 0.125
+    },
+    "methanes2cm": "equal label mass, then equal 25 km group mass",
+    "mars": "equal label mass, then equal physical-group mass; last epoch doubles top-decile champion hard negatives"
+  },
+  "training": {
+    "seed": 20269110,
+    "epochs": 4,
+    "hard_negative_epochs": 1,
+    "mars_requests_per_epoch": 4096,
+    "methanes2cm_requests_per_epoch": 4096,
+    "smoke_requests": 4,
+    "mars_batch_size": 16,
+    "methanes2cm_batch_size": 64,
+    "evaluation_batch_size": 32,
+    "loader_workers": 2,
+    "precision": "CUDA BF16",
+    "lora_learning_rate": 0.00005,
+    "scene_learning_rate": 0.0001,
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "training_residual_scale": 1.0,
+    "residual_l2_weight": 0.001,
+    "focal_gamma": 2.0,
+    "partial_auc_weight": 0.25,
+    "partial_auc_negative_fraction": 0.125,
+    "partial_auc_margin": 0.5,
+    "endpoint_rule": "fixed epoch 4; no held-fold epoch selection",
+    "augmentation": "joint quarter-turn and reflection"
+  },
+  "search": {
+    "strengths": [0.1, 0.25, 0.5, 1.0],
+    "candidate_count": 4,
+    "selection_rule": "all gates, then worst-fold AP, paired-site lower bound, worst-sensor AP, pooled AP, smaller strength"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20269150,
+    "confidence": 0.95,
+    "unit": "physical_location_id / fixed 25 km group"
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.003,
+    "paired_site_average_precision_lower_bound_strictly_positive": true,
+    "each_fold_average_precision_delta_strictly_positive": true,
+    "each_sensor_average_precision_delta_strictly_positive": true,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "pass_action": "freeze a second seed at the selected strength and then authorize dense-v6 work",
+    "failure_action": "reject this objective before external confirmation"
+  },
+  "outputs": {
+    "smoke": "reports/experiments/mars_v6_error_correcting_pilot_smoke.json",
+    "raw_cache": "outputs/mars_v6_error_correcting_pilot_raw_logits.npz",
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_v6_error_correcting_pilot.pt",
+    "json": "reports/experiments/mars_v6_error_correcting_pilot.json",
+    "markdown": "reports/experiments/MARS_V6_ERROR_CORRECTING_PILOT.md"
+  },
+  "invariants": [
+    "Smoke status permits optimization smoke only; held-fold outcomes require frozen hashes and a clean committed worktree.",
+    "Each endpoint fits the opposite MARS fold plus fixed external auxiliary training cohorts.",
+    "The inference protection gate is exact identity below 0.25 and maps every changed score back to at least 0.25.",
+    "Synthetic Gaussian data never supervises this scene branch and the dense branch is not executed.",
+    "MethaneS2CM held development, MARS fold 2, folds 0/1, official test, UNEP sealed, and CloudSEN fresh test remain unopened.",
+    "A passing first seed selects one strength; a second seed is mandatory before external confirmation."
+  ]
+}
