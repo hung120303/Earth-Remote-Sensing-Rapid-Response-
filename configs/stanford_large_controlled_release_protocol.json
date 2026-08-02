@@ -13,6 +13,11 @@
     "subthreshold_challenge": "0 < metered CH4 < 1000 kg/h",
     "reason": "Only intentional zero-release controls are definitive negatives. The primary positive boundary follows the paper's approximate best-case S2/Landsat detectability boundary; all lower nonzero releases remain an immutable challenge stratum."
   },
+  "metadata_only_amendment": {
+    "reason": "The initial metadata build used per-release summary files, which omit intentional blank controls. The compact paper source workbook contains both release and non-release events.",
+    "outcome_accessed": false,
+    "contract_change": "Use QC-valid rows from the paper source workbook as the cohort universe. Label thresholds, product requirements, and the outcome sequence remain unchanged."
+  },
   "product_contract": {
     "sentinel_2": "exact public Level-1C acquisition within 180 seconds of the metered overpass",
     "landsat": "exact USGS Collection 2 Level-1 Landsat 8/9 acquisition within 180 seconds of the metered overpass",
@@ -28,9 +33,9 @@
     "forbidden": "training, checkpoint selection, threshold selection, or iterative tuning on these outcomes"
   },
   "claim_boundaries": [
-    "The cohort contains only two physical sites.",
+    "The QC-valid source-workbook cohort contains one physical site (Casa Grande); the repository's earlier Phase 0 release summaries at Evanston are outside this paper source table.",
     "It cannot replace the official MARS-S2L full or test-only-site benchmark views.",
-    "Site-block uncertainty is descriptive with two groups and cannot establish broad geographic superiority.",
+    "No site-block uncertainty or geographic superiority claim is possible from one site.",
     "Any exact product or geographic overlap with MARS must be reported before scoring.",
     "Subthreshold observations are reported separately and never relabeled after outcomes are known."
   ],
@@ -42,6 +47,8 @@
     "Score each target once and report all scenes, primary confusion counts, and challenge sensitivity."
   ],
   "outputs": {
+    "source_workbook": ".research/stanford_controlled_release_2024_2025/source_data_Reuland_2026_07162026.xlsx",
+    "clean_event_rows": ".research/stanford_controlled_release_2024_2025/clean_events.jsonl",
     "manifest": ".research/stanford_controlled_release_2024_2025/cohort_manifest.jsonl",
     "audit_json": "reports/acquisition/stanford_large_controlled_release_cohort.json",
     "audit_markdown": "reports/acquisition/STANFORD_LARGE_CONTROLLED_RELEASE_COHORT.md"

@@ -1,0 +1,82 @@
+{
+  "claim_boundary": "One-site controlled operating-point stress test; Casa Grande occurs in excluded upstream MARS metadata, so this is temporally new but not source-disjoint, cannot support site-bootstrap inference, and is not a replacement for official MARS-S2L views.",
+  "generated_at_utc": "2026-08-02T06:46:23.355982+00:00",
+  "label_contract": {
+    "primary_negative": "metered CH4 == 0 kg/h",
+    "primary_positive": "metered CH4 >= 1000 kg/h",
+    "subthreshold_challenge": "0 < metered CH4 < 1000 kg/h"
+  },
+  "manifest": {
+    "path": ".research/stanford_controlled_release_2024_2025/cohort_manifest.jsonl",
+    "sha256": "e97d8ce66c84325d7bca447d49f2746c4bb7408c10b404490726e4b11a88330e",
+    "tracked": false
+  },
+  "mars_overlap": {
+    "exact_matches": [],
+    "exact_target_product_matches": 0,
+    "locations": {
+      "Casa Grande": {
+        "latitude": 32.821749,
+        "location_ids": [
+          "6e88d538-2bef-42bf-82d2-85a628e862d5"
+        ],
+        "longitude": -111.785795,
+        "same_site_rows": 677,
+        "same_site_split_label": {
+          "Not Used:False": 669,
+          "Not Used:True": 8
+        }
+      }
+    }
+  },
+  "metadata_only_amendment": {
+    "contract_change": "Replace the incomplete summary-file universe with the paper's QC-valid source workbook rows; label thresholds and scoring sequence are unchanged.",
+    "outcome_accessed": false,
+    "reason": "The initial build used per-release summaries, which omit intentional blank controls. The paper source workbook contains both releases and non-releases."
+  },
+  "provenance": {
+    "git_commit": "3635b4223b3b7032ddb269a19297c42fd08a87e9",
+    "script": "tools/build_stanford_large_controlled_release_cohort.py",
+    "script_sha256": "7dfec88ff2a4699338866a07a45467675f56e1c545b6da6ebec20d95631b1bb0"
+  },
+  "schema_version": 2,
+  "source": {
+    "clean_event_rows": ".research/stanford_controlled_release_2024_2025/clean_events.jsonl",
+    "clean_event_rows_sha256": "499444b15a3c625ceab7bac1e34541c60b0ebdf886009b529df299caf53da942",
+    "data": "https://doi.org/10.25740/qh001qt3946",
+    "license": "CC-BY-4.0",
+    "paper": "https://doi.org/10.21203/rs.3.rs-9110475/v1",
+    "purl": "https://purl.stanford.edu/qh001qt3946",
+    "workbook_path": ".research/stanford_controlled_release_2024_2025/source_data_Reuland_2026_07162026.xlsx",
+    "workbook_sha256": "8539cdf39dae5fe12be3e5a5b98c556701d29f6719b52d5551c6d0d47a546fd8",
+    "workbook_url": "https://stacks.stanford.edu/file/qh001qt3946/Code%20scripts/source_data_Reuland_2026_07162026.xlsx"
+  },
+  "status": "metadata audited; no ERSRR model outcome accessed",
+  "summary": {
+    "locations": {
+      "Casa Grande": 262
+    },
+    "resolution": {
+      "resolved": 257,
+      "unresolved": 5
+    },
+    "rows": 262,
+    "sensor_truth": {
+      "Landsat:primary_negative": 47,
+      "Landsat:primary_positive": 5,
+      "Landsat:subthreshold_challenge": 36,
+      "Sentinel-2:primary_negative": 89,
+      "Sentinel-2:primary_positive": 8,
+      "Sentinel-2:subthreshold_challenge": 77
+    },
+    "sensors": {
+      "Landsat": 88,
+      "Sentinel-2": 174
+    },
+    "truth_strata": {
+      "primary_negative": 136,
+      "primary_positive": 13,
+      "subthreshold_challenge": 113
+    }
+  }
+}

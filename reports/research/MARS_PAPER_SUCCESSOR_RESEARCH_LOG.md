@@ -5864,3 +5864,26 @@ accept an acquisition containing a catalogued plume when its wind direction is
 not similar to the target plume. Background products remain temporal references
 only unless an independent absence label exists. This rules out a tempting but
 invalid way to manufacture thousands of negatives.
+
+### 2026-08-02: large controlled-release source workbook audited before scoring
+
+The April 2026 Stanford preprint and its public CC-BY-4.0 data repository were
+audited as a stronger source of intentional no-release controls. The compact
+paper source workbook, not the per-release summary files, is the authoritative
+cohort universe: the summary files omit blank controls. Applying the paper's
+experiment-team QC and acquisition filters yields 262 unique 2025 observations
+at Casa Grande: 174 Sentinel-2 and 88 Landsat. The frozen visibility-aware
+contract contains 136 exact zero-release negatives, 13 primary positives at or
+above 1,000 kg CH4/h, and 113 nonzero sub-threshold challenge observations.
+
+Public STAC resolves 257 exact Level-1 products; five remain unresolved. No
+exact 2025 target product appears in the upstream MARS metadata. The Casa Grande
+site itself is present in 677 upstream MARS rows, all under the excluded `Not
+Used` split (669 negative, eight positive). The cohort is therefore temporally
+new but neither geographically nor source-disjoint. With one physical site it
+cannot support site-block inference, but it is a strong post-freeze operating-
+point and false-positive stress test. No ERSRR model score was accessed.
+
+The raw workbook, clean event rows, and resolved manifest remain ignored under
+`.research/stanford_controlled_release_2024_2025/`. The tracked audit is
+`reports/acquisition/stanford_large_controlled_release_cohort.json`.
