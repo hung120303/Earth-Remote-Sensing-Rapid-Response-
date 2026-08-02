@@ -13,9 +13,11 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 from evaluate_mars_group_crc_crossfold import (  # noqa: E402
+    crc_threshold_fast,
     crossfold_curve,
     threshold_metrics,
 )
+from calibrate_mars_v6_group_risk import crc_threshold  # noqa: E402
 
 
 def test_threshold_metrics_weights_physical_groups_equally() -> None:
@@ -62,4 +64,19 @@ def test_crossfold_requires_exact_folds_three_and_four() -> None:
             np.asarray([2, 3]),
             np.asarray([0, 0]),
             [0.5],
+        )
+
+
+@pytest.mark.parametrize("alpha", [0.2, 0.4, 0.6, 0.9])
+def test_fast_crc_matches_reference_scan(alpha: float) -> None:
+    scores = np.asarray([0.99, 0.81, 0.7, 0.7, 0.4, 0.3, 0.2, 0.1])
+    labels = np.asarray([1, 1, 0, 0, 0, 0, 0, 0])
+    groups = np.asarray(["p1", "p2", "n1", "n1", "n2", "n2", "n3", "n3"])
+    expected = crc_threshold(scores, labels, groups, alpha)
+    actual = crc_threshold_fast(scores, labels, groups, alpha)
+    assert actual["feasible"] is expected["feasible"]
+    assert actual.get("threshold") == expected.get("threshold")
+    if actual["feasible"]:
+        assert actual["crc_expected_risk_bound"] == pytest.approx(
+            expected["crc_expected_risk_bound"]
         )

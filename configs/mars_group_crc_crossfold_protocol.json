@@ -4,7 +4,7 @@
   "scope": "honest fold-3-to-4 and fold-4-to-3 transfer audit for group-level conformal false-positive risk control",
   "evaluator": {
     "path": "tools/evaluate_mars_group_crc_crossfold.py",
-    "sha256": "e52feafb87293b5c1581b192e17620a9bdeaea022dd233a9405cfa48e8a4b11e"
+    "sha256": "8b3c79833bc2f3552bea2643c6ed6631e61fa3b5d89f561528292a32a3aaef83"
   },
   "dependencies": [
     {
@@ -29,6 +29,12 @@
     "primary_alpha": 0.075,
     "direction_rule": "calibrate on fold 3 and confirm on fold 4, then calibrate on fold 4 and confirm on fold 3",
     "claim": "expected group-balanced FPR for future exchangeable 25 km groups only"
+  },
+  "pre_outcome_runtime_amendment": {
+    "reason": "The first invocation was terminated before any output because the exact reference threshold scan was quadratic in crop count.",
+    "change": "Replace only the scan implementation with a sort-and-increment exact equivalent; four unit-test alphas prove identical feasibility, threshold, and corrected risk.",
+    "scientific_contract_changed": false,
+    "outcome_observed_before_change": false
   },
   "gates": {
     "both_direction_held_group_fpr_at_most_alpha": true,

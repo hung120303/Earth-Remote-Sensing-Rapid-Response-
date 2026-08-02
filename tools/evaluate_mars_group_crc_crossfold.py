@@ -19,11 +19,7 @@ from typing import Any, Iterable
 
 import numpy as np
 
-from calibrate_mars_v6_group_risk import (
-    crc_threshold,
-    group_balanced_recall,
-    group_losses,
-)
+from calibrate_mars_v6_group_risk import group_balanced_recall, group_losses
 
 
 DEFAULT_PROTOCOL = Path("configs/mars_group_crc_crossfold_protocol.json")
@@ -115,6 +111,71 @@ def sensor_metrics(
     return report
 
 
+def crc_threshold_fast(
+    scores: np.ndarray,
+    labels: np.ndarray,
+    groups: np.ndarray,
+    alpha: float,
+) -> dict[str, Any]:
+    """Exact linearithmic equivalent of the reference CRC threshold scan."""
+
+    if not 0.0 < alpha < 1.0:
+        raise ValueError("alpha must lie in (0, 1)")
+    values = _aligned(scores=scores, labels=labels, groups=groups)
+    labels_int = values["labels"].astype(int)
+    negative = labels_int == 0
+    negative_scores = values["scores"][negative].astype(np.float64)
+    negative_groups = values["groups"][negative]
+    if not negative_scores.size:
+        raise ValueError("Risk calibration requires negative examples")
+
+    unique_groups, group_inverse = np.unique(negative_groups, return_inverse=True)
+    group_totals = np.bincount(group_inverse).astype(np.float64)
+    false_positives = group_totals.copy()
+    order = np.argsort(negative_scores, kind="stable")
+    sorted_scores = negative_scores[order]
+    sorted_groups = group_inverse[order]
+    start = 0
+    while start < sorted_scores.size:
+        stop = int(np.searchsorted(sorted_scores, sorted_scores[start], side="right"))
+        removed = np.bincount(
+            sorted_groups[start:stop], minlength=unique_groups.size
+        ).astype(np.float64)
+        false_positives -= removed
+        losses = false_positives / group_totals
+        corrected = (unique_groups.size * float(losses.mean()) + 1.0) / (
+            unique_groups.size + 1.0
+        )
+        if corrected <= alpha:
+            threshold = float(np.nextafter(sorted_scores[start], math.inf))
+            positive = labels_int == 1
+            return {
+                "alpha": float(alpha),
+                "feasible": True,
+                "threshold": threshold,
+                "negative_groups": int(unique_groups.size),
+                "negative_crops": int(negative.sum()),
+                "empirical_group_balanced_fpr": float(losses.mean()),
+                "crc_expected_risk_bound": float(corrected),
+                "maximum_group_fpr": float(losses.max()),
+                "group_balanced_recall": group_balanced_recall(
+                    values["scores"], values["labels"], values["groups"], threshold
+                ),
+                "crop_recall": float(np.mean(values["scores"][positive] >= threshold))
+                if positive.any()
+                else math.nan,
+            }
+        start = stop
+
+    return {
+        "alpha": float(alpha),
+        "feasible": False,
+        "threshold": None,
+        "negative_groups": int(unique_groups.size),
+        "minimum_achievable_crc_bound": float(1.0 / (unique_groups.size + 1.0)),
+    }
+
+
 def crossfold_curve(
     scores: np.ndarray,
     labels: np.ndarray,
@@ -150,7 +211,7 @@ def crossfold_curve(
         confirmation = values["folds"].astype(int) == confirmation_fold
         direction_rows = []
         for alpha in alpha_values:
-            calibrated = crc_threshold(
+            calibrated = crc_threshold_fast(
                 values["scores"][calibration],
                 values["labels"][calibration],
                 values["groups"][calibration],
