@@ -584,3 +584,14 @@ positive AP in each fold and sensor, positive paired-site AP lower bound, and
 the already fixed positive dense IoU evidence at anchored strength 0.10. Both
 protocols precede the future ignored cache. Fold 2, the separate fold-0/fold-1
 files, external outcomes, and the official test are not selection inputs.
+
+## 2026-08-01: bounded Gaussian replicate passes reproducibility gates
+
+The 17,745-row replicate retained both fixed strengths. Strengths 0.05/0.10
+improve AP +0.000689/+0.001154, preserve matched-FPR recall exactly, and have
+positive AP in both folds and both sensors. Their pooled AP deviations from the
+reference are -0.000261/-0.000443, within the frozen 0.001 tolerance. Raw
+logits remain ignored; cache SHA-256 is
+`68aaf9d5b0e6d650bfc70d8ea511f5a4d3838bbc353811ce11462214f96faa02`.
+The compact receipt and cache hashes are bound into the already preregistered
+Gaussian+DOFA evaluator before selection.

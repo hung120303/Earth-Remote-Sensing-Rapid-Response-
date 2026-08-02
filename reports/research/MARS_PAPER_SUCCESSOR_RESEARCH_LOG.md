@@ -5614,3 +5614,22 @@ ignored cache is accepted. The ensemble grid, code hashes, components,
 bootstrap seed, and gates are frozen before that cache exists. The restricted
 evaluator uses only folds 3/4 from the shared folds-2/3/4 cache and does not open
 the separate fold-0/fold-1 files. Fold 2 and the official test remain closed.
+
+### 2026-08-01: bounded Gaussian reproducibility replicate passes
+
+The separately frozen stochastic replicate completed all 17,745 folds-3/4
+scenes. Both conservative strengths pass every predeclared reproducibility
+gate. Strength 0.05 improves AP +0.000689 with fold changes
++0.000526/+0.000621 and Sentinel-2/Landsat changes
++0.000919/+0.000474; strength 0.10 improves AP +0.001154 with fold changes
++0.001155/+0.000847 and sensor changes +0.001566/+0.000776. Matched-FPR
+recall remains exact for both. Relative to the committed reference, pooled AP
+differences are -0.000261 and -0.000443, within the frozen 0.001 tolerance.
+
+The ignored 17,745-row raw-logit cache is 719,360 bytes with SHA-256
+`68aaf9d5b0e6d650bfc70d8ea511f5a4d3838bbc353811ce11462214f96faa02`.
+The compact receipt SHA-256 is
+`0ad67fdf5d21e4d109b0fbec6e5f964a449f594812bfc872c752db84f32d0de1`.
+Both hashes, and only the predeclared hash/status placeholders, are now bound
+into the protected Gaussian+DOFA ensemble protocol before its one-shot
+two-candidate evaluation.

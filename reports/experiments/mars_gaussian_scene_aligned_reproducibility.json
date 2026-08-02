@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "status": "completed_bounded_stochastic_scene_replicate",
+  "generated_at_utc": "2026-08-02T02:50:28.264831+00:00",
+  "scope": "bounded stochastic reproducibility replicate of the Gaussian scene-aligned folds-3/4 cross-fit, retaining raw logits only with predeclared direction and magnitude checks",
+  "protocol": "configs/mars_gaussian_scene_aligned_reproducibility_protocol.json",
+  "protocol_sha256": "bc0fa6190ec24f9c60fcd67fa34bfae225e992918f7810cc199507dfca606f85",
+  "git_commit": "84e588d924142747bf1de4db5480d4a4e3fd3453",
+  "rows": 17745,
+  "fold_counts": {
+    "3": 8799,
+    "4": 8946
+  },
+  "replay_validation": [
+    {
+      "strength": 0.05,
+      "delta": {
+        "average_precision": 0.0006885086928767326,
+        "recall_at_fpr_0_0713": 0.0,
+        "sensor_average_precision": {
+          "Sentinel-2": 0.0009186174743193165,
+          "Landsat": 0.00047369751329706666
+        }
+      },
+      "reference_delta": {
+        "average_precision": 0.0009491473593674637,
+        "recall_at_fpr_0_0713": 0.0,
+        "sensor_average_precision": {
+          "Landsat": 0.00034318884795281335,
+          "Sentinel-2": 0.001247324667017824
+        }
+      },
+      "delta_minus_reference": {
+        "average_precision": -0.0002606386664907312,
+        "recall": 0.0,
+        "sensor_average_precision": {
+          "Landsat": 0.00013050866534425332,
+          "Sentinel-2": -0.00032870719269850746
+        }
+      },
+      "fold_ap_delta": {
+        "3": 0.000525992937991826,
+        "4": 0.0006211657677234195
+      },
+      "checks": {
+        "pooled_ap_positive": true,
+        "matched_fpr_recall_nonworse": true,
+        "each_sensor_ap_positive": true,
+        "each_fold_ap_positive": true,
+        "pooled_ap_within_reference_tolerance": true,
+        "each_sensor_ap_within_reference_tolerance": true
+      },
+      "eligible": true
+    },
+    {
+      "strength": 0.1,
+      "delta": {
+        "average_precision": 0.0011543664368811601,
+        "recall_at_fpr_0_0713": 0.0,
+        "sensor_average_precision": {
+          "Sentinel-2": 0.0015663150656471947,
+          "Landsat": 0.000776060699709813
+        }
+      },
+      "reference_delta": {
+        "average_precision": 0.0015970117498640413,
+        "recall_at_fpr_0_0713": 0.0,
+        "sensor_average_precision": {
+          "Landsat": 0.0009217867479437425,
+          "Sentinel-2": 0.002084711056544064
+        }
+      },
+      "delta_minus_reference": {
+        "average_precision": -0.0004426453129828811,
+        "recall": 0.0,
+        "sensor_average_precision": {
+          "Landsat": -0.00014572604823392954,
+          "Sentinel-2": -0.0005183959908968694
+        }
+      },
+      "fold_ap_delta": {
+        "3": 0.0011546459319691227,
+        "4": 0.0008468363185930583
+      },
+      "checks": {
+        "pooled_ap_positive": true,
+        "matched_fpr_recall_nonworse": true,
+        "each_sensor_ap_positive": true,
+        "each_fold_ap_positive": true,
+        "pooled_ap_within_reference_tolerance": true,
+        "each_sensor_ap_within_reference_tolerance": true
+      },
+      "eligible": true
+    }
+  ],
+  "validation_mode": "bounded_stochastic_replicate",
+  "all_replay_checks_pass": true,
+  "eligible_strengths": [
+    0.05,
+    0.1
+  ],
+  "eligible_for_preregistered_ensemble": true,
+  "scene_cache": {
+    "path": "outputs/mars_gaussian_scene_aligned_replicate_folds34_raw_logits.npz",
+    "bytes": 719360,
+    "sha256": "68aaf9d5b0e6d650bfc70d8ea511f5a4d3838bbc353811ce11462214f96faa02",
+    "tracked": false
+  },
+  "endpoint_state_cache": {
+    "path": "outputs/mars_gaussian_scene_aligned_replicate_folds34_states.pt",
+    "bytes": 84730557,
+    "sha256": "b549930d8c8c2531d430218d58f0e17d83c58182b5f7d97a9c086baafcf3cb03",
+    "tracked": false
+  },
+  "endpoint_summaries": [
+    {
+      "held_fold": 3,
+      "fit_folds": [
+        4
+      ],
+      "fit_rows": 8946,
+      "held_rows": 8799,
+      "seed": 20268303,
+      "final_phase_losses": {
+        "gaussian_scene_aligned_pretrain": 1.7270560530887014,
+        "real_synthetic_joint": 1.9417276849523621
+      }
+    },
+    {
+      "held_fold": 4,
+      "fit_folds": [
+        3
+      ],
+      "fit_rows": 8799,
+      "held_rows": 8946,
+      "seed": 20268304,
+      "final_phase_losses": {
+        "gaussian_scene_aligned_pretrain": 1.8599921321493575,
+        "real_synthetic_joint": 1.9462570830395347
+      }
+    }
+  ],
+  "external_or_official_test_accessed": false
+}
