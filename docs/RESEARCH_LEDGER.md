@@ -665,3 +665,20 @@ bound, and non-worse matched-FPR recall gates. A real-checkpoint mixed-source
 smoke is finite (loss 0.254646, gradient norm 1.622571, peak CUDA 214,051,840
 bytes) and accessed no held outcome. Trainer, dependency, input, and smoke
 hashes are frozen before the new cross-fit.
+
+## 2026-08-01: v6.1 unconstrained error correction rejected
+
+The corrected objective converged and produced substantially larger residuals,
+but every preregistered inference strength worsened AP. At strength 0.10, AP
+changed -0.001376 with paired-site interval [-0.002920,-0.000085]; fold-3 and
+fold-4 changes were -0.000145/-0.000609, and both Sentinel-2 and Landsat
+regressed. Strengths 0.25/0.50/1.00 degraded monotonically by
+-0.003785/-0.008486/-0.021014 AP. The protection gate preserved matched-FPR
+recall exactly at all strengths.
+
+This falsifies the explanation that the earlier v6 gain was limited only by
+its bounded training gradient. On this cohort, stronger product-aware adapter
+corrections are anti-complementary to the Gaussian+DOFA champion. V6.1 is
+retired without a second seed, dense training, or external outcome access.
+The ignored raw-logit cache is retained by SHA-256 in the compact report for
+reproducibility and future non-outcome diagnostics.

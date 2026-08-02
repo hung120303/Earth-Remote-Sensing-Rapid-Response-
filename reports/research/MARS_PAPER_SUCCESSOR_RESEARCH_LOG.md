@@ -5750,3 +5750,20 @@ At evaluation the residual is again bounded and applied only above the exact
 0.25 gate. The four strengths and all promotion gates are fixed before
 cross-fit scoring. Twelve focused tests pass, and the real mixed-source smoke
 is finite at 214,051,840 peak CUDA bytes with no held outcome accessed.
+
+### 2026-08-01: unconstrained error-correction pilot rejected
+
+The frozen two-endpoint run completed in 1,645.3 seconds. Losses were finite
+and the residual magnitude grew enough to test the mechanistic hypothesis.
+Nevertheless, the AP strength curve was monotonically adverse: -0.001376,
+-0.003785, -0.008486, and -0.021014 for strengths 0.10, 0.25, 0.50, and 1.00.
+At the selected smallest strength the paired 25 km group interval was entirely
+negative, [-0.002920,-0.000085], and both folds and both sensors regressed.
+The exact protection gate retained unchanged matched-FPR recall.
+
+The architecture is rejected before replication, dense-v6 work, and external
+confirmation. No MARS fold 2, fold 0/1, official-test, or external held
+outcome was accessed. Compact result SHA-256:
+`1da707289767e9a4f840f86629770089406813dd2819a86ad6b2d1be35c4672a`;
+ignored raw-logit cache SHA-256:
+`986bcbf2a3a920a4ae5bb617c2a696863ab66a591c2cb70735b5c182d79e71c2`.

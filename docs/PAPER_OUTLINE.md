@@ -173,6 +173,12 @@ Retain it to show that cohort scaling plus product tokens alone was
 insufficient; do not imply that its unrun dense branch or CRC stage was
 evaluated.
 
+Pair that ablation with the v6.1 objective control: removing the bounded
+training correction reversed the small gain to -0.001376 AP at the weakest
+protected inference strength, with an entirely negative paired-site interval.
+Together these runs support an information/complementarity ceiling, not an
+optimizer-capacity explanation.
+
 ## Candidate venues
 
 The present evidence best fits a remote-sensing methods/benchmark paper emphasizing spatial
