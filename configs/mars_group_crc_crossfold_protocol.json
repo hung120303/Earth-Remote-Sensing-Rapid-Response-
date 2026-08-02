@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_crossfold_risk_outcome",
+  "scope": "honest fold-3-to-4 and fold-4-to-3 transfer audit for group-level conformal false-positive risk control",
+  "evaluator": {
+    "path": "tools/evaluate_mars_group_crc_crossfold.py",
+    "sha256": "e52feafb87293b5c1581b192e17620a9bdeaea022dd233a9405cfa48e8a4b11e"
+  },
+  "dependencies": [
+    {
+      "path": "tools/calibrate_mars_v6_group_risk.py",
+      "sha256": "5e9d530361c81d9522fec2d8d9d4f35f0293d13346f22e5360d1d480d97cffc9"
+    }
+  ],
+  "inputs": {
+    "champion_scores": {
+      "path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz",
+      "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424"
+    },
+    "champion_result": {
+      "path": "reports/experiments/mars_dofa_gaussian_protected_ensemble.json",
+      "sha256": "9473bc039e43bfc15d97b8eca0228fce66b31dffc8c487f8b3a4351c3280e1b5"
+    }
+  },
+  "risk_control": {
+    "loss": "within-25km-group negative-crop false-positive fraction",
+    "correction": "(n * empirical group risk + 1) / (n + 1)",
+    "alphas": [0.01, 0.025, 0.05, 0.075, 0.1, 0.15, 0.2],
+    "primary_alpha": 0.075,
+    "direction_rule": "calibrate on fold 3 and confirm on fold 4, then calibrate on fold 4 and confirm on fold 3",
+    "claim": "expected group-balanced FPR for future exchangeable 25 km groups only"
+  },
+  "gates": {
+    "both_direction_held_group_fpr_at_most_alpha": true,
+    "pooled_crossfit_crop_fpr_at_most_alpha": true,
+    "minimum_pooled_crop_recall": 0.94,
+    "failure_action": "retain the curve as a negative calibration result but do not replace the current operating rule"
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_group_crc_crossfold.json",
+    "markdown": "reports/experiments/MARS_GROUP_CRC_CROSSFOLD.md"
+  },
+  "invariants": [
+    "Each confirmation fold is scored only at thresholds selected from the other fold.",
+    "No fold 2, folds 0/1, official test, or external held outcome is loaded.",
+    "Sensor results are empirical diagnostics, not conditional conformal guarantees.",
+    "No single global threshold is claimed to control risk under geographic shift without exchangeability."
+  ]
+}
