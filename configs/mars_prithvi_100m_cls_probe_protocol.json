@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_finite_probe_smoke_before_outcomes",
+  "scope": "folds-3/4 cross-fit viability test of a frozen Prithvi-EO-2.0-100M-TL CLS probe fused with the Gaussian+DOFA champion",
+  "trainer": {
+    "path": "tools/train_mars_prithvi_100m_cls_probe.py",
+    "sha256": "1345e2eeca67325a220e0d9ff7ab428c123dc9765210948a8eba69407dc80d65"
+  },
+  "inputs": {
+    "features": {
+      "path": "outputs/mars_prithvi_eo_2_100m_tl_cls_folds34.npz",
+      "sha256": "9758449fd8ca580a31771a1929314d99eabe2ad0822c902ad48ae96226f3944b"
+    },
+    "champion": {
+      "path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz",
+      "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424"
+    },
+    "feature_receipt": {
+      "path": "reports/acquisition/mars_prithvi_100m_cls_folds34.json",
+      "sha256": "3881603e3a7d2e18dc1b2d94e51dc1ee9968a4a8eef901e895089f54d9c6cb4a"
+    },
+    "foundation_receipt": {
+      "path": "reports/acquisition/prithvi_eo_2_100m_tl.json",
+      "sha256": "165ea6d7c4354c34ea4ceff6a18d6cc94fd6e25926e34ccafb3d9f92a9794153"
+    },
+    "champion_receipt": {
+      "path": "reports/experiments/mars_dofa_gaussian_champion_cache.json",
+      "sha256": "11132fc140769e68dcbf743cfd0980617a92ae97ed22c0c973a2130528c005f7"
+    }
+  },
+  "representation": {
+    "encoder": "Prithvi-EO-2.0-100M-TL frozen official checkpoint",
+    "features": "concatenated CLS tokens after blocks 3, 6, 9, and 12",
+    "feature_count": 3072,
+    "normalization": "source fit rows and unlabeled held fold use separate per-feature mean/std",
+    "probe": "site-and-label-balanced L2 logistic regression",
+    "fusion": "logit blend with already-selected Gaussian+DOFA champion",
+    "champion_features_excluded": true
+  },
+  "training": {
+    "seed": 20269200,
+    "folds": [3, 4],
+    "max_iter": 750,
+    "solver": "lbfgs",
+    "target_labels_in_normalization": false,
+    "target_labels_in_fit": false
+  },
+  "search": {
+    "regularization": [0.001, 0.003, 0.01],
+    "blend_weights": [0.025, 0.05, 0.1, 0.2],
+    "candidate_count": 12,
+    "selection_rule": "worst-fold AP, pooled AP, worst-sensor AP, matched-FPR recall, smaller blend, then C closest to 0.003"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20269250,
+    "confidence": 0.95,
+    "unit": "physical_location_id / fixed 25 km group",
+    "timing": "selected point-ranked candidate only"
+  },
+  "gates": {
+    "average_precision_delta_minimum": 0.003,
+    "paired_site_average_precision_lower_bound_strictly_positive": true,
+    "each_fold_average_precision_delta_strictly_positive": true,
+    "each_sensor_average_precision_delta_strictly_positive": true,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "pass_action": "extract and confirm the selected fixed probe on folds 0/1 before external scoring",
+    "failure_action": "reject the 100M CLS path before confirmation or external scoring"
+  },
+  "smoke": {
+    "scope": "finite regularized probe fit/predict without a held metric",
+    "fit_rows": 192,
+    "prediction_rows": 64,
+    "finite": true,
+    "receipt_sha256": "bcf185a28d98db52bb8d56ba15b2c3352110086b9f5996f14fc80b8b697c9a58",
+    "held_outcomes_accessed": false
+  },
+  "outputs": {
+    "smoke": "reports/experiments/mars_prithvi_100m_cls_probe_smoke.json",
+    "raw_cache": "outputs/mars_prithvi_100m_cls_probe_raw_scores.npz",
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_prithvi_100m_cls_probe.joblib",
+    "json": "reports/experiments/mars_prithvi_100m_cls_probe.json",
+    "markdown": "reports/experiments/MARS_PRITHVI_100M_CLS_PROBE.md"
+  },
+  "invariants": [
+    "Draft status permits finite fit/predict smoke only; all score outcomes require a frozen committed protocol.",
+    "Every MARS score is cross-fitted by physical-site fold and no held label enters normalization or fitting.",
+    "The comparator is the actual Gaussian+DOFA champion, not an earlier spatial-Prithvi score.",
+    "Only folds 3/4 are used; fold 2, folds 0/1, external held cohorts, and official test remain unopened.",
+    "A pass authorizes only separate folds-0/1 confirmation, not official-test scoring."
+  ]
+}

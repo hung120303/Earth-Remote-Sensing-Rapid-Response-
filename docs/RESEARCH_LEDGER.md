@@ -699,3 +699,19 @@ extraction is restricted to folds 3/4 and is label-independent; the MARS
 broad-NIR to HLS narrow-NIR mismatch remains explicitly disclosed. Candidate
 probe/fusion choices will be frozen separately after the cache identity exists
 and before any model score is computed.
+
+## 2026-08-01: 100M Prithvi CLS probe frozen before outcomes
+
+The completed 102,807,297-byte cache contains exactly 17,745 unique rows and
+3,072 finite features; identities, labels, sensors, folds, and groups align
+one-to-one with the Gaussian+DOFA champion. Cache SHA-256 is
+`9758449fd8ca580a31771a1929314d99eabe2ad0822c902ad48ae96226f3944b`.
+
+The probe receives only frozen 100M CLS features. It uses equal label mass and
+equal physical-site mass within label, separate source and unlabeled-target
+feature moments, and L2 logistic regression. The frozen grid is C
+0.001/0.003/0.01 crossed with champion logit blends
+0.025/0.05/0.10/0.20. Selection prioritizes worst-fold AP before pooled AP;
+promotion requires +0.003 pooled AP, positive AP in both folds and sensors, a
+positive 10,000-replicate paired-site lower bound, and non-worse matched-FPR
+recall. A pass authorizes only separate folds-0/1 extraction/confirmation.

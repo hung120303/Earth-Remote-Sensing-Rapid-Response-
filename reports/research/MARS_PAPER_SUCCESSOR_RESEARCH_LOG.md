@@ -5767,3 +5767,23 @@ outcome was accessed. Compact result SHA-256:
 `1da707289767e9a4f840f86629770089406813dd2819a86ad6b2d1be35c4672a`;
 ignored raw-logit cache SHA-256:
 `986bcbf2a3a920a4ae5bb617c2a696863ab66a591c2cb70735b5c182d79e71c2`.
+
+### 2026-08-01: official Prithvi-100M representation acquired and preregistered
+
+The official IBM/NASA 100M temporal/location checkpoint was acquired at
+immutable Hugging Face revision
+`2c84e383194986040f883cc43d7869002c425e1b`. Its 454,660,610-byte state
+strictly loads 112,639,492 parameters, including 86,237,186 encoder
+parameters, with no missing or unexpected keys. The Apache-2.0 source files,
+checkpoint identity, and model configuration are recorded in
+`reports/acquisition/prithvi_eo_2_100m_tl.json`; bulk files remain ignored.
+
+Frozen extraction completed all 17,745 folds-3/4 scenes in 1,535.8 seconds.
+The compact four-block CLS contract yields 3,072 float16 features per scene
+in a 102,807,297-byte ignored cache. An independent audit confirms finite
+values and exact champion identity/label/sensor/fold/group alignment.
+
+Before probe outcomes, three L2 values and four conservative champion blend
+weights are fixed, together with the worst-fold-first rank and +0.003 AP
+promotion gate. Target-fold normalization uses no target labels; training is
+site/label balanced. The finite probe smoke accesses no held metric.
