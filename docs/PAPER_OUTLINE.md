@@ -166,6 +166,13 @@ the 33,131 authorized training rows, 5,050 MethaneS2CM risk-calibration rows,
 and 6,428 untouched confirmation rows. The Gaussian+DOFA result remains the
 scene comparator; it is not replaced by the weaker spatial-Prithvi baseline.
 
+The first unified-cohort scene-adapter pilot is a negative-result ablation,
+not the proposed main method: +0.000182 AP with paired-site interval
+[-0.000107,+0.000427] versus Gaussian+DOFA, failing the frozen +0.003 gate.
+Retain it to show that cohort scaling plus product tokens alone was
+insufficient; do not imply that its unrun dense branch or CRC stage was
+evaluated.
+
 ## Candidate venues
 
 The present evidence best fits a remote-sensing methods/benchmark paper emphasizing spatial

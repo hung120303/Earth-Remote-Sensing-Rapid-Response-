@@ -5719,3 +5719,19 @@ The pilot searches only residual strengths 0.025, 0.05, and 0.10 and requires
 strictly positive 10,000-replicate paired-site lower bound. Only a pass may
 authorize a second seed and dense-v6 investment. MARS fold 2, folds 0/1,
 official test, and held external outcomes remain closed.
+
+### 2026-08-01: v6 scene viability pilot rejected
+
+The frozen run completed in 1,619.6 seconds. Both endpoint losses decreased
+over four epochs, confirming that the 338,502-parameter scene adapters were
+trainable. The selected protected residual strength 0.05 reached AP 0.906707,
+only +0.000182 over the Gaussian+DOFA comparator. The AP change was positive
+but negligible on fold 3 (+0.000161), fold 4 (+0.000007), Sentinel-2
+(+0.000295), and Landsat (+0.000064). Matched-FPR recall was unchanged.
+
+The paired 25 km group-bootstrap interval was
+[-0.000107,+0.000427], so the lower bound was not positive; the point change
+also missed the preregistered +0.003 floor by an order of magnitude. The
+experiment is rejected without a second seed or dense-v6 phase. It accessed no
+external held outcome and did not reopen MARS fold 2, folds 0/1, or the
+official test.

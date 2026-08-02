@@ -630,3 +630,21 @@ residual directly with the passed Gaussian+DOFA champion on cross-fit folds
 site-bootstrap evidence and non-worse matched-FPR recall. A pass requires a
 second seed; a failure retires this schedule without opening any external or
 official outcome.
+
+## 2026-08-01: v6 unified scene schedule rejected at the viability gate
+
+The frozen one-seed cross-fit completed both four-epoch endpoints. Training
+loss declined in both directions, but the learned scene residual added only
++0.000182 AP to the Gaussian+DOFA champion at the selected strength 0.05.
+Fold-3/fold-4 AP changes were +0.000161/+0.000007 and Sentinel-2/Landsat
+changes were +0.000295/+0.000064. Matched-FPR recall and the full operating
+confusion matrix were unchanged. The 10,000-replicate paired 25 km group
+interval was [-0.000107,+0.000427].
+
+The result fails both the frozen +0.003 AP floor and the strictly positive
+paired-site lower-bound gate. No second seed, dense-v6 training, external
+confirmation outcome, fold 2, or official-test outcome is authorized by this
+experiment. The specific product-aware rank-8 scene-adapter schedule is
+retired. This negative result strengthens the conclusion that simply adding
+the auxiliary cohorts to a protected residual learner does not break the
+current scene-ranking ceiling.
