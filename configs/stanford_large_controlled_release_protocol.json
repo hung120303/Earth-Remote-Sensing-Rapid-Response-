@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "status": "frozen before ERSRR model scoring",
+  "scope": "external controlled-release stress test using the public Stanford 2024-2025 campaign",
+  "sources": {
+    "preprint": "https://doi.org/10.21203/rs.3.rs-9110475/v1",
+    "data": "https://doi.org/10.25740/qh001qt3946",
+    "license": "CC-BY-4.0"
+  },
+  "label_contract": {
+    "primary_negative": "metered CH4 == 0 kg/h",
+    "primary_positive": "metered CH4 >= 1000 kg/h",
+    "subthreshold_challenge": "0 < metered CH4 < 1000 kg/h",
+    "reason": "Only intentional zero-release controls are definitive negatives. The primary positive boundary follows the paper's approximate best-case S2/Landsat detectability boundary; all lower nonzero releases remain an immutable challenge stratum."
+  },
+  "product_contract": {
+    "sentinel_2": "exact public Level-1C acquisition within 180 seconds of the metered overpass",
+    "landsat": "exact USGS Collection 2 Level-1 Landsat 8/9 acquisition within 180 seconds of the metered overpass",
+    "substitutions_forbidden": [
+      "Sentinel-2 Level-2A",
+      "Landsat Level-2",
+      "Landsat 7",
+      "nearest-date replacement"
+    ]
+  },
+  "selection_contract": {
+    "allowed": "external confirmation after architecture, checkpoint, crop geometry, reference rule, and threshold are frozen",
+    "forbidden": "training, checkpoint selection, threshold selection, or iterative tuning on these outcomes"
+  },
+  "claim_boundaries": [
+    "The cohort contains only two physical sites.",
+    "It cannot replace the official MARS-S2L full or test-only-site benchmark views.",
+    "Site-block uncertainty is descriptive with two groups and cannot establish broad geographic superiority.",
+    "Any exact product or geographic overlap with MARS must be reported before scoring.",
+    "Subthreshold observations are reported separately and never relabeled after outcomes are known."
+  ],
+  "outcome_sequence": [
+    "Resolve and hash exact target products without model inference.",
+    "Audit exact-product and geographic overlap against all MARS metadata.",
+    "Freeze crop geometry, temporal-reference rule, checkpoint hashes, and threshold.",
+    "Acquire only required windows and bands into ignored storage.",
+    "Score each target once and report all scenes, primary confusion counts, and challenge sensitivity."
+  ],
+  "outputs": {
+    "manifest": ".research/stanford_controlled_release_2024_2025/cohort_manifest.jsonl",
+    "audit_json": "reports/acquisition/stanford_large_controlled_release_cohort.json",
+    "audit_markdown": "reports/acquisition/STANFORD_LARGE_CONTROLLED_RELEASE_COHORT.md"
+  }
+}

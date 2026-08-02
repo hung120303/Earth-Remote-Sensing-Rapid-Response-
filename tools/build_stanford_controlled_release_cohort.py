@@ -122,6 +122,8 @@ def resolve_item(
     sensor: str,
     observed: datetime,
     post: Any = post_json,
+    longitude: float = SITE_LON,
+    latitude: float = SITE_LAT,
 ) -> dict[str, Any]:
     if sensor == "Sentinel-2":
         url = EARTH_SEARCH
@@ -142,7 +144,12 @@ def resolve_item(
         url,
         {
             "collections": [collection],
-            "bbox": [SITE_LON - 0.001, SITE_LAT - 0.001, SITE_LON + 0.001, SITE_LAT + 0.001],
+            "bbox": [
+                longitude - 0.001,
+                latitude - 0.001,
+                longitude + 0.001,
+                latitude + 0.001,
+            ],
             "datetime": f"{start}/{end}",
             "limit": 100,
         },
