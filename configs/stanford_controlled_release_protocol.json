@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_any_model_score_or_image-crop_outcome",
+  "scope": "external one-site stress test using metered Stanford 2022 controlled releases",
+  "sources": {
+    "paper": "https://doi.org/10.5194/amt-17-765-2024",
+    "data": "https://doi.org/10.5281/zenodo.10149991",
+    "license": "CC-BY-4.0",
+    "site": {
+      "longitude": -111.785773,
+      "latitude": 32.8218205
+    }
+  },
+  "cohort_builder": {
+    "path": "tools/build_stanford_controlled_release_cohort.py",
+    "sha256": "4b91a677361eb0f528fcca6d8af91d4c77784368dddb1365cf2acafa602dd38f"
+  },
+  "label_contract": {
+    "primary_negative": "metered CH4 <= 10 kg/h",
+    "primary_positive": "metered CH4 >= 1000 kg/h",
+    "subthreshold_challenge": "10 < metered CH4 < 1000 kg/h",
+    "reason": "The paper reports approximately 1 t/h as a best-case S2/Landsat detection boundary and explicitly treats the 4.95 kg/h Sentinel-2 release as a true negative. Intermediate releases remain a separate stress stratum."
+  },
+  "product_contract": {
+    "sentinel_2": "exact public Level-1C acquisition within 180 seconds of the metered overpass",
+    "landsat": "exact USGS Collection 2 Level-1 Landsat 8/9 acquisition within 180 seconds of the metered overpass",
+    "substitutions_forbidden": [
+      "Sentinel-2 Level-2A",
+      "Landsat Level-2",
+      "Landsat 7",
+      "nearest-date replacement"
+    ]
+  },
+  "role": "external operating-point and no-plume stress test only",
+  "claim_boundaries": [
+    "All observations belong to one physical site.",
+    "No paired site-block confidence interval or geographic generalization claim is possible.",
+    "This cohort cannot replace either official MARS-S2L evaluation view.",
+    "Subthreshold challenge observations do not enter primary positive/negative metrics."
+  ],
+  "outcome_sequence": [
+    "Resolve and hash exact target products without model inference.",
+    "Freeze crop geometry, temporal-reference rule, model/checkpoint hashes, and operating threshold.",
+    "Acquire only required windows/bands into ignored storage.",
+    "Score each target once and report every scene plus primary confusion counts.",
+    "Report subthreshold observations separately without changing labels or thresholds."
+  ],
+  "outputs": {
+    "manifest": ".research/stanford_controlled_release_2022/cohort_manifest.jsonl",
+    "audit_json": "reports/acquisition/stanford_controlled_release_cohort.json",
+    "audit_markdown": "reports/acquisition/STANFORD_CONTROLLED_RELEASE_COHORT.md"
+  }
+}
