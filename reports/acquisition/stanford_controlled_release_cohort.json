@@ -1,0 +1,76 @@
+{
+  "claim_boundary": "One-site, upstream-MARS-Not-Used stress test only; not source-disjoint, no site-bootstrap superiority claim, and no replacement for the official MARS-S2L full/test-only views.",
+  "generated_at_utc": "2026-08-02T06:22:30.514705+00:00",
+  "label_contract": {
+    "primary_negative": "metered CH4 <= 10 kg/h",
+    "primary_positive": "metered CH4 >= 1000 kg/h",
+    "rationale": "Use only metered absence/negligible release and rates at or above the paper's approximately 1 t/h best-case S2/Landsat detectability boundary for primary metrics.",
+    "subthreshold_challenge": "10 < metered CH4 < 1000 kg/h"
+  },
+  "manifest": {
+    "path": ".research/stanford_controlled_release_2022/cohort_manifest.jsonl",
+    "sha256": "1a97b92bad9e388a1b4c615d98677024e30cd2b72d9a5ab5b796b2b57623fa7d",
+    "tracked": false
+  },
+  "mars_overlap": {
+    "exact_target_product_matches": 8,
+    "exact_target_product_split_label": {
+      "Not Used:False": 5,
+      "Not Used:True": 3
+    },
+    "interpretation": "The controlled-release site and some exact target products occur in the upstream MARS metadata, but only under the excluded 'Not Used' split. They were not part of the paper train/development/test cohort; nevertheless this is not a new source-disjoint or geographically independent site.",
+    "nearest_location_km": 0.0,
+    "rows_checked": 93539,
+    "same_site_location_ids": [
+      "6e88d538-2bef-42bf-82d2-85a628e862d5"
+    ],
+    "same_site_rows": 677,
+    "same_site_split_label": {
+      "Not Used:False": 669,
+      "Not Used:True": 8
+    },
+    "site_disjoint_at_25km": false
+  },
+  "provenance": {
+    "git_commit": "5097eb953262bd2bc7e5a87029c39b416ec8c4a0",
+    "script": "tools/build_stanford_controlled_release_cohort.py",
+    "script_sha256": "4993d58c5e160de7209fd4cfefa3871068ddf36fbcaeacd364f600a9d1b3db63"
+  },
+  "schema_version": 1,
+  "source": {
+    "license": "CC-BY-4.0",
+    "paper": "https://doi.org/10.5194/amt-17-765-2024",
+    "site": {
+      "latitude": 32.8218205,
+      "longitude": -111.785773
+    },
+    "table_path": ".research/stanford_controlled_release_2022/overpasses.csv",
+    "table_sha256": "120b5f5f54744ec46af75672accd7688d4b49e4b028f2af9fd8137accecbd270",
+    "table_url": "https://raw.githubusercontent.com/sahar-elabbadi/SU-Controlled-Releases-2022/publish/Satellite_overpasses_with_release_rates_20230404.csv",
+    "zenodo": "https://doi.org/10.5281/zenodo.10149991"
+  },
+  "status": "metadata audited; upstream MARS overlap found; no model outcome accessed",
+  "summary": {
+    "resolution": {
+      "resolved": 19,
+      "unresolved": 1
+    },
+    "rows": 20,
+    "sensor_truth": {
+      "Landsat:primary_negative": 5,
+      "Landsat:primary_positive": 4,
+      "Landsat:subthreshold_challenge": 3,
+      "Sentinel-2:primary_negative": 4,
+      "Sentinel-2:primary_positive": 4
+    },
+    "sensors": {
+      "Landsat": 12,
+      "Sentinel-2": 8
+    },
+    "truth_strata": {
+      "primary_negative": 9,
+      "primary_positive": 8,
+      "subthreshold_challenge": 3
+    }
+  }
+}

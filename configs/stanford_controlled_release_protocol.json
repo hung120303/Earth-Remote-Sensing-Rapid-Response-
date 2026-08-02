@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "frozen_before_any_model_score_or_image-crop_outcome",
+  "status": "frozen before model scoring; metadata-only amendment records discovered upstream MARS overlap",
   "scope": "external one-site stress test using metered Stanford 2022 controlled releases",
   "sources": {
     "paper": "https://doi.org/10.5194/amt-17-765-2024",
@@ -13,7 +13,7 @@
   },
   "cohort_builder": {
     "path": "tools/build_stanford_controlled_release_cohort.py",
-    "sha256": "4b91a677361eb0f528fcca6d8af91d4c77784368dddb1365cf2acafa602dd38f"
+    "sha256": "4993d58c5e160de7209fd4cfefa3871068ddf36fbcaeacd364f600a9d1b3db63"
   },
   "label_contract": {
     "primary_negative": "metered CH4 <= 10 kg/h",
@@ -31,9 +31,15 @@
       "nearest-date replacement"
     ]
   },
-  "role": "external operating-point and no-plume stress test only",
+  "metadata_only_amendment": {
+    "reason": "The first cohort build found eight exact targets and the same physical site in upstream MARS metadata.",
+    "outcome_accessed": false,
+    "contract_change": "Downgrade the cohort from external/source-disjoint to a previously unscored MARS 'Not Used' fixed-site diagnostic. Primary labels, products, and future model scoring remain unchanged."
+  },
+  "role": "previously unscored upstream-MARS-Not-Used operating-point and no-plume stress test only",
   "claim_boundaries": [
     "All observations belong to one physical site.",
+    "The site and some exact targets occur in upstream MARS metadata under the excluded 'Not Used' split, so the cohort is not source-disjoint.",
     "No paired site-block confidence interval or geographic generalization claim is possible.",
     "This cohort cannot replace either official MARS-S2L evaluation view.",
     "Subthreshold challenge observations do not enter primary positive/negative metrics."

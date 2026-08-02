@@ -141,3 +141,17 @@ valid only under exchangeability and is not promoted as a geographic-transfer
 guarantee. The architecture path now prioritizes new exact-product real groups
 and independent calibration/confirmation cohorts rather than more head or
 foundation-model search.
+
+## Negative-label provenance constraint
+
+MARS temporal background products are not no-plume ground truth. Upstream
+selection defaults `query_only_images_without_plumes` to false and can retain a
+catalogued plume whose wind is dissimilar to the target event. They may be used
+as reference imagery, never as scene-negative supervision without a separate
+verified absence label.
+
+The Stanford 2022 controlled-release table provides genuine metered absence,
+but overlap auditing found the same site and eight exact targets in MARS's
+excluded `Not Used` metadata. It is therefore a useful previously unscored
+fixed-site stress test after champion freeze, not independent geographic or
+source confirmation.

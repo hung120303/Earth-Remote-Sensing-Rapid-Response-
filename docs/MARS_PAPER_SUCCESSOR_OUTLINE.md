@@ -176,3 +176,14 @@ a distribution-free guarantee under geographic or product shift. Directional
 results must be shown rather than hidden behind the pooled 5.95% group FPR.
 This negative result strengthens the data-diversity thesis and prevents an
 overclaim present in the external recommendation.
+
+## 2026-08-02 controlled-release data-provenance result
+
+Stanford's 2022 single-blind campaign supplies the strongest available
+no-plume semantics—metered zero release—but is not an independent MARS source.
+The audit found 677 same-site upstream MARS rows and eight exact target-product
+matches, all excluded as `Not Used`. The paper may use a future one-shot score
+only as a fixed-site diagnostic and must not count it as geographic confirmation.
+The methods section should also state explicitly that MARS temporal background
+selection does not imply methane absence and therefore was never used to create
+negative labels.

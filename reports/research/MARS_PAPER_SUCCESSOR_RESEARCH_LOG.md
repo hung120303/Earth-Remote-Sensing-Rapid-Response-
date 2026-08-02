@@ -5838,3 +5838,29 @@ USGS EROS Registration System. The public USGS STAC item confirms the exact
 same product and its requester-pays `s3://usgs-landsat` alternate, but this
 machine has no AWS account/profile. An EROS sign-in tab is left for user
 handoff. No alternate Landsat product, tier, or processing level is used.
+
+### 2026-08-02: controlled-release negative source audited before scoring
+
+The Stanford 2022 single-blind satellite campaign is the first candidate found
+with metered zero-release Sentinel-2/Landsat observations rather than negatives
+inferred from catalog absence. Its public CC-BY-4.0 table contains 20 relevant
+overpasses at the Casa Grande, Arizona release site: eight primary positives at
+or above 1,000 kg CH4/h, nine primary negatives at or below 10 kg CH4/h, and
+three intermediate-rate challenge observations. Nineteen exact L1 targets
+resolve through public STAC; one Sentinel-2 acquisition is absent from the
+current catalog.
+
+The mandatory overlap audit then found the site already represented by 677
+rows in upstream MARS metadata, including eight exact target products. Every
+same-site and exact-match row is in the excluded `Not Used` split, so none was
+part of the paper train/development/test contract. The cohort remains eligible
+as a previously unscored, post-freeze fixed-site diagnostic, but it is neither
+source-disjoint nor geographically independent and cannot provide a paired-site
+superiority claim. No model score or crop outcome was accessed.
+
+MARS `background_image_tile` must not be converted into a no-plume label. The
+authors' selector defaults `query_only_images_without_plumes` to false and may
+accept an acquisition containing a catalogued plume when its wind direction is
+not similar to the target plume. Background products remain temporal references
+only unless an independent absence label exists. This rules out a tempting but
+invalid way to manufacture thousands of negatives.

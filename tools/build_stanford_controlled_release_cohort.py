@@ -211,6 +211,10 @@ def haversine_km(lon1: float, lat1: float, lon2: float, lat2: float) -> float:
 def mars_overlap(path: Path, product_ids: set[str]) -> dict[str, Any]:
     nearest = math.inf
     exact_products = 0
+    exact_split_label: Counter[str] = Counter()
+    same_site_rows = 0
+    same_site_split_label: Counter[str] = Counter()
+    same_site_location_ids: set[str] = set()
     rows = 0
     with path.open("r", encoding="utf-8-sig", newline="") as source:
         for row in csv.DictReader(source):
@@ -218,6 +222,9 @@ def mars_overlap(path: Path, product_ids: set[str]) -> dict[str, Any]:
             tile = row.get("tile", "")
             if tile in product_ids:
                 exact_products += 1
+                exact_split_label[
+                    f"{row.get('split_name', '')}:{row.get('isplume', '')}"
+                ] += 1
             try:
                 distance = haversine_km(
                     SITE_LON,
@@ -228,11 +235,27 @@ def mars_overlap(path: Path, product_ids: set[str]) -> dict[str, Any]:
             except (KeyError, TypeError, ValueError):
                 continue
             nearest = min(nearest, distance)
+            if distance <= 0.1:
+                same_site_rows += 1
+                same_site_location_ids.add(str(row.get("id_location", "")))
+                same_site_split_label[
+                    f"{row.get('split_name', '')}:{row.get('isplume', '')}"
+                ] += 1
     return {
         "rows_checked": rows,
         "exact_target_product_matches": exact_products,
+        "exact_target_product_split_label": dict(sorted(exact_split_label.items())),
         "nearest_location_km": None if math.isinf(nearest) else nearest,
         "site_disjoint_at_25km": bool(nearest > 25.0),
+        "same_site_rows": same_site_rows,
+        "same_site_location_ids": sorted(same_site_location_ids),
+        "same_site_split_label": dict(sorted(same_site_split_label.items())),
+        "interpretation": (
+            "The controlled-release site and some exact target products occur in the upstream "
+            "MARS metadata, but only under the excluded 'Not Used' split. They were not part "
+            "of the paper train/development/test cohort; nevertheless this is not a new "
+            "source-disjoint or geographically independent site."
+        ),
     }
 
 
@@ -271,11 +294,13 @@ def write_markdown(path: Path, report: dict[str, Any]) -> None:
         f"| Sub-threshold challenge scenes | {summary['truth_strata'].get('subthreshold_challenge', 0)} |",
         f"| Resolved exact products | {summary['resolution'].get('resolved', 0)} |",
         "",
-        "The fixed-location single-blind campaign supplies genuine metered zero-release negatives and high-rate positives. It is a valuable external operating-point stress test, but all observations belong to one physical site. It therefore cannot provide an independent site-block bootstrap claim or replace the official MARS-S2L benchmark.",
+        "The fixed-location single-blind campaign supplies genuine metered zero-release negatives and high-rate positives. It is a valuable previously unscored operating-point stress test, but all observations belong to one physical site already present in excluded upstream MARS metadata. It therefore cannot provide an independent site-block bootstrap claim or replace the official MARS-S2L benchmark.",
         "",
         "The three intermediate-rate observations are reported separately and never silently relabeled. The 4.95 kg/h Sentinel-2 event is a primary negative because the paper explicitly treats it as more than two orders of magnitude below Sentinel-2 detectability.",
         "",
-        f"MARS exact-product overlap: {report['mars_overlap']['exact_target_product_matches']}; nearest MARS location: {report['mars_overlap']['nearest_location_km']:.2f} km.",
+        f"MARS exact-product overlap: {report['mars_overlap']['exact_target_product_matches']}; same-site upstream rows: {report['mars_overlap']['same_site_rows']}; nearest MARS location: {report['mars_overlap']['nearest_location_km']:.2f} km.",
+        "",
+        "All overlapping targets and same-site rows are in MARS's excluded `Not Used` split. This makes the cohort eligible only as a previously unscored, fixed-site diagnostic after model freeze—not as source-disjoint or geographic confirmation.",
         "",
         "Bulk source data and future image crops remain under `.research/` and are excluded from Git.",
         "",
@@ -324,7 +349,7 @@ def main() -> int:
     mars_path = root / args.mars_metadata
     report = {
         "schema_version": 1,
-        "status": "metadata audited; no model outcome accessed",
+        "status": "metadata audited; upstream MARS overlap found; no model outcome accessed",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source": {
             "paper": PAPER_URL,
@@ -352,8 +377,9 @@ def main() -> int:
             "tracked": False,
         },
         "claim_boundary": (
-            "One-site external stress test only; no site-bootstrap superiority claim and no "
-            "replacement for the official MARS-S2L full/test-only views."
+            "One-site, upstream-MARS-Not-Used stress test only; not source-disjoint, no "
+            "site-bootstrap superiority claim, and no replacement for the official "
+            "MARS-S2L full/test-only views."
         ),
         "provenance": {
             "script": Path(__file__).resolve().relative_to(root).as_posix(),

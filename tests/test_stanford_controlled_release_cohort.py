@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,6 +13,7 @@ if str(TOOLS) not in sys.path:
 
 from build_stanford_controlled_release_cohort import (
     haversine_km,
+    mars_overlap,
     methane_rate,
     parse_rows,
     resolve_item,
@@ -81,6 +83,22 @@ class StanfordControlledReleaseTests(unittest.TestCase):
         )
         self.assertEqual(summary["rows"], 2)
         self.assertEqual(summary["sensor_truth"]["Landsat:primary_negative"], 1)
+
+    def test_mars_overlap_separates_excluded_same_site_from_disjoint_data(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "mars.csv"
+            path.write_text(
+                "tile,split_name,isplume,id_location,lon,lat\n"
+                "TARGET,Not Used,True,site-a,-111.785773,32.8218205\n"
+                "OTHER,Not Used,False,site-a,-111.785773,32.8218205\n"
+                "FAR,train,False,site-b,0,0\n",
+                encoding="utf-8",
+            )
+            result = mars_overlap(path, {"TARGET"})
+        self.assertEqual(result["exact_target_product_matches"], 1)
+        self.assertEqual(result["same_site_rows"], 2)
+        self.assertEqual(result["same_site_split_label"]["Not Used:False"], 1)
+        self.assertFalse(result["site_disjoint_at_25km"])
 
 
 if __name__ == "__main__":
