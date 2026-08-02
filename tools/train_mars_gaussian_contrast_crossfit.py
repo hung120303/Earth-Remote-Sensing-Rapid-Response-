@@ -700,7 +700,10 @@ def main() -> int:
     if scene_cache_replay:
         raw_scene = merge_scene_logits(prediction_parts)
         reference = json.loads(paths["reference_result"].read_text(encoding="utf-8"))
-        tolerance = float(protocol["replay_validation"]["absolute_tolerance"])
+        validation = protocol["replay_validation"]
+        validation_mode = str(validation.get("mode", "exact"))
+        if validation_mode not in ("exact", "bounded_stochastic_replicate"):
+            raise ValueError(f"Unknown scene-cache validation mode: {validation_mode}")
         replay_rows = []
         for strength in strengths:
             scores = replay_scene_scores(
@@ -719,36 +722,84 @@ def main() -> int:
                 row for row in reference["candidates"] if float(row["strength"]) == strength
             )
             expected = expected_row["versus_current"]["delta"]
-            checks = {
-                "average_precision": abs(
-                    float(observed["average_precision"])
-                    - float(expected["average_precision"])
+            fold_ap_delta = {}
+            for fold in sorted(set(map(int, raw_scene["folds"]))):
+                rows = raw_scene["folds"] == fold
+                fold_ap_delta[str(fold)] = float(
+                    comparison(
+                        metric_summary(
+                            raw_scene["labels"][rows], scores[rows], raw_scene["sensors"][rows]
+                        ),
+                        metric_summary(
+                            raw_scene["labels"][rows],
+                            raw_scene["base_scores"][rows],
+                            raw_scene["sensors"][rows],
+                        ),
+                    )["delta"]["average_precision"]
                 )
-                <= tolerance,
-                "recall": abs(
-                    float(observed["recall_at_fpr_0_0713"])
-                    - float(expected["recall_at_fpr_0_0713"])
-                )
-                <= tolerance,
-                "sensor_average_precision": all(
-                    abs(
-                        float(observed["sensor_average_precision"][sensor])
-                        - float(expected["sensor_average_precision"][sensor])
-                    )
-                    <= tolerance
+            differences = {
+                "average_precision": float(observed["average_precision"])
+                - float(expected["average_precision"]),
+                "recall": float(observed["recall_at_fpr_0_0713"])
+                - float(expected["recall_at_fpr_0_0713"]),
+                "sensor_average_precision": {
+                    sensor: float(observed["sensor_average_precision"][sensor])
+                    - float(expected["sensor_average_precision"][sensor])
                     for sensor in expected["sensor_average_precision"]
-                ),
+                },
             }
-            if not all(checks.values()):
-                raise RuntimeError(f"Scene-cache replay differs at strength {strength}: {checks}")
+            if validation_mode == "exact":
+                tolerance = float(validation["absolute_tolerance"])
+                checks = {
+                    "average_precision": abs(differences["average_precision"]) <= tolerance,
+                    "recall": abs(differences["recall"]) <= tolerance,
+                    "sensor_average_precision": all(
+                        abs(value) <= tolerance
+                        for value in differences["sensor_average_precision"].values()
+                    ),
+                }
+            else:
+                tolerance = float(validation["maximum_absolute_ap_delta_difference"])
+                checks = {
+                    "pooled_ap_positive": float(observed["average_precision"]) > 0.0,
+                    "matched_fpr_recall_nonworse": float(
+                        observed["recall_at_fpr_0_0713"]
+                    )
+                    >= 0.0,
+                    "each_sensor_ap_positive": min(
+                        map(float, observed["sensor_average_precision"].values())
+                    )
+                    > 0.0,
+                    "each_fold_ap_positive": min(fold_ap_delta.values()) > 0.0,
+                    "pooled_ap_within_reference_tolerance": abs(
+                        differences["average_precision"]
+                    )
+                    <= tolerance,
+                    "each_sensor_ap_within_reference_tolerance": max(
+                        abs(value)
+                        for value in differences["sensor_average_precision"].values()
+                    )
+                    <= tolerance,
+                }
+            eligible = all(checks.values())
             replay_rows.append(
                 {
                     "strength": strength,
                     "delta": observed,
                     "reference_delta": expected,
+                    "delta_minus_reference": differences,
+                    "fold_ap_delta": fold_ap_delta,
                     "checks": checks,
+                    "eligible": eligible,
                 }
             )
+        if validation_mode == "exact" and not all(row["eligible"] for row in replay_rows):
+            failed = next(row for row in replay_rows if not row["eligible"])
+            raise RuntimeError(
+                "Scene-cache replay differs at strength "
+                f"{failed['strength']}: {json.dumps(failed, sort_keys=True)}"
+            )
+        eligible_strengths = [row["strength"] for row in replay_rows if row["eligible"]]
         cache_path = (ROOT / protocol["outputs"]["scene_cache"]).resolve()
         state_path = (ROOT / protocol["outputs"]["endpoint_state_cache"]).resolve()
         atomic_npz(
@@ -771,7 +822,11 @@ def main() -> int:
         os.replace(temporary_state, state_path)
         report = {
             "schema_version": 1,
-            "status": "completed_exact_scene_cache_replay",
+            "status": (
+                "completed_exact_scene_cache_replay"
+                if validation_mode == "exact"
+                else "completed_bounded_stochastic_scene_replicate"
+            ),
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
             "scope": protocol["scope"],
             "protocol": protocol_path.relative_to(ROOT).as_posix(),
@@ -785,7 +840,10 @@ def main() -> int:
                 for fold in sorted(set(map(int, raw_scene["folds"])))
             },
             "replay_validation": replay_rows,
-            "all_replay_checks_pass": True,
+            "validation_mode": validation_mode,
+            "all_replay_checks_pass": all(row["eligible"] for row in replay_rows),
+            "eligible_strengths": eligible_strengths,
+            "eligible_for_preregistered_ensemble": bool(eligible_strengths),
             "scene_cache": {
                 "path": protocol["outputs"]["scene_cache"],
                 "bytes": cache_path.stat().st_size,
@@ -825,7 +883,9 @@ def main() -> int:
         markdown_path.write_text(
             "# Gaussian scene-aligned cache replay\n\n"
             f"- Rows: **{report['rows']:,}**\n"
-            f"- Exact replay checks pass: **{report['all_replay_checks_pass']}**\n"
+            f"- Validation mode: **{report['validation_mode']}**\n"
+            f"- All validation checks pass: **{report['all_replay_checks_pass']}**\n"
+            f"- Eligible strengths: **{report['eligible_strengths']}**\n"
             f"- Scene cache SHA-256: `{report['scene_cache']['sha256']}`\n"
             f"- Endpoint-state SHA-256: `{report['endpoint_state_cache']['sha256']}`\n",
             encoding="utf-8",
@@ -833,15 +893,16 @@ def main() -> int:
         print(
             json.dumps(
                 {
-                    "ok": True,
+                    "ok": report["eligible_for_preregistered_ensemble"],
                     "rows": report["rows"],
+                    "eligible_strengths": report["eligible_strengths"],
                     "scene_cache_sha256": report["scene_cache"]["sha256"],
                     "state_cache_sha256": report["endpoint_state_cache"]["sha256"],
                 },
                 sort_keys=True,
             )
         )
-        return 0
+        return 0 if report["eligible_for_preregistered_ensemble"] else 1
 
     raw = merge_predictions(prediction_parts, strengths)
     candidates, identity = summarize_predictions(

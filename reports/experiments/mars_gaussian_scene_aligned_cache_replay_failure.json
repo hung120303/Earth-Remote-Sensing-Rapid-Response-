@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "rejected_non_bitwise_replay",
+  "generated_at_utc": "2026-08-02T01:23:22.8717345Z",
+  "scope": "audit receipt for the frozen exact Gaussian scene-cache replay",
+  "protocol": "configs/mars_gaussian_scene_aligned_cache_replay_protocol.json",
+  "protocol_sha256": "a981d848681b6a62fc228ea1cd6a9531a325cdd391b0976e81dd1cd0bfef49a4",
+  "freeze_commit": "28a221c1272200fd9aba8b7b6f79a37c00139618",
+  "attempts": 2,
+  "diagnostic_attempt": {
+    "exit_code": 1,
+    "elapsed_seconds": 4866.9,
+    "failed_strength": 0.05,
+    "checks": {
+      "average_precision_exact_within_1e_9": false,
+      "matched_fpr_recall_exact_within_1e_9": true,
+      "sensor_average_precision_exact_within_1e_9": false
+    },
+    "captured_exception": "RuntimeError: Scene-cache replay differs at strength 0.05",
+    "example_training_difference": {
+      "diagnostic_endpoint_4_final_synthetic_scene_bce": 0.41015660686270405,
+      "reference_endpoint_4_final_synthetic_scene_bce": 0.41218838113537437
+    }
+  },
+  "interpretation": "The fixed seed and code path preserve recall but are not bitwise reproducible for AP under the CUDA/BF16/data-worker execution. The exact protocol remains rejected and is not loosened after outcome access.",
+  "outputs_written": false,
+  "folds_0_1_accessed": false,
+  "fold2_or_official_test_accessed": false,
+  "next_action": "Use a separately frozen bounded stochastic reproducibility protocol with directional and magnitude gates; retain raw caches as ignored research evidence and permit only eligible strengths."
+}

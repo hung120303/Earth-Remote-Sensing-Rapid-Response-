@@ -552,6 +552,22 @@ below the fixed +0.002 floor. The finding supports conservative Gaussian scene e
 ensemble component, not a standalone higher-weight successor. Compact result SHA-256:
 `6963e5ac8832011a4c39899d3097ff23afb3222ab6f1d2bbbc67cdc325190358`.
 
+## 2026-08-01: exact replay rejected; stochastic reproducibility made explicit
+
+Two executions of the exact raw-logit replay produced no accepted cache. The
+captured diagnostic run completed both endpoints in 4,866.9 seconds, preserved
+matched-FPR recall within 1e-9, but failed 1e-9 equality for pooled and sensor
+AP at strength 0.05. Endpoint training losses also differed slightly from the
+reference, establishing CUDA/BF16/worker nondeterminism. The original frozen
+protocol is not loosened; its rejection is recorded in
+`reports/experiments/mars_gaussian_scene_aligned_cache_replay_failure.json`.
+
+A separate bounded-reproducibility protocol now freezes a 0.001 AP-delta
+tolerance before its cache exists and requires positive pooled, fold, and
+sensor AP plus non-worse recall per strength. The protected ensemble verifies
+both the compact replicate receipt and its cache hash, and scores only strengths
+marked eligible. No fold-2 or official-test outcome was accessed.
+
 ## 2026-08-01: conservative Gaussian-ViT + DOFA ensemble frozen before cache
 
 The next development-only test combines the fixed DOFA residual with Gaussian

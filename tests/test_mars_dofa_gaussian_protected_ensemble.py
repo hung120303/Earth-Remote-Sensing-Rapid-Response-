@@ -15,6 +15,7 @@ from evaluate_mars_dofa_gaussian_protected_ensemble import (  # noqa: E402
     gaussian_local_candidate,
     load_gaussian_scene_cache,
     validate_fixed_dofa_result,
+    validate_gaussian_replicate_result,
 )
 
 
@@ -81,3 +82,23 @@ def test_fixed_dofa_result_binding(tmp_path: Path) -> None:
     validate_fixed_dofa_result(path, fixed)
     with pytest.raises(ValueError, match="Fixed DOFA"):
         validate_fixed_dofa_result(path, {**fixed, "weight": 0.1})
+
+
+def test_gaussian_replicate_result_binds_cache(tmp_path: Path) -> None:
+    cache = tmp_path / "cache.bin"
+    cache.write_bytes(b"cache")
+    cache_hash = __import__("hashlib").sha256(b"cache").hexdigest()
+    result = tmp_path / "result.json"
+    result.write_text(
+        """{
+  "protocol_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "scene_cache": {"sha256": "%s"},
+  "eligible_strengths": [0.05],
+  "eligible_for_preregistered_ensemble": true
+}\n""" % cache_hash,
+        encoding="utf-8",
+    )
+    _, eligible = validate_gaussian_replicate_result(result, cache, "a" * 64)
+    assert eligible == {0.05}
+    with pytest.raises(ValueError, match="protocol binding"):
+        validate_gaussian_replicate_result(result, cache, "b" * 64)

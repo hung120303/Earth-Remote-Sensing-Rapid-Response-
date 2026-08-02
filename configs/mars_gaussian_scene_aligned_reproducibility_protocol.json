@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_held_outcomes",
+  "scope": "bounded stochastic reproducibility replicate of the Gaussian scene-aligned folds-3/4 cross-fit, retaining raw logits only with predeclared direction and magnitude checks",
+  "protocol_sha256_self_excluding_field": "see_git_commit",
+  "scene_cache_replay": true,
+  "trainer": {
+    "path": "tools/train_mars_gaussian_contrast_crossfit.py",
+    "sha256": "7d904a4f6bf7b072ba1671fb95463384b421f158db242ba4e7068abbcab4a2a3"
+  },
+  "code_dependencies": [
+    {"path": "EarthRemoteSensingRapidResponse/mars_gaussian_contrast_vit.py", "sha256": "92ca3507b88f7196e3c49d84ccc2e889ca9433caecd5ac8ab159eb79efb8a268"},
+    {"path": "EarthRemoteSensingRapidResponse/mars_gaussian_plume.py", "sha256": "9ec8d0b11ba934d65ffcf014e0b2ba29d0b62d21006bd70f2db093dbeec0eaca"},
+    {"path": "tools/train_mars_gaussian_contrast_full_bank.py", "sha256": "0e52401f06437b220a7d5637f08f2ea3c01195f3224564d4852e5772b4e605f2"},
+    {"path": "tools/train_mars_gaussian_vit_pilot.py", "sha256": "30d07ed4271ebae4c8b279590c71e7c89cb7889275bff2b1f5fbff844835af78"},
+    {"path": "tools/train_mars_dinov3_methane_fusion_pilot.py", "sha256": "3d1aa56264e7e5c4f12b9cf6902b8694a23170ef0aefe7fae7ee0724eba4e575"},
+    {"path": "tools/train_mars_ndmi_bitemporal_fusion_pilot.py", "sha256": "072a45394ed2d9a409a05ba03521eb9d9ff88c1d513003dd77c2095e71347b3f"},
+    {"path": "tools/train_mars_paper_residual.py", "sha256": "cdbe9313f3d532cbe435a7302f543b55387c7b29e4e1fedafccb3193556a6874"},
+    {"path": "tools/train_mars_physics_guided_teacher_balanced_pilot.py", "sha256": "88e8afce95d62f8c425e9c604aae8ed3fe91db79e75befe710141c1a76299938"},
+    {"path": "tools/train_mars_physics_guided_teacher_pilot.py", "sha256": "73e5161fa03eec45b637d64998ff0ed116fc0496f2af32a8f72d74f546dbb376"},
+    {"path": "tools/train_methanes2cm_v5.py", "sha256": "73fcb67a0ff15a467ac9aa9d92f248eabb0b3fd08ee2d4586269c558b736c461"}
+  ],
+  "inputs": {
+    "metadata_root": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L", "sha256": "directory_verified_by_acquisition_receipt"},
+    "manifest": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl", "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"},
+    "acquisition_receipt": {"path": "reports/acquisition/mars_s2l_paper_v3_development_download.json", "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"},
+    "fold_protocol": {"path": "configs/mars_paper_v3_group_folds.json", "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"},
+    "released_checkpoint": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch", "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"},
+    "score_cache": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
+    "transmittance_lut": {"path": "configs/mars_s2_integrated_transmittances.json", "sha256": "1c11ef3f84a9d2a8ce65fc7301166ce20517bb57425ed3f5dca5a313a876c03f"},
+    "full_bank_protocol": {"path": "configs/mars_gaussian_contrast_full_bank_protocol.json", "sha256": "25b5ef8633874f887c036d12cbaaf9712400caf9ca3d06789de39a3fdfff5f18"},
+    "full_bank_result": {"path": "reports/experiments/mars_gaussian_contrast_full_bank.json", "sha256": "689b806228abda20e433af180f25a2e722bd71a1a2c213a9fb51c0f082f162f3"},
+    "reference_result": {"path": "reports/experiments/mars_gaussian_scene_aligned_crossfit.json", "sha256": "6963e5ac8832011a4c39899d3097ff23afb3222ab6f1d2bbbc67cdc325190358"}
+  },
+  "folds": [3, 4],
+  "architecture": {
+    "family": "physics-contrast ViT encoder with convolutional U-Net decoder",
+    "input": "exact MARS 16-channel target/reference/MBMP/wind/cloud tensor",
+    "model": {"dimension": 256, "depth": 8, "heads": 8, "mlp_ratio": 4, "dropout": 0.05, "patch_size": 16, "reference_grid": 13, "scene_protection_gate": 0.25},
+    "controlled_change": "none to the statistical training path; raw scene logits and bounded reproducibility evidence are retained because exact GPU replay proved non-bitwise"
+  },
+  "synthetic_bank": {
+    "train_start": 0,
+    "train_template_count": 16000,
+    "fixed_selected_epoch": 9,
+    "positive_negative_pairing": "each analytical positive is adjacent to its unchanged real-background negative twin",
+    "strength": "log-uniform 500-10000 released-LUT input units",
+    "geometry": "anisotropic wind-aligned analytical Gaussian plumes"
+  },
+  "sampling": {"real_mass": 0.75, "real_rule": "equal label x sensor request mass, then equal physical-site mass within stratum", "synthetic_mass": 0.25, "synthetic_rule": "equal positive/unchanged-negative and equal Sentinel-2/Landsat indexed templates"},
+  "training": {
+    "seed": 20268300,
+    "synthetic_data_seed": 20268241,
+    "pretrain_loader_seed": 20268242,
+    "crop_size": 160,
+    "synthetic_pretrain_epochs": 9,
+    "synthetic_requests_per_epoch": 32000,
+    "synthetic_scene_supervision": true,
+    "joint_epochs": 3,
+    "joint_samples_per_epoch": 4096,
+    "batch_size": 24,
+    "evaluation_batch_size": 12,
+    "loader_workers": 4,
+    "precision": "bf16",
+    "pretrain_learning_rate": 0.001,
+    "joint_learning_rate": 0.0002,
+    "weight_decay": 0.02,
+    "gradient_clip": 2.0,
+    "hard_negative_fraction": 0.02,
+    "scene_weight": 0.5,
+    "partial_auc_weight": 0.25,
+    "partial_auc_negative_fraction": 0.125,
+    "partial_auc_margin": 0.5,
+    "residual_scene_weight": 0.5,
+    "direction_weight": 0.1,
+    "plume_center_probability": 0.9,
+    "progress_every_batches": 128,
+    "endpoint_rule": "same fixed seed and schedule as the reference; nondeterministic GPU/worker variation is measured rather than mislabeled exact",
+    "optimizer_rule": "fresh AdamW optimizer at the fixed learning rate for each phase",
+    "augmentation": "joint quarter-turn and reflections with consistent wind-vector transforms"
+  },
+  "search": {"strengths": [0.05, 0.1], "candidate_count": 2, "rule": "fixed before this replicate; no strength can be added or altered after generation"},
+  "replay_validation": {
+    "mode": "bounded_stochastic_replicate",
+    "reference": "reports/experiments/mars_gaussian_scene_aligned_crossfit.json",
+    "maximum_absolute_ap_delta_difference": 0.001,
+    "required_per_strength": "positive pooled AP, positive AP in folds 3 and 4, positive Sentinel-2 and Landsat AP, non-worse matched-FPR recall, and pooled/sensor AP deltas within 0.001 of the committed reference",
+    "tolerance_basis": "one half of the downstream preregistered +0.002 AP promotion floor"
+  },
+  "bootstrap": {"replicates": 10000, "seed": 20268450, "confidence": 0.95, "unit": "physical_location_id"},
+  "gates": {"cache_replicate_only": true},
+  "smoke": {"status": "passed_before_freeze", "focused_tests": 11, "peak_cuda_bytes": 1461616640, "held_outcome_accessed": false},
+  "outputs": {
+    "scene_cache": "outputs/mars_gaussian_scene_aligned_replicate_folds34_raw_logits.npz",
+    "endpoint_state_cache": "outputs/mars_gaussian_scene_aligned_replicate_folds34_states.pt",
+    "json": "reports/experiments/mars_gaussian_scene_aligned_reproducibility.json",
+    "markdown": "reports/experiments/MARS_GAUSSIAN_SCENE_ALIGNED_REPRODUCIBILITY.md"
+  },
+  "invariants": [
+    "The earlier exact-replay protocol remains immutable and rejected; this protocol does not retroactively loosen it.",
+    "The bounded reproducibility tolerance and directional gates are frozen before this replicate's raw logits exist.",
+    "Every raw cache is retained as ignored research evidence, but only strengths marked eligible may enter the separately frozen ensemble.",
+    "Each endpoint fits only the opposite authorized development fold and scores its held fold once.",
+    "Fold 0, fold 1, fold 2, external cohorts, and the official test are not accessed.",
+    "Bulk logits and endpoint states remain Git-ignored."
+  ]
+}

@@ -4,7 +4,7 @@
   "scope": "development-only folds-3/4 selection of an exact protected residual ensemble combining the fixed DOFA scene probe with a conservative Gaussian-synthetic ViT scene head",
   "evaluator": {
     "path": "tools/evaluate_mars_dofa_gaussian_protected_ensemble.py",
-    "sha256": "9053ba6d54a386d00f0939a52644ce7774d65032eb274f33ec3669a6acc1201e"
+    "sha256": "ebef277fce333e5473004faa9b163d1e6f7af3934cf36b5d409ece5b336ab603"
   },
   "code_dependencies": [
     {"path": "tools/evaluate_mars_dofa_anchored_protected_ensemble.py", "sha256": "b224268547c5ad6eb6f3bcce9c147b98326a3a1204ea49ce8e8b8573d36d917f"},
@@ -20,12 +20,12 @@
     "current_scores": {"path": "outputs/mars_scene_domain_routing_development_scores.npz", "sha256": "fd955b78b26a3b2a5165b4abab02180ccf4dad433511bf4da7afbff44275c1c7"},
     "dofa_features": {"path": "outputs/mars_dofa_v2_scene_features_folds34.npz", "sha256": "2c43352e92f96549d64188c78318fe606d55552aa9587aace1a195e8dfba66fe"},
     "dofa_result": {"path": "reports/experiments/mars_dofa_v2_train_fitted_normalization_folds34.json", "sha256": "23e9124a5f0b5a9a788a46a6fd07753501a8b83c880b0a4e3f24e680c92074b2"},
-    "gaussian_scene_cache": {"path": "outputs/mars_gaussian_scene_aligned_folds34_raw_logits.npz", "sha256": "pending_cache_generation"},
-    "gaussian_cache_result": {"path": "reports/experiments/mars_gaussian_scene_aligned_cache_replay.json", "sha256": "pending_cache_generation"},
+    "gaussian_scene_cache": {"path": "outputs/mars_gaussian_scene_aligned_replicate_folds34_raw_logits.npz", "sha256": "pending_cache_generation"},
+    "gaussian_cache_result": {"path": "reports/experiments/mars_gaussian_scene_aligned_reproducibility.json", "sha256": "pending_cache_generation"},
     "anchored_development_result": {"path": "reports/experiments/mars_protected_bisensor_expanded_unep.json", "sha256": "3e70513986192dda3b7aadc8feed6a5b12ce6e11eaaef2691e9deb7859efc96c"},
     "anchored_fold2_result": {"path": "reports/experiments/mars_protected_bisensor_expanded_unep_fold2_cache.json", "sha256": "a801b317c3f7690cca5d1afad283c77a95700ade435738378fa859afb4ac5b26"}
   },
-  "gaussian_cache_protocol_sha256": "a981d848681b6a62fc228ea1cd6a9531a325cdd391b0976e81dd1cd0bfef49a4",
+  "gaussian_cache_protocol_sha256": "bc0fa6190ec24f9c60fcd67fa34bfae225e992918f7810cc199507dfca606f85",
   "fixed_dofa": {
     "feature_set": "change_extreme",
     "C": 0.01,
@@ -42,7 +42,7 @@
   },
   "architecture": {
     "base": "current spatial-Prithvi scene score",
-    "gaussian_component": "scene-aligned physics-contrast Vision Transformer trained on analytical wind-aligned Gaussian plume/unchanged-background pairs plus authorized real fit folds",
+    "gaussian_component": "bounded-reproducibility replicate of the scene-aligned physics-contrast Vision Transformer trained on analytical wind-aligned Gaussian plume/unchanged-background pairs plus authorized real fit folds; each strength must pass the separately frozen replicate gates",
     "dofa_component": "fixed five-projection DOFA change/extreme-feature logistic residual with fit-fold-only global normalization",
     "final_protection_gate": 0.25,
     "formula": "inside local-logit coordinates above 0.25, add the conservative Gaussian-ViT residual and the fixed DOFA residual to current; below 0.25 preserve current exactly",
@@ -76,7 +76,7 @@
     "markdown": "reports/experiments/MARS_DOFA_GAUSSIAN_PROTECTED_ENSEMBLE.md"
   },
   "invariants": [
-    "This exact two-candidate grid, evaluator, components, protection gate, bootstrap, and gates are committed before the raw Gaussian scene cache exists.",
+    "This exact two-candidate grid, evaluator, components, protection gate, bootstrap, and gates are recommitted after the exact-replay rejection and before the bounded-replicate raw Gaussian scene cache exists.",
     "After cache generation, only the two pending cache/result hashes and protocol status may change before evaluation.",
     "The evaluator opens only the shared folds-2/3/4 feature file long enough to select folds 3/4; it does not open separate fold-0 or fold-1 feature files.",
     "Fold 2 labels/outcomes and the official test are not accessed for scene selection.",

@@ -167,6 +167,22 @@ def validate_fixed_dofa_result(path: Path, fixed: dict[str, Any]) -> None:
         raise ValueError("Fixed DOFA candidate differs from its passed selection report")
 
 
+def validate_gaussian_replicate_result(
+    result_path: Path,
+    cache_path: Path,
+    expected_protocol_sha256: str,
+) -> tuple[dict[str, Any], set[float]]:
+    report = json.loads(result_path.read_text(encoding="utf-8"))
+    if str(report["protocol_sha256"]) != expected_protocol_sha256:
+        raise ValueError("Gaussian replicate result protocol binding differs")
+    if str(report["scene_cache"]["sha256"]) != sha256(cache_path):
+        raise ValueError("Gaussian replicate result cache binding differs")
+    eligible = set(map(float, report.get("eligible_strengths", [])))
+    if bool(report.get("eligible_for_preregistered_ensemble")) != bool(eligible):
+        raise ValueError("Gaussian replicate eligibility contract differs")
+    return report, eligible
+
+
 def write_markdown(path: Path, report: dict[str, Any]) -> None:
     selected = report["selected"]
     delta = selected["evaluation"]["versus_current"]["delta"]
@@ -227,6 +243,11 @@ def main() -> int:
     raw_gaussian = load_gaussian_scene_cache(
         paths["gaussian_scene_cache"], values, protocol["gaussian_cache_protocol_sha256"]
     )
+    gaussian_replicate, eligible_strengths = validate_gaussian_replicate_result(
+        paths["gaussian_cache_result"],
+        paths["gaussian_scene_cache"],
+        protocol["gaussian_cache_protocol_sha256"],
+    )
     dense = dense_evidence(paths, float(protocol["fixed_dense"]["strength"]))
     gate = float(protocol["architecture"]["final_protection_gate"])
     candidates = []
@@ -256,6 +277,7 @@ def main() -> int:
         ]
         sensor_ap = list(delta["sensor_average_precision"].values())
         checks = {
+            "gaussian_replicate_eligible": strength in eligible_strengths,
             "minimum_ap_delta": delta["average_precision"]
             >= float(gates["average_precision_delta_minimum"]),
             "recall_no_worse": delta["recall_at_fpr_0_0713"] >= 0.0,
@@ -296,6 +318,11 @@ def main() -> int:
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip(),
         "fixed_dofa": protocol["fixed_dofa"],
+        "gaussian_replicate": {
+            "status": gaussian_replicate["status"],
+            "validation_mode": gaussian_replicate["validation_mode"],
+            "eligible_strengths": sorted(eligible_strengths),
+        },
         "fixed_dense_evidence": dense,
         "candidates": [{key: value for key, value in row.items() if key != "rank"} for row in candidates],
         "selected": {key: value for key, value in selected.items() if key != "rank"},

@@ -5563,6 +5563,29 @@ using a final local-logit gate that mathematically keeps every affected score
 above 0.25. That combination must be preregistered before any per-scene Gaussian
 cache is generated.
 
+### 2026-08-01: exact Gaussian replay rejected; bounded replicate frozen
+
+The frozen raw-logit replay completed both 80-minute cross-fit directions but
+failed its deliberately strict 1e-9 validation at Gaussian strength 0.05.
+Matched-FPR recall reproduced exactly; pooled AP and sensor AP did not. The
+training trace independently confirms non-bitwise execution: endpoint-4 final
+synthetic scene BCE was 0.410157 in the diagnostic attempt versus 0.412188 in
+the committed reference. No cache, state, or success receipt was written, and
+the exact protocol remains rejected rather than being relaxed after seeing the
+failure. The compact audit is
+`reports/experiments/mars_gaussian_scene_aligned_cache_replay_failure.json`.
+
+The next attempt is therefore framed as a stochastic reproducibility replicate,
+not an exact replay. Before its outputs exist, the tolerance is frozen at
+0.001 AP-delta difference (half the downstream +0.002 promotion floor). Each
+strength must independently retain positive pooled AP, positive AP in both
+folds and both sensors, non-worse matched-FPR recall, and pooled/sensor AP
+within that tolerance of the reference. A raw cache may be retained as ignored
+research evidence, but the ensemble evaluator cryptographically binds its
+receipt and rejects any strength not explicitly marked eligible. The ensemble
+protocol was updated before the new cache exists; fold 2 and the official test
+remain closed.
+
 ### 2026-08-01: conservative Gaussian-ViT plus DOFA ensemble preregistered
 
 The next experiment tests whether two independently learned, individually
