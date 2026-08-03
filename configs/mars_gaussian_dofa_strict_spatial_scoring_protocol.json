@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "status": "authorized_and_frozen_before_candidate_strict_spatial_inference",
+  "scope": "Candidate-specific post-test replay of the already-frozen Gaussian+DOFA scene score on the complete MARS-S2L strict-spatial Sentinel-2 cohort.",
+  "scientific_boundary": {
+    "project_level_holdout_status": "not pristine: exact-paper outcomes were previously opened by earlier, different candidate replays",
+    "candidate_specific_status": "Gaussian+DOFA was selected and materialized from development folds 3/4 before its own strict-spatial inference",
+    "allowed_claim": "candidate-specific strict-spatial diagnostic across 150 train-disjoint 25 km groups",
+    "forbidden_claims": [
+      "fresh project-level confirmation",
+      "controlled-release validation",
+      "broad superiority from this replay alone",
+      "pixel localization improvement"
+    ]
+  },
+  "source": {
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "license": "CC-BY-NC-SA-4.0",
+    "product_level": "Sentinel-2 Level-1C",
+    "strict_cohort_receipt_path": "reports/acquisition/mars_s2l_v3_strict_cohort.json",
+    "strict_cohort_receipt_sha256": "7f086645064f838e1cd8765f882eddae773cb88e1b8d79ba1020a373c41d0c48"
+  },
+  "cohort": {
+    "selection": "all image/cloud pairs in the exact strict remote catalog",
+    "rows": 4401,
+    "strict_spatial_components": 150,
+    "label_free_site_context_groups": 373,
+    "countries": 32,
+    "sensor": "Sentinel-2 MSI",
+    "group_unit": "frozen 25 km connected spatial component",
+    "fallback_rows": 0,
+    "partial_scoring_forbidden": true
+  },
+  "input_contract": {
+    "metadata_root": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+    "allowed_asset_roles": [
+      "image",
+      "cloud_mask"
+    ],
+    "forbidden_asset_roles": [
+      "plume_mask",
+      "methane_enhancement"
+    ],
+    "image_shape": [
+      12,
+      200,
+      200
+    ],
+    "image_dtype": "uint16",
+    "band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12",
+      "B02_bg",
+      "B03_bg",
+      "B04_bg",
+      "B08_bg",
+      "B11_bg",
+      "B12_bg"
+    ],
+    "released_reflectance": "uint16 DN / 5000 clipped to [0,2]",
+    "observable": "all 12 radiometric bands nonzero AND cloud class equals zero",
+    "cloud_channel": "cloud class > 0",
+    "wind": "recover exact normalized wind channels from input_13_mean and input_14_mean in the label-free paper feature cache; multiply by 8 before reconstructing model inputs",
+    "scorer_must_not_open": [
+      "publication_v3_strict_samples.jsonl",
+      "validated_images_all.csv",
+      "mars_paper_test_v3_diagnostic_cache.npz",
+      "any plume mask",
+      "any methane enhancement raster"
+    ]
+  },
+  "released": {
+    "score": "released_connected_score from the hash-bound label-free exact-paper cache",
+    "threshold": 0.5,
+    "comparator": ">",
+    "decision_rule": "probability >0.5 with at least 100 8-connected pixels"
+  },
+  "candidate": {
+    "name": "Gaussian+DOFA on current-v3 ExtraTrees base",
+    "base_score": "current_v3_scores from the hash-bound label-free exact-paper cache",
+    "gaussian_endpoints": "equal arithmetic mean of raw scene logits from opposite-fold states 3 and 4",
+    "dofa_endpoints": "equal logit mean over ten train-fitted endpoints from five fixed projection seeds and two opposite-fold fits",
+    "gaussian_strength": 0.1,
+    "final_protection_gate": 0.25,
+    "dofa_gate": 0.5,
+    "dofa_weight": 0.05,
+    "operational_threshold": 0.16728139929966007,
+    "threshold_comparator": ">=",
+    "composition": "unchanged score_stanford_large_controlled_release_label_free.py::compose_gaussian_dofa_score",
+    "retuning_forbidden": true
+  },
+  "scoring_dependencies": {
+    "strict_remote_catalog": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_remote_catalog.jsonl",
+      "sha256": "ad8be1441d5a7a0585bc4c8b66305cc53524f48d3837137e92e27881abd3ef28"
+    },
+    "strict_download_receipt": {
+      "path": "reports/acquisition/mars_s2l_v3_strict_download.json",
+      "sha256": "43af2ce31bc317a2c769b342eff5f48007c5cb476fe288834a81f076f9b09e9a"
+    },
+    "label_free_paper_cache": {
+      "path": "outputs/mars_paper_scene_features_label_free.npz",
+      "sha256": "8a35e60e7c396e58639f940239020adb36def885124841e0b20901e10db52f33"
+    },
+    "label_free_paper_receipt": {
+      "path": "reports/acquisition/mars_paper_scene_features_label_free.json",
+      "sha256": "8f82262d60e9a47a40f2c7ded63042544c87bdfe00c74ed9c34cd5db462b168f"
+    },
+    "mars_adapter": {
+      "path": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py",
+      "sha256": "6c82aecd58918567b34f422e4c6f4e817e5578a6bc24ea284791f3d44b63fd36"
+    },
+    "scorer": {
+      "path": "tools/score_mars_gaussian_dofa_strict_spatial_label_free.py",
+      "sha256": "c5ce16d18d4a7f3e9f71fa1246cc13dff74fa05ba23d4363873be06905ed76bc"
+    },
+    "composer": {
+      "path": "tools/score_stanford_large_controlled_release_label_free.py",
+      "sha256": "adfbe547d4108cc1865026ec300a8ccfa6fccf82cc7c824a936dcf05f42f5239"
+    },
+    "gaussian_protocol": {
+      "path": "configs/mars_gaussian_scene_aligned_reproducibility_protocol.json",
+      "sha256": "bc0fa6190ec24f9c60fcd67fa34bfae225e992918f7810cc199507dfca606f85"
+    },
+    "gaussian_state": {
+      "path": "outputs/mars_gaussian_scene_aligned_replicate_folds34_states.pt",
+      "sha256": "b549930d8c8c2531d430218d58f0e17d83c58182b5f7d97a9c086baafcf3cb03"
+    },
+    "gaussian_implementation": {
+      "path": "tools/train_mars_gaussian_contrast_crossfit.py",
+      "sha256": "7d904a4f6bf7b072ba1671fb95463384b421f158db242ba4e7068abbcab4a2a3"
+    },
+    "dofa_checkpoint": {
+      "path": ".research/foundation_models/dofa/checkpoints/dofav2_vit_base_e150.pth",
+      "sha256": "e1be9d50fb3e4e3640e337d098b92d67797eaf2a579de3b7a1e363095885314d"
+    },
+    "dofa_deployment_state": {
+      "path": "outputs/mars_dofa_v2_external_deployment_folds34.joblib",
+      "sha256": "c50ab663acc774d8da9b33eb357fdbc0d0e3f8afffd1ad7c28f09b240ffa21f8"
+    },
+    "dofa_backbone": {
+      "path": "EarthRemoteSensingRapidResponse/dofa_v2_backbone.py",
+      "sha256": "a005d69019be8121db0cb0100b2815f4f8abd5ef44a4c700bc659b20bf1a96da"
+    },
+    "dofa_extractor": {
+      "path": "tools/extract_mars_dofa_v2_scene_features.py",
+      "sha256": "ed8ad97c94da23ede880f44fdd57078a36c130c85f90b23cc705abebb8f55e2e"
+    },
+    "dofa_selector": {
+      "path": "tools/train_mars_dofa_v2_scene_probe.py",
+      "sha256": "62eaefe3ea087bfabeac415af5cba8f18809320b93f43a12b51b97d950f34cb7"
+    },
+    "dofa_endpoint_scorer": {
+      "path": "tools/materialize_mars_dofa_v2_external_deployment_state.py",
+      "sha256": "f618f5114d1126f6b79ebb10753512a526461d78aab8627d81fb8eade610b1b0"
+    }
+  },
+  "implementation_gate": {
+    "dry_run_required": true,
+    "input_preflight_required": true,
+    "two_row_input_only_model_smoke_required": true,
+    "tests_required": true,
+    "pre_authorization_receipt": {
+      "path": "reports/experiments/mars_gaussian_dofa_strict_spatial_pre_authorization_validation.json",
+      "sha256": "3cb7773038a74533e1a214ca6cb7e85d7adfba80383a802c9592503e8fb4b300"
+    },
+    "real_inference_authorized": true
+  },
+  "outputs": {
+    "scores": "outputs/mars_gaussian_dofa_strict_spatial_label_free_scores.npz",
+    "score_manifest": "outputs/mars_gaussian_dofa_strict_spatial_label_free_score_manifest.json",
+    "receipt": "reports/acquisition/mars_gaussian_dofa_strict_spatial_label_free_scores.json"
+  },
+  "one_shot_rules": [
+    "No partial real-cohort inference.",
+    "No output overwrite.",
+    "No labeled strict manifest, diagnostic cache, plume mask, enhancement raster, or metadata CSV access during candidate scoring.",
+    "No candidate threshold, endpoint, feature family, endpoint weight, or protection gate may change after this protocol is authorized.",
+    "The candidate-specific score bundle must be immutable before any evaluator is frozen or run."
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "status": "authorized_after_comparator_provenance_correction_before_metric_computation",
+  "scope": "One-shot scene-level Gaussian+DOFA candidate-specific replay on the complete MARS-S2L strict-spatial cohort.",
+  "scientific_boundary": {
+    "project_level_holdout_status": "not pristine: prior ERSRR candidates opened this exact-paper outcome view",
+    "candidate_specific_status": "Gaussian+DOFA scoring was completed input-only and made immutable before this outcome protocol was created",
+    "allowed_claim": "candidate-specific post-test strict-spatial diagnostic",
+    "forbidden_claims": [
+      "fresh project-level confirmation",
+      "controlled-release validation",
+      "pixel localization improvement",
+      "unrestricted geographic superiority"
+    ]
+  },
+  "implementation_retry": {
+    "first_authorized_attempt": "failed before metric computation and before output creation because the exact-paper diagnostic identity array is named aligned_sample_ids rather than sample_ids",
+    "first_correction": "change only the diagnostic identity-key lookup from sample_ids to aligned_sample_ids",
+    "second_authorized_attempt": "failed before metric computation and before output creation because published CSV scene_pred was incorrectly required to equal the freshly reconstructed released-checkpoint connected-component score",
+    "second_correction": "retain the preregistered reconstructed released connected-component comparator and use published CSV scene_pred only as a provenance cross-check; label and current-v3 score equality checks remain required",
+    "models_scores_thresholds_cohort_metrics_bootstrap_and_gates_changed": false,
+    "outcomes_summarized_before_correction": false,
+    "outputs_created_before_correction": false
+  },
+  "source": {
+    "dataset": "UNEP-IMEO/MARS-S2L",
+    "revision": "c26b1d7e31a0c5241fa37c9140802622c215eb32",
+    "license": "CC-BY-NC-SA-4.0",
+    "sensor": "Sentinel-2 MSI",
+    "product_level": "Level-1C"
+  },
+  "cohort": {
+    "rows": 4401,
+    "selection": "all rows in publication_v3_strict_samples.jsonl",
+    "strict_spatial_components": 150,
+    "bootstrap_unit": "frozen 25 km connected spatial component",
+    "missing_rows": 0
+  },
+  "models": {
+    "released_mars_v3": {
+      "score_array": "released_mars_v3_scores",
+      "threshold": 0.5,
+      "comparator": ">"
+    },
+    "gaussian_dofa": {
+      "score_array": "gaussian_dofa_scores",
+      "threshold": 0.16728139929966007,
+      "comparator": ">=",
+      "retuning_forbidden": true
+    },
+    "current_v3_secondary_diagnostic": {
+      "score_array": "current_v3_scores",
+      "threshold": 0.16728139929966007,
+      "comparator": ">=",
+      "interpretation": "same candidate threshold for measuring incremental Gaussian/DOFA contribution; not a separately selected comparator"
+    }
+  },
+  "metrics": {
+    "scene_ranking": [
+      "average precision",
+      "ROC AUROC"
+    ],
+    "fixed_operating_point": [
+      "recall",
+      "false-positive rate",
+      "precision",
+      "confusion counts"
+    ],
+    "matched_fpr": "maximum candidate recall at or below each bootstrap replicate's released fixed FPR",
+    "paired_exact": "two-sided exact McNemar test on fixed-threshold correctness discordances",
+    "pixel_metrics": "not evaluated because Gaussian+DOFA changes only the scene score"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 20260803,
+    "confidence": 0.95,
+    "unit": "strict 25 km connected spatial component",
+    "paired": true
+  },
+  "superiority_gate": {
+    "average_precision_delta_lower_gt_zero": true,
+    "matched_fpr_recall_delta_lower_gt_zero": true,
+    "fixed_recall_delta_lower_gte_zero": true,
+    "fixed_fpr_delta_upper_lte_zero": true,
+    "interpretation": "all four required checks must pass for candidate-specific scene superiority; passing cannot restore a fresh project-level holdout"
+  },
+  "score_dependencies": {
+    "scoring_protocol": {
+      "path": "configs/mars_gaussian_dofa_strict_spatial_scoring_protocol.json",
+      "sha256": "7c2d9422cf8ad0cab6a798b022213eee0406cbebc57b92b4122e80e9f6e9bb8a"
+    },
+    "pre_authorization_receipt": {
+      "path": "reports/experiments/mars_gaussian_dofa_strict_spatial_pre_authorization_validation.json",
+      "sha256": "3cb7773038a74533e1a214ca6cb7e85d7adfba80383a802c9592503e8fb4b300"
+    },
+    "score_bundle": {
+      "path": "outputs/mars_gaussian_dofa_strict_spatial_label_free_scores.npz",
+      "sha256": "c2ffb8c217eec27ab989514499df0fa05d6c6ad8b59fe555ca0b68d10b76bc9f"
+    },
+    "score_manifest": {
+      "path": "outputs/mars_gaussian_dofa_strict_spatial_label_free_score_manifest.json",
+      "sha256": "0886a61f8a0df23a482505aa19f30bf8212b1812fefbe7cf757253e57b34dde6"
+    },
+    "score_receipt": {
+      "path": "reports/acquisition/mars_gaussian_dofa_strict_spatial_label_free_scores.json",
+      "sha256": "7ff4840b3256dc964cc5c5b8f4b2b94919e84fa25a3b5a03b36fb7a9e2f2c093"
+    },
+    "evaluator": {
+      "path": "tools/evaluate_mars_gaussian_dofa_strict_spatial.py",
+      "sha256": "2f4ccda50198ea863c837808dea4e1ed770808bd7ceb797985ca1ca115007293"
+    }
+  },
+  "outcome_dependencies": {
+    "strict_labeled_manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_samples.jsonl",
+      "sha256": "6e959ae0af50c5a309247cbe674fe01b31a36f8b149f9be3292acebed3e5f906"
+    },
+    "exact_paper_diagnostic_cache": {
+      "path": "outputs/mars_paper_test_v3_diagnostic_cache.npz",
+      "sha256": "1624fddc0222f8ffc5137f557c7fc3e465d53b335c82cc8014711baa35bb94a1"
+    }
+  },
+  "evaluation_gate": {
+    "score_bundle_validation_required": true,
+    "tests_required": true,
+    "dry_run_required": true,
+    "pre_outcome_validation_receipt": {
+      "path": "reports/experiments/mars_gaussian_dofa_strict_spatial_pre_outcome_validation.json",
+      "sha256": "b4da81c20dc8b4b08d0b6b7e9e351fb9cfc759e53b88513984c9300b90f9ef38"
+    },
+    "one_shot_outcome_access_authorized": true
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_gaussian_dofa_strict_spatial_one_shot.json",
+    "markdown": "reports/experiments/MARS_GAUSSIAN_DOFA_STRICT_SPATIAL_ONE_SHOT.md"
+  },
+  "one_shot_rules": [
+    "No output overwrite.",
+    "No model, score, threshold, comparator, bootstrap unit, metric, gate, or cohort change after authorization.",
+    "No post-outcome rescoring or retuning.",
+    "Report failure rather than opening another threshold or subgroup search.",
+    "Keep the project-level post-test limitation explicit even if the candidate-specific gate passes."
+  ]
+}

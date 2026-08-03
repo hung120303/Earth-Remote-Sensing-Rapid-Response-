@@ -1,0 +1,242 @@
+{
+  "cohort": {
+    "negatives": 4334,
+    "positives": 67,
+    "rows": 4401,
+    "strict_spatial_components": 150
+  },
+  "comparisons": {
+    "gaussian_dofa_vs_current_v3": {
+      "baseline": {
+        "average_precision": 0.36463888908874653,
+        "fixed_operating_point": {
+          "comparator": ">=",
+          "false_positive_rate": 0.05699123211813567,
+          "fn": 26,
+          "fp": 247,
+          "precision": 0.1423611111111111,
+          "recall": 0.6119402985074627,
+          "threshold": 0.16728139929966007,
+          "tn": 4087,
+          "tp": 41
+        },
+        "roc_auc": 0.8697456418874707
+      },
+      "baseline_name": "Current-v3 ExtraTrees base at candidate threshold",
+      "candidate": {
+        "average_precision": 0.3748941023609057,
+        "fixed_operating_point": {
+          "comparator": ">=",
+          "false_positive_rate": 0.05699123211813567,
+          "fn": 26,
+          "fp": 247,
+          "precision": 0.1423611111111111,
+          "recall": 0.6119402985074627,
+          "threshold": 0.16728139929966007,
+          "tn": 4087,
+          "tp": 41
+        },
+        "matched_fpr_operating_point": {
+          "comparator": ">=",
+          "false_positive_rate": 0.053068758652515,
+          "fp": 230,
+          "recall": 0.6119402985074627,
+          "threshold": 0.18821856928159175,
+          "tp": 41
+        },
+        "roc_auc": 0.8700486951490816
+      },
+      "candidate_name": "Gaussian+DOFA",
+      "fixed_decision_mcnemar": {
+        "baseline_correct_candidate_wrong": 0,
+        "baseline_wrong_candidate_correct": 0,
+        "discordant": 0,
+        "two_sided_exact_pvalue": 1.0
+      },
+      "paired_component_bootstrap": {
+        "components": 150,
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": 0.0027029603248571064,
+            "mean": 0.010151335997327956,
+            "upper": 0.02021408277104262
+          },
+          "fixed_false_positive_rate": {
+            "lower": 0.0,
+            "mean": 0.0,
+            "upper": 0.0
+          },
+          "fixed_recall": {
+            "lower": 0.0,
+            "mean": 0.0,
+            "upper": 0.0
+          },
+          "matched_fpr_recall": {
+            "lower": 0.0,
+            "mean": 0.0,
+            "upper": 0.0
+          }
+        },
+        "replicates": 10000,
+        "seed": 20260803,
+        "unit": "strict 25 km connected spatial component"
+      },
+      "point_deltas": {
+        "average_precision": 0.01025521327215917,
+        "fixed_false_positive_rate": 0.0,
+        "fixed_recall": 0.0,
+        "matched_fpr_recall": 0.0,
+        "roc_auc": 0.0003030532616108417
+      },
+      "superiority_gate": {
+        "checks": {
+          "average_precision_delta_lower_gt_zero": true,
+          "fixed_fpr_delta_upper_lte_zero": true,
+          "fixed_recall_delta_lower_gte_zero": true,
+          "matched_fpr_recall_delta_lower_gt_zero": false
+        },
+        "passed": false,
+        "required": {
+          "average_precision_delta_lower_gt_zero": true,
+          "fixed_fpr_delta_upper_lte_zero": true,
+          "fixed_recall_delta_lower_gte_zero": true,
+          "matched_fpr_recall_delta_lower_gt_zero": true
+        }
+      }
+    },
+    "gaussian_dofa_vs_released_mars_v3": {
+      "baseline": {
+        "average_precision": 0.35212281291315817,
+        "fixed_operating_point": {
+          "comparator": ">",
+          "false_positive_rate": 0.09506229810798339,
+          "fn": 24,
+          "fp": 412,
+          "precision": 0.0945054945054945,
+          "recall": 0.6417910447761194,
+          "threshold": 0.5,
+          "tn": 3922,
+          "tp": 43
+        },
+        "roc_auc": 0.8175464394685548
+      },
+      "baseline_name": "Released MARS-S2L v3",
+      "candidate": {
+        "average_precision": 0.3748941023609057,
+        "fixed_operating_point": {
+          "comparator": ">=",
+          "false_positive_rate": 0.05699123211813567,
+          "fn": 26,
+          "fp": 247,
+          "precision": 0.1423611111111111,
+          "recall": 0.6119402985074627,
+          "threshold": 0.16728139929966007,
+          "tn": 4087,
+          "tp": 41
+        },
+        "matched_fpr_operating_point": {
+          "comparator": ">=",
+          "false_positive_rate": 0.07914167051222888,
+          "fp": 343,
+          "recall": 0.6716417910447762,
+          "threshold": 0.084433174558429,
+          "tp": 45
+        },
+        "roc_auc": 0.8700486951490816
+      },
+      "candidate_name": "Gaussian+DOFA",
+      "fixed_decision_mcnemar": {
+        "baseline_correct_candidate_wrong": 5,
+        "baseline_wrong_candidate_correct": 168,
+        "discordant": 173,
+        "two_sided_exact_pvalue": 2.096655508768743e-43
+      },
+      "paired_component_bootstrap": {
+        "components": 150,
+        "confidence": 0.95,
+        "delta_intervals": {
+          "average_precision": {
+            "lower": -0.013201098692232294,
+            "mean": 0.026663099765066853,
+            "upper": 0.06049633547882609
+          },
+          "fixed_false_positive_rate": {
+            "lower": -0.04525866670102183,
+            "mean": -0.03799402800646668,
+            "upper": -0.030941200127801927
+          },
+          "fixed_recall": {
+            "lower": -0.16981132075471705,
+            "mean": -0.036024638152517635,
+            "upper": 0.02816901408450706
+          },
+          "matched_fpr_recall": {
+            "lower": -0.03703703703703698,
+            "mean": 0.037750108252211444,
+            "upper": 0.10869565217391308
+          }
+        },
+        "replicates": 10000,
+        "seed": 20260803,
+        "unit": "strict 25 km connected spatial component"
+      },
+      "point_deltas": {
+        "average_precision": 0.022771289447747534,
+        "fixed_false_positive_rate": -0.03807106598984772,
+        "fixed_recall": -0.02985074626865669,
+        "matched_fpr_recall": 0.029850746268656803,
+        "roc_auc": 0.0525022556805268
+      },
+      "superiority_gate": {
+        "checks": {
+          "average_precision_delta_lower_gt_zero": false,
+          "fixed_fpr_delta_upper_lte_zero": true,
+          "fixed_recall_delta_lower_gte_zero": false,
+          "matched_fpr_recall_delta_lower_gt_zero": false
+        },
+        "passed": false,
+        "required": {
+          "average_precision_delta_lower_gt_zero": true,
+          "fixed_fpr_delta_upper_lte_zero": true,
+          "fixed_recall_delta_lower_gte_zero": true,
+          "matched_fpr_recall_delta_lower_gt_zero": true
+        }
+      }
+    }
+  },
+  "decision": "primary_superiority_gate_failed",
+  "generated_at_utc": "2026-08-03T18:20:24.059896+00:00",
+  "pixel_claim": "not evaluated; Gaussian+DOFA changes only the frozen scene score",
+  "protocol": {
+    "path": "configs/mars_gaussian_dofa_strict_spatial_evaluation_protocol.json",
+    "sha256": "67b4e84cd6d8b6e9f9b56a0d9cc78126cfac182294f9a529a3b0bd8918bd4352"
+  },
+  "provenance": {
+    "current_scores_max_abs_error": 0.0,
+    "manifest_and_diagnostic_labels_exact": true,
+    "negatives": 4334,
+    "positives": 67,
+    "released_comparator": "input-only reconstruction of the released checkpoint connected-component score; the published CSV scene_pred is retained only as a provenance cross-check",
+    "released_vs_published_scene_pred_max_abs_difference": 0.9297791748649615,
+    "rows": 4401,
+    "strict_spatial_components": 150
+  },
+  "schema_version": 1,
+  "scientific_boundary": {
+    "allowed_claim": "candidate-specific post-test strict-spatial diagnostic",
+    "candidate_specific_status": "Gaussian+DOFA scoring was completed input-only and made immutable before this outcome protocol was created",
+    "forbidden_claims": [
+      "fresh project-level confirmation",
+      "controlled-release validation",
+      "pixel localization improvement",
+      "unrestricted geographic superiority"
+    ],
+    "project_level_holdout_status": "not pristine: prior ERSRR candidates opened this exact-paper outcome view"
+  },
+  "score_bundle": {
+    "path": "outputs/mars_gaussian_dofa_strict_spatial_label_free_scores.npz",
+    "sha256": "c2ffb8c217eec27ab989514499df0fa05d6c6ad8b59fe555ca0b68d10b76bc9f"
+  },
+  "status": "complete_candidate_specific_post_test_replay"
+}

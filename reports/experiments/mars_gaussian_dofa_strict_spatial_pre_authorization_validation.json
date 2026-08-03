@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "pre_authorization_validation_passed",
+  "scope": "Gaussian+DOFA candidate-specific MARS strict-spatial input-only replay",
+  "scientific_boundary": {
+    "project_level_holdout_status": "not pristine because prior candidates opened the exact-paper outcomes",
+    "candidate_specific_status": "Gaussian+DOFA remained frozen and had not generated strict-spatial candidate scores",
+    "outcome_arrays_opened_by_candidate_scorer": false
+  },
+  "pre_authorization_protocol": {
+    "path": "configs/mars_gaussian_dofa_strict_spatial_scoring_protocol.json",
+    "sha256": "476dc1e7bd47449ee61dab7dae76182005e93b27156c812db91dca1bae0eafb8",
+    "real_inference_authorized": false
+  },
+  "scorer": {
+    "path": "tools/score_mars_gaussian_dofa_strict_spatial_label_free.py",
+    "sha256": "c5ce16d18d4a7f3e9f71fa1246cc13dff74fa05ba23d4363873be06905ed76bc"
+  },
+  "tests": {
+    "path": "tests/test_score_mars_gaussian_dofa_strict_spatial_label_free.py",
+    "sha256": "eba4d54f8d19f5f0bad25c36e3b4da11379d59171752d8ca4699658e54f0ee51",
+    "command": ".venv/bin/python -m pytest -q tests/test_score_mars_gaussian_dofa_strict_spatial_label_free.py tests/test_score_stanford_large_controlled_release_label_free.py tests/test_materialize_mars_dofa_v2_external_deployment_state.py",
+    "result": "21 passed in 65.50s"
+  },
+  "compile_and_whitespace": "passed",
+  "dry_run": {
+    "status": "dry_run",
+    "rows": 4401,
+    "label_free_site_context_groups": 373,
+    "verified_bindings": 16,
+    "outcome_arrays_opened": false
+  },
+  "input_preflight": {
+    "status": "input_preflight_passed",
+    "rows": 4401,
+    "input_assets": 8802,
+    "input_bytes_from_catalog": 4489482232,
+    "spot_checked_assets": 64,
+    "full_acquisition_assets_verified_by_bound_receipt": 8869,
+    "full_digests_replayed": false,
+    "outcome_arrays_opened": false
+  },
+  "wind_reconstruction_audit": {
+    "rows": 4401,
+    "maximum_absolute_error_m_per_s": 0.00000286102294921875,
+    "mean_absolute_error_m_per_s": 0.000000197019407640569,
+    "interpretation": "expected float32 cache roundoff; candidate scorer reuses the exact cached normalized input channels"
+  },
+  "input_only_model_smoke": {
+    "status": "input_only_model_smoke_passed",
+    "rows": 2,
+    "gaussian_endpoints": 2,
+    "dofa_endpoints": 10,
+    "device": "NVIDIA GeForce RTX 5070",
+    "torch": "2.11.0+cu128",
+    "outcome_arrays_opened": false
+  }
+}

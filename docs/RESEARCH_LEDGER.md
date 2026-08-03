@@ -116,6 +116,17 @@ On the separate strict MARS cohort, v4.3 achieved AP 0.3903, AUROC 0.8644, recal
 AUROC 0.8175, recall 0.6418, FPR 0.0948, Dice 0.2346, and IoU 0.1329. V4.3 improved ranking and
 FPR but not recall or overlap; only its FPR delta was bootstrap-conclusive.
 
+A later candidate-specific post-test replay applied the already frozen Gaussian+DOFA score to all
+4,401 strict rows (67 positives, 4,334 negatives, 150 spatial components). Relative to a fresh
+released-checkpoint connected-component replay, Gaussian+DOFA raised AP from 0.3521 to 0.3749 and
+reduced FPR from 0.0951 to 0.0570, but recall fell from 0.6418 to 0.6119. Paired component intervals
+crossed zero for AP `[-0.0132, 0.0605]`, fixed recall `[-0.1698, 0.0282]`, and matched-FPR recall
+`[-0.0370, 0.1087]`; only the FPR delta `[-0.0453, -0.0309]` was conclusive. Gaussian+DOFA and its
+current-v3 base made identical fixed decisions; the added endpoints improved ranking AP by 0.0103
+with a positive interval `[0.0027, 0.0202]` but no operational recall gain. The frozen superiority
+gate failed, so Gaussian+DOFA is retired as a superiority candidate. This is not a fresh
+project-level holdout because earlier ERSRR candidates had already opened the exact-paper view.
+
 The MARS-S2L paper reports full-test AP 0.6408, recall 0.7915, FPR 0.0713, and IoU 0.3224, and
 test-only-site AP 0.4496, recall 0.7753, and FPR 0.0763. Those are different-cohort context. V5.1’s
 MethaneS2CM AP is numerically higher, but its recall and IoU are lower than the paper full-test
@@ -140,6 +151,7 @@ Authoritative current artifacts:
 - `reports/experiments/methanes2cm_v5_1_location_test.json`;
 - `reports/experiments/methanes2cm_v5_1_location_test_posthoc.json`;
 - `reports/experiments/mars_v4_3_strict_comparison.json`;
+- `reports/experiments/mars_gaussian_dofa_strict_spatial_one_shot.json`;
 - `reports/ERSRR_RESEARCH_REPORT.html`.
 
 ## Retired v3 study question and frozen decision rule

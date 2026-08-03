@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "status": "pre_outcome_validation_passed",
+  "scope": "Gaussian+DOFA candidate-specific MARS strict-spatial one-shot scene evaluation",
+  "pre_outcome_protocol": {
+    "path": "configs/mars_gaussian_dofa_strict_spatial_evaluation_protocol.json",
+    "sha256": "b25a8ff220f90c90b2d8f1c712df9c62f4dfef53cfde7ef3c5680f277b2a6016",
+    "one_shot_outcome_access_authorized": false
+  },
+  "evaluator": {
+    "path": "tools/evaluate_mars_gaussian_dofa_strict_spatial.py",
+    "sha256": "03d1d44bd7bcd14bce2be3316c138cf4f5af0a1659351472af8583b0c48aa60e"
+  },
+  "tests": {
+    "path": "tests/test_evaluate_mars_gaussian_dofa_strict_spatial.py",
+    "sha256": "7eaacca5ba24d3664034af3adf90be6c66da550abcb754ebe66eabf6e49f9ea3",
+    "command": ".venv/bin/python -m pytest -q tests/test_evaluate_mars_gaussian_dofa_strict_spatial.py tests/test_evaluate_stanford_large_controlled_release_scores.py tests/test_evaluate_stanford_evanston_scores.py",
+    "result": "27 passed in 15.78s"
+  },
+  "compile_and_whitespace": "passed",
+  "dry_run": {
+    "status": "pre_outcome_dry_run_passed",
+    "rows": 4401,
+    "verified_score_bindings": 6,
+    "outcomes_opened": false
+  },
+  "immutable_scores": {
+    "path": "outputs/mars_gaussian_dofa_strict_spatial_label_free_scores.npz",
+    "sha256": "c2ffb8c217eec27ab989514499df0fa05d6c6ad8b59fe555ca0b68d10b76bc9f",
+    "rows": 4401,
+    "unique_ids": 4401,
+    "all_arrays_finite": true,
+    "outcome_arrays_present": false
+  }
+}
