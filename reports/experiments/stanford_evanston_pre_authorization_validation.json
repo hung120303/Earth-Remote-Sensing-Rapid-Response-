@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "status": "pre_authorization_validation_passed",
+  "scope": "Outcome-blind Stanford Evanston label-free scorer validation before first detector inference.",
+  "pre_authorization_protocol": {
+    "path": "configs/stanford_evanston_label_free_scoring_protocol.json",
+    "sha256": "2d0aab8082c352dc6c5f5bb7eda140d5df64d46efb5b55535d4c0ee3301ebdf0",
+    "real_inference_authorized": false
+  },
+  "code": {
+    "cohort_launcher": {
+      "path": "tools/score_stanford_evanston_label_free.py",
+      "sha256": "4e9ec4be6f677a21e1bb0bd6edff33d9ae901ba096162d19cc4db1bfbe5e8d41"
+    },
+    "label_free_scorer": {
+      "path": "tools/score_stanford_large_controlled_release_label_free.py",
+      "sha256": "adfbe547d4108cc1865026ec300a8ccfa6fccf82cc7c824a936dcf05f42f5239"
+    },
+    "evanston_tests": {
+      "path": "tests/test_score_stanford_evanston_label_free.py",
+      "sha256": "c97126808c5876e3a309c6f095ecf8df8ac15bf9ad66041b0f1309d8596537b8"
+    }
+  },
+  "tests": {
+    "command_scope": [
+      "tests/test_score_stanford_evanston_label_free.py",
+      "tests/test_score_stanford_large_controlled_release_label_free.py",
+      "tests/test_evaluate_stanford_large_controlled_release_scores.py"
+    ],
+    "passed": 22,
+    "failed": 0
+  },
+  "disabled_state_dry_run": {
+    "status": "dry_run",
+    "verified_deployment_bindings": 50,
+    "deployable": false,
+    "blockers": [
+      {
+        "code": "INFERENCE_NOT_AUTHORIZED"
+      }
+    ]
+  },
+  "input_preflight": {
+    "status": "input_preflight_passed",
+    "rows": 9,
+    "metadata_rows": 9,
+    "model_input_shape": [9, 16, 256, 256],
+    "observable_shape": [9, 1, 256, 256],
+    "stanford_detector_outputs_accessed": false,
+    "stanford_labels_or_rates_accessed": false
+  },
+  "synthetic_model_smoke": {
+    "status": "synthetic_model_smoke_passed",
+    "verified_deployment_bindings": 50,
+    "runtime": {
+      "device": "NVIDIA GeForce RTX 5070",
+      "rows": 2,
+      "torch": "2.11.0+cu128"
+    },
+    "arrays": {
+      "event_ids": [2],
+      "released_mars_v3_scores": [2],
+      "released_mars_v3_decisions": [2],
+      "current_oof_extratrees_scores": [2],
+      "gaussian_dofa_scores": [2],
+      "gaussian_dofa_decisions": [2],
+      "calibrated_spatial_prithvi_scores": [2],
+      "calibrated_spatial_prithvi_decisions": [2]
+    },
+    "stanford_imagery_accessed": false,
+    "stanford_outcomes_accessed": false
+  },
+  "outcome_blindness": {
+    "evanston_labels_accessed": false,
+    "evanston_rates_accessed": false,
+    "evanston_flow_summaries_accessed": false,
+    "evanston_team_detections_accessed": false,
+    "evanston_detector_outputs_accessed": false
+  },
+  "authorization_decision": "Eligible to freeze real inference authorization without changing model, preprocessing, aggregation, thresholds, cohort, or output paths."
+}

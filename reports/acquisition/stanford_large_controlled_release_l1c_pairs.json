@@ -1,0 +1,76 @@
+{
+  "bindings": {
+    "protocol": {
+      "path": "configs/stanford_large_controlled_release_protocol.json",
+      "sha256": "dc318d43ae2226832337b795979681a7997afdbc7213798ab610b2f4df22f78e"
+    },
+    "script": {
+      "path": "tools/build_stanford_large_controlled_release_l1c_pairs.py",
+      "sha256": "9dae24406cb279c6600471e026d85b1ec5a480a5af820d6420d967952fe11165"
+    },
+    "source_manifest": {
+      "path": ".research/stanford_controlled_release_2024_2025/cohort_manifest.jsonl",
+      "sha256": "e97d8ce66c84325d7bca447d49f2746c4bb7408c10b404490726e4b11a88330e"
+    }
+  },
+  "contract": {
+    "asset_authority": "official public sentinel-s2-l1c AWS assets with exact productName and MGRS tileInfo verification",
+    "band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12"
+    ],
+    "eligible_targets": "resolved Sentinel-2 L1C rows only",
+    "excluded_reference_ids": "every resolved source-cohort target scene ID",
+    "excluded_reference_utc_dates": [
+      "2024-11-14",
+      "2024-11-16",
+      "2024-11-21",
+      "2024-11-26",
+      "2024-11-29",
+      "2024-12-01",
+      "2024-12-04",
+      "2024-12-07",
+      "2024-12-09",
+      "2024-12-19",
+      "2024-12-22",
+      "2024-12-29"
+    ],
+    "landsat_status": "pending exact USGS EROS Collection 2 Level-1 authentication; no Landsat L2 substitution",
+    "reference_policy": "prior-only same-MGRS L1C; 1 hour through 31 days; catalog eo:cloud_cover <= 20%; order by gap, cloud, then ID; when empty, 334-410 day seasonal fallback ordered by distance from 365 days, cloud, then ID",
+    "spectral_product": "Sentinel-2 Level-1C top-of-atmosphere raw DN"
+  },
+  "generated_at_utc": "2026-08-02T15:09:53.349030+00:00",
+  "outcome_blindness": {
+    "detector_outcomes_accessed": false,
+    "source_release_outcome_fields_emitted": false,
+    "source_release_outcome_fields_selected": false,
+    "statement": "No detector outcomes were accessed."
+  },
+  "pair_manifest": {
+    "path": ".research/stanford_controlled_release_2024_2025/l1c_stress/pair_manifest.json",
+    "sha256": "10abbcd2605688525d0045526e516b9bce844b829e5f8c7e07a05acd69d290de",
+    "tracked": false
+  },
+  "schema_version": 1,
+  "scope": "outcome_blind_stanford_2025_sentinel2_l1c_target_reference_pairs",
+  "status": "frozen_complete",
+  "summary": {
+    "all_pairs_complete": true,
+    "complete_pairs": 169,
+    "eligible_sentinel2_targets": 169,
+    "pair_errors": 0,
+    "reference_tier_counts": {
+      "primary_1_to_31_days": 14,
+      "seasonal_334_to_410_days": 155
+    },
+    "references_matching_excluded_campaign_dates": 0,
+    "references_matching_source_targets": 0,
+    "resolved_source_target_ids_excluded": 257,
+    "unique_reference_scene_ids": 86,
+    "unique_target_scene_ids": 169
+  }
+}

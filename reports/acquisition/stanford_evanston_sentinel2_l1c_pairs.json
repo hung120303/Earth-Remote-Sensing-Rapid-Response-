@@ -1,0 +1,81 @@
+{
+  "bindings": {
+    "pair_manifest": {
+      "path": ".research/stanford_controlled_release_2024_2025/evanston_l1c_stress/pair_manifest.json",
+      "sha256": "3a62d2613760cf5223384aac4c65d611595878f9ed3037baea62d931ba2cf1f8",
+      "tracked": false
+    },
+    "protocol": {
+      "path": "configs/stanford_evanston_sentinel2_l1c_pair_protocol.json",
+      "sha256": "aee83fc719f307cd480512adf8392617e338f5e3345e789d03f872040bd78e44"
+    },
+    "script": {
+      "path": "tools/build_stanford_evanston_sentinel2_l1c_pairs.py",
+      "sha256": "ed166e6708e9319f69a6689c16ee308942180c985660c20667f44070e5b2ce9c"
+    },
+    "target_manifest": {
+      "path": ".research/stanford_controlled_release_2024_2025/evanston_l1c_audit/target_manifest.json",
+      "sha256": "376d962a994b01fe6efea3c4ad35a88a42eddfc1d9211fad027c75da6fa67e81"
+    }
+  },
+  "claim_boundary": "Outcome-blind pairing only; no imagery, release summaries, rates, scores, or performance claims.",
+  "contract": {
+    "band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12"
+    ],
+    "excluded_reference_scene_ids": [
+      "S2A_12TVL_20240809_0_L1C",
+      "S2A_12TVL_20240819_0_L1C",
+      "S2A_12TVL_20240829_0_L1C",
+      "S2A_12TVL_20241008_1_L1C",
+      "S2B_12TVL_20240903_0_L1C",
+      "S2B_12TVL_20241003_0_L1C",
+      "S2B_12TVL_20241013_0_L1C",
+      "S2B_12TWL_20240913_0_L1C",
+      "S2B_12TWL_20240923_0_L1C"
+    ],
+    "excluded_reference_utc_dates": [
+      "2024-08-09",
+      "2024-08-19",
+      "2024-08-29",
+      "2024-09-03",
+      "2024-09-13",
+      "2024-09-23",
+      "2024-10-03",
+      "2024-10-08",
+      "2024-10-13"
+    ],
+    "reference_policy": "prior-only same-MGRS L1C; 1 hour through 31 days; catalog cloud <=20%; deterministic gap/cloud/ID order; 334-410 day seasonal fallback only if primary window empty",
+    "spectral_product": "Sentinel-2 Level-1C top-of-atmosphere raw DN"
+  },
+  "outcome_blindness": {
+    "detector_outputs_accessed": false,
+    "event_selection_changed": false,
+    "release_or_summary_files_opened": false
+  },
+  "schema_version": 1,
+  "scope": "outcome_blind_stanford_evanston_sentinel2_l1c_target_reference_pairs",
+  "status": "frozen_complete",
+  "summary": {
+    "all_pairs_complete": true,
+    "complete_pairs": 9,
+    "eligible_targets": 9,
+    "pair_errors": 0,
+    "reference_tier_counts": {
+      "primary_1_to_31_days": 9
+    },
+    "references_matching_campaign_dates": 0,
+    "references_matching_target_scene_ids": 0,
+    "target_mgrs_tile_counts": {
+      "12TVL": 7,
+      "12TWL": 2
+    },
+    "unique_reference_scene_ids": 6,
+    "unique_target_scene_ids": 9
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "bindings": {
+    "pair_manifest": {
+      "path": ".research/stanford_controlled_release_2024_2025/evanston_l1c_stress/pair_manifest.json",
+      "sha256": "3a62d2613760cf5223384aac4c65d611595878f9ed3037baea62d931ba2cf1f8"
+    },
+    "pair_receipt": {
+      "path": "reports/acquisition/stanford_evanston_sentinel2_l1c_pairs.json",
+      "sha256": "4654f4928200d1438ed735a50fc34275237b3fb0ca9a020d6be649f997dffd9e"
+    },
+    "protocol": {
+      "path": "configs/stanford_evanston_sentinel2_l1c_pair_protocol.json",
+      "sha256": "aee83fc719f307cd480512adf8392617e338f5e3345e789d03f872040bd78e44"
+    },
+    "script": {
+      "path": "tools/acquire_stanford_large_controlled_release_l1c_crops.py",
+      "sha256": "16b5d5dfc171b5240c81fb8cb427d04bc99c2725a961a382c1d985c4231dbcf5"
+    }
+  },
+  "contract": {
+    "band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12"
+    ],
+    "cloud_or_l2_assets_acquired": false,
+    "full_products_downloaded": false,
+    "ignored_output_root": ".research/stanford_controlled_release_2024_2025/evanston_l1c_stress/crops",
+    "landsat_status": "pending exact USGS EROS Collection 2 Level-1 authentication; no Landsat L2 substitution",
+    "shape": [
+      256,
+      256
+    ],
+    "spectral_product": "Sentinel-2 Level-1C top-of-atmosphere raw DN",
+    "target_grid": "target B02 native 10 m grid",
+    "ten_meter_resampling": "nearest; target B02 native window",
+    "twenty_meter_resampling": "bilinear",
+    "window_only": true
+  },
+  "crop_manifest": {
+    "path": ".research/stanford_controlled_release_2024_2025/evanston_l1c_stress/crop_manifest.json",
+    "sha256": "0ed63b0199673b8932c2825476b0885abed10ee9fe996ae9612ef0872faac23f",
+    "tracked": false
+  },
+  "generated_at_utc": "2026-08-03T04:25:46.172717+00:00",
+  "outcome_blindness": {
+    "detector_outcomes_accessed": false,
+    "release_labels_or_rates_accessed": false,
+    "statement": "No release outcomes or detector outcomes were accessed."
+  },
+  "schema_version": 1,
+  "scope": "outcome_blind_stanford_evanston_sentinel2_l1c_windowed_crops",
+  "status": "acquisition_complete",
+  "summary": {
+    "acquisition_errors": 0,
+    "all_pairs_complete": true,
+    "ignored_crop_assets": 18,
+    "ignored_crop_bytes": 9551062,
+    "reference_all_band_nonzero_fraction_median": 1.0,
+    "reference_all_band_nonzero_fraction_min": 1.0,
+    "requested_pairs": 9,
+    "status_counts": {
+      "verified_cached": 9
+    },
+    "target_all_band_nonzero_fraction_median": 1.0,
+    "target_all_band_nonzero_fraction_min": 1.0,
+    "verified_pairs": 9
+  }
+}

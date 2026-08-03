@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_development_endpoint_materialization_and_before_external_access",
+  "scope": "materialize the already-selected train-fitted DOFA-v2 folds-3/4 probe as a label-free external inference state",
+  "materializer": {
+    "path": "tools/materialize_mars_dofa_v2_external_deployment_state.py",
+    "sha256": "f618f5114d1126f6b79ebb10753512a526461d78aab8627d81fb8eade610b1b0"
+  },
+  "inputs": {
+    "selection_protocol": {
+      "path": "configs/mars_dofa_v2_train_fitted_normalization_protocol.json",
+      "sha256": "c500a8fed0dda544885983afe7092a6797c499dd0d20a1900241b6c3792de39c"
+    },
+    "selected_result": {
+      "path": "reports/experiments/mars_dofa_v2_train_fitted_normalization_folds34.json",
+      "sha256": "23e9124a5f0b5a9a788a46a6fd07753501a8b83c880b0a4e3f24e680c92074b2"
+    },
+    "dofa_folds34_features": {
+      "path": "outputs/mars_dofa_v2_scene_features_folds34.npz",
+      "sha256": "2c43352e92f96549d64188c78318fe606d55552aa9587aace1a195e8dfba66fe",
+      "tracked": false,
+      "authorized_folds_only": [3, 4]
+    }
+  },
+  "deployment_rule": {
+    "feature_set": "change_extreme",
+    "C": 0.01,
+    "projection_dimension": 2048,
+    "projection_seeds": [
+      20260780,
+      20260781,
+      20260782,
+      20260783,
+      20260784
+    ],
+    "normalization_mode": "global_train_fitted",
+    "folds": [3, 4],
+    "endpoint_aggregation": "equal_mean_logit_all_10_endpoints"
+  },
+  "endpoint_contract": {
+    "count": 10,
+    "construction": "for each fixed projection seed, fit one endpoint on fold 4 for the held-fold-3 role and one endpoint on fold 3 for the held-fold-4 role",
+    "first_normalization": "mean/std fit only on the endpoint fit fold",
+    "projection": "fixed sparse random projection determined only by seed and feature width",
+    "second_normalization": "projected mean/std fit only on the endpoint fit fold",
+    "classifier": "fixed C=0.01 logistic regression and original class weighting/random-state contract",
+    "external_aggregation": "apply every endpoint unchanged to every external row, average all ten logits equally, then sigmoid",
+    "external_labels_or_moments": "forbidden"
+  },
+  "forbidden_access": {
+    "folds": [0, 1, 2],
+    "official_test": true,
+    "external_cohort": true
+  },
+  "outputs": {
+    "state": "outputs/mars_dofa_v2_external_deployment_folds34.joblib",
+    "json": "reports/experiments/mars_dofa_v2_external_deployment_state.json"
+  },
+  "invariants": [
+    "This is deterministic materialization of the already-selected folds-3/4 probe, not retraining for candidate selection.",
+    "The materializer opens only the existing folds-3/4 DOFA feature cache and never opens fold-0, fold-1, fold-2, official-test, or external data.",
+    "No Stanford feature, label, release rate, or detector outcome may be accessed before this state is written and hash-bound into the Stanford scoring protocol.",
+    "The output contains inference parameters and provenance only; it contains no development labels or sample outcomes.",
+    "Changing endpoint weighting, projection seeds, feature set, normalization, C, or gate requires a new preregistered development hypothesis and cannot be selected on Stanford."
+  ]
+}

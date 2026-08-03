@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "scope": "All-model generated-data smoke before first Stanford inference",
+  "scorer": {
+    "path": "tools/score_stanford_large_controlled_release_label_free.py",
+    "sha256": "adfbe547d4108cc1865026ec300a8ccfa6fccf82cc7c824a936dcf05f42f5239"
+  },
+  "protocol_at_execution": {
+    "path": "configs/stanford_large_controlled_release_scoring_protocol.json",
+    "sha256": "acdca8ee8c121e4236eaf3afd0dc6b1ad7cf79d442a8071b84ad301e332cf49e"
+  },
+  "command": ".venv/bin/python tools/score_stanford_large_controlled_release_label_free.py --synthetic-smoke --batch-size 1",
+  "verified_deployment_bindings": 46,
+  "synthetic_rows": 2,
+  "completed_stages": [
+    "released_mars_and_residual_current",
+    "gaussian_held_fold_3",
+    "gaussian_held_fold_4",
+    "dofa_v2",
+    "prithvi_spatial_calibration"
+  ],
+  "output_arrays": {
+    "event_ids": [2],
+    "released_mars_v3_scores": [2],
+    "released_mars_v3_decisions": [2],
+    "current_oof_extratrees_scores": [2],
+    "gaussian_dofa_scores": [2],
+    "gaussian_dofa_decisions": [2],
+    "calibrated_spatial_prithvi_scores": [2],
+    "calibrated_spatial_prithvi_decisions": [2]
+  },
+  "runtime": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "torch": "2.11.0+cu128"
+  },
+  "stanford_imagery_accessed": false,
+  "stanford_detector_outputs_accessed": false,
+  "stanford_labels_or_rates_accessed": false,
+  "official_test_outcomes_accessed": false,
+  "final_replay": {
+    "status": "passed",
+    "scorer_sha256": "adfbe547d4108cc1865026ec300a8ccfa6fccf82cc7c824a936dcf05f42f5239",
+    "input_preflight_rows": 169,
+    "input_preflight_assets": 338,
+    "input_preflight_detector_outputs_accessed": false,
+    "input_preflight_labels_or_rates_accessed": false
+  },
+  "notes": [
+    "Initial generated-data smoke iterations exposed and fixed loader context, feature-name type, Gaussian class import, Gaussian forward arguments, and Gaussian observable dtype before any Stanford model inference.",
+    "No threshold, selection rule, candidate identity, cohort member, or outcome rule changed."
+  ]
+}

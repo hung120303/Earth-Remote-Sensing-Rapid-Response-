@@ -1,0 +1,55 @@
+{
+  "access": {
+    "external_or_stanford_features_accessed": false,
+    "external_or_stanford_outcomes_accessed": false,
+    "folds_0_1_2_accessed": false,
+    "official_test_accessed": false,
+    "opened_folds": [
+      3,
+      4
+    ]
+  },
+  "deployment_rule": {
+    "C": 0.01,
+    "endpoint_aggregation": "equal_mean_logit_all_10_endpoints",
+    "feature_set": "change_extreme",
+    "folds": [
+      3,
+      4
+    ],
+    "normalization_mode": "global_train_fitted",
+    "projection_dimension": 2048,
+    "projection_seeds": [
+      20260780,
+      20260781,
+      20260782,
+      20260783,
+      20260784
+    ]
+  },
+  "generated_at_utc": "2026-08-02T23:25:42.483137+00:00",
+  "git_commit": "1874076e4e050391d845f95ddfd33e15609e4b37",
+  "protocol": "configs/mars_dofa_v2_external_deployment_state_protocol.json",
+  "protocol_sha256": "91ea1d7d7d1f8c72f71f9cd9893a3f31209a1d01f22fe33602ddc51ed9248e57",
+  "schema_version": 1,
+  "scope": "development_only_dofa_v2_folds34_external_deployment_state",
+  "script_sha256": "f618f5114d1126f6b79ebb10753512a526461d78aab8627d81fb8eade610b1b0",
+  "state": {
+    "bytes": 4738785,
+    "endpoint_count": 10,
+    "path": "outputs/mars_dofa_v2_external_deployment_folds34.joblib",
+    "sha256": "c50ab663acc774d8da9b33eb357fdbc0d0e3f8afffd1ad7c28f09b240ffa21f8",
+    "tracked": false
+  },
+  "status": "materialized_before_external_or_stanford_access",
+  "verification": {
+    "crossfit_probability_sha256": "02079ae471cbd913b3192c39049492a2df933e3f5d670e3191122a1a321b9b31",
+    "external_ten_endpoint_smoke": true,
+    "fold_counts": {
+      "3": 8799,
+      "4": 8946
+    },
+    "serialized_endpoint_replay": true,
+    "source_rows": 17745
+  }
+}

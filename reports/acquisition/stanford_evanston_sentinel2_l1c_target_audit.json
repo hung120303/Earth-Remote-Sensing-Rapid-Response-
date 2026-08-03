@@ -1,0 +1,42 @@
+{
+  "bindings": {
+    "manifest": {
+      "path": ".research/stanford_controlled_release_2024_2025/evanston_l1c_audit/target_manifest.json",
+      "sha256": "376d962a994b01fe6efea3c4ad35a88a42eddfc1d9211fad027c75da6fa67e81"
+    },
+    "protocol": {
+      "path": "configs/stanford_evanston_sentinel2_l1c_target_audit_protocol.json",
+      "sha256": "6bce5714fb5f9e09f06d86f25242c01dc6790c1dc182700ffbf725569854b414"
+    },
+    "script": {
+      "path": "tools/audit_stanford_evanston_sentinel2_l1c_targets.py",
+      "sha256": "0f29886cc87d9613f7e4a034c7651e40f47b8338a995e9ea616a30bbc2863712"
+    }
+  },
+  "claim_boundary": "Availability audit only. No labels, scores, performance result, or generalization claim.",
+  "schema_version": 1,
+  "scope": "Outcome-blind Sentinel-2 L1C target availability audit for the independent Evanston, Wyoming controlled-release site.",
+  "site": {
+    "address": "556 Sage Industrial Road, Evanston, WY 82930",
+    "center": [
+      -110.931318658838,
+      41.275737966074
+    ],
+    "coordinate_match_score": 100,
+    "coordinate_match_type": "PointAddress",
+    "name": "Rawhide Leasing Yard, Evanston, Wyoming"
+  },
+  "status": "complete_outcome_blind_target_audit",
+  "summary": {
+    "audited_events": 9,
+    "frozen_events": 9,
+    "imagery_downloaded": false,
+    "mgrs_tiles": [
+      "12TVL",
+      "12TWL"
+    ],
+    "release_or_summary_files_opened": false,
+    "unique_targets": 9,
+    "validated_targets": 9
+  }
+}

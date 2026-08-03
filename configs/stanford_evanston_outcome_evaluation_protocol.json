@@ -1,0 +1,207 @@
+{
+  "bindings": {
+    "crop_manifest": {
+      "path": ".research/stanford_controlled_release_2024_2025/evanston_l1c_stress/crop_manifest.json",
+      "sha256": "0ed63b0199673b8932c2825476b0885abed10ee9fe996ae9612ef0872faac23f"
+    },
+    "evaluator": {
+      "path": "tools/evaluate_stanford_evanston_scores.py",
+      "sha256": "26d34b9a5fbd01804855608f95a5e3e1ec20a3730b4b40cd6f19059255099958"
+    },
+    "metric_validation_dependency": {
+      "path": "tools/evaluate_stanford_large_controlled_release_scores.py",
+      "sha256": "7f5c3b40d00ceec86aaeaefe704c5168d2c4d9ee30284b8161cb771c11c1eba8"
+    },
+    "pre_outcome_validation": {
+      "path": "reports/experiments/stanford_evanston_pre_outcome_validation.json",
+      "sha256": "05451d398a1ca181b08318e6778cfb8891fab6903468e573b8c2ce569454b15a"
+    },
+    "score_manifest": {
+      "path": ".research/stanford_controlled_release_2024_2025/evanston_l1c_stress/scores/label_free_score_manifest.json",
+      "sha256": "89b1714ba06447a24d461668462704f9ee3a9fe6eb8bd117212c5db845e5275c"
+    },
+    "score_receipt": {
+      "path": "reports/acquisition/stanford_evanston_label_free_scores.json",
+      "sha256": "e74c5288627607be4edf1dfd93452a0dd4068343500872d8ac4ea1a32c07646a"
+    },
+    "scores": {
+      "path": ".research/stanford_controlled_release_2024_2025/evanston_l1c_stress/scores/label_free_scores.npz",
+      "sha256": "89e887309ba15ed85ba38a24fee653ca830c1a0a1d8a9c0c075224655b7aa6f8"
+    },
+    "scoring_protocol": {
+      "path": "configs/stanford_evanston_label_free_scoring_protocol.json",
+      "sha256": "182b5b7065cdd14ce7868f4945dccaceac4da1ab802de66280c150aae9ff41fb"
+    }
+  },
+  "claim_boundary": [
+    "This is a post-test evaluation at one independent geographic site and remains separate from the completed Casa Grande result.",
+    "No model, preprocessing, fusion, aggregation, reference, crop, threshold, stratum, or metric may be retuned after outcome access.",
+    "Nine events provide limited exact-binomial and bootstrap precision; undefined metrics remain null rather than being imputed.",
+    "Two controlled-release sites do not establish broad geographic generalization.",
+    "Spatial-Prithvi remains a separate post-test candidate and retains its failed official test-only-site uncertainty qualification.",
+    "No pixel-IoU claim is possible because this outcome source supplies release summaries, not plume masks."
+  ],
+  "cohort": {
+    "event_ids": [
+      "08092024_S2A",
+      "08192024_S2A",
+      "08292024_S2A",
+      "09032024_S2B",
+      "09132024_S2B",
+      "09232024_S2B",
+      "10032024_S2B",
+      "10082024_S2A",
+      "10132024_S2B"
+    ],
+    "expected_rows": 9
+  },
+  "metrics": {
+    "challenge": "fixed-threshold detection fraction",
+    "paired_comparisons": "candidate-minus-released-MARS AP, recall, and FPR deltas plus exact McNemar discordance",
+    "primary_fixed_threshold": [
+      "confusion_counts",
+      "recall",
+      "false_positive_rate",
+      "precision"
+    ],
+    "primary_ranking": [
+      "average_precision",
+      "AUROC_descriptive"
+    ],
+    "undefined_rule": "Return null with reason whenever the required class or denominator is absent; never impute."
+  },
+  "models": {
+    "gaussian_dofa": {
+      "comparator": ">=",
+      "decision_field": "gaussian_dofa_decisions",
+      "score_field": "gaussian_dofa_scores",
+      "threshold": 0.16728139929966007
+    },
+    "released_mars_v3": {
+      "comparator": ">",
+      "decision_field": "released_mars_v3_decisions",
+      "score_field": "released_mars_v3_scores",
+      "threshold": 0.5
+    },
+    "spatial_prithvi_posttest": {
+      "comparator": ">=",
+      "decision_field": "calibrated_spatial_prithvi_decisions",
+      "score_field": "calibrated_spatial_prithvi_scores",
+      "threshold": 0.28187603894788654
+    }
+  },
+  "one_shot_sequence": [
+    "Validate protocol and every immutable score binding before source access.",
+    "Refuse overwrite if any one-shot output already exists.",
+    "Acquire only the nine listed official summary CSVs and verify size, SHA-1, and MD5.",
+    "Require exact schema and exactly one row whose release_ID matches each frozen score event ID.",
+    "Join once, apply frozen strata/thresholds/metrics, and write immutable ignored joined outcomes plus compact reports.",
+    "Do not retune or rewrite Casa Grande results after Evanston outcomes are known."
+  ],
+  "outcome": {
+    "challenge": "0 < ch4_kgh_mean < 1000",
+    "challenge_view": "fixed-threshold detection fraction reported separately; never relabeled",
+    "field": "ch4_kgh_mean",
+    "negative": "ch4_kgh_mean == 0",
+    "positive": "ch4_kgh_mean >= 1000",
+    "primary_view": "negative and positive only",
+    "window": "official mean methane flow rate for the five-minute window preceding approximate satellite overpass"
+  },
+  "outputs": {
+    "joined": ".research/stanford_controlled_release_2024_2025/evanston_l1c_stress/scores/one_shot_joined.jsonl",
+    "report_json": "reports/experiments/stanford_evanston_one_shot.json",
+    "report_markdown": "reports/experiments/STANFORD_EVANSTON_ONE_SHOT.md",
+    "source_manifest": ".research/stanford_controlled_release_2024_2025/evanston_outcomes/source_manifest.json"
+  },
+  "schema_version": 1,
+  "scope": "One-shot outcome evaluation of nine immutable Stanford Evanston/Rawhide Sentinel-2 label-free scores.",
+  "sources": {
+    "base_url": "https://stacks.stanford.edu/file/qh001qt3946",
+    "doi": "10.25740/qh001qt3946",
+    "inventory_url": "https://purl.stanford.edu/qh001qt3946.json",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/legalcode",
+    "repository": "Stanford Digital Repository qh001qt3946",
+    "repository_modified_utc": "2026-07-17T18:38:07.000+00:00",
+    "repository_version": 17,
+    "source_rule": "Use exactly one official *_summary.csv per frozen release_ID; never derive a different window from one-second releasedata.",
+    "summary_files": [
+      {
+        "event_id": "08092024_S2A",
+        "filename": "2024-2025 release data - all Phases/Phase 0 (Aug - Dec 2024)/08092024_S2A/08092024_S2A_summary.csv",
+        "md5": "a584d0fd2a264d9fa78d2f292ab483f4",
+        "sha1": "be0e445ad078378200a2aa868bd9068e2d2d74b8",
+        "size": 324
+      },
+      {
+        "event_id": "08192024_S2A",
+        "filename": "2024-2025 release data - all Phases/Phase 0 (Aug - Dec 2024)/08192024_S2A/08192024_S2A_summary.csv",
+        "md5": "43d892ce63aa5652b601e549034dc48b",
+        "sha1": "01051f8e1f7f936b273092b3abf8062d19900f43",
+        "size": 322
+      },
+      {
+        "event_id": "08292024_S2A",
+        "filename": "2024-2025 release data - all Phases/Phase 0 (Aug - Dec 2024)/08292024_S2A/08292024_S2A_summary.csv",
+        "md5": "57f2e33c4be033d87beb96f294a16270",
+        "sha1": "9f59b91adacdf3141c7f45d727490bb4ff30ed76",
+        "size": 324
+      },
+      {
+        "event_id": "09032024_S2B",
+        "filename": "2024-2025 release data - all Phases/Phase 0 (Aug - Dec 2024)/09032024_S2B/09032024_S2B_summary.csv",
+        "md5": "fcd2071c2d5824ae10509da368128cc4",
+        "sha1": "c37faf129e537d3c4572b3dde9413616e1f13e52",
+        "size": 326
+      },
+      {
+        "event_id": "09132024_S2B",
+        "filename": "2024-2025 release data - all Phases/Phase 0 (Aug - Dec 2024)/09132024_S2B/09132024_S2B_summary.csv",
+        "md5": "e5d60315b6e8ed792fbf116e7e39bdbd",
+        "sha1": "6d240fac29436d59af782d06db44739b04b7591c",
+        "size": 328
+      },
+      {
+        "event_id": "09232024_S2B",
+        "filename": "2024-2025 release data - all Phases/Phase 0 (Aug - Dec 2024)/09232024_S2B/09232024_S2B_summary.csv",
+        "md5": "93dd743e3a74968cdc9754d01fcb2149",
+        "sha1": "5b084c687ad8269b3428ce2fd78704ad7d6792e2",
+        "size": 323
+      },
+      {
+        "event_id": "10032024_S2B",
+        "filename": "2024-2025 release data - all Phases/Phase 0 (Aug - Dec 2024)/10032024_S2B/10032024_S2B_summary.csv",
+        "md5": "7de9ec2277310be064c87385229ffb86",
+        "sha1": "c464f36084da46ced5504f495951374d0b15f69d",
+        "size": 323
+      },
+      {
+        "event_id": "10082024_S2A",
+        "filename": "2024-2025 release data - all Phases/Phase 0 (Aug - Dec 2024)/10082024_S2A/10082024_S2A_summary.csv",
+        "md5": "fe02f4efa5c47144565dc50ae63f4b53",
+        "sha1": "e060b8be755062a5dd47cc122c78e1cbeeba6cdf",
+        "size": 325
+      },
+      {
+        "event_id": "10132024_S2B",
+        "filename": "2024-2025 release data - all Phases/Phase 0 (Aug - Dec 2024)/10132024_S2B/10132024_S2B_summary.csv",
+        "md5": "e141fc8a12182f746d8ba1c2b555eb40",
+        "sha1": "2cc1f549b6230bf64e2576d00307b5b45804b0aa",
+        "size": 322
+      }
+    ],
+    "variable_dictionary_url": "https://stacks.stanford.edu/file/qh001qt3946/2024-2025%20release%20data%20-%20all%20Phases/gas_release_variables.txt"
+  },
+  "status": "frozen_before_first_evanston_outcome_access",
+  "uncertainty": {
+    "confidence": 0.95,
+    "marginal_preregistered": "Wilson score intervals",
+    "marginal_small_sample_addition": "Exact Clopper-Pearson intervals for recall, FPR, precision, and challenge detection fraction",
+    "paired_binary_test": "two-sided exact McNemar/binomial test on discordant fixed-threshold decisions",
+    "paired_bootstrap_replicates": 10000,
+    "paired_bootstrap_rule": "Resample UTC-date blocks with replacement; retain all rows; omit undefined metric replicates and report valid counts.",
+    "paired_bootstrap_seed": 20260812,
+    "paired_bootstrap_unit": "UTC acquisition date",
+    "superiority_gate": "AP and recall delta lower bounds > 0 and FPR delta upper bound <= 0; otherwise no superiority."
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "access_sequence": {
+    "joined_outcomes_once": true,
+    "score_bundle_validated_before_outcomes": true,
+    "threshold_selection_on_stanford": false
+  },
+  "bindings": {
+    "joined": {
+      "path": ".research/stanford_controlled_release_2024_2025/l1c_stress/scores/one_shot_joined.jsonl",
+      "sha256": "035d11b1eed9b68a40b2f50f4f6ad1f8633e0909a592ed9a5e764f893e350b3d"
+    },
+    "outcomes": {
+      "path": ".research/stanford_controlled_release_2024_2025/clean_events.jsonl",
+      "sha256": "499444b15a3c625ceab7bac1e34541c60b0ebdf886009b529df299caf53da942"
+    },
+    "protocol": {
+      "path": "configs/stanford_large_controlled_release_scoring_protocol.json",
+      "sha256": "658f0d51b9b710fb6aa9deb1e83290f86e5e5b1bb53f22ab7349db0851e4ec70"
+    },
+    "score_bundle": {
+      "path": ".research/stanford_controlled_release_2024_2025/l1c_stress/scores/label_free_scores.npz",
+      "sha256": "713976b7609f9eaa454e1b3a59f8c4ca551695a2867f7fc9c067c710623d9d37"
+    },
+    "score_receipt": {
+      "path": "reports/acquisition/stanford_large_controlled_release_label_free_scores.json",
+      "sha256": "9f82e1fa0abca4668ccaf511545622319e7ef462c93c83cb00c50c8f5c8de6e3"
+    },
+    "script": {
+      "path": "tools/evaluate_stanford_large_controlled_release_scores.py",
+      "sha256": "7f5c3b40d00ceec86aaeaefe704c5168d2c4d9ee30284b8161cb771c11c1eba8"
+    }
+  },
+  "claim_boundary": "Stanford is one-site temporal evidence only. IoU is unavailable. Spatial-Prithvi is post-test. Superiority requires every preregistered paired interval gate.",
+  "cohort": {
+    "rows": 169,
+    "truth_strata": {
+      "primary_negative": 86,
+      "primary_positive": 8,
+      "subthreshold_challenge": 75
+    }
+  },
+  "comparisons": {
+    "gaussian_dofa": {
+      "paired_date_bootstrap": {
+        "average_precision_delta": {
+          "lower": -0.056137142477175994,
+          "point": -0.008344152280267497,
+          "upper": 0.009964682572449667,
+          "valid_replicates": 9994
+        },
+        "blocks": 87,
+        "confidence": 0.95,
+        "false_positive_rate_delta": {
+          "lower": -0.12790697674418605,
+          "point": -0.0697674418604651,
+          "upper": -0.022988505747126436,
+          "valid_replicates": 10000
+        },
+        "recall_delta": {
+          "lower": -0.5,
+          "point": -0.125,
+          "upper": 0.0,
+          "valid_replicates": 9994
+        },
+        "requested_replicates": 10000,
+        "seed": 20260812,
+        "unit": "UTC acquisition date"
+      },
+      "superiority_gate": {
+        "checks": {
+          "ap_delta_lower_positive": false,
+          "fpr_delta_upper_nonpositive": true,
+          "recall_delta_lower_positive": false
+        },
+        "passed": false
+      }
+    },
+    "spatial_prithvi_posttest": {
+      "paired_date_bootstrap": {
+        "average_precision_delta": {
+          "lower": -0.060724606686473656,
+          "point": -0.008292041544023424,
+          "upper": 0.009356950517392815,
+          "valid_replicates": 9994
+        },
+        "blocks": 87,
+        "confidence": 0.95,
+        "false_positive_rate_delta": {
+          "lower": -0.21794871794871795,
+          "point": -0.13953488372093023,
+          "upper": -0.07058823529411765,
+          "valid_replicates": 10000
+        },
+        "recall_delta": {
+          "lower": -0.5,
+          "point": -0.125,
+          "upper": 0.0,
+          "valid_replicates": 9994
+        },
+        "requested_replicates": 10000,
+        "seed": 20260812,
+        "unit": "UTC acquisition date"
+      },
+      "superiority_gate": {
+        "checks": {
+          "ap_delta_lower_positive": false,
+          "fpr_delta_upper_nonpositive": true,
+          "recall_delta_lower_positive": false
+        },
+        "passed": false
+      }
+    }
+  },
+  "generated_at_utc": "2026-08-03T03:57:55.144915+00:00",
+  "primary_view": {
+    "models": {
+      "gaussian_dofa": {
+        "auroc_descriptive": 0.4622093023255814,
+        "average_precision": 0.08724337172006133,
+        "fixed_threshold": {
+          "comparator": ">=",
+          "confusion": {
+            "fn": 8,
+            "fp": 7,
+            "tn": 79,
+            "tp": 0
+          },
+          "false_positive_rate": 0.08139534883720931,
+          "false_positive_rate_interval_95": [
+            0.03998643153878242,
+            0.158601826653932
+          ],
+          "precision": 0.0,
+          "recall": 0.0,
+          "recall_interval_95": [
+            0.0,
+            0.3244075648838801
+          ],
+          "threshold": 0.16728139929966007
+        },
+        "negative": 86,
+        "positive": 8,
+        "rows": 94
+      },
+      "released_mars_v3": {
+        "auroc_descriptive": 0.47238372093023256,
+        "average_precision": 0.09558752400032883,
+        "fixed_threshold": {
+          "comparator": ">",
+          "confusion": {
+            "fn": 7,
+            "fp": 13,
+            "tn": 73,
+            "tp": 1
+          },
+          "false_positive_rate": 0.1511627906976744,
+          "false_positive_rate_interval_95": [
+            0.09052122983132332,
+            0.24163565199593862
+          ],
+          "precision": 0.07142857142857142,
+          "recall": 0.125,
+          "recall_interval_95": [
+            0.02241749145005667,
+            0.47088818221285345
+          ],
+          "threshold": 0.5
+        },
+        "negative": 86,
+        "positive": 8,
+        "rows": 94
+      },
+      "spatial_prithvi_posttest": {
+        "auroc_descriptive": 0.4636627906976744,
+        "average_precision": 0.0872954824563054,
+        "fixed_threshold": {
+          "comparator": ">=",
+          "confusion": {
+            "fn": 8,
+            "fp": 1,
+            "tn": 85,
+            "tp": 0
+          },
+          "false_positive_rate": 0.011627906976744186,
+          "false_positive_rate_interval_95": [
+            0.0020555686652495644,
+            0.06296406589291723
+          ],
+          "precision": 0.0,
+          "recall": 0.0,
+          "recall_interval_95": [
+            0.0,
+            0.3244075648838801
+          ],
+          "threshold": 0.28187603894788654
+        },
+        "negative": 86,
+        "positive": 8,
+        "rows": 94
+      }
+    },
+    "rows": 94
+  },
+  "schema_version": 1,
+  "scope": "one-site temporal controlled-release operating-point stress test",
+  "status": "completed one-shot; thresholds unchanged",
+  "subthreshold_challenge": {
+    "models": {
+      "gaussian_dofa": {
+        "detected": 2,
+        "detection_fraction": 0.02666666666666667,
+        "score_distribution": {
+          "maximum": 0.1907324018173851,
+          "median": 0.01846280635304446,
+          "minimum": 0.0019270490958717044,
+          "p25": 0.010017140931790205,
+          "p75": 0.03434183704519145
+        }
+      },
+      "released_mars_v3": {
+        "detected": 8,
+        "detection_fraction": 0.10666666666666667,
+        "score_distribution": {
+          "maximum": 0.7591164741606917,
+          "median": 0.03700519911944866,
+          "minimum": 0.0008877068758010864,
+          "p25": 0.009153769351541996,
+          "p75": 0.1682802067953162
+        }
+      },
+      "spatial_prithvi_posttest": {
+        "detected": 0,
+        "detection_fraction": 0.0,
+        "score_distribution": {
+          "maximum": 0.11293822834744698,
+          "median": 0.009409472470296483,
+          "minimum": 0.0013642793436336091,
+          "p25": 0.005138088271390332,
+          "p75": 0.017809397377402045
+        }
+      }
+    },
+    "rows": 75
+  }
+}

@@ -5887,3 +5887,44 @@ point and false-positive stress test. No ERSRR model score was accessed.
 The raw workbook, clean event rows, and resolved manifest remain ignored under
 `.research/stanford_controlled_release_2024_2025/`. The tracked audit is
 `reports/acquisition/stanford_large_controlled_release_cohort.json`.
+
+### 2026-08-03: Casa Grande controlled-release one-shot rejected for superiority
+
+The frozen label-free scorer completed all 169 exact Sentinel-2 L1C pairs before
+outcomes were joined once. The primary view contained 86 metered-zero negatives
+and eight releases at or above 1,000 kg CH4/h across 87 UTC-date blocks.
+Released MARS achieved AP 0.09559, recall 1/8, and FPR 13/86. Gaussian+DOFA
+achieved AP 0.08724, recall 0/8, and FPR 7/86; Spatial-Prithvi achieved AP
+0.08730, recall 0/8, and FPR 1/86.
+
+The candidate FPR reductions were paired-date conclusive, but both candidates
+lost the released model's only primary true positive. Their AP intervals crossed
+zero and recall-delta intervals were [-0.5, 0.0]. Both superiority gates failed.
+Casa Grande remains one-site temporal evidence and cannot establish geographic
+transfer. Compact report SHA-256:
+`6b148e85a9d25ef9627a169ef2c7c2d89c963418a6c693aeb16a35a90a7e53b0`.
+
+### 2026-08-03: independent Evanston one-shot completed without negative controls
+
+Nine outcome-blind Evanston targets were resolved to exact official Sentinel-2
+L1C products, paired with prior-only same-MGRS references, cropped to six-band
+256x256 uint16 tensors, and scored once with the unchanged Casa scorer and
+thresholds. The immutable score bundle was validated before the outcome adapter,
+nine official summary-file identities, `ch4_kgh_mean` strata, metrics, and
+uncertainty were frozen. All nine public sources then matched Stanford repository
+size/SHA-1/MD5 metadata and joined exactly once.
+
+The outcome cohort contained eight nonzero sub-threshold challenge releases, one
+release at or above 1,000 kg CH4/h, and zero no-release controls. Released MARS
+detected the sole primary positive and 2/8 challenges. Gaussian+DOFA detected
+0/1 and 1/8; Spatial-Prithvi detected 0/1 and 0/8. AP, AUROC, and FPR are
+undefined because the primary view has no negative row. Exact McNemar p=1.0 for
+each candidate comparison, and both superiority gates fail.
+
+Evanston is valid independent-site sensitivity/challenge evidence, but it is not
+an independent negative cohort and cannot support broad geographic
+generalization. No threshold or model may be retuned from this outcome. Compact
+report SHA-256:
+`372e963fa335b9e0506770352480db25a224518a67ca220b3bca6f45368b5917`.
+The cross-site interpretation and reproducibility bindings are in
+`reports/research/STANFORD_CONTROLLED_RELEASE_EVIDENCE_SYNTHESIS.md`.

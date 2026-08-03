@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_evanston_reference_selection_imagery_access_and_detector_inference",
+  "scope": "Outcome-blind Sentinel-2 L1C target/reference pairing and windowed crop acquisition for the independent Evanston, Wyoming controlled-release site.",
+  "source": {
+    "dataset": "https://purl.stanford.edu/qh001qt3946",
+    "license": "CC-BY-4.0",
+    "target_audit_protocol": {
+      "path": "configs/stanford_evanston_sentinel2_l1c_target_audit_protocol.json",
+      "sha256": "6bce5714fb5f9e09f06d86f25242c01dc6790c1dc182700ffbf725569854b414"
+    },
+    "target_manifest": {
+      "path": ".research/stanford_controlled_release_2024_2025/evanston_l1c_audit/target_manifest.json",
+      "sha256": "376d962a994b01fe6efea3c4ad35a88a42eddfc1d9211fad027c75da6fa67e81",
+      "rows": 9
+    }
+  },
+  "sentinel_2_l1c_stress_acquisition_contract": {
+    "eligible_targets": "all nine frozen, exact-date/platform, officially validated Evanston Sentinel-2 L1C targets; no outcome-based filtering",
+    "reference": {
+      "direction": "prior only",
+      "same_mgrs_tile": true,
+      "minimum_gap_hours": 1,
+      "maximum_lookback_days": 31,
+      "seasonal_fallback": {
+        "enabled_only_when_primary_window_empty": true,
+        "minimum_lookback_days": 334,
+        "maximum_lookback_days": 410,
+        "target_gap_days": 365,
+        "deterministic_order": [
+          "smallest absolute difference from 365 days",
+          "smallest catalog eo:cloud_cover",
+          "lexicographically smallest Sentinel-2 L1C item ID"
+        ]
+      },
+      "additional_campaign_exclusions": {
+        "source": "https://purl.stanford.edu/qh001qt3946/version/17",
+        "license": "CC BY 4.0",
+        "site": "Rawhide Leasing Yard, Evanston, Wyoming",
+        "rule": "reject every same-tile Sentinel-2 L1C candidate acquired on a frozen Evanston event UTC date, independent of release rate and including alternate overlapping MGRS products",
+        "utc_dates": [
+          "2024-08-09",
+          "2024-08-19",
+          "2024-08-29",
+          "2024-09-03",
+          "2024-09-13",
+          "2024-09-23",
+          "2024-10-03",
+          "2024-10-08",
+          "2024-10-13"
+        ]
+      },
+      "maximum_catalog_eo_cloud_cover_pct": 20,
+      "deterministic_order": [
+        "smallest target-reference time gap",
+        "smallest catalog eo:cloud_cover",
+        "lexicographically smallest Sentinel-2 L1C item ID"
+      ],
+      "excluded_scene_ids": "all nine selected target scene IDs; campaign-date exclusion also rejects alternate overlapping products"
+    },
+    "crop": {
+      "shape_pixels": [256, 256],
+      "center": "exact frozen point-address longitude/latitude",
+      "grid": "target B02 native 10 m grid",
+      "band_order": ["B02", "B03", "B04", "B08", "B11", "B12"],
+      "twenty_meter_resampling": "bilinear",
+      "ten_meter_resampling": "native target-grid window / nearest for reference alignment",
+      "radiometry": "raw uint16 Level-1C DNs; no Level-2, SCL, processing-offset, or scale correction",
+      "observability": "radiometric all-band nonzero fraction only; no cloud channel acquired",
+      "access": "range/window reads only; never bulk-download full products"
+    },
+    "storage": ".research/stanford_controlled_release_2024_2025/evanston_l1c_stress/",
+    "outcome_blindness": "Pair selection and raster acquisition omit and do not use Evanston release labels/rates, team detections, or detector outcomes."
+  },
+  "forbidden": [
+    "Do not open Evanston release-data or summary CSVs before a complete immutable label-free score bundle exists.",
+    "Do not change the nine target events based on cloud, release magnitude, or later detector behavior.",
+    "Do not substitute Sentinel-2 L2A or Landsat L2.",
+    "Do not use a same-day, future, or Evanston campaign-date reference."
+  ],
+  "claim_boundary": "A nine-date second-site replication can test geographic transfer at fixed operating points, but its small sample size and public release schedule require exact-binomial uncertainty and no threshold tuning."
+}

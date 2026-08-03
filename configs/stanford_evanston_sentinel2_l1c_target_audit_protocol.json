@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_evanston_flow_summary_access_and_before_detector_inference",
+  "scope": "Outcome-blind Sentinel-2 L1C target availability audit for the independent Evanston, Wyoming controlled-release site.",
+  "site": {
+    "name": "Rawhide Leasing Yard, Evanston, Wyoming",
+    "address": "556 Sage Industrial Road, Evanston, WY 82930",
+    "longitude": -110.931318658838,
+    "latitude": 41.275737966074,
+    "geocoder": "Esri World Geocoder legacy public endpoint",
+    "geocoder_match_score": 100,
+    "geocoder_match_type": "PointAddress",
+    "coordinate_query": "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?SingleLine=556%20Sage%20Industrial%20Road%2C%20Evanston%2C%20WY%2082930&f=json&outFields=Match_addr%2CAddr_type%2CStAddr%2CCity%2CRegion%2CPostal"
+  },
+  "source": {
+    "dataset": "https://purl.stanford.edu/qh001qt3946",
+    "metadata_inventory": "https://purl.stanford.edu/qh001qt3946.json",
+    "metadata_inventory_version": 17,
+    "license": "CC-BY-4.0",
+    "thesis": "https://purl.stanford.edu/st855tv4509/version/1",
+    "site_evidence": "The thesis describes 81 releases at Rawhide Leasing Yard between August 1 and October 16, 2024.",
+    "inventory_evidence": "The SDR filename inventory contains nine Evanston-period S2A/S2B event directories before the Casa Grande campaign."
+  },
+  "events": [
+    {"event_id": "08092024_S2A", "utc_date": "2024-08-09", "platform": "S2A"},
+    {"event_id": "08192024_S2A", "utc_date": "2024-08-19", "platform": "S2A"},
+    {"event_id": "08292024_S2A", "utc_date": "2024-08-29", "platform": "S2A"},
+    {"event_id": "09032024_S2B", "utc_date": "2024-09-03", "platform": "S2B"},
+    {"event_id": "09132024_S2B", "utc_date": "2024-09-13", "platform": "S2B"},
+    {"event_id": "09232024_S2B", "utc_date": "2024-09-23", "platform": "S2B"},
+    {"event_id": "10032024_S2B", "utc_date": "2024-10-03", "platform": "S2B"},
+    {"event_id": "10082024_S2A", "utc_date": "2024-10-08", "platform": "S2A"},
+    {"event_id": "10132024_S2B", "utc_date": "2024-10-13", "platform": "S2B"}
+  ],
+  "catalog_contract": {
+    "endpoint": "https://earth-search.aws.element84.com/v1/search",
+    "collection": "sentinel-2-l1c",
+    "geometry": "exact point intersection",
+    "date_window": "full frozen UTC date",
+    "platform_match": "item ID prefix must equal frozen S2A/S2B platform",
+    "required_assets": ["blue", "green", "red", "nir", "swir16", "swir22", "tileinfo_metadata"],
+    "official_validation": "Validate productName and MGRS against public official tileInfo.json.",
+    "selection": "minimum catalog cloud cover, then item ID, among exact date/platform products covering the point",
+    "imagery_download": false
+  },
+  "forbidden": [
+    "Do not open Evanston release-data CSVs, summary CSVs, flow rates, labels, team detections, or detector outputs during target audit.",
+    "Do not use Landsat L2 or Sentinel-2 L2A.",
+    "Do not select events based on release magnitude or outcome."
+  ],
+  "claim_boundary": "Availability audit only. No labels, scores, performance result, or generalization claim."
+}

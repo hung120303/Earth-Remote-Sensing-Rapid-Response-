@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "status": "pre_outcome_validation_passed",
+  "scope": "Stanford Evanston one-shot outcome evaluator validation before first summary-CSV access.",
+  "protocol": {
+    "path": "configs/stanford_evanston_outcome_evaluation_protocol.json",
+    "sha256": "6ece113e4893a4dac476721995ac20958b1fcbd1cfe49da537a0283d858e2cad",
+    "status": "frozen_before_first_evanston_outcome_access"
+  },
+  "evaluator": {
+    "path": "tools/evaluate_stanford_evanston_scores.py",
+    "sha256": "26d34b9a5fbd01804855608f95a5e3e1ec20a3730b4b40cd6f19059255099958"
+  },
+  "tests": {
+    "path": "tests/test_evaluate_stanford_evanston_scores.py",
+    "sha256": "7d8a43e7f0e96ad6508ad5711c272e222ccae32dc32cf78faf987acddfe8394c",
+    "command_scope": [
+      "tests/test_evaluate_stanford_evanston_scores.py",
+      "tests/test_evaluate_stanford_large_controlled_release_scores.py"
+    ],
+    "passed": 19,
+    "failed": 0
+  },
+  "dry_run": {
+    "status": "immutable Evanston score bundle valid; outcomes not opened",
+    "rows": 9,
+    "scores_sha256": "89e887309ba15ed85ba38a24fee653ca830c1a0a1d8a9c0c075224655b7aa6f8",
+    "source_files_opened": 0
+  },
+  "source_contract": {
+    "repository_version": 17,
+    "summary_files": 9,
+    "outcome_field": "ch4_kgh_mean",
+    "negative": "ch4_kgh_mean == 0",
+    "positive": "ch4_kgh_mean >= 1000",
+    "challenge": "0 < ch4_kgh_mean < 1000",
+    "license": "CC BY 4.0"
+  },
+  "outcome_accessed": false,
+  "eligible_for_one_shot_access": true
+}

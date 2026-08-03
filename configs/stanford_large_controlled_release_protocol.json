@@ -28,6 +28,76 @@
       "nearest-date replacement"
     ]
   },
+  "sentinel_2_l1c_stress_acquisition_contract": {
+    "eligible_targets": "resolved Sentinel-2 Level-1C source-cohort rows only; Landsat remains pending exact USGS EROS Level-1 authentication",
+    "reference": {
+      "direction": "prior only",
+      "same_mgrs_tile": true,
+      "minimum_gap_hours": 1,
+      "maximum_lookback_days": 31,
+      "seasonal_fallback": {
+        "enabled_only_when_primary_window_empty": true,
+        "minimum_lookback_days": 334,
+        "maximum_lookback_days": 410,
+        "target_gap_days": 365,
+        "deterministic_order": [
+          "smallest absolute difference from 365 days",
+          "smallest catalog eo:cloud_cover",
+          "lexicographically smallest Sentinel-2 L1C item ID"
+        ]
+      },
+      "additional_campaign_exclusions": {
+        "source": "https://purl.stanford.edu/qh001qt3946/version/17",
+        "license": "CC BY 4.0",
+        "site": "Casa Grande controlled-release facility",
+        "rule": "reject every same-tile Sentinel-2 L1C candidate acquired on a listed UTC date, independent of release rate",
+        "utc_dates": [
+          "2024-11-14",
+          "2024-11-16",
+          "2024-11-21",
+          "2024-11-26",
+          "2024-11-29",
+          "2024-12-01",
+          "2024-12-04",
+          "2024-12-07",
+          "2024-12-09",
+          "2024-12-19",
+          "2024-12-22",
+          "2024-12-29"
+        ]
+      },
+      "maximum_catalog_eo_cloud_cover_pct": 20,
+      "deterministic_order": [
+        "smallest target-reference time gap",
+        "smallest catalog eo:cloud_cover",
+        "lexicographically smallest Sentinel-2 L1C item ID"
+      ],
+      "excluded_scene_ids": "every resolved target scene ID in the source cohort"
+    },
+    "crop": {
+      "shape_pixels": [
+        256,
+        256
+      ],
+      "center": "exact source longitude/latitude",
+      "grid": "target B02 native 10 m grid",
+      "band_order": [
+        "B02",
+        "B03",
+        "B04",
+        "B08",
+        "B11",
+        "B12"
+      ],
+      "twenty_meter_resampling": "bilinear",
+      "ten_meter_resampling": "native target-grid window / nearest for reference alignment",
+      "radiometry": "raw uint16 Level-1C DNs; no Level-2, SCL, processing-offset, or scale correction",
+      "observability": "radiometric all-band nonzero fraction only; no cloud channel acquired",
+      "access": "range/window reads only; never bulk-download full products"
+    },
+    "storage": ".research/stanford_controlled_release_2024_2025/l1c_stress/",
+    "outcome_blindness": "Pair selection and raster acquisition omit and do not use release labels/rates; no detector outcomes are accessed."
+  },
   "selection_contract": {
     "allowed": "external confirmation after architecture, checkpoint, crop geometry, reference rule, and threshold are frozen",
     "forbidden": "training, checkpoint selection, threshold selection, or iterative tuning on these outcomes"

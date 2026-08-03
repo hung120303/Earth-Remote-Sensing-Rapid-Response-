@@ -1,0 +1,73 @@
+{
+  "bindings": {
+    "pair_manifest": {
+      "path": ".research/stanford_controlled_release_2024_2025/l1c_stress/pair_manifest.json",
+      "sha256": "10abbcd2605688525d0045526e516b9bce844b829e5f8c7e07a05acd69d290de"
+    },
+    "pair_receipt": {
+      "path": "reports/acquisition/stanford_large_controlled_release_l1c_pairs.json",
+      "sha256": "f4312c3ea615a2f5b612bfa552b8d8909f38fab6cad723e5697034f2c57eb03c"
+    },
+    "protocol": {
+      "path": "configs/stanford_large_controlled_release_protocol.json",
+      "sha256": "dc318d43ae2226832337b795979681a7997afdbc7213798ab610b2f4df22f78e"
+    },
+    "script": {
+      "path": "tools/acquire_stanford_large_controlled_release_l1c_crops.py",
+      "sha256": "6cd4ee756cb7afb92c1d4c310a3874dee7cef2296810b794374516cbcdde9487"
+    }
+  },
+  "contract": {
+    "band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11",
+      "B12"
+    ],
+    "cloud_or_l2_assets_acquired": false,
+    "full_products_downloaded": false,
+    "ignored_output_root": ".research/stanford_controlled_release_2024_2025/l1c_stress/crops",
+    "landsat_status": "pending exact USGS EROS Collection 2 Level-1 authentication; no Landsat L2 substitution",
+    "shape": [
+      256,
+      256
+    ],
+    "spectral_product": "Sentinel-2 Level-1C top-of-atmosphere raw DN",
+    "target_grid": "target B02 native 10 m grid",
+    "ten_meter_resampling": "nearest; target B02 native window",
+    "twenty_meter_resampling": "bilinear",
+    "window_only": true
+  },
+  "crop_manifest": {
+    "path": ".research/stanford_controlled_release_2024_2025/l1c_stress/crop_manifest.json",
+    "sha256": "500246526f908b0de13553d61c0ea20d6cd676b4467309c965454eb5aa32eed3",
+    "tracked": false
+  },
+  "generated_at_utc": "2026-08-02T23:50:56.559140+00:00",
+  "outcome_blindness": {
+    "detector_outcomes_accessed": false,
+    "release_labels_or_rates_accessed": false,
+    "statement": "No release outcomes or detector outcomes were accessed."
+  },
+  "schema_version": 1,
+  "scope": "outcome_blind_stanford_2025_sentinel2_l1c_windowed_crops",
+  "status": "acquisition_complete",
+  "summary": {
+    "acquisition_errors": 0,
+    "all_pairs_complete": true,
+    "ignored_crop_assets": 338,
+    "ignored_crop_bytes": 183395980,
+    "reference_all_band_nonzero_fraction_median": 1.0,
+    "reference_all_band_nonzero_fraction_min": 1.0,
+    "requested_pairs": 169,
+    "status_counts": {
+      "acquired": 165,
+      "verified_cached": 4
+    },
+    "target_all_band_nonzero_fraction_median": 1.0,
+    "target_all_band_nonzero_fraction_min": 1.0,
+    "verified_pairs": 169
+  }
+}

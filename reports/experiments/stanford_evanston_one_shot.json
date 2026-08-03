@@ -1,0 +1,294 @@
+{
+  "claim_boundary": [
+    "This is a post-test evaluation at one independent geographic site and remains separate from the completed Casa Grande result.",
+    "No model, preprocessing, fusion, aggregation, reference, crop, threshold, stratum, or metric may be retuned after outcome access.",
+    "Nine events provide limited exact-binomial and bootstrap precision; undefined metrics remain null rather than being imputed.",
+    "Two controlled-release sites do not establish broad geographic generalization.",
+    "Spatial-Prithvi remains a separate post-test candidate and retains its failed official test-only-site uncertainty qualification.",
+    "No pixel-IoU claim is possible because this outcome source supplies release summaries, not plume masks."
+  ],
+  "cohort": {
+    "UTC_date_blocks": 1,
+    "challenge": 8,
+    "locations": [
+      "Evanston"
+    ],
+    "negative": 0,
+    "positive": 1,
+    "primary_rows": 1,
+    "rows": 9
+  },
+  "joined_sha256": "3e9fc874d9721b16aaab5d285fb34701341b0caeab96f30f7ae8eb54d2e3307d",
+  "models": {
+    "gaussian_dofa": {
+      "challenge": {
+        "detected": 1,
+        "detection_fraction": 0.125,
+        "exact_clopper_pearson_95": [
+          0.003159723531251909,
+          0.5265096708752065
+        ],
+        "rows": 8
+      },
+      "primary": {
+        "fixed_threshold": {
+          "comparator": ">=",
+          "confusion": {
+            "fn": 1,
+            "fp": 0,
+            "tn": 0,
+            "tp": 0
+          },
+          "false_positive_rate": null,
+          "false_positive_rate_exact_clopper_pearson_95": [
+            null,
+            null
+          ],
+          "false_positive_rate_interval_95": [
+            null,
+            null
+          ],
+          "precision": null,
+          "precision_exact_clopper_pearson_95": [
+            null,
+            null
+          ],
+          "recall": 0.0,
+          "recall_exact_clopper_pearson_95": [
+            0.0,
+            0.975
+          ],
+          "recall_interval_95": [
+            0.0,
+            0.7934506856227626
+          ],
+          "threshold": 0.16728139929966007
+        },
+        "negative": 0,
+        "positive": 1,
+        "ranking": {
+          "auroc_descriptive": null,
+          "average_precision": null,
+          "undefined_reason": "primary view does not contain both classes"
+        },
+        "rows": 1
+      }
+    },
+    "released_mars_v3": {
+      "challenge": {
+        "detected": 2,
+        "detection_fraction": 0.25,
+        "exact_clopper_pearson_95": [
+          0.031854026249944246,
+          0.6508557944128242
+        ],
+        "rows": 8
+      },
+      "primary": {
+        "fixed_threshold": {
+          "comparator": ">",
+          "confusion": {
+            "fn": 0,
+            "fp": 0,
+            "tn": 0,
+            "tp": 1
+          },
+          "false_positive_rate": null,
+          "false_positive_rate_exact_clopper_pearson_95": [
+            null,
+            null
+          ],
+          "false_positive_rate_interval_95": [
+            null,
+            null
+          ],
+          "precision": 1.0,
+          "precision_exact_clopper_pearson_95": [
+            0.025000000000000022,
+            1.0
+          ],
+          "recall": 1.0,
+          "recall_exact_clopper_pearson_95": [
+            0.025000000000000022,
+            1.0
+          ],
+          "recall_interval_95": [
+            0.20654931437723745,
+            1.0
+          ],
+          "threshold": 0.5
+        },
+        "negative": 0,
+        "positive": 1,
+        "ranking": {
+          "auroc_descriptive": null,
+          "average_precision": null,
+          "undefined_reason": "primary view does not contain both classes"
+        },
+        "rows": 1
+      }
+    },
+    "spatial_prithvi_posttest": {
+      "challenge": {
+        "detected": 0,
+        "detection_fraction": 0.0,
+        "exact_clopper_pearson_95": [
+          0.0,
+          0.3694166475528192
+        ],
+        "rows": 8
+      },
+      "primary": {
+        "fixed_threshold": {
+          "comparator": ">=",
+          "confusion": {
+            "fn": 1,
+            "fp": 0,
+            "tn": 0,
+            "tp": 0
+          },
+          "false_positive_rate": null,
+          "false_positive_rate_exact_clopper_pearson_95": [
+            null,
+            null
+          ],
+          "false_positive_rate_interval_95": [
+            null,
+            null
+          ],
+          "precision": null,
+          "precision_exact_clopper_pearson_95": [
+            null,
+            null
+          ],
+          "recall": 0.0,
+          "recall_exact_clopper_pearson_95": [
+            0.0,
+            0.975
+          ],
+          "recall_interval_95": [
+            0.0,
+            0.7934506856227626
+          ],
+          "threshold": 0.28187603894788654
+        },
+        "negative": 0,
+        "positive": 1,
+        "ranking": {
+          "auroc_descriptive": null,
+          "average_precision": null,
+          "undefined_reason": "primary view does not contain both classes"
+        },
+        "rows": 1
+      }
+    }
+  },
+  "paired_comparisons": {
+    "gaussian_dofa_minus_released_mars_v3": {
+      "exact_mcnemar": {
+        "baseline_only_positive": 1,
+        "candidate_only_positive": 0,
+        "discordant": 1,
+        "two_sided_p_value": 1.0
+      },
+      "paired_date_bootstrap": {
+        "average_precision_delta": {
+          "lower": null,
+          "point": null,
+          "upper": null,
+          "valid_replicates": 0
+        },
+        "blocks": 1,
+        "confidence": 0.95,
+        "false_positive_rate_delta": {
+          "lower": null,
+          "point": null,
+          "upper": null,
+          "valid_replicates": 0
+        },
+        "recall_delta": {
+          "lower": -1.0,
+          "point": -1.0,
+          "upper": -1.0,
+          "valid_replicates": 10000
+        },
+        "requested_replicates": 10000,
+        "seed": 20260812,
+        "unit": "UTC acquisition date"
+      },
+      "superiority_gate": {
+        "checks": {
+          "ap_delta_lower_positive": false,
+          "fpr_delta_upper_nonpositive": false,
+          "recall_delta_lower_positive": false
+        },
+        "passed": false
+      }
+    },
+    "spatial_prithvi_posttest_minus_released_mars_v3": {
+      "exact_mcnemar": {
+        "baseline_only_positive": 1,
+        "candidate_only_positive": 0,
+        "discordant": 1,
+        "two_sided_p_value": 1.0
+      },
+      "paired_date_bootstrap": {
+        "average_precision_delta": {
+          "lower": null,
+          "point": null,
+          "upper": null,
+          "valid_replicates": 0
+        },
+        "blocks": 1,
+        "confidence": 0.95,
+        "false_positive_rate_delta": {
+          "lower": null,
+          "point": null,
+          "upper": null,
+          "valid_replicates": 0
+        },
+        "recall_delta": {
+          "lower": -1.0,
+          "point": -1.0,
+          "upper": -1.0,
+          "valid_replicates": 10000
+        },
+        "requested_replicates": 10000,
+        "seed": 20260812,
+        "unit": "UTC acquisition date"
+      },
+      "superiority_gate": {
+        "checks": {
+          "ap_delta_lower_positive": false,
+          "fpr_delta_upper_nonpositive": false,
+          "recall_delta_lower_positive": false
+        },
+        "passed": false
+      }
+    }
+  },
+  "protocol_sha256": "4e8fc757e815530702dcdd30605192c4a4b68e661e6498ac7b268cdac55dc76f",
+  "schema_version": 1,
+  "scope": "One-shot outcome evaluation of nine immutable Stanford Evanston/Rawhide Sentinel-2 label-free scores.",
+  "score_bundle_sha256": "89e887309ba15ed85ba38a24fee653ca830c1a0a1d8a9c0c075224655b7aa6f8",
+  "source": {
+    "license": "CC BY 4.0",
+    "outcome_field": "ch4_kgh_mean",
+    "repository": "Stanford Digital Repository qh001qt3946",
+    "summary_window": "five minutes preceding approximate satellite overpass",
+    "version": 17
+  },
+  "source_manifest_sha256": "a2f746c86cbea1184e5b22bee6fcf3b05c69bd7eea865e2e2f1c04e1211e7a4b",
+  "status": "completed independent-site one-shot; thresholds unchanged",
+  "uncertainty": {
+    "confidence": 0.95,
+    "marginal_preregistered": "Wilson score intervals",
+    "marginal_small_sample_addition": "Exact Clopper-Pearson intervals for recall, FPR, precision, and challenge detection fraction",
+    "paired_binary_test": "two-sided exact McNemar/binomial test on discordant fixed-threshold decisions",
+    "paired_bootstrap_replicates": 10000,
+    "paired_bootstrap_rule": "Resample UTC-date blocks with replacement; retain all rows; omit undefined metric replicates and report valid counts.",
+    "paired_bootstrap_seed": 20260812,
+    "paired_bootstrap_unit": "UTC acquisition date",
+    "superiority_gate": "AP and recall delta lower bounds > 0 and FPR delta upper bound <= 0; otherwise no superiority."
+  }
+}
