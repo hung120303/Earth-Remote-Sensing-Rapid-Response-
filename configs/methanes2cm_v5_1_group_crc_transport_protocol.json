@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "status": "evaluation_authorized_after_calibrator_freeze",
+  "scope": "development-only fixed-24-group calibration and fixed-24-group candidate-specific evaluation of v5.1 group-level conformal risk transport",
+  "implementation": {
+    "path": "tools/evaluate_methanes2cm_v5_1_group_crc_transport.py",
+    "sha256": "5dbf831b02e1c3ddd0d6eb69e352349ccbe5ee0737d22367706f85f607b9eb95"
+  },
+  "code_dependencies": {
+    "group_crc": {
+      "path": "tools/calibrate_mars_v6_group_risk.py",
+      "sha256": "5e9d530361c81d9522fec2d8d9d4f35f0293d13346f22e5360d1d480d97cffc9"
+    },
+    "tests": {
+      "path": "tests/test_methanes2cm_v5_1_group_crc_transport.py",
+      "sha256": "f5d1c33c56144b60779ae9b51982bc1220239f100ea4826106bccbbafe77f8d6"
+    }
+  },
+  "pre_fit_validation": {
+    "path": "reports/experiments/methanes2cm_v5_1_group_crc_transport_pre_fit_validation.json",
+    "sha256": "77d7d08586a98f5a4a780be5471f4394518849e9e2fcc7399ca3d92b5129784d"
+  },
+  "fitted_calibrator": {
+    "path": "outputs/methanes2cm_v5_1_group_crc_transport_fit.json",
+    "sha256": "f0e6940db12a33d82420aa629feca411e10dd99e227c25a07e465c9e1af79a0e"
+  },
+  "inputs": {
+    "score_cache": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_1_ensemble_calibration.npz",
+      "sha256": "6e6ad2334b046292ca2c88d9364215f8964f0b49a28478e5d04cbc72a7ea7510"
+    },
+    "development_manifest": {
+      "path": ".research/methanes2cm_mars_disjoint/model_development.jsonl",
+      "sha256": "d0efcd5c280cfa7238df8d2994efc209d4bde8d68b309b0214bfcb62280f6145"
+    },
+    "cohort_receipt": {
+      "path": "reports/acquisition/mars_v6_unified_cohort.json",
+      "sha256": "aef447a2783da546ce239e29568c78d85338c3abf6553fed9ca4683c92bf1b2b"
+    },
+    "v5_1_ensemble_receipt": {
+      "path": "reports/experiments/methanes2cm_v5_1_ensemble_validation.json",
+      "sha256": "03691437f3ce2c384aece9f00c7dc4462eebe5e0b580ca340a7db043dc0cdeca"
+    }
+  },
+  "score_field": "crossfit_development_scene_score",
+  "cohort": {
+    "source": "MethaneS2CM location-training internal development partition",
+    "product": "Sentinel-2 L2A",
+    "rows": 11478,
+    "groups": 48,
+    "partition_rule": "sort SHA256('ersrr-v6-risk-calibration|' + group_id); first 24 groups calibrate and remaining 24 groups evaluate",
+    "calibration_groups": 24,
+    "calibration_rows": 5050,
+    "evaluation_groups": 24,
+    "evaluation_rows": 6428,
+    "spatial_unit": "fixed 25 km group"
+  },
+  "calibration": {
+    "method": "most-permissive threshold satisfying (n * empirical group-balanced negative-crop FPR + 1) / (n + 1) <= alpha",
+    "primary_alpha": 0.075,
+    "crc_alphas": [0.05, 0.075, 0.1, 0.15],
+    "pooled_comparator": "most-permissive threshold with calibration negative-crop FPR <= target",
+    "pooled_target_fpr": 0.05,
+    "selection_rule": "primary alpha 0.075 is fixed; secondary alphas are descriptive and cannot replace it after evaluation"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 2026081002,
+    "confidence": 0.95,
+    "unit": "paired 25 km group"
+  },
+  "promotion_gates": {
+    "confirmation_group_fpr_maximum": 0.075,
+    "confirmation_crop_fpr_maximum": 0.075,
+    "confirmation_recall_minimum": 0.35,
+    "paired_group_fpr_delta_upper_maximum": 0.0,
+    "paired_group_recall_delta_lower_minimum": -0.05,
+    "pass_action": "Retain the frozen group-CRC layer as a development candidate for a genuinely new sealed mixed cohort; do not evaluate the already-opened MethaneS2CM location test.",
+    "failure_action": "Reject group-CRC transport as operationally useful under this fixed split; do not search secondary alpha values on evaluation outcomes."
+  },
+  "sequence": [
+    "Verify implementation, dependency, input, partition, and score-cache bindings without opening outcome arrays.",
+    "Authorize calibration fit; use labels only from the fixed first 24 groups and write an ignored threshold artifact.",
+    "Hash-bind the fitted artifact and change status to evaluation_authorized_after_calibrator_freeze.",
+    "Join scores to labels once on the fixed remaining 24 groups and apply every promotion gate.",
+    "Do not use the opened location-test predictions or outcomes at any stage."
+  ],
+  "outputs": {
+    "fitted_calibrator": "outputs/methanes2cm_v5_1_group_crc_transport_fit.json",
+    "result_json": "reports/experiments/methanes2cm_v5_1_group_crc_transport.json",
+    "result_markdown": "reports/experiments/METHANES2CM_V5_1_GROUP_CRC_TRANSPORT.md"
+  },
+  "evidence_boundary": {
+    "classification": "candidate-specific development evidence, not untouched external confirmation",
+    "known_before_freeze": "The prerequisite alignment audit exposed evaluation label marginals (3246 positive, 3182 negative) but did not inspect score-label association or candidate metrics.",
+    "prior_access": "The underlying v5.1 development score family and labels were opened in earlier model-development work.",
+    "prohibited": [
+      "MethaneS2CM location-test prediction cache",
+      "MethaneS2CM location-test outcomes",
+      "official MARS test",
+      "MARS strict-spatial outcomes",
+      "UNEP sealed positives",
+      "CloudSEN fresh test"
+    ]
+  },
+  "invariants": [
+    "The model, score ordering, dense masks, and empirical-CDF score definition are frozen and unchanged.",
+    "Dry-run mode never opens labels.",
+    "Fit mode uses only the 24 calibration groups and refuses confirmation evaluation.",
+    "Evaluation mode requires a hash-bound fitted artifact and refuses overwrite.",
+    "The primary alpha, pooled comparator, bootstrap, and promotion gates cannot change after evaluation.",
+    "Secondary alpha results cannot be promoted after the primary evaluation fails.",
+    "Bulk caches and fitted threshold artifacts remain Git-ignored."
+  ]
+}

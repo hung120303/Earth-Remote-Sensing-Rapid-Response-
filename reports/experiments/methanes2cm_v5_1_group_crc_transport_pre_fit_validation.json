@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "pre_fit_validation_passed",
+  "scope": "MethaneS2CM v5.1 fixed 24/24-group CRC calibration transport",
+  "draft_protocol": {
+    "path": "configs/methanes2cm_v5_1_group_crc_transport_protocol.json",
+    "sha256": "1aed9e984f682d01cd9cebfc0fe8c370fc1545db7abfa0d0421f3945a1b5fbe1"
+  },
+  "implementation": {
+    "path": "tools/evaluate_methanes2cm_v5_1_group_crc_transport.py",
+    "sha256": "5dbf831b02e1c3ddd0d6eb69e352349ccbe5ee0737d22367706f85f607b9eb95"
+  },
+  "tests": {
+    "path": "tests/test_methanes2cm_v5_1_group_crc_transport.py",
+    "sha256": "f5d1c33c56144b60779ae9b51982bc1220239f100ea4826106bccbbafe77f8d6",
+    "command": ".venv/bin/python -m pytest -q tests/test_methanes2cm_v5_1_group_crc_transport.py tests/test_mars_v6_group_risk.py",
+    "result": "10 passed in 16.60s"
+  },
+  "compile_and_whitespace": "passed",
+  "dry_run": {
+    "status": "pre_outcome_dry_run_passed",
+    "calibration_groups": 24,
+    "calibration_rows": 5050,
+    "confirmation_groups": 24,
+    "confirmation_rows": 6428,
+    "outcome_arrays_opened": false,
+    "verified_bindings": 5
+  },
+  "known_evidence_boundary": "Confirmation label marginals were exposed during prerequisite alignment audit; no score-label association or candidate metric was inspected before this freeze.",
+  "authorization": "Calibration labels from the fixed first 24 groups may now be opened to fit the preregistered thresholds. Confirmation score-label joining remains prohibited."
+}

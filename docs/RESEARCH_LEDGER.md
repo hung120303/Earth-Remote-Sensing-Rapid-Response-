@@ -743,3 +743,28 @@ the champion under this two-frame HLS-transfer contract. Folds 0/1, fold 2,
 external held cohorts, and the official test remain unopened. The cache is
 retained as an ignored negative-result artifact; no classifier artifact is
 promoted.
+
+## 2026-08-11: fixed-split group-CRC calibration transport rejected
+
+The retired v6 scene family was not retrained. Instead, the already frozen
+MethaneS2CM source-development partition was used for a calibration-only test:
+24 fixed 25 km groups (5,050 crops) fit a group-balanced conformal-risk
+threshold, and the disjoint 24 groups (6,428 crops) were evaluated once. This
+is candidate-specific development evidence, not untouched confirmation,
+because the underlying v5.1 development labels were opened previously and the
+confirmation label marginals were exposed during prerequisite alignment.
+
+At primary alpha 0.075, CRC froze threshold 0.787820 with corrected calibration
+risk 0.074981. On the fixed evaluation groups it achieved crop FPR 0.0336 and
+recall 0.3022, versus 0.0531 FPR and 0.4310 recall for the pooled 5% calibration
+threshold. Group-balanced FPR improved by -0.0210 with paired 95% interval
+[-0.0308,-0.0126], but group-balanced recall fell -0.1661 with interval
+[-0.2084,-0.1255]. The frozen 0.35 absolute-recall and -0.05 paired-recall
+noninferiority gates both failed.
+
+Group CRC is therefore rejected as operationally useful under this fixed split.
+Secondary alpha values may not be selected from these outcomes. No model
+weights, ranking, dense masks, opened MethaneS2CM location-test outcomes, MARS
+test outcomes, or other prohibited evidence changed or entered the experiment.
+The machine-readable result is
+`reports/experiments/methanes2cm_v5_1_group_crc_transport.json`.

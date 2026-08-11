@@ -1,0 +1,81 @@
+{
+  "all_promotion_gates_pass": false,
+  "confirmation": {
+    "candidate": {
+      "false_positive_rate": 0.033626649905719674,
+      "fn": 2265,
+      "fp": 107,
+      "group_balanced_false_positive_rate": 0.03078293995685763,
+      "group_balanced_recall": 0.33029866353016496,
+      "negative_groups": 24,
+      "positive_groups": 24,
+      "precision": 0.9016544117647058,
+      "recall": 0.3022181146025878,
+      "threshold": 0.7878196835517884,
+      "tn": 3075,
+      "tp": 981
+    },
+    "groups": 24,
+    "negatives": 3182,
+    "pooled_comparator": {
+      "false_positive_rate": 0.05311125078566939,
+      "fn": 1847,
+      "fp": 169,
+      "group_balanced_false_positive_rate": 0.05177182157428365,
+      "group_balanced_recall": 0.4964017674458172,
+      "negative_groups": 24,
+      "positive_groups": 24,
+      "precision": 0.892219387755102,
+      "recall": 0.43099199014171286,
+      "threshold": 0.7311031222343446,
+      "tn": 3013,
+      "tp": 1399
+    },
+    "positives": 3246,
+    "ranking": {
+      "auroc": 0.8481784669077796,
+      "average_precision": 0.8478079877279718,
+      "invariant_between_threshold_rules": true
+    },
+    "rows": 6428
+  },
+  "decision": "Reject group-CRC transport as operationally useful under this fixed split; do not search secondary alpha values on evaluation outcomes.",
+  "fitted_calibrator_sha256": "f0e6940db12a33d82420aa629feca411e10dd99e227c25a07e465c9e1af79a0e",
+  "generated_at_utc": "2026-08-11T00:12:54.306130+00:00",
+  "limitations": [
+    "Confirmation label marginals were exposed during prerequisite alignment audit before protocol freeze.",
+    "The underlying development labels and v5.1 score family were opened in earlier work.",
+    "This is candidate-specific development evidence, not a fresh external confirmation.",
+    "The guarantee applies only under exchangeability; product/geographic shift remains empirical."
+  ],
+  "paired_group_bootstrap": {
+    "confidence": 0.95,
+    "group_balanced_fpr_delta": {
+      "lower": -0.030781074084768763,
+      "point": -0.020988881617426024,
+      "upper": -0.012578526965468751
+    },
+    "group_balanced_recall_delta": {
+      "lower": -0.208350232615307,
+      "point": -0.16610310391565222,
+      "upper": -0.12552077277313742
+    },
+    "groups": 24,
+    "replicates": 10000,
+    "seed": 2026081002,
+    "unit": "25 km group"
+  },
+  "prohibited_outcomes_accessed": false,
+  "promotion_checks": {
+    "calibration_crc_bound_at_most_primary_alpha": true,
+    "confirmation_crop_fpr_at_most": true,
+    "confirmation_group_fpr_at_most": true,
+    "confirmation_recall_at_least": false,
+    "paired_group_fpr_delta_upper_at_most": true,
+    "paired_group_recall_delta_lower_at_least": false
+  },
+  "protocol_sha256": "80554ce5599e8d4992dcd2bf797c6511b609df60b8ff9fbf339c13332c9eb7ca",
+  "schema_version": 1,
+  "scope": "development-only fixed-24-group confirmation of v5.1 group-CRC threshold transport",
+  "status": "completed"
+}
