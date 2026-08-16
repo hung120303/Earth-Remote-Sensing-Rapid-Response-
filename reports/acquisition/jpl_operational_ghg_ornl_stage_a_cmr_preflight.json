@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "scope": "public_cmr_metadata_only_no_header_or_stage_b_access",
+  "observation_date": "2026-08-16",
+  "decision": "METADATA_RESOLUTION_PASS_GRID_BRIDGE_PENDING",
+  "protocol": {
+    "path": "configs/mars_jpl_ornl_header_bridge_protocol.json",
+    "sha256": "5416bd88082466090f573df9bb9d823338ad8b9e333f1aad8fc7ef9d1af261b2"
+  },
+  "preflight_implementation_commit": "3c01e76a1b3fbf24e0280a236c432e62f8928e3b",
+  "cmr_collection": {
+    "concept_id": "C2662359874-ORNL_CLOUD",
+    "doi": "10.3334/ORNLDAAC/2095"
+  },
+  "counts": {
+    "frozen_cach4_anchor_flightlines": 124,
+    "resolved_exact_header_granules": 124,
+    "unresolved_header_granules": 0,
+    "unique_granule_concept_ids": 124,
+    "granules_with_declared_bytes": 124,
+    "granules_with_source_sha256": 124,
+    "minimum_declared_bytes": 14072,
+    "maximum_declared_bytes": 14075,
+    "total_declared_header_bytes": 1745203
+  },
+  "gates": {
+    "minimum_100_resolved_anchors": true,
+    "minimum_80_percent_resolved": true,
+    "metadata_resolution_gate": true,
+    "geometric_grid_bridge": false
+  },
+  "grid_bridge_status": "pending_authenticated_header_content",
+  "ignored_preflight_receipt": {
+    "path": ".research/jpl_operational_ghg_supplement/ornl_stage_a_cmr_preflight.json",
+    "bytes": 192259,
+    "sha256": "e0a2cef1c4fbdc30543d71a3b2cf3279dbab4ee8b3937e4dbfb46c1d417e0906"
+  },
+  "security_boundary": {
+    "header_content_accessed": false,
+    "stage_b_covid_permian_queried": false,
+    "target_catalog_queried": false,
+    "target_assets_downloaded": false,
+    "jpl_test_or_emit_accessed": false,
+    "protected_mars_outcomes_accessed": false
+  },
+  "claim_boundary": "All frozen CACH4 anchor identities are available in NASA CMR with exact header-size and SHA-256 metadata. This does not establish header content validity, geometric interchangeability, COVID/Permian coordinates, target-pair yield, model benefit, or benchmark superiority."
+}

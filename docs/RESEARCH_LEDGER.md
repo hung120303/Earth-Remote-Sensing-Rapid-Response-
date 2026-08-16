@@ -933,3 +933,18 @@ Target satellite catalogs remain forbidden until a separate committed
 protocol. The bridge is currently pending Earthdata authorization, not a pass
 or fail. Frozen contract:
 `configs/mars_jpl_ornl_header_bridge_protocol.json`.
+
+## 2026-08-16: NASA CMR preflight resolves every frozen grid anchor
+
+Commit `3c01e76a` added a public-metadata-only preflight before the batch
+query. NASA CMR then resolved all 124/124 exact CACH4 L1B radiance-header
+granules. Every selected granule has a distinct concept ID, declared byte
+count, and source SHA-256; the protected header content totals only 1,745,203
+bytes. No header content, COVID/Permian granule, target catalog, target asset,
+JPL test data, or protected MARS outcome was accessed.
+
+This clears only the Stage-A metadata-resolution sub-gate. The geometric grid
+bridge remains pending until the authenticated headers are downloaded and all
+resolved NASA grids match the public JPL grids with zero mismatches. Stage B
+remains unauthorized. Compact receipt:
+`reports/acquisition/jpl_operational_ghg_ornl_stage_a_cmr_preflight.json`.

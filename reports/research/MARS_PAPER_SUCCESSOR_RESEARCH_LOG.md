@@ -6181,3 +6181,17 @@ the connected browser session currently presents empty login fields, and no
 command-line `.netrc` exists. Therefore the bridge remains pending explicit
 Earthdata authorization. No credential, header, COVID/Permian coordinate,
 target catalog, or protected outcome has been accessed yet.
+
+### 2026-08-16: public CMR anchor preflight passes metadata resolution
+
+A separately committed preflight queried only the 124 frozen CACH4 anchor IDs
+in the preregistered NASA collection. All 124 exact `v2t1` L1B radiance-header
+granules resolved, all 124 carried source SHA-256 values and declared byte
+counts, and the total declared protected content was 1,745,203 bytes. The
+ignored detailed receipt is bound by SHA-256 in
+`reports/acquisition/jpl_operational_ghg_ornl_stage_a_cmr_preflight.json`.
+
+This result does not pass the grid bridge: no header content was accessed, no
+grid was compared, and no COVID/Permian or target-catalog query was authorized.
+It removes CMR identity/availability as a risk while leaving Earthdata
+authentication and the zero-mismatch geometric comparison as the next gate.
