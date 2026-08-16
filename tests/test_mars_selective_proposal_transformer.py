@@ -18,6 +18,8 @@ from train_mars_selective_proposal_transformer import (  # noqa: E402
     balanced_cell_weights,
     candidate_scores,
     seed_everything,
+    validate_crossfit_alignment,
+    validate_spatial_cache,
 )
 
 
@@ -64,3 +66,44 @@ def test_candidate_scores_only_raise_routed_rows() -> None:
 def test_seed_configuration_requires_deterministic_algorithms() -> None:
     seed_everything(17)
     assert torch.are_deterministic_algorithms_enabled()
+
+
+def test_spatial_cache_validation_checks_schema_and_binding() -> None:
+    images = np.zeros((2, 9, 64, 64), dtype=np.float16)
+    names = np.asarray(
+        [
+            "released_probability_meanpool",
+            "released_probability_maxpool",
+            "mbmp_centered",
+            "target_reference_B11_difference",
+            "target_reference_B12_difference",
+            "target_reference_B11_normalized_difference",
+            "target_reference_B12_normalized_difference",
+            "cloud_fraction",
+            "observable_fraction",
+        ]
+    )
+    validate_spatial_cache(images, np.asarray(["a", "b"]), names, "abc", "abc")
+    with pytest.raises(ValueError, match="not bound"):
+        validate_spatial_cache(images, np.asarray(["a", "b"]), names, "bad", "abc")
+
+
+def test_crossfit_alignment_rejects_group_crossing_folds() -> None:
+    ids = np.asarray(["a", "b"])
+    labels = np.asarray([0, 1], dtype=np.uint8)
+    sensors = np.asarray([0, 1], dtype=np.uint8)
+    groups = np.asarray(["shared", "shared"])
+    folds = np.asarray([3, 4], dtype=np.uint8)
+    with pytest.raises(ValueError, match="crosses"):
+        validate_crossfit_alignment(
+            ids,
+            labels,
+            sensors,
+            groups,
+            folds,
+            labels,
+            sensors,
+            groups,
+            folds,
+            source="test",
+        )

@@ -93,6 +93,7 @@ class SelectiveProposalTransformer(nn.Module):
         proposal_bias = torch.logit(proposal)
         attention = self.attention(tokens).squeeze(-1)
         attention = attention + self.proposal_attention_scale * proposal_bias
+        visible_mask: torch.Tensor | None = None
         if observable is not None:
             if observable.shape != proposal_probability.shape:
                 raise ValueError("Observable map must align with proposal probability")
@@ -101,10 +102,20 @@ class SelectiveProposalTransformer(nn.Module):
                 kernel_size=self.patch_size,
                 stride=self.patch_size,
             ).flatten(1)
-            attention = attention.masked_fill(visible < 0.1, -1e4)
+            visible_mask = visible >= 0.1
+            attention = attention.masked_fill(~visible_mask, -1e4)
         weights = torch.softmax(attention, dim=1)
         attended = (tokens * weights[:, :, None]).sum(dim=1)
-        mean = tokens.mean(dim=1)
-        maximum = tokens.amax(dim=1)
+        if visible_mask is None:
+            mean = tokens.mean(dim=1)
+            maximum = tokens.amax(dim=1)
+        else:
+            expanded = visible_mask[:, :, None]
+            count = expanded.sum(dim=1).clamp_min(1)
+            mean = (tokens * expanded).sum(dim=1) / count
+            maximum = tokens.masked_fill(~expanded, -1e4).amax(dim=1)
+            empty = ~visible_mask.any(dim=1)
+            if bool(empty.any()):
+                mean = torch.where(empty[:, None], tokens.mean(dim=1), mean)
+                maximum = torch.where(empty[:, None], tokens.amax(dim=1), maximum)
         return self.head(torch.cat([attended, mean, maximum], dim=1)).squeeze(1)
-

@@ -31,9 +31,70 @@ from analyze_mars_recall_anchor import align_feature_rows  # noqa: E402
 from mars_selective_proposal_transformer import SelectiveProposalTransformer  # noqa: E402
 from train_mars_oof_scene_ensemble_v2 import ap_group_bootstrap  # noqa: E402
 from train_mars_scene_ranker import comparison, metric_summary  # noqa: E402
+from extract_mars_spatial_scene_inputs import CHANNEL_NAMES  # noqa: E402
 
 
 DEFAULT_PROTOCOL = Path("configs/mars_selective_proposal_transformer_protocol.json")
+
+
+def validate_spatial_cache(
+    images: np.ndarray,
+    sample_ids: np.ndarray,
+    channel_names: np.ndarray,
+    embedded_images_sha256: str,
+    expected_images_sha256: str,
+) -> None:
+    expected_shape = (sample_ids.size, len(CHANNEL_NAMES), 64, 64)
+    if images.shape != expected_shape or images.dtype != np.float16:
+        raise ValueError("Spatial image cache differs from its frozen schema")
+    if not np.array_equal(channel_names.astype(str), np.asarray(CHANNEL_NAMES)):
+        raise ValueError("Spatial channel names differ from the frozen schema")
+    if embedded_images_sha256 != expected_images_sha256:
+        raise ValueError("Spatial metadata is not bound to the frozen image cache")
+    if len(set(sample_ids.astype(str).tolist())) != sample_ids.size:
+        raise ValueError("Spatial sample identities are not unique")
+
+
+def validate_crossfit_alignment(
+    champion_ids: np.ndarray,
+    champion_labels: np.ndarray,
+    champion_sensors: np.ndarray,
+    champion_groups: np.ndarray,
+    champion_folds: np.ndarray,
+    aligned_labels: np.ndarray,
+    aligned_sensors: np.ndarray,
+    aligned_groups: np.ndarray,
+    aligned_folds: np.ndarray,
+    *,
+    source: str,
+) -> None:
+    size = champion_ids.size
+    arrays = (
+        champion_labels,
+        champion_sensors,
+        champion_groups,
+        champion_folds,
+        aligned_labels,
+        aligned_sensors,
+        aligned_groups,
+        aligned_folds,
+    )
+    if len(set(champion_ids.astype(str).tolist())) != size or any(
+        value.size != size for value in arrays
+    ):
+        raise ValueError(f"{source} alignment has duplicate or mismatched row identities")
+    if not (
+        np.array_equal(champion_labels, aligned_labels)
+        and np.array_equal(champion_sensors, aligned_sensors)
+        and np.array_equal(champion_groups, aligned_groups)
+        and np.array_equal(champion_folds, aligned_folds)
+    ):
+        raise ValueError(f"{source} metadata does not exactly align with champion rows")
+    group_folds: dict[str, set[int]] = {}
+    for group, fold in zip(champion_groups.astype(str), champion_folds.astype(int)):
+        group_folds.setdefault(group, set()).add(int(fold))
+    if any(len(values) != 1 for values in group_folds.values()):
+        raise ValueError("A 25 km group crosses the folds-3/4 boundary")
 
 
 def seed_everything(seed: int) -> None:
@@ -378,11 +439,20 @@ def main() -> int:
 
     images = np.load(paths["spatial_images"], mmap_mode="r", allow_pickle=False)
     with np.load(paths["spatial_metadata"], allow_pickle=False) as bundle:
+        spatial_channel_names = bundle["channel_names"].astype(str)
         spatial_ids = bundle["sample_ids"].astype(str)
         spatial_folds = bundle["folds"].astype(np.uint8)
         spatial_labels = bundle["labels"].astype(np.uint8)
         spatial_sensors = bundle["sensors"].astype(np.uint8)
         spatial_groups = bundle["groups"].astype(str)
+        embedded_images_sha256 = str(bundle["images_sha256"].item())
+    validate_spatial_cache(
+        images,
+        spatial_ids,
+        spatial_channel_names,
+        embedded_images_sha256,
+        protocol["inputs"]["spatial_images"]["sha256"],
+    )
     with np.load(paths["champion_scores"], allow_pickle=False) as bundle:
         sample_ids = bundle["sample_ids"].astype(str)
         labels = bundle["labels"].astype(np.uint8)
@@ -391,16 +461,39 @@ def main() -> int:
         folds = bundle["folds"].astype(np.uint8)
         champion = bundle["champion_scores"].astype(np.float64)
     spatial_indices = align_feature_rows(sample_ids, spatial_ids, spatial_folds)
-    if not (
-        np.array_equal(labels, spatial_labels[spatial_indices])
-        and np.array_equal(sensors, spatial_sensors[spatial_indices])
-        and np.array_equal(groups, spatial_groups[spatial_indices])
-    ):
-        raise ValueError("Spatial cache metadata does not align with champion rows")
+    validate_crossfit_alignment(
+        sample_ids,
+        labels,
+        sensors,
+        groups,
+        folds,
+        spatial_labels[spatial_indices],
+        spatial_sensors[spatial_indices],
+        spatial_groups[spatial_indices],
+        spatial_folds[spatial_indices],
+        source="spatial cache",
+    )
     with np.load(paths["scene_features"], allow_pickle=False) as bundle:
         feature_names = bundle["feature_names"].astype(str)
-        feature_indices = align_feature_rows(sample_ids, bundle["sample_ids"], bundle["folds"])
+        feature_ids = bundle["sample_ids"].astype(str)
+        feature_folds = bundle["folds"].astype(np.uint8)
+        feature_indices = align_feature_rows(sample_ids, feature_ids, feature_folds)
+        feature_labels = bundle["labels"].astype(np.uint8)
+        feature_sensors = bundle["sensors"].astype(np.uint8)
+        feature_groups = bundle["groups"].astype(str)
         features = bundle["features"][feature_indices]
+    validate_crossfit_alignment(
+        sample_ids,
+        labels,
+        sensors,
+        groups,
+        folds,
+        feature_labels[feature_indices],
+        feature_sensors[feature_indices],
+        feature_groups[feature_indices],
+        feature_folds[feature_indices],
+        source="scene-feature cache",
+    )
     released_column = int(np.flatnonzero(feature_names == "released_connected_score")[0])
     released = features[:, released_column].astype(np.float64)
     eligible = released > 0.5

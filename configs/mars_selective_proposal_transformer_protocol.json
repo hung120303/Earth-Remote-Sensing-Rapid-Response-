@@ -10,7 +10,7 @@
     "layers": 2,
     "heads": 4,
     "dropout": 0.1,
-    "pooling": "learned token attention plus released-proposal logit bias, global mean, and global maximum",
+    "pooling": "observability-masked learned token attention plus released-proposal logit bias, masked global mean, and masked global maximum",
     "sensor_embedding": true,
     "training_population": "released_connected_score > 0.5 in the fitting fold",
     "deployment_route": "released_connected_score > 0.5 and Gaussian+DOFA champion score < 0.25",
