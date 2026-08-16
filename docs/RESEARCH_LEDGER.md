@@ -786,3 +786,11 @@ dual-expert pilot that may only raise champion scores when both released and pri
 dense evidence agree. This is folds-3/4 architecture evidence, not external or
 official confirmation. Result:
 `reports/experiments/mars_recall_anchor_diagnostic.json`.
+
+The separately frozen deterministic follow-up tested nine bounded consensus
+rescues and rejected all of them. The safest candidate raised 19 positives but
+562 negatives, reducing AP by 0.000347 and matched-FPR recall by 0.004593; its
+paired group AP interval was [-0.001139,+0.000689]. Both folds regressed. This
+rejection means released sensitivity cannot be restored by an unconditional
+OR/max rule; any continuation must explicitly verify rescue candidates using a
+cross-fitted, model-aligned gate or change the representation itself.

@@ -5917,6 +5917,26 @@ constrained dual-expert architecture pilot; it does not authorize a holdout repl
 or a threshold change. The authoritative result is
 `reports/experiments/mars_recall_anchor_diagnostic.json`.
 
+### 2026-08-16: deterministic dual-teacher rescue rejected
+
+The first frozen rescue pilot deliberately avoided fitting another scene head. It
+retained Gaussian+DOFA everywhere except the low-champion/high-released route and
+could only raise scores using the minimum, geometric mean, or topology-weighted
+consensus of released and primary dense evidence. Three semantically anchored
+rescue strengths produced nine fixed candidates. Promotion required at least
++0.005 AP, strictly positive pooled matched-FPR recall, nonnegative fold/sensor
+effects, and a positive paired 25 km-group AP lower bound.
+
+Every candidate was adverse. The least harmful setting used the conservative
+minimum anchor at weight 1/3, raised 19 positives and 562 negatives, changed AP
+-0.000347, and changed matched-FPR recall -0.004593. Both folds regressed and the
+paired AP interval was [-0.001139,+0.000689]. Stronger rescue increased the number
+of promoted false positives and worsened recall. The low-precision released-only
+region therefore cannot be used through an unconditional bounded OR, even when
+the two dense teachers agree. The deterministic family is retired without any
+external or official replay. Result:
+`reports/experiments/mars_dual_teacher_rescue_folds34.json`.
+
 ### 2026-08-03: Casa Grande controlled-release one-shot rejected for superiority
 
 The frozen label-free scorer completed all 169 exact Sentinel-2 L1C pairs before
