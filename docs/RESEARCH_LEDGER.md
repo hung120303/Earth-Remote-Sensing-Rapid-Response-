@@ -1089,3 +1089,31 @@ share-alike obligations. Any checkpoint materially trained on these labels
 must carry those restrictions. The label claim is no Carbon Mapper detection
 above applicable Tanager sensitivity at the reviewed source and time, never
 physical zero methane. No catalog or image asset has been queried.
+
+## 2026-08-16: Carbon Mapper Tanager metadata route fails the frozen response cap
+
+The guarded metadata execution failed before the public source catalog could
+be enumerated. Carbon Mapper's exact preregistered `sources.geojson` response
+streamed past the 8,388,608-byte per-response ceiling; the reproduced capped
+attempt observed at least 8,414,189 response bytes before aborting. No complete
+source response was cached, no population row was parsed, and the frozen gates
+for pair, scene, source, and component counts were therefore not evaluated.
+This is an acquisition-contract failure, not evidence that the population
+would or would not have passed those gates.
+
+The first live attempt exposed that streamed bytes on an exception were not
+persisted in a compact report. The auditor was corrected to treat every chunk
+as non-refundable traffic and to emit a fail-closed artifact, its 17 focused
+tests passed, and that correction was committed before the reproduced attempt.
+The original threshold was not enlarged and the exact endpoint was not
+replaced by an unregistered query. Carbon Mapper is therefore retired under
+the frozen failure action. No Carbon Mapper image asset, Sentinel-2/Landsat
+catalog, protected MARS outcome, or target-pair query was accessed, and every
+target eligibility claim remains false.
+
+Authoritative compact result:
+`reports/acquisition/carbon_mapper_tanager_null_metadata.json` (SHA-256
+`730048bf557a9024ea97282d6bd042d3093cd29fec983cffe6ce7142694a088b`).
+The next research decision must use an independently preregistered source or
+return to architecture work supported by cohorts that have already passed;
+failed STARCOP, CACH4, and Carbon Mapper candidates may not be pooled.

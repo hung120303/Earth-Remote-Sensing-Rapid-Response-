@@ -6308,3 +6308,28 @@ license is non-commercial, attribution-required, and share-alike; downstream
 checkpoint and data-release terms are recorded now rather than deferred until
 publication. The protocol SHA-256 is
 `06b2058a05ecf748dac25cb7389bb62e9fe88e36859dded389fc03b13d5b0ad0`.
+
+### 2026-08-16: Tanager metadata acquisition fails closed
+
+The first exact public `sources.geojson` request exceeded the preregistered
+8 MiB per-response cap before enumeration completed. The failure-accounting
+path was then corrected and committed—without changing the endpoint, cap,
+selection, or population gates—and the reproduced attempt recorded at least
+8,414,189 streamed bytes against an 8,388,608-byte maximum. The response was
+not cached as complete, so no source feature or population gate was evaluated.
+
+Result: Carbon Mapper **FAILS** at metadata acquisition and is retired under
+the frozen protocol. No image, target-satellite catalog, protected MARS
+outcome, or target pair was accessed. The tracked compact report is
+`reports/acquisition/carbon_mapper_tanager_null_metadata.json`, SHA-256
+`730048bf557a9024ea97282d6bd042d3093cd29fec983cffe6ce7142694a088b`.
+This is not a negative finding about the underlying Tanager null population;
+it is a disciplined refusal to alter a preregistered transport bound after
+seeing live response behavior.
+
+Research implication: three independent negative-source candidates now show
+that data acquisition and geographic novelty—not encoder capacity—are the
+binding constraints. Failed sources remain non-poolable. The next path should
+either finish the separately frozen authenticated NASA grid bridge or design
+the next architecture experiment around only the already qualified
+MARS-Hyperspectral transfer cohort.

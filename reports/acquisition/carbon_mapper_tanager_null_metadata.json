@@ -1,0 +1,42 @@
+{
+  "access_boundary": {
+    "any_row_authorized_for_target_catalog": false,
+    "carbon_mapper_image_assets_accessed": false,
+    "carbon_mapper_metadata_catalog_enumeration_completed": false,
+    "protected_mars_outcome_columns_read": false,
+    "target_sentinel_landsat_catalog_accessed": false
+  },
+  "claim_boundary": "A pass would establish licensed, source-level Tanager null-detect metadata feasibility only. It would not prove physical zero methane, coincident Sentinel-2/Landsat yield, cross-sensor validity, model complementarity, calibration, or superiority over MARS-S2L.",
+  "decision": "FAIL",
+  "failure_reason": "Streamed Carbon Mapper response exceeds frozen cap",
+  "failure_stage": "metadata_acquisition_or_validation",
+  "gates": {
+    "maximum_response_bytes_each": {
+      "observed_at_least": 8414189,
+      "passed": false,
+      "required_at_most": 8388608
+    }
+  },
+  "license_boundary": {
+    "checkpoint_boundary": "Any distributed model checkpoint materially trained on these labels must be marked non-commercial, attributed to Carbon Mapper, and share-alike under the applicable Carbon Mapper terms.",
+    "obligations": [
+      "attribute Carbon Mapper in the paper, data documentation, and any derivative release",
+      "redistribute Carbon Mapper data or derivative products only under the same or substantially similar non-commercial and attribution terms",
+      "do not represent a null detect as proof of physical zero methane",
+      "do not use Carbon Mapper data or derivatives commercially without a separate license"
+    ],
+    "permitted_scope": "Non-commercial research to improve greenhouse-gas emissions monitoring, reporting, or mitigation."
+  },
+  "network": {
+    "network_bytes_observed_this_execution": 8414189,
+    "response_cache_written": false
+  },
+  "next_action": "Retire the Carbon Mapper supplement without changing a threshold, querying a target catalog, or pooling another failed candidate source.",
+  "population_gates_evaluated": false,
+  "protocol": {
+    "committed_before_catalog_enumeration": true,
+    "path": "configs/mars_carbon_mapper_tanager_null_protocol.json",
+    "sha256": "06b2058a05ecf748dac25cb7389bb62e9fe88e36859dded389fc03b13d5b0ad0"
+  },
+  "schema_version": 1
+}
