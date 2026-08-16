@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_starcop_train_manifest_or_archive_member_access",
+  "name": "STARCOP train no-plume cross-modal supplement",
+  "research_question": "Can the author-curated STARCOP AVIRIS-NG train no-plume class supply at least 28 leakage-safe, near-simultaneous Sentinel-2 L1C or Landsat 8/9 Level-1 negatives without downloading the 60.8 GB imagery release?",
+  "decision_context_disclosed_before_freeze": {
+    "mars_hyperspectral_negative_pairs": 272,
+    "unchanged_combined_gate": 300,
+    "unchanged_shortfall": 28,
+    "cach4_supplement_result": "FAIL_15_OF_20_COMPONENTS",
+    "ornl_covid_permian_route": "PENDING_EARTHDATA_AUTHENTICATED_GRID_BRIDGE",
+    "anti_pooling_boundary": "STARCOP must pass every metadata gate and later contribute at least 28 qualifying target pairs by itself. It may not pool with CACH4, COVID, Permian, or another candidate supplement to satisfy either gate.",
+    "reason_for_parallel_route": "STARCOP exposes a hash-bound 1 MB train manifest and georeferenced per-chip zero masks in open Zenodo train archives, permitting sparse byte-range access while the NASA header route awaits authentication."
+  },
+  "source": {
+    "dataset": "STARCOP: Semantic Segmentation of Methane Plumes with Hyperspectral Machine Learning Models",
+    "zenodo_record": "7863343",
+    "doi": "10.5281/zenodo.7863343",
+    "paper_doi": "10.1038/s41598-023-44918-6",
+    "license": "CC-BY-NC-4.0",
+    "record_created": "2023-11-17T03:02:45Z",
+    "record_updated": "2024-03-10T07:10:00Z",
+    "official_code_repository": "https://github.com/spaceml-org/STARCOP",
+    "official_code_commit_observed": "c4789268a3fa0395f92357429052f6f5fc748acb",
+    "negative_semantics": "Dataset-author no-plume training windows. The official generator removes windows intersecting known annotations and explicitly marks additional missed plume windows before assigning has_plume=false. This means no annotated/refined plume in the released benchmark window, not physical zero methane."
+  },
+  "frozen_source_files": {
+    "train_manifest": {
+      "name": "train.csv",
+      "bytes": 1038970,
+      "md5": "02f56b8e9759d01a1ee039f2eeaf4ebc",
+      "url": "https://zenodo.org/api/records/7863343/files/train.csv/content"
+    },
+    "train_archives": [
+      {
+        "name": "STARCOP_train_easy.zip",
+        "bytes": 8997773286,
+        "md5": "aa3f5674d0951f43b386dde1c59f08b5"
+      },
+      {
+        "name": "STARCOP_train_remaining_part1.zip",
+        "bytes": 9240740614,
+        "md5": "ddb419cac0423013abd8039b5d1acea4"
+      },
+      {
+        "name": "STARCOP_train_remaining_part2.zip",
+        "bytes": 9011870388,
+        "md5": "ec00238df6c079f082d84bb77f42cf76"
+      },
+      {
+        "name": "STARCOP_train_remaining_part3.zip",
+        "bytes": 9333864104,
+        "md5": "e563421e499dfb7ec5e068d51fdd8b24"
+      },
+      {
+        "name": "STARCOP_train_remaining_part4.zip",
+        "bytes": 9188310245,
+        "md5": "b9127b7e466b22ff95e22c7e35cbb019"
+      },
+      {
+        "name": "STARCOP_train_remaining_part5.zip",
+        "bytes": 9417306040,
+        "md5": "5f1b02b5e26767417450b8a263569edb"
+      }
+    ],
+    "forbidden_files": [
+      "test.csv",
+      "STARCOP_test.zip"
+    ]
+  },
+  "frozen_local_inputs": {
+    "mars_hyperspectral_protocol": {
+      "path": "configs/mars_hyperspectral_transfer_acquisition_protocol.json",
+      "sha256": "2888577d23c94fd3e8141feafda6b40b20a4fae008b537f15d4542ad9520f28c"
+    },
+    "mars_hyperspectral_stage_b_report": {
+      "path": "reports/acquisition/mars_hyperspectral_transfer_stage_b.json",
+      "sha256": "f7bd429ebb6d8dae93500fff14a3566496480a9d2fd33b13b0d8146ec54f1f65"
+    },
+    "mars_hyperspectral_pairs": {
+      "path": ".research/mars_hyperspectral_transfer/stage_b_combined_pairs.jsonl",
+      "normalized_lf_sha256": "902d118e8a46a9d90465d23b9a55dce561b9cbecd6336f8c390b54cf8d89fa4e"
+    },
+    "mars_hyperspectral_mask_catalog": {
+      "path": ".research/mars_hyperspectral_transfer/train_mask_catalog.jsonl",
+      "sha256": "945c74a5553a17bb01ac2241c02554a580e53bb438fae84f95498528ee546d51"
+    },
+    "safe_mars_manifest": {
+      "path": ".research/source_audit_20260715/mars_s2l_current_validated_images_all.csv",
+      "sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2",
+      "permitted_columns": [
+        "id_location",
+        "location_name",
+        "country",
+        "lon",
+        "lat",
+        "satellite",
+        "tile",
+        "tile_date",
+        "split_name"
+      ],
+      "forbidden_columns": [
+        "isplume",
+        "plume",
+        "ch4_fluxrate",
+        "ch4_fluxrate_std"
+      ]
+    }
+  },
+  "stage_a_train_manifest": {
+    "permitted_content": "The exact hash-bound train.csv only.",
+    "forbidden_content": "No test manifest, archive member, hyperspectral band, matched-filter raster, RGB, or target catalog.",
+    "id_contract": "Each retained ID must match angYYYYMMDDtHHMMSS_r{row}_c{column}_w{width}_h{height}; UTC is parsed exactly from the flight prefix.",
+    "label_contract": "Retain only has_plume=false rows. Do not rank or select negatives using qplume, matched-filter statistics, geography, or a model outcome.",
+    "deterministic_sparse_selection": "Within each negative-bearing flightline, select up to four IDs with the lexicographically smallest SHA-256(id UTF-8) digest. This selection is frozen before any chip coordinate is known.",
+    "gates": {
+      "minimum_negative_rows_in_released_train_manifest": 1000,
+      "minimum_negative_bearing_flightlines": 50,
+      "maximum_selected_rows_per_flightline": 4
+    },
+    "failure_action": "Stop before archive-range access and report the source as insufficient."
+  },
+  "stage_b_sparse_zero_mask_georeferencing": {
+    "authorized_only_if_stage_a_passes": true,
+    "permitted_network_content": [
+      "HTTP response headers and ZIP end/central-directory bytes for the six exact train archives",
+      "the exact compressed bytes needed to reconstruct labelbinary.tif for deterministic selected train-negative IDs"
+    ],
+    "forbidden_network_content": [
+      "any test archive or test manifest",
+      "any positive-row archive member",
+      "any radiance, reflectance, simulated WorldView-3, RGB, mag1c, or other imagery product",
+      "any target satellite catalog or asset"
+    ],
+    "content_caps": {
+      "maximum_central_directory_bytes_total": 536870912,
+      "maximum_uncompressed_label_bytes_each": 1048576,
+      "maximum_downloaded_label_bytes_total": 268435456
+    },
+    "label_and_grid_validation": [
+      "member path is exactly {selected_id}/labelbinary.tif",
+      "GeoTIFF is exactly 512 by 512 with one finite geotransform and projected CRS",
+      "every pixel is zero, confirming the released train no-plume class",
+      "chip center converts to finite WGS84 longitude and latitude",
+      "flight-prefix UTC is exact"
+    ],
+    "eligibility_filters": [
+      "published STARCOP split is train",
+      "released has_plume is false and zero mask is confirmed",
+      "coordinate belongs to a deterministic selected row",
+      "strictly farther than 25 km from every official MARS-S2L test representative location",
+      "strictly farther than 25 km from every already-counted MARS-Hyperspectral negative source crop"
+    ],
+    "grouping": "Transitive connected components of eligible centers with an undirected edge at haversine distance <=25.0 km.",
+    "gates": {
+      "minimum_resolved_selected_negative_rows": 100,
+      "minimum_resolved_negative_flightlines": 50,
+      "minimum_eligible_25km_connected_components": 20,
+      "all_retained_labels_and_coordinates_valid": true
+    },
+    "failure_action": "Retire STARCOP as a supplement without changing a threshold or pooling another candidate source.",
+    "pass_action": "Commit a separate target-catalog protocol before any Sentinel-2 or Landsat query."
+  },
+  "target_catalog_boundary": {
+    "authorized_only_after_stage_b_passes": true,
+    "requires_new_committed_protocol_before_query": true,
+    "products": [
+      "Copernicus Sentinel-2 L1C",
+      "USGS Landsat 8/9 Collection 2 Level-1"
+    ],
+    "maximum_time_offset_hours": 1.0,
+    "minimum_additional_negative_pairs_from_starcop_alone": 28,
+    "target_assets_forbidden_in_this_protocol": true
+  },
+  "outputs": {
+    "ignored_root": ".research/starcop_negative_supplement",
+    "compact_stage_a_json": "reports/acquisition/starcop_negative_supplement_stage_a.json",
+    "compact_stage_b_json": "reports/acquisition/starcop_negative_supplement_stage_b.json",
+    "compact_stage_b_markdown": "reports/acquisition/STARCOP_NEGATIVE_SUPPLEMENT_STAGE_B.md"
+  },
+  "claim_boundary": "A pass would establish sparse train-negative metadata feasibility only. It would not prove physical zero methane, coincident target yield, cross-sensor validity, model complementarity, calibration, or superiority over MARS-S2L."
+}
