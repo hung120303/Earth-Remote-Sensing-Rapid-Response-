@@ -285,7 +285,6 @@ def acquire_train_manifest(session: Any | None = None) -> Path:
         stream=True,
         allow_redirects=False,
         timeout=(15, 60),
-        headers={"Accept": "text/csv,application/octet-stream"},
     )
     response.raise_for_status()
     payload = stream_manifest_payload(response)

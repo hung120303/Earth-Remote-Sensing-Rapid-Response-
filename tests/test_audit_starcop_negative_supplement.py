@@ -242,6 +242,7 @@ def test_exact_identity_and_atomic_ignored_cache(
     assert not path.with_name("train.csv.part").exists()
     assert session.calls[0][0] == (audit.TRAIN_MANIFEST_URL,)
     assert session.calls[0][1]["allow_redirects"] is False
+    assert "headers" not in session.calls[0][1]
 
     monkeypatch.setattr(audit, "TRAIN_MANIFEST_MD5", "0" * 32)
     with pytest.raises(audit.StarcopAuditError, match="MD5 mismatch"):
