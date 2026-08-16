@@ -881,6 +881,13 @@ def _write_stage_b_markdown(report: dict[str, object]) -> None:
         f"- Rows passing the spatial filter: {counts['spatially_eligible_rows']}",
         f"- Eligible 25 km components: {counts['eligible_25km_connected_components']}",
         "",
+        (
+            "The byte-range totals in the JSON cover the final successful execution. "
+            "Earlier fail-closed parser/transport attempts are documented in the "
+            "research ledger; exact label-range bytes from those pre-resume attempts "
+            "were not persisted."
+        ),
+        "",
         "## Frozen gates",
         "",
     ]
@@ -925,6 +932,8 @@ def execute_stage_b_sparse_masks(session: Any | None = None) -> dict[str, object
         resolved: list[dict[str, object]] = []
         cache_hits = 0
         cache_writes = 0
+        cache_hit_bytes = 0
+        cache_write_bytes = 0
         for selected in selected_records:
             sample_id = str(selected["sample_id"])
             archive_name, entry = member_locations[sample_id]
@@ -942,8 +951,10 @@ def execute_stage_b_sparse_masks(session: Any | None = None) -> dict[str, object
                 )
                 cache_zero_mask_payload(sample_id, payload)
                 cache_writes += 1
+                cache_write_bytes += len(payload)
             else:
                 cache_hits += 1
+                cache_hit_bytes += len(payload)
             row = dict(selected)
             row.update(
                 decode_zero_mask(
@@ -1066,14 +1077,30 @@ def execute_stage_b_sparse_masks(session: Any | None = None) -> dict[str, object
         "archives": archive_receipts,
         "byte_range_totals": {
             "requests": len(receipts),
-            "central_directory_bytes": budget.central_bytes,
+            "current_execution_central_directory_bytes": budget.central_bytes,
             "central_directory_cap": budget.central_limit,
-            "downloaded_label_bytes": budget.label_bytes,
+            "current_execution_downloaded_label_range_bytes": budget.label_bytes,
             "downloaded_label_cap": budget.label_limit,
             "full_archive_downloaded": False,
             "archive_md5_verification_claimed": False,
             "verified_zero_mask_cache_hits": cache_hits,
             "verified_zero_mask_cache_writes": cache_writes,
+            "verified_zero_mask_cache_hit_bytes": cache_hit_bytes,
+            "verified_zero_mask_cache_write_bytes": cache_write_bytes,
+        },
+        "historical_acquisition_boundary": {
+            "byte_range_totals_cover_current_successful_execution_only": True,
+            "verified_unique_cached_label_members": cache_hits + cache_writes,
+            "verified_unique_cached_uncompressed_bytes": (
+                cache_hit_bytes + cache_write_bytes
+            ),
+            "prior_failed_attempt_exact_label_range_bytes_available": False,
+            "reason": (
+                "Early fail-closed attempts predated resumable receipt persistence; "
+                "their parser/transport chronology and this limitation are recorded "
+                "in the research ledger."
+            ),
+            "documentation": "docs/RESEARCH_LEDGER.md",
         },
         "counts": counts,
         "gates": gates,
