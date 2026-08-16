@@ -1,0 +1,520 @@
+{
+  "all_continuation_gates_pass": false,
+  "any_prior_reference_paper_rule": {
+    "cell": {
+      "negatives": 3009,
+      "positive_fold_counts": {
+        "3": 15,
+        "4": 10
+      },
+      "positive_groups": 11,
+      "positives": 25,
+      "precision": 0.008239947264337508,
+      "rows": 3034
+    },
+    "checks": {
+      "minimum_feature_contrast": true,
+      "minimum_new_positive_rescues": true,
+      "minimum_positive_groups": true,
+      "minimum_route_precision": false,
+      "positive_rescue_in_each_fold": true,
+      "some_fixed_aggregation_improves_ap": false
+    },
+    "feature_contrasts": [
+      {
+        "feature": "alt_mean_connected_score",
+        "negative_mean": 0.31823277419614454,
+        "positive_mean": 0.5652803426664322,
+        "standardized_mean_difference": 1.3983272470999444
+      },
+      {
+        "feature": "alt_mean_top_500_mean",
+        "negative_mean": 0.254137259796156,
+        "positive_mean": 0.4815239388607442,
+        "standardized_mean_difference": 1.3846291599787515
+      },
+      {
+        "feature": "alt_mean_top_100_mean",
+        "negative_mean": 0.3549085305652783,
+        "positive_mean": 0.6017771303728223,
+        "standardized_mean_difference": 1.3737785182651214
+      },
+      {
+        "feature": "alt_mean_top_25_mean",
+        "negative_mean": 0.3849231216603051,
+        "positive_mean": 0.6310332155041396,
+        "standardized_mean_difference": 1.342606724392811
+      },
+      {
+        "feature": "alt_mean_clear_std",
+        "negative_mean": 0.03453108343592735,
+        "positive_mean": 0.06201104402937926,
+        "standardized_mean_difference": 1.1207602165772168
+      },
+      {
+        "feature": "alt_max_top_500_mean",
+        "negative_mean": 0.6492027985114678,
+        "positive_mean": 0.8482867789268493,
+        "standardized_mean_difference": 0.9533734656551356
+      },
+      {
+        "feature": "alt_mean_clear_area_above_0.9",
+        "negative_mean": 0.0010795940434941169,
+        "positive_mean": 0.0033454240198334444,
+        "standardized_mean_difference": 0.8754424708367035
+      },
+      {
+        "feature": "alt_mean_clear_area_above_0.7",
+        "negative_mean": 0.0025536048110764336,
+        "positive_mean": 0.005966948715067703,
+        "standardized_mean_difference": 0.8286966085728734
+      },
+      {
+        "feature": "alt_max_connected_score",
+        "negative_mean": 0.7984219252092571,
+        "positive_mean": 0.9268314123153687,
+        "standardized_mean_difference": 0.8211442130596209
+      },
+      {
+        "feature": "alt_max_top_100_mean",
+        "negative_mean": 0.8470239909276015,
+        "positive_mean": 0.9479550981521606,
+        "standardized_mean_difference": 0.7905025659541344
+      },
+      {
+        "feature": "alt_max_top_25_mean",
+        "negative_mean": 0.8824639699711836,
+        "positive_mean": 0.9623612666130066,
+        "standardized_mean_difference": 0.7335721110078395
+      },
+      {
+        "feature": "alt_max_minus_original_top_500_mean",
+        "negative_mean": 0.5954156454057864,
+        "positive_mean": 0.7491279603168368,
+        "standardized_mean_difference": 0.7058068307613398
+      },
+      {
+        "feature": "alt_mean_clear_area_above_0.5",
+        "negative_mean": 0.0042638188111972725,
+        "positive_mean": 0.008198928947895184,
+        "standardized_mean_difference": 0.7042569337760186
+      },
+      {
+        "feature": "alt_max_clear_std",
+        "negative_mean": 0.08784209005720356,
+        "positive_mean": 0.1110957571864128,
+        "standardized_mean_difference": 0.6448856849619163
+      },
+      {
+        "feature": "alt_max_minus_original_clear_area_above_0.9",
+        "negative_mean": 0.0035466302941934693,
+        "positive_mean": 0.007285109614022076,
+        "standardized_mean_difference": 0.6062911769872622
+      },
+      {
+        "feature": "alt_max_clear_area_above_0.9",
+        "negative_mean": 0.0035470548402345915,
+        "positive_mean": 0.007285109614022076,
+        "standardized_mean_difference": 0.6062464237838141
+      },
+      {
+        "feature": "alt_mean_clear_area_above_0.3",
+        "negative_mean": 0.00665871113511064,
+        "positive_mean": 0.011203233456006276,
+        "standardized_mean_difference": 0.5766983521396422
+      },
+      {
+        "feature": "alt_std_top_25_mean",
+        "negative_mean": 0.32243035307305185,
+        "positive_mean": 0.2788375141375656,
+        "standardized_mean_difference": -0.5481700143145338
+      },
+      {
+        "feature": "alt_max_minus_original_clear_area_above_0.7",
+        "negative_mean": 0.00818913195534616,
+        "positive_mean": 0.013163712770910933,
+        "standardized_mean_difference": 0.5308201062410586
+      },
+      {
+        "feature": "alt_max_clear_area_above_0.7",
+        "negative_mean": 0.008195992052862028,
+        "positive_mean": 0.013168713646009564,
+        "standardized_mean_difference": 0.5307000848915239
+      }
+    ],
+    "maximum_absolute_feature_contrast": 1.3983272470999444,
+    "pass": false
+  },
+  "baseline_original_released_view": {
+    "average_precision": 0.8781915656230838,
+    "fold_average_precision": {
+      "3": 0.8965954207760567,
+      "4": 0.8660917254051452
+    },
+    "matched_fpr": {
+      "false_positive_rate": 0.07126564330189261,
+      "recall": 0.9461942257217848,
+      "threshold": 0.6515422463417053
+    },
+    "sensor_average_precision": {
+      "0": 0.8432565469725093,
+      "1": 0.9633140668754403
+    }
+  },
+  "claim_boundary": "A pass establishes only that the new reference observations contain sufficient complementary development signal to justify a separately preregistered cross-fitted set model. It is not model improvement, confirmation, calibration, generalization, or superiority evidence.",
+  "cohort": {
+    "folds": [
+      3,
+      4
+    ],
+    "groups": 250,
+    "negatives": 16221,
+    "positives": 1524,
+    "rows": 17745
+  },
+  "decision": "FAIL: retire the prior-reference architecture before model fitting.",
+  "fixed_aggregation_signal_pass": false,
+  "fixed_aggregations": {
+    "maximum": {
+      "checks": {
+        "average_precision_delta": false,
+        "each_fold_ap_nonnegative": false,
+        "each_sensor_ap_nonnegative": false,
+        "matched_fpr_recall_nonnegative": false,
+        "paired_group_ap_lower_positive": false
+      },
+      "delta": {
+        "average_precision": -0.10438169203754888,
+        "fold_average_precision": {
+          "3": -0.1022808061888022,
+          "4": -0.09506560624066807
+        },
+        "matched_fpr_recall": -0.09120734908136485,
+        "sensor_average_precision": {
+          "0": -0.13155060110675165,
+          "1": 0.0
+        }
+      },
+      "fixed_signal_pass": false,
+      "metrics": {
+        "average_precision": 0.7738098735855349,
+        "fold_average_precision": {
+          "3": 0.7943146145872545,
+          "4": 0.7710261191644772
+        },
+        "matched_fpr": {
+          "false_positive_rate": 0.07126564330189261,
+          "recall": 0.85498687664042,
+          "threshold": 0.9611397385597229
+        },
+        "sensor_average_precision": {
+          "0": 0.7117059458657576,
+          "1": 0.9633140668754403
+        }
+      },
+      "new_rescue": {
+        "negatives": 3009,
+        "positive_fold_counts": {
+          "3": 15,
+          "4": 10
+        },
+        "positive_groups": 11,
+        "positives": 25,
+        "precision": 0.008239947264337508,
+        "rows": 3034
+      },
+      "paired_group_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.1618202269589162,
+        "mean": -0.10707135658831046,
+        "replicates": 10000,
+        "upper": -0.06859650858089482
+      }
+    },
+    "median": {
+      "checks": {
+        "average_precision_delta": false,
+        "each_fold_ap_nonnegative": false,
+        "each_sensor_ap_nonnegative": false,
+        "matched_fpr_recall_nonnegative": false,
+        "paired_group_ap_lower_positive": false
+      },
+      "delta": {
+        "average_precision": -0.06328424452372072,
+        "fold_average_precision": {
+          "3": -0.06689475341006879,
+          "4": -0.05595971051462845
+        },
+        "matched_fpr_recall": -0.07349081364829402,
+        "sensor_average_precision": {
+          "0": -0.10153955419584082,
+          "1": 0.0
+        }
+      },
+      "fixed_signal_pass": false,
+      "metrics": {
+        "average_precision": 0.814907321099363,
+        "fold_average_precision": {
+          "3": 0.8297006673659879,
+          "4": 0.8101320148905168
+        },
+        "matched_fpr": {
+          "false_positive_rate": 0.07126564330189261,
+          "recall": 0.8727034120734908,
+          "threshold": 0.49502870440483093
+        },
+        "sensor_average_precision": {
+          "0": 0.7417169927766685,
+          "1": 0.9633140668754403
+        }
+      },
+      "new_rescue": {
+        "negatives": 487,
+        "positive_fold_counts": {
+          "3": 7,
+          "4": 4
+        },
+        "positive_groups": 6,
+        "positives": 11,
+        "precision": 0.02208835341365462,
+        "rows": 498
+      },
+      "paired_group_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.10359800472497163,
+        "mean": -0.06535432029322738,
+        "replicates": 10000,
+        "upper": -0.03977812444457911
+      }
+    },
+    "nearest": {
+      "checks": {
+        "average_precision_delta": false,
+        "each_fold_ap_nonnegative": false,
+        "each_sensor_ap_nonnegative": false,
+        "matched_fpr_recall_nonnegative": false,
+        "paired_group_ap_lower_positive": false
+      },
+      "delta": {
+        "average_precision": -0.09506507200275094,
+        "fold_average_precision": {
+          "3": -0.0959817887944463,
+          "4": -0.08868812354941058
+        },
+        "matched_fpr_recall": -0.09580052493438318,
+        "sensor_average_precision": {
+          "0": -0.1404920760098849,
+          "1": 0.0
+        }
+      },
+      "fixed_signal_pass": false,
+      "metrics": {
+        "average_precision": 0.7831264936203328,
+        "fold_average_precision": {
+          "3": 0.8006136319816104,
+          "4": 0.7774036018557346
+        },
+        "matched_fpr": {
+          "false_positive_rate": 0.07126564330189261,
+          "recall": 0.8503937007874016,
+          "threshold": 0.7135663628578186
+        },
+        "sensor_average_precision": {
+          "0": 0.7027644709626244,
+          "1": 0.9633140668754403
+        }
+      },
+      "new_rescue": {
+        "negatives": 862,
+        "positive_fold_counts": {
+          "3": 9,
+          "4": 7
+        },
+        "positive_groups": 9,
+        "positives": 16,
+        "precision": 0.018223234624145785,
+        "rows": 878
+      },
+      "paired_group_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.13592559383616107,
+        "mean": -0.0968426569916561,
+        "replicates": 10000,
+        "upper": -0.06669514873942274
+      }
+    },
+    "similarity_weighted": {
+      "checks": {
+        "average_precision_delta": false,
+        "each_fold_ap_nonnegative": false,
+        "each_sensor_ap_nonnegative": false,
+        "matched_fpr_recall_nonnegative": false,
+        "paired_group_ap_lower_positive": false
+      },
+      "delta": {
+        "average_precision": -0.055231777875183075,
+        "fold_average_precision": {
+          "3": -0.061485050055840595,
+          "4": -0.04793622058035785
+        },
+        "matched_fpr_recall": -0.061679790026246795,
+        "sensor_average_precision": {
+          "0": -0.09272105505621386,
+          "1": 0.0
+        }
+      },
+      "fixed_signal_pass": false,
+      "metrics": {
+        "average_precision": 0.8229597877479007,
+        "fold_average_precision": {
+          "3": 0.8351103707202161,
+          "4": 0.8181555048247874
+        },
+        "matched_fpr": {
+          "false_positive_rate": 0.07126564330189261,
+          "recall": 0.884514435695538,
+          "threshold": 0.4966899709704804
+        },
+        "sensor_average_precision": {
+          "0": 0.7505354919162954,
+          "1": 0.9633140668754403
+        }
+      },
+      "new_rescue": {
+        "negatives": 478,
+        "positive_fold_counts": {
+          "3": 10,
+          "4": 4
+        },
+        "positive_groups": 8,
+        "positives": 14,
+        "precision": 0.028455284552845527,
+        "rows": 492
+      },
+      "paired_group_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.08724635700002646,
+        "mean": -0.05629701480316662,
+        "replicates": 10000,
+        "upper": -0.034891538838648005
+      }
+    },
+    "top2_mean": {
+      "checks": {
+        "average_precision_delta": false,
+        "each_fold_ap_nonnegative": false,
+        "each_sensor_ap_nonnegative": false,
+        "matched_fpr_recall_nonnegative": false,
+        "paired_group_ap_lower_positive": false
+      },
+      "delta": {
+        "average_precision": -0.07283681232974748,
+        "fold_average_precision": {
+          "3": -0.06878070152067495,
+          "4": -0.066935492357165
+        },
+        "matched_fpr_recall": -0.0741469816272966,
+        "sensor_average_precision": {
+          "0": -0.10573014674054348,
+          "1": 0.0
+        }
+      },
+      "fixed_signal_pass": false,
+      "metrics": {
+        "average_precision": 0.8053547532933363,
+        "fold_average_precision": {
+          "3": 0.8278147192553817,
+          "4": 0.7991562330479802
+        },
+        "matched_fpr": {
+          "false_positive_rate": 0.07126564330189261,
+          "recall": 0.8720472440944882,
+          "threshold": 0.8545168042182922
+        },
+        "sensor_average_precision": {
+          "0": 0.7375264002319658,
+          "1": 0.9633140668754403
+        }
+      },
+      "new_rescue": {
+        "negatives": 1807,
+        "positive_fold_counts": {
+          "3": 14,
+          "4": 10
+        },
+        "positive_groups": 11,
+        "positives": 24,
+        "precision": 0.013107591480065538,
+        "rows": 1831
+      },
+      "paired_group_ap_delta": {
+        "confidence": 0.95,
+        "groups": 250,
+        "lower": -0.11982249461430874,
+        "mean": -0.07532305206416497,
+        "replicates": 10000,
+        "upper": -0.04509699393463657
+      }
+    }
+  },
+  "gaussian_dofa_champion": {
+    "average_precision": 0.9065248967135868,
+    "fold_average_precision": {
+      "3": 0.9320382888898737,
+      "4": 0.8929833747735854
+    },
+    "matched_fpr": {
+      "false_positive_rate": 0.07126564330189261,
+      "recall": 0.9619422572178478,
+      "threshold": 0.16728139929966007
+    },
+    "sensor_average_precision": {
+      "0": 0.875311567004253,
+      "1": 0.9766096450828334
+    }
+  },
+  "generated_at_utc": "2026-08-16T17:19:47.424037+00:00",
+  "outcome_access": {
+    "external_outcomes_accessed": false,
+    "folds_0_1_2_accessed": false,
+    "model_fitted": false,
+    "official_test_accessed": false,
+    "opened": "previously authorized MARS folds 3/4 labels/groups/sensors from the frozen champion cache",
+    "score_promoted": false
+  },
+  "provenance": {
+    "git_commit": "be16c1587a0b52cde92fe7db2566e4c2535a6f9a",
+    "inputs": {
+      "champion_receipt": {
+        "path": "reports/experiments/mars_dofa_gaussian_champion_cache.json",
+        "sha256": "11132fc140769e68dcbf743cfd0980617a92ae97ed22c0c973a2130528c005f7"
+      },
+      "champion_scores": {
+        "path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz",
+        "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424"
+      },
+      "prior_reference_receipt": {
+        "path": "reports/acquisition/mars_prior_reference_released_scores_folds34.json",
+        "sha256": "60deee81c12120fde6fbb49a3835cb904ed8dffd1769e0c2878df65fbcbf7e4a"
+      },
+      "prior_reference_scores": {
+        "path": "outputs/mars_prior_reference_released_scores_folds34.npz",
+        "sha256": "aae3afebe9dabbaf94ae51653cba21d343aab00928be08d9d8a5bc7bf4bdfb56"
+      }
+    },
+    "protocol": {
+      "path": "configs/mars_prior_reference_complementarity_protocol.json",
+      "sha256": "9a057cfe3080248d3533a3cd2d539d65a172bfc7eb97437d2e51d8524d6a34f0"
+    },
+    "script": {
+      "path": "tools/analyze_mars_prior_reference_complementarity.py",
+      "sha256": "dabde15b143d4e5b8d63332836251c74c4ac33a55c49cfc47f0b5985858f5463"
+    }
+  },
+  "schema_version": 1,
+  "status": "complete_folds34_prior_reference_complementarity_diagnostic"
+}
