@@ -6333,3 +6333,55 @@ binding constraints. Failed sources remain non-poolable. The next path should
 either finish the separately frozen authenticated NASA grid bridge or design
 the next architecture experiment around only the already qualified
 MARS-Hyperspectral transfer cohort.
+
+### 2026-08-16: spectral-temporal extended Prithvi pretraining frozen
+
+The next model branch changes the representation before supervised fitting.
+Prithvi-EO-2.0 is already a multi-temporal HLS masked autoencoder, but its
+source domain is 30 m harmonized surface reflectance with narrow NIR. MARS
+uses mixed Sentinel-2 L1C and Landsat TOA crops at finer native resolution,
+including Sentinel-2 wide B08. A local audit also found that the earlier
+Prithvi feature path multiplied the adapter's DN/5,000 tensor by 10,000,
+feeding twice the physical producer scale. The HLS channel names B05/B06/B07
+still mean narrow-NIR/SWIR1/SWIR2, so this is not described as a band-order
+bug; the verified issues are product, resolution, NIR-response, and scale
+shift.
+
+The frozen experiment continues the MAE objective separately for each held
+fold. A fold-3 endpoint sees only fold 4 pixels; a fold-4 endpoint sees only
+fold 3. Each request combines equal MARS and fixed MARS-disjoint
+MethaneS2CM auxiliary counts. Dedicated unlabeled readers open reflectance and
+cloud arrays only: no scene label, plume mask, or plume asset is read. Inputs
+are restored to producer DN/10,000 exactly, location is a constant zero
+sentinel, and only acquisition time remains as metadata.
+
+The encoder adapts its patch embedder, all-block rank-8 attention LoRA, and
+final transformer block. The disposable MAE decoder retains two pretrained
+blocks. The 75% masking objective is MAESTRO-inspired patch-group-normalized
+L1 over visible / NIR / SWIR groups plus 0.2 temporal-difference L1. This
+combines ExPLoRA's parameter-efficient extended-pretraining principle with a
+spectral prior matched to methane change detection. After LoRA is merged, a
+fresh last-four-block LoRA residual head fuses reference, target, signed
+change, and absolute change patch tokens. Its final layer is initialized to
+exactly zero and its correction is bounded, so an untrained candidate exactly
+reproduces the frozen Gaussian+DOFA champion.
+
+The real-data smoke opened no outcome metric and passed after catching and
+fixing one CPU/CUDA adapter-placement defect. With the final two-block decoder,
+8,043,650 parameters are trainable during MAE adaptation and 422,994 during
+scene fitting. Reconstruction, temporal-change, patch, pair, and scene losses
+were finite on real folds-3/4 and auxiliary tensors. The production protocol
+uses 1,200 balanced steps and four scene epochs. Seed one must first add at
+least +0.002 AP with both folds/sensors positive, nonnegative matched-FPR
+recall, and a positive paired-site lower bound. Only then may the frozen second
+seed run. Final promotion requires +0.005 AP, the same strict subgroup/recall
+gates, a positive paired-site lower bound, and an independently positive
+second seed. Folds 0/1/2 and the official test do not appear in the trainer's
+input contract.
+
+Primary research basis: Prithvi-EO-2.0
+(<https://github.com/NASA-IMPACT/Prithvi-EO-2.0>), ExPLoRA
+(<https://proceedings.mlr.press/v267/khanna25a.html>), and MAESTRO
+(<https://openaccess.thecvf.com/content/WACV2026/html/Labatie_MAESTRO_Masked_AutoEncoders_for_Multimodal_Multitemporal_and_Multispectral_Earth_Observation_WACV_2026_paper.html>).
+Frozen protocol SHA-256:
+`6b5adaabf785dcfc6226c984429c26cdc942feb5fb1678e5496f779671af6658`.

@@ -1117,3 +1117,34 @@ Authoritative compact result:
 The next research decision must use an independently preregistered source or
 return to architecture work supported by cohorts that have already passed;
 failed STARCOP, CACH4, and Carbon Mapper candidates may not be pooled.
+
+## 2026-08-16: domain-adaptive Prithvi experiment frozen before outcomes
+
+Architecture work resumed without pooling any failed acquisition source. The
+new protocol uses only MARS folds 3/4 and the already qualified, spatially
+disjoint MethaneS2CM auxiliary cohort. It corrects the old Prithvi transfer
+path's factor-of-two MARS radiometric scale, withholds geographic coordinates,
+and cross-fits both self-supervised pixels and supervised labels: each endpoint
+uses only the opposite fold.
+
+The extended-pretraining stage uses all-block rank-8 attention LoRA, a fully
+trainable patch embedder and final encoder block, and a two-block pretrained
+MAE decoder. Its 75%-masked reconstruction loss normalizes correlated
+visible/NIR/SWIR groups independently and adds a fixed temporal-change term.
+The downstream patch-change residual is exactly zero-initialized and bounded
+around the existing Gaussian+DOFA champion. A dedicated MARS unlabeled reader
+opens only image and cloud assets; a dedicated MethaneS2CM reader opens only
+reflectance arrays and sample IDs.
+
+Ten focused CPU tests and one CUDA adapter-placement regression pass. The
+final real-data smoke produced finite gradients/losses with 8,043,650
+trainable pretraining parameters and 422,994 scene parameters, without
+computing an AP, recall, bootstrap, or protected-fold outcome. The protocol is
+now frozen. Seed two is conditional on a strict seed-one +0.002 AP pilot; final
+promotion requires +0.005 AP, positive fold/sensor deltas, nonnegative
+matched-FPR recall in both folds, a positive paired-site lower bound, and an
+independently positive replication. Folds 0/1/2 and official data are excluded
+from every declared input.
+
+Frozen protocol: `configs/mars_prithvi_domain_adaptive_protocol.json`,
+SHA-256 `6b5adaabf785dcfc6226c984429c26cdc942feb5fb1678e5496f779671af6658`.

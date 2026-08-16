@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_real_data_finite_gradient_smoke_before_any_outcome",
+  "scope": "two-stage folds-3/4 cross-fit of spectral-temporal extended Prithvi pretraining plus a zero-initialized protected scene residual",
+  "trainer": {
+    "path": "tools/train_mars_prithvi_domain_adaptive.py",
+    "sha256": "9bad8eb52b71ae85df9052f628ba82c89d2df7185f08b7358aacdc5c0e58c1aa"
+  },
+  "code_dependencies": [
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_prithvi_domain_adaptation.py",
+      "sha256": "9d28fab9338d007723ed2d20108411a69f65915c39b5753f52e579a460e75739"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_prithvi_domain_residual.py",
+      "sha256": "3cdbaafbe69545c25c5f1f5ceeaf3288eaf0ad9cb16f08926b7c69442323ecfb"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_prithvi_lora_model.py",
+      "sha256": "556ab7e47ae77bd3e3e2a107b0726617bab127c617291c7d953e855d921a162c"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/prithvi_mae.py",
+      "sha256": "9cee9a8cb17c3859d6365a7e58f723e0f4c08e3e29aa4b8e6523506db70321da"
+    }
+  ],
+  "inputs": {
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L"
+    },
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "acquisition_receipt": {
+      "path": "reports/acquisition/mars_s2l_paper_v3_development_download.json",
+      "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "methanes2cm_packed": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/v5_train_packed.h5",
+      "sha256": "f75ea0c35bba240d56e8deae8828722253c5b82fb59b515d8627fb4106951ca4"
+    },
+    "methanes2cm_auxiliary": {
+      "path": ".research/methanes2cm_mars_disjoint/model_auxiliary_training.jsonl",
+      "sha256": "f014e97339c6bfc25032c924a92bb5cc4feee21c08e6a67088934eb4d58391ba"
+    },
+    "foundation_receipt": {
+      "path": "reports/acquisition/prithvi_eo_2_tiny_tl.json",
+      "sha256": "ddc2dec982320ab23f9963b5221b8ce8752c04f01b0b84a018bb70ba84d518f3"
+    },
+    "foundation_config": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/config.json",
+      "sha256": "d7f9e36d2253cb82d296bfd95a9a651f2af455c0cfe8a5ea775b2e3d196ad170"
+    },
+    "foundation_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/artifacts/foundation/prithvi_eo_2_tiny_tl/Prithvi_EO_V2_tiny_TL.pt",
+      "sha256": "d47326db9bad502b611f73e3e3f3a0e68b7b82640d67c22c795417f7209f8d70"
+    },
+    "champion_cache": {
+      "path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz",
+      "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424"
+    }
+  },
+  "data_contract": {
+    "selection_folds": [3, 4],
+    "endpoint_rule": "each held fold uses only the opposite fold for both extended pretraining and supervised fitting",
+    "pretraining_sources": "50/50 request-balanced opposite-fold MARS imagery and fixed MARS-disjoint MethaneS2CM auxiliary imagery",
+    "pretraining_labels": "no scene labels, masks, or plume assets are opened by either unlabeled dataset",
+    "mars_physical_scale": "producer uint16 divided by 10000 exactly; corrects the earlier Prithvi path's factor-of-two scale",
+    "auxiliary_physical_scale": "producer uint16 divided by 10000 exactly",
+    "model_frames": "reference then target, six bands, resized to 128x128",
+    "location_policy": "constant zero sentinel for every row; geographic coordinates never become model features",
+    "temporal_policy": "real MARS acquisition dates; fixed relative-date proxies for MethaneS2CM T-90/T-365"
+  },
+  "pretraining": {
+    "foundation": "Prithvi-EO-2.0-tiny-TL masked autoencoder",
+    "rank": 8,
+    "alpha": 16.0,
+    "lora_dropout": 0.05,
+    "fully_unfrozen_last_blocks": 1,
+    "trainable_encoder_contract": "all-block attention LoRA plus full patch embedder plus final transformer block",
+    "trainable_decoder_contract": "first two pretrained MAE decoder blocks plus decoder norm/prediction layers; discarded after adaptation",
+    "decoder_blocks": 2,
+    "mask_ratio": 0.75,
+    "band_groups": [[0, 1, 2], [3], [4, 5]],
+    "loss": "MAESTRO-inspired patch-group-normalized masked L1 plus 0.2 temporal-difference L1",
+    "temporal_difference_weight": 0.2,
+    "batch_size": 16,
+    "steps": 1200,
+    "smoke_steps": 2,
+    "warmup_steps": 100,
+    "lora_learning_rate": 0.00005,
+    "encoder_learning_rate": 0.00001,
+    "decoder_learning_rate": 0.0001,
+    "weight_decay": 0.05,
+    "gradient_clip": 1.0,
+    "mars_workers": 2,
+    "auxiliary_workers": 1,
+    "prefetch_factor": 2,
+    "report_every_steps": 100
+  },
+  "scene_training": {
+    "architecture": "reference/target/signed-difference/absolute-difference patch fusion, attentive/mean/top-k pooling, sensor embedding, bounded residual around frozen champion",
+    "last_blocks": 4,
+    "rank": 8,
+    "alpha": 16.0,
+    "lora_dropout": 0.05,
+    "head_hidden": 256,
+    "head_dropout": 0.2,
+    "topk_patches": 4,
+    "sensor_embedding_dim": 4,
+    "correction_bound": 1.0,
+    "training_strength": 0.5,
+    "batch_size": 16,
+    "evaluation_batch_size": 32,
+    "epochs": 4,
+    "smoke_epochs": 1,
+    "lora_learning_rate": 0.00005,
+    "head_learning_rate": 0.0005,
+    "weight_decay": 0.01,
+    "patch_loss_weight": 0.15,
+    "pair_loss_weight": 0.2,
+    "pair_margin": 0.5,
+    "correction_l2_weight": 0.01,
+    "gradient_clip": 1.0,
+    "workers": 2,
+    "prefetch_factor": 2,
+    "sampler": "inverse site count times square-root class/sensor balance times 1+2*absolute champion error",
+    "initialization": "final residual layer exactly zero, reproducing the frozen champion before fitting"
+  },
+  "seeds": {
+    "pilot": 20269810,
+    "replication": 20269820
+  },
+  "search": {
+    "strengths": [0.25, 0.5, 1.0],
+    "candidate_count": 3,
+    "selection_rule": "pilot gates, then worst-fold AP delta, pooled AP delta, matched-FPR recall, smaller correction strength",
+    "replication_rule": "the selected pilot strength is frozen; no search is repeated under seed two"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "unit": "25 km physical group",
+    "confidence": 0.95,
+    "pilot_seed": 20269850,
+    "replication_seed": 20269860,
+    "final_seed": 20269870
+  },
+  "gates": {
+    "pilot": {
+      "average_precision_delta_minimum": 0.002,
+      "every_fold_average_precision_strictly_positive": true,
+      "every_sensor_average_precision_strictly_positive": true,
+      "matched_fpr_recall_nonnegative_pooled_and_each_fold": true,
+      "paired_site_average_precision_lower_bound_strictly_positive": true
+    },
+    "final": {
+      "average_precision_delta_minimum": 0.005,
+      "every_fold_average_precision_strictly_positive": true,
+      "every_sensor_average_precision_strictly_positive": true,
+      "matched_fpr_recall_nonnegative_pooled_and_each_fold": true,
+      "paired_site_average_precision_lower_bound_strictly_positive": true,
+      "independently_positive_seed_two_required": true
+    }
+  },
+  "outputs": {
+    "checkpoint_dir": ".research/mars_prithvi_domain_adaptive",
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_prithvi_domain_adaptive.pt",
+    "development_scores": "outputs/mars_prithvi_domain_adaptive_folds34_scores.npz",
+    "json": "reports/experiments/mars_prithvi_domain_adaptive.json",
+    "markdown": "reports/experiments/MARS_PRITHVI_DOMAIN_ADAPTIVE.md"
+  },
+  "research_basis": [
+    {
+      "name": "Prithvi-EO-2.0",
+      "url": "https://github.com/NASA-IMPACT/Prithvi-EO-2.0",
+      "role": "multi-temporal six-band HLS masked-autoencoder foundation"
+    },
+    {
+      "name": "ExPLoRA",
+      "url": "https://proceedings.mlr.press/v267/khanna25a.html",
+      "role": "parameter-efficient unsupervised extended pretraining under domain shift"
+    },
+    {
+      "name": "MAESTRO",
+      "url": "https://openaccess.thecvf.com/content/WACV2026/html/Labatie_MAESTRO_Masked_AutoEncoders_for_Multimodal_Multitemporal_and_Multispectral_Earth_Observation_WACV_2026_paper.html",
+      "role": "patch-group-wise spectral target normalization for multitemporal EO MAE"
+    }
+  ],
+  "invariants": [
+    "Draft status permits only a two-step/tiny-row finite-gradient smoke and no metric report.",
+    "MARS folds 0/1/2 and the official test are neither loaded nor named as input paths.",
+    "A held fold never contributes pixels, labels, masks, statistics, or gradients to its endpoint model.",
+    "The pilot seed must pass before seed two runs; seed two cannot change strength or hyperparameters.",
+    "Failure writes no deployable artifact or promoted score cache.",
+    "Bulk checkpoints, artifacts, and score caches remain Git-ignored; only compact code, protocol, tests, and reports are tracked."
+  ]
+}
