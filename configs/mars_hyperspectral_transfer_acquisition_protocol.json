@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_bulk_metadata_download_mask_access_target_catalog_query_or_modeling",
+  "name": "MARS-Hyperspectral cross-sensor transfer feasibility and acquisition protocol",
+  "research_question": "Can independently analyst-reviewed hyperspectral observations add enough leakage-safe, near-simultaneous Sentinel-2 or Landsat supervision to break the saturated MARS-S2L scene-ranking ceiling?",
+  "source": {
+    "repository": "UNEP-IMEO/MARS-Hyperspectral",
+    "url": "https://huggingface.co/datasets/UNEP-IMEO/MARS-Hyperspectral",
+    "revision": "74b3d3132d135fee1761df1dadb7d662a4b5245b",
+    "paper": "https://arxiv.org/abs/2511.07719v2",
+    "paper_version_date": "2026-03-24",
+    "license": "CC-BY-NC-SA-4.0"
+  },
+  "timing_disclosure": {
+    "known_before_freeze": [
+      "The pinned public repository contains EMIT, PRISMA, and EnMAP 256-by-256 samples plus separate full-granule evaluation folders.",
+      "The paper reports analyst-verified plume and plume-free observations with exact UTC acquisition times and global coverage.",
+      "The dataset card states that info.json:isplume describes source provenance and is not the authoritative binary mask label.",
+      "EMIT split CSVs omit crop coordinates; EnMAP and PRISMA all_events.csv files include latitude and longitude.",
+      "Representative location names such as Iq_19 and EMIT_0064 also exist in the local MARS-S2L source archive, so physical-source leakage is expected and must be removed.",
+      "No MARS-Hyperspectral plume mask, raster value, full-granule label, or target-sensor pairing outcome has been opened for this experiment."
+    ],
+    "interpretation": "The source, revision, paper claims, schemas, and representative identifiers were inspected only to design this protocol. They do not establish transferable target-sensor signal or model improvement."
+  },
+  "protected_boundaries": {
+    "mars_hyperspectral_train": "Eligible for auxiliary training only after all gates pass.",
+    "mars_hyperspectral_validation": "External diagnostic only; never fit weights, thresholds, or architecture choices.",
+    "mars_hyperspectral_test": "Sealed until a candidate and operating point are frozen.",
+    "mars_hyperspectral_fulltiles": "Sealed full-granule operational evaluation; never used for training or selection.",
+    "mars_s2l_official": "No official label, mask, model score, or outcome may be opened during acquisition or candidate selection.",
+    "mars_s2l_development": "Only authorized folds 3 and 4 may be used for post-acquisition architecture selection under an independently frozen modeling protocol."
+  },
+  "stage_a_metadata_audit": {
+    "downloads_permitted": [
+      "README.md",
+      "EMIT/train_t_v4a.csv",
+      "EMIT/val_t_v4a.csv",
+      "EMIT/test_t_v4a.csv",
+      "EnMAP/all_events.csv",
+      "EnMAP/train_s_v4a.csv",
+      "EnMAP/testval_s_v4a.csv",
+      "PRISMA/all_events.csv",
+      "PRISMA/train_s_v4a.csv",
+      "PRISMA/testval_s_v4a.csv"
+    ],
+    "downloads_forbidden": [
+      "plumemask.tif",
+      "plumeinstances.tif",
+      "wmf.tif",
+      "mf.tif",
+      "mag1c.tif",
+      "rgb.tif",
+      "all full-tile products"
+    ],
+    "safe_mars_s2l_columns": [
+      "id_location",
+      "location_name",
+      "country",
+      "lon",
+      "lat",
+      "satellite",
+      "tile",
+      "tile_date",
+      "split_name"
+    ],
+    "forbidden_mars_s2l_columns": [
+      "isplume",
+      "plume",
+      "ch4_fluxrate",
+      "ch4_fluxrate_std"
+    ],
+    "metrics": [
+      "sample and unique-location counts by source sensor and published split",
+      "country and sector breadth",
+      "exact location-name overlap with every MARS-S2L split",
+      "25 km overlap where coordinates are present or safely resolved by exact physical-location identity",
+      "existing local Sentinel-2 or Landsat acquisition matches within 15 minutes, 1 hour, and 6 hours",
+      "unresolved EMIT location count requiring raster georeferencing"
+    ],
+    "gates": {
+      "minimum_total_samples": 5000,
+      "minimum_countries": 20,
+      "minimum_coordinate_resolved_non_mars_test_locations": 100,
+      "minimum_existing_or_catalog_query_candidates_within_6_hours": 50
+    },
+    "failure_action": "Stop before mask download and report that the public archive cannot provide enough target-domain temporal overlap.",
+    "pass_action": "Authorize Stage B only; do not authorize model training."
+  },
+  "stage_b_label_and_catalog_audit": {
+    "eligibility": "Stage A must pass every gate.",
+    "downloads_permitted": [
+      "train-split info.json records needed to resolve metadata",
+      "train-split plumemask.tif rasters as the smallest authoritative georeferenced labels"
+    ],
+    "downloads_forbidden": [
+      "validation or test plumemask.tif",
+      "full-tile labels",
+      "hyperspectral retrieval or RGB rasters before a separate modeling protocol"
+    ],
+    "label_contract": {
+      "authoritative_presence": "plumemask.tif contains at least one positive pixel",
+      "authoritative_absence": "plumemask.tif is all zero and the sample belongs to the authors' reviewed plume-free training archive",
+      "forbidden_shortcut": "Never use info.json:isplume or CSV isplume as target truth.",
+      "positive_transfer": "A Sentinel-2 or Landsat scene within 6 hours is an exploratory scene-presence label; only offsets at or below 1 hour are high-confidence.",
+      "negative_transfer": "A reviewed hyperspectral non-detection may not become a target-sensor no-plume label beyond 1 hour. At larger offsets it may identify a persistent surface confounder but may not supervise scene absence.",
+      "dense_transfer": "A hyperspectral mask may supervise target-sensor pixels only at offsets at or below 15 minutes and after exact geospatial reprojection; otherwise it is not a dense target mask.",
+      "unobservable": "Cloud, invalid coverage, insufficient clear fraction, or missing exact target coverage becomes UNOBSERVABLE, never NO_PLUME."
+    },
+    "target_catalogs": {
+      "sentinel_2": "Copernicus Sentinel-2 L1C exact acquisition metadata and bands B02/B03/B04/B08/B11/B12",
+      "landsat": "USGS Landsat Collection 2 Level-1 exact acquisition metadata and MARS-S2L-compatible bands"
+    },
+    "filters": {
+      "published_source_split": "train only",
+      "minimum_hyperspectral_percentage_clear": 75.0,
+      "maximum_time_offset_hours_positive": 6.0,
+      "maximum_time_offset_hours_negative": 1.0,
+      "maximum_time_offset_minutes_dense": 15.0,
+      "mars_protected_exclusion_radius_km": 25.0,
+      "group_radius_km": 25.0,
+      "exclude_every_mars_s2l_official_test_location": true,
+      "exclude_near_duplicate_target_scene_ids": true
+    },
+    "gates": {
+      "minimum_positive_scene_pairs": 100,
+      "minimum_negative_scene_pairs": 300,
+      "minimum_novel_25km_groups": 30,
+      "minimum_countries": 8,
+      "minimum_high_confidence_pairs_within_1_hour": 100
+    },
+    "failure_action": "Stop before model design or bulk target imagery download; retain only compact audit receipts.",
+    "pass_action": "Preregister a cross-modal teacher/student architecture and target-imagery acquisition manifest before downloading target bands or opening MARS-S2L development outcomes."
+  },
+  "architecture_hypothesis_if_and_only_if_stage_b_passes": {
+    "name": "Product-specific stems with a shared plume-object latent and decoupled scene/dense heads",
+    "hypothesis": "Real analyst-reviewed cross-sensor plume and confounder supervision can improve geographic generalization beyond synthetic plume morphology or another MARS-only score head.",
+    "constraints": [
+      "Hyperspectral retrieval channels are training-only teacher inputs; deployment remains the exact MARS-S2L Sentinel-2/Landsat contract.",
+      "Synthetic Gaussian data may initialize the dense decoder only and may not supervise the scene head.",
+      "Scene and dense losses remain decoupled by label confidence and temporal-alignment tier.",
+      "Location coordinates are used only for leakage control and grouping, never as model features.",
+      "No validation/test hyperspectral sample or official MARS-S2L outcome may influence fitting."
+    ]
+  },
+  "outputs": {
+    "ignored_root": ".research/mars_hyperspectral_transfer",
+    "metadata_manifest": ".research/mars_hyperspectral_transfer/metadata_manifest.json",
+    "stage_a_json": "reports/acquisition/mars_hyperspectral_transfer_stage_a.json",
+    "stage_a_markdown": "reports/acquisition/MARS_HYPERSPECTRAL_TRANSFER_STAGE_A.md",
+    "stage_b_json": "reports/acquisition/mars_hyperspectral_transfer_stage_b.json",
+    "stage_b_markdown": "reports/acquisition/MARS_HYPERSPECTRAL_TRANSFER_STAGE_B.md"
+  },
+  "claim_boundary": "Passing either acquisition stage establishes data feasibility only. It does not establish target-sensor methane truth, complementarity, generalization, calibration, or superiority over MARS-S2L."
+}
