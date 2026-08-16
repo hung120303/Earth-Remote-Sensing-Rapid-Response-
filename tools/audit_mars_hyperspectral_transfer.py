@@ -38,6 +38,7 @@ class HsiSample:
     country: str
     sector: str
     timestamp: datetime
+    percentage_clear: float
     latitude: float | None
     longitude: float | None
 
@@ -121,7 +122,14 @@ def read_hsi_csv(
     result: list[HsiSample] = []
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
-        required = {"id", "location_name", "country", "sector", "tile_date"}
+        required = {
+            "id",
+            "location_name",
+            "country",
+            "sector",
+            "tile_date",
+            "percentage_clear",
+        }
         missing = required - set(reader.fieldnames or [])
         if missing:
             raise ValueError(f"Missing HSI columns in {path}: {sorted(missing)}")
@@ -132,19 +140,21 @@ def read_hsi_csv(
                 for split, ids in split_by_id.items()
                 if ids is None or sample_id in ids
             ]
-            if len(matching) != 1:
+            if len(matching) > 1:
                 raise ValueError(
-                    f"Expected one published split for {sample_id}, got {matching}"
+                    f"Expected at most one published split for {sample_id}, got {matching}"
                 )
+            published_split = matching[0] if matching else "unassigned"
             result.append(
                 HsiSample(
                     sample_id=sample_id,
                     sensor=sensor,
-                    published_split=matching[0],
+                    published_split=published_split,
                     location_name=row["location_name"].strip(),
                     country=row["country"].strip(),
                     sector=row["sector"].strip(),
                     timestamp=parse_datetime(row["tile_date"]),
+                    percentage_clear=float(row["percentage_clear"]),
                     latitude=optional_float(row.get("location_lat")),
                     longitude=optional_float(row.get("location_lon")),
                 )
@@ -248,18 +258,22 @@ def audit(
     protected_coords = [mars_locations[name] for name in protected_names]
 
     resolved: list[tuple[HsiSample, float, float, str]] = []
+    resolved_by_sample: dict[str, tuple[float, float]] = {}
     unresolved = 0
     for sample in samples:
         if sample.latitude is not None and sample.longitude is not None:
             resolved.append((sample, sample.latitude, sample.longitude, "source_csv"))
+            resolved_by_sample[sample.sample_id] = (sample.latitude, sample.longitude)
         elif sample.location_name in mars_locations:
             lat, lon = mars_locations[sample.location_name]
             resolved.append((sample, lat, lon, "exact_mars_location_identity"))
+            resolved_by_sample[sample.sample_id] = (lat, lon)
         else:
             unresolved += 1
 
     overlap_by_identity = sum(sample.location_name in protected_names for sample in samples)
     protected_resolved = 0
+    protected_sample_ids: set[str] = set()
     nonprotected_location_keys: set[tuple[str, str]] = set()
     for sample, lat, lon, _method in resolved:
         protected = sample.location_name in protected_names or nearest_distance_km(
@@ -267,13 +281,26 @@ def audit(
         ) <= float(protocol["stage_b_label_and_catalog_audit"]["filters"]["mars_protected_exclusion_radius_km"])
         if protected:
             protected_resolved += 1
+            protected_sample_ids.add(sample.sample_id)
         else:
             nonprotected_location_keys.add((sample.sensor, sample.location_name))
 
     offsets = (15.0 / 60.0, 1.0, 6.0)
     matched_sample_ids: dict[float, set[str]] = {threshold: set() for threshold in offsets}
     matched_pairs: dict[float, int] = {threshold: 0 for threshold in offsets}
-    for sample in samples:
+    minimum_clear = float(
+        protocol["stage_b_label_and_catalog_audit"]["filters"]
+        ["minimum_hyperspectral_percentage_clear"]
+    )
+    eligible_samples = [
+        sample
+        for sample in samples
+        if sample.published_split == "train"
+        and sample.percentage_clear >= minimum_clear
+        and sample.sample_id in resolved_by_sample
+        and sample.sample_id not in protected_sample_ids
+    ]
+    for sample in eligible_samples:
         for observation in mars_by_name.get(sample.location_name, []):
             delta_hours = abs((sample.timestamp - observation.timestamp).total_seconds()) / 3600.0
             for threshold in offsets:
@@ -300,6 +327,9 @@ def audit(
         "coordinate_resolved_samples": len(resolved),
         "coordinate_unresolved_samples": unresolved,
         "coordinate_resolved_non_mars_test_locations": len(nonprotected_location_keys),
+        "eligible_train_samples_after_clear_and_mars_test_exclusion": len(
+            eligible_samples
+        ),
         "mars_test_overlap_samples_by_exact_identity": overlap_by_identity,
         "mars_test_overlap_samples_after_25km_check": protected_resolved,
         "existing_target_matches": {
@@ -369,6 +399,7 @@ def write_markdown(report: dict[str, object], path: Path) -> None:
         f"- Coordinate-resolved samples: {metrics['coordinate_resolved_samples']:,}",
         f"- Coordinate-unresolved samples: {metrics['coordinate_unresolved_samples']:,}",
         f"- Resolved non-protected locations: {metrics['coordinate_resolved_non_mars_test_locations']:,}",
+        f"- Eligible train samples after clear/protected-site filters: {metrics['eligible_train_samples_after_clear_and_mars_test_exclusion']:,}",
         f"- Exact MARS official-test identity overlaps: {metrics['mars_test_overlap_samples_by_exact_identity']:,}",
         f"- Resolved overlaps after 25 km exclusion: {metrics['mars_test_overlap_samples_after_25km_check']:,}",
         "",

@@ -11,6 +11,7 @@ from tools.audit_mars_hyperspectral_transfer import (
     parse_datetime,
     read_mars_observations,
 )
+from tools.query_mars_hyperspectral_cdse import summarize
 
 
 def test_safe_output_path_rejects_parent_escape(tmp_path: Path) -> None:
@@ -69,3 +70,24 @@ def test_mars_reader_uses_declared_safe_schema(tmp_path: Path) -> None:
     assert len(rows) == 1
     assert rows[0].location_name == "site"
     assert not hasattr(rows[0], "isplume")
+
+
+def test_catalog_summary_counts_temporal_tiers() -> None:
+    summary = summarize(
+        [
+            {
+                "sample_ids": ["a", "b"],
+                "products": [{"id": "p1", "offset_hours": 0.2}],
+            },
+            {
+                "sample_ids": ["c"],
+                "products": [{"id": "p2", "offset_hours": 0.8}],
+            },
+            {"sample_ids": ["d"], "products": []},
+        ],
+        3,
+    )
+    assert summary["hsi_samples_with_candidate"] == 3
+    assert summary["within_15_minutes"] == 2
+    assert summary["within_1_hour"] == 3
+    assert summary["unique_sentinel_products"] == 2
