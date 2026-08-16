@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_jpl_metadata_archive_download_or_supplement_catalog_query",
+  "name": "Independent reviewed-negative supplement for the failed MARS-Hyperspectral Stage B gate",
+  "research_question": "Can a separately curated, exhaustively labeled AVIRIS-NG training archive contribute at least 28 non-duplicate near-simultaneous Sentinel-2 or Landsat 8/9 reviewed negatives without changing the original 300-negative gate?",
+  "prior_result_disclosed_before_freeze": {
+    "protocol": "configs/mars_hyperspectral_transfer_acquisition_protocol.json",
+    "decision": "FAIL",
+    "failed_gate": "minimum_negative_scene_pairs",
+    "required": 300,
+    "observed_sentinel2_plus_landsat89": 272,
+    "shortfall": 28,
+    "unchanged_policy": "The original threshold remains 300. This protocol may only add independently sourced pairs; it may not relabel, widen time windows, admit Landsat 7, or count duplicate target acquisitions."
+  },
+  "candidate_source": {
+    "name": "Dataset for Towards Operational Automated Greenhouse Gas Plume Detection and Delineation",
+    "zenodo_record": "https://zenodo.org/records/19011045",
+    "doi": "10.5281/zenodo.19011045",
+    "paper": "https://arxiv.org/abs/2505.21806v2",
+    "paper_date": "2026-03-15",
+    "code": "https://github.com/JPLMLIA/operational-ghg",
+    "code_license": "Apache-2.0",
+    "dataset_license_status": "No explicit reusable data license was visible on the Zenodo record at freeze time; this is a mandatory gate, not an assumed permission.",
+    "metadata_archive": {
+      "name": "multicampaign.tar",
+      "reported_bytes": 3300000,
+      "reported_md5": "43ad3290fc12133ce387d6c0fce94d6d",
+      "contents_claim": "Combined AVIRIS-NG train/test dataset definitions only; no retrieval rasters."
+    },
+    "bulk_archives_forbidden_in_metadata_stage": [
+      "COVID.tar",
+      "CACH4.tar",
+      "Permian.tar",
+      "EMIT.tar",
+      "model weights"
+    ]
+  },
+  "source_evidence_known_before_freeze": [
+    "The paper states that training and validation use quality-controlled scenes whose plume candidates are exhaustively identifiable by domain experts.",
+    "Background tiles are sampled only after excluding plume tiles and every pixelwise plume label; same-class overlap is bounded.",
+    "Airborne campaign partitions are spatially stratified by connected components of overlapping flightline footprints.",
+    "The public multicampaign archive is small enough for a metadata-first audit, whereas the raster archives total roughly 25 GB for the three AVIRIS campaigns.",
+    "The source is primarily United States airborne campaign data and may overlap MARS-S2L Permian or California geography.",
+    "Whether the compact CSV definitions expose exact crop georeferencing and UTC is unknown and must be tested before any raster acquisition."
+  ],
+  "metadata_stage": {
+    "downloads_permitted": [
+      "Zenodo record JSON and checksums",
+      "multicampaign.tar only",
+      "public paper and repository metadata"
+    ],
+    "downloads_forbidden": [
+      "any retrieval GeoTIFF or label raster",
+      "any test-split outcome or raster",
+      "any EMIT archive",
+      "any target Sentinel-2 or Landsat asset"
+    ],
+    "safe_fields": [
+      "source campaign",
+      "published split",
+      "tile filename or identifier",
+      "label filename or identifier",
+      "binary background/plume class",
+      "flightline identifier",
+      "UTC acquisition time",
+      "crop georeferencing or center",
+      "source scene identity"
+    ],
+    "eligibility": [
+      "published source train split only",
+      "reviewed background/no-plume tiles only",
+      "exact finite WGS84 crop center and UTC must be recoverable without bulk raster transfer",
+      "exclude every location within 25 km of an official MARS-S2L test location",
+      "exclude exact or 25 km duplicates of an already counted MARS-Hyperspectral negative pair",
+      "exclude ambiguous, low-quality, or non-exhaustively labeled scenes"
+    ],
+    "gates": {
+      "explicit_dataset_research_use_license_or_written_permission": true,
+      "minimum_metadata_resolved_train_background_tiles": 100,
+      "minimum_nonprotected_candidate_locations": 20,
+      "exact_utc_and_crop_center_available_without_bulk_download": true
+    },
+    "failure_action": "Stop before target catalog query or bulk source acquisition; retain compact receipts and seek another negative source."
+  },
+  "target_catalog_stage": {
+    "authorized_only_if_metadata_stage_passes": true,
+    "target_products": [
+      "Copernicus Sentinel-2 L1C",
+      "USGS Landsat 8/9 Collection 2 Level-1"
+    ],
+    "maximum_negative_time_offset_hours": 1.0,
+    "same_acquisition_deduplication": "For each source crop and target sensor, count at most one product per target acquisition UTC; tile-edge duplicates choose the lower tile cloud fraction then lexical product ID.",
+    "gates": {
+      "minimum_additional_reviewed_negative_pairs_within_1_hour": 28,
+      "minimum_additional_physical_locations": 10,
+      "minimum_additional_25km_groups": 5,
+      "combined_original_negative_gate": 300
+    },
+    "pass_action": "Only then may a separate target-band acquisition and cross-modal modeling protocol be preregistered.",
+    "failure_action": "Retire this supplement without changing any threshold or opening target assets."
+  },
+  "protected_boundaries": {
+    "jpl_test_split": "Never used for acquisition selection, fitting, calibration, or architecture choice.",
+    "mars_s2l_official": "No label, mask, score, threshold outcome, or prediction may be opened.",
+    "mars_hyperspectral_validation_test_fulltiles": "Remain sealed.",
+    "bulk_policy": "All third-party archives, metadata extracts, and detailed catalogs remain beneath ignored .research roots."
+  },
+  "outputs": {
+    "ignored_root": ".research/jpl_operational_ghg_supplement",
+    "metadata_report_json": "reports/acquisition/jpl_operational_ghg_negative_supplement_metadata.json",
+    "metadata_report_markdown": "reports/acquisition/JPL_OPERATIONAL_GHG_NEGATIVE_SUPPLEMENT_METADATA.md",
+    "target_report_json": "reports/acquisition/jpl_operational_ghg_negative_supplement_target_pairs.json",
+    "target_report_markdown": "reports/acquisition/JPL_OPERATIONAL_GHG_NEGATIVE_SUPPLEMENT_TARGET_PAIRS.md"
+  },
+  "claim_boundary": "A pass establishes acquisition feasibility only. It does not establish cross-sensor label validity after local observability checks, model complementarity, calibration, or superiority over MARS-S2L."
+}
