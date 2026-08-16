@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_label_free_real_smoke_before_full_extraction",
+  "scope": {
+    "purpose": "Extract released-MARS evidence for the original pair and up to five outcome-blind strictly prior exact-grid Sentinel-2 references.",
+    "folds": [3, 4],
+    "rows": 17745,
+    "sensor_policy": "Sentinel-2 receives selected alternate references; Landsat and uncovered Sentinel-2 rows use the original pair exactly."
+  },
+  "implementation": {
+    "script": {
+      "path": "tools/extract_mars_prior_reference_scores.py",
+      "sha256": "a37035744f16c1ef2e1c7c1a72d181088b8c79e27cc159ce4608d39db3a487d3"
+    },
+    "tests": {
+      "path": "tests/test_extract_mars_prior_reference_scores.py",
+      "sha256": "64109e768d3826ce08d4f74a35adb4f679c6edf0a1c9ae922248d3c20c967c61",
+      "result": "9 focused extraction, adjudication, and reference-bank tests passed before the real smoke"
+    },
+    "code_dependencies": [
+      {
+        "path": "tools/evaluate_released_marss2l.py",
+        "sha256": "22363ab23e5b98bff3c294ded35952636318f2d67bdfe99673ed481081edb5d7"
+      },
+      {
+        "path": "EarthRemoteSensingRapidResponse/mars_paper_model.py",
+        "sha256": "f9cc65b3bb764ed83a4aa67209cccdbad2b6c80826b0915711392ca8b10a0486"
+      },
+      {
+        "path": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py",
+        "sha256": "6c82aecd58918567b34f422e4c6f4e817e5578a6bc24ea284791f3d44b63fd36"
+      }
+    ]
+  },
+  "inputs": {
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory_verified_by_acquisition_receipt"
+    },
+    "development_manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "acquisition_receipt": {
+      "path": "reports/acquisition/mars_s2l_paper_v3_development_download.json",
+      "sha256": "268402e06711f4c5776cb6ae9ded1adefaa88ff0ac71b07a8dd4f3229f972f2a"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "selection_manifest": {
+      "path": ".research/mars_prior_reference_bank/folds34_selection.jsonl",
+      "sha256": "177613bbc406de59ec7d5d13a80350ad87ce0acd6a741753aea89c4370326f1f"
+    },
+    "adjudication": {
+      "path": "reports/acquisition/mars_prior_reference_bank_adjudication.json",
+      "sha256": "333d9228ba95bbba7ffdf51c5b188163306f6a1a77c811d8bf04a3b7488962e7"
+    },
+    "released_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+      "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"
+    },
+    "released_score_cache": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89",
+      "permitted_fields": [
+        "feature_names",
+        "features[released_connected_score only]",
+        "folds",
+        "sample_ids"
+      ],
+      "forbidden_fields": ["labels"]
+    }
+  },
+  "reference_substitution": {
+    "target": "unchanged original first six bands",
+    "reference": "selected prior sample first six target bands; never its background bands",
+    "mbmp": "recomputed for each target/substituted-reference pair",
+    "wind": "unchanged original target row wind_u and wind_v divided by 8",
+    "cloud_channel": "unchanged original target cloud mask; the selected reference is already constrained to >=95% clear by the frozen selector",
+    "score_mask": "released probability is zeroed only where the original target cloud class is nonzero, exactly matching the existing released-score cache",
+    "fallback": "original pair exactly when no selected reference exists"
+  },
+  "released_model": {
+    "input_channels": [
+      "MBMP",
+      "target B02",
+      "target B03",
+      "target B04",
+      "target B08",
+      "target B11",
+      "target B12",
+      "reference B02",
+      "reference B03",
+      "reference B04",
+      "reference B08",
+      "reference B11",
+      "reference B12",
+      "wind_u/8",
+      "wind_v/8",
+      "cloud_or_invalid"
+    ],
+    "reflectance": "uint16 DN / 5000 clipped to [0,2]",
+    "scene_score": "8-connected-component threshold for at least 100 pixels, matching the released paper implementation",
+    "paper_decision": "connected score > 0.5"
+  },
+  "representation": {
+    "views": 6,
+    "view_order": [
+      "original reference",
+      "five selector-ordered prior references padded by masked original-reference copies"
+    ],
+    "scalar_features": [
+      "connected score",
+      "top-25/100/500 means",
+      "clear-pixel mean and standard deviation",
+      "clear-pixel area above 0.1/0.3/0.5/0.7/0.9"
+    ],
+    "pooled_maps": "32x32 adaptive mean and max pools of cloud-masked released probability",
+    "purpose": "Support a fixed aggregation diagnostic and, only after a pass, a small reference-set temporal model without rerunning the frozen released U-Net."
+  },
+  "original_view_parity": {
+    "comparator": "released_connected_score from the frozen folds-2/3/4 scene-feature cache, aligned by unique sample_id",
+    "maximum_absolute_difference": 0.002,
+    "maximum_mean_absolute_difference": 0.0005,
+    "paper_rule_decisions_must_match": true,
+    "failure_action": "delete temporary outputs and stop before any alternate-reference result is accepted"
+  },
+  "runtime": {
+    "device": "CUDA",
+    "allow_cpu": false,
+    "autocast": "float16",
+    "target_batch_size": 4,
+    "raster_workers": 8,
+    "progress_every_rows": 1000
+  },
+  "smoke": {
+    "status": "passed_before_full_extraction_freeze",
+    "selection": "first two Sentinel-2 rows with five references, first Sentinel-2 fallback, and first Landsat fallback; outcome-blind",
+    "rows": 4,
+    "device": "NVIDIA GeForce RTX 5070",
+    "maximum_original_score_absolute_difference": 0.00004088878631591797,
+    "mean_original_score_absolute_difference": 0.000013883138308301568,
+    "paper_rule_decisions_equal": true,
+    "view_masks": [
+      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0]
+    ],
+    "outcomes_accessed": false
+  },
+  "outputs": {
+    "scores": "outputs/mars_prior_reference_released_scores_folds34.npz",
+    "pooled_probability_maps": "outputs/mars_prior_reference_released_probability_maps_folds34.npy",
+    "receipt": "reports/acquisition/mars_prior_reference_released_scores_folds34.json"
+  },
+  "invariants": [
+    "The extractor stores no label, plume mask, enhancement, champion score, official-test value, or external outcome.",
+    "Only folds 3/4 are materialized and output alignment is by unique sample_id.",
+    "Candidate reference IDs and order are frozen by the outcome-blind selector; methane-sensitive bands did not influence selection.",
+    "Only the original target image, selected candidate image, original target cloud mask, and non-outcome wind metadata are read.",
+    "Bulk maps and scores remain ignored; only the compact receipt may be committed.",
+    "This extraction cannot select a reference aggregation, train a model, set a threshold, or claim improvement."
+  ],
+  "claim_boundary": "A successful extraction establishes only numerically faithful label-free evidence for frozen alternate references. Complementarity, performance, calibration, and superiority remain untested."
+}
