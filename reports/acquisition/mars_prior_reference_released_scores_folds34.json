@@ -1,0 +1,84 @@
+{
+  "claim_boundary": "A successful extraction establishes only numerically faithful label-free evidence for frozen alternate references. Complementarity, performance, calibration, and superiority remain untested.",
+  "folds": [
+    3,
+    4
+  ],
+  "generated_at_utc": "2026-08-16T17:12:24.412640+00:00",
+  "original_view_parity": {
+    "maximum_absolute_difference": 0.0011861920356750488,
+    "mean_absolute_difference": 4.7521676623897056e-05,
+    "paper_rule_decisions_equal": true,
+    "pass": true,
+    "rows": 17745
+  },
+  "outcome_access": {
+    "labels_accessed": false,
+    "methane_enhancement_accessed": false,
+    "model_selection_performed": false,
+    "permitted_mixed_cache_fields_accessed": [
+      "feature_names",
+      "features[released_connected_score only]",
+      "folds",
+      "sample_ids"
+    ],
+    "plume_masks_accessed": false
+  },
+  "outputs": {
+    "pooled_probability_maps": {
+      "bytes": 436101248,
+      "path": "outputs/mars_prior_reference_released_probability_maps_folds34.npy",
+      "sha256": "91cc2a0f81311641ebfb81c12ef686b9c4f6fa262fbed046315a55ec5bfc1ec9",
+      "tracked": false
+    },
+    "scores": {
+      "bytes": 5231367,
+      "path": "outputs/mars_prior_reference_released_scores_folds34.npz",
+      "sha256": "aae3afebe9dabbaf94ae51653cba21d343aab00928be08d9d8a5bc7bf4bdfb56",
+      "tracked": false
+    }
+  },
+  "provenance": {
+    "device": "NVIDIA GeForce RTX 5070",
+    "git_commit": "500c70aaa1d60230859efb4deae7efdedaa7be7d",
+    "numpy": "2.4.4",
+    "protocol": {
+      "path": "configs/mars_prior_reference_score_extraction_protocol.json",
+      "sha256": "47d9914d6d1c785ac8ab149374525743ff8305c439f88bcdc64dbf006afa1aa8"
+    },
+    "rasterio": "1.4.4",
+    "script": {
+      "path": "tools/extract_mars_prior_reference_scores.py",
+      "sha256": "a37035744f16c1ef2e1c7c1a72d181088b8c79e27cc159ce4608d39db3a487d3"
+    },
+    "torch": "2.11.0+cu128"
+  },
+  "reference_coverage": {
+    "rows_with_alternate_reference": 14569,
+    "rows_with_five_alternate_references": 13733
+  },
+  "rows": 17745,
+  "schema_version": 1,
+  "status": "complete_label_free_prior_reference_released_score_extraction",
+  "view_features": [
+    "connected_score",
+    "top_25_mean",
+    "top_100_mean",
+    "top_500_mean",
+    "clear_mean",
+    "clear_std",
+    "clear_area_above_0.1",
+    "clear_area_above_0.3",
+    "clear_area_above_0.5",
+    "clear_area_above_0.7",
+    "clear_area_above_0.9"
+  ],
+  "views": [
+    "original_reference",
+    "selected_reference_1",
+    "selected_reference_2",
+    "selected_reference_3",
+    "selected_reference_4",
+    "selected_reference_5"
+  ]
+}
