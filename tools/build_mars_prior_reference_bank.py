@@ -55,6 +55,7 @@ LABEL_FIELDS = frozenset(
 )
 ALLOWED_RECORD_FIELDS = frozenset(
     {
+        "band_order",
         "crs",
         "group_id",
         "height",
