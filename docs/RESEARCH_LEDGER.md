@@ -1012,3 +1012,48 @@ manifest feasibility and authorizes the already-preregistered sparse Stage-B
 zero-mask georeferencing audit. The compact receipt is
 `reports/acquisition/starcop_negative_supplement_stage_a.json` (SHA-256
 `a80189174bf7bbe795720c0757000733e5d020fc56f4e85b2b4801449d368747`).
+
+## 2026-08-16: STARCOP sparse Stage B fails the frozen geography gate
+
+The Stage-B audit reconstructed all 1,009 deterministically selected train
+`labelbinary.tif` members across 256 AVIRIS-NG flightlines. Every member is a
+single-band 512x512 projected GeoTIFF, every affine and WGS84 center is finite,
+and every pixel is zero. The 1,009 unique reconstructed masks occupy 1,935,966
+bytes in ignored resumable storage and are bound to their authoritative ZIP
+central-directory uncompressed sizes and CRC-32 values. No full archive,
+source imagery, positive member, test content, target catalog, target asset, or
+protected MARS outcome column was accessed. Record-declared archive MD5 values
+are reported but not claimed as verified because the full archives were never
+downloaded.
+
+The leakage filter is decisive. Of 1,009 resolved negatives, 984 are within
+25 km of an official MARS-S2L test representative; none is within 25 km of an
+already-counted MARS-Hyperspectral negative source crop. Only 25 rows from 14
+flightlines survive, and they collapse to eight transitive 25 km components.
+All eight are also beyond every MARS-S2L representative, but the frozen gate
+required at least 20 components. Stage B therefore **FAILS**. The requirement
+is not lowered, failed sources are not pooled, and no Sentinel-2/Landsat target
+query is authorized. STARCOP is retired as the 28-negative supplement.
+
+The sparse transport failed closed several times before the final report. The
+first archive parse exposed standard ZIP data-descriptor flags; the second
+exposed a deterministic archive-root packaging prefix. Both source-format
+corrections were tested and committed before selected label access. A later
+transient non-206 response motivated bounded retry, shared pacing, and a
+CRC-bound ignored cache. One resumable run reached 988 masks before the
+15-minute process limit; the next completed the remaining 21 before a local
+absolute/relative path comparison failed. The final report was then produced
+from all verified cached masks. Across the documented attempts, exact central-
+directory range traffic was 78,605,306 bytes, below the 512 MiB cap. Exact
+cumulative label-range traffic from pre-resume failures is unavailable because
+those early processes did not persist failure receipts; the report explicitly
+scopes its byte totals to the final successful execution rather than presenting
+a misleading zero as lifetime acquisition. This provenance limitation does not
+affect mask identity, counts, coordinates, or the failed component gate.
+
+Authoritative compact result:
+`reports/acquisition/starcop_negative_supplement_stage_b.json` (SHA-256
+`c5e8e431ec66113ebf72a7de8064459b129af64d4198f6e161c05ab491f08ce7`).
+The next independent source is the preregistered fallback direction: a separate
+metadata-only protocol for Carbon Mapper Tanager assessed null-detect scenes.
+No Carbon Mapper catalog has yet been enumerated.

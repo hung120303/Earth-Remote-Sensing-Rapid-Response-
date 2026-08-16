@@ -6255,3 +6255,38 @@ the ignored selected JSONL contains 1,009 rows and SHA-256
 No ZIP, label mask, imagery, test content, target catalog, coordinate, or MARS
 outcome was opened. Stage B is now authorized under the existing sparse
 zero-mask protocol, but target-catalog access remains forbidden.
+
+### 2026-08-16: STARCOP zero masks validate, but independent geography fails
+
+The guarded ZIP64 range reader resolved the six exact train archives and only
+the 1,009 blind-hash-selected `labelbinary.tif` members. All 1,009 masks are
+valid 512x512 projected single-band GeoTIFFs, all pixels are zero, and all chip
+centers transform to finite WGS84 coordinates. The selected cohort spans all
+256 negative-bearing flightlines, so the row, flightline, and grid-validity
+gates pass.
+
+The unchanged leakage audit rejects the source. There are 984 rows within 25
+km of official MARS-S2L test geography, leaving 25 rows on 14 flightlines in
+only eight 25 km connected components. The requirement was 20. None of the
+rows duplicates a counted MARS-Hyperspectral negative within 25 km. STARCOP is
+therefore retired without a target-catalog query, threshold change, or pooling
+with CACH4/NASA candidates. A released STARCOP zero mask remains an
+author-refined benchmark no-plume label, not proof of physical zero methane.
+
+The full acquisition chronology is retained in `docs/RESEARCH_LEDGER.md`.
+Notably, standard ZIP data descriptors and deterministic archive-root prefixes
+were source-format corrections made before selected label access; later
+transport was paced, bounded, and resumable. The final compact report scopes
+range totals to its successful execution and separately discloses that exact
+label-range bytes from earlier pre-resume failures were not persisted. The
+1,009 unique masks (1,935,966 bytes) remain ignored; tracked artifacts contain
+only compact counts, gates, hashes, and limitations.
+
+Research implication: STARCOP confirms that additional raw negative rows do
+not solve the project bottleneck when their geography is already represented
+by protected MARS sites. The next source decision stays at the data layer, not
+the architecture layer. A Tanager-only Carbon Mapper assessed-null metadata
+protocol is the preferred fallback; it must first demonstrate independently
+reviewed source-level null associations, exact scene UTC/bounds, adequate
+license terms, and at least 20 leakage-safe 25 km components before any target
+asset or model training is allowed.
