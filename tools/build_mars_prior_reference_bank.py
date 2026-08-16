@@ -11,6 +11,7 @@ import re
 import subprocess
 import sys
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
@@ -531,25 +532,33 @@ def run(
     target_medians = np.empty((len(records), len(VISIBLE_NIR_BANDS)), dtype=np.float32)
     reference_medians = np.empty_like(target_medians)
     metadata: list[dict[str, Any]] = []
-    for index, record in enumerate(records):
+    descriptor_workers = int(protocol["execution"]["descriptor_workers"])
+    if descriptor_workers <= 0:
+        raise ValueError("Descriptor workers must be positive")
+
+    def extract(record: dict[str, Any]) -> dict[str, Any]:
         path = safe_asset_path(mars_root, record["image_asset"])
-        extracted = read_scene_descriptors(
-            path, record, descriptor_size=descriptor_size
-        )
-        target_descriptors[index] = extracted["target_descriptor"]
-        reference_descriptors[index] = extracted["reference_descriptor"]
-        target_medians[index] = extracted["target_medians"]
-        reference_medians[index] = extracted["reference_medians"]
-        metadata.append(
-            {
-                **record,
-                "timestamp": parse_timestamp(str(record["target_datetime"])),
-                "crs": extracted["crs"],
-                "transform": list(extracted["transform"]),
-            }
-        )
-        if (index + 1) % 1000 == 0:
-            print(json.dumps({"descriptor_rows": index + 1}), flush=True)
+        return read_scene_descriptors(path, record, descriptor_size=descriptor_size)
+
+    # Each worker opens its own immutable raster. Executor.map preserves record
+    # order, so concurrency cannot change cache alignment or selection ties.
+    with ThreadPoolExecutor(max_workers=descriptor_workers) as executor:
+        extracted_rows = executor.map(extract, records)
+        for index, (record, extracted) in enumerate(zip(records, extracted_rows)):
+            target_descriptors[index] = extracted["target_descriptor"]
+            reference_descriptors[index] = extracted["reference_descriptor"]
+            target_medians[index] = extracted["target_medians"]
+            reference_medians[index] = extracted["reference_medians"]
+            metadata.append(
+                {
+                    **record,
+                    "timestamp": parse_timestamp(str(record["target_datetime"])),
+                    "crs": extracted["crs"],
+                    "transform": list(extracted["transform"]),
+                }
+            )
+            if (index + 1) % 1000 == 0:
+                print(json.dumps({"descriptor_rows": index + 1}), flush=True)
 
     selections, summary = select_prior_references(
         metadata,
