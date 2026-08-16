@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_recall_anchor_diagnostic",
+  "scope": "development-only complementarity audit for a recall-anchored dual-expert successor",
+  "motivation": "The frozen Stanford controlled-release evaluations showed that the released MARS detector retained high-rate sensitivity that the stronger ERSRR scene rankers lost. This audit asks whether that released-detector signal is complementary on authorized MARS folds 3/4 before any new architecture is fitted.",
+  "scientific_boundary": {
+    "allowed": [
+      "descriptive failure analysis on already-opened folds 3 and 4",
+      "measurement of released-versus-champion decision complementarity",
+      "architecture feasibility decision"
+    ],
+    "forbidden": [
+      "candidate promotion",
+      "threshold selection for external or official test data",
+      "use of folds 0, 1, or 2",
+      "opening or rescoring any official, Stanford, UNEP, EMIT, MethaneS2CM, or CloudSEN outcome"
+    ]
+  },
+  "inputs": {
+    "champion_scores": {
+      "path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz",
+      "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424"
+    },
+    "scene_features": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"
+    }
+  },
+  "cohort": {
+    "folds": [3, 4],
+    "rows": 17745,
+    "group_unit": "frozen physical 25 km connected component",
+    "target_false_positive_rate": 0.0713
+  },
+  "scores": {
+    "released_detector": "released_connected_score from the 108-feature cache",
+    "current_v3": "released_primary_scores in the champion cache; historical field name retained for hash compatibility",
+    "spatial_prithvi": "spatial_prithvi_scores in the champion cache",
+    "gaussian_dofa_champion": "champion_scores in the champion cache"
+  },
+  "fixed_analysis": {
+    "released_paper_comparator": "> 0.5",
+    "matched_fpr_comparator": ">= threshold chosen independently for each score at no more than 0.0713 negative FPR",
+    "released_rescue_thresholds": [0.5, 0.7, 0.8, 0.9],
+    "feature_contrast": "standardized mean difference between released-paper-rule rescue true positives and rescue false positives",
+    "maximum_reported_features": 20,
+    "sample_identity_reporting": "development-positive sample IDs only"
+  },
+  "decision_rule": {
+    "continue_to_recall_anchored_architecture_if": [
+      "the released detector recovers at least one champion-missed positive",
+      "the released-only region contains both positives and negatives so a verifier has a nontrivial task",
+      "at least one frozen model-aligned feature has an absolute standardized contrast of at least 0.25"
+    ],
+    "otherwise": "retire released-detector rescue before model fitting"
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_recall_anchor_diagnostic.json",
+    "markdown": "reports/experiments/MARS_RECALL_ANCHOR_DIAGNOSTIC.md"
+  }
+}
