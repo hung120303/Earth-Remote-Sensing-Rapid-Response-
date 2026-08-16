@@ -191,6 +191,26 @@ def test_http_client_rejects_redirect_html_auth_and_caps(tmp_path: Path) -> None
             client.get_json(audit.SOURCES_URL, cache_path=tmp_path / hashlib.sha256(message.encode()).hexdigest())
 
 
+def test_streamed_cap_is_nonrefundable_and_failure_report_is_fail_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    protocol = audit.load_protocol()
+    monkeypatch.setattr(audit, "MAX_RESPONSE_BYTES", 8)
+    response = _Response(b"0123456789")
+    response.headers.pop("Content-Length")
+    client = audit.HttpAuditClient(_Session([response]), sleep=lambda _: None)
+    with pytest.raises(audit.CarbonMapperAuditError, match="Streamed") as caught:
+        client.get_json(audit.SOURCES_URL, cache_path=tmp_path / "forbidden.json")
+    assert client.total_network_bytes == 10
+    report = audit.build_failure_report(
+        protocol=protocol, error=caught.value, client=client
+    )
+    assert report["decision"] == "FAIL"
+    assert report["population_gates_evaluated"] is False
+    assert report["network"]["network_bytes_observed_this_execution"] == 10
+    assert report["access_boundary"]["any_row_authorized_for_target_catalog"] is False
+
+
 def test_http_client_retries_only_frozen_statuses_and_caches(tmp_path: Path) -> None:
     payload = json.dumps({"type": "FeatureCollection", "features": []}).encode()
     retry = _Response(b"", status=503)

@@ -423,10 +423,10 @@ class HttpAuditClient:
             if not chunk:
                 continue
             observed += len(chunk)
-            if observed > MAX_RESPONSE_BYTES or self.total_network_bytes + observed > MAX_TOTAL_RESPONSE_BYTES:
+            self.total_network_bytes += len(chunk)
+            if observed > MAX_RESPONSE_BYTES or self.total_network_bytes > MAX_TOTAL_RESPONSE_BYTES:
                 raise CarbonMapperAuditError("Streamed Carbon Mapper response exceeds frozen cap")
             chunks.append(chunk)
-        self.total_network_bytes += observed
         payload = b"".join(chunks)
         if payload.lstrip().lower().startswith((b"<html", b"<!doctype html")):
             raise CarbonMapperAuditError("HTML/auth payload rejected")
@@ -888,6 +888,74 @@ def _write_markdown(report: dict[str, object]) -> None:
     write_bytes_atomic(COMPACT_MARKDOWN, "\n".join(lines).encode("utf-8"))
 
 
+def build_failure_report(
+    *,
+    protocol: dict[str, Any],
+    error: CarbonMapperAuditError,
+    client: HttpAuditClient,
+) -> dict[str, object]:
+    """Persist an acquisition/schema failure without pretending gates ran."""
+
+    return {
+        "schema_version": 1,
+        "decision": "FAIL",
+        "failure_stage": "metadata_acquisition_or_validation",
+        "failure_reason": str(error),
+        "protocol": {
+            "path": EXPECTED_PROTOCOL.relative_to(ROOT).as_posix(),
+            "sha256": EXPECTED_PROTOCOL_SHA256,
+            "committed_before_catalog_enumeration": True,
+        },
+        "population_gates_evaluated": False,
+        "gates": {
+            "maximum_response_bytes_each": {
+                "required_at_most": MAX_RESPONSE_BYTES,
+                "observed_at_least": client.total_network_bytes,
+                "passed": False,
+            }
+        },
+        "network": {
+            "network_bytes_observed_this_execution": client.total_network_bytes,
+            "response_cache_written": SOURCES_CACHE.is_file(),
+        },
+        "access_boundary": {
+            "carbon_mapper_metadata_catalog_enumeration_completed": False,
+            "carbon_mapper_image_assets_accessed": False,
+            "target_sentinel_landsat_catalog_accessed": False,
+            "protected_mars_outcome_columns_read": False,
+            "any_row_authorized_for_target_catalog": False,
+        },
+        "license_boundary": protocol["license_contract"],
+        "next_action": protocol["failure_action"],
+        "claim_boundary": protocol["claim_boundary"],
+    }
+
+
+def _write_failure_markdown(report: dict[str, object]) -> None:
+    lines = [
+        "# Carbon Mapper Tanager null metadata audit",
+        "",
+        "**Decision:** FAIL",
+        "",
+        f"The metadata audit failed closed: {report['failure_reason']}.",
+        "",
+        (
+            "The preregistered population gates were not evaluated. The response cap "
+            "was not loosened, no catalog response was cached as complete, and no "
+            "Carbon Mapper image or Sentinel-2/Landsat target catalog was accessed."
+        ),
+        "",
+        (
+            f"At least {report['network']['network_bytes_observed_this_execution']} "
+            "response bytes were streamed in the capped attempt."
+        ),
+        "",
+        "Every target-catalog eligibility claim remains false.",
+        "",
+    ]
+    write_bytes_atomic(COMPACT_MARKDOWN, "\n".join(lines).encode("utf-8"))
+
+
 def execute_metadata_audit(session: Any | None = None, *, sleep: Callable[[float], None] = time.sleep) -> dict[str, object]:
     protocol = load_protocol()
     frozen_receipts = validate_frozen_local_inputs(protocol)
@@ -895,39 +963,45 @@ def execute_metadata_audit(session: Any | None = None, *, sleep: Callable[[float
     if SAFE_MARS_COLUMNS & FORBIDDEN_MARS_COLUMNS:
         raise AssertionError("Safe and protected MARS columns overlap")
     client = HttpAuditClient(session=requests.Session() if session is None else session, sleep=sleep)
-    sources_payload, sources_receipt = client.get_json(SOURCES_URL, cache_path=SOURCES_CACHE)
-    candidates, source_counts = parse_source_features(sources_payload)
-    annotated_scenes, scene_receipts = fetch_annotated_scenes(client)
-    annotated_by_id = {str(row["id"]): row for row in annotated_scenes}
-    receipts = [sources_receipt, *scene_receipts]
-    all_null_rows: list[dict[str, object]] = []
-    source_details: list[dict[str, object]] = []
-    for candidate in candidates:
-        source_name = str(candidate["source_name"])
-        url = SOURCE_DETAIL_TEMPLATE.format(source_name=source_name)
-        detail, receipt = client.get_json(url, cache_path=_source_detail_cache_path(source_name))
-        receipts.append(receipt)
-        null_rows = authoritative_null_rows(candidate=candidate, detail=detail, annotated_by_id=annotated_by_id)
-        all_null_rows.extend(null_rows)
-        source_details.append({"source_name": source_name, "latitude": candidate["latitude"], "longitude": candidate["longitude"], "response_sha256": receipt["sha256"], "response_bytes": receipt["bytes"], "authoritative_null_row_count": len(null_rows), "eligible_for_target_catalog": False})
-    selected = select_rows_per_source(all_null_rows)
-    frozen = protocol["frozen_local_inputs"]
-    safe_manifest = ROOT / frozen["safe_mars_manifest"]["path"]
-    mars = read_mars_observations(safe_manifest)
-    all_mars, protected_mars = official_test_locations(mars)
-    prior_coordinates, prior_counts = load_prior_negative_coordinates(
-        stage_b_report_path=ROOT / frozen["mars_hyperspectral_stage_b_report"]["path"],
-        pair_catalog_path=ROOT / frozen["mars_hyperspectral_pairs"]["path"],
-        mask_catalog_path=ROOT / frozen["mars_hyperspectral_mask_catalog"]["path"],
-    )
-    filtered = spatial_filter_rows(selected, all_mars_locations=all_mars, protected_mars_locations=protected_mars, prior_negative_coordinates=prior_coordinates)
-    write_jsonl(SOURCE_DETAILS_JSONL, source_details)
-    write_jsonl(ANNOTATED_SCENES_JSONL, annotated_scenes)
-    write_jsonl(NULL_ROWS_JSONL, filtered)
-    report = build_report(protocol=protocol, source_counts=source_counts, source_details=source_details, annotated_scenes=annotated_scenes, selected_rows=selected, filtered_rows=filtered, receipts=receipts, client=client, frozen_receipts=frozen_receipts, prior_counts=prior_counts)
-    write_json(COMPACT_JSON, report)
-    _write_markdown(report)
-    return report
+    try:
+        sources_payload, sources_receipt = client.get_json(SOURCES_URL, cache_path=SOURCES_CACHE)
+        candidates, source_counts = parse_source_features(sources_payload)
+        annotated_scenes, scene_receipts = fetch_annotated_scenes(client)
+        annotated_by_id = {str(row["id"]): row for row in annotated_scenes}
+        receipts = [sources_receipt, *scene_receipts]
+        all_null_rows: list[dict[str, object]] = []
+        source_details: list[dict[str, object]] = []
+        for candidate in candidates:
+            source_name = str(candidate["source_name"])
+            url = SOURCE_DETAIL_TEMPLATE.format(source_name=source_name)
+            detail, receipt = client.get_json(url, cache_path=_source_detail_cache_path(source_name))
+            receipts.append(receipt)
+            null_rows = authoritative_null_rows(candidate=candidate, detail=detail, annotated_by_id=annotated_by_id)
+            all_null_rows.extend(null_rows)
+            source_details.append({"source_name": source_name, "latitude": candidate["latitude"], "longitude": candidate["longitude"], "response_sha256": receipt["sha256"], "response_bytes": receipt["bytes"], "authoritative_null_row_count": len(null_rows), "eligible_for_target_catalog": False})
+        selected = select_rows_per_source(all_null_rows)
+        frozen = protocol["frozen_local_inputs"]
+        safe_manifest = ROOT / frozen["safe_mars_manifest"]["path"]
+        mars = read_mars_observations(safe_manifest)
+        all_mars, protected_mars = official_test_locations(mars)
+        prior_coordinates, prior_counts = load_prior_negative_coordinates(
+            stage_b_report_path=ROOT / frozen["mars_hyperspectral_stage_b_report"]["path"],
+            pair_catalog_path=ROOT / frozen["mars_hyperspectral_pairs"]["path"],
+            mask_catalog_path=ROOT / frozen["mars_hyperspectral_mask_catalog"]["path"],
+        )
+        filtered = spatial_filter_rows(selected, all_mars_locations=all_mars, protected_mars_locations=protected_mars, prior_negative_coordinates=prior_coordinates)
+        write_jsonl(SOURCE_DETAILS_JSONL, source_details)
+        write_jsonl(ANNOTATED_SCENES_JSONL, annotated_scenes)
+        write_jsonl(NULL_ROWS_JSONL, filtered)
+        report = build_report(protocol=protocol, source_counts=source_counts, source_details=source_details, annotated_scenes=annotated_scenes, selected_rows=selected, filtered_rows=filtered, receipts=receipts, client=client, frozen_receipts=frozen_receipts, prior_counts=prior_counts)
+        write_json(COMPACT_JSON, report)
+        _write_markdown(report)
+        return report
+    except CarbonMapperAuditError as error:
+        report = build_failure_report(protocol=protocol, error=error, client=client)
+        write_json(COMPACT_JSON, report)
+        _write_failure_markdown(report)
+        return report
 
 
 def build_parser() -> argparse.ArgumentParser:
