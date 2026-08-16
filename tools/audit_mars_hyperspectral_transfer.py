@@ -236,6 +236,7 @@ def audit(
     metadata_root: Path,
     mars_manifest: Path,
     protocol_path: Path,
+    catalog_summary_path: Path | None = None,
 ) -> dict[str, object]:
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
     if protocol["source"]["revision"] != REVISION:
@@ -309,6 +310,13 @@ def audit(
                     matched_pairs[threshold] += 1
 
     stage = protocol["stage_a_metadata_audit"]
+    catalog_matches: dict[str, object] | None = None
+    if catalog_summary_path is not None and catalog_summary_path.exists():
+        catalog_matches = json.loads(catalog_summary_path.read_text(encoding="utf-8"))
+        if catalog_matches.get("scope") != "metadata_only_no_target_assets":
+            raise ValueError("Unexpected target catalog summary scope")
+        if int(catalog_matches.get("eligible_hsi_samples", -1)) != len(eligible_samples):
+            raise ValueError("Target catalog eligible-sample denominator mismatch")
     metrics = {
         "samples": len(samples),
         "unique_location_names": len({sample.location_name for sample in samples}),
@@ -346,7 +354,12 @@ def audit(
                 "pairs": matched_pairs[offsets[2]],
             },
         },
+        "catalog_target_matches": catalog_matches,
     }
+    eligible_match_count = max(
+        int(metrics["existing_target_matches"]["within_6_hours"]["hsi_samples"]),
+        int(catalog_matches["within_6_hours"]) if catalog_matches else 0,
+    )
     gates = {
         "minimum_total_samples": metrics["samples"]
         >= int(stage["gates"]["minimum_total_samples"]),
@@ -356,9 +369,7 @@ def audit(
             "coordinate_resolved_non_mars_test_locations"
         ]
         >= int(stage["gates"]["minimum_coordinate_resolved_non_mars_test_locations"]),
-        "minimum_existing_or_catalog_query_candidates_within_6_hours": metrics[
-            "existing_target_matches"
-        ]["within_6_hours"]["hsi_samples"]
+        "minimum_existing_or_catalog_query_candidates_within_6_hours": eligible_match_count
         >= int(
             stage["gates"][
                 "minimum_existing_or_catalog_query_candidates_within_6_hours"
@@ -369,6 +380,20 @@ def audit(
         "schema_version": 1,
         "protocol": str(protocol_path).replace("\\", "/"),
         "protocol_sha256": sha256_file(protocol_path),
+        "metadata_manifest": {
+            "path": str(metadata_root / "metadata_manifest.json").replace("\\", "/"),
+            "sha256": sha256_file(metadata_root / "metadata_manifest.json"),
+            "files": len(acquisition["files"]),
+            "bytes": int(acquisition["total_bytes"]),
+        },
+        "catalog_summary": (
+            {
+                "path": str(catalog_summary_path).replace("\\", "/"),
+                "sha256": sha256_file(catalog_summary_path),
+            }
+            if catalog_matches is not None and catalog_summary_path is not None
+            else None
+        ),
         "source_revision": REVISION,
         "scope": "metadata_only_no_rasters_no_hsi_mask_truth_no_mars_outcomes",
         "metrics": metrics,
@@ -384,6 +409,7 @@ def audit(
 def write_markdown(report: dict[str, object], path: Path) -> None:
     metrics = report["metrics"]
     matches = metrics["existing_target_matches"]
+    catalog = metrics.get("catalog_target_matches")
     lines = [
         "# MARS-Hyperspectral transfer Stage A",
         "",
@@ -408,10 +434,27 @@ def write_markdown(report: dict[str, object], path: Path) -> None:
         f"- Within 15 minutes: {matches['within_15_minutes']['hsi_samples']:,} HSI samples / {matches['within_15_minutes']['pairs']:,} pairs",
         f"- Within 1 hour: {matches['within_1_hour']['hsi_samples']:,} HSI samples / {matches['within_1_hour']['pairs']:,} pairs",
         f"- Within 6 hours: {matches['within_6_hours']['hsi_samples']:,} HSI samples / {matches['within_6_hours']['pairs']:,} pairs",
-        "",
-        "## Frozen gates",
-        "",
     ]
+    if catalog:
+        lines.extend(
+            [
+                "",
+                "## Public Copernicus catalog",
+                "",
+                f"- Eligible HSI training observations queried: {catalog['eligible_hsi_samples']:,}",
+                f"- Sentinel-2 L1C candidates within 15 minutes: {catalog['within_15_minutes']:,}",
+                f"- Sentinel-2 L1C candidates within 1 hour: {catalog['within_1_hour']:,}",
+                f"- Sentinel-2 L1C candidates within 6 hours: {catalog['within_6_hours']:,}",
+                f"- Unique Sentinel-2 L1C products: {catalog['unique_sentinel_products']:,}",
+            ]
+        )
+    lines.extend(
+        [
+            "",
+            "## Frozen gates",
+            "",
+        ]
+    )
     lines.extend(
         f"- {'PASS' if passed else 'FAIL'} `{name}`"
         for name, passed in report["gates"].items()
@@ -441,6 +484,13 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("configs/mars_hyperspectral_transfer_acquisition_protocol.json"),
     )
     parser.add_argument(
+        "--catalog-summary",
+        type=Path,
+        default=Path(
+            ".research/mars_hyperspectral_transfer/cdse_s2_l1c_summary.json"
+        ),
+    )
+    parser.add_argument(
         "--output-json",
         type=Path,
         default=Path("reports/acquisition/mars_hyperspectral_transfer_stage_a.json"),
@@ -459,6 +509,7 @@ def main() -> None:
         metadata_root=args.metadata_root,
         mars_manifest=args.mars_manifest,
         protocol_path=args.protocol,
+        catalog_summary_path=args.catalog_summary,
     )
     args.output_json.parent.mkdir(parents=True, exist_ok=True)
     args.output_json.write_text(

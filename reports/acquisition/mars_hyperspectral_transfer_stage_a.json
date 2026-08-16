@@ -1,0 +1,95 @@
+{
+  "catalog_summary": {
+    "path": ".research/mars_hyperspectral_transfer/cdse_s2_l1c_summary.json",
+    "sha256": "1cb6a108682a237de885ce30df3c0b44dfa2b64656fdc327bfa3b614f1368a6c"
+  },
+  "gates": {
+    "minimum_coordinate_resolved_non_mars_test_locations": true,
+    "minimum_countries": true,
+    "minimum_existing_or_catalog_query_candidates_within_6_hours": true,
+    "minimum_total_samples": true
+  },
+  "interpretation": "PASS authorizes only Stage B label/georeference and target-catalog audit. It does not authorize model training or establish transferability.",
+  "metadata_manifest": {
+    "bytes": 4403716,
+    "files": 10,
+    "path": ".research/mars_hyperspectral_transfer/metadata_manifest.json",
+    "sha256": "2e06ab74c1eda0eb824bee5cc8d1dae7c19cf340252ef67b34d54c13f8a5b676"
+  },
+  "metrics": {
+    "by_published_split": {
+      "test": 1709,
+      "testval": 394,
+      "train": 7041,
+      "unassigned": 71,
+      "validation": 2316
+    },
+    "by_sensor": {
+      "EMIT": 9771,
+      "EnMAP": 600,
+      "PRISMA": 1160
+    },
+    "by_sensor_and_split": {
+      "EMIT:test": 1709,
+      "EMIT:train": 5746,
+      "EMIT:validation": 2316,
+      "EnMAP:testval": 168,
+      "EnMAP:train": 391,
+      "EnMAP:unassigned": 41,
+      "PRISMA:testval": 226,
+      "PRISMA:train": 904,
+      "PRISMA:unassigned": 30
+    },
+    "catalog_target_matches": {
+      "collection": "sentinel-2-l1c",
+      "eligible_hsi_samples": 411,
+      "eligible_query_groups": 411,
+      "endpoint": "https://stac.dataspace.copernicus.eu/v1/search",
+      "hsi_samples_with_candidate": 122,
+      "minimum_offset_hours": 0.006673333333333333,
+      "schema_version": 1,
+      "scope": "metadata_only_no_target_assets",
+      "unique_sentinel_products": 81,
+      "within_15_minutes": 30,
+      "within_1_hour": 111,
+      "within_6_hours": 122
+    },
+    "coordinate_resolved_non_mars_test_locations": 282,
+    "coordinate_resolved_samples": 5950,
+    "coordinate_unresolved_samples": 5581,
+    "countries": 72,
+    "eligible_train_samples_after_clear_and_mars_test_exclusion": 411,
+    "existing_target_matches": {
+      "within_15_minutes": {
+        "hsi_samples": 0,
+        "pairs": 0
+      },
+      "within_1_hour": {
+        "hsi_samples": 1,
+        "pairs": 1
+      },
+      "within_6_hours": {
+        "hsi_samples": 3,
+        "pairs": 3
+      }
+    },
+    "mars_test_overlap_samples_after_25km_check": 5355,
+    "mars_test_overlap_samples_by_exact_identity": 4949,
+    "samples": 11531,
+    "sectors": {
+      "": 4,
+      "Coal": 1311,
+      "Controlled Releases": 49,
+      "Oil and Gas": 8237,
+      "Waste": 1184,
+      "unknown": 746
+    },
+    "unique_location_names": 2463
+  },
+  "pass": true,
+  "protocol": "configs/mars_hyperspectral_transfer_acquisition_protocol.json",
+  "protocol_sha256": "2888577d23c94fd3e8141feafda6b40b20a4fae008b537f15d4542ad9520f28c",
+  "schema_version": 1,
+  "scope": "metadata_only_no_rasters_no_hsi_mask_truth_no_mars_outcomes",
+  "source_revision": "74b3d3132d135fee1761df1dadb7d662a4b5245b"
+}
