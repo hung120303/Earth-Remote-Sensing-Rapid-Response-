@@ -69,8 +69,8 @@ class ManifestRow:
     sample_id: str
     flight: str
     timestamp: str
-    row_offset: int
-    column_offset: int
+    source_row_offset: int
+    source_column_offset: int
     width: int
     height: int
     has_plume: bool
@@ -360,21 +360,29 @@ def parse_manifest_payload(payload: bytes) -> list[ManifestRow]:
             raise StarcopAuditError(f"Invalid STARCOP ID at line {line_number}")
         seen_ids.add(sample_id)
 
-        row_offset = parse_nonnegative_int(raw["window_row_off"], field="window_row_off")
-        column_offset = parse_nonnegative_int(
+        local_row_offset = parse_nonnegative_int(
+            raw["window_row_off"], field="window_row_off"
+        )
+        local_column_offset = parse_nonnegative_int(
             raw["window_col_off"], field="window_col_off"
         )
-        width = parse_nonnegative_int(raw["window_width"], field="window_width")
-        height = parse_nonnegative_int(raw["window_height"], field="window_height")
-        expected = (
-            int(match.group("row")),
-            int(match.group("column")),
-            int(match.group("width")),
-            int(match.group("height")),
+        local_width = parse_nonnegative_int(raw["window_width"], field="window_width")
+        local_height = parse_nonnegative_int(
+            raw["window_height"], field="window_height"
         )
-        observed = (row_offset, column_offset, width, height)
-        if observed != expected:
-            raise StarcopAuditError(f"Window fields do not match ID: {sample_id}")
+        if (local_row_offset, local_column_offset, local_width, local_height) != (
+            0,
+            0,
+            512,
+            512,
+        ):
+            raise StarcopAuditError(
+                f"Cached chip-local window is not 0,0,512,512: {sample_id}"
+            )
+        source_row_offset = int(match.group("row"))
+        source_column_offset = int(match.group("column"))
+        width = int(match.group("width"))
+        height = int(match.group("height"))
         if width != 512 or height != 512:
             raise StarcopAuditError(f"STARCOP chip is not 512x512: {sample_id}")
         has_plume = parse_strict_bool(raw["has_plume"])
@@ -385,8 +393,8 @@ def parse_manifest_payload(payload: bytes) -> list[ManifestRow]:
                 timestamp=_parse_timestamp(
                     match.group("date"), match.group("time"), sample_id=sample_id
                 ),
-                row_offset=row_offset,
-                column_offset=column_offset,
+                source_row_offset=source_row_offset,
+                source_column_offset=source_column_offset,
                 width=width,
                 height=height,
                 has_plume=has_plume,
@@ -441,8 +449,8 @@ def selected_record(row: ManifestRow) -> dict[str, object]:
         "published_split": "train",
         "label_state": "NO_PLUME",
         "has_plume": False,
-        "row_offset": row.row_offset,
-        "column_offset": row.column_offset,
+        "source_row_offset": row.source_row_offset,
+        "source_column_offset": row.source_column_offset,
         "width": row.width,
         "height": row.height,
         "label_member": f"{row.sample_id}/labelbinary.tif",
@@ -535,6 +543,8 @@ def execute_stage_a(session: Any | None = None) -> dict[str, object]:
             "ranking": "(sha256(id UTF-8), id)",
             "qplume_used_for_filtering_or_ranking": False,
             "coordinates_known_during_selection": False,
+            "source_offsets_parsed_from_id": True,
+            "cached_chip_local_window_required": "row=0,column=0,width=512,height=512",
         },
         "security_boundary": {
             "network_executed": True,

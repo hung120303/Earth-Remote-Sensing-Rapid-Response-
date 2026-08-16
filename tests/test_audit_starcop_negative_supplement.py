@@ -33,10 +33,9 @@ def _csv_row(
 ) -> str:
     match = audit.ID_RE.fullmatch(sample_id)
     assert match is not None
-    row = match.group("row") if row_override is None else row_override
+    row = "0" if row_override is None else row_override
     return (
-        f"{sample_id},{has_plume},{match.group('column')},{row},"
-        f"{match.group('width')},{match.group('height')},{qplume}\n"
+        f"{sample_id},{has_plume},0,{row},512,512,{qplume}\n"
     )
 
 
@@ -87,8 +86,8 @@ def test_parser_rejects_duplicate_ids_field_mismatch_and_non_512() -> None:
     with pytest.raises(audit.StarcopAuditError, match="Duplicate STARCOP ID"):
         audit.parse_manifest_payload(duplicate)
 
-    mismatch = _payload([_csv_row(sample_id, row_override="0")])
-    with pytest.raises(audit.StarcopAuditError, match="do not match ID"):
+    mismatch = _payload([_csv_row(sample_id, row_override="512")])
+    with pytest.raises(audit.StarcopAuditError, match="Cached chip-local window"):
         audit.parse_manifest_payload(mismatch)
 
     wrong_shape = _id(width=256, height=512)
@@ -129,6 +128,9 @@ def test_selection_is_deterministic_and_independent_of_qplume() -> None:
     assert [row.sample_id for row in selected_b] == expected
     assert all("qplume" not in audit.selected_record(row) for row in selected_a)
     assert all(audit.selected_record(row)["eligible_for_target_catalog"] is False for row in selected_a)
+    assert selected_a[0].source_row_offset == int(
+        audit.ID_RE.fullmatch(selected_a[0].sample_id).group("row")
+    )
 
 
 def test_stage_a_aggregate_gates_and_per_flight_cap() -> None:
