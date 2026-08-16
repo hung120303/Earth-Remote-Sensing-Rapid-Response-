@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_public_archive_download_before_extraction_image_decoding_or_model_use",
+  "scope": "Integrity, composition, and 25 km geographic-overlap audit of the public Zhao et al. (2025) Sentinel-2 L1C methane-retrieval dataset before any model use.",
+  "sources": {
+    "paper": {
+      "citation": "Zhao et al. (2025), A data-efficient deep transfer learning framework for methane super-emitter detection using high-resolution satellite imagery, Atmospheric Chemistry and Physics 25, 4035-4050",
+      "url": "https://acp.copernicus.org/articles/25/4035/2025/",
+      "doi": "https://doi.org/10.5194/acp-25-4035-2025"
+    },
+    "dataset": {
+      "repository": "Science Data Bank",
+      "record_url": "https://www.scidb.cn/detail?dataSetId=9fddfc604b2c472e90e202afb1561e48",
+      "doi": "https://doi.org/10.57760/sciencedb.15792",
+      "version": "V5",
+      "archive_download_url": "https://china.scidb.cn/download?fileId=83d634df5c2c6370eb287837dc9fe152"
+    }
+  },
+  "files": {
+    "archive": {
+      "path": ".research/zhao_dsan_2025/raw/Methane_Retrieval_Datasets.zip",
+      "expected_bytes": 70398286,
+      "expected_md5": "d56c8336c549f7749e6a9bb86ce7720a",
+      "expected_sha256": "f186e6abe004b29c20301e17b5a7c5ac7c7a0c3040b889ed9b7f6f5e62a2df4a"
+    },
+    "official_table_2": {
+      "path": ".research/zhao_dsan_2025/raw/acp-25-4035-2025-t02.xlsx",
+      "url": "https://acp.copernicus.org/articles/25/4035/2025/acp-25-4035-2025-t02.xlsx",
+      "expected_bytes": 8129,
+      "expected_sha256": "e8756d992a649e4d176d5dd65503aADCEB9505D7A0C95363961FC30920FE9C40"
+    },
+    "official_table_3": {
+      "path": ".research/zhao_dsan_2025/raw/acp-25-4035-2025-t03.xlsx",
+      "url": "https://acp.copernicus.org/articles/25/4035/2025/acp-25-4035-2025-t03.xlsx",
+      "expected_bytes": 7730,
+      "expected_sha256": "80b0c348b46c426923fb3f53f7b953d0f99fbdDED89AC0BA467B818076C48F16"
+    }
+  },
+  "official_table_contract": {
+    "sensor_product": "Sentinel-2 L1C methane retrieval maps",
+    "expected_total_rows": 1627,
+    "expected_plume_containing": 508,
+    "expected_plume_free": 1119,
+    "sites": [
+      {
+        "dataset_index": 1,
+        "emitter": "Compressor station",
+        "field": "Korpeje",
+        "country": "Turkmenistan",
+        "latitude": 38.49393,
+        "longitude": 54.19764,
+        "tile": "T40SBH",
+        "time_span": "2017-03/2023-03",
+        "plume_containing": 109,
+        "plume_free": 133
+      },
+      {
+        "dataset_index": 2,
+        "emitter": "Flare",
+        "field": "Gamyshlja Gunorta",
+        "country": "Turkmenistan",
+        "latitude": 38.33078,
+        "longitude": 54.02832,
+        "tile": "T40SBH",
+        "time_span": "2017-03/2023-03",
+        "plume_containing": 95,
+        "plume_free": 164
+      },
+      {
+        "dataset_index": 3,
+        "emitter": "Flare",
+        "field": "Keymir",
+        "country": "Turkmenistan",
+        "latitude": 37.90825,
+        "longitude": 53.89857,
+        "tile": "T40SBH",
+        "time_span": "2017-03/2023-03",
+        "plume_containing": 66,
+        "plume_free": 186
+      },
+      {
+        "dataset_index": 4,
+        "emitter": "Well-pad device",
+        "field": "Hassi Messaoud",
+        "country": "Algeria",
+        "latitude": 31.6585,
+        "longitude": 5.9053,
+        "tile": "T32SKA",
+        "time_span": "2019-01/2022-12",
+        "plume_containing": 92,
+        "plume_free": 233
+      },
+      {
+        "dataset_index": 5,
+        "emitter": "Pipeline",
+        "field": "Hassi Messaoud",
+        "country": "Algeria",
+        "latitude": 31.778,
+        "longitude": 5.995,
+        "coordinate_note": "Table 2 also reports a second pipeline coordinate at 31.768, 6.000; both coordinates are included in the distance audit.",
+        "alternate_coordinates": [
+          {
+            "latitude": 31.768,
+            "longitude": 6.0
+          }
+        ],
+        "tile": "T32SKA",
+        "time_span": "2019-01/2022-12",
+        "plume_containing": 128,
+        "plume_free": 181
+      },
+      {
+        "dataset_index": 6,
+        "emitter": "Compressor station",
+        "field": "Permian basin",
+        "country": "USA",
+        "latitude": 31.7335,
+        "longitude": -102.0421,
+        "tile": "T13SGR",
+        "time_span": "2018-01/2020-12",
+        "plume_containing": 18,
+        "plume_free": 222
+      }
+    ]
+  },
+  "mars_overlap_contract": {
+    "mars_metadata": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L-paper-source/validated_images_all_20251129.csv",
+    "columns_permitted": [
+      "id_location",
+      "split_name",
+      "lat",
+      "lon"
+    ],
+    "labels_permitted": false,
+    "distance": "great-circle haversine distance between the frozen Zhao coordinates and unique MARS physical-location coordinates",
+    "distance_threshold_km": 25.0,
+    "eligibility": "A Zhao site is eligible for auxiliary model development only if every listed coordinate is strictly farther than 25 km from every MARS physical location in every development and official-test split.",
+    "official_test_policy": "Any site at or within 25 km of a MARS paper-test location is permanently prohibited from training, calibration, model selection, and claimed independent evaluation.",
+    "development_policy": "Any site at or within 25 km of a MARS development location is excluded from auxiliary training for the current folds 3/4 model-selection campaign.",
+    "all_site_policy": "If no site passes the all-MARS boundary, the archive remains research evidence only and contributes zero training examples."
+  },
+  "archive_audit_contract": {
+    "allowed": [
+      "Read the ZIP central directory.",
+      "Verify hashes, byte size, member safety, member counts, class directories, image dimensions, and image modes.",
+      "Decode images only after this protocol is committed and only for integrity/statistical audit.",
+      "Write compact reports; keep archive and extracted images ignored."
+    ],
+    "forbidden": [
+      "Do not fit, tune, calibrate, score, or select any model during the acquisition audit.",
+      "Do not use a Zhao image whose site fails the frozen geographic eligibility rule.",
+      "Do not commit the archive, extracted PNGs, caches, embeddings, or checkpoints.",
+      "Do not claim dense-mask supervision; the public archive contains class-organized retrieval-map PNGs, not pixel masks."
+    ]
+  },
+  "claim_boundary": "This audit can establish integrity, composition, and development eligibility only. It cannot establish model improvement, independent generalization, or superiority to MARS-S2L."
+}
