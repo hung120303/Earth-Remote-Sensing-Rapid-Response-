@@ -768,3 +768,21 @@ weights, ranking, dense masks, opened MethaneS2CM location-test outcomes, MARS
 test outcomes, or other prohibited evidence changed or entered the experiment.
 The machine-readable result is
 `reports/experiments/methanes2cm_v5_1_group_crc_transport.json`.
+
+## 2026-08-16: released-sensitivity rescue is feasible but low precision
+
+The frozen Stanford controlled-release failures motivated a development-only
+complementarity audit on MARS folds 3/4. At independently matched 7.13% FPR,
+Gaussian+DOFA uniquely detects 33 positives and released MARS uniquely detects
+nine; both unique cells contain 220 negatives. The released paper rule identifies
+11 champion-missed positives but also 446 negatives. This rules out an unconditional
+OR while proving that the released model retains sensitivity absent from the current
+champion.
+
+Within that rescue region, frozen model-aligned features separate true from false
+rescues: the largest absolute standardized contrast is 1.384, above the predeclared
+0.25 feasibility floor. All three diagnostic gates pass, authorizing a constrained
+dual-expert pilot that may only raise champion scores when both released and primary
+dense evidence agree. This is folds-3/4 architecture evidence, not external or
+official confirmation. Result:
+`reports/experiments/mars_recall_anchor_diagnostic.json`.

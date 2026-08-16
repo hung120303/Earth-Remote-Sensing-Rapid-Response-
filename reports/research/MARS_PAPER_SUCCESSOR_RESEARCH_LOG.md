@@ -5888,6 +5888,35 @@ The raw workbook, clean event rows, and resolved manifest remain ignored under
 `.research/stanford_controlled_release_2024_2025/`. The tracked audit is
 `reports/acquisition/stanford_large_controlled_release_cohort.json`.
 
+### 2026-08-16: released-detector recall-anchor feasibility established
+
+The Stanford one-shot results exposed a repeated sensitivity failure: released
+MARS detected the only >=1,000 kg CH4/h event at both Casa Grande and Evanston,
+while Gaussian+DOFA and Spatial-Prithvi missed both at scores far below their
+frozen thresholds. A committed, development-only diagnostic therefore tested
+whether the released detector contains complementary sensitivity on the still
+authorized MARS folds 3/4. It did not fit or select a candidate and did not open
+folds 0/1/2, any external outcome, or the official paper cache.
+
+At separately matched 7.13% FPR, Gaussian+DOFA reached AP 0.906525 and recall
+0.961942, while released MARS reached AP 0.871465 and recall 0.946194. The
+champion uniquely recovered 33 positives and the released detector uniquely
+recovered nine; each unique-decision cell also contained 220 negatives. Under
+the released paper rule (`score > 0.5`), the released detector identified 11
+champion-missed positives among 457 rescue-eligible rows. The region is therefore
+low precision but genuinely complementary rather than redundant.
+
+The rescue true positives and false positives are distinguishable by existing
+model-aligned evidence. The strongest standardized contrasts include primary
+area above 0.9 (+1.384), target-channel top-100 mean (-1.201), primary connected
+score (+0.851), primary top-200 mean (+0.841), and primary/released logit-delta
+mean (+0.819). Because these quantities were already extracted without outcome
+access and the maximum absolute contrast exceeds the frozen 0.25 feasibility
+floor, all preregistered diagnostic checks pass. This authorizes a separate,
+constrained dual-expert architecture pilot; it does not authorize a holdout replay
+or a threshold change. The authoritative result is
+`reports/experiments/mars_recall_anchor_diagnostic.json`.
+
 ### 2026-08-03: Casa Grande controlled-release one-shot rejected for superiority
 
 The frozen label-free scorer completed all 169 exact Sentinel-2 L1C pairs before
