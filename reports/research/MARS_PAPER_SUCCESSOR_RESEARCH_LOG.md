@@ -6075,3 +6075,29 @@ scores matched the frozen released-score cache with maximum/mean absolute drift
 0.0000409/0.0000139 and identical paper-rule decisions. Nine focused tests passed.
 The full folds-3/4 extraction was frozen in
 `configs/mars_prior_reference_score_extraction_protocol.json` before execution.
+
+### 2026-08-16: prior-reference temporal architecture rejected before fitting
+
+The full label-free extraction completed all 17,745 folds-3/4 rows. It reproduced
+the original released connected score with maximum/mean absolute differences
+0.001186/0.0000475 and identical `>0.5` paper decisions. The ignored artifacts
+contain six-view scalar evidence (5.23 MB) and 32x32 probability maps (436.10 MB);
+the compact receipt is
+`reports/acquisition/mars_prior_reference_released_scores_folds34.json`.
+
+After a separate protocol and synthetic tests were committed, the already-opened
+folds-3/4 outcomes were joined once. All five outcome-independent aggregations
+were strongly adverse versus the original released view. AP deltas were -0.0951
+(nearest), -0.0633 (median), -0.0728 (top-two mean), -0.0552 (similarity-
+weighted), and -0.1044 (maximum); matched-FPR recall deltas ranged from -0.0617
+to -0.0958. Every fold and Sentinel-2 AP delta was negative, and all five paired
+25 km-group 95% AP intervals were strictly below zero.
+
+Max-over-priors did recover 25 champion-missed positives across 11 groups and
+both folds, but also 3,009 negatives: 0.824% precision, below the frozen 3%
+feasibility floor. Although TP/FP scalar contrasts were large (maximum absolute
+standardized difference 1.398), no fixed aggregation improved AP at all. Both
+independent continuation routes therefore fail. The reference-set temporal
+transformer is retired before fitting; no model, fusion weight, threshold,
+external cohort, or official cache was opened or promoted. Authoritative result:
+`reports/experiments/mars_prior_reference_complementarity_folds34.json`.

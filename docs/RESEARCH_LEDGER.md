@@ -839,3 +839,26 @@ paper-rule decisions. Only if a separately frozen folds-3/4 diagnostic finds
 complementary positive signal will a small permutation-invariant reference-set
 temporal transformer be cross-fitted. This avoids committing to another large
 architecture before the new information source proves useful.
+
+## 2026-08-16: reference-set temporal path rejected at the information gate
+
+The hash-pinned released U-Net completed 17,745 original-plus-prior reference
+sets without outcomes. Original-view parity passed on every row (maximum score
+drift 0.001186, mean 0.0000475, exact paper decisions), so the subsequent
+negative result is not an input-contract artifact.
+
+After a separately committed protocol opened folds-3/4 outcomes, every fixed
+prior-reference aggregation degraded sharply. Similarity weighting was least
+harmful but still changed AP -0.0552 and matched-FPR recall -0.0617; nearest,
+median, top-two, and maximum changed AP by -0.0951/-0.0633/-0.0728/-0.1044.
+All fold/Sentinel-2 effects were negative and all paired 25 km-group AP
+intervals were strictly below zero.
+
+Max-over-priors recovered 25 new champion-missed positives across both folds
+and 11 groups, but raised 3,009 negatives (0.824% precision). No fixed
+aggregation improved AP, so large TP/FP feature contrasts cannot authorize a
+learned verifier under the frozen rule. The temporal set transformer is retired
+before training. This falsifies the hypothesis that selecting multiple visible/
+NIR-matched prior scenes can break the current ranking ceiling through the
+released detector; future work must add genuinely new labeled geography or a
+different observation modality rather than another MARS-only reference head.
