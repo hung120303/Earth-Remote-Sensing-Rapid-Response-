@@ -317,8 +317,6 @@ def parse_central_directory(payload: bytes, expected_entries: int) -> tuple[ZipE
         seen_names.add(name)
         if flags & 0x0001 or flags & 0x0040:
             raise SparseZipError(f"Encrypted ZIP member rejected: {name}")
-        if flags & 0x0008:
-            raise SparseZipError(f"Data-descriptor ZIP member rejected: {name}")
         if compression not in SUPPORTED_METHODS:
             raise SparseZipError(f"Unsupported ZIP compression method: {compression}")
         (
@@ -507,8 +505,8 @@ def fetch_label_member(
         name_length,
         extra_length,
     ) = struct.unpack_from("<4s5H3L2H", fixed, 0)
-    if flags & 0x0009 or flags & 0x0040:
-        raise SparseZipError("Encrypted/data-descriptor local member rejected")
+    if flags & 0x0001 or flags & 0x0040:
+        raise SparseZipError("Encrypted local member rejected")
     variable = reader.read(
         entry.local_header_offset + 30,
         entry.local_header_offset + 29 + name_length + extra_length,
@@ -519,26 +517,55 @@ def fetch_label_member(
     name = _decode_name(raw_name, flags)
     if name != entry.name:
         raise SparseZipError("Local and central member names disagree")
-    (
-        uncompressed_size,
-        compressed_size,
-        _unused_offset,
-        _unused_disk,
-    ) = _zip64_values(
-        extra,
-        uncompressed=uncompressed_size,
-        compressed=compressed_size,
-        local_offset=0,
-        disk_start=0,
-    )
-    if (
-        flags != entry.flags
-        or compression != entry.compression
-        or crc32_value != entry.crc32
-        or compressed_size != entry.compressed_size
-        or uncompressed_size != entry.uncompressed_size
-    ):
+    uses_data_descriptor = bool(flags & 0x0008)
+    if flags != entry.flags or compression != entry.compression:
         raise SparseZipError("Local and central ZIP headers are inconsistent")
+    if uses_data_descriptor:
+        # With general-purpose bit 3 set, the local CRC and sizes are permitted
+        # placeholders. The authoritative central-directory values bound the
+        # byte range, while the reconstructed payload is still checked against
+        # the authoritative size and CRC below.
+        if crc32_value not in {0, entry.crc32}:
+            raise SparseZipError("Data-descriptor local CRC placeholder is invalid")
+        (
+            uncompressed_size,
+            compressed_size,
+            _unused_offset,
+            _unused_disk,
+        ) = _zip64_values(
+            extra,
+            uncompressed=uncompressed_size,
+            compressed=compressed_size,
+            local_offset=0,
+            disk_start=0,
+        )
+        for local_value, central_value, role in (
+            (compressed_size, entry.compressed_size, "compressed size"),
+            (uncompressed_size, entry.uncompressed_size, "uncompressed size"),
+        ):
+            if local_value not in {0, central_value}:
+                raise SparseZipError(
+                    f"Data-descriptor local {role} placeholder is invalid"
+                )
+    else:
+        (
+            uncompressed_size,
+            compressed_size,
+            _unused_offset,
+            _unused_disk,
+        ) = _zip64_values(
+            extra,
+            uncompressed=uncompressed_size,
+            compressed=compressed_size,
+            local_offset=0,
+            disk_start=0,
+        )
+        if (
+            crc32_value != entry.crc32
+            or compressed_size != entry.compressed_size
+            or uncompressed_size != entry.uncompressed_size
+        ):
+            raise SparseZipError("Local and central ZIP headers are inconsistent")
     data_start = entry.local_header_offset + 30 + name_length + extra_length
     if entry.compressed_size <= 0 or data_start + entry.compressed_size > reader.spec.size:
         raise SparseZipError("Selected member data range is invalid")

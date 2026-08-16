@@ -523,6 +523,45 @@ def test_bounded_deflate_rejects_forged_declared_size_zip_bomb() -> None:
         )
 
 
+def test_selected_data_descriptor_uses_central_size_and_crc_safely() -> None:
+    sample_id = _id()
+    member = f"{sample_id}/labelbinary.tif"
+    archive = bytearray(_zip_payload([(member, b"descriptor-fixture")]))
+    initial_reader, _ = _reader(bytes(archive))
+    entry = sparse.read_zip_directory(initial_reader).entries[0]
+    central_offset = archive.find(sparse.CENTRAL_SIGNATURE)
+    assert central_offset >= 0
+
+    # Model a streaming ZIP writer: bit 3 is set in both headers, while the
+    # local CRC/sizes are placeholders and the central record is authoritative.
+    local_flags = struct.unpack_from("<H", archive, entry.local_header_offset + 6)[0]
+    central_flags = struct.unpack_from("<H", archive, central_offset + 8)[0]
+    struct.pack_into("<H", archive, entry.local_header_offset + 6, local_flags | 0x0008)
+    struct.pack_into("<H", archive, central_offset + 8, central_flags | 0x0008)
+    struct.pack_into("<LLL", archive, entry.local_header_offset + 14, 0, 0, 0)
+
+    reader, _ = _reader(bytes(archive))
+    descriptor_entry = sparse.read_zip_directory(reader).entries[0]
+    assert sparse.fetch_label_member(
+        reader,
+        descriptor_entry,
+        sample_id=sample_id,
+        maximum_uncompressed_bytes=1024,
+    ) == b"descriptor-fixture"
+
+    malformed = bytearray(archive)
+    struct.pack_into("<L", malformed, entry.local_header_offset + 18, 0xFFFFFFFF)
+    malformed_reader, _ = _reader(bytes(malformed))
+    malformed_entry = sparse.read_zip_directory(malformed_reader).entries[0]
+    with pytest.raises(sparse.SparseZipError, match="ZIP64 sentinel"):
+        sparse.fetch_label_member(
+            malformed_reader,
+            malformed_entry,
+            sample_id=sample_id,
+            maximum_uncompressed_bytes=1024,
+        )
+
+
 def test_duplicate_and_traversal_central_members_are_rejected() -> None:
     sample_id = _id()
     member = f"{sample_id}/labelbinary.tif"
