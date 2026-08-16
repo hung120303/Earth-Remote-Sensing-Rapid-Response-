@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from tools.acquire_mars_hyperspectral_metadata import safe_output_path
+from tools.acquire_mars_hyperspectral_train_labels import allowed_patterns
 from tools.audit_mars_hyperspectral_transfer import (
     haversine_km,
     parse_datetime,
@@ -91,3 +92,11 @@ def test_catalog_summary_counts_temporal_tiers() -> None:
     assert summary["within_15_minutes"] == 2
     assert summary["within_1_hour"] == 3
     assert summary["unique_sentinel_products"] == 2
+
+
+def test_train_label_patterns_are_exact_and_minimal() -> None:
+    patterns = allowed_patterns({"sample": "EMIT/folder"})
+    assert patterns == [
+        "EMIT/folder/info.json",
+        "EMIT/folder/plumemask.tif",
+    ]
