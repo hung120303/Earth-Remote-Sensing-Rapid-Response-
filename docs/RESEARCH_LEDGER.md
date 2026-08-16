@@ -987,3 +987,28 @@ probable MARS overlap, weak geographic independence, and—in CH4Net's case—an
 uncertain derivative-work license. Controlled-release and atmospheric-baseline
 collections were rejected because they cannot provide 28 distinct satellite
 overpasses or do not establish crop-level column-plume absence.
+
+## 2026-08-16: STARCOP train-manifest gate passes
+
+The exact 1,038,970-byte Zenodo `train.csv` matched its frozen MD5 and contains
+3,425 released train rows: 1,713 no-plume and 1,712 plume. All 256 flightlines
+contain at least one negative. The preregistered outcome-independent rule chose
+1,009 negatives, never more than four per flightline, by the smallest
+`(SHA-256(id), id)` values. All three Stage-A gates pass by wide margins:
+1,713 >= 1,000 negatives, 256 >= 50 negative-bearing flightlines, and an
+observed maximum of four selected rows per flightline.
+
+Two released-schema distinctions were verified against the pinned STARCOP
+generator rather than treated as data errors. The ID records the source-image
+window, while `window_*` columns are reset to `0,0,512,512` after each cached
+chip is materialized. Source windows may be 151x151 for plume examples and one
+edge-padded positive begins at source row -29; all released cached chips remain
+512x512. Every no-plume ID uses a 512x512 source window. These corrections do
+not alter the frozen negative selection or use `qplume`.
+
+No train archive, label mask, imagery product, test manifest, target catalog,
+MARS outcome, or coordinate was accessed. Stage A therefore establishes only
+manifest feasibility and authorizes the already-preregistered sparse Stage-B
+zero-mask georeferencing audit. The compact receipt is
+`reports/acquisition/starcop_negative_supplement_stage_a.json` (SHA-256
+`a80189174bf7bbe795720c0757000733e5d020fc56f4e85b2b4801449d368747`).

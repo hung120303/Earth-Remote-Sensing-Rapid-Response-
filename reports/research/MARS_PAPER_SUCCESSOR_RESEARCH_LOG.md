@@ -6229,3 +6229,29 @@ Turkmenistan-only He et al. and CH4Net datasets are deferred because their many
 rows likely collapse to already represented geography and CH4Net's ND license
 makes downstream training/publication unclear. No fallback catalog or archive
 was queried during this ranking.
+
+### 2026-08-16: STARCOP Stage A passes before archive access
+
+After the guarded auditor and tests were committed, the exact hash-bound
+`train.csv` was downloaded from Zenodo. It contains 3,425 rows split almost
+evenly between 1,713 author-labeled no-plume and 1,712 plume chips. All 256
+flightlines carry negatives. The frozen blind hash rule selected 1,009 negative
+IDs, with an observed maximum of four per flightline. The negative-row,
+negative-flightline, and per-flight cap gates all pass; `qplume`, coordinates,
+geography, and any model output were not used for selection.
+
+The first parse exposed two documented generator semantics. STARCOP's `id`
+retains the original source-window offsets and dimensions, whereas the released
+cached chip's `window_*` columns are reset to 0/0/512/512. Positive source
+windows can be 151x151 and one padded positive has source row -29. The pinned
+official `WindowDataset.cache` code performs this reset, every negative source
+window is 512x512, and every cached row declares a 512x512 local chip. The
+auditor was corrected and recommitted without changing selection or thresholds.
+
+The compact receipt SHA-256 is
+`a80189174bf7bbe795720c0757000733e5d020fc56f4e85b2b4801449d368747`;
+the ignored selected JSONL contains 1,009 rows and SHA-256
+`28589941ad79d1c8cb1baac38923e9c4027950ce70618c83bab99fe357b36d19`.
+No ZIP, label mask, imagery, test content, target catalog, coordinate, or MARS
+outcome was opened. Stage B is now authorized under the existing sparse
+zero-mask protocol, but target-catalog access remains forbidden.
