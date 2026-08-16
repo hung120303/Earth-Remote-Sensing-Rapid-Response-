@@ -80,7 +80,7 @@ def test_boolean_parser_is_strict(value: str) -> None:
     assert audit.parse_strict_bool("false") is False
 
 
-def test_parser_rejects_duplicate_ids_field_mismatch_and_non_512() -> None:
+def test_parser_rejects_duplicate_ids_and_bad_cached_window() -> None:
     sample_id = _id(row=512)
     duplicate = _payload([_csv_row(sample_id), _csv_row(sample_id)])
     with pytest.raises(audit.StarcopAuditError, match="Duplicate STARCOP ID"):
@@ -90,9 +90,14 @@ def test_parser_rejects_duplicate_ids_field_mismatch_and_non_512() -> None:
     with pytest.raises(audit.StarcopAuditError, match="Cached chip-local window"):
         audit.parse_manifest_payload(mismatch)
 
-    wrong_shape = _id(width=256, height=512)
-    with pytest.raises(audit.StarcopAuditError, match="not 512x512"):
-        audit.parse_manifest_payload(_payload([_csv_row(wrong_shape)]))
+    variable_source_window = _id(width=151, height=151)
+    parsed = audit.parse_manifest_payload(_payload([_csv_row(variable_source_window)]))
+    assert parsed[0].source_width == 151
+    assert parsed[0].source_height == 151
+
+    empty_source_window = _id(width=0, height=512)
+    with pytest.raises(audit.StarcopAuditError, match="source window is empty"):
+        audit.parse_manifest_payload(_payload([_csv_row(empty_source_window)]))
 
     invalid_time = _id(flight="ang20200231t120000")
     with pytest.raises(audit.StarcopAuditError, match="Invalid UTC"):

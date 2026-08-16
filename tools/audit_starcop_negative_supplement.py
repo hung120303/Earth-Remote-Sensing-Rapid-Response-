@@ -71,8 +71,8 @@ class ManifestRow:
     timestamp: str
     source_row_offset: int
     source_column_offset: int
-    width: int
-    height: int
+    source_width: int
+    source_height: int
     has_plume: bool
 
     @property
@@ -381,10 +381,10 @@ def parse_manifest_payload(payload: bytes) -> list[ManifestRow]:
             )
         source_row_offset = int(match.group("row"))
         source_column_offset = int(match.group("column"))
-        width = int(match.group("width"))
-        height = int(match.group("height"))
-        if width != 512 or height != 512:
-            raise StarcopAuditError(f"STARCOP chip is not 512x512: {sample_id}")
+        source_width = int(match.group("width"))
+        source_height = int(match.group("height"))
+        if source_width < 1 or source_height < 1:
+            raise StarcopAuditError(f"STARCOP source window is empty: {sample_id}")
         has_plume = parse_strict_bool(raw["has_plume"])
         rows.append(
             ManifestRow(
@@ -395,8 +395,8 @@ def parse_manifest_payload(payload: bytes) -> list[ManifestRow]:
                 ),
                 source_row_offset=source_row_offset,
                 source_column_offset=source_column_offset,
-                width=width,
-                height=height,
+                source_width=source_width,
+                source_height=source_height,
                 has_plume=has_plume,
             )
         )
@@ -451,8 +451,8 @@ def selected_record(row: ManifestRow) -> dict[str, object]:
         "has_plume": False,
         "source_row_offset": row.source_row_offset,
         "source_column_offset": row.source_column_offset,
-        "width": row.width,
-        "height": row.height,
+        "source_width": row.source_width,
+        "source_height": row.source_height,
         "label_member": f"{row.sample_id}/labelbinary.tif",
         "selection_sha256": row.selection_digest,
         "coordinate_resolved": False,
