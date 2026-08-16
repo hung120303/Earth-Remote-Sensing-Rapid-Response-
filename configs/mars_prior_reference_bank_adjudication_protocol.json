@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_initial_feasibility_report_before_any_model_inference_or_outcome_access",
+  "scope": {
+    "purpose": "Post-feasibility engineering adjudication of whether exact-grid filtering plus exact original-pair fallback makes the prior-reference bank sufficiently representative for a separate label-free score extraction.",
+    "folds": [3, 4],
+    "sensor": "Sentinel-2 only; Landsat remains exact champion identity"
+  },
+  "timing_disclosure": {
+    "known_before_freeze": [
+      "The original preregistered audit formally failed its all-rows exact-grid-equivalence gate.",
+      "14,569 of 14,963 Sentinel-2 rows have at least one selected exact-grid reference.",
+      "13,733 Sentinel-2 rows have five selected references.",
+      "112 rows have a same-key strictly prior clear candidate but no exact-grid candidate.",
+      "No label, mask, model score, prediction, external held outcome, or official-test outcome was opened by that audit."
+    ],
+    "interpretation": "These known quantities are engineering coverage facts, not methane outcomes. The original FAIL remains immutable; this document defines a narrower fallback-aware authorization before model inference."
+  },
+  "inputs": {
+    "initial_audit": {
+      "path": "reports/acquisition/mars_prior_reference_bank_folds34.json",
+      "sha256": "e29da2a34d168f49688c4bf598331a8deed8602109ec3f921a1886572600a21a"
+    },
+    "selection_manifest_from_initial_audit": ".research/mars_prior_reference_bank/folds34_selection.jsonl"
+  },
+  "integrity": {
+    "maximum_selected_references": 5,
+    "maximum_recent_pool": 10,
+    "require_exact_manifest_sha256_from_initial_audit": true,
+    "require_exact_safe_manifest_schema": true,
+    "require_unique_sample_ids": true,
+    "require_original_pair_fallback_when_no_reference": true,
+    "landsat_alternate_references_permitted": false,
+    "require_initial_audit_outcome_blind": true
+  },
+  "gates": {
+    "minimum_sentinel_reference_coverage": 0.95,
+    "minimum_five_reference_coverage": 0.90,
+    "maximum_grid_excluded_candidate_fraction": 0.01,
+    "pass_action": "Authorize only a separately preregistered, label-free alternate-reference score extraction on folds 3/4 with exact original-pair fallback.",
+    "failure_action": "Stop the reference-set path before model inference."
+  },
+  "implementation": {
+    "script": {
+      "path": "tools/adjudicate_mars_prior_reference_bank.py",
+      "sha256": "ff9b7105138e22a4661ca26856a7b6db305b79bc1487ac0b5b383bbb4e4082e7"
+    },
+    "tests": {
+      "path": "tests/test_adjudicate_mars_prior_reference_bank.py",
+      "sha256": "300eb0bb2721cc1de3fa7973900a85ff5e63e9fb2a6f4a71ea7bf59159b0ba5b",
+      "result": "7 focused reference-bank and adjudication tests passed before adjudication"
+    }
+  },
+  "outputs": {
+    "json": "reports/acquisition/mars_prior_reference_bank_adjudication.json",
+    "markdown": "reports/acquisition/MARS_PRIOR_REFERENCE_BANK_ADJUDICATION.md"
+  },
+  "invariants": [
+    "The original FAIL result is preserved and never rewritten.",
+    "Only the compact initial audit and its ignored label-free selection manifest are read.",
+    "No label, plume mask, flux, model score, prediction, checkpoint, fold 2, folds 0/1, external held outcome, or official-test outcome is accessed.",
+    "Every alternate reference remains exact-grid by the frozen builder contract; uncovered rows use the original MARS pair exactly.",
+    "Passing is not evidence of methane performance and cannot promote an architecture."
+  ],
+  "claim_boundary": "A pass establishes only that the already-built exact-grid bank is sufficiently representative for a separate label-free inference diagnostic with explicit fallback. It does not establish complementarity, improvement, calibration, generalization, or superiority."
+}
