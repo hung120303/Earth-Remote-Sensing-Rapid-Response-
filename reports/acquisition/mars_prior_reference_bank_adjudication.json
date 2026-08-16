@@ -1,0 +1,85 @@
+{
+  "claim_boundary": "A pass establishes only that the already-built exact-grid bank is sufficiently representative for a separate label-free inference diagnostic with explicit fallback. It does not establish complementarity, improvement, calibration, generalization, or superiority.",
+  "decision": "PASS: authorize a separately frozen, label-free alternate-reference score extraction on folds 3/4 with original-pair fallback.",
+  "gates": {
+    "five_reference_coverage": {
+      "minimum": 0.9,
+      "observed": 0.9177972331751654,
+      "pass": true
+    },
+    "grid_excluded_candidate_fraction": {
+      "maximum": 0.01,
+      "observed": 0.007628908112526395,
+      "pass": true
+    },
+    "outcome_blind": {
+      "pass": true
+    },
+    "reference_coverage": {
+      "minimum": 0.95,
+      "observed": 0.9736683820089554,
+      "pass": true
+    }
+  },
+  "generated_at_utc": "2026-08-16T16:26:44.638096+00:00",
+  "manifest_counts": {
+    "fallback_rows": 3176,
+    "landsat_rows": 2782,
+    "rows": 17745,
+    "sentinel_rows": 14963,
+    "sentinel_rows_with_five_selected_references": 13733,
+    "sentinel_rows_with_selected_reference": 14569
+  },
+  "metrics": {
+    "five_reference_coverage": 0.9177972331751654,
+    "grid_excluded_candidate_fraction": 0.007628908112526395,
+    "grid_excluded_candidate_rows": 112,
+    "reference_coverage": 0.9736683820089554,
+    "sentinel_fallback_fraction": 0.026331617991044578
+  },
+  "original_audit_decision_preserved": "FAIL: do not run alternate-reference model inference.",
+  "outcome_access": {
+    "label_fields_accessed": [],
+    "labels_accessed": false,
+    "model_scores_accessed": false,
+    "plume_masks_accessed": false,
+    "predictions_computed": false,
+    "record_fields_materialized": [
+      "band_order",
+      "crs",
+      "group_id",
+      "height",
+      "percentage_clear",
+      "physical_location_id",
+      "sample_id",
+      "satellite",
+      "sensor_family",
+      "target_datetime",
+      "target_scene_id",
+      "width"
+    ]
+  },
+  "pass": true,
+  "provenance": {
+    "git_commit": "46c64f7e0201fdb3a0d2bf98b954effbba85a138",
+    "initial_audit": {
+      "path": "reports/acquisition/mars_prior_reference_bank_folds34.json",
+      "sha256": "e29da2a34d168f49688c4bf598331a8deed8602109ec3f921a1886572600a21a"
+    },
+    "protocol": {
+      "path": "configs/mars_prior_reference_bank_adjudication_protocol.json",
+      "sha256": "03a4486ab02b223c6b6f5289d914090f513ee014c6c48e4ad675b0cf8d229307"
+    },
+    "script": {
+      "path": "tools/adjudicate_mars_prior_reference_bank.py",
+      "sha256": "ff9b7105138e22a4661ca26856a7b6db305b79bc1487ac0b5b383bbb4e4082e7"
+    },
+    "selection_manifest": {
+      "path": ".research/mars_prior_reference_bank/folds34_selection.jsonl",
+      "sha256": "177613bbc406de59ec7d5d13a80350ad87ce0acd6a741753aea89c4370326f1f",
+      "tracked": false
+    }
+  },
+  "schema_version": 1,
+  "status": "complete_post_feasibility_alignment_adjudication"
+}
