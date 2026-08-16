@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from pathlib import Path
 import hashlib
+from pathlib import Path
 
 import pytest
 
 import tools.audit_jpl_ornl_header_bridge as bridge
 from tools.audit_jpl_cach4_train_headers import parse_envi_header
-
 
 HEADER = """ENVI
 samples = 100
@@ -104,6 +103,27 @@ class _Session:
         self.response = response
 
     def get(self, *_args: object, **_kwargs: object) -> _Response:
+        return self.response
+
+
+class _CmrResponse:
+    def __init__(self, payload: dict[str, object]) -> None:
+        self.payload = payload
+
+    def raise_for_status(self) -> None:
+        return None
+
+    def json(self) -> dict[str, object]:
+        return self.payload
+
+
+class _CmrSession:
+    def __init__(self, payload: dict[str, object]) -> None:
+        self.response = _CmrResponse(payload)
+        self.calls: list[tuple[str, dict[str, object]]] = []
+
+    def get(self, url: str, **kwargs: object) -> _CmrResponse:
+        self.calls.append((url, kwargs))
         return self.response
 
 
@@ -226,6 +246,22 @@ def test_cmr_queries_are_limited_to_explicit_flight_ids_and_no_target_hosts() ->
             "https://catalogue.dataspace.copernicus.eu/sentinel2.tif",
             "ang20200101t120000_rdn_v2x1_img.hdr",
         )
+
+
+def test_stage_a_cmr_preflight_never_requests_header_content() -> None:
+    flight = "ang20200101t120000"
+    session = _CmrSession({"items": [_item(flight)]})
+    receipts, granules = bridge.preflight_header_granules(
+        session=session,  # type: ignore[arg-type]
+        flight_versions={flight: "v2x1"},
+        allowed_versions={flight: "v2x1"},
+        stage="stage_a_cach4_cmr_preflight",
+    )
+    assert len(session.calls) == 1
+    assert session.calls[0][0] == bridge.CMR_ENDPOINT
+    assert receipts[0]["status"] == "resolved_cmr_metadata_only"
+    assert granules[0]["native_id"] == f"{flight}_rdn_v2x1_img.hdr"
+    assert all("path" not in record for record in granules)
 
 
 def test_stage_b_summary_rejects_cach4_rows() -> None:

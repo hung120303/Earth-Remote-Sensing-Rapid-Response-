@@ -17,9 +17,9 @@ import re
 import sys
 import urllib.parse
 from collections import Counter
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
 
 import requests
 from pyproj import Transformer
@@ -28,18 +28,18 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from tools.audit_jpl_cach4_train_headers import (  # noqa: E402
+from tools.audit_jpl_cach4_train_headers import (
     EnviMapInfo,
     flight_timestamp,
     gdal_geotransform,
     parse_envi_header,
 )
-from tools.audit_mars_hyperspectral_transfer import (  # noqa: E402
+from tools.audit_mars_hyperspectral_transfer import (
     FORBIDDEN_MARS_COLUMNS,
     SAFE_MARS_COLUMNS,
     read_mars_observations,
 )
-from tools.filter_jpl_cach4_metadata_eligibility import (  # noqa: E402
+from tools.filter_jpl_cach4_metadata_eligibility import (
     filter_rows,
     load_prior_negative_coordinates,
     normalized_jsonl_sha256,
@@ -47,8 +47,10 @@ from tools.filter_jpl_cach4_metadata_eligibility import (  # noqa: E402
     official_test_locations,
 )
 
-
 EXPECTED_PROTOCOL = Path("configs/mars_jpl_ornl_header_bridge_protocol.json")
+STAGE_A_CMR_PREFLIGHT = Path(
+    ".research/jpl_operational_ghg_supplement/ornl_stage_a_cmr_preflight.json"
+)
 TRAIN_DEFINITION_NAME = "multicampaign_train.csv"
 CMR_ENDPOINT = "https://cmr.earthdata.nasa.gov/search/granules.umm_json"
 COLLECTION_CONCEPT_ID = "C2662359874-ORNL_CLOUD"
@@ -680,6 +682,63 @@ def acquire_flight_headers(
     return receipts, headers
 
 
+def preflight_header_granules(
+    *,
+    session: requests.Session,
+    flight_versions: dict[str, str],
+    allowed_versions: dict[str, str],
+    stage: str,
+) -> tuple[list[dict[str, object]], list[dict[str, object]]]:
+    """Resolve frozen CMR identities without requesting any header content."""
+
+    receipts: list[dict[str, object]] = []
+    granules: list[dict[str, object]] = []
+    for flight in sorted(flight_versions):
+        if allowed_versions.get(flight) != flight_versions[flight]:
+            raise ValueError(f"Flight/version is outside the frozen query plan: {flight}")
+        query_url = cmr_query_url(flight, allowed_versions)
+        try:
+            granule, _ = query_header_granule(
+                session, flight=flight, expected_versions=allowed_versions
+            )
+        except (BridgeError, requests.RequestException, ValueError) as error:
+            receipts.append(
+                {
+                    "stage": stage,
+                    "flight": flight,
+                    "native_id_pattern": native_id_pattern(
+                        flight, allowed_versions
+                    ),
+                    "query_url": query_url,
+                    "status": "unresolved_fail_closed",
+                    "reason": str(error),
+                }
+            )
+            continue
+        record = {
+            "stage": stage,
+            "flight": flight,
+            "native_id": granule.native_id,
+            "concept_id": granule.concept_id,
+            "source_url": granule.url,
+            "declared_bytes": granule.declared_bytes,
+            "source_checksum": granule.checksum,
+            "source_checksum_algorithm": granule.checksum_algorithm,
+        }
+        granules.append(record)
+        receipts.append(
+            {
+                "stage": stage,
+                "flight": flight,
+                "native_id_pattern": native_id_pattern(flight, allowed_versions),
+                "query_url": query_url,
+                "status": "resolved_cmr_metadata_only",
+                "selected": record,
+            }
+        )
+    return receipts, granules
+
+
 def _pixel_vector_lengths(info: EnviMapInfo) -> tuple[float, float]:
     gt = gdal_geotransform(info)
     return math.hypot(gt[1], gt[4]), math.hypot(gt[2], gt[5])
@@ -1238,6 +1297,54 @@ def execute_authenticated_bridge(
     return report
 
 
+def execute_stage_a_cmr_preflight(
+    *, protocol_path: Path, session: requests.Session
+) -> dict[str, object]:
+    """Query only public CMR metadata for the frozen CACH4 anchors."""
+
+    protocol, input_receipts = validate_frozen_inputs(protocol_path)
+    frozen = protocol["frozen_inputs"]
+    anchors = read_anchor_manifest(
+        Path(frozen["cach4_public_header_manifest"]["path"]),
+        expected_count=int(
+            frozen["cach4_public_header_manifest"]["anchor_flightlines"]
+        ),
+    )
+    anchor_versions = {str(record["flight"]): "v2t1" for record in anchors}
+    receipts, granules = preflight_header_granules(
+        session=session,
+        flight_versions=anchor_versions,
+        allowed_versions=anchor_versions,
+        stage="stage_a_cach4_cmr_preflight",
+    )
+    resolved = len(granules)
+    total = len(anchor_versions)
+    gate = protocol["stage_a_cach4_grid_bridge"]
+    minimum = int(gate["minimum_resolved_anchor_flightlines"])
+    minimum_fraction = float(gate["minimum_resolved_anchor_fraction"])
+    report = {
+        "schema_version": 1,
+        "scope": "public_cmr_metadata_only_no_header_or_stage_b_access",
+        "protocol": input_receipts["protocol"],
+        "total_anchor_flightlines": total,
+        "resolved_cmr_granules": resolved,
+        "unresolved_cmr_granules": total - resolved,
+        "resolved_fraction": resolved / total if total else 0.0,
+        "metadata_resolution_gate_would_pass": (
+            resolved >= minimum and resolved / total >= minimum_fraction
+        ),
+        "grid_bridge_pass": False,
+        "grid_bridge_status": "pending_authenticated_header_content",
+        "header_content_accessed": False,
+        "stage_b_covid_permian_queried": False,
+        "target_catalog_queried": False,
+        "granules": granules,
+        "queries": receipts,
+    }
+    write_json(STAGE_A_CMR_PREFLIGHT, report)
+    return report
+
+
 def validation_plan(protocol_path: Path) -> dict[str, object]:
     protocol, receipts = validate_frozen_inputs(protocol_path)
     frozen = protocol["frozen_inputs"]
@@ -1269,10 +1376,16 @@ def validation_plan(protocol_path: Path) -> dict[str, object]:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--protocol", type=Path, default=EXPECTED_PROTOCOL)
-    parser.add_argument(
+    network = parser.add_mutually_exclusive_group()
+    network.add_argument(
         "--execute-authenticated-network",
         action="store_true",
         help="Explicitly query CMR and authenticated ORNL header URLs.",
+    )
+    network.add_argument(
+        "--execute-stage-a-cmr-preflight",
+        action="store_true",
+        help="Query public CMR metadata only for frozen CACH4 anchor IDs.",
     )
     return parser
 
@@ -1281,6 +1394,11 @@ def main() -> None:
     args = build_parser().parse_args()
     if args.execute_authenticated_network:
         report = execute_authenticated_bridge(
+            protocol_path=args.protocol,
+            session=requests.Session(),
+        )
+    elif args.execute_stage_a_cmr_preflight:
+        report = execute_stage_a_cmr_preflight(
             protocol_path=args.protocol,
             session=requests.Session(),
         )
