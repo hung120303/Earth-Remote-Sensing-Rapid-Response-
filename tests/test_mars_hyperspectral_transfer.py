@@ -193,6 +193,17 @@ def test_stage_b_groups_crops_from_the_same_hsi_granule() -> None:
     assert len(groups) == 1
     assert [point.sample_id for point in groups[0].points] == ["a", "b"]
 
+    many_records = [
+        {
+            **records[0],
+            "sample_id": f"sample_{index:02d}",
+            "longitude": 2.0 + index / 100,
+        }
+        for index in range(21)
+    ]
+    chunked = build_query_groups(many_records)
+    assert [len(group.points) for group in chunked] == [20, 1]
+
 
 def test_stage_b_bbox_handles_antimeridian() -> None:
     assert point_in_bbox(179.5, 0.0, [179.0, -1.0, -179.0, 1.0])

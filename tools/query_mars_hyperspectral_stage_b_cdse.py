@@ -19,6 +19,10 @@ from tools.audit_mars_hyperspectral_transfer import parse_datetime
 from tools.query_mars_hyperspectral_cdse import STAC_ENDPOINT
 
 
+MAX_POINTS_PER_QUERY = 20
+STAC_LIMIT = 100
+
+
 @dataclass(frozen=True)
 class SamplePoint:
     sample_id: str
@@ -53,6 +57,14 @@ def read_jsonl(path: Path) -> list[dict[str, object]]:
     ]
 
 
+def jsonl_payload(records: list[dict[str, object]]) -> str:
+    return "".join(json.dumps(record, sort_keys=True) + "\n" for record in records)
+
+
+def jsonl_sha256(records: list[dict[str, object]]) -> str:
+    return hashlib.sha256(jsonl_payload(records).encode("utf-8")).hexdigest()
+
+
 def build_query_groups(records: list[dict[str, object]]) -> list[CatalogGroup]:
     grouped: dict[tuple[str, str, str], list[SamplePoint]] = defaultdict(list)
     for record in records:
@@ -72,20 +84,22 @@ def build_query_groups(records: list[dict[str, object]]) -> list[CatalogGroup]:
         )
     result: list[CatalogGroup] = []
     for (sensor, tile, timestamp), points in sorted(grouped.items()):
-        ordered = tuple(sorted(points, key=lambda value: value.sample_id))
-        identity_payload = "\0".join(
-            [sensor, tile, timestamp, *(point.sample_id for point in ordered)]
-        )
-        identity = hashlib.sha256(identity_payload.encode("utf-8")).hexdigest()[:20]
-        result.append(
-            CatalogGroup(
-                group_id=f"hsi_{identity}",
-                sensor=sensor,
-                hsi_tile=tile,
-                timestamp_iso=timestamp,
-                points=ordered,
+        ordered = sorted(points, key=lambda value: value.sample_id)
+        for start in range(0, len(ordered), MAX_POINTS_PER_QUERY):
+            chunk = tuple(ordered[start : start + MAX_POINTS_PER_QUERY])
+            identity_payload = "\0".join(
+                [sensor, tile, timestamp, *(point.sample_id for point in chunk)]
             )
-        )
+            identity = hashlib.sha256(identity_payload.encode("utf-8")).hexdigest()[:20]
+            result.append(
+                CatalogGroup(
+                    group_id=f"hsi_{identity}",
+                    sensor=sensor,
+                    hsi_tile=tile,
+                    timestamp_iso=timestamp,
+                    points=chunk,
+                )
+            )
     return result
 
 
@@ -121,7 +135,7 @@ def query_cdse_group(
         "collections": ["sentinel-2-l1c"],
         "intersects": geometry,
         "datetime": f"{start}/{end}",
-        "limit": 100,
+        "limit": STAC_LIMIT,
         "fields": {
             "include": [
                 "id",
@@ -148,6 +162,10 @@ def query_cdse_group(
         try:
             with urllib.request.urlopen(request, timeout=90) as response:
                 result = json.loads(response.read().decode("utf-8"))
+            if len(result.get("features", [])) >= STAC_LIMIT:
+                raise RuntimeError(
+                    f"CDSE result reached the {STAC_LIMIT}-item ceiling: {group.group_id}"
+                )
             products: list[dict[str, object]] = []
             for feature in result.get("features", []):
                 properties = feature.get("properties", {})
@@ -293,6 +311,7 @@ def summarize_stage_b(
     query_group_count: int,
     protocol_path: Path,
     mask_catalog_path: Path,
+    query_catalog_path: Path,
     output_pairs_path: Path,
 ) -> tuple[list[dict[str, object]], dict[str, object]]:
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
@@ -364,6 +383,11 @@ def summarize_stage_b(
         "decision": "PASS" if all(gates.values()) else "FAIL",
         "scope": "train_mask_truth_and_public_target_catalog_metadata_only",
         "source_revision": protocol["source"]["revision"],
+        "target_catalog": {
+            "endpoint": STAC_ENDPOINT,
+            "collection": "sentinel-2-l1c",
+            "scope": "metadata_only_no_target_assets",
+        },
         "metrics": metrics,
         "gates": gates,
         "pass": all(gates.values()),
@@ -380,6 +404,12 @@ def summarize_stage_b(
         "ignored_pair_catalog": {
             "path": output_pairs_path.as_posix(),
             "pairs": len(pairs),
+            "sha256": jsonl_sha256(pairs),
+        },
+        "ignored_query_catalog": {
+            "path": query_catalog_path.as_posix(),
+            "groups": len(query_records),
+            "sha256": jsonl_sha256(query_records),
         },
         "claim_boundary": (
             "PASS establishes enough leakage-safe catalog candidates to preregister "
@@ -484,22 +514,17 @@ def main() -> None:
         workers=args.workers,
         request_delay_seconds=args.request_delay_seconds,
     )
-    args.output_jsonl.write_text(
-        "".join(json.dumps(record, sort_keys=True) + "\n" for record in query_records),
-        encoding="utf-8",
-    )
+    args.output_jsonl.write_text(jsonl_payload(query_records), encoding="utf-8")
     pairs, report = summarize_stage_b(
         mask_records=mask_records,
         query_records=query_records,
         query_group_count=len(groups),
         protocol_path=args.protocol,
         mask_catalog_path=args.mask_catalog,
+        query_catalog_path=args.output_jsonl,
         output_pairs_path=args.output_pairs,
     )
-    args.output_pairs.write_text(
-        "".join(json.dumps(pair, sort_keys=True) + "\n" for pair in pairs),
-        encoding="utf-8",
-    )
+    args.output_pairs.write_text(jsonl_payload(pairs), encoding="utf-8")
     args.output_report.parent.mkdir(parents=True, exist_ok=True)
     args.output_report.write_text(
         json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"

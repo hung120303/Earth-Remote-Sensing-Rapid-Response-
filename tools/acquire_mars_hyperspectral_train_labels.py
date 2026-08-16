@@ -165,6 +165,25 @@ def acquire(
         for future in as_completed(futures):
             if not future.result():
                 missing_from_repository.append(futures[future])
+    return finalize_manifest(
+        metadata_root=metadata_root,
+        output_dir=output_dir,
+        repository=repository,
+        revision=revision,
+        missing_from_repository=missing_from_repository,
+    )
+
+
+def finalize_manifest(
+    *,
+    metadata_root: Path,
+    output_dir: Path,
+    repository: str,
+    revision: str,
+    missing_from_repository: list[str] | None = None,
+) -> dict[str, object]:
+    train_folders = read_train_folders(metadata_root)
+    patterns = allowed_patterns(train_folders)
     validation = validate_download(output_dir=output_dir, expected_patterns=patterns)
     if validation["missing_mask_files"]:
         raise RuntimeError(
@@ -178,7 +197,7 @@ def acquire(
         "license": "CC-BY-NC-SA-4.0",
         "scope": "train_split_info_and_authoritative_masks_only",
         "train_samples": len(train_folders),
-        "missing_from_repository": sorted(missing_from_repository),
+        "missing_from_repository": sorted(missing_from_repository or []),
         **validation,
     }
     (output_dir / "train_label_manifest.json").write_text(
@@ -202,6 +221,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--repository", default=DEFAULT_REPOSITORY)
     parser.add_argument("--revision", default=DEFAULT_REVISION)
     parser.add_argument("--max-workers", type=int, default=16)
+    parser.add_argument(
+        "--validate-only",
+        action="store_true",
+        help="Skip network access and finalize the manifest from existing files.",
+    )
     return parser
 
 
@@ -209,13 +233,21 @@ def main() -> None:
     args = build_parser().parse_args()
     if args.max_workers < 1 or args.max_workers > 32:
         raise ValueError("max-workers must be in [1, 32]")
-    report = acquire(
-        metadata_root=args.metadata_root,
-        output_dir=args.output_dir,
-        repository=args.repository,
-        revision=args.revision,
-        max_workers=args.max_workers,
-    )
+    if args.validate_only:
+        report = finalize_manifest(
+            metadata_root=args.metadata_root,
+            output_dir=args.output_dir,
+            repository=args.repository,
+            revision=args.revision,
+        )
+    else:
+        report = acquire(
+            metadata_root=args.metadata_root,
+            output_dir=args.output_dir,
+            repository=args.repository,
+            revision=args.revision,
+            max_workers=args.max_workers,
+        )
     summary = {key: value for key, value in report.items() if key != "sha256_by_path"}
     print(json.dumps(summary, indent=2, sort_keys=True))
 
