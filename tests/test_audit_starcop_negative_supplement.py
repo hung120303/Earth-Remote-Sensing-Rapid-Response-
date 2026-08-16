@@ -451,7 +451,7 @@ def test_archive_urls_and_ranges_fail_closed_and_failed_attempts_keep_budget() -
 
 def test_zip_member_allowlist_crc_decompression_and_local_header_checks() -> None:
     sample_id = _id()
-    member = f"{sample_id}/labelbinary.tif"
+    member = f"STARCOP_train_easy/{sample_id}/labelbinary.tif"
     payload = _zip_payload([(member, b"zero-mask-fixture")])
     reader, _session = _reader(payload)
     directory = sparse.read_zip_directory(reader)
@@ -505,7 +505,7 @@ def test_zip_member_allowlist_crc_decompression_and_local_header_checks() -> Non
 
 def test_bounded_deflate_rejects_forged_declared_size_zip_bomb() -> None:
     sample_id = _id()
-    member = f"{sample_id}/labelbinary.tif"
+    member = f"STARCOP_train_easy/{sample_id}/labelbinary.tif"
     archive = bytearray(_zip_payload([(member, b"0" * 4096)]))
     reader, _ = _reader(bytes(archive))
     entry = sparse.read_zip_directory(reader).entries[0]
@@ -525,7 +525,7 @@ def test_bounded_deflate_rejects_forged_declared_size_zip_bomb() -> None:
 
 def test_selected_data_descriptor_uses_central_size_and_crc_safely() -> None:
     sample_id = _id()
-    member = f"{sample_id}/labelbinary.tif"
+    member = f"STARCOP_train_easy/{sample_id}/labelbinary.tif"
     archive = bytearray(_zip_payload([(member, b"descriptor-fixture")]))
     initial_reader, _ = _reader(bytes(archive))
     entry = sparse.read_zip_directory(initial_reader).entries[0]
@@ -564,7 +564,7 @@ def test_selected_data_descriptor_uses_central_size_and_crc_safely() -> None:
 
 def test_duplicate_and_traversal_central_members_are_rejected() -> None:
     sample_id = _id()
-    member = f"{sample_id}/labelbinary.tif"
+    member = f"STARCOP_train_easy/{sample_id}/labelbinary.tif"
     with pytest.warns(UserWarning):
         duplicate = _zip_payload([(member, b"a"), (member, b"b")])
     duplicate_reader, _ = _reader(duplicate)
@@ -702,7 +702,7 @@ def _geotiff(*, value: int = 0, crs: str = "EPSG:32611") -> bytes:
 
 def test_zero_mask_georeferencing_and_spatial_filter_components() -> None:
     sample_id = _id()
-    member = f"{sample_id}/labelbinary.tif"
+    member = f"STARCOP_train_easy/{sample_id}/labelbinary.tif"
     decoded = audit.decode_zero_mask(
         _geotiff(),
         sample_id=sample_id,

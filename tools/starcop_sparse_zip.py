@@ -448,25 +448,39 @@ def resolve_selected_members(
 ) -> dict[str, tuple[str, ZipEntry]]:
     if len(selected_ids) != len(set(selected_ids)):
         raise SparseZipError("Selected STARCOP IDs are not unique")
-    wanted = {sample_id: f"{sample_id}/labelbinary.tif" for sample_id in selected_ids}
-    by_member: dict[str, list[tuple[str, ZipEntry]]] = {name: [] for name in wanted.values()}
+    matches: dict[str, list[tuple[str, ZipEntry]]] = {
+        sample_id: [] for sample_id in selected_ids
+    }
     for archive_name, directory in directories.items():
+        if not archive_name.endswith(".zip"):
+            raise SparseZipError("Frozen STARCOP archive name lacks .zip")
+        archive_root = archive_name.removesuffix(".zip")
+        wanted = {
+            f"{archive_root}/{sample_id}/labelbinary.tif": sample_id
+            for sample_id in selected_ids
+        }
         for entry in directory.entries:
-            if entry.name in by_member:
-                by_member[entry.name].append((archive_name, entry))
+            sample_id = wanted.get(entry.name)
+            if sample_id is not None:
+                matches[sample_id].append((archive_name, entry))
     result: dict[str, tuple[str, ZipEntry]] = {}
-    for sample_id, member_name in wanted.items():
-        matches = by_member[member_name]
-        if len(matches) != 1:
+    for sample_id, member_matches in matches.items():
+        if len(member_matches) != 1:
             raise SparseZipError(
-                f"Selected label member must occur exactly once: {member_name} ({len(matches)})"
+                "Selected logical label member must occur exactly once below an exact "
+                f"archive root: {sample_id}/labelbinary.tif ({len(member_matches)})"
             )
-        result[sample_id] = matches[0]
+        result[sample_id] = member_matches[0]
     return result
 
 
-def _validate_expected_member(sample_id: str, member_name: str) -> None:
-    if member_name != f"{sample_id}/labelbinary.tif":
+def _validate_expected_member(
+    sample_id: str, archive_name: str, member_name: str
+) -> None:
+    archive_root = archive_name.removesuffix(".zip")
+    if archive_root == archive_name:
+        raise SparseZipError("Frozen STARCOP archive name lacks .zip")
+    if member_name != f"{archive_root}/{sample_id}/labelbinary.tif":
         raise SparseZipError("Only exact selected {id}/labelbinary.tif members are allowed")
     if "/" in sample_id or "\\" in sample_id or sample_id in {"", ".", ".."}:
         raise SparseZipError("Unsafe selected sample ID")
@@ -479,7 +493,7 @@ def fetch_label_member(
     sample_id: str,
     maximum_uncompressed_bytes: int,
 ) -> bytes:
-    _validate_expected_member(sample_id, entry.name)
+    _validate_expected_member(sample_id, reader.spec.name, entry.name)
     if (
         maximum_uncompressed_bytes < 1
         or entry.uncompressed_size > maximum_uncompressed_bytes
