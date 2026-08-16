@@ -17,6 +17,7 @@ from mars_selective_proposal_transformer import SelectiveProposalTransformer  # 
 from train_mars_selective_proposal_transformer import (  # noqa: E402
     balanced_cell_weights,
     candidate_scores,
+    seed_everything,
 )
 
 
@@ -58,3 +59,8 @@ def test_candidate_scores_only_raise_routed_rows() -> None:
     np.testing.assert_array_equal(route, [True, False, False])
     np.testing.assert_allclose(candidate, [0.45, 0.3, 0.1])
     assert np.all(candidate >= champion)
+
+
+def test_seed_configuration_requires_deterministic_algorithms() -> None:
+    seed_everything(17)
+    assert torch.are_deterministic_algorithms_enabled()
