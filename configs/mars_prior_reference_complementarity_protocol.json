@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_synthetic_tests_before_folds34_outcome_opening",
+  "scope": "Frozen folds-3/4 diagnostic of whether outcome-blind prior-reference views add complementary released-model signal before any reference-set model is fitted.",
+  "implementation": {
+    "script": {
+      "path": "tools/analyze_mars_prior_reference_complementarity.py",
+      "sha256": "dabde15b143d4e5b8d63332836251c74c4ac33a55c49cfc47f0b5985858f5463"
+    },
+    "tests": {
+      "path": "tests/test_analyze_mars_prior_reference_complementarity.py",
+      "sha256": "9ec8c6cb78a9c2771600a431269fa9a06382bd5c36b0dbda032e1c28a7fdc77c",
+      "result": "3 synthetic-only aggregation, feature-summary, and rescue-accounting tests passed before real outcome opening"
+    },
+    "code_dependencies": [
+      {
+        "path": "tools/train_mars_scene_ranker.py",
+        "sha256": "25f6cedc022962935e7e6b12a67cada1f662b316663217e4709249e776068baf"
+      },
+      {
+        "path": "tools/train_mars_oof_scene_ensemble_v2.py",
+        "sha256": "0ea9318c13c317db73e09fbeba396a3726940d2e1af5910373b373a1e2f3698d"
+      }
+    ]
+  },
+  "inputs": {
+    "prior_reference_scores": {
+      "path": "outputs/mars_prior_reference_released_scores_folds34.npz",
+      "sha256": "aae3afebe9dabbaf94ae51653cba21d343aab00928be08d9d8a5bc7bf4bdfb56",
+      "outcomes": false
+    },
+    "prior_reference_receipt": {
+      "path": "reports/acquisition/mars_prior_reference_released_scores_folds34.json",
+      "sha256": "60deee81c12120fde6fbb49a3835cb904ed8dffd1769e0c2878df65fbcbf7e4a",
+      "outcomes": false
+    },
+    "champion_scores": {
+      "path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz",
+      "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424",
+      "outcomes": "previously authorized folds 3/4 labels, groups, sensors, and frozen Gaussian+DOFA champion scores"
+    },
+    "champion_receipt": {
+      "path": "reports/experiments/mars_dofa_gaussian_champion_cache.json",
+      "sha256": "11132fc140769e68dcbf743cfd0980617a92ae97ed22c0c973a2130528c005f7"
+    }
+  },
+  "cohort": {
+    "folds": [3, 4],
+    "rows": 17745,
+    "group_unit": "frozen 25 km physical connected component",
+    "target_false_positive_rate": 0.0713,
+    "landsat_policy": "All aggregations remain exact original released-view identities because no alternate Landsat reference was selected."
+  },
+  "aggregations": {
+    "fixed": [
+      "nearest",
+      "median",
+      "top2_mean",
+      "similarity_weighted",
+      "maximum"
+    ],
+    "nearest": "first outcome-blind visible/NIR-distance-selected prior reference",
+    "median": "median connected score across valid prior references",
+    "top2_mean": "mean of the two highest valid prior-reference scores, or the single score when only one exists",
+    "similarity_weighted": "softmax(-visible/NIR descriptor distance / 0.02) weighted score",
+    "similarity_temperature": 0.02,
+    "maximum": "maximum connected score over valid prior references; reported as the any-prior paper-rule route as well",
+    "fallback": "exact original released-view score when no prior reference exists",
+    "selection_rule": "No aggregation is promoted here. A fixed aggregation is called signal-positive only if all frozen gates pass; otherwise the max route can authorize a learned set model only through the separate separability gates."
+  },
+  "feature_contrast": {
+    "inputs": "per-reference scalar evidence summarized by max, mean, standard deviation, max-minus-original, selected-reference count, and descriptor-distance summaries",
+    "maximum_reported_features": 20,
+    "role": "feasibility evidence for a future cross-fitted set model, never a fitted decision rule"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "seed": 2026081601,
+    "confidence": 0.95,
+    "unit": "physical 25 km group",
+    "pairing": "same rows and groups for original-reference and fixed-aggregation released scores"
+  },
+  "gates": {
+    "released_paper_threshold": 0.5,
+    "minimum_fixed_ap_delta": 0.002,
+    "fixed_matched_fpr_recall_delta_minimum": 0.0,
+    "fixed_each_fold_ap_delta_minimum": 0.0,
+    "fixed_each_sensor_ap_delta_minimum": 0.0,
+    "fixed_paired_group_ap_lower_strictly_positive": true,
+    "minimum_new_positive_rescues": 5,
+    "minimum_route_precision": 0.03,
+    "minimum_positive_groups": 3,
+    "minimum_positive_rescues_per_fold": 1,
+    "minimum_absolute_feature_contrast": 0.25,
+    "some_fixed_aggregation_ap_delta_must_be_positive": true,
+    "pass_action": "Preregister and cross-fit a small permutation-invariant reference-set temporal model on folds 3/4; no aggregation or score is promoted by this diagnostic.",
+    "failure_action": "Retire the prior-reference architecture before model fitting."
+  },
+  "future_architecture_if_authorized": {
+    "input": "six view tokens: distinguished original plus five masked prior-reference tokens, each formed from frozen scalar evidence, 32x32 mean/max probability maps, descriptor distance, and missingness",
+    "family": "shared small convolutional view encoder plus a two-layer permutation-invariant set transformer over prior-reference tokens",
+    "evaluation": "strict fold-3/fold-4 cross-fitting, multiple fixed seeds, Gaussian+DOFA champion identity protection, paired 25 km bootstrap",
+    "not_authorized_here": [
+      "training",
+      "fusion-strength selection",
+      "threshold selection",
+      "fold 2 or folds 0/1",
+      "external or official replay"
+    ]
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_prior_reference_complementarity_folds34.json",
+    "markdown": "reports/experiments/MARS_PRIOR_REFERENCE_COMPLEMENTARITY_FOLDS34.md"
+  },
+  "invariants": [
+    "The prior-reference pixels, selection order, released-model evidence, and scalar features were frozen without outcomes.",
+    "This diagnostic opens only already-authorized folds 3/4 labels/groups/sensors and frozen champion scores.",
+    "No model is fitted, no score is promoted, and fixed aggregation outcomes cannot be used to alter the reference selector.",
+    "Fold 2, folds 0/1, all external outcomes, and official paper outcomes remain unavailable.",
+    "All fixed aggregations, gates, bootstrap seeds, and the future-architecture boundary are committed before this diagnostic runs."
+  ],
+  "claim_boundary": "A pass establishes only that the new reference observations contain sufficient complementary development signal to justify a separately preregistered cross-fitted set model. It is not model improvement, confirmation, calibration, generalization, or superiority evidence."
+}
