@@ -79,7 +79,12 @@ def eligible_queries(
     ]
 
 
-def query_cdse(query: CatalogQuery, *, retries: int = 4) -> dict[str, object]:
+def query_cdse(
+    query: CatalogQuery,
+    *,
+    retries: int = 7,
+    request_delay_seconds: float = 0.0,
+) -> dict[str, object]:
     center = parse_datetime(query.timestamp_iso).astimezone(timezone.utc)
     start = (center - timedelta(hours=6)).isoformat().replace("+00:00", "Z")
     end = (center + timedelta(hours=6)).isoformat().replace("+00:00", "Z")
@@ -113,6 +118,8 @@ def query_cdse(query: CatalogQuery, *, retries: int = 4) -> dict[str, object]:
         },
     )
     for attempt in range(retries):
+        if request_delay_seconds:
+            time.sleep(request_delay_seconds)
         try:
             with urllib.request.urlopen(request, timeout=90) as response:
                 result = json.loads(response.read().decode("utf-8"))
@@ -146,16 +153,54 @@ def query_cdse(query: CatalogQuery, *, retries: int = 4) -> dict[str, object]:
                 raise RuntimeError(
                     f"CDSE query failed after {retries} attempts for {query.sample_ids[0]}"
                 ) from error
-            time.sleep(2**attempt)
+            retry_after = 0.0
+            if isinstance(error, urllib.error.HTTPError) and error.code == 429:
+                try:
+                    retry_after = float(error.headers.get("Retry-After", "0"))
+                except (TypeError, ValueError):
+                    retry_after = 0.0
+            time.sleep(max(retry_after, min(60.0, 5.0 * (2**attempt))))
     raise AssertionError("unreachable")
 
 
-def run_queries(queries: list[CatalogQuery], *, workers: int) -> list[dict[str, object]]:
-    records: list[dict[str, object]] = []
+def read_records(path: Path) -> list[dict[str, object]]:
+    if not path.exists():
+        return []
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def run_queries(
+    queries: list[CatalogQuery],
+    *,
+    workers: int,
+    checkpoint_path: Path,
+    request_delay_seconds: float,
+) -> list[dict[str, object]]:
+    records = read_records(checkpoint_path)
+    completed = {
+        tuple(record["sample_ids"])
+        for record in records
+    }
+    pending = [query for query in queries if query.sample_ids not in completed]
+    checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(max_workers=workers) as executor:
-        futures = {executor.submit(query_cdse, query): query for query in queries}
+        futures = {
+            executor.submit(
+                query_cdse,
+                query,
+                request_delay_seconds=request_delay_seconds,
+            ): query
+            for query in pending
+        }
         for future in as_completed(futures):
-            records.append(future.result())
+            record = future.result()
+            records.append(record)
+            with checkpoint_path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(record, sort_keys=True) + "\n")
     records.sort(key=lambda value: value["sample_ids"][0])
     return records
 
@@ -220,7 +265,15 @@ def build_parser() -> argparse.ArgumentParser:
             ".research/mars_hyperspectral_transfer/cdse_s2_l1c_summary.json"
         ),
     )
-    parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument("--workers", type=int, default=1)
+    parser.add_argument("--request-delay-seconds", type=float, default=0.75)
+    parser.add_argument(
+        "--checkpoint",
+        type=Path,
+        default=Path(
+            ".research/mars_hyperspectral_transfer/cdse_s2_l1c_candidates.partial.jsonl"
+        ),
+    )
     return parser
 
 
@@ -233,7 +286,12 @@ def main() -> None:
         mars_manifest=args.mars_manifest,
         protocol_path=args.protocol,
     )
-    records = run_queries(queries, workers=args.workers)
+    records = run_queries(
+        queries,
+        workers=args.workers,
+        checkpoint_path=args.checkpoint,
+        request_delay_seconds=args.request_delay_seconds,
+    )
     args.output_jsonl.parent.mkdir(parents=True, exist_ok=True)
     args.output_jsonl.write_text(
         "".join(json.dumps(record, sort_keys=True) + "\n" for record in records),
