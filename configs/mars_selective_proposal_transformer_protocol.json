@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_selective_proposal_transformer_training",
+  "scope": "two-fold, two-seed selective proposal-verifier transformer on authorized MARS folds 3/4",
+  "hypothesis": "A transformer trained only on released-positive proposal scenes can learn localized plume morphology and physics without the site/context suppression that caused the current champion to miss transferable released-model positives.",
+  "architecture": {
+    "input": "9x64x64 frozen spatial maps: released probability mean/max, centered MBMP, B11/B12 differences and normalized differences, cloud fraction, observable fraction",
+    "patch_size": 4,
+    "dimension": 64,
+    "layers": 2,
+    "heads": 4,
+    "dropout": 0.1,
+    "pooling": "learned token attention plus released-proposal logit bias, global mean, and global maximum",
+    "sensor_embedding": true,
+    "training_population": "released_connected_score > 0.5 in the fitting fold",
+    "deployment_route": "released_connected_score > 0.5 and Gaussian+DOFA champion score < 0.25",
+    "composition": "max(champion, rescue_weight * mean-seed verifier probability) inside route; champion unchanged elsewhere",
+    "rescue_weights": [0.3333333333333333, 0.5],
+    "candidate_count": 2
+  },
+  "training": {
+    "crossfit": {"held_3": "fit_4", "held_4": "fit_3"},
+    "seeds": [20260816, 20260817],
+    "epochs": 12,
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "pairwise_loss_weight": 0.2,
+    "sampling": "equal total mass by label, then equal mass by 25 km group x label x sensor cell",
+    "augmentation": "shared random horizontal/vertical flips and 90-degree rotation",
+    "endpoint_aggregation": "equal mean of verifier logits over the two seeds"
+  },
+  "inputs": {
+    "spatial_images": {
+      "path": "outputs/mars_spatial_scene_inputs_all_folds.npy",
+      "sha256": "6530fa2d07d94bd57ba1ac757039dedd18745227e7a476fb0d69f78f996134a5"
+    },
+    "spatial_metadata": {
+      "path": "outputs/mars_spatial_scene_inputs_all_folds_metadata.npz",
+      "sha256": "0160ed93371396a487b819dd170a682f55756d285f0ba94d0f0d093ba51a8d01"
+    },
+    "champion_scores": {
+      "path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz",
+      "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424"
+    },
+    "scene_features": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"
+    },
+    "deterministic_rescue_result": {
+      "path": "reports/experiments/mars_dual_teacher_rescue_folds34.json",
+      "sha256": "e601b339c57841cdb6ecad4b1cfe0c5261494eee555f4f801ce78e9e1238303a"
+    }
+  },
+  "cohort": {
+    "folds": [3, 4],
+    "rows": 17745,
+    "groups": 250,
+    "target_false_positive_rate": 0.0713
+  },
+  "promotion_gates": {
+    "minimum_pooled_ap_delta": 0.005,
+    "strictly_positive_pooled_matched_fpr_recall_delta": true,
+    "minimum_each_fold_ap_delta": 0.0,
+    "minimum_each_fold_recall_delta": 0.0,
+    "minimum_each_sensor_ap_delta": 0.0,
+    "paired_group_bootstrap_replicates": 10000,
+    "paired_group_bootstrap_seed": 20260818,
+    "paired_ap_lower_bound_must_be_positive": true,
+    "both_seeds_must_finish_finite": true
+  },
+  "execution": {
+    "smoke_required": true,
+    "smoke_output": "reports/experiments/mars_selective_proposal_transformer_smoke.json",
+    "full_state_output": "outputs/mars_selective_proposal_transformer_folds34_states.pt",
+    "full_score_output": "outputs/mars_selective_proposal_transformer_folds34_scores.npz",
+    "bulk_outputs_tracked": false
+  },
+  "holdout_boundary": {
+    "folds_0_1_2": "prohibited",
+    "official_mars": "prohibited during this pilot",
+    "external_cohorts": "prohibited during this pilot",
+    "dense_masks": "unchanged; this is a scene-only rescue viability test"
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_selective_proposal_transformer_folds34.json",
+    "markdown": "reports/experiments/MARS_SELECTIVE_PROPOSAL_TRANSFORMER_FOLDS34.md"
+  }
+}
