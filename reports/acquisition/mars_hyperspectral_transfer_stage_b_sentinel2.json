@@ -1,0 +1,72 @@
+{
+  "claim_boundary": "PASS establishes enough leakage-safe catalog candidates to preregister target-band acquisition and modeling. Target crop observability, dense reprojection validity, complementarity, and model improvement remain unproven.",
+  "decision": "FAIL",
+  "gates": {
+    "minimum_countries": true,
+    "minimum_high_confidence_pairs_within_1_hour": true,
+    "minimum_negative_scene_pairs": false,
+    "minimum_novel_25km_groups": true,
+    "minimum_positive_scene_pairs": true
+  },
+  "ignored_pair_catalog": {
+    "pairs": 447,
+    "path": ".research/mars_hyperspectral_transfer/stage_b_sentinel2_pairs.jsonl",
+    "sha256": "80f0895aec61bbd2914e6f97b9847517c2ce5b982be1bdab436b0265583372cb"
+  },
+  "ignored_query_catalog": {
+    "groups": 1466,
+    "path": ".research/mars_hyperspectral_transfer/stage_b_cdse.jsonl",
+    "sha256": "f61e64784a5002cb33560851a30aff29ffd8dbd4add70294eda6839a018ac850"
+  },
+  "inputs": {
+    "mask_catalog": {
+      "path": ".research/mars_hyperspectral_transfer/train_mask_catalog.jsonl",
+      "sha256": "945c74a5553a17bb01ac2241c02554a580e53bb438fae84f95498528ee546d51"
+    },
+    "protocol": {
+      "path": "configs/mars_hyperspectral_transfer_acquisition_protocol.json",
+      "sha256": "2888577d23c94fd3e8141feafda6b40b20a4fae008b537f15d4542ad9520f28c"
+    }
+  },
+  "metrics": {
+    "by_scene_supervision": {
+      "absence_high_confidence": 161,
+      "presence_exploratory": 177,
+      "presence_high_confidence": 109
+    },
+    "by_source_sensor": {
+      "EMIT": 344,
+      "EnMAP": 24,
+      "PRISMA": 79
+    },
+    "by_target_sensor": {
+      "sentinel2": 447
+    },
+    "catalog_query_groups": 1466,
+    "catalog_query_groups_with_products": 379,
+    "countries": 41,
+    "dense_reprojection_candidates_within_15_minutes": 81,
+    "eligible_catalog_samples": 2345,
+    "high_confidence_pairs_within_1_hour": 270,
+    "mask_catalog_samples": 7041,
+    "negative_scene_pairs_within_1_hour": 161,
+    "novel_25km_groups_beyond_all_mars_locations": 155,
+    "positive_scene_pairs_within_1_hour": 109,
+    "positive_scene_pairs_within_6_hours": 286,
+    "samples_with_usable_pair": 447,
+    "scene_pairs_after_same_acquisition_deduplication": 447,
+    "unique_target_products": 248
+  },
+  "pass": false,
+  "schema_version": 1,
+  "scope": "train_mask_truth_and_public_target_catalog_metadata_only",
+  "source_revision": "74b3d3132d135fee1761df1dadb7d662a4b5245b",
+  "target_catalogs": [
+    {
+      "collection": "sentinel-2-l1c",
+      "endpoint": "https://stac.dataspace.copernicus.eu/v1/search",
+      "scope": "metadata_only_no_target_assets",
+      "sensor": "sentinel2"
+    }
+  ]
+}

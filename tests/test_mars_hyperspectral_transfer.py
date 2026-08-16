@@ -255,3 +255,36 @@ def test_stage_b_deduplicates_tiles_from_one_acquisition_and_limits_negatives() 
     assert len(pairs) == 1
     assert pairs[0]["target_product_id"] == "clearer-tile"
     assert pairs[0]["scene_supervision"] == "absence_high_confidence"
+
+
+def test_stage_b_keeps_independent_target_sensors_at_the_same_time() -> None:
+    mask_records = [
+        {
+            "sample_id": "positive",
+            "label_state": "PLUME",
+            "sensor": "EMIT",
+            "tile": "hsi",
+            "timestamp": "2024-01-01T00:00:00+00:00",
+            "country": "X",
+            "group_id": "g",
+            "novel_beyond_all_mars_25km": True,
+        }
+    ]
+    query_records = [
+        {
+            "target_sensor": target_sensor,
+            "products": [
+                {
+                    "id": f"{target_sensor}-product",
+                    "datetime": "2024-01-01T00:10:00Z",
+                    "offset_hours": 1 / 6,
+                    "cloud_cover": 0.0,
+                    "covered_sample_ids": ["positive"],
+                }
+            ],
+        }
+        for target_sensor in ("sentinel2", "landsat")
+    ]
+    pairs = _deduplicated_pairs(mask_records, query_records)
+    assert len(pairs) == 2
+    assert {pair["target_sensor"] for pair in pairs} == {"sentinel2", "landsat"}

@@ -251,8 +251,9 @@ def _deduplicated_pairs(
     query_records: list[dict[str, object]],
 ) -> list[dict[str, object]]:
     by_sample = {str(record["sample_id"]): record for record in mask_records}
-    candidate_by_key: dict[tuple[str, str], dict[str, object]] = {}
+    candidate_by_key: dict[tuple[str, str, str], dict[str, object]] = {}
     for query_record in query_records:
+        target_sensor = str(query_record.get("target_sensor", "sentinel2"))
         for product in query_record["products"]:
             for sample_id in product["covered_sample_ids"]:
                 source = by_sample[str(sample_id)]
@@ -262,7 +263,7 @@ def _deduplicated_pairs(
                     continue
                 if label == "PLUME" and offset > 6.0:
                     continue
-                key = (str(sample_id), str(product["datetime"]))
+                key = (str(sample_id), target_sensor, str(product["datetime"]))
                 cloud = product.get("cloud_cover")
                 cloud_sort = math.inf if cloud is None else float(cloud)
                 candidate = {
@@ -272,6 +273,7 @@ def _deduplicated_pairs(
                     "source_tile": source["tile"],
                     "source_datetime": source["timestamp"],
                     "target_product_id": product["id"],
+                    "target_sensor": target_sensor,
                     "target_datetime": product["datetime"],
                     "offset_hours": offset,
                     "target_tile_cloud_cover": cloud,
@@ -313,6 +315,7 @@ def summarize_stage_b(
     mask_catalog_path: Path,
     query_catalog_path: Path,
     output_pairs_path: Path,
+    target_catalogs: list[dict[str, object]] | None = None,
 ) -> tuple[list[dict[str, object]], dict[str, object]]:
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
     pairs = _deduplicated_pairs(mask_records, query_records)
@@ -351,6 +354,9 @@ def summarize_stage_b(
         "by_source_sensor": dict(
             sorted(Counter(str(pair["source_sensor"]) for pair in pairs).items())
         ),
+        "by_target_sensor": dict(
+            sorted(Counter(str(pair["target_sensor"]) for pair in pairs).items())
+        ),
         "by_scene_supervision": dict(
             sorted(Counter(str(pair["scene_supervision"]) for pair in pairs).items())
         ),
@@ -383,11 +389,15 @@ def summarize_stage_b(
         "decision": "PASS" if all(gates.values()) else "FAIL",
         "scope": "train_mask_truth_and_public_target_catalog_metadata_only",
         "source_revision": protocol["source"]["revision"],
-        "target_catalog": {
-            "endpoint": STAC_ENDPOINT,
-            "collection": "sentinel-2-l1c",
-            "scope": "metadata_only_no_target_assets",
-        },
+        "target_catalogs": target_catalogs
+        or [
+            {
+                "sensor": "sentinel2",
+                "endpoint": STAC_ENDPOINT,
+                "collection": "sentinel-2-l1c",
+                "scope": "metadata_only_no_target_assets",
+            }
+        ],
         "metrics": metrics,
         "gates": gates,
         "pass": all(gates.values()),
