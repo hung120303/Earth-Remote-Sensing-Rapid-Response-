@@ -6136,3 +6136,48 @@ modeling. No gate was lowered, Landsat 7 was not added post hoc, and no protecte
 model outcome was opened. Detailed catalogs remain ignored; compact authoritative
 receipts are `reports/acquisition/mars_hyperspectral_transfer_stage_b.json` and
 `reports/acquisition/mars_hyperspectral_transfer_stage_b_sentinel2.json`.
+
+### 2026-08-16: JPL CACH4 metadata supplement rejected conservatively
+
+The released JPL operational-GHG train definitions contain 3,332 CACH4 rows:
+3,149 background and 183 plume crops on 124 AVIRIS-NG flightlines. Header-only
+acquisition retrieved 124 public CMF ENVI sidecars totaling 33,011 bytes. It did
+not retrieve source rasters, labels, the released JPL test definition, or any
+target-satellite asset. All 3,149 background rows have exact flight UTC and
+finite WGS84 centers. The source sampler pads edge windows, explaining 1,015
+sample-axis overhangs, 159 line-axis overhangs, and 1,131 rows overhanging either
+axis; all crop centers remain in bounds.
+
+After the hash-bound safe-column filter, 390 rows are official-test protected,
+194 duplicate already-counted MARS-Hyperspectral negative geography, and 2,565
+are row-eligible. Those rows collapse to only 15 connected 25 km physical
+components despite spanning 104 flightlines. The preregistered minimum is 20,
+so the result is FAIL and target-catalog querying was never authorized. Counts,
+distance summaries, protocol identities, and ignored-output hashes are recorded
+in `reports/acquisition/jpl_operational_ghg_negative_supplement_metadata.json`.
+
+### 2026-08-16: NASA ORNL header bridge preregistered, authentication pending
+
+Primary NASA documentation for DOI 10.3334/ORNLDAAC/2095 states that each
+flightline's L1B `img` is orthocorrected into a rotated UTM grid and accompanied
+by a text ENVI header containing samples, lines, datum, map reference, pixel
+size, and units. CMR collection `C2662359874-ORNL_CLOUD` independently resolves
+the known CACH4 anchor to
+`AVIRIS-NG_L1B_radiance.ang20180821t184959_rdn_v2t1_img.hdr`, 14,074 bytes,
+SHA-256 `67b842bc81d95db3104ce04adde1b8e52124d332e2ba5182d9a470430f3b766b`,
+with acquisition beginning 2018-08-21T18:49:59Z.
+
+Commit `6aa596e1` freezes the bridge before any flight-specific header download.
+At least 100 of the 124 CACH4 anchors must resolve, at least 80% overall, and
+every resolved NASA header must match the public JPL CMF dimensions/CRS and five
+control-point centers within 0.25 pixel. A pass alone would authorize metadata
+resolution for 3,317 COVID plus 10,127 Permian train backgrounds. CACH4 is not
+pooled into the new cohort; COVID/Permian alone must retain at least 20 eligible
+25 km components under identical official-test and prior-pair exclusions.
+
+The public CMR query works, and JPL's public directory contains only the 2018
+CACH4 product family. NASA routes the actual header through Earthdata Login;
+the connected browser session currently presents empty login fields, and no
+command-line `.netrc` exists. Therefore the bridge remains pending explicit
+Earthdata authorization. No credential, header, COVID/Permian coordinate,
+target catalog, or protected outcome has been accessed yet.

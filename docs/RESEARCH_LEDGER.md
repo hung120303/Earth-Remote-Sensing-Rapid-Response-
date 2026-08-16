@@ -891,3 +891,45 @@ protocol until an independent reviewed-negative source supplies the missing
 evidence. Compact results are in
 `reports/acquisition/mars_hyperspectral_transfer_stage_b.json` and the
 Sentinel-only ablation beside it.
+
+## 2026-08-16: JPL CACH4 reviewed-negative supplement fails the unchanged location gate
+
+The JPL operational-GHG release contributes 3,149 released CACH4 train
+background tiles across 124 AVIRIS-NG flightlines. All 124 public JPL CMF ENVI
+headers were retrieved without a raster download, and every tile has an exact
+flight UTC and finite WGS84 crop center. The released sampler's edge padding is
+preserved explicitly: 1,131 tiles overhang at least one source-image boundary,
+but every crop center is in bounds. Filename offsets map to ENVI sample then
+line, and centers use the GDAL rotated-ENVI affine convention.
+
+The separately frozen eligibility filter excluded 390 rows within 25 km of
+official MARS-S2L test geography and 194 rows within 25 km of an already-counted
+MARS-Hyperspectral negative source crop. This leaves 2,565 rows and 104
+flightlines, but only 15 transitive 25 km components. The unchanged requirement
+was at least 20 independently located components, so the metadata stage fails.
+No Sentinel-2/Landsat catalog, target asset, released JPL test content, or
+protected MARS outcome was accessed. The source label must be described as
+"no confidently detectable plume after expert review," not physical zero
+methane. Authoritative result:
+`reports/acquisition/jpl_operational_ghg_negative_supplement_metadata.json`.
+
+## 2026-08-16: NASA header bridge frozen for untouched COVID/Permian cohorts
+
+NASA ORNL DAAC collection `AVIRIS-NG_L1B_radiance_2095` (DOI
+10.3334/ORNLDAAC/2095, CMR concept `C2662359874-ORNL_CLOUD`) publishes each
+orthocorrected L1B product as an ENVI binary plus text header. CMR resolves the
+known CACH4 anchor `ang20180821t184959` to the 14,074-byte
+`ang20180821t184959_rdn_v2t1_img.hdr` granule and reports exact flight UTC,
+WGS84 geometry, SHA-256, and the protected ORNL download URL.
+
+Before opening that header, a new protocol froze an all-or-nothing geometric
+bridge: at least 100 of 124 CACH4 anchors and at least 80% overall must resolve,
+and every resolved NASA grid must match the already verified JPL CMF grid in
+dimensions, WGS84 UTM CRS, pixel-vector length, ENVI reference convention, and
+five control-point centers within 0.25 pixel. Only a PASS may geolocate the
+13,444 untouched COVID/Permian train backgrounds. CACH4 is excluded entirely
+from their unchanged >=20-component gate, preventing post-failure pooling.
+Target satellite catalogs remain forbidden until a separate committed
+protocol. The bridge is currently pending Earthdata authorization, not a pass
+or fail. Frozen contract:
+`configs/mars_jpl_ornl_header_bridge_protocol.json`.

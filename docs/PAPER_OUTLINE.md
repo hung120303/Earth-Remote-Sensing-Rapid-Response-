@@ -139,6 +139,16 @@ for operational monitoring.
   pairs, 460 pairs within one hour, 204 novel 25 km groups, and 49 countries, but only 272/300
   required reviewed negatives. No target bands or model were opened; retain this as evidence for
   conservative cohort qualification rather than implying cross-modal learning was evaluated.
+- The independent JPL CACH4 reviewed-background supplement is a second data-gate negative result:
+  3,149 train backgrounds were geolocated from 124 tiny public ENVI headers, but the frozen
+  official-test/prior-pair exclusions leave only 15/20 required physical 25 km components. The
+  target catalog was never queried. State the label as no confidently detectable expert-reviewed
+  plume, not physical zero methane.
+- The NASA ORNL header bridge for the untouched COVID/Permian train campaigns is preregistered and
+  pending, not evidence. Its geometric agreement gate must pass on >=100 CACH4 anchors before any
+  COVID/Permian center is accepted; CACH4 is excluded from the new >=20-component gate. Report the
+  bridge only after its compact receipt is committed, and keep Earthdata credentials, cookies, and
+  signed URLs outside the release bundle.
 
 ## V5.2 preregistration requirements
 
