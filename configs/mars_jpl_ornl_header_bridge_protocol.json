@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_any_flight_specific_ornl_cmr_granule_query_or_header_download",
+  "name": "NASA ORNL AVIRIS-NG header bridge for untouched JPL COVID and Permian train backgrounds",
+  "research_question": "Can public NASA AVIRIS-NG L1B ENVI headers be proven geometrically interchangeable with the JPL CMF crop-index grid, then recover exact UTC and WGS84 centers for an independent COVID-plus-Permian train-background cohort with at least 20 non-protected 25 km components?",
+  "decision_context_disclosed_before_freeze": {
+    "original_mars_hyperspectral_negative_pairs": 272,
+    "unchanged_combined_gate": 300,
+    "unchanged_shortfall": 28,
+    "cach4_metadata_result": "FAIL",
+    "cach4_eligible_rows": 2565,
+    "cach4_eligible_25km_components": 15,
+    "required_components": 20,
+    "anti_threshold_shopping_boundary": "CACH4 rows and components are excluded from this new cohort and cannot be pooled with COVID or Permian to satisfy the gate. The >=20-component threshold, 25 km radius, official-test protection, prior-pair deduplication, and later >=28-pair target gate are unchanged.",
+    "reason_for_new_route": "The released multicampaign definition already contained COVID and Permian train cohorts, but exact coordinates were unavailable until discovery of NASA's public per-flightline AVIRIS-NG L1B ENVI headers."
+  },
+  "candidate_cohort": {
+    "included_campaigns": [
+      "COVID",
+      "Permian"
+    ],
+    "excluded_campaigns": [
+      "CACH4",
+      "EMIT"
+    ],
+    "published_split": "train_only",
+    "label": "released background/no-plume class only",
+    "known_counts": {
+      "covid_background_rows": 3317,
+      "covid_plume_rows": 146,
+      "covid_flightlines": 147,
+      "permian_background_rows": 10127,
+      "permian_plume_rows": 1074,
+      "permian_flightlines": 170,
+      "combined_background_rows": 13444,
+      "combined_flightlines_before_cross_campaign_deduplication": 317
+    }
+  },
+  "authoritative_metadata_source": {
+    "provider": "NASA ORNL DAAC via Common Metadata Repository",
+    "collection_title": "AVIRIS-NG L1B Calibrated Radiance, Facility Instrument Collection, V1",
+    "short_name": "AVIRIS-NG_L1B_radiance_2095",
+    "collection_concept_id": "C2662359874-ORNL_CLOUD",
+    "doi": "10.3334/ORNLDAAC/2095",
+    "collection_revision_observed": 24,
+    "collection_revision_date_observed": "2026-07-20T18:24:22.134Z",
+    "collection_query": "https://cmr.earthdata.nasa.gov/search/collections.umm_json?short_name=AVIRIS-NG_L1B_radiance_2095&page_size=10",
+    "documentation": "https://daac.ornl.gov/AVIRIS/guides/AVIRIS-NG_L1B_radiance.html",
+    "source_description": "NASA describes each L1B flightline as an orthocorrected ENVI image accompanied by a text .hdr holding samples, lines, projection, and map information.",
+    "use_constraint": "NASA Earth Science Data and Information Policy as linked by the collection UMM metadata"
+  },
+  "frozen_inputs": {
+    "parent_supplement_protocol": {
+      "path": "configs/mars_cross_modal_negative_supplement_protocol.json",
+      "sha256": "0d26e596045a063645ca0bd108868641aa674e2a796b7bacecf34f1d4860929e"
+    },
+    "cach4_filter_protocol": {
+      "path": "configs/mars_cross_modal_negative_supplement_filter_protocol.json",
+      "sha256": "31750ac5456893e444d40c9bacfb16195c36c7c5639e7ddc6ceef1e81b0f645c"
+    },
+    "cach4_failed_report": {
+      "path": "reports/acquisition/jpl_operational_ghg_negative_supplement_metadata.json",
+      "bytes": 11157,
+      "sha256": "5c2dffc3c135b97dfbd9920bc28f440e1ce9eab1477df56a8ac5e546361f0379"
+    },
+    "jpl_train_definition": {
+      "path": ".research/jpl_operational_ghg_supplement/multicampaign_train.csv",
+      "bytes": 2514226,
+      "sha256": "e24afc507a81969742199b53ad92c7bcda423de65298c13d4ac3c25b2acae1d4"
+    },
+    "cach4_public_header_manifest": {
+      "path": ".research/jpl_operational_ghg_supplement/cach4_header_manifest.json",
+      "bytes": 69417,
+      "sha256": "bb4db9dae491a88c14246d3ce3ef0a50f7ac20271c7be599d2e16e8cac42f577",
+      "anchor_flightlines": 124
+    },
+    "safe_mars_manifest": {
+      "path": ".research/source_audit_20260715/mars_s2l_current_validated_images_all.csv",
+      "bytes": 94136263,
+      "sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2",
+      "permitted_columns": [
+        "id_location",
+        "location_name",
+        "country",
+        "lon",
+        "lat",
+        "satellite",
+        "tile",
+        "tile_date",
+        "split_name"
+      ],
+      "forbidden_columns": [
+        "isplume",
+        "plume",
+        "ch4_fluxrate",
+        "ch4_fluxrate_std"
+      ]
+    },
+    "prior_stage_b_report": {
+      "path": "reports/acquisition/mars_hyperspectral_transfer_stage_b.json",
+      "bytes": 3411,
+      "sha256": "f7bd429ebb6d8dae93500fff14a3566496480a9d2fd33b13b0d8146ec54f1f65"
+    },
+    "prior_stage_b_pairs": {
+      "path": ".research/mars_hyperspectral_transfer/stage_b_combined_pairs.jsonl",
+      "bytes": 532440,
+      "byte_sha256": "1657b39bcd25580eade09813e27e9506934be4033bc1ae0711d3f23d81e170ad",
+      "normalized_lf_sha256": "902d118e8a46a9d90465d23b9a55dce561b9cbecd6336f8c390b54cf8d89fa4e"
+    },
+    "prior_mask_catalog": {
+      "path": ".research/mars_hyperspectral_transfer/train_mask_catalog.jsonl",
+      "bytes": 6839938,
+      "sha256": "945c74a5553a17bb01ac2241c02554a580e53bb438fae84f95498528ee546d51"
+    }
+  },
+  "network_and_content_boundary": {
+    "permitted": [
+      "NASA CMR collection and granule UMM JSON for explicit train flight IDs",
+      "NASA ORNL public or Earthdata-authenticated text .hdr sidecars for orthocorrected L1B img granules",
+      "HTTP headers, content lengths, checksums, and redirects needed to verify those text sidecars"
+    ],
+    "forbidden": [
+      "any AVIRIS-NG binary image, retrieval raster, label raster, GLT, IGM, LOC, OBS, browse image, KML, or bulk archive",
+      "any JPL released test definition, outcome, or raster",
+      "any MARS protected outcome field, mask, prediction, score, or threshold result",
+      "any Sentinel-2 or Landsat target-catalog query or target asset",
+      "any EMIT campaign definition or asset"
+    ],
+    "maximum_header_bytes_each": 262144,
+    "detailed_metadata_location": ".research/jpl_operational_ghg_supplement/ornl_l1b_headers"
+  },
+  "stage_a_cach4_grid_bridge": {
+    "anchors": "All 124 CACH4 train flight IDs in the hash-bound public JPL header manifest are queried against the frozen NASA collection.",
+    "granule_match": "A flight ID must resolve to exactly one orthocorrected L1B radiance img ENVI header. Ambiguous or non-img products are unresolved, never chosen heuristically.",
+    "minimum_resolved_anchor_flightlines": 100,
+    "minimum_resolved_anchor_fraction": 0.8,
+    "grid_comparison": {
+      "samples_and_lines": "exact equality",
+      "projected_crs": "same WGS84 UTM zone and hemisphere",
+      "pixel_size": "same sample and line vector lengths within 1e-6 relative tolerance",
+      "pixel_index_mapping": "same ENVI one-based reference-pixel convention",
+      "maximum_discrepancy_pixels": 0.25,
+      "points_compared": "pixel centers at four image corners and image center after both ENVI map-info records are converted with the GDAL rotation convention"
+    },
+    "pass": "At least 100 anchors and at least 80% of all 124 anchors resolve, and every resolved anchor satisfies every grid comparison with no mismatch.",
+    "failure_action": "Stop. Do not infer COVID or Permian crop coordinates and do not query a target satellite catalog."
+  },
+  "stage_b_covid_permian_metadata": {
+    "authorized_only_if_stage_a_passes": true,
+    "row_interpretation": "For released filenames ending tile{width}x{height}+A+B.tif, A is ENVI sample/column and B is ENVI line/row, as verified from the released source sampler and CACH4 header dimensions. The crop center is sample A+width/2, line B+height/2.",
+    "edge_policy": "The released sampler pads overhanging windows. A row is valid only when its center is inside the source grid; full-window overhang is recorded separately.",
+    "coordinate_conversion": "Use the NASA L1B ENVI affine with GDAL rotation convention, then convert WGS84 UTM to EPSG:4326.",
+    "metadata_gates": {
+      "minimum_resolved_train_background_rows": 100,
+      "exact_utc_and_finite_wgs84_center_for_every_retained_row": true,
+      "minimum_eligible_25km_connected_components": 20
+    },
+    "eligibility_filters": [
+      "campaign is COVID or Permian",
+      "published split is train",
+      "released class is background/no-plume",
+      "coordinate is resolved by a Stage-A-approved NASA header",
+      "crop center is inside the source grid",
+      "strictly farther than 25 km from every official MARS-S2L test representative location",
+      "strictly farther than 25 km from every already-counted MARS-Hyperspectral negative source crop"
+    ],
+    "grouping": "Connected components of eligible crop centers, with an undirected edge at haversine distance <=25.0 km; each transitive component counts once.",
+    "pass": "All metadata gates pass on COVID and Permian alone. CACH4 cannot contribute rows or components.",
+    "failure_action": "Retire the JPL operational-GHG negative supplement without changing a threshold and seek a different source."
+  },
+  "target_catalog_boundary": {
+    "authorized_only_after_stage_b_passes": true,
+    "requires_new_committed_protocol_before_query": true,
+    "unchanged_target_products": [
+      "Copernicus Sentinel-2 L1C",
+      "USGS Landsat 8/9 Collection 2 Level-1"
+    ],
+    "unchanged_maximum_time_offset_hours": 1.0,
+    "unchanged_required_additional_negative_pairs": 28,
+    "target_assets_forbidden_in_this_protocol": true
+  },
+  "outputs": {
+    "ignored_cmr_receipt": ".research/jpl_operational_ghg_supplement/ornl_l1b_cmr_receipt.json",
+    "ignored_header_manifest": ".research/jpl_operational_ghg_supplement/ornl_l1b_header_manifest.json",
+    "ignored_resolved_rows": ".research/jpl_operational_ghg_supplement/covid_permian_train_negative_resolved_rows.jsonl",
+    "ignored_filtered_rows": ".research/jpl_operational_ghg_supplement/covid_permian_train_negative_eligible_rows.jsonl",
+    "compact_json": "reports/acquisition/jpl_operational_ghg_ornl_header_bridge.json",
+    "compact_markdown": "reports/acquisition/JPL_OPERATIONAL_GHG_ORNL_HEADER_BRIDGE.md"
+  },
+  "claim_boundary": "A PASS would establish metadata and acquisition feasibility only. It would not establish coincident target yield, local methane-label observability, cross-sensor validity, model complementarity, calibration, or superiority over MARS-S2L."
+}
