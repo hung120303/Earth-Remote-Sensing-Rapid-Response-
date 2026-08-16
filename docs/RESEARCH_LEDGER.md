@@ -948,3 +948,42 @@ bridge remains pending until the authenticated headers are downloaded and all
 resolved NASA grids match the public JPL grids with zero mismatches. Stage B
 remains unauthorized. Compact receipt:
 `reports/acquisition/jpl_operational_ghg_ornl_stage_a_cmr_preflight.json`.
+
+## 2026-08-16: independent reviewed-negative source order frozen
+
+The 28-pair MARS-Hyperspectral shortfall is a diversity problem, not a raw-row
+problem. Four independent real-negative sources were compared before opening a
+new manifest. STARCOP was selected first because its released train split has
+author-refined no-plume windows, exact AVIRIS-NG flight UTC, per-chip zero-mask
+GeoTIFFs, an open CC BY-NC 4.0 research license, and a 1 MB hash-bound manifest
+that can be audited without downloading its 60.8 GB imagery release. Commit
+`241f07d0` freezes a two-stage sparse protocol: select at most four train
+negatives per flightline by SHA-256 of the ID before coordinates are known,
+then range-read only their `labelbinary.tif` members. STARCOP alone must retain
+at least 20 independent 25 km components and later provide at least 28
+Sentinel-2/Landsat pairs within one hour. It cannot be pooled with any failed
+candidate to pass either gate. A released no-plume label means no
+annotated/refined plume in that benchmark window, not physical zero methane.
+
+Carbon Mapper Tanager is the preferred fallback if STARCOP fails. Carbon
+Mapper's primary product guide defines a candidate source-level null detect as
+an assessed scene with at most 25% cloud that covers a known source without a
+detection above the sensor limit. Its API exposes assessed scenes, exact UTC,
+bounds, Tanager instrument identity, cloud assessment, plume counts, and source
+observation/null-detection associations. A future protocol must restrict the
+source to Tanager so existing EMIT/AVIRIS cohorts are not recycled, bind the API
+schema and query before enumeration, and join scenes to reviewed source points
+rather than label arbitrary scene centers. No Carbon Mapper catalog query has
+been made in this path.
+
+GHGSat's global-landfill table is technically attractive (434 published null
+observations across a 47-country survey), but the deposit states All Rights
+Reserved; it is ineligible for training unless written permission is obtained.
+Two much larger direct Sentinel-2/Landsat negative sets were deprioritized:
+He et al. Dryad contains duplicated annotations/augmentations concentrated in
+Turkmenistan, and CH4Net contains 9,121 visible-no-plume scenes at only 23
+Turkmenistan sites under CC BY-NC-ND 4.0. Their raw counts do not compensate for
+probable MARS overlap, weak geographic independence, and—in CH4Net's case—an
+uncertain derivative-work license. Controlled-release and atmospheric-baseline
+collections were rejected because they cannot provide 28 distinct satellite
+overpasses or do not establish crop-level column-plume absence.

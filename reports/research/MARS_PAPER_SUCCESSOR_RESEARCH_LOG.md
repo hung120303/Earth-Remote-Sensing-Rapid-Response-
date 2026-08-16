@@ -6195,3 +6195,37 @@ This result does not pass the grid bridge: no header content was accessed, no
 grid was compared, and no COVID/Permian or target-catalog query was authorized.
 It removes CMR identity/availability as a risk while leaving Earthdata
 authentication and the zero-mismatch geometric comparison as the next gate.
+
+### 2026-08-16: STARCOP chosen for a sparse independent-negative audit
+
+The next candidate was chosen on label provenance, exact time/georeferencing,
+license, geography, and sparse-access feasibility rather than raw negative-row
+count. STARCOP (Zenodo 7863343; paper DOI 10.1038/s41598-023-44918-6) is the
+first route. Its authors construct no-plume training windows from regions that
+do not intersect known plume annotations, explicitly repair a set of missed
+plume windows, and release a `labelbinary.tif` for each 512x512 chip. The
+negative claim is therefore limited to no annotated/refined plume in a released
+train window. It is not a physical-zero claim.
+
+Commit `241f07d0` was made before `train.csv` or any archive member was opened.
+The protocol pins the 1,038,970-byte manifest and six train-only archive hashes,
+forbids all test content, and selects at most four negatives per flightline by
+the lexicographically smallest `(SHA-256(id), id)` values. Only after Stage A
+passes may ZIP end/central-directory ranges and exact selected zero-mask members
+be read. STARCOP must independently clear 100 resolved rows, 50 flightlines, 20
+leakage-safe 25 km components, and later 28 <=1-hour target pairs. Bulk imagery,
+positive members, target catalogs, and MARS outcomes remain forbidden.
+
+The ranked fallback is Carbon Mapper's Tanager-only assessed-scene catalog.
+Primary documentation confirms that an optimal-observation null-detect
+candidate is a <=25%-cloud scene covering a known source with no detected plume
+above the sensor limit. The API exposes `assessment_status`, Tanager instrument,
+UTC, bounds, assessed cloud percentage, plume counts, and source-level
+null-detection scene associations. Any use requires a separate frozen query and
+must attach a zero scene to a reviewed source coordinate; a scene centroid is
+not a no-plume label. GHGSat landfill nulls are globally stronger but excluded
+pending written permission because the public deposit is All Rights Reserved.
+Turkmenistan-only He et al. and CH4Net datasets are deferred because their many
+rows likely collapse to already represented geography and CH4Net's ND license
+makes downstream training/publication unclear. No fallback catalog or archive
+was queried during this ranking.
