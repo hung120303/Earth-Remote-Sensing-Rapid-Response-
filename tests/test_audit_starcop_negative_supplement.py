@@ -95,6 +95,12 @@ def test_parser_rejects_duplicate_ids_and_bad_cached_window() -> None:
     assert parsed[0].source_width == 151
     assert parsed[0].source_height == 151
 
+    padded_source_window = _id(row=-29, column=575, width=151, height=151)
+    parsed = audit.parse_manifest_payload(
+        _payload([_csv_row(padded_source_window, has_plume="true")])
+    )
+    assert parsed[0].source_row_offset == -29
+
     empty_source_window = _id(width=0, height=512)
     with pytest.raises(audit.StarcopAuditError, match="source window is empty"):
         audit.parse_manifest_payload(_payload([_csv_row(empty_source_window)]))

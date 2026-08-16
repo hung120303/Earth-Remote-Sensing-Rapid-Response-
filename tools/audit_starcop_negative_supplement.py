@@ -45,7 +45,7 @@ MAXIMUM_SELECTED_PER_FLIGHTLINE = 4
 
 ID_RE = re.compile(
     r"^(?P<flight>ang(?P<date>\d{8})t(?P<time>\d{6}))_"
-    r"r(?P<row>\d+)_c(?P<column>\d+)_w(?P<width>\d+)_h(?P<height>\d+)$"
+    r"r(?P<row>-?\d+)_c(?P<column>-?\d+)_w(?P<width>\d+)_h(?P<height>\d+)$"
 )
 INTEGER_RE = re.compile(r"^(?:0|[1-9]\d*)$")
 REQUIRED_COLUMNS = frozenset(
