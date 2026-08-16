@@ -452,9 +452,16 @@ def main() -> int:
         return 0
 
     smoke_path = (ROOT / protocol["execution"]["smoke_output"]).resolve()
-    if not smoke_path.is_file() or json.loads(smoke_path.read_text(encoding="utf-8")).get(
-        "status"
-    ) != "passed":
+    smoke = (
+        json.loads(smoke_path.read_text(encoding="utf-8"))
+        if smoke_path.is_file()
+        else {}
+    )
+    if (
+        smoke.get("status") != "passed"
+        or smoke.get("protocol_sha256") != sha256(protocol_path)
+        or smoke.get("script_sha256") != sha256(Path(__file__).resolve())
+    ):
         raise ValueError("Passing selective-proposal smoke report is required")
 
     seeds = [int(value) for value in protocol["training"]["seeds"]]
