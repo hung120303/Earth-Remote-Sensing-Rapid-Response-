@@ -1,0 +1,136 @@
+{
+  "artifacts": {
+    "descriptor_cache": {
+      "bytes": 48431851,
+      "path": ".research/mars_prior_reference_bank/folds34_descriptors.npz",
+      "sha256": "5abf0b5ad95c1846b8d6a0912e103a90346a4d4fff6e38c493251f040d2fb020",
+      "tracked": false
+    },
+    "selection_manifest": {
+      "bytes": 17223916,
+      "path": ".research/mars_prior_reference_bank/folds34_selection.jsonl",
+      "sha256": "177613bbc406de59ec7d5d13a80350ad87ce0acd6a741753aea89c4370326f1f",
+      "tracked": false
+    }
+  },
+  "by_fold_sensor": {
+    "fold 3 / Landsat": {
+      "rows": 1396,
+      "with_five_references": 0,
+      "with_selected_reference": 0
+    },
+    "fold 3 / Sentinel-2": {
+      "rows": 7403,
+      "with_five_references": 6730,
+      "with_selected_reference": 7170
+    },
+    "fold 4 / Landsat": {
+      "rows": 1386,
+      "with_five_references": 0,
+      "with_selected_reference": 0
+    },
+    "fold 4 / Sentinel-2": {
+      "rows": 7560,
+      "with_five_references": 7003,
+      "with_selected_reference": 7399
+    }
+  },
+  "decision": "FAIL: do not run alternate-reference model inference.",
+  "feasibility_gates_pass": false,
+  "generated_at_utc": "2026-08-16T16:22:12.902578+00:00",
+  "outcome_access": {
+    "label_fields_accessed": [],
+    "labels_accessed": false,
+    "model_scores_accessed": false,
+    "plume_masks_accessed": false,
+    "predictions_computed": false,
+    "record_fields_materialized": [
+      "band_order",
+      "crs",
+      "group_id",
+      "height",
+      "percentage_clear",
+      "physical_location_id",
+      "sample_id",
+      "satellite",
+      "sensor_family",
+      "target_datetime",
+      "target_scene_id",
+      "width"
+    ]
+  },
+  "provenance": {
+    "git_commit": "32083519e892921872c64f806f20518a5d3926b7",
+    "protocol": {
+      "path": "configs/mars_prior_reference_bank_protocol.json",
+      "sha256": "5123c9aefd52b864d095461a8738b84d2a819cbb6928fa0a57c9e1d18134735d"
+    },
+    "script": {
+      "path": "tools/build_mars_prior_reference_bank.py",
+      "sha256": "3f1e418d8ea9e292db1fd50a450bd85efbe0647f71540d3b345ef8355b42338a"
+    }
+  },
+  "schema_version": 1,
+  "scope": "Outcome-blind feasibility audit for a strictly prior, multi-reference Sentinel-2 bank on authorized MARS folds 3/4. This is an information-acquisition audit, not a model experiment.",
+  "status": "complete_outcome_blind_prior_reference_feasibility_audit",
+  "summary": {
+    "best_selected_closer_than_original_fraction": 0.7018326583842405,
+    "best_selected_closer_than_original_rows": 10225,
+    "best_selected_compared_rows": 14569,
+    "best_selected_distance_percentiles": {
+      "0": 0.0019495824817568064,
+      "100": 0.7627221345901489,
+      "25": 0.007350793574005365,
+      "50": 0.011533720418810844,
+      "75": 0.0202815979719162,
+      "90": 0.04213893935084344,
+      "95": 0.06756349354982369,
+      "99": 0.16039468050003045
+    },
+    "exact_grid_candidate_percentiles": {
+      "0": 0.0,
+      "100": 636.0,
+      "25": 36.0,
+      "50": 127.0,
+      "75": 255.0,
+      "90": 438.0,
+      "95": 530.0,
+      "99": 605.0
+    },
+    "original_reference_distance_percentiles_all_rows": {
+      "0": 0.0019841105677187443,
+      "100": 0.9861595630645752,
+      "25": 0.009145671501755714,
+      "50": 0.015973130241036415,
+      "75": 0.03120935708284378,
+      "90": 0.0646423801779747,
+      "95": 0.09908879846334451,
+      "99": 0.21060027599334719
+    },
+    "raw_prior_candidate_percentiles": {
+      "0": 0.0,
+      "100": 637.0,
+      "25": 38.0,
+      "50": 129.0,
+      "75": 256.0,
+      "90": 439.0,
+      "95": 531.0,
+      "99": 606.0
+    },
+    "selected_reference_count_percentiles": {
+      "0": 0.0,
+      "100": 5.0,
+      "25": 5.0,
+      "50": 5.0,
+      "75": 5.0,
+      "90": 5.0,
+      "95": 5.0,
+      "99": 5.0
+    },
+    "sentinel_rows": 14963,
+    "sentinel_rows_with_any_exact_grid_candidate": 14569,
+    "sentinel_rows_with_any_strict_prior_clear_candidate": 14681,
+    "sentinel_rows_with_five_selected_references": 13733,
+    "sentinel_rows_with_selected_reference": 14569
+  }
+}
