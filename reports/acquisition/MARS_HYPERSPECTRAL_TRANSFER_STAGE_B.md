@@ -6,14 +6,14 @@ Authoritative labels came only from published train-split `plumemask.tif` pixels
 
 ## Leakage-safe target candidates
 
-- Positive scene pairs within 6 hours: 286
-- Positive pairs within 1 hour: 109
-- Reviewed negative pairs within 1 hour: 161
-- All high-confidence pairs within 1 hour: 270
-- Dense reprojection candidates within 15 minutes: 81
-- Novel 25 km groups beyond every MARS-S2L location: 155
-- Countries: 41
-- Unique Sentinel-2 products: 248
+- Positive scene pairs within 6 hours: 500
+- Positive pairs within 1 hour: 188
+- Reviewed negative pairs within 1 hour: 272
+- All high-confidence pairs within 1 hour: 460
+- Dense reprojection candidates within 15 minutes: 137
+- Novel 25 km groups beyond every MARS-S2L location: 204
+- Countries: 49
+- Unique Sentinel-2 products: 442
 
 ## Frozen gates
 

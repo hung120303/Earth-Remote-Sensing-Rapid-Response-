@@ -9,8 +9,8 @@ from pathlib import Path
 from tools.query_mars_hyperspectral_cdse import STAC_ENDPOINT
 from tools.query_mars_hyperspectral_stage_b_cdse import (
     jsonl_payload,
-    jsonl_sha256,
     read_jsonl,
+    sha256_file,
     summarize_stage_b,
     write_markdown,
 )
@@ -77,13 +77,13 @@ def combine(
             "sensor": "sentinel2",
             "path": sentinel_query_path.as_posix(),
             "groups": len(sentinel_records),
-            "sha256": jsonl_sha256(sentinel_records),
+            "sha256": sha256_file(sentinel_query_path),
         },
         {
             "sensor": "landsat",
             "path": landsat_query_path.as_posix(),
             "groups": len(landsat_records),
-            "sha256": jsonl_sha256(landsat_records),
+            "sha256": sha256_file(landsat_query_path),
         },
     ]
     return pairs, report

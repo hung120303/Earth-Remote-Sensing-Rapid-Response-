@@ -862,3 +862,32 @@ before training. This falsifies the hypothesis that selecting multiple visible/
 NIR-matched prior scenes can break the current ranking ceiling through the
 released detector; future work must add genuinely new labeled geography or a
 different observation modality rather than another MARS-only reference head.
+
+## 2026-08-16: MARS-Hyperspectral transfer acquisition fails one frozen gate
+
+The pinned UNEP-IMEO MARS-Hyperspectral train archive was audited without
+opening validation, test, full-tile, retrieval, or official MARS-S2L outcomes.
+All 7,041 authoritative `plumemask.tif` files were retained under ignored
+research storage (16.06 MB with optional metadata), and every mask was strictly
+binary. Pixel truth yields 3,349 plume and 3,692 reviewed no-plume crops. Raster
+georeferencing agrees with the 1,295 published crop coordinates to 0.012 km
+median and 0.021 km maximum, validating mask-derived EMIT centers.
+
+After the frozen >=75% clear and 25 km official-test exclusion, 2,345 crops
+remain: 1,008 plume and 1,337 no-plume across 59 countries and 390 connected
+25 km groups; 380 groups are beyond every MARS-S2L location. Public metadata
+queries used exact Sentinel-2 L1C and Landsat 8/9 Collection 2 Level-1 products.
+Same-sensor tiles from one acquisition were deduplicated per crop. Sentinel-2
+alone provides 286 positive and 161 negative pairs; the combined catalogs
+provide 500 positive, 272 reviewed negative, 460 <=1-hour, and 137 <=15-minute
+pairs across 204 novel groups and 49 countries.
+
+Four of five Stage B gates pass, but the preregistered minimum of 300 reviewed
+negative pairs fails by 28. Landsat 7 is not admitted because the exact
+MARS-S2L operational contract is LC08/LC09. The failed gate is not lowered:
+no target bands, hyperspectral retrievals, model architecture, threshold, or
+MARS outcome was opened. This cross-modal path is retired under the frozen
+protocol until an independent reviewed-negative source supplies the missing
+evidence. Compact results are in
+`reports/acquisition/mars_hyperspectral_transfer_stage_b.json` and the
+Sentinel-only ablation beside it.

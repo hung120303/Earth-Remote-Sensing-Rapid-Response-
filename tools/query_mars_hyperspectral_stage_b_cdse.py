@@ -384,9 +384,10 @@ def summarize_stage_b(
         ]
         >= int(gates_config["minimum_high_confidence_pairs_within_1_hour"]),
     }
+    passed = all(gates.values())
     report = {
         "schema_version": 1,
-        "decision": "PASS" if all(gates.values()) else "FAIL",
+        "decision": "PASS" if passed else "FAIL",
         "scope": "train_mask_truth_and_public_target_catalog_metadata_only",
         "source_revision": protocol["source"]["revision"],
         "target_catalogs": target_catalogs
@@ -400,7 +401,7 @@ def summarize_stage_b(
         ],
         "metrics": metrics,
         "gates": gates,
-        "pass": all(gates.values()),
+        "pass": passed,
         "inputs": {
             "protocol": {
                 "path": protocol_path.as_posix(),
@@ -422,9 +423,17 @@ def summarize_stage_b(
             "sha256": jsonl_sha256(query_records),
         },
         "claim_boundary": (
-            "PASS establishes enough leakage-safe catalog candidates to preregister "
-            "target-band acquisition and modeling. Target crop observability, dense "
-            "reprojection validity, complementarity, and model improvement remain unproven."
+            (
+                "PASS establishes enough leakage-safe catalog candidates to preregister "
+                "target-band acquisition and modeling. Target crop observability, dense "
+                "reprojection validity, complementarity, and model improvement remain unproven."
+            )
+            if passed
+            else (
+                "FAIL does not authorize target-band download or modeling under this "
+                "protocol. Retain compact receipts and seek an independent source that "
+                "satisfies the failed gate without changing it post hoc."
+            )
         ),
     }
     return pairs, report

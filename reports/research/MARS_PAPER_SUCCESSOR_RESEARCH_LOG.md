@@ -6101,3 +6101,38 @@ independent continuation routes therefore fail. The reference-set temporal
 transformer is retired before fitting; no model, fusion weight, threshold,
 external cohort, or official cache was opened or promoted. Authoritative result:
 `reports/experiments/mars_prior_reference_complementarity_folds34.json`.
+
+### 2026-08-16: train-only MARS-Hyperspectral transfer feasibility retired
+
+The acquisition protocol was committed before mask access at pinned dataset
+revision `74b3d3132d135fee1761df1dadb7d662a4b5245b`. Stage A used only safe
+identity, split, time, country, sector, clear-fraction, and coordinate fields;
+it passed after a complete public Copernicus metadata query found 122 eligible
+Sentinel-2 candidates among the initially coordinate-resolved subset.
+
+Stage B then downloaded only published train-split `plumemask.tif` and optional
+`info.json` files. The manifest records 7,041/7,041 masks, 6,899 optional info
+records, 16,056,560 bytes, and per-file SHA-256 values; validation/test/full-tile
+masks and all hyperspectral retrieval/RGB products remained sealed. Mask pixels,
+never CSV `isplume` or flux fields, define 3,349 positives and 3,692 reviewed
+negatives. All masks have either `{0}` or `{0,1}` values. Mask-derived centers
+match 1,295 source coordinates to 0.01199 km median and 0.02095 km maximum.
+
+The frozen clear/protected-site filters leave 2,345 catalog-eligible train crops
+(1,008 positive, 1,337 negative), 390 connected 25 km components, 380 components
+more than 25 km from every MARS-S2L location, and 59 countries. Rate-limited,
+checkpointed metadata queries covered 1,466 grouped crop requests in each target
+catalog. Sentinel-2 L1C alone yields 447 deduplicated scene pairs: 286 positive
+within six hours, 161 negative within one hour, 270 total within one hour, 81
+within 15 minutes, 155 novel groups, and 41 countries.
+
+The preregistered Landsat extension used the exact USGS `landsat-c2l1` catalog
+and only LC08/LC09 items. Combined with Sentinel-2, it yields 772 scene pairs,
+500 positives, 272 negatives, 460 total within one hour, 137 dense-reprojection
+candidates within 15 minutes, 204 novel groups, and 49 countries. The positive,
+high-confidence, geography, and country gates pass; the frozen 300-negative gate
+fails by 28. The result therefore does not authorize target-band download or
+modeling. No gate was lowered, Landsat 7 was not added post hoc, and no protected
+model outcome was opened. Detailed catalogs remain ignored; compact authoritative
+receipts are `reports/acquisition/mars_hyperspectral_transfer_stage_b.json` and
+`reports/acquisition/mars_hyperspectral_transfer_stage_b_sentinel2.json`.

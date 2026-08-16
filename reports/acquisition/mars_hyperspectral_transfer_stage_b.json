@@ -1,0 +1,93 @@
+{
+  "claim_boundary": "FAIL does not authorize target-band download or modeling under this protocol. Retain compact receipts and seek an independent source that satisfies the failed gate without changing it post hoc.",
+  "decision": "FAIL",
+  "gates": {
+    "minimum_countries": true,
+    "minimum_high_confidence_pairs_within_1_hour": true,
+    "minimum_negative_scene_pairs": false,
+    "minimum_novel_25km_groups": true,
+    "minimum_positive_scene_pairs": true
+  },
+  "ignored_pair_catalog": {
+    "pairs": 772,
+    "path": ".research/mars_hyperspectral_transfer/stage_b_combined_pairs.jsonl",
+    "sha256": "902d118e8a46a9d90465d23b9a55dce561b9cbecd6336f8c390b54cf8d89fa4e"
+  },
+  "ignored_query_catalog": {
+    "groups": 2932,
+    "path": ".research/mars_hyperspectral_transfer/stage_b_combined_queries.jsonl",
+    "sha256": "e796e5e4319c2b7285695628f809ec521206013dfde9acf446e481883d56a5c7"
+  },
+  "inputs": {
+    "mask_catalog": {
+      "path": ".research/mars_hyperspectral_transfer/train_mask_catalog.jsonl",
+      "sha256": "945c74a5553a17bb01ac2241c02554a580e53bb438fae84f95498528ee546d51"
+    },
+    "protocol": {
+      "path": "configs/mars_hyperspectral_transfer_acquisition_protocol.json",
+      "sha256": "2888577d23c94fd3e8141feafda6b40b20a4fae008b537f15d4542ad9520f28c"
+    }
+  },
+  "metrics": {
+    "by_scene_supervision": {
+      "absence_high_confidence": 272,
+      "presence_exploratory": 312,
+      "presence_high_confidence": 188
+    },
+    "by_source_sensor": {
+      "EMIT": 610,
+      "EnMAP": 32,
+      "PRISMA": 130
+    },
+    "by_target_sensor": {
+      "landsat": 325,
+      "sentinel2": 447
+    },
+    "catalog_query_groups": 2932,
+    "catalog_query_groups_with_products": 632,
+    "countries": 49,
+    "dense_reprojection_candidates_within_15_minutes": 137,
+    "eligible_catalog_samples": 2345,
+    "high_confidence_pairs_within_1_hour": 460,
+    "mask_catalog_samples": 7041,
+    "negative_scene_pairs_within_1_hour": 272,
+    "novel_25km_groups_beyond_all_mars_locations": 204,
+    "positive_scene_pairs_within_1_hour": 188,
+    "positive_scene_pairs_within_6_hours": 500,
+    "samples_with_usable_pair": 663,
+    "scene_pairs_after_same_acquisition_deduplication": 772,
+    "unique_target_products": 442
+  },
+  "pass": false,
+  "schema_version": 1,
+  "scope": "train_mask_truth_and_public_target_catalog_metadata_only",
+  "source_query_catalogs": [
+    {
+      "groups": 1466,
+      "path": ".research/mars_hyperspectral_transfer/stage_b_cdse.jsonl",
+      "sensor": "sentinel2",
+      "sha256": "51bded0aa785dd12d8c11757b51bfb43323d17a839d7f860492fb77f4a2870c7"
+    },
+    {
+      "groups": 1466,
+      "path": ".research/mars_hyperspectral_transfer/stage_b_landsat.jsonl",
+      "sensor": "landsat",
+      "sha256": "8bd97ff7517bd1b6a5c955c1d0dcbd68809c052e9bc4a10dd42d53fee8d7e61a"
+    }
+  ],
+  "source_revision": "74b3d3132d135fee1761df1dadb7d662a4b5245b",
+  "target_catalogs": [
+    {
+      "collection": "sentinel-2-l1c",
+      "endpoint": "https://stac.dataspace.copernicus.eu/v1/search",
+      "scope": "metadata_only_no_target_assets",
+      "sensor": "sentinel2"
+    },
+    {
+      "collection": "landsat-c2l1",
+      "endpoint": "https://landsatlook.usgs.gov/stac-server/search",
+      "scope": "metadata_only_no_target_assets",
+      "sensor": "landsat"
+    }
+  ]
+}

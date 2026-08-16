@@ -134,6 +134,11 @@ for operational monitoring.
   only the FPR improvement is bootstrap-conclusive.
 - V4.3 and released MARS-S2L collapse under the MethaneS2CM product/domain shift at their fixed
   rules. This cannot be presented as proof that their architectures are intrinsically inferior.
+- The preregistered MARS-Hyperspectral cross-modal acquisition is a data-gate negative result,
+  not a model ablation: exact Sentinel-2 L1C plus Landsat 8/9 L1 metadata produce 500 positive
+  pairs, 460 pairs within one hour, 204 novel 25 km groups, and 49 countries, but only 272/300
+  required reviewed negatives. No target bands or model were opened; retain this as evidence for
+  conservative cohort qualification rather than implying cross-modal learning was evaluated.
 
 ## V5.2 preregistration requirements
 
