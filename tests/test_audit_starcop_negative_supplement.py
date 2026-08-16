@@ -1,12 +1,20 @@
 from __future__ import annotations
 
 import hashlib
+import io
+import struct
+import zipfile
+from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import numpy as np
 import pytest
+from rasterio.io import MemoryFile
+from rasterio.transform import from_origin
 
 import tools.audit_starcop_negative_supplement as audit
+import tools.starcop_sparse_zip as sparse
 
 HEADER = (
     "id,has_plume,window_col_off,window_row_off,window_width,window_height,qplume\n"
@@ -260,3 +268,451 @@ def test_exact_identity_and_atomic_ignored_cache(
     monkeypatch.setattr(audit, "TRAIN_MANIFEST_MD5", "0" * 32)
     with pytest.raises(audit.StarcopAuditError, match="MD5 mismatch"):
         audit.stream_manifest_payload(_Response(payload))
+
+
+class _SparseResponse:
+    def __init__(
+        self,
+        payload: bytes,
+        *,
+        url: str,
+        start: int,
+        end: int,
+        total: int,
+        status: int = 206,
+        content_type: str = "application/octet-stream",
+        content_encoding: str | None = None,
+        content_range: str | None = None,
+        history: list[object] | None = None,
+    ) -> None:
+        self.payload = payload
+        self.url = url
+        self.status_code = status
+        self.history = [] if history is None else history
+        self.headers = {
+            "Content-Type": content_type,
+            "Content-Length": str(len(payload)),
+            "Content-Range": (
+                f"bytes {start}-{end}/{total}"
+                if content_range is None
+                else content_range
+            ),
+        }
+        if content_encoding is not None:
+            self.headers["Content-Encoding"] = content_encoding
+
+    def iter_content(self, chunk_size: int) -> list[bytes]:
+        return [
+            self.payload[index : index + chunk_size]
+            for index in range(0, len(self.payload), chunk_size)
+        ]
+
+
+class _BytesRangeSession:
+    def __init__(self, payload: bytes, url: str) -> None:
+        self.payload = payload
+        self.url = url
+        self.status = 206
+        self.content_type = "application/octet-stream"
+        self.content_encoding: str | None = None
+        self.content_range: str | None = None
+        self.history: list[object] = []
+        self.calls: list[tuple[int, int]] = []
+
+    def get(self, url: str, **kwargs: object) -> _SparseResponse:
+        assert url == self.url
+        raw_range = str(kwargs["headers"]["Range"])
+        start, end = (int(value) for value in raw_range.removeprefix("bytes=").split("-"))
+        self.calls.append((start, end))
+        return _SparseResponse(
+            self.payload[start : end + 1],
+            url=url,
+            start=start,
+            end=end,
+            total=len(self.payload),
+            status=self.status,
+            content_type=self.content_type,
+            content_encoding=self.content_encoding,
+            content_range=self.content_range,
+            history=self.history,
+        )
+
+
+def _archive_spec(payload: bytes) -> sparse.ArchiveSpec:
+    name = "STARCOP_train_easy.zip"
+    return sparse.ArchiveSpec(
+        name=name,
+        size=len(payload),
+        declared_md5="0" * 32,
+        url=sparse.archive_url(name),
+    )
+
+
+def _reader(payload: bytes) -> tuple[sparse.RangeReader, _BytesRangeSession]:
+    spec = _archive_spec(payload)
+    session = _BytesRangeSession(payload, spec.url)
+    return (
+        sparse.RangeReader(
+            spec=spec,
+            session=session,
+            budget=sparse.RangeBudget(10_000_000, 10_000_000),
+        ),
+        session,
+    )
+
+
+def _zip_payload(
+    members: list[tuple[str, bytes]], *, compression: int = zipfile.ZIP_DEFLATED
+) -> bytes:
+    output = io.BytesIO()
+    with zipfile.ZipFile(output, "w", compression=compression) as archive:
+        for name, payload in members:
+            archive.writestr(name, payload)
+    return output.getvalue()
+
+
+def test_stage_b_authorization_binds_pass_manifest_and_selected_receipt(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    protocol, rows = audit.authorize_stage_b()
+    assert len(rows) == 1009
+    assert all(row["eligible_for_target_catalog"] is False for row in rows)
+    assert len(audit.stage_b_archive_specs(protocol)) == 6
+    parser = audit.build_parser()
+    assert parser.parse_args([]).execute_stage_b_sparse_masks is False
+    assert parser.parse_args(
+        ["--execute-stage-b-sparse-masks"]
+    ).execute_stage_b_sparse_masks is True
+    with pytest.raises(SystemExit):
+        parser.parse_args(
+            ["--execute-train-manifest", "--execute-stage-b-sparse-masks"]
+        )
+
+    monkeypatch.setattr(audit, "EXPECTED_STAGE_A_REPORT_SHA256", "0" * 64)
+    with pytest.raises(audit.StarcopAuditError, match="PASS receipt SHA-256"):
+        audit.authorize_stage_b()
+
+
+def test_archive_urls_and_ranges_fail_closed_and_failed_attempts_keep_budget() -> None:
+    payload = b"0123456789"
+    spec = _archive_spec(payload)
+    sparse.validate_archive_spec(spec, frozenset({spec.name}))
+    forbidden = replace(spec, url=spec.url + "?download=1")
+    with pytest.raises(sparse.SparseZipError, match="exact frozen Zenodo"):
+        sparse.validate_archive_spec(forbidden, frozenset({spec.name}))
+    test_archive = replace(
+        spec,
+        name="STARCOP_test.zip",
+        url=sparse.archive_url("STARCOP_test.zip"),
+    )
+    with pytest.raises(sparse.SparseZipError, match="six frozen train"):
+        sparse.validate_archive_spec(test_archive, frozenset({spec.name}))
+
+    session = _BytesRangeSession(payload, spec.url)
+    budget = sparse.RangeBudget(central_limit=4, label_limit=4)
+    reader = sparse.RangeReader(spec=spec, session=session, budget=budget)
+    assert reader.read(0, 2, category="central_directory") == b"012"
+    assert budget.central_bytes == 3
+    with pytest.raises(sparse.SparseZipError, match="cap exceeded"):
+        reader.read(3, 4, category="central_directory")
+
+    failed_session = _BytesRangeSession(payload, spec.url)
+    failed_session.status = 200
+    failed_budget = sparse.RangeBudget(central_limit=4, label_limit=4)
+    failed_reader = sparse.RangeReader(
+        spec=spec, session=failed_session, budget=failed_budget
+    )
+    with pytest.raises(sparse.SparseZipError, match="status 206"):
+        failed_reader.read(0, 2, category="central_directory")
+    assert failed_budget.central_bytes == 3
+    with pytest.raises(sparse.SparseZipError, match="cap exceeded"):
+        failed_reader.read(3, 4, category="central_directory")
+
+    malformed_session = _BytesRangeSession(payload, spec.url)
+    malformed_session.content_range = "bytes 0-2/*"
+    malformed = sparse.RangeReader(
+        spec=spec,
+        session=malformed_session,
+        budget=sparse.RangeBudget(10, 10),
+    )
+    with pytest.raises(sparse.SparseZipError, match="Content-Range"):
+        malformed.read(0, 2, category="central_directory")
+
+    encoded_session = _BytesRangeSession(payload, spec.url)
+    encoded_session.content_encoding = "gzip"
+    encoded = sparse.RangeReader(
+        spec=spec,
+        session=encoded_session,
+        budget=sparse.RangeBudget(10, 10),
+    )
+    with pytest.raises(sparse.SparseZipError, match="Encoded range"):
+        encoded.read(0, 2, category="central_directory")
+
+
+def test_zip_member_allowlist_crc_decompression_and_local_header_checks() -> None:
+    sample_id = _id()
+    member = f"{sample_id}/labelbinary.tif"
+    payload = _zip_payload([(member, b"zero-mask-fixture")])
+    reader, _session = _reader(payload)
+    directory = sparse.read_zip_directory(reader)
+    locations = sparse.resolve_selected_members(
+        {reader.spec.name: directory}, [sample_id]
+    )
+    archive_name, entry = locations[sample_id]
+    assert archive_name == reader.spec.name
+    assert sparse.fetch_label_member(
+        reader,
+        entry,
+        sample_id=sample_id,
+        maximum_uncompressed_bytes=1024,
+    ) == b"zero-mask-fixture"
+    with pytest.raises(sparse.SparseZipError, match="Only exact selected"):
+        sparse.fetch_label_member(
+            reader,
+            entry,
+            sample_id="ang20200101t000000_r0_c0_w512_h512",
+            maximum_uncompressed_bytes=1024,
+        )
+    with pytest.raises(sparse.SparseZipError, match="exactly once"):
+        sparse.resolve_selected_members(
+            {reader.spec.name: directory}, [_id(row=512)]
+        )
+    with pytest.raises(sparse.SparseZipError, match="inconsistent"):
+        sparse.fetch_label_member(
+            reader,
+            replace(entry, compression=0),
+            sample_id=sample_id,
+            maximum_uncompressed_bytes=1024,
+        )
+
+    stored = bytearray(_zip_payload([(member, b"abcdef")], compression=zipfile.ZIP_STORED))
+    stored_reader, _ = _reader(bytes(stored))
+    stored_entry = sparse.read_zip_directory(stored_reader).entries[0]
+    name_length, extra_length = struct.unpack_from(
+        "<HH", stored, stored_entry.local_header_offset + 26
+    )
+    data_offset = stored_entry.local_header_offset + 30 + name_length + extra_length
+    stored[data_offset] ^= 0x01
+    corrupt_reader, _ = _reader(bytes(stored))
+    with pytest.raises(sparse.SparseZipError, match="CRC-32"):
+        sparse.fetch_label_member(
+            corrupt_reader,
+            stored_entry,
+            sample_id=sample_id,
+            maximum_uncompressed_bytes=1024,
+        )
+
+
+def test_bounded_deflate_rejects_forged_declared_size_zip_bomb() -> None:
+    sample_id = _id()
+    member = f"{sample_id}/labelbinary.tif"
+    archive = bytearray(_zip_payload([(member, b"0" * 4096)]))
+    reader, _ = _reader(bytes(archive))
+    entry = sparse.read_zip_directory(reader).entries[0]
+    # Forge both the supplied central entry and local header to declare one byte;
+    # the compressed stream still expands to 4096 bytes.
+    struct.pack_into("<L", archive, entry.local_header_offset + 22, 1)
+    forged_entry = replace(entry, uncompressed_size=1)
+    forged_reader, _ = _reader(bytes(archive))
+    with pytest.raises(sparse.SparseZipError, match="expands beyond"):
+        sparse.fetch_label_member(
+            forged_reader,
+            forged_entry,
+            sample_id=sample_id,
+            maximum_uncompressed_bytes=1024,
+        )
+
+
+def test_duplicate_and_traversal_central_members_are_rejected() -> None:
+    sample_id = _id()
+    member = f"{sample_id}/labelbinary.tif"
+    with pytest.warns(UserWarning):
+        duplicate = _zip_payload([(member, b"a"), (member, b"b")])
+    duplicate_reader, _ = _reader(duplicate)
+    with pytest.raises(sparse.SparseZipError, match="Duplicate ZIP member"):
+        sparse.read_zip_directory(duplicate_reader)
+
+    traversal = _zip_payload([("../labelbinary.tif", b"a")])
+    traversal_reader, _ = _reader(traversal)
+    with pytest.raises(sparse.SparseZipError, match="traversal"):
+        sparse.read_zip_directory(traversal_reader)
+
+
+class _VirtualRangeSession:
+    def __init__(
+        self, *, total: int, url: str, segments: list[tuple[int, bytes]]
+    ) -> None:
+        self.total = total
+        self.url = url
+        self.segments = segments
+        self.calls: list[tuple[int, int]] = []
+
+    def get(self, url: str, **kwargs: object) -> _SparseResponse:
+        assert url == self.url
+        raw = str(kwargs["headers"]["Range"]).removeprefix("bytes=")
+        start, end = (int(value) for value in raw.split("-"))
+        result = bytearray(end - start + 1)
+        for segment_start, segment in self.segments:
+            overlap_start = max(start, segment_start)
+            overlap_end = min(end + 1, segment_start + len(segment))
+            if overlap_start < overlap_end:
+                result[overlap_start - start : overlap_end - start] = segment[
+                    overlap_start - segment_start : overlap_end - segment_start
+                ]
+        self.calls.append((start, end))
+        return _SparseResponse(
+            bytes(result), url=url, start=start, end=end, total=self.total
+        )
+
+
+def test_zip64_locator_uses_64bit_central_offset_and_size() -> None:
+    total = 5_000_000_000
+    central_offset = 1_000
+    zip64_offset = 2_000
+    name = b"folder/labelbinary.tif"
+    central = struct.pack(
+        "<4s6H3L5H2L",
+        sparse.CENTRAL_SIGNATURE,
+        45,
+        20,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        len(name),
+        0,
+        0,
+        0,
+        0,
+        0,
+        500,
+    ) + name
+    zip64 = struct.pack(
+        "<4sQ2H2L4Q",
+        sparse.ZIP64_EOCD_SIGNATURE,
+        44,
+        45,
+        45,
+        0,
+        0,
+        1,
+        1,
+        len(central),
+        central_offset,
+    )
+    locator = struct.pack(
+        "<4sLQL", sparse.ZIP64_LOCATOR_SIGNATURE, 0, zip64_offset, 1
+    )
+    eocd = struct.pack(
+        "<4s4H2LH",
+        sparse.EOCD_SIGNATURE,
+        0,
+        0,
+        0xFFFF,
+        0xFFFF,
+        0xFFFFFFFF,
+        0xFFFFFFFF,
+        0,
+    )
+    spec = sparse.ArchiveSpec(
+        name="STARCOP_train_easy.zip",
+        size=total,
+        declared_md5="0" * 32,
+        url=sparse.archive_url("STARCOP_train_easy.zip"),
+    )
+    session = _VirtualRangeSession(
+        total=total,
+        url=spec.url,
+        segments=[
+            (central_offset, central),
+            (zip64_offset, zip64),
+            (total - 42, locator + eocd),
+        ],
+    )
+    reader = sparse.RangeReader(
+        spec=spec,
+        session=session,
+        budget=sparse.RangeBudget(1_000_000, 1_000_000),
+    )
+    directory = sparse.read_zip_directory(reader)
+    assert directory.zip64 is True
+    assert directory.central_offset == central_offset
+    assert directory.central_size == len(central)
+    assert directory.entries[0].local_header_offset == 500
+    assert (zip64_offset, zip64_offset + 55) in session.calls
+
+
+def _geotiff(*, value: int = 0, crs: str = "EPSG:32611") -> bytes:
+    data = np.full((512, 512), value, dtype=np.uint8)
+    with MemoryFile() as memory:
+        with memory.open(
+            driver="GTiff",
+            width=512,
+            height=512,
+            count=1,
+            dtype="uint8",
+            crs=crs,
+            transform=from_origin(500_000, 4_100_000, 30, 30),
+        ) as dataset:
+            dataset.write(data, 1)
+        return memory.read()
+
+
+def test_zero_mask_georeferencing_and_spatial_filter_components() -> None:
+    sample_id = _id()
+    member = f"{sample_id}/labelbinary.tif"
+    decoded = audit.decode_zero_mask(
+        _geotiff(),
+        sample_id=sample_id,
+        archive_name="STARCOP_train_easy.zip",
+        label_member=member,
+    )
+    assert decoded["zero_mask_confirmed"] is True
+    assert decoded["coordinate_resolved"] is True
+    assert decoded["eligible_for_target_catalog"] is False
+    with pytest.raises(audit.StarcopAuditError, match="not all zero"):
+        audit.decode_zero_mask(
+            _geotiff(value=1),
+            sample_id=sample_id,
+            archive_name="STARCOP_train_easy.zip",
+            label_member=member,
+        )
+    with pytest.raises(audit.StarcopAuditError, match="projected CRS"):
+        audit.decode_zero_mask(
+            _geotiff(crs="EPSG:4326"),
+            sample_id=sample_id,
+            archive_name="STARCOP_train_easy.zip",
+            label_member=member,
+        )
+
+    def row(identifier: str, latitude: float, longitude: float) -> dict[str, object]:
+        return {
+            **decoded,
+            "sample_id": identifier,
+            "tile": identifier.split("_r", 1)[0],
+            "timestamp": "2020-01-01T12:00:00Z",
+            "latitude": latitude,
+            "longitude": longitude,
+        }
+
+    rows = [
+        row(_id(row=0), 10.0, 10.0),
+        row(_id(row=512), 20.0, 20.0),
+        row(_id(row=1024), 30.0, 30.0),
+        row(_id(row=1536), 30.05, 30.05),
+        row(_id(row=2048), 40.0, 40.0),
+    ]
+    filtered = audit.filter_stage_b_rows(
+        rows=rows,
+        all_mars_locations={"development": (0.0, 0.0), "test": (10.0, 10.0)},
+        protected_mars_locations={"test": (10.0, 10.0)},
+        prior_negative_coordinates={"prior": (20.0, 20.0)},
+    )
+    assert all(item["eligible_for_target_catalog"] is False for item in filtered)
+    passing = [item for item in filtered if item["passes_frozen_spatial_filter"]]
+    assert len(passing) == 3
+    assert passing[0]["group_id"] == passing[1]["group_id"]
+    assert passing[2]["group_id"] != passing[0]["group_id"]
