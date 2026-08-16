@@ -6,6 +6,10 @@ import argparse
 import csv
 import hashlib
 import json
+import time
+import urllib.error
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path, PurePosixPath
 
 
@@ -90,6 +94,51 @@ def validate_download(
     }
 
 
+def download_one(
+    *,
+    relative_path: str,
+    output_dir: Path,
+    repository: str,
+    revision: str,
+    retries: int = 6,
+) -> bool:
+    output = output_dir.joinpath(*PurePosixPath(relative_path).parts)
+    if output.exists() and output.stat().st_size > 0:
+        return True
+    url = (
+        f"https://huggingface.co/datasets/{repository}/resolve/"
+        f"{revision}/{relative_path}?download=true"
+    )
+    request = urllib.request.Request(
+        url, headers={"User-Agent": "ERSRR-research-audit/1.0"}
+    )
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response:
+                payload = response.read()
+            output.parent.mkdir(parents=True, exist_ok=True)
+            partial = output.with_name(output.name + ".part")
+            partial.write_bytes(payload)
+            partial.replace(output)
+            return True
+        except urllib.error.HTTPError as error:
+            if error.code == 404:
+                return False
+            if attempt + 1 == retries:
+                raise
+            retry_after = 0.0
+            try:
+                retry_after = float(error.headers.get("Retry-After", "0"))
+            except (TypeError, ValueError):
+                pass
+            time.sleep(max(retry_after, min(60.0, 2.0 * (2**attempt))))
+        except (urllib.error.URLError, TimeoutError):
+            if attempt + 1 == retries:
+                raise
+            time.sleep(min(60.0, 2.0 * (2**attempt)))
+    raise AssertionError("unreachable")
+
+
 def acquire(
     *,
     metadata_root: Path,
@@ -98,19 +147,24 @@ def acquire(
     revision: str,
     max_workers: int,
 ) -> dict[str, object]:
-    from huggingface_hub import snapshot_download
-
     train_folders = read_train_folders(metadata_root)
     patterns = allowed_patterns(train_folders)
     output_dir.mkdir(parents=True, exist_ok=True)
-    snapshot_download(
-        repo_id=repository,
-        repo_type="dataset",
-        revision=revision,
-        allow_patterns=patterns,
-        local_dir=output_dir,
-        max_workers=max_workers,
-    )
+    missing_from_repository: list[str] = []
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(
+                download_one,
+                relative_path=relative_path,
+                output_dir=output_dir,
+                repository=repository,
+                revision=revision,
+            ): relative_path
+            for relative_path in patterns
+        }
+        for future in as_completed(futures):
+            if not future.result():
+                missing_from_repository.append(futures[future])
     validation = validate_download(output_dir=output_dir, expected_patterns=patterns)
     manifest: dict[str, object] = {
         "schema_version": 1,
@@ -119,6 +173,7 @@ def acquire(
         "license": "CC-BY-NC-SA-4.0",
         "scope": "train_split_info_and_authoritative_masks_only",
         "train_samples": len(train_folders),
+        "missing_from_repository": sorted(missing_from_repository),
         **validation,
     }
     (output_dir / "train_label_manifest.json").write_text(
