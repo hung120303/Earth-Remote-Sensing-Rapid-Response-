@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_real_descriptor_extraction_or_outcome_access",
+  "scope": "Outcome-blind feasibility audit for a strictly prior, multi-reference Sentinel-2 bank on authorized MARS folds 3/4. This is an information-acquisition audit, not a model experiment.",
+  "rationale": {
+    "failure_mode": "Repeated scene-head, dense-to-scene, product-alignment, synthetic, and released-proposal experiments over the fixed single-reference MARS tensors are saturated. Independent controlled releases show that the current champion can miss emissions detected by the released model.",
+    "new_information": "Use other strictly earlier, same-site Sentinel-2 target observations as candidate reference frames rather than fitting another head over the existing target/reference pair.",
+    "architecture_if_later_authorized": "A reference-set temporal Vision Transformer will encode target/candidate pairs and attend over reference tokens, but it is authorized only after a separate frozen alternate-reference score extraction demonstrates complementary positive signal.",
+    "not_a_repeat_of_site_templates": "Earlier site-template experiments aggregated derived score/probability/MBMP maps after the fixed target/reference pair had already been processed. This audit selects and later re-pairs raw six-band target imagery before methane inference."
+  },
+  "research_basis": {
+    "project_eucalyptus": {
+      "repository": "https://github.com/Orbio-Earth/Project-Eucalyptus",
+      "revision": "46f719b7003eeb9ed604b8f1dd4616aa1ba1def0",
+      "license": "research and non-commercial use",
+      "data_document_sha256": "5217f72cfe36b26c7ec84184f1dc2bdb8c4f11d5e1cdd42de9fe7bc6ce7178d9",
+      "model_document_sha256": "61b9ed41590f149f02a8582643439153e8080fe120af57972abcab3d3f00ed55",
+      "evidence": [
+        "The production Sentinel-2 model uses two cloud-filtered prior reference scenes.",
+        "The authors identify methane-contaminated or surface-mismatched references as a false-negative mechanism observed in controlled releases.",
+        "Their proposed research directions include averaging the last 5/10 overpasses, similarity-based reference selection, and learned attention over references."
+      ],
+      "local_ignored_clone": ".research/eucalyptus/Project-Eucalyptus",
+      "released_model_use": "not authorized here; its 24-channel input requires B05/B07/B8A absent from the six-band MARS contract, and the released file is a whole-object PyTorch pickle rather than a weights-only artifact"
+    },
+    "zhao_dsan_2025": {
+      "audit": "reports/acquisition/zhao_dsan_2025_dataset_audit.json",
+      "role": "architecture literature only",
+      "exclusion": "all 1,627 public images come from six sites overlapping both MARS development and official-test geography within 0.216 km"
+    }
+  },
+  "implementation": {
+    "builder": {
+      "path": "tools/build_mars_prior_reference_bank.py",
+      "sha256": "dcf9300aa066e2235aecf60c1db6a79377c5341d0033bc2ab04010275e11c816"
+    },
+    "tests": {
+      "path": "tests/test_build_mars_prior_reference_bank.py",
+      "sha256": "e21127e89d22cefadbc3de11f3ae1d6d5a3355a0d302f7c30fa8a8cfad9f8cfb",
+      "result": "4 passed before real descriptor extraction"
+    }
+  },
+  "inputs": {
+    "mars_root": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+    "development_manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "fold_assignments": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    }
+  },
+  "folds": [
+    3,
+    4
+  ],
+  "selection": {
+    "candidate_sensor": "Sentinel-2",
+    "landsat_policy": "No alternate Landsat reference is selected; all later Landsat model scores and masks must remain exact champion identities until a separately preregistered reprojection-aware path exists.",
+    "same_physical_location_required": true,
+    "same_sensor_required": true,
+    "same_mgrs_tile_required": true,
+    "strictly_prior_target_datetime_required": true,
+    "distinct_target_scene_id_required": true,
+    "minimum_percentage_clear": 95.0,
+    "exact_crs_and_affine_transform_required": true,
+    "descriptor_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08"
+    ],
+    "methane_sensitive_bands_used_for_selection": false,
+    "descriptor_size": 16,
+    "descriptor": "Per-band median-normalized 16x16 average-pooled target texture. Distance is mean absolute texture difference plus 0.25 times mean absolute log median-reflectance ratio.",
+    "radiometric_weight": 0.25,
+    "recent_pool_size": 10,
+    "selected_references": 5,
+    "selection_order": "Among the ten most recent eligible prior observations, choose the five smallest frozen descriptor distances with stable row-order tie breaking.",
+    "fallback": "If no eligible reference exists, use the original MARS pair only in any later inference experiment."
+  },
+  "feasibility_gates": {
+    "minimum_sentinel_reference_coverage": 0.8,
+    "all_rows_with_a_same-key_prior_must_have_an_exact_grid_prior": true,
+    "all_descriptors_finite": true,
+    "no_outcome_or_model_access": true,
+    "pass_action": "Preregister and run a frozen released-model alternate-reference score extraction and a diagnostic of complementarity versus the Gaussian+DOFA champion.",
+    "failure_action": "Stop the reference-set path before model inference."
+  },
+  "outcome_access": {
+    "labels_permitted": false,
+    "plume_masks_permitted": false,
+    "fluxes_permitted": false,
+    "model_scores_permitted": false,
+    "predictions_permitted": false,
+    "record_fields_permitted": [
+      "image asset path only",
+      "crs",
+      "group_id",
+      "height",
+      "percentage_clear",
+      "physical_location_id",
+      "sample_id",
+      "satellite",
+      "sensor_family",
+      "target_datetime",
+      "target_scene_id",
+      "width"
+    ]
+  },
+  "outputs": {
+    "descriptor_cache": ".research/mars_prior_reference_bank/folds34_descriptors.npz",
+    "selection_manifest": ".research/mars_prior_reference_bank/folds34_selection.jsonl",
+    "json": "reports/acquisition/mars_prior_reference_bank_folds34.json",
+    "markdown": "reports/acquisition/MARS_PRIOR_REFERENCE_BANK_FOLDS34.md"
+  },
+  "invariants": [
+    "Only folds 3 and 4 are materialized.",
+    "The builder never accesses manifest label fields or non-image asset paths.",
+    "Only B02/B03/B04/B08 target pixels can influence reference selection; B11/B12, masks, fluxes, and outcomes cannot.",
+    "Every selected observation is strictly earlier than its target and belongs to the same physical site, Sentinel-2 sensor family, MGRS tile, CRS, and affine grid.",
+    "No model is loaded, trained, scored, calibrated, or selected in this audit.",
+    "Fold 2, folds 0/1, MethaneS2CM held development, external outcomes, and official paper outcomes remain unavailable to this audit.",
+    "Bulk descriptor and selection artifacts remain ignored and only compact reports may be committed."
+  ],
+  "claim_boundary": "Passing this audit establishes only that a leakage-safe prior-reference set is available. It does not establish methane signal, model improvement, calibration, or superiority."
+}
