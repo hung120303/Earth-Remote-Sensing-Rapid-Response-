@@ -15,9 +15,9 @@
   },
   "eligibility_boundary": {
     "coordinate_resolved": true,
-    "eligible_for_target_catalog": false,
-    "novel_beyond_all_mars_25km": null,
-    "target_catalog_queried": false
+    "eligible_for_target_catalog_rows": 2565,
+    "target_catalog_queried": false,
+    "target_catalog_stage_authorized": false
   },
   "flight_ids": [
     "ang20180821t184959",
@@ -148,18 +148,23 @@
   "gates": {
     "exact_utc_and_crop_center_available_without_bulk_download": true,
     "explicit_dataset_research_use_license_or_written_permission": true,
-    "metadata_stage_decision": "PENDING_PROTECTED_AND_DUPLICATE_FILTERING",
+    "metadata_stage_decision": "FAIL",
     "minimum_metadata_resolved_train_background_tiles": {
       "observed": 3149,
       "pass": true,
       "required": 100
     },
     "minimum_nonprotected_candidate_locations": {
-      "reason": "25km protected-site and prior-pair filtering not run",
-      "status": "PENDING"
+      "interpretation": "Rows and flightlines are not counted as independent candidate locations; each transitive 25km connected component counts once.",
+      "observed": 15,
+      "pass": false,
+      "required": 20,
+      "unit": "eligible_25km_connected_components"
     }
   },
   "ignored_artifacts": {
+    "filtered_rows_jsonl": ".research/jpl_operational_ghg_supplement/cach4_train_negative_eligible_rows.jsonl",
+    "filtered_rows_sha256": "7f8546f098a427e353b347f5d8e7329014bc2a09fcecb86afa485721e5ed3447",
     "header_manifest": ".research/jpl_operational_ghg_supplement/cach4_header_manifest.json",
     "headers": ".research/jpl_operational_ghg_supplement/cach4_headers",
     "resolved_rows_jsonl": ".research/jpl_operational_ghg_supplement/cach4_train_negative_resolved_rows.jsonl",
@@ -174,12 +179,128 @@
     },
     "record_id": 19011045
   },
+  "metadata_eligibility": {
+    "component_novelty_contract": "A component is novel beyond all MARS only when every eligible member is strictly farther than 25km from every MARS representative location.",
+    "conservative_location_gate": {
+      "interpretation": "Rows and flightlines are not counted as independent candidate locations; each transitive 25km connected component counts once.",
+      "observed": 15,
+      "pass": false,
+      "required": 20,
+      "unit": "eligible_25km_connected_components"
+    },
+    "counts": {
+      "all_mars_representative_locations": 1318,
+      "components_novel_beyond_all_mars_25km": 15,
+      "eligible_25km_connected_components": 15,
+      "eligible_flightlines": 104,
+      "eligible_rows": 2565,
+      "excluded_rows_any_reason": 584,
+      "mars_test_protected_rows": 390,
+      "negative_pair_rows": 272,
+      "official_test_representative_locations": 1289,
+      "prior_pair_duplicate_rows": 194,
+      "protected_and_prior_duplicate_rows": 0,
+      "raw_cach4_train_negative_rows": 3149,
+      "raw_cach4_train_rows": 3332,
+      "resolved_negative_rows": 3149,
+      "unique_negative_source_samples": 232
+    },
+    "distance_summaries_km": {
+      "eligible_nearest_any_mars_representative_location": {
+        "count": 2565,
+        "maximum": 463.9711410736192,
+        "median": 285.38383068991754,
+        "minimum": 25.065544998080387,
+        "p05": 46.165372762583026,
+        "p95": 380.87753846002454
+      },
+      "nearest_any_mars_representative_location": {
+        "count": 3149,
+        "maximum": 463.9711410736192,
+        "median": 274.4007421972625,
+        "minimum": 4.8369294001650305,
+        "p05": 13.504412134383742,
+        "p95": 378.400086981447
+      },
+      "nearest_counted_prior_negative_source_crop": {
+        "count": 3149,
+        "maximum": 273.2356547188142,
+        "median": 140.33399750381164,
+        "minimum": 4.8329426412973,
+        "p05": 22.714667874336378,
+        "p95": 254.0282843859626
+      },
+      "nearest_official_mars_test": {
+        "count": 3149,
+        "maximum": 596.2572411089545,
+        "median": 274.4007421972625,
+        "minimum": 4.8369294001650305,
+        "p05": 13.504412134383742,
+        "p95": 592.7229890210875
+      }
+    },
+    "inputs": {
+      "filter_protocol": {
+        "path": "configs/mars_cross_modal_negative_supplement_filter_protocol.json",
+        "sha256": "31750ac5456893e444d40c9bacfb16195c36c7c5639e7ddc6ceef1e81b0f645c"
+      },
+      "mars_safe_column_manifest": {
+        "columns_accessed": [
+          "country",
+          "id_location",
+          "lat",
+          "location_name",
+          "lon",
+          "satellite",
+          "split_name",
+          "tile",
+          "tile_date"
+        ],
+        "path": ".research/source_audit_20260715/mars_s2l_current_validated_images_all.csv",
+        "protected_outcome_columns_accessed": [],
+        "sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2"
+      },
+      "parent_protocol": {
+        "path": "configs/mars_cross_modal_negative_supplement_protocol.json",
+        "sha256": "0d26e596045a063645ca0bd108868641aa674e2a796b7bacecf34f1d4860929e"
+      },
+      "prior_mask_catalog": {
+        "path": ".research/mars_hyperspectral_transfer/train_mask_catalog.jsonl",
+        "sha256": "945c74a5553a17bb01ac2241c02554a580e53bb438fae84f95498528ee546d51"
+      },
+      "prior_pair_catalog": {
+        "byte_sha256": "1657b39bcd25580eade09813e27e9506934be4033bc1ae0711d3f23d81e170ad",
+        "normalized_lf_sha256": "902d118e8a46a9d90465d23b9a55dce561b9cbecd6336f8c390b54cf8d89fa4e",
+        "path": ".research/mars_hyperspectral_transfer/stage_b_combined_pairs.jsonl"
+      },
+      "prior_stage_b_report": {
+        "path": "reports/acquisition/mars_hyperspectral_transfer_stage_b.json",
+        "sha256": "f7bd429ebb6d8dae93500fff14a3566496480a9d2fd33b13b0d8146ec54f1f65"
+      },
+      "resolved_cach4_negatives": {
+        "path": ".research/jpl_operational_ghg_supplement/cach4_train_negative_resolved_rows.jsonl",
+        "sha256": "aa7d381a8216e3e311c3ffe84c00a3aa99b83d4dbf5007302499c81f77dc36c4"
+      }
+    },
+    "output": {
+      "path": ".research/jpl_operational_ghg_supplement/cach4_train_negative_eligible_rows.jsonl",
+      "rows": 3149,
+      "sha256": "7f8546f098a427e353b347f5d8e7329014bc2a09fcecb86afa485721e5ed3447"
+    },
+    "radius_km": 25.0,
+    "security_boundary": {
+      "jpl_test_definition_or_content_accessed": false,
+      "mars_protected_outcome_fields_accessed": [],
+      "target_assets_downloaded": false,
+      "target_catalog_queried": false
+    }
+  },
   "padded_edge_semantics": {
     "source_behavior": "The released imagesampler uses extract_window with a fill value, so nominal 256-pixel windows can extend beyond the source edge.",
     "validation": "Every crop center satisfies 0 <= A+width/2 < samples and 0 <= B+height/2 < lines; full-window overhang is recorded, not mistaken for a center-georeferencing failure."
   },
-  "schema_version": 1,
-  "scope": "released_CACH4_train_definitions_and_public_ENVI_headers_only",
+  "schema_version": 2,
+  "scope": "final_CACH4_train_metadata_eligibility_no_target_catalog_query",
   "sources": {
     "public_header_root": "https://popo.jpl.nasa.gov/pub/AThorpe/extract_time/output/FA18_500ppmm_150fetch_10_20_30merge/",
     "train_definition": ".research/jpl_operational_ghg_supplement/multicampaign_train.csv",

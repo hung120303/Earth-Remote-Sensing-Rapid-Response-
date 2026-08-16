@@ -1,20 +1,30 @@
-# JPL CACH4 train-header metadata audit
+# JPL CACH4 negative-supplement metadata gate
 
-Status: **PENDING protected-site and duplicate filtering**. This is not a metadata-stage pass and no target Sentinel-2/Landsat catalog was queried.
+**Decision: FAIL.** Target-catalog stage: **not authorized and not queried**.
 
-## Scope and interpretation
+This final metadata filter read only released CACH4 train negatives, public ENVI header-derived centers, the safe-column MARS location view, and hash-bound already-counted MARS-Hyperspectral negative-pair metadata. It accessed no protected MARS outcome field, no released JPL test content, and no Sentinel-2/Landsat catalog or asset.
 
-Only released `multicampaign_train.csv` definitions and 124 tiny public JPL ENVI `.hdr` sidecars were read. The headers are geospatial metadata matching the frozen protocol's permitted crop-georeferencing field; no retrieval raster, GeoTIFF, label raster, target asset, or released test content was opened.
+## Eligibility result
 
-The JPL CMF suffix `+A+B` is interpreted as ENVI sample/column `A`, then line/row `B`. All 3,332 train crop centers passed `0 <= A + width/2 < samples` and `0 <= B + height/2 < lines`. The released sampler pads edge windows: 1,015 rows overhang the sample axis, 159 overhang the line axis, and 1,131 overhang either axis (maximum 127 sample pixels and 127 line pixels). This does not move the crop center outside the source image. Crop centers use the GDAL ENVI affine convention with rotation radians `-degrees*pi/180` before conversion from UTM WGS84 to EPSG:4326.
+- Raw CACH4 train rows: 3,332
+- Resolved train negatives: 3,149
+- Within 25 km of official MARS test geography: 390
+- Within 25 km of an already-counted negative source crop: 194
+- Excluded for either reason: 584
+- Eligible rows / flightlines: 2,565 / 104
+- Eligible transitive 25 km components: 15
+- Components wholly novel beyond every MARS representative location: 15
 
-## Compact result
+The frozen `minimum_nonprotected_candidate_locations >= 20` gate counts 25 km connected components, not tiles or flightlines: **FAIL (15)**.
 
-- Dataset license metadata: `{'id': 'cc-by-4.0'}`
-- CACH4 train rows: 3,332 (3,149 background; 183 plume)
-- Train flightlines listed and header-resolved: 124
-- Background rows with exact UTC and WGS84 crop center: 3,149
-- Coordinate-resolution gate: **PASS**
-- Target-catalog eligibility: **FALSE pending 25 km protected-site and duplicate filtering**
+## Distance audit
 
-Detailed headers and row-level coordinates remain beneath ignored `.research/jpl_operational_ghg_supplement`. The compact JSON lists all train flight IDs and exposes aggregate gates without publishing the detailed location catalog.
+- Nearest official-test location: min 4.836929 km; median 274.400742 km
+- Nearest counted prior-negative crop: min 4.832943 km; median 140.333998 km
+- Nearest any-MARS representative: min 4.836929 km; median 274.400742 km
+
+Detailed row-level distances and stable group IDs remain in ignored `.research/jpl_operational_ghg_supplement/cach4_train_negative_eligible_rows.jsonl`. The compact JSON records hashes for the protocol, resolved CACH4 rows, safe-column MARS manifest, prior Stage B report, pair catalog, mask catalog, and filtered output.
+
+## Claim boundary
+
+Metadata-stage PASS only authorizes the separately frozen target-catalog feasibility query. It does not establish target-pair yield, label observability, transferability, model performance, or superiority over MARS-S2L.
