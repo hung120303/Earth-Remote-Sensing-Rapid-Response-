@@ -11,6 +11,7 @@ import binascii
 import hashlib
 import re
 import struct
+import time
 import zlib
 from dataclasses import dataclass, field
 from pathlib import PurePosixPath
@@ -29,6 +30,8 @@ CENTRAL_SIGNATURE = b"PK\x01\x02"
 LOCAL_SIGNATURE = b"PK\x03\x04"
 ZIP64_EXTRA_ID = 0x0001
 SUPPORTED_METHODS = frozenset({0, 8})
+RETRYABLE_HTTP_STATUSES = frozenset({429, 500, 502, 503, 504})
+MAX_RANGE_ATTEMPTS = 5
 CONTENT_RANGE_RE = re.compile(r"^bytes (?P<start>\d+)-(?P<end>\d+)/(?P<total>\d+)$")
 
 
@@ -68,8 +71,10 @@ class ZipDirectory:
 class RangeBudget:
     central_limit: int
     label_limit: int
+    minimum_interval_seconds: float = 0.0
     central_bytes: int = 0
     label_bytes: int = 0
+    last_request_monotonic: float = 0.0
 
     def charge(self, category: str, amount: int) -> None:
         if amount < 0:
@@ -85,6 +90,18 @@ class RangeBudget:
         else:
             raise SparseZipError(f"Unknown byte-range category: {category}")
 
+    def wait_for_request_slot(self) -> None:
+        if self.minimum_interval_seconds < 0:
+            raise SparseZipError("Negative HTTP pacing interval")
+        remaining = (
+            self.last_request_monotonic
+            + self.minimum_interval_seconds
+            - time.monotonic()
+        )
+        if remaining > 0:
+            time.sleep(remaining)
+        self.last_request_monotonic = time.monotonic()
+
 
 @dataclass
 class RangeReader:
@@ -99,22 +116,47 @@ class RangeReader:
                 f"Invalid range {start}-{end} for {self.spec.name} ({self.spec.size})"
             )
         expected_length = end - start + 1
-        self.budget.charge(category, expected_length)
-        response = self.session.get(
-            self.spec.url,
-            headers={"Range": f"bytes={start}-{end}", "Accept-Encoding": "identity"},
-            stream=True,
-            allow_redirects=False,
-            timeout=(15, 60),
-        )
-        # Charges are intentionally never rolled back. A failed or malicious
-        # response consumed an attempt and cannot be retried around a global cap.
-        payload = validate_range_response(
-            response,
-            spec=self.spec,
-            expected_start=start,
-            expected_end=end,
-        )
+        response: Any | None = None
+        for attempt in range(MAX_RANGE_ATTEMPTS):
+            self.budget.charge(category, expected_length)
+            self.budget.wait_for_request_slot()
+            response = self.session.get(
+                self.spec.url,
+                headers={
+                    "Range": f"bytes={start}-{end}",
+                    "Accept-Encoding": "identity",
+                },
+                stream=True,
+                allow_redirects=False,
+                timeout=(15, 60),
+            )
+            # Charges are intentionally never rolled back. A failed or malicious
+            # response consumed an attempt and cannot be retried around a global cap.
+            try:
+                payload = validate_range_response(
+                    response,
+                    spec=self.spec,
+                    expected_start=start,
+                    expected_end=end,
+                )
+                break
+            except SparseZipError:
+                status = int(getattr(response, "status_code", 0))
+                close = getattr(response, "close", None)
+                if callable(close):
+                    close()
+                if status not in RETRYABLE_HTTP_STATUSES or attempt + 1 >= MAX_RANGE_ATTEMPTS:
+                    raise
+                retry_after = str(response.headers.get("Retry-After", "")).strip()
+                try:
+                    delay = float(retry_after) if retry_after else 2.0**attempt
+                except ValueError:
+                    delay = 2.0**attempt
+                time.sleep(min(max(delay, 0.25), 30.0))
+        else:  # pragma: no cover - the bounded loop either succeeds or raises.
+            raise SparseZipError("Exhausted range attempts")
+        if response is None:  # pragma: no cover - defensive initialization guard.
+            raise SparseZipError("Range response was not initialized")
         self.receipts.append(
             {
                 "archive": self.spec.name,
@@ -173,8 +215,11 @@ def validate_range_response(
         raise SparseZipError("Range response URL differs from the frozen archive URL")
     if getattr(response, "history", []):
         raise SparseZipError("Redirected range responses are forbidden")
-    if int(getattr(response, "status_code", 0)) != 206:
-        raise SparseZipError("Archive range response must have HTTP status 206")
+    status = int(getattr(response, "status_code", 0))
+    if status != 206:
+        raise SparseZipError(
+            f"Archive range response must have HTTP status 206; observed {status}"
+        )
     content_type = str(response.headers.get("Content-Type", "")).lower()
     if "html" in content_type:
         raise SparseZipError("HTML/auth range response rejected")
@@ -521,11 +566,17 @@ def fetch_label_member(
     ) = struct.unpack_from("<4s5H3L2H", fixed, 0)
     if flags & 0x0001 or flags & 0x0040:
         raise SparseZipError("Encrypted local member rejected")
-    variable = reader.read(
+    variable_length = name_length + extra_length
+    data_start = entry.local_header_offset + 30 + variable_length
+    if entry.compressed_size <= 0 or data_start + entry.compressed_size > reader.spec.size:
+        raise SparseZipError("Selected member data range is invalid")
+    variable_and_compressed = reader.read(
         entry.local_header_offset + 30,
-        entry.local_header_offset + 29 + name_length + extra_length,
+        data_start + entry.compressed_size - 1,
         category="label_member",
     )
+    variable = variable_and_compressed[:variable_length]
+    compressed = variable_and_compressed[variable_length:]
     raw_name = variable[:name_length]
     extra = variable[name_length:]
     name = _decode_name(raw_name, flags)
@@ -580,14 +631,6 @@ def fetch_label_member(
             or uncompressed_size != entry.uncompressed_size
         ):
             raise SparseZipError("Local and central ZIP headers are inconsistent")
-    data_start = entry.local_header_offset + 30 + name_length + extra_length
-    if entry.compressed_size <= 0 or data_start + entry.compressed_size > reader.spec.size:
-        raise SparseZipError("Selected member data range is invalid")
-    compressed = reader.read(
-        data_start,
-        data_start + entry.compressed_size - 1,
-        category="label_member",
-    )
     if entry.compression == 0:
         payload = compressed
     elif entry.compression == 8:
@@ -606,8 +649,13 @@ def fetch_label_member(
             raise SparseZipError("Selected label DEFLATE stream has trailing/incomplete data")
     else:  # Protected by central and local validation; retained as a fail-closed guard.
         raise SparseZipError("Unsupported selected-member compression")
+    validate_label_payload(payload, entry)
+    return payload
+
+
+def validate_label_payload(payload: bytes, entry: ZipEntry) -> None:
+    """Bind a reconstructed or cached selected mask to its central entry."""
     if len(payload) != entry.uncompressed_size:
         raise SparseZipError("Selected label uncompressed-size mismatch")
     if (binascii.crc32(payload) & 0xFFFFFFFF) != entry.crc32:
         raise SparseZipError("Selected label CRC-32 mismatch")
-    return payload

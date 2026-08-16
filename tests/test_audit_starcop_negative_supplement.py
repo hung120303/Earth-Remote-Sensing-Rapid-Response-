@@ -393,7 +393,9 @@ def test_stage_b_authorization_binds_pass_manifest_and_selected_receipt(
         audit.authorize_stage_b()
 
 
-def test_archive_urls_and_ranges_fail_closed_and_failed_attempts_keep_budget() -> None:
+def test_archive_urls_and_ranges_fail_closed_and_failed_attempts_keep_budget(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     payload = b"0123456789"
     spec = _archive_spec(payload)
     sparse.validate_archive_spec(spec, frozenset({spec.name}))
@@ -448,6 +450,23 @@ def test_archive_urls_and_ranges_fail_closed_and_failed_attempts_keep_budget() -
     with pytest.raises(sparse.SparseZipError, match="Encoded range"):
         encoded.read(0, 2, category="central_directory")
 
+    class _TransientSession(_BytesRangeSession):
+        def get(self, url: str, **kwargs: object) -> _SparseResponse:
+            self.status = 429 if not self.calls else 206
+            return super().get(url, **kwargs)
+
+    monkeypatch.setattr(sparse.time, "sleep", lambda _seconds: None)
+    transient_session = _TransientSession(payload, spec.url)
+    transient_budget = sparse.RangeBudget(central_limit=10, label_limit=10)
+    transient = sparse.RangeReader(
+        spec=spec,
+        session=transient_session,
+        budget=transient_budget,
+    )
+    assert transient.read(0, 2, category="central_directory") == b"012"
+    assert len(transient_session.calls) == 2
+    assert transient_budget.central_bytes == 6
+
 
 def test_zip_member_allowlist_crc_decompression_and_local_header_checks() -> None:
     sample_id = _id()
@@ -501,6 +520,25 @@ def test_zip_member_allowlist_crc_decompression_and_local_header_checks() -> Non
             sample_id=sample_id,
             maximum_uncompressed_bytes=1024,
         )
+
+
+def test_zero_mask_cache_is_bound_to_central_size_and_crc(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    sample_id = _id()
+    member = f"STARCOP_train_easy/{sample_id}/labelbinary.tif"
+    source_payload = b"verified-zero-mask-cache-fixture"
+    archive = _zip_payload([(member, source_payload)])
+    reader, _ = _reader(archive)
+    entry = sparse.read_zip_directory(reader).entries[0]
+    monkeypatch.setattr(audit, "ZERO_MASK_CACHE_ROOT", tmp_path / "masks")
+
+    assert audit.cached_zero_mask_payload(sample_id, entry) is None
+    audit.cache_zero_mask_payload(sample_id, source_payload)
+    assert audit.cached_zero_mask_payload(sample_id, entry) == source_payload
+    (audit.ZERO_MASK_CACHE_ROOT / f"{sample_id}.tif").write_bytes(b"tampered")
+    with pytest.raises(audit.StarcopAuditError, match="identity mismatch"):
+        audit.cached_zero_mask_payload(sample_id, entry)
 
 
 def test_bounded_deflate_rejects_forged_declared_size_zip_bomb() -> None:

@@ -51,11 +51,13 @@ from tools.starcop_sparse_zip import (
     RangeBudget,
     RangeReader,
     SparseZipError,
+    ZipEntry,
     archive_url,
     fetch_label_member,
     read_zip_directory,
     resolve_selected_members,
     validate_archive_spec,
+    validate_label_payload,
 )
 
 EXPECTED_PROTOCOL = ROOT / "configs/mars_starcop_negative_supplement_protocol.json"
@@ -77,6 +79,7 @@ EXPECTED_STAGE_A_REPORT_SHA256 = (
 RESOLVED_STAGE_B_JSONL = IGNORED_ROOT / "stage_b_resolved_train_negatives.jsonl"
 FILTERED_STAGE_B_JSONL = IGNORED_ROOT / "stage_b_filtered_train_negatives.jsonl"
 RANGE_RECEIPTS_JSONL = IGNORED_ROOT / "stage_b_range_receipts.jsonl"
+ZERO_MASK_CACHE_ROOT = IGNORED_ROOT / "zero_mask_cache"
 STAGE_B_REPORT = ROOT / "reports/acquisition/starcop_negative_supplement_stage_b.json"
 STAGE_B_MARKDOWN = ROOT / "reports/acquisition/STARCOP_NEGATIVE_SUPPLEMENT_STAGE_B.md"
 MINIMUM_NEGATIVE_ROWS = 1_000
@@ -808,6 +811,30 @@ def decode_zero_mask(
     }
 
 
+def cached_zero_mask_payload(sample_id: str, entry: ZipEntry) -> bytes | None:
+    if ID_RE.fullmatch(sample_id) is None:
+        raise StarcopAuditError("Unsafe STARCOP cache sample ID")
+    path = ZERO_MASK_CACHE_ROOT / f"{sample_id}.tif"
+    if not path.is_file():
+        return None
+    payload = path.read_bytes()
+    try:
+        validate_label_payload(payload, entry)
+    except SparseZipError as exc:
+        raise StarcopAuditError(f"Cached selected label identity mismatch: {sample_id}") from exc
+    return payload
+
+
+def cache_zero_mask_payload(sample_id: str, payload: bytes) -> None:
+    if ID_RE.fullmatch(sample_id) is None:
+        raise StarcopAuditError("Unsafe STARCOP cache sample ID")
+    ZERO_MASK_CACHE_ROOT.mkdir(parents=True, exist_ok=True)
+    path = ZERO_MASK_CACHE_ROOT / f"{sample_id}.tif"
+    partial = path.with_name(path.name + ".part")
+    partial.write_bytes(payload)
+    partial.replace(path)
+
+
 def filter_stage_b_rows(
     *,
     rows: list[dict[str, object]],
@@ -883,6 +910,7 @@ def execute_stage_b_sparse_masks(session: Any | None = None) -> dict[str, object
     budget = RangeBudget(
         central_limit=MAXIMUM_CENTRAL_DIRECTORY_BYTES,
         label_limit=MAXIMUM_DOWNLOADED_LABEL_BYTES,
+        minimum_interval_seconds=0.15,
     )
     readers = {
         spec.name: RangeReader(spec=spec, session=client, budget=budget)
@@ -895,6 +923,8 @@ def execute_stage_b_sparse_masks(session: Any | None = None) -> dict[str, object
         selected_ids = [str(row["sample_id"]) for row in selected_records]
         member_locations = resolve_selected_members(directories, selected_ids)
         resolved: list[dict[str, object]] = []
+        cache_hits = 0
+        cache_writes = 0
         for selected in selected_records:
             sample_id = str(selected["sample_id"])
             archive_name, entry = member_locations[sample_id]
@@ -902,12 +932,18 @@ def execute_stage_b_sparse_masks(session: Any | None = None) -> dict[str, object
                 raise StarcopAuditError(
                     f"Selected label exceeds the frozen uncompressed cap: {sample_id}"
                 )
-            payload = fetch_label_member(
-                readers[archive_name],
-                entry,
-                sample_id=sample_id,
-                maximum_uncompressed_bytes=MAXIMUM_UNCOMPRESSED_LABEL_BYTES,
-            )
+            payload = cached_zero_mask_payload(sample_id, entry)
+            if payload is None:
+                payload = fetch_label_member(
+                    readers[archive_name],
+                    entry,
+                    sample_id=sample_id,
+                    maximum_uncompressed_bytes=MAXIMUM_UNCOMPRESSED_LABEL_BYTES,
+                )
+                cache_zero_mask_payload(sample_id, payload)
+                cache_writes += 1
+            else:
+                cache_hits += 1
             row = dict(selected)
             row.update(
                 decode_zero_mask(
@@ -1036,6 +1072,8 @@ def execute_stage_b_sparse_masks(session: Any | None = None) -> dict[str, object
             "downloaded_label_cap": budget.label_limit,
             "full_archive_downloaded": False,
             "archive_md5_verification_claimed": False,
+            "verified_zero_mask_cache_hits": cache_hits,
+            "verified_zero_mask_cache_writes": cache_writes,
         },
         "counts": counts,
         "gates": gates,
