@@ -794,3 +794,16 @@ paired group AP interval was [-0.001139,+0.000689]. Both folds regressed. This
 rejection means released sensitivity cannot be restored by an unconditional
 OR/max rule; any continuation must explicitly verify rescue candidates using a
 cross-fitted, model-aligned gate or change the representation itself.
+
+The separately preregistered cross-fitted verifier now rejects the first of
+those continuations. A small transformer trained on nine full-spatial evidence
+maps reached held-proposal AP 0.915--0.966, yet its conservative rescue raised
+42 negatives and zero positives. Pooled AP changed -0.000024, matched-FPR recall
+was unchanged, both folds and both sensors regressed, and the paired 25 km-group
+AP interval was [-0.000055,-0.000006]. The stronger rescue raised 98 negatives
+and zero positives. No external or official replay was authorized.
+
+The released-proposal branch is therefore closed. Another ranker or verifier on
+the same frozen folds would repeat a saturated experiment family; a defensible
+next attempt must add independently labeled geographic diversity or materially
+new observational information rather than reweighting existing scores.

@@ -5937,6 +5937,31 @@ the two dense teachers agree. The deterministic family is retired without any
 external or official replay. Result:
 `reports/experiments/mars_dual_teacher_rescue_folds34.json`.
 
+### 2026-08-16: selective proposal-verifier transformer rejected
+
+A preregistered cross-fitted verifier then tested whether the deterministic
+rescue failed only because it lacked local spatial context. The 122,051-parameter
+transformer received nine frozen, label-independent 64x64 evidence maps and was
+trained only on released-positive proposals. Fold 3 was predicted by fold-4
+fits and vice versa; two fixed seeds were averaged. The verifier could only
+raise Gaussian+DOFA inside the frozen low-champion/high-released route.
+
+The verifier learned the proposal labels in isolation (held-route AP ranged
+from 0.915 to 0.966 across endpoints), but it did not identify any useful
+champion error. At the least aggressive rescue weight it raised 42 rows, all
+negative, changed pooled AP by -0.000024, and left matched-FPR recall unchanged.
+Both folds and both sensors lost AP, and the paired 25 km-group interval was
+strictly adverse at [-0.000055,-0.000006]. The stronger fixed weight raised 98
+negatives and no positives. All promotion gates failed, so no state, score,
+external-cohort, or official-test artifact was produced.
+
+This closes the released-proposal rescue branch: an unconditional consensus
+rule and a learned spatial verifier both fail to add complementary ranking to
+the folds-3/4 champion. Further scene-head variations on the same frozen cohort
+are not evidence-based. The next architecture must change the information
+available to the model or train on new geographically independent real events.
+Result: `reports/experiments/mars_selective_proposal_transformer_folds34.json`.
+
 ### 2026-08-03: Casa Grande controlled-release one-shot rejected for superiority
 
 The frozen label-free scorer completed all 169 exact Sentinel-2 L1C pairs before
