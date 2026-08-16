@@ -1057,3 +1057,35 @@ Authoritative compact result:
 The next independent source is the preregistered fallback direction: a separate
 metadata-only protocol for Carbon Mapper Tanager assessed null-detect scenes.
 No Carbon Mapper catalog has yet been enumerated.
+
+## 2026-08-16: Carbon Mapper Tanager null-detect metadata protocol frozen
+
+Official Carbon Mapper Product Guide v1.1.6 defines a null detect as an
+absence of detection under optimal observing conditions and considers a scene
+a candidate when it has less than 25% cloud and intersects a known source.
+The hash-pinned API v1.0.0 schema provides a stronger source-scene record:
+`counts_as_null_detection`, `counts_toward_daily_emissions`, `has_detection`,
+and `has_non_null_emission` for every scene in each source's daily breakdown.
+It also exposes a public annotated-scene endpoint with Tanager identity,
+mission phase, timestamp, assessed cloud, bounds, and publication status.
+
+Protocol `configs/mars_carbon_mapper_tanager_null_protocol.json` (SHA-256
+`06b2058a05ecf748dac25cb7389bb62e9fe88e36859dded389fc03b13d5b0ad0`)
+is frozen before catalog enumeration. It retains only production-phase
+Tanager CH4 scenes explicitly counted as source-level null detections, with
+no detection/non-null emission at that source, assessed cloud <=25%, and a
+source point inside the published scene bounds. Scene-wide plume count is not
+used because a valid null source crop may coexist with a plume elsewhere in
+the scene. At most four null scenes per source are chosen by a fixed SHA-256
+order before geography is opened.
+
+The metadata gate requires at least 50 leakage-safe source-scene pairs, 28
+distinct Tanager scenes, 30 source points, and 20 connected components whose
+every member is more than 25 km from every MARS-S2L representative. Carbon
+Mapper must later provide 28 <=1-hour target pairs by itself; it may not pool a
+failed source to pass. The current Terms permit non-commercial research and
+derivatives in furtherance of emissions mitigation with attribution and
+share-alike obligations. Any checkpoint materially trained on these labels
+must carry those restrictions. The label claim is no Carbon Mapper detection
+above applicable Tanager sensitivity at the reviewed source and time, never
+physical zero methane. No catalog or image asset has been queried.

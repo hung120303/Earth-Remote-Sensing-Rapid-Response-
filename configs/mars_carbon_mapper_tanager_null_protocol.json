@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_any_carbon_mapper_catalog_enumeration",
+  "name": "Carbon Mapper Tanager source-level null-detect supplement",
+  "research_question": "Can authoritative production-phase Tanager source-scene null detections provide at least 28 leakage-safe Sentinel-2 L1C or Landsat 8/9 Level-1 negative pairs without recycling MARS-S2L geography?",
+  "decision_context_disclosed_before_freeze": {
+    "mars_hyperspectral_negative_pairs": 272,
+    "unchanged_combined_gate": 300,
+    "unchanged_shortfall": 28,
+    "starcop_result": "FAIL_8_OF_20_COMPONENTS",
+    "cach4_result": "FAIL_15_OF_20_COMPONENTS",
+    "nasa_covid_permian_route": "PENDING_EARTHDATA_AUTHENTICATED_GRID_BRIDGE",
+    "anti_pooling_boundary": "Carbon Mapper must pass every metadata gate and later contribute at least 28 qualifying target pairs by itself. It may supplement the already-qualified MARS-Hyperspectral cohort only after doing so; it may not pool with STARCOP, CACH4, COVID, Permian, or another failed candidate to satisfy a gate."
+  },
+  "official_sources": {
+    "product_guide": {
+      "url": "https://carbonmapper.org/articles/product-guide",
+      "observed_version": "1.1.6",
+      "ignored_snapshot": ".research/carbon_mapper_tanager/product_guide.html",
+      "bytes": 1973465,
+      "sha256": "c045910e055c779060232a75d7f48f9777b35b75aabc379b6168f69351d602b6"
+    },
+    "terms": {
+      "url": "https://carbonmapper.org/terms",
+      "ignored_snapshot": ".research/carbon_mapper_tanager/terms.html",
+      "bytes": 1742848,
+      "sha256": "34bca5e43641559876b3e99bb5a5c3760c263b2fb738cf8ca3b6ff13387cfc8a"
+    },
+    "openapi": {
+      "url": "https://api.carbonmapper.org/api/v1/openapi.json",
+      "ignored_snapshot": ".research/carbon_mapper_tanager/openapi.json",
+      "bytes": 1460945,
+      "sha256": "6a73c4da5b3a2b4ec16a4db7c966f8bb4737a40127d113111cf8269c05fa3082",
+      "api_title": "CarbonMapper Data Platform API",
+      "api_version": "1.0.0"
+    }
+  },
+  "license_contract": {
+    "permitted_scope": "Non-commercial research to improve greenhouse-gas emissions monitoring, reporting, or mitigation.",
+    "obligations": [
+      "attribute Carbon Mapper in the paper, data documentation, and any derivative release",
+      "redistribute Carbon Mapper data or derivative products only under the same or substantially similar non-commercial and attribution terms",
+      "do not represent a null detect as proof of physical zero methane",
+      "do not use Carbon Mapper data or derivatives commercially without a separate license"
+    ],
+    "checkpoint_boundary": "Any distributed model checkpoint materially trained on these labels must be marked non-commercial, attributed to Carbon Mapper, and share-alike under the applicable Carbon Mapper terms."
+  },
+  "frozen_local_inputs": {
+    "mars_hyperspectral_stage_b_report": {
+      "path": "reports/acquisition/mars_hyperspectral_transfer_stage_b.json",
+      "bytes": 3411,
+      "sha256": "f7bd429ebb6d8dae93500fff14a3566496480a9d2fd33b13b0d8146ec54f1f65"
+    },
+    "mars_hyperspectral_pairs": {
+      "path": ".research/mars_hyperspectral_transfer/stage_b_combined_pairs.jsonl",
+      "bytes": 532440,
+      "normalized_lf_sha256": "902d118e8a46a9d90465d23b9a55dce561b9cbecd6336f8c390b54cf8d89fa4e"
+    },
+    "mars_hyperspectral_mask_catalog": {
+      "path": ".research/mars_hyperspectral_transfer/train_mask_catalog.jsonl",
+      "bytes": 6839938,
+      "sha256": "945c74a5553a17bb01ac2241c02554a580e53bb438fae84f95498528ee546d51"
+    },
+    "safe_mars_manifest": {
+      "path": ".research/source_audit_20260715/mars_s2l_current_validated_images_all.csv",
+      "bytes": 94136263,
+      "sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2",
+      "permitted_columns": [
+        "id_location",
+        "location_name",
+        "country",
+        "lon",
+        "lat",
+        "satellite",
+        "tile",
+        "tile_date",
+        "split_name"
+      ],
+      "forbidden_columns": [
+        "isplume",
+        "plume",
+        "ch4_fluxrate",
+        "ch4_fluxrate_std"
+      ]
+    }
+  },
+  "permitted_api": {
+    "hosts": [
+      "api.carbonmapper.org"
+    ],
+    "sources_query": "https://api.carbonmapper.org/api/v1/catalog/sources.geojson?plume_gas=CH4&instrument=tan&cloud_cover_pct_max=25&status=published&minpoints=1&eps=100",
+    "source_detail_template": "https://api.carbonmapper.org/api/v1/catalog/source/{source_name}?instrument=tan&plume_gas=CH4&cloud_cover_pct_max=25&status=published&minpoints=1&explain=true",
+    "annotated_scenes_template": "https://api.carbonmapper.org/api/v1/catalog/scenes/annotated?plume_gas=CH4&instruments=tan&not_cloudy=true&sort=asc&limit=100&offset={offset}",
+    "maximum_source_detail_requests": 1000,
+    "maximum_scene_pages": 100,
+    "maximum_response_bytes_each": 8388608,
+    "maximum_response_bytes_total": 268435456,
+    "minimum_request_interval_seconds": 0.25,
+    "retryable_http_statuses": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
+    "maximum_attempts_per_request": 5
+  },
+  "source_selection": {
+    "maximum_source_coordinate_disagreement_km": 0.1,
+    "candidate_filter_before_detail_requests": [
+      "feature geometry is a finite WGS84 Point",
+      "properties.gas equals CH4",
+      "properties.source_name encodes a 100m source with coordinates agreeing with the feature point",
+      "properties.observation_date_count is greater than properties.detection_date_count",
+      "properties.observation_scenes_names is a non-empty unique string list"
+    ],
+    "request_order": "ascending (SHA-256(source_name UTF-8), source_name)",
+    "overflow_action": "If more than 1000 source features qualify, request only the first 1000 by the frozen order and report truncation; do not choose by geography, emissions, MARS distance, or model output."
+  },
+  "authoritative_null_contract": {
+    "required_source_response": [
+      "source_name and WGS84 point agree with the requested source",
+      "explanation.summary.number_of_null_detect_days is positive",
+      "daily_breakdown and top-level scene identities are internally consistent"
+    ],
+    "required_daily_scene_flags": {
+      "instrument": "tan",
+      "counts_as_null_detection": true,
+      "counts_toward_daily_emissions": true,
+      "has_detection": false,
+      "has_non_null_emission": false
+    },
+    "required_annotated_scene": [
+      "UUID and name match the authoritative source response",
+      "instrument equals tan",
+      "mission_phase equals production",
+      "published_at is non-null",
+      "not_cloudy is true",
+      "cloud_cover_pct_assessed is present and <=25",
+      "timestamp is finite RFC3339 UTC",
+      "bounds are finite WGS84 and contain the source point"
+    ],
+    "scene_wide_plume_count_note": "A scene may contain a plume at another source. The negative label is source-crop-specific and comes only from counts_as_null_detection=true for that source-scene pair; published_plume_count is not used to create or reject the label.",
+    "claim": "No Carbon Mapper detection above the applicable Tanager sensitivity at the reviewed source in that qualifying scene; not physical zero methane."
+  },
+  "deterministic_row_selection": {
+    "maximum_null_scenes_per_source": 4,
+    "ranking": "ascending (SHA-256(source_name + NUL + scene_id UTF-8), scene_id)",
+    "selection_timing": "after authoritative null and scene-schema validation, before MARS distance filtering or target-catalog access"
+  },
+  "eligibility": {
+    "radius_km": 25.0,
+    "exclude_if_within_radius_of": [
+      "any official MARS-S2L test representative location",
+      "any already-counted MARS-Hyperspectral negative source crop"
+    ],
+    "novel_component_requirement": "Every member of a counted component must be strictly farther than 25 km from every MARS-S2L representative location.",
+    "grouping": "Transitive connected components of retained source points with an undirected edge at haversine distance <=25.0 km."
+  },
+  "gates": {
+    "population": "Deterministically selected authoritative null pairs after official-test and prior-negative exclusions; the component gate additionally requires every member to be >25 km from every MARS-S2L representative.",
+    "license_permits_noncommercial_research_derivatives_with_attribution_and_share_alike": true,
+    "minimum_authoritative_null_source_scene_pairs": 50,
+    "minimum_distinct_tanager_scenes": 28,
+    "minimum_distinct_null_source_points": 30,
+    "minimum_novel_25km_connected_components": 20,
+    "all_retained_source_scene_records_valid": true
+  },
+  "failure_action": "Retire the Carbon Mapper supplement without changing a threshold, querying a target catalog, or pooling another failed candidate source.",
+  "pass_action": "Commit a separate target-catalog protocol before any Sentinel-2 or Landsat query.",
+  "target_catalog_boundary": {
+    "authorized_only_after_metadata_gate_passes": true,
+    "requires_new_committed_protocol_before_query": true,
+    "products": [
+      "Copernicus Sentinel-2 L1C",
+      "USGS Landsat 8/9 Collection 2 Level-1"
+    ],
+    "maximum_time_offset_hours": 1.0,
+    "minimum_additional_negative_pairs_from_carbon_mapper_alone": 28,
+    "target_assets_forbidden_in_this_protocol": true
+  },
+  "forbidden_content": [
+    "Carbon Mapper RGB, atmospheric retrieval, plume raster, concentration tile, or other image asset",
+    "any target Sentinel-2/Landsat catalog or asset",
+    "any protected MARS outcome column",
+    "any EMIT, AVIRIS-NG, AVIRIS-3, GAO, SSC, Tanager first-light, CO2, unassessed, or >25%-cloud row"
+  ],
+  "outputs": {
+    "ignored_root": ".research/carbon_mapper_tanager",
+    "ignored_sources": ".research/carbon_mapper_tanager/sources.geojson",
+    "ignored_source_details": ".research/carbon_mapper_tanager/source_details.jsonl",
+    "ignored_annotated_scenes": ".research/carbon_mapper_tanager/annotated_scenes.jsonl",
+    "ignored_null_rows": ".research/carbon_mapper_tanager/eligible_null_source_scenes.jsonl",
+    "compact_json": "reports/acquisition/carbon_mapper_tanager_null_metadata.json",
+    "compact_markdown": "reports/acquisition/CARBON_MAPPER_TANAGER_NULL_METADATA.md"
+  },
+  "claim_boundary": "A pass would establish licensed, source-level Tanager null-detect metadata feasibility only. It would not prove physical zero methane, coincident Sentinel-2/Landsat yield, cross-sensor validity, model complementarity, calibration, or superiority over MARS-S2L."
+}

@@ -6290,3 +6290,21 @@ protocol is the preferred fallback; it must first demonstrate independently
 reviewed source-level null associations, exact scene UTC/bounds, adequate
 license terms, and at least 20 leakage-safe 25 km components before any target
 asset or model training is allowed.
+
+### 2026-08-16: Tanager source-level null protocol preregistered
+
+The preferred fallback is now frozen before any Carbon Mapper catalog row is
+opened. Hash-pinned official documentation supplies the precise label: a
+source response must mark the Tanager scene `counts_as_null_detection=true`
+and `counts_toward_daily_emissions=true`, while both `has_detection` and
+`has_non_null_emission` are false. The scene must be public, production-phase,
+annotated, <=25% assessed cloud, and geometrically contain the source point.
+This is stronger and more local than filtering whole scenes to zero plumes.
+
+The preregistered source must independently retain 50 null source-scene pairs,
+28 scenes, 30 sources, and 20 25 km components novel beyond all MARS-S2L
+locations before a separate target-catalog protocol can exist. The applicable
+license is non-commercial, attribution-required, and share-alike; downstream
+checkpoint and data-release terms are recorded now rather than deferred until
+publication. The protocol SHA-256 is
+`06b2058a05ecf748dac25cb7389bb62e9fe88e36859dded389fc03b13d5b0ad0`.
