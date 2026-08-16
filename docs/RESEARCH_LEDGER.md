@@ -807,3 +807,35 @@ The released-proposal branch is therefore closed. Another ranker or verifier on
 the same frozen folds would repeat a saturated experiment family; a defensible
 next attempt must add independently labeled geographic diversity or materially
 new observational information rather than reweighting existing scores.
+
+## 2026-08-16: independent-data audit redirects the architecture to reference sets
+
+The official Zhao et al. ACP 2025 archive was downloaded and hash-verified, but
+all 1,627 rendered images come from six sites overlapping both MARS development
+and official-test geography within 0.216 km. They also lack the georeferenced
+six-band/dense-mask contract. Zhao DSAN is retained as product-alignment
+literature only; zero images are admitted to model development.
+
+Project Eucalyptus provides a stronger, non-outcome architecture clue. Its
+controlled-release discussion identifies methane-contaminated or mismatched
+reference observations as a false-negative mechanism and recommends multiple
+recent references, similarity selection, or learned attention. Its released
+24-channel model is incompatible with MARS and is not loaded. The adopted path
+instead changes the information supplied to the trusted released MARS model.
+
+An outcome-blind folds-3/4 selector found exact-grid, strictly prior Sentinel-2
+references for 14,569/14,963 rows (97.37%) and five references for 13,733
+(91.78%). The original all-rows gate remains a recorded FAIL because 112 rows
+with a same-key prior have only shifted grids. A separately preregistered
+fallback-aware adjudication passes: reference coverage 97.3668%, five-reference
+coverage 91.7797%, grid-exclusion fraction 0.7629%, with exact original-pair
+fallback and no outcomes accessed.
+
+The next experiment is therefore staged rather than assumed. First, the pinned
+released U-Net scores the original plus five frozen prior-reference views while
+holding target, wind, and target cloud fixed. A four-row real smoke reproduces
+the original connected score within 0.000041 maximum absolute error with exact
+paper-rule decisions. Only if a separately frozen folds-3/4 diagnostic finds
+complementary positive signal will a small permutation-invariant reference-set
+temporal transformer be cross-fitted. This avoids committing to another large
+architecture before the new information source proves useful.

@@ -6002,3 +6002,76 @@ report SHA-256:
 `372e963fa335b9e0506770352480db25a224518a67ca220b3bca6f45368b5917`.
 The cross-site interpretation and reproducibility bindings are in
 `reports/research/STANFORD_CONTROLLED_RELEASE_EVIDENCE_SYNTHESIS.md`.
+
+### 2026-08-16: Zhao DSAN public cohort acquired and excluded for benchmark leakage
+
+The official Science Data Bank archive associated with Zhao et al. (ACP 2025)
+was acquired from `https://doi.org/10.57760/sciencedb.15792` and verified against
+the publisher's MD5. The 70,398,286-byte archive contains 1,627 rendered RGBA
+PNGs (508 plume and 1,119 no-plume) from six named sites but no georeferenced
+six-band tensors or dense plume masks. The paper and its official Tables 2--3
+remain useful product-alignment/DSAN literature.
+
+Every public site lies within 0--0.216 km of geography already represented in
+both MARS development and the official paper-test contract. The cohort therefore
+contributes zero eligible model rows: using it for training, calibration, or
+confirmation would leak benchmark geography and its rendered PNG contract cannot
+reproduce the MARS multispectral input. Bulk files remain ignored. The compact
+audit is `reports/acquisition/zhao_dsan_2025_dataset_audit.json`.
+
+### 2026-08-16: Project Eucalyptus identifies reference choice as new information
+
+The official Project Eucalyptus repository was pinned at revision
+`46f719b7003eeb9ed604b8f1dd4616aa1ba1def0`. Its Sentinel-2 pipeline uses two
+cloud-filtered prior references, documents false negatives caused by methane-
+contaminated or surface-mismatched references in controlled releases, and
+proposes averaging the last 5/10 overpasses, similarity selection, or learned
+attention. This supports a materially new information path rather than another
+scene head over MARS's fixed target/reference pair.
+
+The released Eucalyptus model is not loaded: its 24-channel input requires B05,
+B07, and B8A, which are absent from MARS's six-band contract, and its whole-object
+PyTorch pickle is not a weights-only artifact. The research path uses only the
+documented failure mechanism and continues with the trusted released MARS model.
+
+### 2026-08-16: strictly prior reference bank is feasible with explicit fallback
+
+Before any model score or outcome was opened, a selector scanned only folds 3/4
+and used B02/B03/B04/B08 texture and radiometry to choose up to five strictly
+earlier, >=95%-clear, same-site/sensor/MGRS, exact-grid Sentinel-2 observations.
+No B11/B12 value, label, mask, flux, prediction, or model score influenced the
+bank. Bulk descriptors and the 17,745-row selection manifest remain ignored.
+
+The original preregistered audit correctly records a formal FAIL: although
+14,569/14,963 Sentinel-2 rows (97.37%) have an exact-grid reference and
+13,733 (91.78%) have five, its all-or-nothing gate required all 14,681 rows with
+any same-key prior to have an exact-grid prior. Small grid-origin shifts excluded
+112 rows. That result remains immutable in
+`reports/acquisition/mars_prior_reference_bank_folds34.json`.
+
+A separate post-feasibility engineering adjudication disclosed those coverage
+facts before freeze and asked only whether exact filtering plus exact original-
+pair fallback is representative enough for label-free inference. It passed the
+frozen >=95% any-reference, >=90% five-reference, <=1% grid-exclusion, and
+outcome-blind gates: 97.3668%, 91.7797%, 0.7629%, and true, respectively. This
+authorizes only a separately frozen released-model score extraction; it is not a
+performance result. The adjudication is
+`reports/acquisition/mars_prior_reference_bank_adjudication.json`.
+
+### 2026-08-16: alternate-reference evidence extractor frozen
+
+The dedicated label-free extractor keeps each original target, wind vector, and
+target cloud mask fixed; substitutes only a selected candidate's first six
+target bands (never its background bands); recomputes MBMP; and scores the
+original plus five prior-reference views with the hash-pinned released MARS
+U-Net. It stores scalar connected/dense summaries and ignored 32x32 mean/max
+probability maps for a later frozen aggregation diagnostic. It cannot read plume
+masks, enhancement rasters, labels, champion scores, external outcomes, or any
+official-test value.
+
+A real outcome-blind four-row smoke covered two five-reference Sentinel-2 rows,
+one Sentinel-2 fallback, and one Landsat fallback. Recomputed original-reference
+scores matched the frozen released-score cache with maximum/mean absolute drift
+0.0000409/0.0000139 and identical paper-rule decisions. Nine focused tests passed.
+The full folds-3/4 extraction was frozen in
+`configs/mars_prior_reference_score_extraction_protocol.json` before execution.
