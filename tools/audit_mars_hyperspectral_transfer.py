@@ -34,6 +34,7 @@ class HsiSample:
     sample_id: str
     sensor: str
     published_split: str
+    tile: str
     location_name: str
     country: str
     sector: str
@@ -150,6 +151,7 @@ def read_hsi_csv(
                     sample_id=sample_id,
                     sensor=sensor,
                     published_split=published_split,
+                    tile=row.get("tile", "").strip(),
                     location_name=row["location_name"].strip(),
                     country=row["country"].strip(),
                     sector=row["sector"].strip(),

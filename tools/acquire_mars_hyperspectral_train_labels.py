@@ -166,6 +166,11 @@ def acquire(
             if not future.result():
                 missing_from_repository.append(futures[future])
     validation = validate_download(output_dir=output_dir, expected_patterns=patterns)
+    if validation["missing_mask_files"]:
+        raise RuntimeError(
+            "Authoritative train-mask acquisition is incomplete: "
+            f"{len(validation['missing_mask_files'])} masks missing"
+        )
     manifest: dict[str, object] = {
         "schema_version": 1,
         "repository": repository,

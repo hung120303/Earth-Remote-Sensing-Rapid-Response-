@@ -3,16 +3,31 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
+import numpy as np
 import pytest
+import rasterio
+from rasterio.transform import from_origin
 
 from tools.acquire_mars_hyperspectral_metadata import safe_output_path
-from tools.acquire_mars_hyperspectral_train_labels import allowed_patterns
+from tools.acquire_mars_hyperspectral_train_labels import (
+    allowed_patterns,
+    validate_download,
+)
 from tools.audit_mars_hyperspectral_transfer import (
     haversine_km,
     parse_datetime,
     read_mars_observations,
 )
+from tools.audit_mars_hyperspectral_train_masks import (
+    geographic_group_ids,
+    read_mask_fact,
+)
 from tools.query_mars_hyperspectral_cdse import summarize
+from tools.query_mars_hyperspectral_stage_b_cdse import (
+    _deduplicated_pairs,
+    build_query_groups,
+    point_in_bbox,
+)
 
 
 def test_safe_output_path_rejects_parent_escape(tmp_path: Path) -> None:
@@ -100,3 +115,132 @@ def test_train_label_patterns_are_exact_and_minimal() -> None:
         "EMIT/folder/info.json",
         "EMIT/folder/plumemask.tif",
     ]
+
+
+def test_train_label_validation_reports_missing_authoritative_mask(
+    tmp_path: Path,
+) -> None:
+    folder = tmp_path / "EMIT" / "folder"
+    folder.mkdir(parents=True)
+    (folder / "info.json").write_text("{}", encoding="utf-8")
+    validation = validate_download(
+        output_dir=tmp_path,
+        expected_patterns=[
+            "EMIT/folder/info.json",
+            "EMIT/folder/plumemask.tif",
+        ],
+    )
+    assert validation["missing_mask_files"] == [
+        "EMIT/folder/plumemask.tif"
+    ]
+
+
+def test_mask_truth_and_georeferencing_come_from_authoritative_raster(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "sample" / "plumemask.tif"
+    path.parent.mkdir()
+    values = np.zeros((4, 4), dtype=np.uint8)
+    values[1, 2] = 1
+    with rasterio.open(
+        path,
+        "w",
+        driver="GTiff",
+        width=4,
+        height=4,
+        count=1,
+        dtype="uint8",
+        crs="EPSG:4326",
+        transform=from_origin(10.0, 20.0, 0.1, 0.1),
+    ) as target:
+        target.write(values, 1)
+
+    fact = read_mask_fact(sample_id="sample", mask_path=path, label_root=tmp_path)
+    assert fact.label_state == "PLUME"
+    assert fact.positive_pixels == 1
+    assert fact.longitude == pytest.approx(10.2)
+    assert fact.latitude == pytest.approx(19.8)
+
+
+def test_geographic_grouping_uses_connected_25km_components() -> None:
+    groups = geographic_group_ids(
+        {
+            "a": (0.0, 0.0),
+            "b": (0.0, 0.20),
+            "c": (0.0, 0.40),
+            "far": (5.0, 5.0),
+        },
+        25.0,
+    )
+    assert groups["a"] == groups["b"] == groups["c"]
+    assert groups["far"] != groups["a"]
+
+
+def test_stage_b_groups_crops_from_the_same_hsi_granule() -> None:
+    records = [
+        {
+            "sample_id": sample_id,
+            "eligible_for_target_catalog": True,
+            "sensor": "EMIT",
+            "tile": "granule",
+            "timestamp": "2024-01-01T00:00:00+00:00",
+            "longitude": longitude,
+            "latitude": 1.0,
+        }
+        for sample_id, longitude in (("a", 2.0), ("b", 2.1))
+    ]
+    groups = build_query_groups(records)
+    assert len(groups) == 1
+    assert [point.sample_id for point in groups[0].points] == ["a", "b"]
+
+
+def test_stage_b_bbox_handles_antimeridian() -> None:
+    assert point_in_bbox(179.5, 0.0, [179.0, -1.0, -179.0, 1.0])
+    assert point_in_bbox(-179.5, 0.0, [179.0, -1.0, -179.0, 1.0])
+    assert not point_in_bbox(0.0, 0.0, [179.0, -1.0, -179.0, 1.0])
+
+
+def test_stage_b_deduplicates_tiles_from_one_acquisition_and_limits_negatives() -> None:
+    mask_records = [
+        {
+            "sample_id": "negative",
+            "label_state": "NO_PLUME",
+            "sensor": "EMIT",
+            "tile": "hsi",
+            "timestamp": "2024-01-01T00:00:00+00:00",
+            "country": "X",
+            "group_id": "g",
+            "novel_beyond_all_mars_25km": True,
+        }
+    ]
+    query_records = [
+        {
+            "products": [
+                {
+                    "id": "cloudy-tile",
+                    "datetime": "2024-01-01T00:30:00Z",
+                    "offset_hours": 0.5,
+                    "cloud_cover": 80.0,
+                    "covered_sample_ids": ["negative"],
+                },
+                {
+                    "id": "clearer-tile",
+                    "datetime": "2024-01-01T00:30:00Z",
+                    "offset_hours": 0.5,
+                    "cloud_cover": 10.0,
+                    "covered_sample_ids": ["negative"],
+                },
+                {
+                    "id": "too-late",
+                    "datetime": "2024-01-01T02:00:00Z",
+                    "offset_hours": 2.0,
+                    "cloud_cover": 0.0,
+                    "covered_sample_ids": ["negative"],
+                },
+            ]
+        }
+    ]
+    pairs = _deduplicated_pairs(mask_records, query_records)
+    assert len(pairs) == 1
+    assert pairs[0]["target_product_id"] == "clearer-tile"
+    assert pairs[0]["scene_supervision"] == "absence_high_confidence"
