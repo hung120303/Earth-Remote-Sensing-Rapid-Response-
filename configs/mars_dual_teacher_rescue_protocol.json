@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_dual_teacher_rescue_scoring",
+  "scope": "development-only deterministic dual-teacher recall rescue on MARS folds 3/4",
+  "architecture": {
+    "name": "recall-anchored dual-teacher rescue",
+    "base_score": "frozen Gaussian+DOFA champion",
+    "sensitivity_expert": "released MARS connected-component score",
+    "topology_expert": "current primary dense-model connected and top-200 scores",
+    "route": "released score > 0.5 and champion score < 0.25",
+    "composition": "max(champion, rescue_weight * anchor) inside the route; champion unchanged elsewhere",
+    "anchors": {
+      "geometric_dense": "sqrt(primary_connected * released_connected)",
+      "conservative_dense": "min(primary_connected, released_connected)",
+      "topology_consensus": "cuberoot(primary_connected * released_connected * primary_top_200_mean)"
+    },
+    "rescue_weights": [0.3333333333333333, 0.5, 0.75],
+    "candidate_count": 9,
+    "rationale": "The one-third weight maps two 0.5 teacher decisions near the inherited 0.167 champion threshold; 0.5 and 0.75 test stronger but still bounded rescue. The max operator forbids suppression of any champion score."
+  },
+  "inputs": {
+    "champion_scores": {
+      "path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz",
+      "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424"
+    },
+    "scene_features": {
+      "path": "outputs/mars_scene_features_folds234.npz",
+      "sha256": "01d8587e283c1179d61a7c789eb514b3f699d3e7a75bf8c50e4baff3f1698b89"
+    },
+    "feasibility_report": {
+      "path": "reports/experiments/mars_recall_anchor_diagnostic.json",
+      "sha256": "342844238687f122bbabb3e963c8d98d829f5fc6a91c95dd6087475b493824d9"
+    }
+  },
+  "cohort": {
+    "folds": [3, 4],
+    "rows": 17745,
+    "groups": 250,
+    "group_unit": "frozen physical 25 km connected component",
+    "target_false_positive_rate": 0.0713
+  },
+  "selection": {
+    "rank": [
+      "all point gates",
+      "worst-fold recall delta",
+      "worst-fold AP delta",
+      "pooled AP delta",
+      "lower rescue weight"
+    ],
+    "no_candidate_refit": true
+  },
+  "promotion_gates": {
+    "minimum_pooled_ap_delta": 0.005,
+    "minimum_pooled_matched_fpr_recall_delta": 0.0,
+    "strictly_positive_pooled_recall_required": true,
+    "minimum_each_fold_ap_delta": 0.0,
+    "minimum_each_fold_recall_delta": 0.0,
+    "minimum_each_sensor_ap_delta": 0.0,
+    "paired_group_bootstrap_replicates": 10000,
+    "paired_group_bootstrap_seed": 20260816,
+    "paired_ap_lower_bound_must_be_positive": true
+  },
+  "holdout_boundary": {
+    "folds_0_1_2": "prohibited",
+    "official_mars": "prohibited during this pilot",
+    "external_cohorts": "prohibited during this pilot",
+    "dense_masks": "unchanged frozen promoted mask rule; no new IoU claim from this scene-only pilot"
+  },
+  "outputs": {
+    "json": "reports/experiments/mars_dual_teacher_rescue_folds34.json",
+    "markdown": "reports/experiments/MARS_DUAL_TEACHER_RESCUE_FOLDS34.md"
+  }
+}
