@@ -130,6 +130,23 @@ def test_prior_pair_coordinates_are_bound_to_reported_identities(
         )
 
 
+def test_recorded_relative_path_accepts_equivalent_absolute_repository_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    artifact = tmp_path / "ignored" / "artifact.jsonl"
+    artifact.parent.mkdir()
+    artifact.write_text('{"sample_id":"a"}\n', encoding="utf-8")
+    monkeypatch.setattr(eligibility, "ROOT", tmp_path)
+    eligibility._require_recorded_file(
+        path=artifact.resolve(),
+        recorded={
+            "path": "ignored/artifact.jsonl",
+            "sha256": eligibility.sha256_file(artifact),
+        },
+        role="Fixture",
+    )
+
+
 def test_pair_receipt_normalization_is_stable_across_crlf(tmp_path: Path) -> None:
     lf = tmp_path / "lf.jsonl"
     crlf = tmp_path / "crlf.jsonl"

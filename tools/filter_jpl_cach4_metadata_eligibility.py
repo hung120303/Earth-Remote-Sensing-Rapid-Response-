@@ -13,15 +13,17 @@ import json
 import math
 import sys
 from collections import defaultdict
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from tools.audit_mars_hyperspectral_train_masks import geographic_group_ids  # noqa: E402
-from tools.audit_mars_hyperspectral_transfer import (  # noqa: E402
+from tools.audit_mars_hyperspectral_train_masks import (
+    geographic_group_ids,
+)
+from tools.audit_mars_hyperspectral_transfer import (
     FORBIDDEN_MARS_COLUMNS,
     SAFE_MARS_COLUMNS,
     MarsObservation,
@@ -29,7 +31,6 @@ from tools.audit_mars_hyperspectral_transfer import (  # noqa: E402
     read_mars_observations,
     representative_locations,
 )
-
 
 EXPECTED_IGNORED_ROOT = Path(".research/jpl_operational_ghg_supplement")
 EXPECTED_FILTER_PROTOCOL = Path(
@@ -114,7 +115,10 @@ def _require_recorded_file(
     normalized_jsonl: bool = False,
 ) -> None:
     recorded_path = str(recorded.get("path", "")).replace("\\", "/")
-    actual_path = path.as_posix()
+    try:
+        actual_path = path.resolve().relative_to(ROOT.resolve()).as_posix()
+    except ValueError:
+        actual_path = path.as_posix()
     if recorded_path != actual_path:
         raise ValueError(
             f"{role} path differs from frozen Stage B report: "
