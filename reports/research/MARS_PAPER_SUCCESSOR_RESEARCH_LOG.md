@@ -6385,3 +6385,43 @@ Primary research basis: Prithvi-EO-2.0
 (<https://openaccess.thecvf.com/content/WACV2026/html/Labatie_MAESTRO_Masked_AutoEncoders_for_Multimodal_Multitemporal_and_Multispectral_Earth_Observation_WACV_2026_paper.html>).
 Frozen protocol SHA-256:
 `6b5adaabf785dcfc6226c984429c26cdc942feb5fb1678e5496f779671af6658`.
+
+### 2026-08-16: independent audit supersedes v1 before outcome; v2 frozen
+
+At the user's request, the already configured local Hermes agent performed a
+read-only independent protocol/literature audit while v1 was running. It did
+not edit the repository, run training, or open a score cache. Two findings
+survived local code verification. First, v1's seed-two standalone check tested
+pooled/fold AP and pooled recall but omitted sensor AP, per-fold recall, and a
+seed-two paired-site lower bound required by the written contract. Second,
+invalid pixels were zero-filled in the encoder input but still contributed to
+patch normalization and reconstruction/temporal loss. The future four-member
+external aggregation rule was also undefined.
+
+V1 was terminated before `evaluate_candidate` ran: no pooled AP, recall,
+bootstrap, strength selection, fold-4 endpoint, or tracked outcome exists. Its
+completed fold-3 encoder/scene checkpoints remain ignored and are forbidden as
+v2 initialization. This is a supersession, not an architecture result. Compact
+record SHA-256:
+`18b8070d638dce61bdd51e2295ceac3d79cd9d93b27f2d432ac165c32ccc6b22`.
+
+V2 uses new seeds and an isolated checkpoint directory. Valid pixels alone now
+define each patch/group mean, variance, reconstruction numerator/denominator,
+and temporal-change numerator/denominator; completely invalid masked patches
+are skipped. Seed two must independently pass every pilot check, including
+both sensors, both-fold recall, and paired-site uncertainty. Future external
+scoring is fixed as: average the two endpoint corrections within each seed,
+then average across seeds, then add the selected strength times that
+four-member mean to the champion logit.
+
+Thirteen focused tests pass, including an invalid-pixel invariance test and an
+exact seed-two gate test. The corrected real-data smoke produced finite losses
+and gradients without outcome metrics. V2 protocol SHA-256 is
+`86c350b2b61732c643dc4207b74cd50baf5cb5f4037ec0d462f6cb5b3d5fa934`.
+
+Paper-language constraint from the audit: this is an integrated,
+ExPLoRA-inspired and MAESTRO-inspired candidate, not a faithful reproduction
+or causal demonstration of either method. ExPLoRA's published parameter
+placement and MAESTRO's structured masking differ from this implementation.
+Any positive result is attributed to the full preregistered system unless a
+same-head untouched-Prithvi ablation is separately frozen and run.

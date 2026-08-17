@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "SUPERSEDED_BEFORE_OUTCOME",
+  "generated_at_utc": "2026-08-17T00:03:14.669269Z",
+  "protocol": {
+    "path": "configs/mars_prithvi_domain_adaptive_protocol.json@fc24e856",
+    "sha256": "6b5adaabf785dcfc6226c984429c26cdc942feb5fb1678e5496f779671af6658"
+  },
+  "execution": {
+    "pooled_average_precision_computed": false,
+    "recall_computed": false,
+    "bootstrap_computed": false,
+    "candidate_strength_selected": false,
+    "fold_3_endpoint_encoder_checkpoint_completed": true,
+    "fold_3_endpoint_scene_checkpoint_completed": true,
+    "fold_4_endpoint_completed": false,
+    "checkpoint_reuse_authorized": false,
+    "tracked_outcome_report_created": false
+  },
+  "reasons": [
+    "The v1 seed-two standalone check omitted per-sensor AP, per-fold recall, and a seed-two paired-site lower-bound gate required by the written research contract.",
+    "The v1 masked reconstruction objective zero-filled invalid pixels but did not exclude them from patch normalization or reconstruction/temporal losses.",
+    "Future external four-member aggregation was not explicitly frozen."
+  ],
+  "corrective_action": "Start a new hash-bound v2 with observability-weighted loss, exact seed-two pilot gates, explicit external four-member mean-correction aggregation, new seeds, and a new ignored checkpoint directory.",
+  "limitations": [
+    "This artifact contains no development outcome and is not evidence for or against the architecture.",
+    "The v1 ignored checkpoints are retained only as an audit trail and may not initialize v2."
+  ]
+}

@@ -338,6 +338,14 @@ def prithvi_input(
     return normalized.masked_fill(valid <= 0.5, 0.0)
 
 
+def prithvi_observable(observable: torch.Tensor) -> torch.Tensor:
+    if observable.ndim != 4 or observable.shape[1] != 1:
+        raise ValueError("Observable mask must have shape Bx1xHxW")
+    return F.interpolate(
+        observable.float(), size=(INPUT_SIZE, INPUT_SIZE), mode="nearest"
+    )
+
+
 def mars_pair(
     batch: dict[str, Any], device: torch.device
 ) -> tuple[torch.Tensor, torch.Tensor]:
@@ -502,6 +510,13 @@ def pretrain_encoder(
             ),
             dim=0,
         )
+        observable = torch.cat(
+            (
+                prithvi_observable(mars_observable),
+                prithvi_observable(aux_observable),
+            ),
+            dim=0,
+        )
         temporal = torch.cat((mars_temporal, aux_temporal), dim=0)
         location = torch.cat((mars_location, aux_location), dim=0)
         if step < warmup:
@@ -533,6 +548,7 @@ def pretrain_encoder(
                 values,
                 pred,
                 mask,
+                observable,
                 band_groups=tuple(tuple(group) for group in spec["band_groups"]),
                 temporal_difference_weight=float(spec["temporal_difference_weight"]),
             )
@@ -679,9 +695,7 @@ def train_scene_model(
         generator=torch.Generator().manual_seed(seed),
     )
     batch_size = (
-        min(int(spec["batch_size"]), len(records))
-        if smoke
-        else int(spec["batch_size"])
+        min(int(spec["batch_size"]), len(records)) if smoke else int(spec["batch_size"])
     )
     loader = DataLoader(
         MarsPaperDataset(paths["metadata_root"], records, augment=True, seed=seed),
@@ -894,18 +908,10 @@ def evaluate_candidate(
 
 
 def standalone_replication_checks(result: dict[str, Any]) -> dict[str, bool]:
-    return {
-        "pooled_ap_positive": result["versus_champion"]["delta"]["average_precision"]
-        > 0.0,
-        "every_fold_ap_positive": min(
-            value["delta"]["average_precision"] for value in result["per_fold"].values()
-        )
-        > 0.0,
-        "pooled_recall_nonnegative": result["versus_champion"]["delta"][
-            "recall_at_fpr_0_0713"
-        ]
-        >= 0.0,
-    }
+    # Seed two is a genuine replication gate, not merely a contributor to the
+    # two-seed mean. It must independently pass every frozen pilot check,
+    # including sensor directionality, both-fold recall, and paired-site CI.
+    return {f"seed_two_{name}": bool(value) for name, value in result["checks"].items()}
 
 
 def save_torch_atomic(path: Path, payload: dict[str, Any]) -> None:
@@ -1361,6 +1367,9 @@ def main() -> int:
                 "kind": "mars_prithvi_domain_adaptive_residual",
                 "protocol_sha256": protocol_hash,
                 "strength": float(pilot_selected["strength"]),
+                "external_member_aggregation": protocol["data_contract"][
+                    "external_member_aggregation"
+                ],
                 "members": encoder_scene_payloads,
             },
         )

@@ -202,3 +202,22 @@ def test_group_normalized_loss_has_finite_gradients_and_validates_mask_and_frame
             one_frame_prediction,
             torch.ones(1, 4),
         )
+
+
+def test_observability_excludes_invalid_values_and_empty_patches() -> None:
+    foundation = DummyFoundation()
+    target = torch.randn(1, 6, 2, 4, 4)
+    prediction = target.clone()
+    observable = torch.ones(1, 1, 4, 4)
+    observable[:, :, 2:, 2:] = 0.0
+    prediction[:, :, :, 2:, 2:] = 1000.0
+    mask = torch.ones(1, 8)
+    result = patch_group_normalized_l1_loss(
+        foundation,
+        target,
+        foundation.patchify(prediction),
+        mask,
+        observable,
+    )
+    assert result["reconstruction"].item() == pytest.approx(0.0, abs=1e-6)
+    assert result["temporal_difference"].item() == pytest.approx(0.0, abs=1e-6)

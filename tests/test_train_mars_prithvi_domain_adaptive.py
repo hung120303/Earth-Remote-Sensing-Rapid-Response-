@@ -15,6 +15,7 @@ from train_mars_prithvi_domain_adaptive import (
     corrected_scores,
     load_champion,
     record_weights,
+    standalone_replication_checks,
 )
 
 
@@ -77,3 +78,17 @@ def test_champion_loader_rejects_non_selection_folds(tmp_path: Path) -> None:
     )
     with pytest.raises(ValueError, match="folds 3/4"):
         load_champion(path)
+
+
+def test_replication_requires_every_frozen_pilot_check() -> None:
+    checks = {
+        "pooled_ap": True,
+        "every_fold_ap": True,
+        "every_sensor_ap": False,
+        "pooled_recall": True,
+        "every_fold_recall": True,
+        "paired_site_ap": False,
+    }
+    result = standalone_replication_checks({"checks": checks})
+    assert result == {f"seed_two_{name}": value for name, value in checks.items()}
+    assert not all(result.values())

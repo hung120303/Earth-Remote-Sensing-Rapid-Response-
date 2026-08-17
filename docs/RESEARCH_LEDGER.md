@@ -1148,3 +1148,26 @@ from every declared input.
 
 Frozen protocol: `configs/mars_prithvi_domain_adaptive_protocol.json`,
 SHA-256 `6b5adaabf785dcfc6226c984429c26cdc942feb5fb1678e5496f779671af6658`.
+
+## 2026-08-16: v1 stopped before outcome; corrected v2 frozen
+
+A read-only independent Hermes audit identified two verified contract defects
+while v1 was still below the outcome boundary: the seed-two code enforced a
+weaker gate than the prose, and invalid pixels entered MAE normalization/loss.
+The running process was terminated before pooled AP, recall, bootstrap, or
+strength selection. Only the fold-3 endpoint had completed; its ignored
+checkpoints cannot initialize v2. Compact supersession report:
+`reports/experiments/mars_prithvi_domain_adaptive_v1_superseded.json`, SHA-256
+`18b8070d638dce61bdd51e2295ceac3d79cd9d93b27f2d432ac165c32ccc6b22`.
+
+V2 excludes invalid pixels from patch/group statistics and both loss terms,
+requires seed two to independently pass all pilot fold/sensor/recall/bootstrap
+checks, declares the future external four-member mean-correction rule, uses
+new seeds, and writes to a new checkpoint directory. Thirteen focused tests
+and a new real-data finite-gradient smoke pass with no outcome. Frozen v2
+protocol SHA-256:
+`86c350b2b61732c643dc4207b74cd50baf5cb5f4037ec0d462f6cb5b3d5fa934`.
+
+The research claim is deliberately limited to an ExPLoRA-inspired,
+MAESTRO-inspired integrated system. It is not presented as a faithful
+reproduction or as a causal ablation of either published method.

@@ -1,15 +1,19 @@
 {
   "schema_version": 1,
-  "status": "frozen_after_real_data_finite_gradient_smoke_before_any_outcome",
+  "status": "frozen_v2_after_observability_weighted_real_data_smoke_before_any_outcome",
   "scope": "two-stage folds-3/4 cross-fit of spectral-temporal extended Prithvi pretraining plus a zero-initialized protected scene residual",
+  "supersedes": {
+    "protocol_sha256": "6b5adaabf785dcfc6226c984429c26cdc942feb5fb1678e5496f779671af6658",
+    "reason": "v1 stopped before pooled AP because its seed-two check was weaker than prose and its MAE reconstruction loss did not exclude cloud/nodata pixels"
+  },
   "trainer": {
     "path": "tools/train_mars_prithvi_domain_adaptive.py",
-    "sha256": "9bad8eb52b71ae85df9052f628ba82c89d2df7185f08b7358aacdc5c0e58c1aa"
+    "sha256": "5dbf99842ad147c92f4c27ff4aca837cc347fdf5f5f134c9d20c7e0bcea29534"
   },
   "code_dependencies": [
     {
       "path": "EarthRemoteSensingRapidResponse/mars_prithvi_domain_adaptation.py",
-      "sha256": "9d28fab9338d007723ed2d20108411a69f65915c39b5753f52e579a460e75739"
+      "sha256": "37cfbd19ea3846c1356f8df1a675ea1bf81f5c603c0c401fbbb9d0f1484ab4ce"
     },
     {
       "path": "EarthRemoteSensingRapidResponse/mars_prithvi_domain_residual.py",
@@ -74,7 +78,8 @@
     "auxiliary_physical_scale": "producer uint16 divided by 10000 exactly",
     "model_frames": "reference then target, six bands, resized to 128x128",
     "location_policy": "constant zero sentinel for every row; geographic coordinates never become model features",
-    "temporal_policy": "real MARS acquisition dates; fixed relative-date proxies for MethaneS2CM T-90/T-365"
+    "temporal_policy": "real MARS acquisition dates; fixed relative-date proxies for MethaneS2CM T-90/T-365",
+    "external_member_aggregation": "for a future non-MARS scene, run both fold-trained endpoints within each seed, average their bounded corrections within seed, then average the two seed corrections; add the frozen strength times that four-member mean to the champion logit"
   },
   "pretraining": {
     "foundation": "Prithvi-EO-2.0-tiny-TL masked autoencoder",
@@ -87,7 +92,7 @@
     "decoder_blocks": 2,
     "mask_ratio": 0.75,
     "band_groups": [[0, 1, 2], [3], [4, 5]],
-    "loss": "MAESTRO-inspired patch-group-normalized masked L1 plus 0.2 temporal-difference L1",
+    "loss": "observability-weighted MAESTRO-inspired patch-group-normalized masked L1 plus 0.2 temporal-difference L1; invalid pixels are excluded from target statistics and both loss numerators/denominators",
     "temporal_difference_weight": 0.2,
     "batch_size": 16,
     "steps": 1200,
@@ -133,8 +138,8 @@
     "initialization": "final residual layer exactly zero, reproducing the frozen champion before fitting"
   },
   "seeds": {
-    "pilot": 20269810,
-    "replication": 20269820
+    "pilot": 20269910,
+    "replication": 20269920
   },
   "search": {
     "strengths": [0.25, 0.5, 1.0],
@@ -146,9 +151,9 @@
     "replicates": 10000,
     "unit": "25 km physical group",
     "confidence": 0.95,
-    "pilot_seed": 20269850,
-    "replication_seed": 20269860,
-    "final_seed": 20269870
+    "pilot_seed": 20269950,
+    "replication_seed": 20269960,
+    "final_seed": 20269970
   },
   "gates": {
     "pilot": {
@@ -164,15 +169,15 @@
       "every_sensor_average_precision_strictly_positive": true,
       "matched_fpr_recall_nonnegative_pooled_and_each_fold": true,
       "paired_site_average_precision_lower_bound_strictly_positive": true,
-      "independently_positive_seed_two_required": true
+      "seed_two_must_independently_pass_every_pilot_gate_including_sensor_fold_recall_and_paired_site_ci": true
     }
   },
   "outputs": {
-    "checkpoint_dir": ".research/mars_prithvi_domain_adaptive",
-    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_prithvi_domain_adaptive.pt",
-    "development_scores": "outputs/mars_prithvi_domain_adaptive_folds34_scores.npz",
-    "json": "reports/experiments/mars_prithvi_domain_adaptive.json",
-    "markdown": "reports/experiments/MARS_PRITHVI_DOMAIN_ADAPTIVE.md"
+    "checkpoint_dir": ".research/mars_prithvi_domain_adaptive_v2",
+    "artifact": "EarthRemoteSensingRapidResponse/artifacts/mars_prithvi_domain_adaptive_v2.pt",
+    "development_scores": "outputs/mars_prithvi_domain_adaptive_v2_folds34_scores.npz",
+    "json": "reports/experiments/mars_prithvi_domain_adaptive_v2.json",
+    "markdown": "reports/experiments/MARS_PRITHVI_DOMAIN_ADAPTIVE_V2.md"
   },
   "research_basis": [
     {
@@ -196,6 +201,9 @@
     "MARS folds 0/1/2 and the official test are neither loaded nor named as input paths.",
     "A held fold never contributes pixels, labels, masks, statistics, or gradients to its endpoint model.",
     "The pilot seed must pass before seed two runs; seed two cannot change strength or hyperparameters.",
+    "Seed two independently passes every pilot gate; averaging cannot conceal a sensor, fold-recall, or paired-site failure.",
+    "Cloud, nodata, and radiometrically invalid pixels contribute neither normalization statistics nor reconstruction/temporal loss.",
+    "Future external score aggregation is the fixed four-member mean correction declared in the data contract.",
     "Failure writes no deployable artifact or promoted score cache.",
     "Bulk checkpoints, artifacts, and score caches remain Git-ignored; only compact code, protocol, tests, and reports are tracked."
   ]

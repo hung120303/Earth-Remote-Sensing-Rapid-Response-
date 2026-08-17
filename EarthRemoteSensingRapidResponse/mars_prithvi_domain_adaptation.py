@@ -182,34 +182,42 @@ def _validate_band_groups(
     return groups
 
 
-def _group_normalize(
-    patch_values: torch.Tensor,
+def _group_normalize_pair(
+    target_values: torch.Tensor,
+    pred_values: torch.Tensor,
+    valid_values: torch.Tensor,
     groups: Iterable[Sequence[int]],
     epsilon: float,
-) -> torch.Tensor:
-    """Normalize channels in ``patch_values`` per frame, spatial patch, group."""
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Normalize target/prediction with valid target patch/group statistics."""
 
     # Layout: B, temporal-patches, H-patches, W-patches, patch-time, p, q, C.
-    channels = patch_values.shape[-1]
-    normalized_channels: list[torch.Tensor | None] = [None] * channels
+    channels = target_values.shape[-1]
+    normalized_target: list[torch.Tensor | None] = [None] * channels
+    normalized_pred: list[torch.Tensor | None] = [None] * channels
     for group in groups:
         indices = list(group)
-        values = patch_values[..., indices]
-        # The Prithvi patch-time dimension is normally one.  Spatial pixels and
-        # group bands are the normalization population; each patch-time slice
-        # remains independently normalized when a wider temporal patch exists.
-        mean = values.mean(dim=(-3, -2, -1), keepdim=True)
-        variance = values.var(dim=(-3, -2, -1), unbiased=False, keepdim=True)
+        target_group = target_values[..., indices]
+        pred_group = pred_values[..., indices]
+        valid_group = valid_values.expand(*target_values.shape[:-1], len(indices))
+        count = valid_group.sum(dim=(-3, -2, -1), keepdim=True).clamp_min(1.0)
+        mean = (target_group * valid_group).sum(dim=(-3, -2, -1), keepdim=True) / count
+        variance = ((target_group - mean).square() * valid_group).sum(
+            dim=(-3, -2, -1), keepdim=True
+        ) / count
         scale = torch.sqrt(variance + epsilon)
-        group_normalized = (values - mean) / scale
+        target_group = ((target_group - mean) / scale) * valid_group
+        pred_group = ((pred_group - mean) / scale) * valid_group
         for offset, channel in enumerate(indices):
-            normalized_channels[channel] = group_normalized[..., offset : offset + 1]
-    if any(value is None for value in normalized_channels):
+            normalized_target[channel] = target_group[..., offset : offset + 1]
+            normalized_pred[channel] = pred_group[..., offset : offset + 1]
+    if any(value is None for value in normalized_target + normalized_pred):
         raise AssertionError(
             "internal band-group normalization did not cover all channels"
         )
-    return torch.cat(
-        [value for value in normalized_channels if value is not None], dim=-1
+    return (
+        torch.cat([value for value in normalized_target if value is not None], dim=-1),
+        torch.cat([value for value in normalized_pred if value is not None], dim=-1),
     )
 
 
@@ -218,6 +226,7 @@ def patch_group_normalized_l1_loss(
     pixel_values: torch.Tensor,
     pred: torch.Tensor,
     mask: torch.Tensor,
+    observable: torch.Tensor | None = None,
     band_groups: Sequence[Sequence[int]] = ((0, 1, 2), (3,), (4, 5)),
     epsilon: float = 1e-6,
     temporal_difference_weight: float = 0.2,
@@ -242,6 +251,23 @@ def patch_group_normalized_l1_loss(
         raise ValueError("temporal_difference_weight must be non-negative")
 
     batch, channels, frames, height, width = pixel_values.shape
+    if observable is None:
+        valid_images = torch.ones(
+            (batch, frames, height, width),
+            dtype=pixel_values.dtype,
+            device=pixel_values.device,
+        )
+    elif observable.shape == (batch, 1, height, width):
+        valid_images = observable[:, 0, None].expand(-1, frames, -1, -1)
+    elif observable.shape == (batch, 1, frames, height, width):
+        valid_images = observable[:, 0]
+    else:
+        raise ValueError(
+            "observable must have shape Bx1xHxW or Bx1xTxHxW matching pixel_values"
+        )
+    valid_images = (valid_images > 0.5).to(
+        device=pixel_values.device, dtype=pixel_values.dtype
+    )
     groups = _validate_band_groups(band_groups, channels)
     patchified_target = foundation.patchify(pixel_values)
     if patchified_target.ndim != 3 or patchified_target.shape[0] != batch:
@@ -294,56 +320,56 @@ def patch_group_normalized_l1_loss(
     )
     target_layout = patchified_target.reshape(layout)
     pred_layout = pred.reshape(layout)
-    target_normalized = _group_normalize(target_layout, groups, epsilon)
-    pred_normalized = _group_normalize_with_stats(
-        pred_layout, target_layout, groups, epsilon
+    valid_layout = (
+        valid_images.reshape(
+            batch,
+            frames,
+            grid_height,
+            patch_height,
+            grid_width,
+            patch_width,
+        )
+        .permute(0, 1, 2, 4, 3, 5)
+        .unsqueeze(4)
+        .unsqueeze(-1)
+    )
+    target_normalized, pred_normalized = _group_normalize_pair(
+        target_layout, pred_layout, valid_layout, groups, epsilon
     )
 
-    reconstruction_per_patch = (
-        (pred_normalized - target_normalized).abs().mean(dim=(-1, -2, -3, -4))
-    )
-    reconstruction = reconstruction_per_patch.reshape(-1)[mask_bool.reshape(-1)].mean()
+    absolute_error = (pred_normalized - target_normalized).abs()
+    reconstruction_valid = valid_layout.expand_as(absolute_error)
+    reconstruction_count = reconstruction_valid.sum(dim=(-1, -2, -3, -4))
+    reconstruction_per_patch = (absolute_error * reconstruction_valid).sum(
+        dim=(-1, -2, -3, -4)
+    ) / reconstruction_count.clamp_min(1.0)
+    reconstruction_selection = mask_bool & (reconstruction_count.reshape(batch, -1) > 0)
+    if not bool(reconstruction_selection.any().item()):
+        raise ValueError("mask contains no observable reconstruction patch")
+    reconstruction = reconstruction_per_patch.reshape(-1)[
+        reconstruction_selection.reshape(-1)
+    ].mean()
 
     frame_mask = mask_bool.reshape(batch, frames, grid_height, grid_width)
     temporal_mask = frame_mask[:, 0] | frame_mask[:, 1]
     target_difference = target_normalized[:, 1] - target_normalized[:, 0]
     pred_difference = pred_normalized[:, 1] - pred_normalized[:, 0]
-    temporal_per_patch = (
-        (pred_difference - target_difference).abs().mean(dim=(-1, -2, -3, -4))
+    temporal_valid = (valid_layout[:, 0] * valid_layout[:, 1]).expand_as(
+        target_difference
     )
-    temporal_difference = temporal_per_patch[temporal_mask].mean()
+    temporal_count = temporal_valid.sum(dim=(-1, -2, -3, -4))
+    temporal_per_patch = (
+        (pred_difference - target_difference).abs() * temporal_valid
+    ).sum(dim=(-1, -2, -3, -4)) / temporal_count.clamp_min(1.0)
+    temporal_selection = temporal_mask & (temporal_count > 0)
+    temporal_difference = (
+        temporal_per_patch[temporal_selection].mean()
+        if bool(temporal_selection.any().item())
+        else reconstruction * 0.0
+    )
     loss = reconstruction + float(temporal_difference_weight) * temporal_difference
     return {
         "loss": loss,
         "reconstruction": reconstruction,
         "temporal_difference": temporal_difference,
     }
-
-
-def _group_normalize_with_stats(
-    patch_values: torch.Tensor,
-    target_values: torch.Tensor,
-    groups: Iterable[Sequence[int]],
-    epsilon: float,
-) -> torch.Tensor:
-    """Normalize predictions using target patch/group statistics."""
-
-    channels = patch_values.shape[-1]
-    normalized_channels: list[torch.Tensor | None] = [None] * channels
-    for group in groups:
-        indices = list(group)
-        target_group = target_values[..., indices]
-        pred_group = patch_values[..., indices]
-        mean = target_group.mean(dim=(-3, -2, -1), keepdim=True)
-        variance = target_group.var(dim=(-3, -2, -1), unbiased=False, keepdim=True)
-        scale = torch.sqrt(variance + epsilon)
-        group_normalized = (pred_group - mean) / scale
-        for offset, channel in enumerate(indices):
-            normalized_channels[channel] = group_normalized[..., offset : offset + 1]
-    if any(value is None for value in normalized_channels):
-        raise AssertionError(
-            "internal band-group normalization did not cover all channels"
-        )
-    return torch.cat(
-        [value for value in normalized_channels if value is not None], dim=-1
-    )
