@@ -28,18 +28,18 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from tools.audit_jpl_cach4_train_headers import (
+from tools.audit_jpl_cach4_train_headers import (  # noqa: E402
     EnviMapInfo,
     flight_timestamp,
     gdal_geotransform,
     parse_envi_header,
 )
-from tools.audit_mars_hyperspectral_transfer import (
+from tools.audit_mars_hyperspectral_transfer import (  # noqa: E402
     FORBIDDEN_MARS_COLUMNS,
     SAFE_MARS_COLUMNS,
     read_mars_observations,
 )
-from tools.filter_jpl_cach4_metadata_eligibility import (
+from tools.filter_jpl_cach4_metadata_eligibility import (  # noqa: E402
     filter_rows,
     load_prior_negative_coordinates,
     normalized_jsonl_sha256,
