@@ -6425,3 +6425,29 @@ or causal demonstration of either method. ExPLoRA's published parameter
 placement and MAESTRO's structured masking differ from this implementation.
 Any positive result is attributed to the full preregistered system unless a
 same-head untouched-Prithvi ablation is separately frozen and run.
+
+### 2026-08-16: domain-adaptive Prithvi v2 rejected at seed-one gate
+
+The corrected v2 production run completed both strictly cross-fitted fold
+endpoints and opened only folds 3/4. The preregistered 0.25 residual was the
+least harmful candidate: AP was 0.904501, a -0.002024 change from the frozen
+Gaussian+DOFA champion, matched-FPR recall changed -0.000656, and the paired
+250-site/10,000-replicate AP interval was [-0.004297, +0.000679]. Fold 3
+regressed -0.001481 AP while fold 4 gained only +0.000655. Pooled Sentinel-2
+AP regressed -0.003565; Landsat changed -0.000097.
+
+Increasing the correction did not reveal an underweighted signal. Frozen
+strengths 0.50 and 1.00 produced AP deltas -0.004743 and -0.012790; the 1.00
+paired-site interval was entirely negative [-0.024466, -0.001631]. The harm is
+therefore monotonic over the registered sweep and concentrated in the shifted
+Sentinel-2 domain. No post-hoc smaller weight will be tried.
+
+Both masked objectives optimized normally—the endpoint total losses fell from
+3.999/4.139 at step 100 to 0.820/0.845 at step 1,200—so stable reconstruction
+is not sufficient for complementary methane ranking. The result falsifies the
+complete spectral-temporal domain-adaptive Prithvi residual path under this
+protocol. Seed two, external cohorts, folds 0/1/2, and official evaluation
+were never authorized. The next architecture should add genuinely new
+methane-specific supervision or measurement evidence rather than another
+Prithvi-derived scalar correction. Compact result:
+`reports/experiments/mars_prithvi_domain_adaptive_v2.json`.

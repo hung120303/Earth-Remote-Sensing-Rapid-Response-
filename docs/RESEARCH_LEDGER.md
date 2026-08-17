@@ -1118,6 +1118,38 @@ The next research decision must use an independently preregistered source or
 return to architecture work supported by cohorts that have already passed;
 failed STARCOP, CACH4, and Carbon Mapper candidates may not be pooled.
 
+## 2026-08-16: corrected domain-adaptive Prithvi v2 fails seed one
+
+The v2 protocol ran to its conditional pilot boundary on the frozen git state
+`5bb79d4a56349b8be2db92fe5e4e6817c315844c`. It trained two independent
+folds-3/4 endpoints; each endpoint's self-supervised and supervised inputs came
+only from the opposite development fold plus the fixed MARS-disjoint auxiliary
+cohort. No fold 0/1/2 or official-test input was loaded.
+
+The least harmful registered strength, 0.25, reached AP 0.904501 and changed
+-0.002024 AP and -0.000656 matched-FPR recall versus the Gaussian+DOFA
+champion. Its 250-group, 10,000-replicate paired-site interval was
+[-0.004297, +0.000679]. Fold AP changes disagreed (-0.001481 on fold 3,
++0.000655 on fold 4), while sensor AP changed -0.003565 for Sentinel-2 and
+-0.000097 for Landsat. Every-fold AP, every-sensor AP, pooled AP, pooled
+recall, and paired-site lower-bound gates failed.
+
+The fixed strength sweep degraded monotonically: 0.50 changed -0.004743 AP
+and 1.00 changed -0.012790 AP. The strength-1 paired-site interval was
+[-0.024466, -0.001631]. Seed two was therefore skipped exactly as registered;
+no artifact was promoted and no external or official evaluation occurred.
+Ignored checkpoints are retained only for reproducibility and are not eligible
+for reuse as a promoted model.
+
+Interpretation: the observability-weighted MAE optimized stably but did not
+learn a correction complementary to the champion. The failure is strongest on
+Sentinel-2 and is geographically discordant. This retires further scalar
+Prithvi corrections and post-hoc weight search. A defensible next candidate
+must introduce new methane-specific measurement supervision—subject to a
+separate frozen data bridge—or a representation whose evidence is not already
+captured by Gaussian, DOFA, and spatial-Prithvi components. Authoritative
+compact result: `reports/experiments/mars_prithvi_domain_adaptive_v2.json`.
+
 ## 2026-08-16: domain-adaptive Prithvi experiment frozen before outcomes
 
 Architecture work resumed without pooling any failed acquisition source. The
