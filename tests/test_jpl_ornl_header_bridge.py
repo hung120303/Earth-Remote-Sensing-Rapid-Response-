@@ -127,6 +127,109 @@ class _CmrSession:
         return self.response
 
 
+def _granule(flight: str) -> bridge.HeaderGranule:
+    selected = bridge.select_header_granule(
+        flight, "v2x1", {"items": [_item(flight)]}
+    )
+    return selected
+
+
+def test_acquire_queries_each_flight_and_reuses_only_bound_valid_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    flights = ["ang20200101t120000", "ang20200102t120000"]
+    root = tmp_path / "headers"
+    cached = _granule(flights[0])
+    cached_path = root / flights[0] / cached.native_id
+    cached_path.parent.mkdir(parents=True)
+    cached_path.write_bytes(HEADER.encode("utf-8"))
+    queried: list[str] = []
+
+    def fake_query(
+        _session: object,
+        *,
+        flight: str,
+        expected_versions: dict[str, str],
+    ) -> tuple[bridge.HeaderGranule, str]:
+        queried.append(flight)
+        return _granule(flight), bridge.cmr_query_url(flight, expected_versions)
+
+    downloads: list[str] = []
+
+    def fake_fetch(
+        _session: object, selected: bridge.HeaderGranule
+    ) -> tuple[bytes, dict[str, object]]:
+        if selected.flight == flights[0]:
+            raise AssertionError("a valid CMR-bound cache must not be downloaded")
+        downloads.append(selected.native_id)
+        return HEADER.encode("utf-8"), {"resolution": "downloaded-test"}
+
+    monkeypatch.setattr(bridge, "query_header_granule", fake_query)
+    monkeypatch.setattr(bridge, "fetch_header", fake_fetch)
+    receipts, headers = bridge.acquire_flight_headers(
+        session=object(),  # type: ignore[arg-type]
+        flight_versions={flight: "v2x1" for flight in flights},
+        allowed_versions={flight: "v2x1" for flight in flights},
+        header_root=root,
+        stage="test",
+    )
+
+    assert queried == sorted(flights)
+    assert len(headers) == 2
+    assert len(receipts) == 2
+    assert receipts[0]["resolution"] == "cached"
+    assert receipts[0]["response"]["resolution"] == "cached"
+    assert receipts[1]["resolution"] == "downloaded"
+    assert downloads == [_granule(flights[1]).native_id]
+
+
+def test_acquire_replaces_invalid_cache_atomically_and_receipts_download(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    flight = "ang20200101t120000"
+    root = tmp_path / "headers"
+    granule = _granule(flight)
+    output = root / flight / granule.native_id
+    output.parent.mkdir(parents=True)
+    output.write_bytes(b"ENVI\ncorrupt")
+    queried: list[str] = []
+    downloads: list[str] = []
+
+    def fake_query(
+        _session: object,
+        *,
+        flight: str,
+        expected_versions: dict[str, str],
+    ) -> tuple[bridge.HeaderGranule, str]:
+        queried.append(flight)
+        return granule, bridge.cmr_query_url(flight, expected_versions)
+
+    def fake_fetch(
+        _session: object, selected: bridge.HeaderGranule
+    ) -> tuple[bytes, dict[str, object]]:
+        downloads.append(selected.native_id)
+        return HEADER.encode("utf-8"), {"resolution": "downloaded-test"}
+
+    monkeypatch.setattr(bridge, "query_header_granule", fake_query)
+    monkeypatch.setattr(bridge, "fetch_header", fake_fetch)
+    receipts, headers = bridge.acquire_flight_headers(
+        session=object(),  # type: ignore[arg-type]
+        flight_versions={flight: "v2x1"},
+        allowed_versions={flight: "v2x1"},
+        header_root=root,
+        stage="test",
+    )
+
+    assert queried == [flight]
+    assert downloads == [granule.native_id]
+    assert headers[0]["sha256"] == hashlib.sha256(HEADER.encode()).hexdigest()
+    assert receipts[0]["status"] == "resolved_header_only"
+    assert receipts[0]["resolution"] == "downloaded"
+    assert "cache_validation_error" in receipts[0]
+    assert output.read_bytes() == HEADER.encode("utf-8")
+    assert not output.with_name(output.name + ".part").exists()
+
+
 def test_auth_redirect_and_non_header_content_are_rejected() -> None:
     native = "ang20200101t120000_rdn_v2x1_img.hdr"
     login = _Response(
@@ -177,6 +280,18 @@ def test_auth_redirect_and_non_header_content_are_rejected() -> None:
     valid_header = _Response(url=asset_url, payload=HEADER.encode("utf-8"))
     with pytest.raises(bridge.BridgeError, match="CMR SHA-256"):
         bridge.fetch_header(_Session(valid_header), wrong_checksum)  # type: ignore[arg-type]
+
+    wrong_size = bridge.HeaderGranule(
+        flight=fake_granule.flight,
+        native_id=fake_granule.native_id,
+        concept_id=None,
+        url=asset_url,
+        declared_bytes=len(HEADER) + 1,
+        checksum=None,
+        checksum_algorithm=None,
+    )
+    with pytest.raises(bridge.BridgeError, match="CMR-declared"):
+        bridge.fetch_header(_Session(valid_header), wrong_size)  # type: ignore[arg-type]
 
 
 def test_grid_bridge_detects_subpixel_threshold_mismatch() -> None:

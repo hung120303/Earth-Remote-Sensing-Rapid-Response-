@@ -598,16 +598,78 @@ def fetch_header(
             raise BridgeError("Downloaded header exceeds frozen maximum")
         chunks.append(chunk)
     payload = b"".join(chunks)
+    if (
+        granule.declared_bytes is not None
+        and len(payload) != granule.declared_bytes
+    ):
+        raise BridgeError("Downloaded header differs from the CMR-declared byte count")
     if not payload.lstrip().startswith(b"ENVI"):
         raise BridgeError("Downloaded asset is not an ENVI header")
     if granule.checksum is not None and sha256_bytes(payload) != granule.checksum:
         raise BridgeError("Downloaded header differs from the CMR SHA-256")
-    parse_envi_header(payload.decode("utf-8"))
+    try:
+        parse_envi_header(payload.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError) as error:
+        raise BridgeError("Downloaded asset is not a parseable ENVI header") from error
     return payload, {
         "final_url": str(response.url),
         "content_type": response.headers.get("Content-Type"),
         "content_length": response.headers.get("Content-Length"),
         "redirects": [str(item.url) for item in response.history],
+    }
+
+
+def validate_cached_header(
+    path: Path, granule: HeaderGranule
+) -> tuple[bytes, dict[str, object]]:
+    """Validate a local header against the CMR granule selected for this run.
+
+    A local file is reusable only when its filename is exactly the selected
+    native ID and every available CMR/content invariant holds.  In particular,
+    a cache with no CMR checksum is still bounded by the frozen byte limit and
+    must parse as a supported ENVI header; it is never accepted merely because
+    it happens to exist.
+    """
+
+    if path.name != granule.native_id:
+        raise BridgeError("Cached header filename is not the selected CMR native ID")
+    try:
+        if not path.is_file():
+            raise BridgeError("Cached header path is not a regular file")
+        size = path.stat().st_size
+        if size > MAX_HEADER_BYTES:
+            raise BridgeError("Cached header exceeds frozen maximum")
+        if (
+            granule.declared_bytes is not None
+            and size != granule.declared_bytes
+        ):
+            raise BridgeError("Cached header differs from the CMR-declared byte count")
+        payload = path.read_bytes()
+    except OSError as error:
+        raise BridgeError(f"Unable to read cached header: {error}") from error
+    if len(payload) != size:
+        raise BridgeError("Cached header changed while it was being read")
+    if len(payload) > MAX_HEADER_BYTES:
+        raise BridgeError("Cached header exceeds frozen maximum")
+    if (
+        granule.declared_bytes is not None
+        and len(payload) != granule.declared_bytes
+    ):
+        raise BridgeError("Cached header differs from the CMR-declared byte count")
+    observed_sha256 = sha256_bytes(payload)
+    if granule.checksum is not None and observed_sha256 != granule.checksum:
+        raise BridgeError("Cached header differs from the CMR SHA-256")
+    if not payload.lstrip().startswith(b"ENVI"):
+        raise BridgeError("Cached asset is not an ENVI header")
+    try:
+        parse_envi_header(payload.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError) as error:
+        raise BridgeError("Cached asset is not a parseable ENVI header") from error
+    return payload, {
+        "resolution": "cached",
+        "path": path.as_posix(),
+        "bytes": len(payload),
+        "sha256": observed_sha256,
     }
 
 
@@ -625,11 +687,27 @@ def acquire_flight_headers(
         if allowed_versions.get(flight) != flight_versions[flight]:
             raise ValueError(f"Flight/version is outside the frozen query plan: {flight}")
         query_url = cmr_query_url(flight, allowed_versions)
+        output: Path | None = None
+        cache_error: str | None = None
         try:
             granule, _ = query_header_granule(
                 session, flight=flight, expected_versions=allowed_versions
             )
-            payload, response_metadata = fetch_header(session, granule)
+            output = header_root / flight / granule.native_id
+            if output.exists():
+                try:
+                    payload, response_metadata = validate_cached_header(output, granule)
+                    resolution = "cached"
+                except BridgeError as error:
+                    # The selected CMR metadata is authoritative for this run.
+                    # Reacquire an invalid cache atomically below rather than
+                    # silently binding to stale or corrupted local content.
+                    cache_error = str(error)
+                    payload, response_metadata = fetch_header(session, granule)
+                    resolution = "downloaded"
+            else:
+                payload, response_metadata = fetch_header(session, granule)
+                resolution = "downloaded"
         except AuthenticationRequired:
             raise
         except BridgeError as error:
@@ -644,11 +722,12 @@ def acquire_flight_headers(
                 }
             )
             continue
-        output = header_root / flight / granule.native_id
-        output.parent.mkdir(parents=True, exist_ok=True)
-        partial = output.with_name(output.name + ".part")
-        partial.write_bytes(payload)
-        partial.replace(output)
+        assert output is not None
+        if resolution == "downloaded":
+            output.parent.mkdir(parents=True, exist_ok=True)
+            partial = output.with_name(output.name + ".part")
+            partial.write_bytes(payload)
+            partial.replace(output)
         info = parse_envi_header(payload.decode("utf-8"))
         record = {
             "stage": stage,
@@ -675,6 +754,8 @@ def acquire_flight_headers(
                 "native_id_pattern": native_id_pattern(flight, allowed_versions),
                 "query_url": query_url,
                 "status": "resolved_header_only",
+                "resolution": resolution,
+                **({"cache_validation_error": cache_error} if cache_error else {}),
                 "selected": record,
                 "response": response_metadata,
             }
