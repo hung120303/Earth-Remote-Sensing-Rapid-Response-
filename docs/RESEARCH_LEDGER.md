@@ -1150,6 +1150,37 @@ separate frozen data bridge—or a representation whose evidence is not already
 captured by Gaussian, DOFA, and spatial-Prithvi components. Authoritative
 compact result: `reports/experiments/mars_prithvi_domain_adaptive_v2.json`.
 
+## 2026-08-16: cross-modal literature supports targets, not unrestricted features
+
+Primary-source review after the Prithvi rejection found one directly relevant
+methane transfer precedent: PlumeBed composes hyperspectral Carbon Mapper
+plumes with Sentinel-2 backgrounds and applies domain-adversarial learning.
+General remote-sensing work supports learning with a privileged modality, but
+only for classification benchmarks. The large synthetic Sentinel-2 methane
+ViT/U-Net study explicitly treats asynchronous airborne comparison as
+indirect, and the EMIT V002 product contract provides enhancement,
+uncertainty, and sensitivity for scenes while reserving multi-scientist review
+for identified plume complexes.
+
+The conditional architecture call is therefore conservative. If the frozen
+300-negative acquisition gate passes, PSF-matched enhancement/masks and their
+uncertainty/sensitivity become primary training-only targets. Unrestricted
+hyperspectral hidden-feature matching is not the default. Dense labels remain
+limited to <=15 minutes, scene labels to <=1 hour, and unobservable coverage
+is never converted to no plume. Sentinel-2 and Landsat use separate students
+or stems and must each pass the sensor AP gate. No model protocol or imagery
+download is authorized by this review. Detailed note:
+`reports/research/HYPERSPECTRAL_PRIVILEGED_SUPERVISION_NOTE.md`.
+
+A follow-up source-only Hermes sweep found no public cohort that already closes
+the 28-pair negative deficit. Local receipts independently confirm that CACH4
+and STARCOP fail their spatial-component gates; Carbon Mapper null detections
+are source-specific; and COVID/Permian remain behind the authenticated
+NASA/ORNL grid bridge. Temporary source downloads created by the scout in the
+repository root were removed and never staged. Future Hermes use is therefore
+bounded to discovery, with local primary-source verification and diff review
+before any claim or protocol change.
+
 ## 2026-08-16: domain-adaptive Prithvi experiment frozen before outcomes
 
 Architecture work resumed without pooling any failed acquisition source. The

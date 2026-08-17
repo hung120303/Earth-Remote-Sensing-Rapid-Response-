@@ -6451,3 +6451,35 @@ were never authorized. The next architecture should add genuinely new
 methane-specific supervision or measurement evidence rather than another
 Prithvi-derived scalar correction. Compact result:
 `reports/experiments/mars_prithvi_domain_adaptive_v2.json`.
+
+### 2026-08-16: privileged hyperspectral supervision evidence narrowed
+
+A bounded Hermes source sweep was independently checked against four primary
+sources. Remote-sensing modality distillation supports training-only privileged
+modalities, but its published benchmark is classification rather than methane.
+PlumeBed is the strongest methane-specific transfer precedent: it combines
+Carbon Mapper hyperspectral plumes with Sentinel-2 backgrounds and
+domain-adversarial training, but does not validate temporally paired hidden
+feature distillation. The large synthetic Sentinel-2 ViT/U-Net study describes
+its airborne comparison as indirect because of acquisition timing, and NASA's
+EMIT documentation distinguishes scene-wide enhancement/uncertainty/sensitivity
+from plume complexes confirmed by three scientists.
+
+Architecture consequence: if the frozen cross-modal acquisition gate later
+passes, use PSF-matched, uncertainty-weighted enhancement/mask targets as the
+primary privileged signal. Hidden-feature distillation is a low-weight
+ablation. Sentinel-2 and Landsat require separate students or stems and
+independent sensor gates because no cited methane source validates Landsat
+transfer. Temporal intermittency is the principal validity threat. Full
+source audit and conditional design boundary:
+`reports/research/HYPERSPECTRAL_PRIVILEGED_SUPERVISION_NOTE.md`.
+
+A second read-only Hermes scout was restricted to the missing negative-data
+gate. After independent source and compact-receipt checks, no candidate already
+clears the frozen requirement. CACH4 remains below the component gate,
+STARCOP remains retired, Carbon Mapper null detections are source-specific, and
+COVID/Permian remain conditional on the authenticated NASA/ORNL grid bridge.
+Hermes created temporary root-level source downloads despite the read-only
+instruction; they were identified from the before/after Git status and removed
+without entering version control. Hermes remains a discovery scout, while
+source verification, protocol decisions, and repository writes stay local.
