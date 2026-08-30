@@ -143,3 +143,19 @@ components before a target catalog can be queried. Passing that audit would
 still authorize only a new pairing protocol, not the privileged-student model.
 The full CSV, GHGSat rasters, and target imagery remain unopened at protocol
 freeze. See `configs/mars_ghgsat_landfill_null_protocol.json`.
+
+## 2026-08-29 GHGSat metadata outcome
+
+The frozen metadata audit passes: 176 protected-geography-safe C1/C2 reviewed
+null observations remain after deterministic selection and exclusions, across
+66 sites and 64 independent 25 km components. Requirements were 56, 30, and
+20, respectively. The released paper counts also reconcile exactly. This
+closes the independent-source metadata gate with substantial headroom, without
+pooling a failed source.
+
+The conditional privileged-supervision architecture is still not authorized.
+The next step must freeze an exact Sentinel-2 L1C/Landsat C2 L1 catalog-pairing
+contract and demonstrate at least 28 <=1-hour pairs from GHGSat alone. Until
+that separate gate passes and the exact target manifest is committed, no
+target imagery or model protocol may be opened. GHGSat nulls remain scene-head
+supervision only; they cannot supervise an all-zero dense mask.

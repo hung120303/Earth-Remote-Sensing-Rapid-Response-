@@ -1280,3 +1280,32 @@ the medoid of its validated positive-row coordinates, with a 25 km within-site
 span sanity bound. Failure retires this source without threshold changes or
 pooling. Protocol SHA-256:
 `0943cb2a15f2106b9ee4a71f9ab36c06f563e410ad0b530ee1f3514b3aa1bcb1`.
+
+## 2026-08-29: GHGSat independent negative-source gate passes
+
+The exact hash-bound CSV was downloaded after protocol freeze. Its 299,683
+bytes match the released MD5 and SHA-256
+`b383b457db5790cac9d99c36d01a22599c53b03bf67075dbb87501c31997896a`.
+An initial 88-byte HTTP 406 response led only to a browser-compatible request
+header fix; the exact URL, file identity, cap, and every scientific gate stayed
+unchanged. A later parse failure correctly identified empty positive-only
+measurement fields on null rows. The Zenodo description states that no
+emission rate is calculated for non-detections, so the implementation now
+requires those fields to be exactly empty for nulls and finite for positives.
+That schema correction was committed before the cached audit was rerun.
+
+The audit exactly reconciled 1,447 observations, 1,013 positive observations,
+434 null observations, 1,085 plume rows, 151 sites, and the 2021-2022 years.
+There were 329 C1/C2 null candidates. Deterministic selection capped them at
+199 across sites; five selected observations were within 25 km of protected
+official MARS test geography and 18 were within 25 km of a counted prior
+negative point. The remaining 176 observations span 66 distinct sites and 64
+independent 25 km components. Gates pass by margins of +120 observations,
++36 sites, and +44 components.
+
+No target catalog or imagery was accessed. This pass authorizes only a new,
+committed Sentinel-2/Landsat pairing protocol. It does not authorize model
+training, create dense-negative masks, or establish benchmark improvement.
+Authoritative compact artifacts are
+`reports/acquisition/ghgsat_landfill_null_metadata.json` and
+`reports/acquisition/GHGSAT_LANDFILL_NULL_METADATA.md`.

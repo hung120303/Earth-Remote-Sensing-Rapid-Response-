@@ -6540,3 +6540,37 @@ No GHGSat raster, target-satellite catalog, target image, or protected MARS
 outcome is authorized at this stage. Frozen protocol:
 `configs/mars_ghgsat_landfill_null_protocol.json`, SHA-256
 `0943cb2a15f2106b9ee4a71f9ab36c06f563e410ad0b530ee1f3514b3aa1bcb1`.
+
+### 2026-08-29: GHGSat landfill-null metadata gate passes with headroom
+
+The exact frozen 299,683-byte CSV was acquired from Zenodo and matched MD5
+`0e3ba8fae21d6f888413148a76edc5de` and SHA-256
+`b383b457db5790cac9d99c36d01a22599c53b03bf67075dbb87501c31997896a`.
+The first request received an 88-byte HTTP 406 response because the client
+advertised an unnecessarily narrow content type. The browser-compatible
+header correction was committed without changing the URL, hash, byte cap,
+population, or gate before the successful retry.
+
+The first verified-cache parse then exposed the release's documented null-row
+convention: positive-only emission uncertainty and IME intermediate fields are
+empty for non-detections because no emission rate is calculated. The parser
+was corrected to require those fields to be exactly empty for nulls and finite
+for positives; all thresholds and label rules were unchanged, the correction
+was committed, and 50 focused/helper tests pass.
+
+The final cached audit exactly reproduces all published counts: 1,447
+clear-sky observations at 151 sites in 2021-2022, 1,013 positive observations,
+434 null observations, and 1,085 positive plume rows. Of 434 nulls, 329 were
+C1/C2 morning candidates; the deterministic four-per-site cap retained 199.
+The protected MARS/prior-negative filters excluded 23, leaving 176 reviewed
+null observations at 66 sites in 64 connected 25 km components. Every frozen
+gate passes versus requirements of 56 observations, 30 sites, and 20
+components.
+
+This is a metadata-source pass only. The label remains a GHGSat site-level
+non-detection above applicable sensitivity, not zero methane or a dense
+all-negative scene. No GHGSat raster, Sentinel-2/Landsat catalog or asset,
+protected outcome, score cache, checkpoint, or official benchmark result was
+accessed. The next authorized action is a separately committed exact
+target-catalog pairing protocol. Compact result:
+`reports/acquisition/ghgsat_landfill_null_metadata.json`.
