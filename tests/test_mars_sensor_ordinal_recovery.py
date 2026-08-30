@@ -491,6 +491,7 @@ def test_protocol_recovery_phase_accepts_only_consistent_immutable_prefix(
     seal_or_validate_text_artifact(markdown_path, "unrelated\n")
     with pytest.raises(RuntimeError, match="unrelated or partial"):
         _verify_recovery_output_phase(protocol)
+    os.chmod(markdown_path, 0o644)
     markdown_path.unlink()
 
     os.chmod(candidate_path, 0o644)
