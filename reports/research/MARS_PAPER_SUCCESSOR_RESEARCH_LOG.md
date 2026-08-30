@@ -6483,3 +6483,30 @@ Hermes created temporary root-level source downloads despite the read-only
 instruction; they were identified from the before/after Git status and removed
 without entering version control. Hermes remains a discovery scout, while
 source verification, protocol decisions, and repository writes stay local.
+
+### 2026-08-29: authenticated NASA/ORNL bridge passes geometry but fails geography
+
+The frozen header-only bridge was completed through the authenticated Edge
+session without exporting credentials. All 404 exact ORNL ENVI header assets
+(124 CACH4 anchors plus 280 COVID/Permian train-background flightlines) were
+checked against CMR-declared byte counts and SHA-256 values. The 5,880,697
+downloaded bytes remain under ignored research storage; no AVIRIS image,
+target-satellite catalog, target asset, JPL test/EMIT content, or protected
+MARS outcome was accessed. Ten focused bridge tests pass.
+
+Stage A passed completely: 124/124 anchors resolved, with zero geometric grid
+mismatches. Stage B then resolved all 13,444 released COVID/Permian background
+rows across all 280 flightlines, with no missing header and no invalid crop
+center. After the frozen MARS-test and prior-pair exclusions, 3,672 rows in 133
+flightlines remained, but they formed only 13 connected 25 km components. The
+unchanged gate required 20. The bridge therefore **FAILS**, and its target
+catalog remains forbidden.
+
+This retires COVID/Permian as the missing-negative supplement under the frozen
+contract. Its 13 components may not be pooled with the failed CACH4, STARCOP,
+or Carbon Mapper candidates, and the 300-negative privileged-supervision gate
+is still unmet. Authoritative compact artifacts are
+`reports/acquisition/jpl_operational_ghg_ornl_header_bridge.json` and
+`reports/acquisition/JPL_OPERATIONAL_GHG_ORNL_HEADER_BRIDGE.md`; the compact
+JSON SHA-256 is
+`32ecb2c905cc2ac81433174465de70feaa6a186e23eb9b37aa543eb4ee2725e2`.

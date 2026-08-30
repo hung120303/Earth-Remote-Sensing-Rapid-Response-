@@ -109,3 +109,18 @@ This note does not preregister an architecture, authorize imagery downloads,
 or claim expected improvement. The frozen sequence remains: close the data
 gate, freeze a target-band manifest, acquire only that manifest, then freeze a
 model protocol before any development outcome is opened.
+
+## 2026-08-29 acquisition outcome
+
+The pending NASA/ORNL bridge has now been executed under its frozen contract.
+All 124 CACH4 anchors passed the grid-equivalence test with zero mismatch, and
+all 13,444 COVID/Permian background rows resolved from 280 exact NASA headers.
+After the unchanged geographic exclusions, however, 3,672 eligible rows formed
+only 13 connected 25 km components versus the required 20. The supplement is
+therefore retired without a target-catalog query.
+
+This result does not weaken or reinterpret the 300-negative requirement. The
+conditional privileged-supervision architecture remains unauthorized, and the
+13 failed components cannot be pooled with CACH4, STARCOP, or Carbon Mapper.
+Any future cross-modal path requires a genuinely independent preregistered
+source that clears the existing gate on its own.

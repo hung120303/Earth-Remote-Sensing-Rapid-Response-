@@ -1,0 +1,157 @@
+{
+  "claim_boundary": "A PASS would establish metadata and acquisition feasibility only. It would not establish coincident target yield, local methane-label observability, cross-sensor validity, model complementarity, calibration, or superiority over MARS-S2L.",
+  "decision": "FAIL",
+  "inputs": {
+    "cach4_failed_report": {
+      "bytes": 11157,
+      "path": "reports/acquisition/jpl_operational_ghg_negative_supplement_metadata.json",
+      "sha256": "5c2dffc3c135b97dfbd9920bc28f440e1ce9eab1477df56a8ac5e546361f0379"
+    },
+    "cach4_filter_protocol": {
+      "bytes": 5373,
+      "path": "configs/mars_cross_modal_negative_supplement_filter_protocol.json",
+      "sha256": "31750ac5456893e444d40c9bacfb16195c36c7c5639e7ddc6ceef1e81b0f645c"
+    },
+    "cach4_public_header_manifest": {
+      "bytes": 69417,
+      "path": ".research/jpl_operational_ghg_supplement/cach4_header_manifest.json",
+      "sha256": "bb4db9dae491a88c14246d3ce3ef0a50f7ac20271c7be599d2e16e8cac42f577"
+    },
+    "jpl_train_definition": {
+      "bytes": 2514226,
+      "path": ".research/jpl_operational_ghg_supplement/multicampaign_train.csv",
+      "sha256": "e24afc507a81969742199b53ad92c7bcda423de65298c13d4ac3c25b2acae1d4"
+    },
+    "parent_supplement_protocol": {
+      "bytes": 6557,
+      "path": "configs/mars_cross_modal_negative_supplement_protocol.json",
+      "sha256": "0d26e596045a063645ca0bd108868641aa674e2a796b7bacecf34f1d4860929e"
+    },
+    "prior_mask_catalog": {
+      "bytes": 6839938,
+      "path": ".research/mars_hyperspectral_transfer/train_mask_catalog.jsonl",
+      "sha256": "945c74a5553a17bb01ac2241c02554a580e53bb438fae84f95498528ee546d51"
+    },
+    "prior_stage_b_pairs": {
+      "byte_sha256": "1657b39bcd25580eade09813e27e9506934be4033bc1ae0711d3f23d81e170ad",
+      "bytes": 532440,
+      "normalized_lf_sha256": "902d118e8a46a9d90465d23b9a55dce561b9cbecd6336f8c390b54cf8d89fa4e",
+      "path": ".research/mars_hyperspectral_transfer/stage_b_combined_pairs.jsonl"
+    },
+    "prior_stage_b_report": {
+      "bytes": 3411,
+      "path": "reports/acquisition/mars_hyperspectral_transfer_stage_b.json",
+      "sha256": "f7bd429ebb6d8dae93500fff14a3566496480a9d2fd33b13b0d8146ec54f1f65"
+    },
+    "protocol": {
+      "path": "configs/mars_jpl_ornl_header_bridge_protocol.json",
+      "sha256": "5416bd88082466090f573df9bb9d823338ad8b9e333f1aad8fc7ef9d1af261b2"
+    },
+    "safe_mars_manifest": {
+      "bytes": 94136263,
+      "path": ".research/source_audit_20260715/mars_s2l_current_validated_images_all.csv",
+      "sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2"
+    }
+  },
+  "outputs": {
+    "ignored_cmr_receipt": {
+      "bytes": 689118,
+      "path": ".research/jpl_operational_ghg_supplement/ornl_l1b_cmr_receipt.json",
+      "sha256": "ba23b29bade4643a274cb6ab5deaeec891eb3e42d9e914009a484e0fc33efd5e"
+    },
+    "ignored_filtered_rows": {
+      "bytes": 22262482,
+      "path": ".research/jpl_operational_ghg_supplement/covid_permian_train_negative_eligible_rows.jsonl",
+      "sha256": "f640b0e3e57da5253af915cc541ddb011c19da679074304d536d200bc9331952"
+    },
+    "ignored_header_manifest": {
+      "bytes": 343159,
+      "path": ".research/jpl_operational_ghg_supplement/ornl_l1b_header_manifest.json",
+      "sha256": "9510d4aa50c4d784a213e723bf5d2c35a645b14581584e59f818bc515c1fba74"
+    },
+    "ignored_resolved_rows": {
+      "bytes": 16017168,
+      "path": ".research/jpl_operational_ghg_supplement/covid_permian_train_negative_resolved_rows.jsonl",
+      "sha256": "1dbd5a4ba1319ac16d18353b7b7af930ba52c6eaf7a6422fc5512f2c8e3e63e7"
+    },
+    "ignored_stage_a_grid_comparisons": {
+      "bytes": 54237,
+      "path": ".research/jpl_operational_ghg_supplement/ornl_l1b_headers/stage_a_grid_comparisons.json",
+      "sha256": "33709b0dd301709e2b8e5e50dee48e7f3d216d728ba6e4fd69e3c09c3797ee68"
+    }
+  },
+  "schema_version": 1,
+  "scope": "NASA_ORNL_L1B_headers_only_no_target_catalog_or_assets",
+  "security_boundary": {
+    "cmr_queries_limited_to_explicit_released_train_flight_ids": true,
+    "downloaded_content_type": "ENVI_radiance_img_headers_only",
+    "jpl_test_or_emit_accessed": false,
+    "mars_protected_outcomes_accessed": [],
+    "maximum_header_bytes_each": 262144,
+    "target_asset_downloaded": false,
+    "target_catalog_queried": false
+  },
+  "stage_a_cach4_grid_bridge": {
+    "gates": {
+      "minimum_resolved_anchor_flightlines": true,
+      "minimum_resolved_anchor_fraction": true,
+      "zero_grid_mismatches": true
+    },
+    "grid_mismatches": 0,
+    "pass": true,
+    "resolved_anchor_flightlines": 124,
+    "resolved_anchor_fraction": 1.0,
+    "total_anchor_flightlines": 124,
+    "unresolved_anchor_flightlines": 0
+  },
+  "stage_b_covid_permian_metadata": {
+    "counts": {
+      "campaign_rows": {
+        "COVID": 3317,
+        "Permian": 10127
+      },
+      "eligible_25km_components": 13,
+      "eligible_flightlines": 133,
+      "eligible_rows": 3672,
+      "prior_pair_duplicate_rows": 0,
+      "protected_rows": 9772,
+      "released_negative_rows": 13444,
+      "resolved_flightlines": 280,
+      "resolved_negative_rows": 13444,
+      "rows_missing_header": 0,
+      "rows_with_invalid_center": 0
+    },
+    "distance_summaries_km": {
+      "nearest_any_mars": {
+        "count": 13444,
+        "maximum": 519.1277219661423,
+        "median": 7.704940998539934,
+        "minimum": 0.03337968622529078,
+        "p05": 1.5879047916609839,
+        "p95": 396.79359866336773
+      },
+      "nearest_official_mars_test": {
+        "count": 13444,
+        "maximum": 625.8370156153223,
+        "median": 7.7329885971100465,
+        "minimum": 0.03337968622529078,
+        "p05": 1.5919013144700256,
+        "p95": 410.666696014219
+      },
+      "nearest_prior_negative": {
+        "count": 13444,
+        "maximum": 470.0318320080873,
+        "median": 189.62501604735272,
+        "minimum": 51.26229551338384,
+        "p05": 127.29851046309236,
+        "p95": 290.24118862545726
+      }
+    },
+    "gates": {
+      "exact_utc_and_finite_wgs84_center_for_every_retained_row": true,
+      "minimum_eligible_25km_connected_components": false,
+      "minimum_resolved_train_background_rows": true
+    },
+    "pass": false
+  }
+}

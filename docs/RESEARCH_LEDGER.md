@@ -1234,3 +1234,20 @@ protocol SHA-256:
 The research claim is deliberately limited to an ExPLoRA-inspired,
 MAESTRO-inspired integrated system. It is not presented as a faithful
 reproduction or as a causal ablation of either published method.
+
+## 2026-08-29: NASA/ORNL COVID+Permian bridge rejected at frozen component gate
+
+Authenticated header-only acquisition completed for the exact 124 CACH4 grid
+anchors and 280 COVID/Permian released-train flightlines. All 404 ENVI headers
+matched NASA CMR byte counts and SHA-256 values. Stage A resolved every anchor
+and found zero grid mismatch, proving the JPL crop-index and NASA orthocorrected
+header grids geometrically interchangeable under the frozen comparison.
+
+Stage B resolved all 13,444 released background rows with exact UTC and finite
+WGS84 centers. Frozen geographic protection excluded 9,772 rows; the remaining
+3,672 rows across 133 flightlines formed only 13 independent 25 km components,
+below the preregistered minimum of 20. The overall decision is **FAIL**. No
+Sentinel-2/Landsat catalog or asset was queried, and no protected MARS outcome
+was opened. COVID/Permian cannot be pooled with any previously failed source
+to rescue the gate. The compact result is
+`reports/acquisition/jpl_operational_ghg_ornl_header_bridge.json`.
