@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_any_ghgsat_reference_catalog_query_or_asset_access",
+  "name": "GHGSat reviewed-null prior-reference catalog audit",
+  "research_question": "Do the 79 frozen GHGSat target source-sensor pairs yield enough prediction-blind prior same-granule references to support at least 28 distinct locally observable reviewed-null training observations?",
+  "decision_context_disclosed_before_freeze": {
+    "target_catalog_decision": "PASS",
+    "target_candidates": 109,
+    "selected_source_sensor_pairs": 79,
+    "selected_sentinel_2_l1c_pairs": 47,
+    "selected_landsat_8_9_level_1_pairs": 32,
+    "distinct_source_observations": 66,
+    "distinct_sites": 44,
+    "distinct_25km_components": 44,
+    "distinct_target_item_ids": 78,
+    "unchanged_required_final_negative_observations": 28,
+    "outcome_blindness": "No reference catalog, target or reference asset URL, raster window, local observability result, model artifact, MARS development outcome, or official benchmark outcome has been accessed for this source before freeze."
+  },
+  "frozen_inputs": {
+    "target_catalog_protocol": {
+      "path": "configs/mars_ghgsat_target_catalog_protocol.json",
+      "bytes": 9357,
+      "sha256": "486e78bdb41b4aa9dfcb6bc6943eb80caf0cf8c7c5899bce1cdb6cc7a06967ff"
+    },
+    "target_catalog_report": {
+      "path": "reports/acquisition/ghgsat_landfill_target_catalog.json",
+      "bytes": 3352,
+      "sha256": "ef8d99761c045a817f10a06568de11366aff3bfb7b55403eac4adc8cff1b5e6b",
+      "required_decision": "PASS"
+    },
+    "selected_target_pairs": {
+      "path": ".research/ghgsat_landfill_null/target_catalog/selected_pairs.jsonl",
+      "bytes": 59230,
+      "sha256": "8c7942f0ac7bc07e250603e25ff23bb345e7bafbd86394e4ce0e42d41a33f6a8",
+      "rows": 79
+    }
+  },
+  "source_pair_contract": {
+    "exact_rows": 79,
+    "required_target_sensors": [
+      "sentinel_2_l1c",
+      "landsat_8_9_level_1"
+    ],
+    "unique_identity": [
+      "site_ID",
+      "obs_ID",
+      "date",
+      "sat_ID",
+      "target_sensor"
+    ],
+    "all_78_target_item_ids_excluded_from_reference_selection": true,
+    "label_boundary": "The source is a reviewed site-level GHGSat non-detection above applicable sensitivity, not physical zero and not a dense all-negative scene. Reference selection cannot strengthen that label."
+  },
+  "catalogs": {
+    "sentinel_2_l1c": {
+      "endpoint": "https://stac.dataspace.copernicus.eu/v1/search",
+      "collection": "sentinel-2-l1c",
+      "allowed_item_prefixes": [
+        "S2A_",
+        "S2B_"
+      ],
+      "same_granule_rule": "MGRS tile parsed from the frozen target item ID must match exactly.",
+      "required_item_fields": [
+        "type",
+        "id",
+        "collection",
+        "geometry",
+        "bbox",
+        "properties.datetime",
+        "properties.eo:cloud_cover"
+      ]
+    },
+    "landsat_8_9_level_1": {
+      "endpoint": "https://landsatlook.usgs.gov/stac-server/search",
+      "collection": "landsat-c2l1",
+      "allowed_item_prefixes": [
+        "LC08_",
+        "LC09_"
+      ],
+      "required_processing_level": "L1TP",
+      "required_collection_category": "T1",
+      "same_granule_rule": "Six-digit WRS path/row parsed from the frozen target item ID must match exactly.",
+      "required_item_fields": [
+        "type",
+        "id",
+        "collection",
+        "geometry",
+        "bbox",
+        "properties.datetime",
+        "properties.eo:cloud_cover",
+        "properties.landsat:correction",
+        "properties.landsat:collection_category"
+      ]
+    }
+  },
+  "reference_contract": {
+    "direction": "prior only",
+    "primary_window": {
+      "minimum_gap_hours": 1,
+      "maximum_lookback_days": 31
+    },
+    "seasonal_fallback": {
+      "enabled_only_when_no_valid_primary_candidate_exists": true,
+      "minimum_lookback_days": 334,
+      "maximum_lookback_days": 410,
+      "target_gap_days": 365
+    },
+    "maximum_catalog_eo_cloud_cover_pct": 20,
+    "same_collection": true,
+    "same_granule": true,
+    "point_coverage": "Full candidate geometry contains or touches the exact frozen source point.",
+    "excluded_items": "Every frozen target item ID for the same target sensor, globally across the 79 rows.",
+    "selection_order_primary": [
+      "smallest target-reference time gap",
+      "smallest catalog eo:cloud_cover",
+      "lexicographically smallest item ID"
+    ],
+    "selection_order_seasonal": [
+      "smallest absolute difference from 365 days",
+      "smallest catalog eo:cloud_cover",
+      "lexicographically smallest item ID"
+    ],
+    "maximum_selected_per_source_sensor_pair": 1
+  },
+  "query_contract": {
+    "one_primary_query_per_frozen_source_sensor_pair": true,
+    "seasonal_query_only_after_valid_primary_set_is_empty": true,
+    "geometry": "Exact WGS84 Point at the frozen representative longitude/latitude.",
+    "stac_limit": 100,
+    "fail_if_limit_reached": true,
+    "fields_extension": "Request only structural and required item metadata; exclude assets and links.",
+    "maximum_response_bytes_each": 2097152,
+    "maximum_response_bytes_total": 134217728,
+    "minimum_request_interval_seconds": 0.25,
+    "maximum_attempts_per_request": 5,
+    "retryable_http_statuses": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
+    "checkpointing": "Append-only exact request and accepted-response hash receipts under the ignored root; resume only on canonical request, endpoint, source identity, target identity, and accepted parsed-candidate checkpoint match.",
+    "forbidden_response_retention": [
+      "asset URLs",
+      "item links",
+      "preview or thumbnail URLs",
+      "raster bytes"
+    ]
+  },
+  "gates": {
+    "minimum_selected_target_reference_pairs": 28,
+    "minimum_distinct_source_observations_with_reference": 28,
+    "minimum_distinct_sites_with_reference": 20,
+    "minimum_novel_25km_components_with_reference": 20,
+    "all_queries_and_retained_items_valid": true
+  },
+  "failure_action": "Retire GHGSat as the missing-negative pairing source without widening either reference window, raising the cloud ceiling, accepting future references, accepting a different product level/tier, relaxing same-granule matching, or pooling another failed source.",
+  "pass_action": "Commit the exact target/reference item manifest, then freeze a separate sensor-specific asset-resolution and windowed-raster/local-observability protocol before requesting any asset URL or raster byte.",
+  "network_boundary": {
+    "permitted": [
+      "metadata-only POST responses from the two exact frozen STAC search endpoints",
+      "HTTP headers and retry metadata required to validate those responses"
+    ],
+    "forbidden": [
+      "any item-detail endpoint",
+      "any target or reference asset URL",
+      "any raster, preview, thumbnail, QA band, metadata asset, or full product",
+      "any GHGSat raster",
+      "any model artifact, prediction, score, threshold, protected fold outcome, or official benchmark outcome",
+      "any location coordinate as a model feature"
+    ]
+  },
+  "outputs": {
+    "ignored_root": ".research/ghgsat_landfill_null/reference_catalog",
+    "ignored_requests": ".research/ghgsat_landfill_null/reference_catalog/requests.jsonl",
+    "ignored_responses": ".research/ghgsat_landfill_null/reference_catalog/responses.jsonl",
+    "ignored_candidates": ".research/ghgsat_landfill_null/reference_catalog/candidates.jsonl",
+    "ignored_pairs": ".research/ghgsat_landfill_null/reference_catalog/target_reference_pairs.jsonl",
+    "compact_json": "reports/acquisition/ghgsat_landfill_reference_catalog.json",
+    "compact_markdown": "reports/acquisition/GHGSAT_LANDFILL_REFERENCE_CATALOG.md"
+  },
+  "claim_boundary": "A PASS establishes deterministic prior-reference catalog feasibility only. It does not establish asset accessibility, local cloud/radiometric observability, a dense no-plume mask, training value, calibration, generalization, or superiority over MARS-S2L."
+}
