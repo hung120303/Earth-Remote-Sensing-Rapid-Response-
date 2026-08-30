@@ -49,12 +49,14 @@ PROTOCOL_RELATIVE_PATH = "configs/mars_ghgsat_landfill_null_protocol.json"
 EXPECTED_PROTOCOL = ROOT / PROTOCOL_RELATIVE_PATH
 EXPECTED_PROTOCOL_SHA256 = "0943cb2a15f2106b9ee4a71f9ab36c06f563e410ad0b530ee1f3514b3aa1bcb1"
 _INTEGER_RE = re.compile(r"^-?(?:0|[1-9]\d*)$")
-NUMERIC_COLUMNS = (
+ALWAYS_NUMERIC_COLUMNS = (
     "lat",
     "lon",
     "Q_t_per_hr",
-    "Q_error_t_per_hr",
     "wind_speed_m_per_s",
+)
+POSITIVE_ONLY_NUMERIC_COLUMNS = (
+    "Q_error_t_per_hr",
     "IME_kg",
     "intermediate_results_L_m",
     "intermediate_results_effective_wind_speed_m_per_s",
@@ -351,7 +353,10 @@ def parse_csv_rows(path: Path, protocol: dict[str, Any]) -> list[dict[str, objec
                 site_id = _text(source["site_ID"], name="site_ID")
                 obs_id = _text(source["obs_ID"], name="obs_ID")
                 integers = {name: _integer(source[name], name=name) for name in INTEGER_COLUMNS}
-                numbers = {name: _finite(source[name], name=name) for name in NUMERIC_COLUMNS}
+                numbers: dict[str, float | None] = {
+                    name: _finite(source[name], name=name)
+                    for name in ALWAYS_NUMERIC_COLUMNS
+                }
                 if integers["sat_ID"] not in {1, 2, 3, 4, 5}:
                     raise GHGSatAuditError("sat_ID must identify GHGSat C1-C5")
                 if not (-90 <= numbers["lat"] <= 90 and -180 <= numbers["lon"] <= 180):
@@ -360,13 +365,35 @@ def parse_csv_rows(path: Path, protocol: dict[str, Any]) -> list[dict[str, objec
                 _parse_utc(_text(source["date"], name="date"), fields=calendar)  # type: ignore[arg-type]
                 pinned = source["manually_pinned_sources"]
                 plume_name = source["plume_tif_file_name"]
-                null = (
+                null_identity = (
                     numbers["lat"] == 0.0
                     and numbers["lon"] == 0.0
                     and numbers["Q_t_per_hr"] == 0.0
                     and pinned == ""
                     and plume_name == ""
                 )
+                if null_identity:
+                    nonempty = [
+                        name
+                        for name in POSITIVE_ONLY_NUMERIC_COLUMNS
+                        if source[name] != ""
+                    ]
+                    if nonempty:
+                        raise GHGSatAuditError(
+                            "null row has non-empty positive-only measurement fields: "
+                            + ", ".join(nonempty)
+                        )
+                    numbers.update(
+                        {name: None for name in POSITIVE_ONLY_NUMERIC_COLUMNS}
+                    )
+                else:
+                    numbers.update(
+                        {
+                            name: _finite(source[name], name=name)
+                            for name in POSITIVE_ONLY_NUMERIC_COLUMNS
+                        }
+                    )
+                null = null_identity
                 positive = (
                     (numbers["lat"] != 0.0 or numbers["lon"] != 0.0)
                     and numbers["Q_t_per_hr"] > 0.0

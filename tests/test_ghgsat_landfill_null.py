@@ -86,15 +86,15 @@ def row(
         "minute": "4",
         "second": "5",
         "Q_t_per_hr": "1.5" if state == "positive" else "0.0",
-        "Q_error_t_per_hr": "0.1" if state == "positive" else "0.0",
+        "Q_error_t_per_hr": "0.1" if state == "positive" else "",
         "wind_speed_m_per_s": "2.0" if state == "positive" else "0.0",
         "sat_ID": str(sat),
         "obs_ID": obs,
         "date": date,
-        "IME_kg": "3.0" if state == "positive" else "0.0",
-        "intermediate_results_L_m": "4.0" if state == "positive" else "0.0",
-        "intermediate_results_effective_wind_speed_m_per_s": "5.0" if state == "positive" else "0.0",
-        "conversion_ch4_ppb_to_molm2": "6.0" if state == "positive" else "0.0",
+        "IME_kg": "3.0" if state == "positive" else "",
+        "intermediate_results_L_m": "4.0" if state == "positive" else "",
+        "intermediate_results_effective_wind_speed_m_per_s": "5.0" if state == "positive" else "",
+        "conversion_ch4_ppb_to_molm2": "6.0" if state == "positive" else "",
         "manually_pinned_sources": "pin" if state == "positive" else "",
         "plume_tif_file_name": "plume.tif" if state == "positive" else "",
     }
@@ -270,6 +270,13 @@ def test_exact_header_and_strict_field_validation(tmp_path: Path) -> None:
         write_csv(path, [bad])
         with pytest.raises(audit.GHGSatAuditError, match=message):
             audit.parse_csv_rows(path, value)
+
+    invalid_null = row(state="null")
+    invalid_null["IME_kg"] = "0.0"
+    path = tmp_path / "bad-null-measurement.csv"
+    write_csv(path, [invalid_null])
+    with pytest.raises(audit.GHGSatAuditError, match="positive-only measurement"):
+        audit.parse_csv_rows(path, value)
 
 
 @pytest.mark.parametrize(
