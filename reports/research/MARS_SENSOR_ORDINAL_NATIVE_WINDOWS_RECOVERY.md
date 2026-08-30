@@ -1,6 +1,6 @@
 # MARS sensor-aware ordinal native-Windows recovery freeze
 
-Status: frozen pre-outcome infrastructure amendment; stop for Codex review before execution.
+Status: allocator-corrected checkpoint round trip passed; exactly one resumable native-Windows held-fold execution is authorized.
 
 ## Why the retry moves to native Windows
 
@@ -18,7 +18,7 @@ The next scientific attempt therefore starts at epoch 1 on native Windows CUDA. 
 - rasterio: `1.4.4`
 - scikit-learn: `1.9.0`
 - SciPy: `1.17.1`
-- `PYTORCH_ALLOC_CONF=expandable_segments:True`
+- `PYTORCH_ALLOC_CONF=backend:cudaMallocAsync`
 - `CUDA_MODULE_LOADING=LAZY`
 
 The runtime signature is part of every recoverable generation and must match exactly before resume. The Windows environment is intentionally not created by this amendment.
@@ -70,3 +70,9 @@ Exactly one wrapper-corrected checkpoint-roundtrip smoke is authorized. The retr
 The one wrapper-corrected smoke at clean native commit `26ef0523be3ff5dedca42c7298250e601e7ab797` used native `cmd.exe`, separate stdout/stderr files, and the actual Python exit code. Python exited 1 with empty stdout. The exact batch-16 pixel backward returned to `clip_grad_norm_`, where CUDA reported `cudaErrorMemoryAllocation` before the first optimizer step or JSON output. Because CUDA failures may be reported asynchronously, the traceback does not prove that the foreach norm operation caused the shortage. This is an allocator infrastructure failure, not scientific rejection. The exact output, post-process memory diagnostic, and absence attestations are preserved in `reports/research/mars_sensor_ordinal_native_bounded_allocator_failure.json`.
 
 The reviewed allocator amendment restores the original clipping and AdamW calls unchanged. Native Windows does not support the earlier `expandable_segments` setting, so the runtime now requires `PYTORCH_ALLOC_CONF=backend:cudaMallocAsync` and independently attests that PyTorch selected the `cudaMallocAsync` backend before data access. Model, losses, clipping, optimizer, batch and crop sizes, precision, seed, schedule, data, folds, comparators, thresholds, bootstrap, all seven gates, and scientific digest remain unchanged. Exactly one allocator-corrected fitting-only checkpoint-roundtrip smoke is authorized; no held run is authorized.
+
+## Allocator-corrected checkpoint round trip passed
+
+The one authorized allocator-corrected smoke was consumed at clean native commit `9adfdafefe83a12ea488b8a3f1b1ecb31e69b0cd` and passed with Python exit code 0, 2,099 bytes of JSON stdout, and zero-byte stderr. The restored next sample/group identities and the next model/optimizer step were exactly equal. Peak CUDA allocated and reserved bytes were `4604530303` and `4966055936`. The exact runtime, content hashes, equality checks, and no-access attestations are committed in `reports/research/mars_sensor_ordinal_allocator_corrected_checkpoint_smoke_success.json`.
+
+The scientific-settings digest remains `25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`. Exactly one resumable native-Windows `--run-held-folds` execution is now authorized under the attested runtime and frozen recovery state machine. Folds 0/1/2 and all protected, external, and official evidence remain forbidden; comparator values remain sealed until final candidate immutability. No second held-fold execution is authorized.

@@ -182,6 +182,8 @@ The first held execution reached no scientific outcome and wrote no result artif
 
 `--runtime-smoke` authenticates the frozen protocol, executable dependencies, manifest, and fold map without opening comparator artifacts. It constructs the held-fold-4 endpoint setup from fold-3 fitting records only, freezes the existing deterministic inner split and inner-training-only cutpoints, forms the exact frozen 16-row/16-group 8-positive/8-negative dense batch, and runs one full pixel forward/backward/AdamW update on CUDA at the frozen epoch-1 learning rate. It records finite loss/gradient plus peak allocated/reserved CUDA memory. It does not evaluate inner validation, infer on a held fold, or open folds 0/1/2, comparator, external, or official evidence.
 
+The allocator-corrected checkpoint-roundtrip smoke subsequently passed at clean commit `9adfdafefe83a12ea488b8a3f1b1ecb31e69b0cd` under native Windows with `PYTORCH_ALLOC_CONF=backend:cudaMallocAsync` and `CUDA_MODULE_LOADING=LAZY`. Its exact-equality and no-access receipt is `reports/research/mars_sensor_ordinal_allocator_corrected_checkpoint_smoke_success.json`. Exactly one resumable `--run-held-folds` execution is authorized under that runtime. The frozen science digest remains `25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`; folds 0/1/2 and protected, external, and official evidence remain forbidden.
+
 ## Frozen constants checklist
 
 - outer endpoints: fold 4 -> 3 and fold 3 -> 4

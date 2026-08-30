@@ -6756,3 +6756,20 @@ NVIDIA's stream-ordered memory-allocation documentation:
 <https://docs.pytorch.org/docs/main/generated/torch.cuda.memory.get_allocator_backend.html>
 and
 <https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/stream-ordered-memory-allocation.html>.
+
+### 2026-08-30: allocator-corrected checkpoint round trip passes
+
+The one authorized allocator-corrected fitting-only smoke was consumed at clean
+native commit `9adfdafefe83a12ea488b8a3f1b1ecb31e69b0cd` and passed. Python
+exited 0; stdout was 2,099 bytes and stderr was empty. Restored next-batch
+sample/group identities and the next model/optimizer step were exactly equal.
+Peak CUDA allocated/reserved bytes were `4604530303`/`4966055936`. The compact
+receipt, hashes, attested Windows runtime, and all no-access declarations are in
+`reports/research/mars_sensor_ordinal_allocator_corrected_checkpoint_smoke_success.json`.
+
+The science digest remains
+`25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`.
+Exactly one resumable native-Windows `--run-held-folds` execution is authorized
+under the attested runtime and frozen recovery rules. Folds 0/1/2 and protected,
+external, and official evidence remain forbidden; no second held execution is
+authorized.

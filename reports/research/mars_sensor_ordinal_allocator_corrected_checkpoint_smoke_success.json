@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "classification": "allocator_corrected_checkpoint_roundtrip_smoke_success",
+  "native_commit": "9adfdafefe83a12ea488b8a3f1b1ecb31e69b0cd",
+  "clean_head_before_execution": true,
+  "mode": "--checkpoint-roundtrip-smoke",
+  "scope": "fold-3 fitting evidence only",
+  "command": ".venv\\Scripts\\python.exe tools\\train_mars_sensor_ordinal.py --checkpoint-roundtrip-smoke",
+  "host_shell": "native Windows cmd.exe",
+  "actual_python_exit_code": 0,
+  "source_capture": {
+    "stdout_path": ".research/mars_sensor_ordinal/operator_checkpoint_roundtrip_smoke_stdout.txt",
+    "stdout_bytes": 2099,
+    "stdout_sha256": "947759e8c4b72a0d13b6ede62875f815efc33f4a3264e0b50d02ae3346b701e7",
+    "stderr_path": ".research/mars_sensor_ordinal/operator_checkpoint_roundtrip_smoke_stderr.txt",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "protocol": {
+    "file_sha256_at_execution": "4fa919492b1c9717de418a31e1652c48b480e49bbcb5d60fa4882530ceba9897",
+    "self_hash_at_execution": "e3d5c53caeb4dc388db2c319faa1b766048a3229aa93efe4713e3956157663f6",
+    "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca",
+    "trainer_sha256": "4a1596d586092f8b0764fdd6a5f85122c0bd9530987bcad96b0953d95df9b0cc",
+    "model_sha256": "687b6e1f13f6a88afc802c55d35602d0ebd38a27c4a7eeea4ae3b758698a53bb"
+  },
+  "runtime_signature": {
+    "platform": "Windows",
+    "gpu": "NVIDIA GeForce RTX 5070",
+    "nvidia_driver": "595.79",
+    "torch": "2.11.0+cu128",
+    "numpy": "2.4.4",
+    "rasterio": "1.4.4",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.17.1",
+    "allocator_backend": "cudaMallocAsync",
+    "environment": {
+      "PYTORCH_ALLOC_CONF": "backend:cudaMallocAsync",
+      "CUDA_MODULE_LOADING": "LAZY"
+    }
+  },
+  "workload": {
+    "rows": 16,
+    "distinct_groups": 16,
+    "input_shape": [16, 14, 256, 256],
+    "inner_training_rows": 6913,
+    "inner_training_groups": 116,
+    "inner_validation_rows_not_scored": 1886,
+    "inner_validation_groups_not_scored": 30,
+    "peak_cuda_allocated_bytes": 4604530303,
+    "peak_cuda_reserved_bytes": 4966055936
+  },
+  "identity_hashes": {
+    "inner_training_groups_sha256": "3536c71d209bd3eb87661e2637c10c6d623f728149b9565d536b18b8d8d87a44",
+    "first_sample_ids_sha256": "80c63ae9e02b6f63915cfcef56372ff336e57de3f6a7a2aface16ade54de8e8a",
+    "first_group_ids_sha256": "d575594dba20647af0b7966d6e6d43b4779cd27f4d6fcd5719a91929261bb0b8",
+    "next_sample_ids_sha256": "32e0d2bef085f0083c50c009b63f0e407885bc02f17476af34cccca1dca846a9",
+    "next_group_ids_sha256": "0f67d6889ef836e46d4cdc8b232da57fa9f904e23a03bf69f37c629d51f42271"
+  },
+  "exact_equality_attestations": {
+    "next_sample_and_group_identities_equal": true,
+    "next_step_model_optimizer_exactly_equal": true
+  },
+  "stdout_no_access_attestations": {
+    "inner_validation_outcome_opened": false,
+    "held_outcome_opened": false,
+    "comparator_integrity_bytes_hashed": false,
+    "comparator_values_decoded": false,
+    "folds_0_1_2_opened": false,
+    "external_or_official_evidence_opened": false
+  },
+  "operator_no_access_attestations": {
+    "held_data_opened": false,
+    "protected_evidence_opened": false,
+    "validation_outcomes_opened": false
+  },
+  "ok": true
+}
