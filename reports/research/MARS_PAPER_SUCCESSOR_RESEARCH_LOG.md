@@ -6742,9 +6742,11 @@ rejection; the exact output and absence attestations are in
 `reports/research/mars_sensor_ordinal_native_bounded_allocator_failure.json`.
 
 The pre-smoke amendment forces `foreach=False` for both pixel and scene global
-L2 gradient clipping. The frozen max norm remains 2.0; only the allocator path
-changes from peak TensorList workspace to per-tensor bounded temporaries. Model,
-losses, optimizer, batch/crop sizes, precision, seed, schedule, data, folds,
-comparators, thresholds, bootstrap, all seven gates, and scientific digest are
-unchanged. No CUDA smoke or held data was run, and no further execution is
-authorized by this amendment.
+L2 gradient clipping. The Codex-reviewed correction also forces `foreach=False`
+for every pixel and scene AdamW construction, including recovery and smoke
+reconstruction, so neither clipping nor the immediately following optimizer
+update can select a CUDA TensorList path at peak memory. The frozen max norm
+remains 2.0; model, losses, optimizer hyperparameters, batch/crop sizes,
+precision, seed, schedule, data, folds, comparators, thresholds, bootstrap, all
+seven gates, and scientific digest are unchanged. No CUDA smoke or held data
+was run, and no further execution is authorized by this amendment.

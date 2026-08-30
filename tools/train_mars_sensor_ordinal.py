@@ -633,8 +633,8 @@ def train_endpoint(
     )
     model = MarsSensorOrdinalUNet().to(device)
     spec = protocol["training"]
-    pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4)
-    scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4)
+    pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4, foreach=False)
+    scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4, foreach=False)
     batcher = SiteBalancedBatcher(paths["metadata_root"], inner_training, cutpoints, np.random.default_rng(SEED))
     recovery_root = (ROOT / protocol["outputs"]["candidate_predictions"]).resolve().parent / "recovery" / f"held-{held_fold}"
     store = RecoveryStore(recovery_root, identity, device)
@@ -1511,8 +1511,8 @@ def smoke(protocol: dict[str, Any], paths: dict[str, Path]) -> dict[str, Any]:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     batch = collate([make_crop(positive_sample, cutpoints, size=256, rng=rng, augment=True), make_crop(negative_sample, cutpoints, size=256, rng=rng, augment=True)], device)
     model = MarsSensorOrdinalUNet().to(device)
-    pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=3e-4, betas=(0.9, 0.999), weight_decay=1e-4)
-    scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=1e-3, betas=(0.9, 0.999), weight_decay=1e-4)
+    pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=3e-4, betas=(0.9, 0.999), weight_decay=1e-4, foreach=False)
+    scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=1e-3, betas=(0.9, 0.999), weight_decay=1e-4, foreach=False)
     result = finite_gradient_step(model, batch, pixel_optimizer, scene_optimizer)
     result.update({"ok": all(math.isfinite(value) for value in result.values()), "scope": "fold_3_fitting_data_only", "rows": 2,
                    "sample_ids": batch["sample_id"], "input_shape": list(batch["inputs"].shape),
@@ -1568,6 +1568,7 @@ def checkpoint_roundtrip_smoke(protocol: dict[str, Any], protocol_path: Path, pa
         lr=pixel_learning_rate(1, int(protocol["training"]["epochs"])),
         betas=(float(optimizer_spec["betas"][0]), float(optimizer_spec["betas"][1])),
         weight_decay=float(optimizer_spec["weight_decay"]),
+        foreach=False,
     )
     scene_optimizer_spec = protocol["training"]["scene_optimizer"]
     scene_optimizer = torch.optim.AdamW(
@@ -1575,6 +1576,7 @@ def checkpoint_roundtrip_smoke(protocol: dict[str, Any], protocol_path: Path, pa
         lr=0.0,
         betas=(float(scene_optimizer_spec["betas"][0]), float(scene_optimizer_spec["betas"][1])),
         weight_decay=float(scene_optimizer_spec["weight_decay"]),
+        foreach=False,
     )
     first_result = pixel_step(model, first_batch, optimizer)
     first_ids = list(first_batch["sample_id"])
@@ -1633,12 +1635,14 @@ def checkpoint_roundtrip_smoke(protocol: dict[str, Any], protocol_path: Path, pa
             lr=0.0,
             betas=(float(optimizer_spec["betas"][0]), float(optimizer_spec["betas"][1])),
             weight_decay=float(optimizer_spec["weight_decay"]),
+            foreach=False,
         )
         recovered_scene_optimizer = torch.optim.AdamW(
             recovered_model.scene_parameters(),
             lr=0.0,
             betas=(float(scene_optimizer_spec["betas"][0]), float(scene_optimizer_spec["betas"][1])),
             weight_decay=float(scene_optimizer_spec["weight_decay"]),
+            foreach=False,
         )
         recovered_batcher = SiteBalancedBatcher(
             paths["metadata_root"], inner_training, cutpoints, np.random.default_rng(SEED + 1)

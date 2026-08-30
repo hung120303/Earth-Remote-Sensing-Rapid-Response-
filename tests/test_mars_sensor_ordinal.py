@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 import sys
 from pathlib import Path
@@ -91,6 +92,27 @@ def test_training_steps_force_bounded_nonforeach_gradient_clipping(
     assert np.isfinite(pixel_step(model, batch, pixel_optimizer)["pixel_gradient_norm"])
     assert np.isfinite(scene_step(model, batch, scene_optimizer)["scene_gradient_norm"])
     assert calls == [(2.0, False), (2.0, False)]
+
+
+def test_all_trainer_adamw_instances_force_bounded_nonforeach_updates() -> None:
+    tree = ast.parse((ROOT / "tools" / "train_mars_sensor_ordinal.py").read_text(encoding="utf-8"))
+    calls = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr == "AdamW"
+    ]
+    assert calls
+    assert all(
+        any(
+            keyword.arg == "foreach"
+            and isinstance(keyword.value, ast.Constant)
+            and keyword.value.value is False
+            for keyword in call.keywords
+        )
+        for call in calls
+    )
 
 
 def test_exact_14_channels_and_independent_sensor_stems() -> None:
