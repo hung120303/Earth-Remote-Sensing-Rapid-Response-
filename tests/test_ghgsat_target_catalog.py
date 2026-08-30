@@ -220,6 +220,9 @@ def test_request_canonicalization_is_exact_deterministic_and_metadata_only() -> 
     assert body["collections"] == ["sentinel-2-l1c"]
     assert body["datetime"] == "2021-01-02T02:04:05Z/2021-01-02T04:04:05Z"
     assert body["limit"] == 100
+    assert body["fields"]["include"] == [
+        "type", *value["catalogs"]["sentinel_2_l1c"]["required_item_fields"],
+    ]
     assert body["fields"]["exclude"] == ["assets", "links"]
     encoded = str(first["canonical_request"])
     assert '"assets"' not in encoded.replace('"exclude":["assets","links"]', "")

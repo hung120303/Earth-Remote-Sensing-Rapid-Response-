@@ -372,7 +372,11 @@ def build_request(row: dict[str, object], sensor: str, protocol: dict[str, Any])
     catalog = protocol["catalogs"][sensor]
     source_time = parse_source_utc(row["date"])
     seconds = int(protocol["query_contract"]["maximum_absolute_time_offset_seconds"])
-    include = list(catalog["required_item_fields"])
+    # ``type`` is mandatory STAC Feature structure. It is not a scientific
+    # item field in the frozen catalog list, but literal Fields projection by
+    # CDSE omits it unless requested, which would make the projected response
+    # impossible to validate as a Feature.
+    include = ["type", *catalog["required_item_fields"]]
     body: dict[str, object] = {
         "collections": [catalog["collection"]],
         "intersects": {
