@@ -1,0 +1,119 @@
+{
+  "access_boundary_proof": {
+    "asset_urls_retained": false,
+    "ghgsat_assets_accessed": false,
+    "item_detail_queried": false,
+    "item_links_retained": false,
+    "metadata_search_endpoints_only": true,
+    "model_artifacts_accessed": false,
+    "preview_or_thumbnail_accessed": false,
+    "protected_outcomes_accessed": false,
+    "raster_bytes_accessed": false,
+    "reference_assets_accessed": false,
+    "target_assets_accessed": false
+  },
+  "candidate_counts_by_sensor": {
+    "landsat_8_9_level_1": 56,
+    "sentinel_2_l1c": 214
+  },
+  "candidate_counts_by_window": {
+    "primary": 252,
+    "seasonal": 18
+  },
+  "claim_boundary": "A PASS establishes deterministic prior-reference catalog feasibility only. It does not establish asset accessibility, local cloud/radiometric observability, a dense no-plume mask, training value, calibration, generalization, or superiority over MARS-S2L.",
+  "cloud_cover_summary": {
+    "count": 76,
+    "maximum": 19.5,
+    "mean": 5.372129460971319,
+    "median": 2.955,
+    "minimum": 0.0
+  },
+  "decision": "PASS",
+  "distinct_counts": {
+    "distinct_components": 43,
+    "distinct_reference_item_ids": 75,
+    "distinct_sites": 43,
+    "distinct_source_observations": 64,
+    "selected_target_reference_pairs": 76
+  },
+  "frozen_inputs_mutated": false,
+  "gates": {
+    "all_queries_and_retained_items_valid": {
+      "observed": true,
+      "pass": true,
+      "required": true
+    },
+    "minimum_distinct_sites_with_reference": {
+      "observed": 43,
+      "pass": true,
+      "required": 20
+    },
+    "minimum_distinct_source_observations_with_reference": {
+      "observed": 64,
+      "pass": true,
+      "required": 28
+    },
+    "minimum_novel_25km_components_with_reference": {
+      "observed": 43,
+      "pass": true,
+      "required": 20
+    },
+    "minimum_selected_target_reference_pairs": {
+      "observed": 76,
+      "pass": true,
+      "required": 28
+    }
+  },
+  "http_and_byte_receipts": {
+    "cumulative_response_bytes": 661830,
+    "historical_response_bytes_before_execution": 0,
+    "maximum_response_bytes_each": 2097152,
+    "maximum_response_bytes_total": 134217728,
+    "network_bytes_observed_this_execution": 661830,
+    "requests_append_only": ".research/ghgsat_landfill_null/reference_catalog/requests.jsonl",
+    "responses_append_only": ".research/ghgsat_landfill_null/reference_catalog/responses.jsonl",
+    "status_counts": {
+      "200": 88,
+      "429": 1
+    }
+  },
+  "output_receipts": {
+    "candidates": {
+      "bytes": 266153,
+      "path": ".research/ghgsat_landfill_null/reference_catalog/candidates.jsonl",
+      "rows": 270,
+      "sha256": "d160fe663f646ed8a2e0798954517e077c63f7f405a107a4c7dea9edc5cc4c90"
+    },
+    "target_reference_pairs": {
+      "bytes": 73828,
+      "path": ".research/ghgsat_landfill_null/reference_catalog/target_reference_pairs.jsonl",
+      "rows": 76,
+      "sha256": "ebd2cd3e4f4a201905f441c86eeabd1a50798e57c3818a3bd46d4fb11709f6a2"
+    }
+  },
+  "queries": {
+    "http_attempts": 89,
+    "network_queries": 88,
+    "primary_expected": 79,
+    "primary_logical_queries": 79,
+    "resumed_queries": 0,
+    "seasonal_logical_queries": 9,
+    "total_logical_queries": 88
+  },
+  "schema_version": 1,
+  "selection_counts_by_sensor": {
+    "landsat_8_9_level_1": 29,
+    "sentinel_2_l1c": 47
+  },
+  "selection_counts_by_window": {
+    "primary": 70,
+    "seasonal": 6
+  },
+  "target_reference_gap_days_summary": {
+    "count": 76,
+    "maximum": 368.0001797968171,
+    "mean": 36.43437731778022,
+    "median": 7.999850496626157,
+    "minimum": 1.990138877314815
+  }
+}

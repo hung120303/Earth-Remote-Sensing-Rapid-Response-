@@ -1344,3 +1344,25 @@ frozen point, time, sensor, geometry, and deterministic-selection contract. No
 assets, references, protected outcomes, or model artifacts were accessed. It
 does not establish raster-level observability, create dense all-negative
 labels, authorize a model protocol, or claim benchmark or model improvement.
+
+## 2026-08-29: frozen GHGSat reference-catalog audit passes
+
+The frozen auditor completed 79 primary logical queries and 9 seasonal logical
+queries, 88 total. It made 89 HTTP attempts: 88 returned status 200 and one
+handled status 429. The audit retained 270 valid candidates and selected 76
+target/reference pairs: 47 Sentinel-2 L1C and 29 Landsat C2 L1. Of those
+selections, 70 came from the primary window and 6 from the seasonal fallback.
+They represent 64 distinct source observations, 43 sites, 43 independent 25 km
+components, and 75 distinct reference item IDs. All frozen gates passed.
+
+The candidate JSONL SHA-256 is
+`d160fe663f646ed8a2e0798954517e077c63f7f405a107a4c7dea9edc5cc4c90`;
+the pair JSONL SHA-256 is
+`ebd2cd3e4f4a201905f441c86eeabd1a50798e57c3818a3bd46d4fb11709f6a2`.
+The compact report is
+`reports/acquisition/ghgsat_landfill_reference_catalog.json`.
+
+No asset URL, item detail, raster, protected outcome, or model artifact was
+accessed. This result is strictly catalog feasibility; it does not establish
+local observability, dense no-plume truth, training value, or benchmark
+improvement.
