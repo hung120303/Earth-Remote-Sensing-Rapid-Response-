@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import ast
 import json
 import sys
 from pathlib import Path
@@ -26,10 +25,8 @@ from train_mars_sensor_ordinal import (
     metric_gates,
     model_input,
     ordinal_levels,
-    pixel_step,
     prepare_endpoint_data,
     protocol_identity,
-    scene_step,
     scene_learning_rate,
     validate_requested_folds,
     verify_runtime_environment,
@@ -63,56 +60,6 @@ def test_invalid_pixels_have_zero_dense_and_ordinal_weight() -> None:
     assert output["binary_logit"].grad[0, 0, 0, 1] == 0
     assert torch.count_nonzero(output["ordinal_logits"].grad[..., 1]) == 0
     assert torch.isfinite(losses["loss"])
-
-
-def test_training_steps_force_bounded_nonforeach_gradient_clipping(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    model = MarsSensorOrdinalUNet()
-    inputs = torch.randn(2, 14, 16, 16)
-    batch = {
-        "inputs": inputs,
-        "sensor_index": torch.tensor([0, 1]),
-        "observable": torch.ones(2, 1, 16, 16, dtype=torch.bool),
-        "plume": torch.zeros(2, 16, 16),
-        "ordinal_level": torch.zeros(2, 16, 16, dtype=torch.long),
-        "ordinal_support": torch.ones(2, 16, 16, dtype=torch.bool),
-        "presence": torch.tensor([0.0, 1.0]),
-    }
-    pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=3e-4)
-    scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=1e-3)
-    calls: list[tuple[float, bool | None]] = []
-    original = torch.nn.utils.clip_grad_norm_
-
-    def audited(parameters, max_norm, *args, **kwargs):
-        calls.append((float(max_norm), kwargs.get("foreach")))
-        return original(parameters, max_norm, *args, **kwargs)
-
-    monkeypatch.setattr(torch.nn.utils, "clip_grad_norm_", audited)
-    assert np.isfinite(pixel_step(model, batch, pixel_optimizer)["pixel_gradient_norm"])
-    assert np.isfinite(scene_step(model, batch, scene_optimizer)["scene_gradient_norm"])
-    assert calls == [(2.0, False), (2.0, False)]
-
-
-def test_all_trainer_adamw_instances_force_bounded_nonforeach_updates() -> None:
-    tree = ast.parse((ROOT / "tools" / "train_mars_sensor_ordinal.py").read_text(encoding="utf-8"))
-    calls = [
-        node
-        for node in ast.walk(tree)
-        if isinstance(node, ast.Call)
-        and isinstance(node.func, ast.Attribute)
-        and node.func.attr == "AdamW"
-    ]
-    assert calls
-    assert all(
-        any(
-            keyword.arg == "foreach"
-            and isinstance(keyword.value, ast.Constant)
-            and keyword.value.value is False
-            for keyword in call.keywords
-        )
-        for call in calls
-    )
 
 
 def test_exact_14_channels_and_independent_sensor_stems() -> None:
@@ -380,7 +327,7 @@ def test_runtime_modes_require_exact_compatibility_environment(
     monkeypatch.setenv("CUDA_MODULE_LOADING", "LAZY")
     with pytest.raises(RuntimeError, match="PYTORCH_ALLOC_CONF"):
         verify_runtime_environment()
-    monkeypatch.setenv("PYTORCH_ALLOC_CONF", "expandable_segments:True")
+    monkeypatch.setenv("PYTORCH_ALLOC_CONF", "backend:cudaMallocAsync")
     monkeypatch.setenv("CUDA_MODULE_LOADING", "EAGER")
     with pytest.raises(RuntimeError, match="CUDA_MODULE_LOADING"):
         verify_runtime_environment()

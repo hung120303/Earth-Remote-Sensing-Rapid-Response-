@@ -5,7 +5,7 @@
   "implementation_base_commit": "f83584aecaeee0fa92fe1fe215a6a89fb6ce3f82",
   "trainer": {
     "path": "tools/train_mars_sensor_ordinal.py",
-    "sha256": "6bffe6b05db55938057ecd9a43864ad3074fbae26e4d547932eb1a765a9368b7"
+    "sha256": "4a1596d586092f8b0764fdd6a5f85122c0bd9530987bcad96b0953d95df9b0cc"
   },
   "model": {
     "path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py",
@@ -218,7 +218,7 @@
     "status": "frozen_after_wsl_dxg_sigbus_before_any_runtime_smoke_or_held_retry",
     "trigger": "The documented WSL DXG SIGBUS occurred before any scientific outcome and produced no result artifact.",
     "required_environment": {
-      "PYTORCH_ALLOC_CONF": "expandable_segments:True",
+      "PYTORCH_ALLOC_CONF": "backend:cudaMallocAsync",
       "CUDA_MODULE_LOADING": "LAZY"
     },
     "enforced_modes": [
@@ -284,8 +284,9 @@
       "rasterio": "1.4.4",
       "scikit-learn": "1.9.0",
       "scipy": "1.17.1",
+      "allocator_backend": "cudaMallocAsync",
       "environment": {
-        "PYTORCH_ALLOC_CONF": "expandable_segments:True",
+        "PYTORCH_ALLOC_CONF": "backend:cudaMallocAsync",
         "CUDA_MODULE_LOADING": "LAZY"
       }
     },
@@ -395,16 +396,19 @@
       "scientific_settings_unchanged": true,
       "held_outcome_accessed": false
     },
-    "pre_smoke_bounded_allocator_amendment": {
+    "pre_smoke_async_allocator_amendment": {
       "status": "frozen_after_wrapper_corrected_native_smoke_failed_before_json_or_scientific_access",
       "trigger_native_commit": "26ef0523be3ff5dedca42c7298250e601e7ab797",
       "failure_receipt": "reports/research/mars_sensor_ordinal_native_bounded_allocator_failure.json",
-      "failure": "The exact batch-16 pixel backward completed, then PyTorch's implicit CUDA foreach gradient-norm path requested additional TensorList workspace and failed with cudaErrorMemoryAllocation before the first optimizer step or JSON output.",
-      "allocator_contract": "Both pixel and scene global L2 gradient clips retain the frozen max norm 2.0 and force torch.nn.utils.clip_grad_norm_ foreach=False; every pixel and scene AdamW construction, including recovery and smoke reconstruction, also forces foreach=False so neither clipping nor the immediately following optimizer update can select a CUDA TensorList path at peak memory.",
-      "unchanged": "model, losses, L2 global clipping threshold, optimizer hyperparameters, batch and crop sizes, precision, seed, schedule, data, folds, comparators, thresholds, bootstrap, and all seven gates",
+      "failure": "The exact batch-16 pixel backward returned to clip_grad_norm_, where CUDA reported cudaErrorMemoryAllocation before the first optimizer step or JSON output; because CUDA errors may be reported asynchronously, the traceback does not prove the foreach norm operation caused the shortage.",
+      "allocator_contract": "Native Windows does not support expandable_segments. Replace that inert setting with PyTorch's cudaMallocAsync allocator backend, require runtime attestation of cudaMallocAsync before data access, and leave gradient clipping and optimizer calls mathematically unchanged.",
+      "unchanged": "model, losses, L2 global clipping threshold and implementation, optimizer and implementation, batch and crop sizes, precision, seed, schedule, data, folds, comparators, thresholds, bootstrap, and all seven gates",
       "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca",
       "scientific_settings_unchanged": true,
-      "next_runtime_smoke_authorized": false,
+      "next_runtime_smoke_authorized": true,
+      "authorized_runs": 1,
+      "authorized_mode": "--checkpoint-roundtrip-smoke",
+      "authorized_scope": "fold-3 fitting evidence only; no inner-validation outcome",
       "held_run_authorized": false,
       "inner_validation_outcome_opened": false,
       "held_data_or_outcome_opened": false,
@@ -469,7 +473,7 @@
           "official_evidence_opened": false,
           "scientific_rejection": false
         },
-        "wrapper_corrected_retry_authorized_runs": 0,
+        "allocator_corrected_retry_authorized_runs": 1,
         "held_run_authorized": false
       },
       "wrapper": {
@@ -478,10 +482,11 @@
         "stdout_stderr_capture": "redirect stdout and stderr separately",
         "success_criterion": "actual Python process exit code is zero",
         "exact_python_command_unchanged": ".venv\\Scripts\\python.exe tools\\train_mars_sensor_ordinal.py --checkpoint-roundtrip-smoke",
-        "environment_trainer_model_data_batch_seed_and_science_unchanged": true
+        "allocator_environment_changed_by_later_amendment": "PYTORCH_ALLOC_CONF changed from unsupported expandable_segments to backend:cudaMallocAsync",
+        "model_data_batch_seed_and_science_unchanged": true
       }
     },
     "held_outcome_accessed_by_amendment": false
   },
-  "protocol_sha256_self_excluding_field": "acb319f2be4e2c704d7bec41c22a78cec2c96cb776b2473ccb72966319bfb45b"
+  "protocol_sha256_self_excluding_field": "e3d5c53caeb4dc388db2c319faa1b766048a3229aa93efe4713e3956157663f6"
 }

@@ -44,7 +44,7 @@ DENSE_SCENE_GATE = 0.75
 MINIMUM_CONNECTED_PIXELS = 100
 GAUSSIAN_DENSE_STRENGTH = 0.1
 REQUIRED_RUNTIME_ENV = {
-    "PYTORCH_ALLOC_CONF": "expandable_segments:True",
+    "PYTORCH_ALLOC_CONF": "backend:cudaMallocAsync",
     "CUDA_MODULE_LOADING": "LAZY",
 }
 REQUIRED_NATIVE_WINDOWS_RUNTIME = {
@@ -56,6 +56,7 @@ REQUIRED_NATIVE_WINDOWS_RUNTIME = {
     "rasterio": "1.4.4",
     "scikit-learn": "1.9.0",
     "scipy": "1.17.1",
+    "allocator_backend": "cudaMallocAsync",
 }
 RECOVERY_SCHEMA_VERSION = 1
 REQUIRED_RECOVERY_PAYLOAD_KEYS = frozenset({
@@ -106,12 +107,18 @@ def runtime_signature() -> dict[str, Any]:
             versions[distribution] = importlib.metadata.version(distribution)
         except importlib.metadata.PackageNotFoundError:
             versions[distribution] = "unavailable"
+    allocator_backend = (
+        torch.cuda.memory.get_allocator_backend()
+        if torch.cuda.is_available()
+        else "unavailable"
+    )
     return {
         "platform": platform.system(),
         "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "unavailable",
         "nvidia_driver": driver,
         "torch": torch.__version__,
         **versions,
+        "allocator_backend": allocator_backend,
         "environment": {name: os.environ.get(name) for name in REQUIRED_RUNTIME_ENV},
     }
 
@@ -479,10 +486,7 @@ def pixel_step(model: MarsSensorOrdinalUNet, batch: dict[str, Any], optimizer: t
     if not torch.isfinite(losses["loss"]):
         raise FloatingPointError("Non-finite pixel loss")
     losses["loss"].backward()
-    # The foreach CUDA path may request an additional TensorList workspace at
-    # peak backward memory. Keep the frozen global L2 clip while forcing the
-    # scalar implementation, whose temporary allocation is bounded per tensor.
-    gradient = torch.nn.utils.clip_grad_norm_(model.pixel_parameters(), 2.0, foreach=False)
+    gradient = torch.nn.utils.clip_grad_norm_(model.pixel_parameters(), 2.0)
     if not torch.isfinite(gradient):
         raise FloatingPointError("Non-finite pixel gradient")
     optimizer.step()
@@ -503,7 +507,7 @@ def scene_step(model: MarsSensorOrdinalUNet, batch: dict[str, Any], optimizer: t
                and parameter.grad is not None and torch.count_nonzero(parameter.grad).item()]
     if leaking:
         raise RuntimeError(f"Scene gradient leaked into pixel model: {leaking[:3]}")
-    gradient = torch.nn.utils.clip_grad_norm_(model.scene_parameters(), 2.0, foreach=False)
+    gradient = torch.nn.utils.clip_grad_norm_(model.scene_parameters(), 2.0)
     if not torch.isfinite(gradient):
         raise FloatingPointError("Non-finite scene gradient")
     optimizer.step()
@@ -633,8 +637,8 @@ def train_endpoint(
     )
     model = MarsSensorOrdinalUNet().to(device)
     spec = protocol["training"]
-    pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4, foreach=False)
-    scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4, foreach=False)
+    pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4)
+    scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4)
     batcher = SiteBalancedBatcher(paths["metadata_root"], inner_training, cutpoints, np.random.default_rng(SEED))
     recovery_root = (ROOT / protocol["outputs"]["candidate_predictions"]).resolve().parent / "recovery" / f"held-{held_fold}"
     store = RecoveryStore(recovery_root, identity, device)
@@ -1511,8 +1515,8 @@ def smoke(protocol: dict[str, Any], paths: dict[str, Path]) -> dict[str, Any]:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     batch = collate([make_crop(positive_sample, cutpoints, size=256, rng=rng, augment=True), make_crop(negative_sample, cutpoints, size=256, rng=rng, augment=True)], device)
     model = MarsSensorOrdinalUNet().to(device)
-    pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=3e-4, betas=(0.9, 0.999), weight_decay=1e-4, foreach=False)
-    scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=1e-3, betas=(0.9, 0.999), weight_decay=1e-4, foreach=False)
+    pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=3e-4, betas=(0.9, 0.999), weight_decay=1e-4)
+    scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=1e-3, betas=(0.9, 0.999), weight_decay=1e-4)
     result = finite_gradient_step(model, batch, pixel_optimizer, scene_optimizer)
     result.update({"ok": all(math.isfinite(value) for value in result.values()), "scope": "fold_3_fitting_data_only", "rows": 2,
                    "sample_ids": batch["sample_id"], "input_shape": list(batch["inputs"].shape),
@@ -1568,7 +1572,6 @@ def checkpoint_roundtrip_smoke(protocol: dict[str, Any], protocol_path: Path, pa
         lr=pixel_learning_rate(1, int(protocol["training"]["epochs"])),
         betas=(float(optimizer_spec["betas"][0]), float(optimizer_spec["betas"][1])),
         weight_decay=float(optimizer_spec["weight_decay"]),
-        foreach=False,
     )
     scene_optimizer_spec = protocol["training"]["scene_optimizer"]
     scene_optimizer = torch.optim.AdamW(
@@ -1576,7 +1579,6 @@ def checkpoint_roundtrip_smoke(protocol: dict[str, Any], protocol_path: Path, pa
         lr=0.0,
         betas=(float(scene_optimizer_spec["betas"][0]), float(scene_optimizer_spec["betas"][1])),
         weight_decay=float(scene_optimizer_spec["weight_decay"]),
-        foreach=False,
     )
     first_result = pixel_step(model, first_batch, optimizer)
     first_ids = list(first_batch["sample_id"])
@@ -1635,14 +1637,12 @@ def checkpoint_roundtrip_smoke(protocol: dict[str, Any], protocol_path: Path, pa
             lr=0.0,
             betas=(float(optimizer_spec["betas"][0]), float(optimizer_spec["betas"][1])),
             weight_decay=float(optimizer_spec["weight_decay"]),
-            foreach=False,
         )
         recovered_scene_optimizer = torch.optim.AdamW(
             recovered_model.scene_parameters(),
             lr=0.0,
             betas=(float(scene_optimizer_spec["betas"][0]), float(scene_optimizer_spec["betas"][1])),
             weight_decay=float(scene_optimizer_spec["weight_decay"]),
-            foreach=False,
         )
         recovered_batcher = SiteBalancedBatcher(
             paths["metadata_root"], inner_training, cutpoints, np.random.default_rng(SEED + 1)

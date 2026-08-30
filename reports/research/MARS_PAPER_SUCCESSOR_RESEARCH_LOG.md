@@ -6730,23 +6730,29 @@ step. The scientific digest remains
 After Codex review, exactly one corrected fitting-only native checkpoint smoke
 is authorized; no held run is authorized or executed.
 
-### 2026-08-30: native foreach clipping allocation is bounded
+### 2026-08-30: native allocator backend is corrected
 
 The wrapper-corrected fitting-only smoke at clean native commit `26ef0523` used
 native `cmd.exe`, separate output streams, and the actual Python exit code. The
-exact batch-16 pixel backward completed, but PyTorch's implicit CUDA foreach
-gradient-norm path requested additional TensorList workspace at peak backward
-memory and failed with `cudaErrorMemoryAllocation` before the first optimizer
-step or JSON output. This is an infrastructure failure, not scientific
-rejection; the exact output and absence attestations are in
+exact batch-16 pixel backward returned to `clip_grad_norm_`, where CUDA reported
+`cudaErrorMemoryAllocation` before the first optimizer step or JSON output.
+Because CUDA failures may be reported asynchronously, the traceback does not
+prove the foreach norm operation caused the shortage. This is an infrastructure
+failure, not scientific rejection; the exact output, post-process memory
+diagnostic, and absence attestations are in
 `reports/research/mars_sensor_ordinal_native_bounded_allocator_failure.json`.
 
-The pre-smoke amendment forces `foreach=False` for both pixel and scene global
-L2 gradient clipping. The Codex-reviewed correction also forces `foreach=False`
-for every pixel and scene AdamW construction, including recovery and smoke
-reconstruction, so neither clipping nor the immediately following optimizer
-update can select a CUDA TensorList path at peak memory. The frozen max norm
-remains 2.0; model, losses, optimizer hyperparameters, batch/crop sizes,
-precision, seed, schedule, data, folds, comparators, thresholds, bootstrap, all
-seven gates, and scientific digest are unchanged. No CUDA smoke or held data
-was run, and no further execution is authorized by this amendment.
+The reviewed amendment restores the original clipping and AdamW calls. Native
+Windows does not support the earlier `expandable_segments` setting, so the
+runtime now requires `PYTORCH_ALLOC_CONF=backend:cudaMallocAsync` and attests
+that PyTorch selected `cudaMallocAsync` before any data access. Model, losses,
+clipping, optimizer, batch/crop sizes, precision, seed, schedule, data, folds,
+comparators, thresholds, bootstrap, all seven gates, and scientific digest are
+unchanged. Exactly one allocator-corrected fitting-only checkpoint-roundtrip
+smoke is authorized; no held run is authorized.
+
+Allocator rationale is grounded in the PyTorch allocator-backend contract and
+NVIDIA's stream-ordered memory-allocation documentation:
+<https://docs.pytorch.org/docs/main/generated/torch.cuda.memory.get_allocator_backend.html>
+and
+<https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/stream-ordered-memory-allocation.html>.

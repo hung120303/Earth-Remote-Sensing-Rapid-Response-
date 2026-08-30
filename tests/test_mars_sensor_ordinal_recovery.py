@@ -829,7 +829,7 @@ def test_native_windows_runtime_is_rejected_before_data_access(
 ) -> None:
     import train_mars_sensor_ordinal as trainer
 
-    monkeypatch.setenv("PYTORCH_ALLOC_CONF", "expandable_segments:True")
+    monkeypatch.setenv("PYTORCH_ALLOC_CONF", "backend:cudaMallocAsync")
     monkeypatch.setenv("CUDA_MODULE_LOADING", "LAZY")
     monkeypatch.setattr(trainer, "runtime_signature", lambda: {
         **trainer.REQUIRED_NATIVE_WINDOWS_RUNTIME,
@@ -848,6 +848,7 @@ def test_native_windows_runtime_is_rejected_before_data_access(
         "rasterio": "1.4.4",
         "scikit-learn": "1.9.0",
         "scipy": "1.17.1",
+        "allocator_backend": "cudaMallocAsync",
     }
     exact = {
         **trainer.REQUIRED_NATIVE_WINDOWS_RUNTIME,
@@ -855,3 +856,8 @@ def test_native_windows_runtime_is_rejected_before_data_access(
     }
     monkeypatch.setattr(trainer, "runtime_signature", lambda: exact)
     assert trainer.verify_runtime_environment(require_native_windows=True) == exact
+
+    wrong_allocator = {**exact, "allocator_backend": "native"}
+    monkeypatch.setattr(trainer, "runtime_signature", lambda: wrong_allocator)
+    with pytest.raises(RuntimeError, match="allocator_backend"):
+        trainer.verify_runtime_environment(require_native_windows=True)
