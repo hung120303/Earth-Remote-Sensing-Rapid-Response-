@@ -1413,7 +1413,12 @@ identity `db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b`.
 
 The first process launch is consumed. Exactly one continuation of the same
 scientific execution may restore that exact generation only after Codex verifies
-at least 32 GiB commit headroom and 16 GiB available physical memory. No
+at least 32 GiB commit headroom and 8 GiB available physical memory. The
+physical gate was refined from 16 GiB before continuation because the maximum
+observed trainer working set was 2.13 GiB and the exact failure was commit
+exhaustion from a 71.23 GiB `SignalRgb` private-commit leak; 8 GiB remains more
+than 3.75 times the observed working set while the 32 GiB commit gate is
+unchanged. No
 from-scratch restart, altered settings, completed/incomplete held-fold replay,
 second scientific attempt, or protected evidence is permitted. Trainer/model
 hashes and science digest

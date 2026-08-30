@@ -541,8 +541,15 @@
         "codex_prelaunch_host_memory_gate": {
           "minimum_commit_headroom_bytes": 34359738368,
           "minimum_commit_headroom_gib": 32,
-          "minimum_available_physical_bytes": 17179869184,
-          "minimum_available_physical_gib": 16
+          "minimum_available_physical_bytes": 8589934592,
+          "minimum_available_physical_gib": 8,
+          "physical_gate_refinement": {
+            "initial_gate_gib": 16,
+            "refined_gate_gib": 8,
+            "basis": "The terminated trainer's maximum observed working set was 2.13 GiB and the exact failure was Windows commit exhaustion caused by a 71.23 GiB SignalRgb private-commit leak, not physical-RAM exhaustion. Eight GiB is more than 3.75 times the observed trainer working set while the independent 32 GiB commit-headroom gate remains unchanged.",
+            "approved_cleanup": "The user approved restarting SignalRgb and shutting down WSL; SignalRgb restarted at 0.46 GiB private commit and Windows commit headroom rose above 39 GiB before any continuation.",
+            "scientific_settings_unchanged": true
+          }
         },
         "forbidden": [
           "from-scratch restart",
@@ -562,5 +569,5 @@
     },
     "held_outcome_accessed_by_amendment": false
   },
-  "protocol_sha256_self_excluding_field": "9d524970084bdf5c2b4211ffc5934818beb482d17aaac5886fd3469e79526e05"
+  "protocol_sha256_self_excluding_field": "0ffc24791b16b171694801b0fdf4965fa6f610cbfd14851553bc896eead0d76f"
 }
