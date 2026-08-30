@@ -124,3 +124,22 @@ conditional privileged-supervision architecture remains unauthorized, and the
 13 failed components cannot be pooled with CACH4, STARCOP, or Carbon Mapper.
 Any future cross-modal path requires a genuinely independent preregistered
 source that clears the existing gate on its own.
+
+## 2026-08-29 independent replacement-source protocol
+
+The next candidate is the licensed GHGSat global-landfill release, not a pool
+of any retired source. Its 434 released null observations are reviewed
+site-level non-detections in clear-sky GHGSat acquisitions. They are valid only
+as sensitivity-qualified source-site claims and cannot become dense all-zero
+masks or physical-zero labels. The dataset is CC BY-NC-SA 4.0; model research
+and any materially trained redistributed checkpoint must preserve the
+non-commercial, attribution, and share-alike boundary.
+
+Only C1/C2 observations enter the frozen metadata headroom gate because their
+10:30 local descending-node time is aligned in principle with Sentinel-2 and
+Landsat daytime acquisitions; C3-C5 are approximately 13:00. The audit must
+independently clear 56 selected morning nulls, 30 sites, and 20 novel 25 km
+components before a target catalog can be queried. Passing that audit would
+still authorize only a new pairing protocol, not the privileged-student model.
+The full CSV, GHGSat rasters, and target imagery remain unopened at protocol
+freeze. See `configs/mars_ghgsat_landfill_null_protocol.json`.

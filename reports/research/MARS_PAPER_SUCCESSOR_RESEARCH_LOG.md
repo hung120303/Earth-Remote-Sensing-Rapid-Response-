@@ -6510,3 +6510,33 @@ is still unmet. Authoritative compact artifacts are
 `reports/acquisition/JPL_OPERATIONAL_GHG_ORNL_HEADER_BRIDGE.md`; the compact
 JSON SHA-256 is
 `32ecb2c905cc2ac81433174465de70feaa6a186e23eb9b37aa543eb4ee2725e2`.
+
+### 2026-08-29: GHGSat landfill-null metadata audit frozen
+
+After the ORNL rejection, a bounded Hermes source audit proposed one genuinely
+independent candidate: the released GHGSat global-landfill survey associated
+with Dogniaux et al. Independent checks against the Zenodo record and Nature
+paper confirm 1,447 clear-sky site observations across 151 landfills, including
+1,013 positive observations and 434 reviewed non-detections. The null label is
+strictly a site-level failure to detect a localized plume under that GHGSat
+observation and sensitivity; it is not physical zero methane or scene-wide
+absence.
+
+The apparent rights discrepancy is resolved on the record itself. GHGSat
+retains copyright, while the dataset carries an explicit CC BY-NC-SA 4.0
+license. Any research use must therefore remain non-commercial, attributed,
+and share-alike. A peer-reviewed GHGSat platform audit also corrected the
+initial timing estimate: C1-C2 use a 10:30 local descending node, whereas
+C3-C5 use about 13:00. Only C1/C2 nulls may contribute to the frozen
+morning-pair headroom gate for Sentinel-2/Landsat.
+
+The metadata protocol was committed before downloading the complete CSV. It
+requires exact reproduction of the paper population, deterministic site
+coordinates from released positive rows for zero-coordinate null records,
+at least 56 selected C1/C2 null observations, 30 distinct null sites, and 20
+novel 25 km components after the unchanged protected-geography exclusions.
+This is twice the eventual 28-pair requirement, not an assumed pairing rate.
+No GHGSat raster, target-satellite catalog, target image, or protected MARS
+outcome is authorized at this stage. Frozen protocol:
+`configs/mars_ghgsat_landfill_null_protocol.json`, SHA-256
+`0943cb2a15f2106b9ee4a71f9ab36c06f563e410ad0b530ee1f3514b3aa1bcb1`.

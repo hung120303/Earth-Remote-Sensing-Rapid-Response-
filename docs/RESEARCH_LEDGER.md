@@ -1251,3 +1251,32 @@ Sentinel-2/Landsat catalog or asset was queried, and no protected MARS outcome
 was opened. COVID/Permian cannot be pooled with any previously failed source
 to rescue the gate. The compact result is
 `reports/acquisition/jpl_operational_ghg_ornl_header_bridge.json`.
+
+## 2026-08-29: independent GHGSat landfill-null audit preregistered
+
+Hermes identified the Dogniaux et al. GHGSat global-landfill release as the
+only defensible new public candidate after the ORNL failure. Codex independently
+verified the primary Zenodo and Nature sources before making the protocol call.
+The released population contains 1,447 clear-sky site observations at 151
+waste sites: 1,013 positive observations represented by 1,085 plume rows and
+434 reviewed null observations. Null means no localized plume detected at the
+reviewed site above applicable GHGSat sensitivity. It does not mean zero
+emissions, below-threshold absence, or a scene-wide negative.
+
+Zenodo shows both GHGSat's retained copyright and the governing CC BY-NC-SA
+4.0 dataset license. Non-commercial use, attribution, share-alike handling,
+and a constrained checkpoint-distribution statement are now explicit parts of
+the contract. The peer-reviewed GHGSat platform table reports C1-C2 at 10:30
+local descending-node time and C3-C5 at 13:00. The metadata feasibility audit
+therefore selects only C1/C2 null observations; exact cross-sensor time offsets
+remain forbidden until a later, separately committed target-catalog protocol.
+
+Before the full CSV is downloaded, the frozen metadata gates require exact
+paper-count reconciliation, validity of every released observation, at least
+56 deterministically selected morning nulls, at least 30 distinct null sites,
+and at least 20 MARS/prior-negative-disjoint 25 km components. Null coordinates
+are zero sentinels in the release, so each site's representative is frozen as
+the medoid of its validated positive-row coordinates, with a 25 km within-site
+span sanity bound. Failure retires this source without threshold changes or
+pooling. Protocol SHA-256:
+`0943cb2a15f2106b9ee4a71f9ab36c06f563e410ad0b530ee1f3514b3aa1bcb1`.

@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_csv_download_or_target_catalog_query",
+  "name": "GHGSat global-landfill reviewed null-observation metadata audit",
+  "research_question": "Can the released GHGSat global-landfill survey independently provide enough licensed, reviewed morning-orbit non-detections in MARS-disjoint geography to justify a later audit for at least 28 Sentinel-2 L1C or Landsat 8/9 Collection 2 Level-1 pairs within one hour?",
+  "decision_context_disclosed_before_freeze": {
+    "original_mars_hyperspectral_negative_pairs": 272,
+    "unchanged_combined_gate": 300,
+    "unchanged_shortfall": 28,
+    "retired_sources": {
+      "starcop": "FAIL_8_OF_20_COMPONENTS",
+      "jpl_cach4": "FAIL_15_OF_20_COMPONENTS",
+      "jpl_covid_permian": "FAIL_13_OF_20_COMPONENTS",
+      "carbon_mapper_tanager": "FAIL_FROZEN_RESPONSE_BYTE_CAP_BEFORE_POPULATION_ENUMERATION"
+    },
+    "anti_pooling_boundary": "GHGSat must pass every metadata gate and later contribute at least 28 qualifying target pairs by itself. It may supplement the already-qualified 272-pair MARS-Hyperspectral cohort only after doing so; it may not pool with any failed candidate to satisfy a gate.",
+    "record_page_preview_observed_before_freeze": "The public Zenodo record page disclosed the schema, a limited CSV preview, rounded file size, MD5, license, and download URL. The complete CSV has not been downloaded or enumerated locally.",
+    "paper_population_disclosed_before_freeze": {
+      "clear_sky_observations": 1447,
+      "positive_observations": 1013,
+      "null_observations": 434,
+      "positive_plume_rows": 1085,
+      "waste_sites": 151,
+      "urban_areas": 130,
+      "countries": 47,
+      "continents": 6,
+      "years": [
+        2021,
+        2022
+      ]
+    }
+  },
+  "authoritative_source": {
+    "dataset_title": "GHGSat plume dataset for article \"Global satellite survey reveals uncertainty in landfill methane emissions\"",
+    "provider": "Dogniaux et al. via Zenodo",
+    "record_id": 16641834,
+    "record_version": "v1",
+    "record_publication_date": "2025-11-05",
+    "record_url": "https://zenodo.org/records/16641834",
+    "record_doi": "10.5281/zenodo.16641834",
+    "csv": {
+      "name": "GHGSat_detected_plumes.csv",
+      "url": "https://zenodo.org/api/records/16641834/files/GHGSat_detected_plumes.csv/content",
+      "bytes": 299683,
+      "md5": "0e3ba8fae21d6f888413148a76edc5de",
+      "maximum_bytes": 1048576
+    },
+    "paper": {
+      "title": "Global satellite survey reveals uncertainty in landfill methane emissions",
+      "doi": "10.1038/s41586-025-09683-8",
+      "url": "https://www.nature.com/articles/s41586-025-09683-8"
+    },
+    "orbit_timing_source": {
+      "title": "An Independent Evaluation of GHGSat Methane Emissions: Performance Assessment",
+      "doi": "10.1029/2023JD039906",
+      "url": "https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2023JD039906",
+      "frozen_interpretation": "The peer-reviewed platform table reports local descending-node times of 10:30 for C1-C2 and 13:00 for C3-C5. Only sat_ID 1 or 2 may contribute to the morning target-pair headroom gate."
+    }
+  },
+  "license_contract": {
+    "record_license": "CC-BY-NC-SA-4.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode",
+    "copyright_notice": "Copyright 2025 GHGSat, Inc. All Rights Reserved",
+    "interpretation": "The explicit Creative Commons license grants non-commercial research reuse subject to attribution and share-alike even though GHGSat retains copyright.",
+    "obligations": [
+      "attribute the dataset creators, GHGSat, record DOI, and Nature paper in research outputs",
+      "use the dataset and derivatives only for non-commercial research unless separately licensed",
+      "apply CC BY-NC-SA 4.0 or a compatible share-alike treatment to redistributed dataset derivatives",
+      "mark any materially trained distributed checkpoint non-commercial and attribution/share-alike constrained, or withhold redistribution pending license review",
+      "never describe a non-detection as physical zero methane"
+    ]
+  },
+  "label_contract": {
+    "source_claim": "A clear-sky GHGSat observation of a reviewed waste-disposal site in which no localized methane plume was detected above the applicable GHGSat sensitivity.",
+    "not_claimed": [
+      "physical zero methane emissions",
+      "scene-wide absence of every methane source",
+      "absence below the GHGSat detection limit",
+      "absence at a Sentinel-2 or Landsat acquisition taken at another time"
+    ],
+    "paper_outcomes": "Each site observation is categorized as no detected plume, one detected plume, or multiple detected plumes. Multiple positive plume rows are aggregated to one positive observation for count reconciliation.",
+    "null_row_contract": [
+      "lat equals exactly 0.0",
+      "lon equals exactly 0.0",
+      "Q_t_per_hr equals exactly 0.0",
+      "plume_tif_file_name is empty",
+      "manually_pinned_sources is empty",
+      "the grouped observation contains no positive row"
+    ]
+  },
+  "csv_contract": {
+    "encoding": "UTF-8 with optional BOM",
+    "expected_columns_in_order": [
+      "site_ID",
+      "lat",
+      "lon",
+      "year",
+      "month",
+      "day",
+      "hour",
+      "minute",
+      "second",
+      "Q_t_per_hr",
+      "Q_error_t_per_hr",
+      "wind_speed_m_per_s",
+      "sat_ID",
+      "obs_ID",
+      "date",
+      "IME_kg",
+      "intermediate_results_L_m",
+      "intermediate_results_effective_wind_speed_m_per_s",
+      "conversion_ch4_ppb_to_molm2",
+      "manually_pinned_sources",
+      "plume_tif_file_name"
+    ],
+    "observation_identity": [
+      "site_ID",
+      "obs_ID",
+      "date",
+      "sat_ID"
+    ],
+    "required_internal_consistency": [
+      "calendar fields reproduce date as an exact UTC timestamp",
+      "all rows in one observation identity have identical time and satellite fields",
+      "each observation is exclusively null or positive",
+      "all null and positive rows satisfy the frozen field semantics",
+      "every null site has at least one finite positive plume coordinate from another released observation"
+    ]
+  },
+  "site_coordinate_rule": {
+    "reason": "Released null rows intentionally carry zero coordinate sentinels, so a deterministic site representative must be derived without a target catalog or model output.",
+    "candidate_points": "All finite, non-zero released positive-row (lat, lon) coordinates for the same site_ID after positive-row validation.",
+    "representative": "The candidate point minimizing the sum of haversine distances to every candidate point for that site. Ties are resolved by ascending latitude, longitude, then original CSV row number.",
+    "maximum_pairwise_site_coordinate_span_km": 25.0,
+    "failure": "A null site without a valid representative or with a coordinate span above the frozen maximum is invalid and cannot be retained; any invalid released observation fails the all-records-valid gate."
+  },
+  "frozen_local_inputs": {
+    "safe_mars_manifest": {
+      "path": ".research/source_audit_20260715/mars_s2l_current_validated_images_all.csv",
+      "bytes": 94136263,
+      "sha256": "799fa3272be6c313534c5d974894883db9f97874adb617eeaace1c8a4f9dc9b2",
+      "permitted_columns": [
+        "id_location",
+        "location_name",
+        "country",
+        "lon",
+        "lat",
+        "satellite",
+        "tile",
+        "tile_date",
+        "split_name"
+      ],
+      "forbidden_columns": [
+        "isplume",
+        "plume",
+        "ch4_fluxrate",
+        "ch4_fluxrate_std"
+      ]
+    },
+    "prior_stage_b_report": {
+      "path": "reports/acquisition/mars_hyperspectral_transfer_stage_b.json",
+      "bytes": 3411,
+      "sha256": "f7bd429ebb6d8dae93500fff14a3566496480a9d2fd33b13b0d8146ec54f1f65"
+    },
+    "prior_stage_b_pairs": {
+      "path": ".research/mars_hyperspectral_transfer/stage_b_combined_pairs.jsonl",
+      "bytes": 532440,
+      "normalized_lf_sha256": "902d118e8a46a9d90465d23b9a55dce561b9cbecd6336f8c390b54cf8d89fa4e"
+    },
+    "prior_mask_catalog": {
+      "path": ".research/mars_hyperspectral_transfer/train_mask_catalog.jsonl",
+      "bytes": 6839938,
+      "sha256": "945c74a5553a17bb01ac2241c02554a580e53bb438fae84f95498528ee546d51"
+    }
+  },
+  "population_reconciliation_gates": {
+    "exact_clear_sky_observations": 1447,
+    "exact_positive_observations": 1013,
+    "exact_null_observations": 434,
+    "exact_positive_plume_rows": 1085,
+    "exact_distinct_sites": 151,
+    "exact_years": [
+      2021,
+      2022
+    ],
+    "all_released_rows_and_observations_valid": true
+  },
+  "deterministic_null_selection": {
+    "eligible_satellites": [
+      1,
+      2
+    ],
+    "maximum_null_observations_per_site": 4,
+    "ranking": "ascending (SHA-256(site_ID + NUL + obs_ID + NUL + date UTF-8), obs_ID, date)",
+    "selection_timing": "after complete population and label validation, before MARS/prior-negative distance filtering or target-catalog access"
+  },
+  "geographic_eligibility": {
+    "radius_km": 25.0,
+    "exclude_if_within_radius_of": [
+      "any official MARS-S2L test representative location",
+      "any already-counted MARS-Hyperspectral negative source crop"
+    ],
+    "official_test_protection_uses_only_safe_columns": true,
+    "grouping": "Transitive connected components of retained site representatives with an undirected edge at haversine distance <=25.0 km.",
+    "novel_component_requirement": "Every member of a counted component must be strictly farther than 25 km from every protected MARS or prior-negative point."
+  },
+  "metadata_gates": {
+    "population": "Deterministically selected C1/C2 reviewed null observations after frozen MARS and prior-negative exclusions.",
+    "license_permits_noncommercial_research_derivatives_with_attribution_and_share_alike": true,
+    "minimum_selected_morning_null_observations": 56,
+    "minimum_distinct_null_sites": 30,
+    "minimum_novel_25km_connected_components": 20,
+    "all_released_rows_and_observations_valid": true
+  },
+  "threshold_rationale": {
+    "minimum_selected_morning_null_observations": "Twice the unchanged 28-pair target requirement is required as preregistered headroom before any target-catalog query. This is a feasibility gate, not an assumed 50 percent pairing rate.",
+    "minimum_distinct_null_sites": "Prevents a pass dominated by repeated acquisitions from a small number of landfills.",
+    "minimum_novel_25km_connected_components": "Unchanged spatial-diversity gate used for the independent negative-source search."
+  },
+  "network_and_content_boundary": {
+    "permitted_after_this_protocol_is_committed": [
+      "one download of the exact frozen CSV URL within the byte cap",
+      "HTTP redirects and headers required to verify the exact CSV identity"
+    ],
+    "forbidden": [
+      "Plume_rasters.zip or any GHGSat raster/image asset",
+      "any Sentinel-2 or Landsat target-catalog query or target asset",
+      "any protected MARS outcome, mask, prediction, score, or threshold result",
+      "any official MARS test outcome column",
+      "any change to a gate after the CSV is opened"
+    ]
+  },
+  "target_catalog_boundary": {
+    "authorized_only_after_metadata_gates_pass": true,
+    "requires_new_committed_protocol_before_query": true,
+    "eligible_source_observations": "Only retained GHGSat C1/C2 reviewed null observations from this audit.",
+    "products": [
+      "Copernicus Sentinel-2 L1C",
+      "USGS Landsat 8/9 Collection 2 Level-1"
+    ],
+    "maximum_absolute_time_offset_hours": 1.0,
+    "minimum_additional_negative_pairs_from_ghgsat_alone": 28,
+    "target_assets_forbidden_in_this_protocol": true
+  },
+  "failure_action": "Retire the GHGSat landfill-null supplement without changing a threshold, querying a target catalog, or pooling another failed source.",
+  "pass_action": "Commit a separate exact target-catalog pairing protocol before any Sentinel-2 or Landsat query.",
+  "outputs": {
+    "ignored_root": ".research/ghgsat_landfill_null",
+    "ignored_csv": ".research/ghgsat_landfill_null/GHGSat_detected_plumes.csv",
+    "ignored_validated_observations": ".research/ghgsat_landfill_null/validated_observations.jsonl",
+    "ignored_selected_nulls": ".research/ghgsat_landfill_null/selected_morning_null_observations.jsonl",
+    "ignored_eligible_nulls": ".research/ghgsat_landfill_null/eligible_morning_null_observations.jsonl",
+    "compact_json": "reports/acquisition/ghgsat_landfill_null_metadata.json",
+    "compact_markdown": "reports/acquisition/GHGSAT_LANDFILL_NULL_METADATA.md"
+  },
+  "claim_boundary": "A PASS establishes licensed metadata feasibility for reviewed, source-site-level GHGSat C1/C2 non-detections only. It does not establish physical zero methane, a coincident Sentinel-2/Landsat yield, dense negative validity, cross-sensor transfer, model complementarity, calibration, or superiority over MARS-S2L."
+}
