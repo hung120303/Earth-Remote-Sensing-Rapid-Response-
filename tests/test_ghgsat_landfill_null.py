@@ -201,6 +201,10 @@ def test_download_cap_exact_count_md5_part_and_atomic_behavior(tmp_path: Path, f
     assert not (tmp_path / "fixture.csv.part").exists()
     assert downloader.bytes_received == len(payload)
     assert session.calls[0][0] == ("https://zenodo.org/exact.csv",)
+    assert session.calls[0][1]["headers"] == {
+        "Accept": "*/*",
+        "User-Agent": "ERSRR-research-metadata-audit/1.0",
+    }
     assert response.closed
 
 

@@ -233,7 +233,10 @@ class FrozenCSVDownloader:
                 allow_redirects=True,
                 stream=True,
                 timeout=(15, 120),
-                headers={"Accept": "text/csv,application/octet-stream"},
+                headers={
+                    "Accept": "*/*",
+                    "User-Agent": "ERSRR-research-metadata-audit/1.0",
+                },
             )
             final_url = str(getattr(response, "url", ""))
             final_parts = urlsplit(final_url)
@@ -805,7 +808,12 @@ def main(argv: list[str] | None = None) -> int:
                     destination=ROOT / protocol["outputs"]["ignored_csv"],
                 )
             except Exception as exc:
-                report = build_failure_report(protocol, exc, download_bytes=downloader.bytes_received)
+                report = build_failure_report(
+                    protocol,
+                    exc,
+                    local_receipts=local_receipts,
+                    download_bytes=downloader.bytes_received,
+                )
                 _write_reports(protocol, report)
                 raise
         else:
