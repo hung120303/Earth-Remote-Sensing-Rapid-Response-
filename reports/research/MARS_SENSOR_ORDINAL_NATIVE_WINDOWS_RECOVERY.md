@@ -1,6 +1,6 @@
 # MARS sensor-aware ordinal native-Windows recovery freeze
 
-Status: allocator-corrected checkpoint round trip passed; exactly one resumable native-Windows held-fold execution is authorized.
+Status: the first native process launch terminated from host commit exhaustion after epoch 1; exactly one continuation of that same scientific execution is conditionally authorized from the validated epoch-1 recovery generation.
 
 ## Why the retry moves to native Windows
 
@@ -75,4 +75,14 @@ The reviewed allocator amendment restores the original clipping and AdamW calls 
 
 The one authorized allocator-corrected smoke was consumed at clean native commit `9adfdafefe83a12ea488b8a3f1b1ecb31e69b0cd` and passed with Python exit code 0, 2,099 bytes of JSON stdout, and zero-byte stderr. The restored next sample/group identities and the next model/optimizer step were exactly equal. Peak CUDA allocated and reserved bytes were `4604530303` and `4966055936`. The exact runtime, content hashes, equality checks, and no-access attestations are committed in `reports/research/mars_sensor_ordinal_allocator_corrected_checkpoint_smoke_success.json`.
 
-The scientific-settings digest remains `25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`. Exactly one resumable native-Windows `--run-held-folds` execution is now authorized under the attested runtime and frozen recovery state machine. Folds 0/1/2 and all protected, external, and official evidence remain forbidden; comparator values remain sealed until final candidate immutability. No second held-fold execution is authorized.
+The scientific-settings digest remains `25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`. At this boundary, exactly one resumable native-Windows `--run-held-folds` scientific execution was authorized under the attested runtime and frozen recovery state machine. Folds 0/1/2 and all protected, external, and official evidence remained forbidden; comparator values remained sealed until final candidate immutability. The following amendment records consumption of its first process launch and the sole continuation boundary.
+
+## First native held-fold process terminated by host commit exhaustion
+
+The single authorized native `--run-held-folds` process launch at clean HEAD `6bc182f390a1eef0d5beac9186287344552072c4` exited 1. Epoch 1 of endpoint fitting held on fold 3 completed through inner validation, checkpoint selection, history append, and the durable recovery boundary. The next dense batch then failed in `model_input` at the NumPy concatenate because Windows could not allocate 2.14 MiB for `(14, 200, 200)` float32. This is a host-memory infrastructure failure, not scientific rejection.
+
+The post-failure host diagnostic recorded 124,745,715,712 committed bytes of a 136,488,603,648-byte limit (91.40%, only 11,742,887,936 bytes / 10.94 GiB headroom), 5,794 MiB available physical memory, 71.23 GiB private commit for `SignalRgb`, and 6.94 GiB for `vmmemWSL`. Exact capture hashes and access/absence attestations are committed in `reports/research/mars_sensor_ordinal_native_held_folds_host_memory_failure.json`.
+
+No held prediction, semantic comparator decode, fold 0/1/2 access, protected/external/official evidence, candidate, held part or receipt, endpoint, gate, compact result, or final result exists. The durable pointer `.research/mars_sensor_ordinal/recovery/held-3/latest.json` binds completed epoch 1 and next epoch 2 to `generation-0001-1788130213322999400-439e6a7e199f494fa72514bbeeeedaf9.pt`, checkpoint SHA-256 `7d26f700dcb5e9f73eb03fade39773ae88949a06ec33151a0236d9a805673519`, identity `db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b`.
+
+The first process launch is consumed. Exactly one later process may continue the **same** authorized scientific execution, and only after Codex verifies at least 32 GiB Windows commit headroom and 16 GiB available physical memory immediately before launch. It must validate and restore that exact epoch-1 generation and begin at next epoch 2. A from-scratch restart, altered settings, replay of a completed or incompletely accessed held fold, a second scientific attempt, and protected evidence are forbidden. The trainer SHA-256 remains `4a1596d586092f8b0764fdd6a5f85122c0bd9530987bcad96b0953d95df9b0cc`, model SHA-256 remains `687b6e1f13f6a88afc802c55d35602d0ebd38a27c4a7eeea4ae3b758698a53bb`, and scientific-settings digest remains `25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`.

@@ -262,6 +262,7 @@
     "Comparator preflight may hash opaque bytes but may not decode comparator values before final candidate immutability.",
     "A validated immutable held part and completed access receipt must be reused on restart; that held fold must not be evaluated again.",
     "A held-access start receipt without a validated part is an explicit incomplete-held-access failure and never authorizes automatic reevaluation.",
+    "After the first native process launch, only the one explicitly bound continuation from the validated epoch-1 recovery generation is allowed; from-scratch restart, altered settings, completed or incomplete held-fold replay, and a second scientific attempt are forbidden.",
     "Configured finalization outputs are accepted only as a validated immutable recovery prefix bound to this protocol and scientific digest; unrelated output remains a hard refusal."
   ],
   "preheld_infrastructure_recovery_amendment": {
@@ -507,18 +508,59 @@
       },
       "held_execution_authorization": {
         "authorized_runs": 1,
-        "consumed_runs": 0,
+        "consumed_runs": 1,
         "mode": "--run-held-folds",
         "platform": "native Windows CUDA only",
         "required_runtime": "exact runtime_signature recorded by reports/research/mars_sensor_ordinal_allocator_corrected_checkpoint_smoke_success.json",
         "resumable": true,
         "resume_contract": "reuse only validated complete recovery generations and immutable held parts under the frozen recovery state machine; never repeat a completed or incompletely accessed held fold",
         "scope": "development-only folds 3 and 4 under the frozen protocol",
-        "forbidden": "folds 0/1/2; protected, external, or official evidence; comparator decode before final candidate immutability; any second --run-held-folds execution",
+        "forbidden": "folds 0/1/2; protected, external, or official evidence; comparator decode before final candidate immutability; any second scientific attempt",
         "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca"
       }
     },
+    "post_launch_host_memory_recovery_amendment": {
+      "status": "frozen_after_first_native_process_terminated_before_any_held_prediction_or_semantic_comparator_access",
+      "failure_receipt": "reports/research/mars_sensor_ordinal_native_held_folds_host_memory_failure.json",
+      "failure": "Windows host commit exhaustion caused NumPy to fail a 2.14 MiB model_input concatenate while constructing the next dense batch after epoch 1 completed and its inner-validation checkpoint metrics were logged.",
+      "classification": "host-memory infrastructure failure; not scientific rejection",
+      "first_process_launch_consumed": true,
+      "recovery_generation": {
+        "pointer": ".research/mars_sensor_ordinal/recovery/held-3/latest.json",
+        "completed_epoch": 1,
+        "next_epoch": 2,
+        "checkpoint": "generation-0001-1788130213322999400-439e6a7e199f494fa72514bbeeeedaf9.pt",
+        "checkpoint_sha256": "7d26f700dcb5e9f73eb03fade39773ae88949a06ec33151a0236d9a805673519",
+        "identity_sha256": "db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b"
+      },
+      "same_execution_continuation": {
+        "authorized_continuations": 1,
+        "consumed_continuations": 0,
+        "scientific_execution_identity": "the already-consumed native --run-held-folds execution only; this continuation is not a second scientific attempt",
+        "required_start": "validate and restore the bound epoch-1 generation, then continue at next_epoch 2",
+        "codex_prelaunch_host_memory_gate": {
+          "minimum_commit_headroom_bytes": 34359738368,
+          "minimum_commit_headroom_gib": 32,
+          "minimum_available_physical_bytes": 17179869184,
+          "minimum_available_physical_gib": 16
+        },
+        "forbidden": [
+          "from-scratch restart",
+          "altered scientific or runtime settings",
+          "replay of any completed or incompletely accessed held fold",
+          "a second scientific attempt",
+          "folds 0/1/2",
+          "protected, external, or official evidence",
+          "semantic comparator decode before final candidate immutability"
+        ]
+      },
+      "artifact_absence": "No held prediction, candidate, held part or receipt, endpoint, gate, compact result, or final result exists.",
+      "trainer_sha256": "4a1596d586092f8b0764fdd6a5f85122c0bd9530987bcad96b0953d95df9b0cc",
+      "model_sha256": "687b6e1f13f6a88afc802c55d35602d0ebd38a27c4a7eeea4ae3b758698a53bb",
+      "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca",
+      "scientific_settings_unchanged": true
+    },
     "held_outcome_accessed_by_amendment": false
   },
-  "protocol_sha256_self_excluding_field": "7d9683c505f9b1911faf9c4d7399647f2baf56a9fc07a88eaf0f5bbaac6e72fe"
+  "protocol_sha256_self_excluding_field": "9d524970084bdf5c2b4211ffc5934818beb482d17aaac5886fd3469e79526e05"
 }

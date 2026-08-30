@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "status": "terminated_host_memory_infrastructure_failure",
+  "decision": "infrastructure_failure_not_scientific_rejection",
+  "attempt": {
+    "branch": "experiment/sensor-aware-ordinal-native",
+    "git_commit": "6bc182f390a1eef0d5beac9186287344552072c4",
+    "mode": "--run-held-folds",
+    "process_launches_consumed": 1,
+    "exit_code": 1,
+    "failure_stage": "held-fold-3 endpoint fitting after the complete epoch-1 recovery boundary, in the next dense-batch model_input NumPy concatenate",
+    "exception": "numpy._core._exceptions._ArrayMemoryError: Unable to allocate 2.14 MiB for an array with shape (14, 200, 200) and data type float32"
+  },
+  "source_captures": {
+    ".research/mars_sensor_ordinal/native_held_folds_stdout.jsonl": "14ce2f2e24dd8be3af1c1c32bd2d474095dfb0ef777fad932aa178363dc62c9a",
+    ".research/mars_sensor_ordinal/native_held_folds_stderr.txt": "411c11d22b83e328905baa55bba7e4dcc48c9c6a6327b9895470d26c0983b7b4",
+    ".research/mars_sensor_ordinal/native_held_folds_exit_code.txt": "2f1c37754e38b4ac70a9559fbfbdbd28feda47f36be9cd9e3ad5bc844ee3feb6"
+  },
+  "recovery": {
+    "pointer": ".research/mars_sensor_ordinal/recovery/held-3/latest.json",
+    "pointer_sha256": "849799c411a122449491f06cce16d3afdca360267b79f8b5c94eb283503518cd",
+    "completed_epoch": 1,
+    "next_epoch": 2,
+    "checkpoint": "generation-0001-1788130213322999400-439e6a7e199f494fa72514bbeeeedaf9.pt",
+    "checkpoint_sha256": "7d26f700dcb5e9f73eb03fade39773ae88949a06ec33151a0236d9a805673519",
+    "identity_sha256": "db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b",
+    "epoch_1_inner_validation_checkpoint_metrics_logged": true
+  },
+  "post_failure_host_diagnostic": {
+    "committed_bytes": 124745715712,
+    "commit_limit_bytes": 136488603648,
+    "committed_percent": 91.40,
+    "commit_headroom_bytes": 11742887936,
+    "commit_headroom_gib": 10.94,
+    "available_physical_mib": 5794,
+    "largest_private_commit": {
+      "process": "SignalRgb",
+      "gib": 71.23
+    },
+    "vmmemWSL_private_commit_gib": 6.94,
+    "interpretation": "Windows host commit exhaustion prevented a 2.14 MiB NumPy allocation; this is host-memory infrastructure failure, not scientific evidence."
+  },
+  "access_attestation": {
+    "held_fold_3_inner_validation_checkpoint_metrics_logged": true,
+    "held_prediction_created_or_opened": false,
+    "held_fold_3_completed_or_incomplete_access_receipt_exists": false,
+    "held_fold_4_completed_or_incomplete_access_receipt_exists": false,
+    "comparator_values_decoded": false,
+    "semantic_comparator_accessed": false,
+    "folds_0_1_2_opened": false,
+    "protected_evidence_opened": false,
+    "external_evidence_opened": false,
+    "official_evidence_opened": false,
+    "candidate_created": false,
+    "held_part_created": false,
+    "held_receipt_created": false,
+    "endpoint_created": false,
+    "gate_evaluated": false,
+    "final_result_created": false
+  },
+  "continuation_boundary": {
+    "same_scientific_execution_only": true,
+    "authorized_continuations": 1,
+    "from_scratch_restart_allowed": false,
+    "required_recovery_identity_sha256": "db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b",
+    "required_completed_epoch": 1,
+    "required_next_epoch": 2,
+    "minimum_commit_headroom_bytes": 34359738368,
+    "minimum_available_physical_bytes": 17179869184,
+    "codex_prelaunch_verification_required": true,
+    "altered_settings_allowed": false,
+    "completed_or_incomplete_held_fold_replay_allowed": false,
+    "second_scientific_attempt_allowed": false,
+    "protected_evidence_allowed": false
+  },
+  "frozen_bindings": {
+    "trainer_sha256": "4a1596d586092f8b0764fdd6a5f85122c0bd9530987bcad96b0953d95df9b0cc",
+    "model_sha256": "687b6e1f13f6a88afc802c55d35602d0ebd38a27c4a7eeea4ae3b758698a53bb",
+    "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca",
+    "scientific_settings_changed": false
+  }
+}

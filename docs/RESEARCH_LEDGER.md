@@ -1390,3 +1390,32 @@ protected fold, official outcome, dense supervision, or rescue acquisition is
 authorized. Compact results:
 `reports/acquisition/ghgsat_landfill_windowed_observability.json` and
 `reports/acquisition/GHGSAT_LANDFILL_WINDOWED_OBSERVABILITY.md`.
+
+## 2026-08-30: native ordinal process stops on host commit exhaustion
+
+The first authorized native-Windows sensor-aware ordinal `--run-held-folds`
+process launched from clean HEAD `6bc182f390a1eef0d5beac9186287344552072c4`
+and exited 1. Held-fold-3 endpoint epoch 1 completed through inner validation and
+the durable checkpoint boundary. The next dense-batch `model_input` NumPy
+concatenate could not allocate 2.14 MiB. Post-failure diagnostics showed
+124,745,715,712 committed of 136,488,603,648 bytes (91.40%), 5,794 MiB available
+physical memory, `SignalRgb` at 71.23 GiB private commit, and `vmmemWSL` at
+6.94 GiB. This is host-memory infrastructure failure, not scientific rejection.
+
+No held prediction, semantic comparator decode, fold 0/1/2, protected/external/
+official evidence, candidate, held part or receipt, endpoint, gate, or final
+result exists. The exact capture hashes and access attestations are in
+`reports/research/mars_sensor_ordinal_native_held_folds_host_memory_failure.json`.
+The validated recovery generation has completed epoch 1, next epoch 2,
+checkpoint SHA-256
+`7d26f700dcb5e9f73eb03fade39773ae88949a06ec33151a0236d9a805673519`, and
+identity `db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b`.
+
+The first process launch is consumed. Exactly one continuation of the same
+scientific execution may restore that exact generation only after Codex verifies
+at least 32 GiB commit headroom and 16 GiB available physical memory. No
+from-scratch restart, altered settings, completed/incomplete held-fold replay,
+second scientific attempt, or protected evidence is permitted. Trainer/model
+hashes and science digest
+`25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`
+remain frozen.
