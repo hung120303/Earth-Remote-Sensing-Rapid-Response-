@@ -6574,3 +6574,16 @@ protected outcome, score cache, checkpoint, or official benchmark result was
 accessed. The next authorized action is a separately committed exact
 target-catalog pairing protocol. Compact result:
 `reports/acquisition/ghgsat_landfill_null_metadata.json`.
+
+The next catalog audit is frozen before any target query. It will issue one
+metadata-only point/time request per qualified source observation to the
+official CDSE Sentinel-2 L1C and USGS Landsat Collection 2 Level-1 STAC
+collections. The window remains exactly +/-1 hour. Landsat is restricted to
+LC08/LC09 L1TP Tier 1; Sentinel-2 to S2A/S2B L1C. Full item geometry must
+contain the site point, assets are excluded, and cloud cover is only a
+deterministic tie-breaker because local observability requires raster QA later.
+At most one item per source observation and target sensor is retained. A pass
+requires at least 28 distinct source observations, 20 sites, 20 novel 25 km
+components, and 20 distinct target item IDs; dual-sensor matches cannot inflate
+the source-observation count. Protocol SHA-256:
+`486e78bdb41b4aa9dfcb6bc6943eb80caf0cf8c7c5899bce1cdb6cc7a06967ff`.

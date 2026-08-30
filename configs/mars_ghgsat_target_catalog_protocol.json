@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_any_sentinel2_or_landsat_target_catalog_query",
+  "name": "GHGSat landfill-null Sentinel-2/Landsat exact-time catalog audit",
+  "research_question": "Do the independently qualified GHGSat C1/C2 reviewed null observations yield at least 28 distinct, MARS-disjoint source observations with exact Sentinel-2 L1C or Landsat 8/9 Collection 2 Level-1 point coverage within one hour?",
+  "decision_context_disclosed_before_freeze": {
+    "ghgsat_metadata_decision": "PASS",
+    "released_null_observations": 434,
+    "c1_c2_candidates_before_cap": 329,
+    "selected_before_protected_filter": 199,
+    "eligible_source_observations": 176,
+    "eligible_source_sites": 66,
+    "eligible_source_components": 64,
+    "unchanged_required_additional_negative_pairs": 28,
+    "anti_pooling_boundary": "GHGSat must yield at least 28 distinct qualifying source observations by itself. No failed STARCOP, CACH4, COVID/Permian, or Carbon Mapper row may contribute to this gate.",
+    "outcome_blindness": "No target catalog response, target asset, local observability result, model output, MARS development outcome, or official benchmark outcome has been inspected for this source before freeze."
+  },
+  "frozen_source_inputs": {
+    "metadata_protocol": {
+      "path": "configs/mars_ghgsat_landfill_null_protocol.json",
+      "bytes": 12942,
+      "sha256": "0943cb2a15f2106b9ee4a71f9ab36c06f563e410ad0b530ee1f3514b3aa1bcb1"
+    },
+    "metadata_report": {
+      "path": "reports/acquisition/ghgsat_landfill_null_metadata.json",
+      "bytes": 7790,
+      "sha256": "5c0da9fa0f8896024e5da190d22ffd438562ba56727192c5aab8f02bdf2a41b6",
+      "required_decision": "PASS"
+    },
+    "eligible_observations": {
+      "path": ".research/ghgsat_landfill_null/eligible_morning_null_observations.jsonl",
+      "bytes": 135889,
+      "sha256": "aa2c6963c3acf72a4e6198c6af7052e90797ea870100e11111b674f3c7d8c89c",
+      "rows": 176
+    }
+  },
+  "source_observation_contract": {
+    "required_fields": [
+      "site_ID",
+      "obs_ID",
+      "date",
+      "sat_ID",
+      "observation_state",
+      "representative_latitude",
+      "representative_longitude",
+      "component_id",
+      "passes_protected_distance_filter",
+      "eligible_for_target_catalog"
+    ],
+    "required_values": {
+      "sat_ID": [
+        1,
+        2
+      ],
+      "observation_state": "null",
+      "passes_protected_distance_filter": true,
+      "eligible_for_target_catalog": false
+    },
+    "eligible_for_target_catalog_explanation": "The metadata audit intentionally left this false because it did not itself authorize a query. This committed protocol supplies that authorization for the exact 176 hash-bound rows only.",
+    "unique_identity": [
+      "site_ID",
+      "obs_ID",
+      "date",
+      "sat_ID"
+    ],
+    "label_claim": "No localized plume detected at the reviewed waste site above applicable GHGSat sensitivity in the clear-sky C1/C2 observation; not physical zero and not a dense target mask."
+  },
+  "catalogs": {
+    "sentinel_2_l1c": {
+      "provider": "Copernicus Data Space Ecosystem",
+      "documentation": "https://documentation.dataspace.copernicus.eu/APIs/STAC.html",
+      "endpoint": "https://stac.dataspace.copernicus.eu/v1/search",
+      "collection": "sentinel-2-l1c",
+      "allowed_platform_item_prefixes": [
+        "S2A_",
+        "S2B_"
+      ],
+      "required_item_fields": [
+        "id",
+        "collection",
+        "geometry",
+        "bbox",
+        "properties.datetime",
+        "properties.eo:cloud_cover"
+      ],
+      "assets_requested": false
+    },
+    "landsat_8_9_level_1": {
+      "provider": "U.S. Geological Survey EROS",
+      "documentation": "https://www.usgs.gov/landsat-missions/spatiotemporal-asset-catalog-stac",
+      "endpoint": "https://landsatlook.usgs.gov/stac-server/search",
+      "collection": "landsat-c2l1",
+      "allowed_item_prefixes": [
+        "LC08_",
+        "LC09_"
+      ],
+      "required_processing_level": "L1TP",
+      "required_collection_category": "T1",
+      "required_item_fields": [
+        "id",
+        "collection",
+        "geometry",
+        "bbox",
+        "properties.datetime",
+        "properties.eo:cloud_cover",
+        "properties.landsat:correction",
+        "properties.landsat:collection_category"
+      ],
+      "assets_requested": false
+    }
+  },
+  "query_contract": {
+    "one_query_per_source_observation_per_catalog": true,
+    "geometry": "Exact WGS84 Point at the frozen site representative.",
+    "datetime_window": "Closed interval from source UTC minus 1 hour through source UTC plus 1 hour.",
+    "maximum_absolute_time_offset_seconds": 3600,
+    "stac_limit": 100,
+    "fail_if_limit_reached": true,
+    "fields_extension": "Include only required item metadata and exclude assets and links where supported.",
+    "maximum_response_bytes_each": 2097152,
+    "maximum_response_bytes_total": 268435456,
+    "minimum_request_interval_seconds": 0.25,
+    "maximum_attempts_per_request": 5,
+    "retryable_http_statuses": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
+    "checkpointing": "Each exact request and hash of its accepted response is append-only under the ignored root. A resume may skip only a request whose canonical request hash and accepted response receipt both match.",
+    "response_validation": [
+      "response is a valid STAC FeatureCollection",
+      "every retained item belongs to the exact requested collection and allowed platform",
+      "item datetime is finite UTC and within the closed one-hour interval",
+      "full item geometry, not only bbox, contains or touches the frozen point",
+      "cloud cover is finite in [0,100] but is not an eligibility threshold",
+      "no asset URL or raster content is retained"
+    ]
+  },
+  "candidate_and_selection_contract": {
+    "candidate": "A valid catalog item satisfying every catalog and response rule for one frozen source observation.",
+    "maximum_selected_per_source_observation_per_target_sensor": 1,
+    "selection_order_within_target_sensor": [
+      "smallest absolute source-target time offset in seconds",
+      "smallest catalog eo:cloud_cover",
+      "lexicographically smallest item ID"
+    ],
+    "cross_sensor_policy": "Sentinel-2 and Landsat selections are both retained when independently present. Gates count distinct GHGSat source observations separately from total source-sensor pairs so a dual-sensor match cannot manufacture source-event headroom.",
+    "duplicate_target_policy": "A target item may cover multiple reviewed sites, but each source-observation/target-sensor pair is unique and all later sampling/bootstrap grouping remains at least source observation, site, and 25 km component aware.",
+    "catalog_cloud_policy": "Cloud cover is recorded and used only as a deterministic tie-breaker. Local crop observability and cloud/QA validity are deferred to the separately frozen windowed-asset protocol; unobservable crops can never become negatives."
+  },
+  "gates": {
+    "minimum_selected_source_sensor_pairs": 28,
+    "minimum_distinct_source_observations_with_pair": 28,
+    "minimum_distinct_sites_with_pair": 20,
+    "minimum_novel_25km_components_with_pair": 20,
+    "minimum_distinct_target_item_ids": 20,
+    "all_queries_and_retained_items_valid": true
+  },
+  "failure_action": "Retire GHGSat as the missing-negative pairing source without changing a threshold, widening the one-hour window, accepting L2 products, relaxing Landsat T1/L1TP, or pooling a failed source.",
+  "pass_action": "Commit a separate exact target/reference item manifest and windowed-asset/local-observability protocol before requesting any raster asset or designing the model experiment.",
+  "network_and_evidence_boundary": {
+    "permitted": [
+      "the two exact public STAC search endpoints",
+      "metadata-only POST responses for the 176 hash-bound observations",
+      "HTTP headers and retry metadata needed to validate those responses"
+    ],
+    "forbidden": [
+      "any Sentinel-2 or Landsat raster, preview, thumbnail, tile metadata asset, QA band, or band URL fetch",
+      "any GHGSat raster or plume asset",
+      "any reference-scene catalog query outside the exact current-target one-hour window",
+      "any protected MARS outcome, mask, prediction, score, threshold, checkpoint, fold 0/1/2 result, or official benchmark result",
+      "any location coordinate as a model feature"
+    ]
+  },
+  "outputs": {
+    "ignored_root": ".research/ghgsat_landfill_null/target_catalog",
+    "ignored_requests": ".research/ghgsat_landfill_null/target_catalog/requests.jsonl",
+    "ignored_responses": ".research/ghgsat_landfill_null/target_catalog/responses.jsonl",
+    "ignored_candidates": ".research/ghgsat_landfill_null/target_catalog/candidates.jsonl",
+    "ignored_selected_pairs": ".research/ghgsat_landfill_null/target_catalog/selected_pairs.jsonl",
+    "compact_json": "reports/acquisition/ghgsat_landfill_target_catalog.json",
+    "compact_markdown": "reports/acquisition/GHGSAT_LANDFILL_TARGET_CATALOG.md"
+  },
+  "claim_boundary": "A PASS establishes public target-catalog timing and footprint feasibility only. It does not establish local clear-sky observability, valid six-band current/reference crops, dense labels, training value, calibration, generalization, or superiority over MARS-S2L."
+}

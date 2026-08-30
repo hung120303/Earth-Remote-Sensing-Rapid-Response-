@@ -1309,3 +1309,16 @@ training, create dense-negative masks, or establish benchmark improvement.
 Authoritative compact artifacts are
 `reports/acquisition/ghgsat_landfill_null_metadata.json` and
 `reports/acquisition/GHGSAT_LANDFILL_NULL_METADATA.md`.
+
+The exact metadata-only target-catalog protocol is frozen before its first
+query. It uses the official CDSE `sentinel-2-l1c` and USGS `landsat-c2l1`
+STAC collections over the closed +/-1-hour window for the 176 hash-bound
+source observations. Landsat must be LC08/LC09 L1TP Tier 1; Sentinel-2 must be
+S2A/S2B L1C. Full geometry containment is mandatory, asset fields are excluded,
+and catalog cloud cover cannot decide eligibility. At most one candidate per
+source observation per target sensor survives deterministic offset/cloud/ID
+selection. The gate counts at least 28 distinct source observations, not merely
+28 potentially correlated source-sensor pairs, plus 20 sites, 20 components,
+and 20 target item IDs. Protocol:
+`configs/mars_ghgsat_target_catalog_protocol.json`, SHA-256
+`486e78bdb41b4aa9dfcb6bc6943eb80caf0cf8c7c5899bce1cdb6cc7a06967ff`.
