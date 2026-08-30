@@ -135,6 +135,17 @@ def fit_ordinal_cutpoints(metadata_root: Path, records: Sequence[dict[str, Any]]
     return result
 
 
+def prepare_endpoint_data(
+    metadata_root: Path, fit_records: Sequence[dict[str, Any]]
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], set[str], set[str], np.ndarray]:
+    """Freeze the inner split, then fit ordinal cutpoints on inner training only."""
+    training_groups, validation_groups = deterministic_inner_split(fit_records)
+    inner_training = [row for row in fit_records if str(row["group_id"]) in training_groups]
+    inner_validation = [row for row in fit_records if str(row["group_id"]) in validation_groups]
+    cutpoints = fit_ordinal_cutpoints(metadata_root, inner_training)
+    return inner_training, inner_validation, training_groups, validation_groups, cutpoints
+
+
 def ordinal_levels(enhancement: np.ndarray | None, plume: np.ndarray, observable: np.ndarray, cutpoints: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Assign ties low; unsupported positive pixels receive no ordinal weight."""
     levels = np.zeros(plume.shape, dtype=np.int64)
@@ -511,10 +522,9 @@ def _cpu_state(model: MarsSensorOrdinalUNet) -> dict[str, torch.Tensor]:
 
 
 def train_endpoint(protocol: dict[str, Any], paths: dict[str, Path], fit_records: Sequence[dict[str, Any]], held_fold: int, device: torch.device) -> tuple[dict[str, Any], dict[str, torch.Tensor], np.ndarray]:
-    training_groups, validation_groups = deterministic_inner_split(fit_records)
-    inner_training = [row for row in fit_records if str(row["group_id"]) in training_groups]
-    inner_validation = [row for row in fit_records if str(row["group_id"]) in validation_groups]
-    cutpoints = fit_ordinal_cutpoints(paths["metadata_root"], fit_records)
+    inner_training, inner_validation, training_groups, validation_groups, cutpoints = prepare_endpoint_data(
+        paths["metadata_root"], fit_records
+    )
     model = MarsSensorOrdinalUNet().to(device)
     spec = protocol["training"]
     pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4)
@@ -567,7 +577,7 @@ def train_endpoint(protocol: dict[str, Any], paths: dict[str, Path], fit_records
         "held_fold": held_fold, "fit_fold": 7 - held_fold,
         "inner_training_groups": len(training_groups), "inner_validation_groups": len(validation_groups),
         "inner_training_rows": len(inner_training), "inner_validation_rows": len(inner_validation),
-        "cutpoints": cutpoints.tolist(), "cutpoint_source": "outer_fitting_fold_only",
+        "cutpoints": cutpoints.tolist(), "cutpoint_source": "inner_training_groups_only",
         "selected_epoch": best_epoch, "selected_rank": list(best_rank), "history": history,
     }
     return metadata, best_state, cutpoints
@@ -769,6 +779,14 @@ def atomic_text(path: Path, text: str) -> None:
     os.replace(temporary, path)
 
 
+def protocol_identity(protocol: dict[str, Any]) -> str:
+    """Hash canonical protocol content with only the self-hash field omitted."""
+    canonical = dict(protocol)
+    canonical.pop("protocol_sha256_self_excluding_field", None)
+    payload = json.dumps(canonical, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def verify_protocol(protocol: dict[str, Any], protocol_path: Path, *, smoke: bool) -> dict[str, Path]:
     frozen = protocol.get("status") == "frozen_before_held_outcomes"
     if not smoke and not frozen:
@@ -776,16 +794,26 @@ def verify_protocol(protocol: dict[str, Any], protocol_path: Path, *, smoke: boo
     if tuple(protocol.get("outer_folds", ())) != (3, 4):
         raise ValueError("Protocol must bind exactly outer folds [3, 4]")
     validate_requested_folds(protocol["outer_folds"])
+    if protocol_identity(protocol) != protocol.get("protocol_sha256_self_excluding_field"):
+        raise ValueError("Frozen protocol self-hash mismatch")
     paths = {name: (ROOT / binding["path"]).resolve() for name, binding in protocol["dependencies"].items()}
     if frozen:
         bindings = [("trainer", protocol["trainer"]), ("model", protocol["model"]),
-                    *[(f"code_dependency_{index}", binding) for index, binding in enumerate(protocol.get("code_dependencies", []))],
-                    *[(name, binding) for name, binding in protocol["dependencies"].items() if binding["sha256"] != "directory"]]
+                    *[(f"code_dependency_{index}", binding) for index, binding in enumerate(protocol.get("code_dependencies", []))]]
+        allowed_data_dependencies = {"manifest", "fold_protocol"} if smoke else set(protocol["dependencies"])
+        bindings.extend(
+            (name, binding)
+            for name, binding in protocol["dependencies"].items()
+            if name in allowed_data_dependencies and binding["sha256"] != "directory"
+        )
         for name, binding in bindings:
             path = (ROOT / binding["path"]).resolve()
             if not path.is_file() or sha256(path) != binding["sha256"]:
                 raise ValueError(f"Frozen dependency hash mismatch: {name}")
+    required_paths = {"metadata_root", "manifest", "fold_protocol"} if smoke else set(paths)
     for name, path in paths.items():
+        if name not in required_paths:
+            continue
         if not path.exists():
             raise FileNotFoundError(f"Missing dependency: {name}")
     if not smoke:

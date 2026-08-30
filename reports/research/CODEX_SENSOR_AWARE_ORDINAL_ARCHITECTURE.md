@@ -57,7 +57,7 @@ The ordinal head emits `(a1,d2,d3,d4)` and cumulative logits are monotone by con
 
 ## Branch-local ordinal targets
 
-For each outer endpoint, collect all finite producer enhancement values at `plume_mask & observable_mask` pixels from that endpoint's outer fitting fold only. Fit `q25`, `q50`, and `q75` with `numpy.quantile(..., method="linear")`. These three values are frozen per endpoint before inner validation or held-fold inference and are applied unchanged to fitting, inner-validation, and held-fold pixels.
+For each outer endpoint, first freeze the deterministic inner 25 km group split. Collect all finite producer enhancement values at `plume_mask & observable_mask` pixels from that endpoint's inner-training groups only. Fit `q25`, `q50`, and `q75` with `numpy.quantile(..., method="linear")`. These three values are frozen per endpoint before inner validation or held-fold inference and are applied unchanged to inner training, inner validation, and held-fold pixels.
 
 Exact assignment:
 
@@ -183,7 +183,7 @@ Bulk checkpoints, cutpoint caches, prediction arrays, and dense comparator recon
 - U-Net widths: `32,48,64,96,64,48,32`
 - dense/ordinal hidden widths: 16/16
 - ordinal: four monotone cumulative logits
-- cutpoints: fit-fold-only q25/q50/q75, NumPy linear quantiles
+- cutpoints: inner-training-group-only q25/q50/q75, NumPy linear quantiles
 - scene descriptor/MLP: `26`, then `26->32->16->1`
 - scene gradient into pixel model: none
 - inner validation: hash-stratified one-fifth canonical groups

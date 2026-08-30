@@ -2,45 +2,110 @@
   "schema_version": 1,
   "status": "frozen_before_held_outcomes",
   "scope": "Development-only fold-3/fold-4 sensor-aware ordinal cross-fit; no folds 0/1/2, official paper test, external held outcomes, GHGSat, or failed sources.",
-  "protocol_sha256_self_excluding_field": "see_git_commit",
-  "trainer": {"path": "tools/train_mars_sensor_ordinal.py", "sha256": "96e039d8bf900baff8ccb807357dd8fa76716de782715284c16273afe6a1aef1"},
-  "model": {"path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py", "sha256": "687b6e1f13f6a88afc802c55d35602d0ebd38a27c4a7eeea4ae3b758698a53bb"},
+  "implementation_base_commit": "f83584aecaeee0fa92fe1fe215a6a89fb6ce3f82",
+  "trainer": {
+    "path": "tools/train_mars_sensor_ordinal.py",
+    "sha256": "f593be5271a8067bee9a85f07a73a0000234bad1c650226808b6b4aa4d200665"
+  },
+  "model": {
+    "path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py",
+    "sha256": "687b6e1f13f6a88afc802c55d35602d0ebd38a27c4a7eeea4ae3b758698a53bb"
+  },
   "code_dependencies": [
-    {"path": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py", "sha256": "6c82aecd58918567b34f422e4c6f4e817e5578a6bc24ea284791f3d44b63fd36"},
-    {"path": "EarthRemoteSensingRapidResponse/mars_paper_model.py", "sha256": "f9cc65b3bb764ed83a4aa67209cccdbad2b6c80826b0915711392ca8b10a0486"},
-    {"path": "EarthRemoteSensingRapidResponse/mars_v4_model.py", "sha256": "595d9aa5db498174a97e52c8509b4f700de88fd5d97098fff6f55d90691f3765"},
-    {"path": "EarthRemoteSensingRapidResponse/mars_gaussian_contrast_vit.py", "sha256": "92ca3507b88f7196e3c49d84ccc2e889ca9433caecd5ac8ab159eb79efb8a268"},
-    {"path": "EarthRemoteSensingRapidResponse/mars_gaussian_vit.py", "sha256": "d587a49b7c1d40bfc12152febed6ed31f56c4ca2225d5b89b3eedffa8be8fd11"},
-    {"path": "tools/train_mars_gaussian_contrast_crossfit.py", "sha256": "7d904a4f6bf7b072ba1671fb95463384b421f158db242ba4e7068abbcab4a2a3"}
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py",
+      "sha256": "6c82aecd58918567b34f422e4c6f4e817e5578a6bc24ea284791f3d44b63fd36"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_paper_model.py",
+      "sha256": "f9cc65b3bb764ed83a4aa67209cccdbad2b6c80826b0915711392ca8b10a0486"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_v4_model.py",
+      "sha256": "595d9aa5db498174a97e52c8509b4f700de88fd5d97098fff6f55d90691f3765"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_gaussian_contrast_vit.py",
+      "sha256": "92ca3507b88f7196e3c49d84ccc2e889ca9433caecd5ac8ab159eb79efb8a268"
+    },
+    {
+      "path": "EarthRemoteSensingRapidResponse/mars_gaussian_vit.py",
+      "sha256": "d587a49b7c1d40bfc12152febed6ed31f56c4ca2225d5b89b3eedffa8be8fd11"
+    },
+    {
+      "path": "tools/train_mars_gaussian_contrast_crossfit.py",
+      "sha256": "7d904a4f6bf7b072ba1671fb95463384b421f158db242ba4e7068abbcab4a2a3"
+    }
   ],
   "dependencies": {
-    "metadata_root": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L", "sha256": "directory"},
-    "manifest": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl", "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"},
-    "fold_protocol": {"path": "configs/mars_paper_v3_group_folds.json", "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"},
-    "champion_scene_cache": {"path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz", "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424"},
-    "gaussian_dense_state": {"path": "outputs/mars_gaussian_scene_aligned_replicate_folds34_states.pt", "sha256": "b549930d8c8c2531d430218d58f0e17d83c58182b5f7d97a9c086baafcf3cb03"},
-    "gaussian_protocol": {"path": "configs/mars_gaussian_scene_aligned_reproducibility_protocol.json", "sha256": "bc0fa6190ec24f9c60fcd67fa34bfae225e992918f7810cc199507dfca606f85"},
-    "released_dense_checkpoint": {"path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch", "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"}
+    "metadata_root": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L",
+      "sha256": "directory"
+    },
+    "manifest": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/paper_v3_development_samples.jsonl",
+      "sha256": "31ba92e791ba07be781dd700ff1e720b8cd686357b9bec38ebfe41bbaa207e8e"
+    },
+    "fold_protocol": {
+      "path": "configs/mars_paper_v3_group_folds.json",
+      "sha256": "6862182bdc1a14ec4a36cc33f318ba3b49a927789f3ff5be7801dc5162051873"
+    },
+    "champion_scene_cache": {
+      "path": "outputs/mars_dofa_gaussian_champion_folds34_scores.npz",
+      "sha256": "988b98c92a1a5fa1fe52d7052b9159352f0fadd876b400fce1c8c879c94ea424"
+    },
+    "gaussian_dense_state": {
+      "path": "outputs/mars_gaussian_scene_aligned_replicate_folds34_states.pt",
+      "sha256": "b549930d8c8c2531d430218d58f0e17d83c58182b5f7d97a9c086baafcf3cb03"
+    },
+    "gaussian_protocol": {
+      "path": "configs/mars_gaussian_scene_aligned_reproducibility_protocol.json",
+      "sha256": "bc0fa6190ec24f9c60fcd67fa34bfae225e992918f7810cc199507dfca606f85"
+    },
+    "released_dense_checkpoint": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/trained_models/MARSS2L_20250326/best_epoch",
+      "sha256": "be634fb9e24dc4877f44c1ff9f69972e6f0453e30d70c0dc03677876340ef246"
+    }
   },
-  "outer_folds": [3, 4],
+  "outer_folds": [
+    3,
+    4
+  ],
   "seed": 26082917,
   "architecture": {
     "input_channels": 14,
     "sensor_stems": "independent Sentinel-2 and Landsat 14->24->24 stems",
-    "unet_widths": [32, 48, 64, 96, 64, 48, 32],
+    "unet_widths": [
+      32,
+      48,
+      64,
+      96,
+      64,
+      48,
+      32
+    ],
     "ordinal_cumulative_logits": 4,
     "scene_descriptor": 26,
     "pretrained_or_auxiliary_candidate_components": false,
     "scene_gradient_into_pixel_network": false
   },
   "ordinal_targets": {
-    "source": "finite producer enhancement at plume & observable pixels from the complete outer fitting fold only",
-    "quantiles": [0.25, 0.5, 0.75],
+    "source": "finite producer enhancement at plume & observable pixels from deterministic inner-training groups only",
+    "quantiles": [
+      0.25,
+      0.5,
+      0.75
+    ],
     "numpy_method": "linear",
     "tie_rule": "q25->level1, q50->level2, q75->level3",
     "physical_unit_claim": "none"
   },
-  "inner_split": {"unit": "canonical 25 km group_id", "stratified_group_hash_modulus": 5, "validation_remainder": 0, "seed": 26082917},
+  "inner_split": {
+    "unit": "canonical 25 km group_id",
+    "stratified_group_hash_modulus": 5,
+    "validation_remainder": 0,
+    "seed": 26082917
+  },
   "training": {
     "epochs": 24,
     "dense_steps_per_epoch": 600,
@@ -48,26 +113,97 @@
     "crop_size": 256,
     "dense_batch_size": 16,
     "scene_batch_size": 4,
-    "pixel_optimizer": {"name": "AdamW", "learning_rate": 0.0003, "betas": [0.9, 0.999], "weight_decay": 0.0001, "warmup_epochs": 2, "cosine_min_learning_rate": 0.00003},
-    "scene_optimizer": {"name": "AdamW", "learning_rate": 0.001, "betas": [0.9, 0.999], "weight_decay": 0.0001, "warmup_start_epoch": 5, "warmup_epochs": 1, "cosine_min_learning_rate": 0.0001},
-    "checkpoint_rank": ["higher inner scene AP", "higher aggregate dense IoU at 0.40", "lower scene BCE"]
+    "pixel_optimizer": {
+      "name": "AdamW",
+      "learning_rate": 0.0003,
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "weight_decay": 0.0001,
+      "warmup_epochs": 2,
+      "cosine_min_learning_rate": 3e-05
+    },
+    "scene_optimizer": {
+      "name": "AdamW",
+      "learning_rate": 0.001,
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "weight_decay": 0.0001,
+      "warmup_start_epoch": 5,
+      "warmup_epochs": 1,
+      "cosine_min_learning_rate": 0.0001
+    },
+    "checkpoint_rank": [
+      "higher inner scene AP",
+      "higher aggregate dense IoU at 0.40",
+      "lower scene BCE"
+    ]
   },
   "evaluation": {
     "candidate_dense_threshold": 0.4,
     "scene_metadata_threshold": 0.5,
-    "matched_fpr_grid": [0.005, 0.01, 0.02, 0.05, 0.1],
+    "matched_fpr_grid": [
+      0.005,
+      0.01,
+      0.02,
+      0.05,
+      0.1
+    ],
     "comparator_alignment": "after immutable candidate predictions, exact sample_id/fold/sensor/group",
     "dense_comparator": "reconstruct released-logit + 0.1 * 2*tanh(frozen Gaussian endpoint dense logit/2), using opposite-fold state and its frozen cloud/component/scene-gate rule; never feed comparator outputs to candidate"
   },
-  "bootstrap": {"replicates": 10000, "ap_seed": 26082918, "dense_seed": 26082919, "unit": "canonical 25 km group", "stratified_within_outer_fold": true, "lower_percentile": 2.5},
-  "gates": {"pooled_ap_delta_minimum": 0.003, "each_fold_ap_delta_strictly_positive": true, "each_sensor_ap_delta_strictly_positive": true, "matched_fpr_recall_delta_minimum": 0.0, "ap_bootstrap_lower_strictly_positive": true, "dense_iou_delta_strictly_positive": true, "dense_bootstrap_lower_strictly_positive": true},
-  "smoke": {"status": "passed_after_freeze_before_held_outcomes", "scope": "fold-3 fitting rows only; no fold-4 outcome or metric access", "rows": 2, "input_shape": [2, 14, 256, 256], "pixel_loss": 0.9749386310577393, "scene_loss": 0.6943879723548889, "pixel_gradient_norm": 6.556541919708252, "scene_gradient_norm": 0.038930125534534454, "peak_cuda_bytes": 582658560, "finite": true},
+  "bootstrap": {
+    "replicates": 10000,
+    "ap_seed": 26082918,
+    "dense_seed": 26082919,
+    "unit": "canonical 25 km group",
+    "stratified_within_outer_fold": true,
+    "lower_percentile": 2.5
+  },
+  "gates": {
+    "pooled_ap_delta_minimum": 0.003,
+    "each_fold_ap_delta_strictly_positive": true,
+    "each_sensor_ap_delta_strictly_positive": true,
+    "matched_fpr_recall_delta_minimum": 0.0,
+    "ap_bootstrap_lower_strictly_positive": true,
+    "dense_iou_delta_strictly_positive": true,
+    "dense_bootstrap_lower_strictly_positive": true
+  },
+  "smoke": {
+    "status": "passed_after_freeze_before_held_outcomes",
+    "scope": "fold-3 fitting rows only; no fold-4 outcome or metric access",
+    "rows": 2,
+    "input_shape": [
+      2,
+      14,
+      256,
+      256
+    ],
+    "pixel_loss": 0.9749386310577393,
+    "scene_loss": 0.6943879723548889,
+    "pixel_gradient_norm": 6.556541919708252,
+    "scene_gradient_norm": 0.038930125534534454,
+    "peak_cuda_bytes": 582658560,
+    "finite": true
+  },
   "preheld_execution_amendment": {
     "status": "frozen_before_any_inner_epoch_or_held_outcome",
     "trigger": "first execution aborted while constructing the first fitting-fold dense batch because one sampled scene had no source-support crop meeting the frozen 0.70 gate",
     "change": "resample without replacement from another same-label fitting site; never relax the 0.70 gate and never reuse a site within a batch",
     "held_outcome_accessed": false,
-    "one_real_batch_check": {"rows": 16, "shape": [16, 14, 256, 256], "finite": true}
+    "one_real_batch_check": {
+      "rows": 16,
+      "shape": [
+        16,
+        14,
+        256,
+        256
+      ],
+      "finite": true
+    }
   },
   "outputs": {
     "candidate_predictions": ".research/mars_sensor_ordinal/candidate_folds34_predictions.npz",
@@ -75,5 +211,11 @@
     "json": "reports/experiments/mars_sensor_ordinal_folds34.json",
     "markdown": "reports/experiments/MARS_SENSOR_ORDINAL_FOLDS34.md"
   },
-  "one_shot_rules": ["No output overwrite.", "No held run unless protocol is frozen and every dependency hash matches.", "Stop after the fixed seed if any gate fails.", "No folds 0/1/2, official paper test, external held outcomes, GHGSat, failed sources, second seed, retuning, or rescue verification."]
+  "one_shot_rules": [
+    "No output overwrite.",
+    "No held run unless protocol is frozen and every dependency hash matches.",
+    "Stop after the fixed seed if any gate fails.",
+    "No folds 0/1/2, official paper test, external held outcomes, GHGSat, failed sources, second seed, retuning, or rescue verification."
+  ],
+  "protocol_sha256_self_excluding_field": "ece48a9b3291ce62948f48bd39b7e1b40185fa80997a8202adb0d71ca18bcb13"
 }

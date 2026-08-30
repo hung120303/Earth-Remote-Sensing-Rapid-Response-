@@ -23,6 +23,8 @@ from train_mars_sensor_ordinal import (
     main,
     metric_gates,
     ordinal_levels,
+    prepare_endpoint_data,
+    protocol_identity,
     scene_learning_rate,
     validate_requested_folds,
     verify_protocol,
@@ -81,6 +83,30 @@ def test_deterministic_inner_split_is_group_disjoint_and_repeatable() -> None:
     assert first[0].isdisjoint(first[1])
     validation_labels = {row["label_state"] for row in rows if row["group_id"] in first[1]}
     assert validation_labels == {"PLUME", "NO_PLUME"}
+
+
+def test_endpoint_cutpoints_exclude_inner_validation(monkeypatch: pytest.MonkeyPatch) -> None:
+    rows = [
+        {"group_id": f"p-{index}", "label_state": "PLUME", "sample_id": f"p-{index}"}
+        for index in range(10)
+    ] + [
+        {"group_id": f"n-{index}", "label_state": "NO_PLUME", "sample_id": f"n-{index}"}
+        for index in range(10)
+    ]
+    captured: list[dict[str, object]] = []
+
+    def fake_cutpoints(metadata_root: Path, records: list[dict[str, object]]) -> np.ndarray:
+        captured.extend(records)
+        return np.asarray([1.0, 2.0, 3.0])
+
+    monkeypatch.setattr("train_mars_sensor_ordinal.fit_ordinal_cutpoints", fake_cutpoints)
+    inner_training, inner_validation, training_groups, validation_groups, _ = prepare_endpoint_data(
+        Path("unused"), rows
+    )
+    assert captured == inner_training
+    assert {str(row["group_id"]) for row in captured} == training_groups
+    assert {str(row["group_id"]) for row in inner_validation} == validation_groups
+    assert training_groups.isdisjoint(validation_groups)
 
 
 def test_augmentation_uses_one_shared_transform_for_every_spatial_tensor() -> None:
@@ -196,6 +222,36 @@ def test_nonfrozen_held_run_and_frozen_hash_mismatch_are_rejected(tmp_path: Path
     frozen["trainer"] = {**protocol["trainer"], "sha256": "0" * 64}
     with pytest.raises(ValueError, match="hash mismatch"):
         verify_protocol(frozen, protocol_path, smoke=False)
+
+
+def test_frozen_protocol_self_hash_rejects_schedule_mutation() -> None:
+    protocol_path = ROOT / "configs/mars_sensor_ordinal_protocol.json"
+    protocol = json.loads(protocol_path.read_text())
+    assert protocol_identity(protocol) == protocol["protocol_sha256_self_excluding_field"]
+    protocol["training"]["epochs"] = 1
+    with pytest.raises(ValueError, match="self-hash mismatch"):
+        verify_protocol(protocol, protocol_path, smoke=False)
+
+
+def test_smoke_verification_does_not_read_comparator_evidence(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    protocol_path = ROOT / "configs/mars_sensor_ordinal_protocol.json"
+    protocol = json.loads(protocol_path.read_text())
+    forbidden = {
+        str((ROOT / protocol["dependencies"][name]["path"]).resolve())
+        for name in ("champion_scene_cache", "gaussian_dense_state", "released_dense_checkpoint")
+    }
+    import train_mars_sensor_ordinal as trainer
+
+    original_sha256 = trainer.sha256
+
+    def guarded_sha256(path: Path) -> str:
+        assert str(path.resolve()) not in forbidden
+        return original_sha256(path)
+
+    monkeypatch.setattr(trainer, "sha256", guarded_sha256)
+    verify_protocol(protocol, protocol_path, smoke=True)
 
 
 def test_cli_refuses_to_open_held_outcomes_without_explicit_flag() -> None:
