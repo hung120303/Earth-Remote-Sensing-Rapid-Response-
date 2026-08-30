@@ -169,6 +169,62 @@ def test_batcher_generator_and_all_global_rngs_restore_exactly() -> None:
     assert np.array_equal(actual[3], expected[3])
 
 
+def test_relocated_torch_rng_entries_are_restored_as_byte_exact_cpu_tensors(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class RelocatedTensor(torch.Tensor):
+        @staticmethod
+        def __new__(cls, value: torch.Tensor):
+            return torch.Tensor._make_subclass(cls, value, False)
+
+        @property
+        def device(self) -> torch.device:
+            return torch.device("cuda:0")
+
+        def to(self, *args, **kwargs) -> torch.Tensor:
+            return self.as_subclass(torch.Tensor).to(*args, **kwargs)
+
+    batcher = SimpleNamespace(rng=np.random.default_rng(13))
+    state = capture_rng_state(batcher)
+    cpu_bytes = state["torch_cpu"].clone()
+    cuda_bytes = torch.arange(0, 64, dtype=torch.uint8)
+    state["torch_cpu"] = RelocatedTensor(cpu_bytes)
+    state["torch_cuda_all"] = [RelocatedTensor(cuda_bytes)]
+    restored: dict[str, object] = {}
+
+    monkeypatch.setattr(torch, "set_rng_state", lambda value: restored.__setitem__("cpu", value))
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: True)
+    monkeypatch.setattr(torch.cuda, "device_count", lambda: 1)
+    monkeypatch.setattr(torch.cuda, "set_rng_state_all", lambda values: restored.__setitem__("cuda", values))
+
+    restore_rng_state(state, batcher)
+
+    restored_cpu = restored["cpu"]
+    restored_cuda = restored["cuda"]
+    assert isinstance(restored_cpu, torch.Tensor)
+    assert restored_cpu.device.type == "cpu" and restored_cpu.dtype == torch.uint8
+    assert torch.equal(restored_cpu, cpu_bytes)
+    assert isinstance(restored_cuda, list) and len(restored_cuda) == 1
+    assert restored_cuda[0].device.type == "cpu" and restored_cuda[0].dtype == torch.uint8
+    assert torch.equal(restored_cuda[0], cuda_bytes)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("torch_cpu", torch.zeros(8, dtype=torch.int64), "torch_cpu.*uint8"),
+        ("torch_cpu", torch.zeros((2, 4), dtype=torch.uint8), "torch_cpu.*one-dimensional"),
+        ("torch_cuda_all", [torch.zeros(8, dtype=torch.int64)], r"torch_cuda_all\[0\].*uint8"),
+    ],
+)
+def test_invalid_torch_rng_entries_are_rejected(field: str, value: object, message: str) -> None:
+    batcher = SimpleNamespace(rng=np.random.default_rng(13))
+    state = capture_rng_state(batcher)
+    state[field] = value
+    with pytest.raises(RuntimeError, match=message):
+        restore_rng_state(state, batcher)
+
+
 def test_interrupted_continuation_matches_uninterrupted_through_epoch_five_warmup(tmp_path: Path) -> None:
     def construct(seed: int):
         torch.manual_seed(seed)
@@ -237,6 +293,77 @@ def test_interrupted_continuation_matches_uninterrupted_through_epoch_five_warmu
     assert _nested_exact_equal(expected_model, recovered_model.state_dict())
     assert _nested_exact_equal(expected_pixel, recovered_pixel.state_dict())
     assert _nested_exact_equal(expected_scene, recovered_scene.state_dict())
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is required for the recovery device audit")
+def test_cpu_loaded_checkpoint_restores_exact_cuda_next_step_and_usable_optimizer(tmp_path: Path) -> None:
+    device = torch.device("cuda")
+
+    def construct(seed: int):
+        torch.manual_seed(seed)
+        model = torch.nn.Linear(2, 1).to(device)
+        optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4, weight_decay=1e-4)
+        batcher = SimpleNamespace(rng=np.random.default_rng(seed))
+        return model, optimizer, batcher
+
+    def advance(model, optimizer, batcher) -> float:
+        scale = (
+            random.random()
+            + float(np.random.random())
+            + float(torch.rand(()))
+            + float(torch.rand((), device=device))
+            + float(batcher.rng.random())
+        )
+        optimizer.zero_grad()
+        loss = model(torch.tensor([[0.25, -0.5]], device=device)).sum() * scale
+        loss.backward()
+        optimizer.step()
+        return float(loss.detach())
+
+    random.seed(31)
+    np.random.seed(32)
+    torch.manual_seed(33)
+    model, optimizer, batcher = construct(34)
+    advance(model, optimizer, batcher)
+    identity = {"runtime_signature": {"platform": "Windows", "device": "cuda"}}
+    payload = _payload(identity, completed_epoch=1)
+    payload.update({
+        "live_model_state": copy.deepcopy(model.state_dict()),
+        "best_model_state": copy.deepcopy(model.state_dict()),
+        "pixel_optimizer_state": copy.deepcopy(optimizer.state_dict()),
+        "scene_optimizer_state": copy.deepcopy(optimizer.state_dict()),
+        "pixel_optimizer_param_groups": copy.deepcopy(optimizer.state_dict()["param_groups"]),
+        "scene_optimizer_param_groups": copy.deepcopy(optimizer.state_dict()["param_groups"]),
+        "pixel_optimizer_lrs": [float(optimizer.param_groups[0]["lr"])],
+        "scene_optimizer_lrs": [float(optimizer.param_groups[0]["lr"])],
+        "rng_state": capture_rng_state(batcher),
+    })
+    store = RecoveryStore(tmp_path, identity, device)
+    store.save(payload)
+
+    expected_loss = advance(model, optimizer, batcher)
+    expected_model = copy.deepcopy(model.state_dict())
+    expected_optimizer = copy.deepcopy(optimizer.state_dict())
+
+    recovered_model, recovered_optimizer, recovered_batcher = construct(999)
+    loaded = store.load()
+    assert loaded is not None
+    assert all(value.device.type == "cpu" for value in loaded["live_model_state"].values())
+    assert all(value.device.type == "cpu" for value in loaded["best_model_state"].values())
+    assert loaded["rng_state"]["torch_cpu"].device.type == "cpu"
+    assert all(value.device.type == "cpu" for value in loaded["rng_state"]["torch_cuda_all"])
+
+    recovered_model.load_state_dict(loaded["live_model_state"])
+    recovered_optimizer.load_state_dict(loaded["pixel_optimizer_state"])
+    restore_rng_state(loaded["rng_state"], recovered_batcher)
+    actual_loss = advance(recovered_model, recovered_optimizer, recovered_batcher)
+
+    assert actual_loss == expected_loss
+    assert _nested_exact_equal(recovered_model.state_dict(), expected_model)
+    assert _nested_exact_equal(recovered_optimizer.state_dict(), expected_optimizer)
+    for optimizer_state in recovered_optimizer.state.values():
+        assert optimizer_state["exp_avg"].device.type == "cuda"
+        assert optimizer_state["exp_avg_sq"].device.type == "cuda"
 
 
 def test_corrupt_latest_generation_falls_back_to_previous(tmp_path: Path) -> None:

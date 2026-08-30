@@ -1159,15 +1159,41 @@ def capture_rng_state(batcher: SiteBalancedBatcher) -> dict[str, Any]:
     }
 
 
+def _cpu_byte_rng_state(value: Any, name: str) -> torch.Tensor:
+    if not isinstance(value, torch.Tensor):
+        raise RuntimeError(f"Checkpoint {name} RNG state must be a tensor")
+    if value.dtype != torch.uint8:
+        raise RuntimeError(f"Checkpoint {name} RNG state must have dtype uint8")
+    if value.ndim != 1:
+        raise RuntimeError(f"Checkpoint {name} RNG state must be one-dimensional")
+    try:
+        result = value.detach().to(device="cpu", dtype=torch.uint8).contiguous()
+    except (RuntimeError, TypeError) as error:
+        raise RuntimeError(f"Checkpoint {name} RNG state cannot be restored byte-exactly on CPU") from error
+    if result.device.type != "cpu" or result.dtype != torch.uint8 or result.ndim != 1:
+        raise RuntimeError(f"Checkpoint {name} RNG state normalization failed")
+    return result
+
+
 def restore_rng_state(state: dict[str, Any], batcher: SiteBalancedBatcher) -> None:
     """Restore all RNGs; callers must invoke this after every construction/load."""
+    required = {"python", "numpy_legacy", "torch_cpu", "torch_cuda_all", "site_balanced_batcher_bit_generator"}
+    if not isinstance(state, dict) or set(state) != required:
+        raise RuntimeError("Checkpoint RNG state coverage mismatch")
+    torch_cpu_state = _cpu_byte_rng_state(state["torch_cpu"], "torch_cpu")
+    cuda_values = state["torch_cuda_all"]
+    if not isinstance(cuda_values, (list, tuple)):
+        raise RuntimeError("Checkpoint torch_cuda_all RNG state must be a sequence")
+    cuda_states = [
+        _cpu_byte_rng_state(value, f"torch_cuda_all[{index}]")
+        for index, value in enumerate(cuda_values)
+    ]
+    if torch.cuda.is_available() and len(cuda_states) != torch.cuda.device_count():
+        raise RuntimeError("Checkpoint CUDA RNG device count differs from runtime")
     random.setstate(state["python"])
     np.random.set_state(state["numpy_legacy"])
-    torch.set_rng_state(state["torch_cpu"])
+    torch.set_rng_state(torch_cpu_state)
     if torch.cuda.is_available():
-        cuda_states = state["torch_cuda_all"]
-        if len(cuda_states) != torch.cuda.device_count():
-            raise RuntimeError("Checkpoint CUDA RNG device count differs from runtime")
         torch.cuda.set_rng_state_all(cuda_states)
     batcher.rng.bit_generator.state = copy.deepcopy(state["site_balanced_batcher_bit_generator"])
 
@@ -1266,7 +1292,11 @@ class RecoveryStore:
                 errors.append(f"invalid generation {checkpoint.name}")
                 continue
             try:
-                payload = torch.load(checkpoint, map_location=self.device, weights_only=False)
+                # Load the complete checkpoint on CPU. Model.load_state_dict copies live/best
+                # tensors to the model device, and Optimizer.load_state_dict casts optimizer
+                # tensors according to their parameter policy. Keeping serialized RNG bytes on
+                # CPU prevents map_location from turning CPU RNG state into a CUDA ByteTensor.
+                payload = torch.load(checkpoint, map_location="cpu", weights_only=False)
             except Exception as error:
                 errors.append(f"unreadable generation {checkpoint.name}: {error}")
                 continue

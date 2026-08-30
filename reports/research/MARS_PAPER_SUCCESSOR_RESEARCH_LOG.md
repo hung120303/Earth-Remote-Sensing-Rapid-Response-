@@ -6702,3 +6702,30 @@ started held access can never be silently repeated; a completed part is reused,
 and only a protocol/science-bound immutable finalization prefix is accepted.
 Opaque comparator hashing versus post-candidate semantic decoding is unchanged.
 No scientific setting changed, and no native smoke or held data was run.
+
+### 2026-08-30: first native checkpoint smoke fails before JSON
+
+The single authorized fitting-only checkpoint-roundtrip smoke at native commit
+`676fb75871d4aed2c4a3e94b559d4aede15f7c59` failed before JSON output or the
+restored next step. `RecoveryStore` used CUDA `map_location` for the complete
+payload, relocating the saved Torch CPU RNG state to a CUDA ByteTensor;
+`torch.set_rng_state` then raised `TypeError: RNG state must be a
+torch.ByteTensor`. This is an infrastructure failure, not scientific rejection.
+
+The native allocator warning reported that `expandable_segments` is unsupported
+on this platform. The configured variable was accepted but inert and did not
+cause the failure. No inner-validation outcome, held data or outcome, semantic
+comparator value, fold 0/1/2, external, protected, or official evidence was
+opened. No JSON output, persistent checkpoint, held part, candidate, endpoint,
+experiment report, gate, or promotion decision exists. Exact traceback and the
+complete absence attestation are in
+`reports/research/mars_sensor_ordinal_native_checkpoint_smoke_failure.json`.
+
+The narrow pre-smoke amendment loads recovery payloads on CPU, validates Torch
+RNG entries as one-dimensional `uint8` tensors, and restores CPU and all CUDA
+RNG states from byte-exact CPU tensors. CUDA continuation tests verify that
+model and AdamW states loaded from CPU remain usable and produce the exact next
+step. The scientific digest remains
+`25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`.
+After Codex review, exactly one corrected fitting-only native checkpoint smoke
+is authorized; no held run is authorized or executed.

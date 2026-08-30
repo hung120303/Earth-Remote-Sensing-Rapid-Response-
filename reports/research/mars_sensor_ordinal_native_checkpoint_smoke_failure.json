@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "classification": "infrastructure_failure_not_scientific_rejection",
+  "native_commit": "676fb75871d4aed2c4a3e94b559d4aede15f7c59",
+  "mode": "--checkpoint-roundtrip-smoke",
+  "scope": "fold-3 fitting data only",
+  "exit_code": 1,
+  "json_output_produced": false,
+  "failure": {
+    "cause": "RecoveryStore loaded the complete checkpoint with CUDA map_location, relocating rng_state.torch_cpu to a CUDA ByteTensor; restore_rng_state passed it to torch.set_rng_state, which requires a CPU torch.ByteTensor.",
+    "exception": "TypeError: RNG state must be a torch.ByteTensor",
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\tools\\train_mars_sensor_ordinal.py\", line 2127, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\tools\\train_mars_sensor_ordinal.py\", line 2118, in main\n    result = checkpoint_roundtrip_smoke(protocol, protocol_path, paths)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\tools\\train_mars_sensor_ordinal.py\", line 1620, in checkpoint_roundtrip_smoke\n    restore_rng_state(recovered[\"rng_state\"], recovered_batcher)\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\tools\\train_mars_sensor_ordinal.py\", line 1166, in restore_rng_state\n    torch.set_rng_state(state[\"torch_cpu\"])\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\.venv\\Lib\\site-packages\\torch\\random.py\", line 19, in set_rng_state\n    default_generator.set_state(new_state)\nTypeError: RNG state must be a torch.ByteTensor"
+  },
+  "allocator_warning": {
+    "exact": "C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\tools\\train_mars_sensor_ordinal.py:389: UserWarning: expandable_segments not supported on this platform (Triggered internally at C:\\actions-runner\\_work\\pytorch\\pytorch\\pytorch\\c10/cuda/CUDAAllocatorConfig.h:39.)",
+    "disposition": "PYTORCH_ALLOC_CONF=expandable_segments:True was accepted but expandable_segments is unsupported and inert on native Windows; it did not cause the failure."
+  },
+  "access_attestation": {
+    "inner_validation_outcome_opened": false,
+    "held_data_or_outcome_opened": false,
+    "semantic_comparator_accessed": false,
+    "folds_0_1_2_opened": false,
+    "external_evidence_opened": false,
+    "protected_evidence_opened": false,
+    "official_evidence_opened": false
+  },
+  "artifact_absence_attestation": {
+    "json_output": false,
+    "persistent_smoke_checkpoint": false,
+    "held_prediction_part": false,
+    "candidate_predictions": false,
+    "endpoint_states": false,
+    "experiment_json": false,
+    "experiment_markdown": false,
+    "gate_or_promotion_decision": false
+  },
+  "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca"
+}

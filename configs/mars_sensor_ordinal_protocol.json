@@ -5,7 +5,7 @@
   "implementation_base_commit": "f83584aecaeee0fa92fe1fe215a6a89fb6ce3f82",
   "trainer": {
     "path": "tools/train_mars_sensor_ordinal.py",
-    "sha256": "cacb6cf7c9c83eb861a5490ca951316a295437fdb25cde828dbb996f755ec288"
+    "sha256": "79aba7f7d07cf610652d956b2d1544cdee30034f482d4deb9ea8a36a84c57d87"
   },
   "model": {
     "path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py",
@@ -377,6 +377,24 @@
       "native_runtime_smoke_executed": false,
       "held_outcome_accessed": false
     },
+    "pre_smoke_serializer_amendment": {
+      "status": "frozen_after_first_native_checkpoint_smoke_failed_before_json_or_scientific_access",
+      "trigger_native_commit": "676fb75871d4aed2c4a3e94b559d4aede15f7c59",
+      "failure_receipt": "reports/research/mars_sensor_ordinal_native_checkpoint_smoke_failure.json",
+      "failure": "RecoveryStore CUDA map_location relocated the Torch CPU RNG ByteTensor to CUDA; torch.set_rng_state rejected it before JSON output or restored next-step execution.",
+      "serializer_contract": "RecoveryStore loads the complete payload on CPU; restore_rng_state validates one-dimensional uint8 Torch RNG entries and passes byte-exact CPU tensors to torch.set_rng_state and torch.cuda.set_rng_state_all; model and optimizer load_state_dict move live state according to model parameters and optimizer policy while best state remains CPU-safe.",
+      "allocator_warning": "expandable_segments is unsupported and inert on native Windows; the accepted PYTORCH_ALLOC_CONF value did not cause the failure.",
+      "corrected_smoke_authorization": {
+        "authorized_runs": 1,
+        "mode": "--checkpoint-roundtrip-smoke",
+        "scope": "fitting-only checkpoint round trip using fold-3 fitting evidence",
+        "held_run_authorized": false,
+        "forbidden": "inner-validation outcomes, held data or outcomes, semantic comparator access, folds 0/1/2, external, protected, and official evidence"
+      },
+      "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca",
+      "scientific_settings_unchanged": true,
+      "held_outcome_accessed": false
+    },
     "native_windows_recovery_smoke": {
       "flag": "--checkpoint-roundtrip-smoke",
       "scope": "fold-3 fitting evidence only; production dense batch size 16; one pixel update and exact checkpoint next-step round trip",
@@ -392,11 +410,17 @@
         "semantic comparator access",
         "folds 0/1/2",
         "external evidence",
+        "protected evidence",
         "official evidence"
       ],
-      "executed": false
+      "first_attempt": {
+        "native_commit": "676fb75871d4aed2c4a3e94b559d4aede15f7c59",
+        "result": "infrastructure failure before JSON output",
+        "scientific_rejection": false
+      },
+      "corrected_attempt_executed": false
     },
     "held_outcome_accessed_by_amendment": false
   },
-  "protocol_sha256_self_excluding_field": "f8ad511f2fbf3377deaf244f84efa7086226981ebd985d548ab5d0ab3241e2ab"
+  "protocol_sha256_self_excluding_field": "2ae62a88d28ea19a42d3468bddb6f7d2d0c10072b33f287348e4eea9eed01039"
 }
