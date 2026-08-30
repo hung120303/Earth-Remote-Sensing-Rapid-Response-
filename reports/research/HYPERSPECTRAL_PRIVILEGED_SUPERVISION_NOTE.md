@@ -159,3 +159,22 @@ contract and demonstrate at least 28 <=1-hour pairs from GHGSat alone. Until
 that separate gate passes and the exact target manifest is committed, no
 target imagery or model protocol may be opened. GHGSat nulls remain scene-head
 supervision only; they cannot supervise an all-zero dense mask.
+
+## 2026-08-29 GHGSat target-catalog acquisition-feasibility outcome
+
+The frozen auditor completed 352 logical queries after independent review and
+correction. It found 109 candidates and selected 79 source-sensor pairs: 47
+Sentinel-2 L1C and 32 Landsat C2 L1. These represent 66 distinct source
+observations, 44 sites, 44 independent 25 km components, and 78 target item
+IDs. All frozen gates pass. The ignored candidates and selected-pairs outputs
+have SHA-256 values
+`cabe8b0c7055de8844f203daa87657c694b197b89540120cb411dc3ecbf34cba` and
+`8c7942f0ac7bc07e250603e25ff23bb345e7bafbd86394e4ce0e42d41a33f6a8`,
+respectively. The compact report is
+`reports/acquisition/ghgsat_landfill_target_catalog.json`.
+
+This pass establishes only catalog-level acquisition feasibility under the
+frozen pairing contract. No assets, references, protected outcomes, or model
+artifacts were accessed. It does not establish raster-level observability,
+authorize the conditional privileged-supervision architecture or any model
+protocol, create dense all-negative supervision, or claim performance gain.

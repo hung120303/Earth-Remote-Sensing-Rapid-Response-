@@ -6587,3 +6587,24 @@ requires at least 28 distinct source observations, 20 sites, 20 novel 25 km
 components, and 20 distinct target item IDs; dual-sensor matches cannot inflate
 the source-observation count. Protocol SHA-256:
 `486e78bdb41b4aa9dfcb6bc6943eb80caf0cf8c7c5899bce1cdb6cc7a06967ff`.
+
+### 2026-08-29: frozen GHGSat target-catalog acquisition-feasibility gate passes
+
+The independently reviewed and corrected auditor completed 352 logical queries
+under the frozen contract. It found 109 candidates and selected 79
+source-sensor pairs: 47 Sentinel-2 L1C and 32 Landsat C2 L1. The selected set
+contains 66 distinct source observations, 44 sites, 44 independent 25 km
+components, and 78 target item IDs. All frozen gates pass.
+
+The ignored candidates SHA-256 is
+`cabe8b0c7055de8844f203daa87657c694b197b89540120cb411dc3ecbf34cba`,
+and the ignored selected-pairs SHA-256 is
+`8c7942f0ac7bc07e250603e25ff23bb345e7bafbd86394e4ce0e42d41a33f6a8`.
+The compact result is
+`reports/acquisition/ghgsat_landfill_target_catalog.json`.
+
+This is strictly an acquisition-feasibility result under the frozen catalog
+contract. No assets, references, protected outcomes, or model artifacts were
+accessed. The pass does not establish target-raster observability, convert a
+GHGSat site-level non-detection into a dense all-negative label, authorize a
+model protocol, or provide evidence of benchmark or model improvement.

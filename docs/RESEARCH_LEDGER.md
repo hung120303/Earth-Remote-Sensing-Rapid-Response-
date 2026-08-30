@@ -1322,3 +1322,25 @@ selection. The gate counts at least 28 distinct source observations, not merely
 and 20 target item IDs. Protocol:
 `configs/mars_ghgsat_target_catalog_protocol.json`, SHA-256
 `486e78bdb41b4aa9dfcb6bc6943eb80caf0cf8c7c5899bce1cdb6cc7a06967ff`.
+
+## 2026-08-29: frozen GHGSat target-catalog audit passes
+
+The independently reviewed and corrected auditor completed all 352 frozen
+logical queries. It returned 109 candidates and deterministically selected 79
+source-sensor pairs: 47 Sentinel-2 L1C and 32 Landsat C2 L1. Those selections
+represent 66 distinct source observations, 44 sites, 44 independent 25 km
+components, and 78 target item IDs. Every frozen acquisition-feasibility gate
+passes.
+
+The ignored candidate output has SHA-256
+`cabe8b0c7055de8844f203daa87657c694b197b89540120cb411dc3ecbf34cba`;
+the ignored selected-pairs output has SHA-256
+`8c7942f0ac7bc07e250603e25ff23bb345e7bafbd86394e4ce0e42d41a33f6a8`.
+The authoritative compact report is
+`reports/acquisition/ghgsat_landfill_target_catalog.json`.
+
+This result establishes only catalog-level acquisition feasibility under the
+frozen point, time, sensor, geometry, and deterministic-selection contract. No
+assets, references, protected outcomes, or model artifacts were accessed. It
+does not establish raster-level observability, create dense all-negative
+labels, authorize a model protocol, or claim benchmark or model improvement.
