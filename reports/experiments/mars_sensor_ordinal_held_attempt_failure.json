@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "status": "failed_infrastructure_before_held_result",
+  "decision": "infrastructure_failure_not_scientific_rejection",
+  "attempt": {
+    "branch": "experiment/sensor-aware-ordinal",
+    "git_commit": "c6f987e75f170b0c0ddfb607b746173c67b16642",
+    "command": "env PYTORCH_ALLOC_CONF=expandable_segments:True CUDA_MODULE_LOADING=LAZY ./.venv/bin/python tools/train_mars_sensor_ordinal.py --run-held-folds",
+    "exit_code": 1,
+    "runtime_seconds": 14199,
+    "retry_count": 0
+  },
+  "frozen_bindings": {
+    "protocol_path": "configs/mars_sensor_ordinal_protocol.json",
+    "protocol_sha256": "48a33297434e30b1af1dd690779aca12ca185b03529f9682358c4174b0b9f712",
+    "protocol_identity_self_excluding_field": "2d27cca136a7b726bd9f8fdd1e44dc5c7577287da78a0a9fbf192e67ffaf7461",
+    "trainer_path": "tools/train_mars_sensor_ordinal.py",
+    "trainer_sha256": "1fa8742823fe0df4546caef69faffe548fd6afdd7cda34d94e7cbd26c05799d7",
+    "model_path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py",
+    "model_sha256": "687b6e1f13f6a88afc802c55d35602d0ebd38a27c4a7eeea4ae3b758698a53bb",
+    "scientific_setting_changed": false
+  },
+  "recovered_progress": {
+    "source": "captured command output from the failed attempt; no rerun and no new evidence opened",
+    "scope": "held-fold-3 endpoint fitting; inner-validation checkpoint-selection metrics only",
+    "endpoint_completed": false,
+    "provisional_selected_epoch_at_failure": 6,
+    "epochs": [
+      {
+        "epoch": 1,
+        "pixel_lr": 0.00015,
+        "scene_lr": 0.0,
+        "pixel_loss_mean": 0.45899770324428874,
+        "scene_loss_mean": null,
+        "scene_ap": 0.11476436568648482,
+        "dense_iou": 0.003690443201858618,
+        "scene_bce": 0.658398343460038,
+        "selected_so_far": 1
+      },
+      {
+        "epoch": 2,
+        "pixel_lr": 0.0003,
+        "scene_lr": 0.0,
+        "pixel_loss_mean": 0.3382612255960703,
+        "scene_loss_mean": null,
+        "scene_ap": 0.09575871743884792,
+        "dense_iou": 0.010107972453627477,
+        "scene_bce": 0.6578269538392689,
+        "selected_so_far": 1
+      },
+      {
+        "epoch": 3,
+        "pixel_lr": 0.0002986258946539259,
+        "scene_lr": 0.0,
+        "pixel_loss_mean": 0.2528295705964168,
+        "scene_loss_mean": null,
+        "scene_ap": 0.10324182578142065,
+        "dense_iou": 0.006144692209308792,
+        "scene_bce": 0.6536987264717162,
+        "selected_so_far": 1
+      },
+      {
+        "epoch": 4,
+        "pixel_lr": 0.00029453155143795715,
+        "scene_lr": 0.0,
+        "pixel_loss_mean": 0.20580818162610134,
+        "scene_loss_mean": null,
+        "scene_ap": 0.08588868533716491,
+        "dense_iou": 0.024582380272295975,
+        "scene_bce": 0.6512545488450573,
+        "selected_so_far": 1
+      },
+      {
+        "epoch": 5,
+        "pixel_lr": 0.00028780031937286,
+        "scene_lr": 0.001,
+        "pixel_loss_mean": 0.17900266113380592,
+        "scene_loss_mean": 0.6936723264058431,
+        "scene_ap": 0.11298451866995828,
+        "dense_iou": 0.035182287900500916,
+        "scene_bce": 0.6884106071061178,
+        "selected_so_far": 1
+      },
+      {
+        "epoch": 6,
+        "pixel_lr": 0.00027856922693220946,
+        "scene_lr": 0.000993862586531225,
+        "pixel_loss_mean": 0.16065274845808744,
+        "scene_loss_mean": 0.6883197816212973,
+        "scene_ap": 0.2336575648263855,
+        "dense_iou": 0.05133088115800051,
+        "scene_bce": 0.6293895097577827,
+        "selected_so_far": 6
+      },
+      {
+        "epoch": 7,
+        "pixel_lr": 0.00026702619253782484,
+        "scene_lr": 0.0009756177587652855,
+        "pixel_loss_mean": 0.14157763275007407,
+        "scene_loss_mean": 0.6573300274213155,
+        "scene_ap": 0.16443518120048176,
+        "dense_iou": 0.026712314065551954,
+        "scene_bce": 0.5906817182042663,
+        "selected_so_far": 6
+      },
+      {
+        "epoch": 8,
+        "pixel_lr": 0.0002534061990826135,
+        "scene_lr": 0.0009457631880429201,
+        "pixel_loss_mean": 0.1325830954996248,
+        "scene_loss_mean": 0.6356253178914388,
+        "scene_ap": 0.14543002033586053,
+        "dense_iou": 0.03914186156390267,
+        "scene_bce": 0.6511020950389346,
+        "selected_so_far": 6
+      },
+      {
+        "epoch": 9,
+        "pixel_lr": 0.00023798651035650565,
+        "scene_lr": 0.0009051132292283772,
+        "pixel_loss_mean": 0.11804489844168226,
+        "scene_loss_mean": 0.5559527074297269,
+        "scene_ap": 0.22537783357153893,
+        "dense_iou": 0.13991954783848465,
+        "scene_bce": 0.5517183397322685,
+        "selected_so_far": 6
+      }
+    ]
+  },
+  "traceback": [
+    "Traceback (most recent call last):",
+    "  File \"/home/joshu/ersrr-ordinal/tools/train_mars_sensor_ordinal.py\", line 1061, in <module>",
+    "    raise SystemExit(main())",
+    "                     ^^^^^^",
+    "  File \"/home/joshu/ersrr-ordinal/tools/train_mars_sensor_ordinal.py\", line 1055, in main",
+    "    report = run_full(protocol, protocol_path, paths)",
+    "             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/home/joshu/ersrr-ordinal/tools/train_mars_sensor_ordinal.py\", line 985, in run_full",
+    "    metadata, state, cutpoints = train_endpoint(protocol, paths, fit_records, held_fold, device)",
+    "                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/home/joshu/ersrr-ordinal/tools/train_mars_sensor_ordinal.py\", line 564, in train_endpoint",
+    "    pixel_losses = [pixel_step(model, batcher.dense_batch(device, int(spec[\"crop_size\"])), pixel_optimizer)[\"pixel_loss\"] for _ in range(int(spec[\"dense_steps_per_epoch\"]))]",
+    "                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/home/joshu/ersrr-ordinal/tools/train_mars_sensor_ordinal.py\", line 564, in <listcomp>",
+    "    pixel_losses = [pixel_step(model, batcher.dense_batch(device, int(spec[\"crop_size\"])), pixel_optimizer)[\"pixel_loss\"] for _ in range(int(spec[\"dense_steps_per_epoch\"]))]",
+    "                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"/home/joshu/ersrr-ordinal/tools/train_mars_sensor_ordinal.py\", line 418, in pixel_step",
+    "    if not torch.isfinite(gradient):",
+    "torch.AcceleratorError: CUDA error: unknown error",
+    "Search for `cudaErrorUnknown' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.",
+    "CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.",
+    "For debugging consider passing CUDA_LAUNCH_BLOCKING=1",
+    "Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions."
+  ],
+  "infrastructure_diagnostics": {
+    "wsl_kernel": [
+      "dxgvmb_send_create_allocation: send_create_allocation failed ffffffb5",
+      "dxgkio_create_allocation: Ioctl failed: -75"
+    ],
+    "windows_system_log_thermal_event_present": false,
+    "windows_system_log_whea_event_present": false,
+    "gpu_temperature_normal": true,
+    "interpretation": "Repeated WSL DXG allocation-bridge failures and cudaErrorUnknown support an infrastructure/runtime failure; available diagnostics do not support thermal or WHEA hardware failure."
+  },
+  "access_attestation": {
+    "fold_3_inner_validation_progress_opened": true,
+    "fold_3_held_outcome_opened": false,
+    "fold_4_held_outcome_opened": false,
+    "candidate_result_opened": false,
+    "comparator_opened": false,
+    "promotion_gates_evaluated": false,
+    "folds_0_1_2_opened": false,
+    "protected_outcome_opened": false,
+    "external_outcome_opened": false,
+    "official_outcome_opened": false,
+    "new_evidence_opened_for_receipt": false
+  },
+  "artifact_absence": {
+    "candidate_predictions": ".research/mars_sensor_ordinal/candidate_folds34_predictions.npz",
+    "candidate_predictions_present": false,
+    "comparator_artifact_created_or_opened": false,
+    "gate_artifact_created": false,
+    "endpoint_states": ".research/mars_sensor_ordinal/endpoint_states.pt",
+    "endpoint_states_present": false,
+    "compact_result_json": "reports/experiments/mars_sensor_ordinal_folds34.json",
+    "compact_result_json_present": false,
+    "compact_result_markdown": "reports/experiments/MARS_SENSOR_ORDINAL_FOLDS34.md",
+    "compact_result_markdown_present": false,
+    "protected_artifact_created_or_opened": false,
+    "official_artifact_created_or_opened": false,
+    "bulk_output_present": false
+  },
+  "scientific_interpretation": "Epochs 1-9 are incomplete endpoint inner-validation progress only. They are not held-fold candidate results, cannot be compared with the frozen comparator, do not evaluate any promotion gate, and do not constitute scientific acceptance or rejection."
+}

@@ -6652,3 +6652,24 @@ missing-negative source; it cannot be pooled with prior failed sources. The
 conditional privileged-supervision branch remains unauthorized, and no model
 or protected outcome was run. Compact result:
 `reports/acquisition/ghgsat_landfill_windowed_observability.json`.
+
+### 2026-08-30: sensor-aware ordinal held attempt fails in infrastructure
+
+The one authorized unchanged attempt at commit
+`c6f987e75f170b0c0ddfb607b746173c67b16642` ran for 14,199 seconds and then
+raised `torch.AcceleratorError: CUDA error: unknown error` during fold-3
+endpoint fitting after epoch 9. Captured inner-validation progress for epochs
+1-9 is preserved in the compact failure receipt. The endpoint did not complete;
+its provisional in-memory checkpoint rank selected epoch 6, but no endpoint
+state or candidate prediction was written.
+
+Independent review confirmed that no candidate result, comparator access, gate
+evaluation, endpoint-state artifact, compact result, protected artifact, or
+official artifact exists. WSL kernel diagnostics repeatedly reported DXG
+allocation-bridge failures (`ffffffb5`, `Ioctl -75`); Windows System logs
+contained no thermal or WHEA event, and GPU temperatures were normal. The
+attempt is therefore recorded as **infrastructure failure, not scientific
+rejection**. The frozen trainer, model, protocol, thresholds, comparators, and
+all seven gates remain unchanged. No retry was run and bulk output remains
+absent. Compact receipt:
+`reports/experiments/mars_sensor_ordinal_held_attempt_failure.json`.
