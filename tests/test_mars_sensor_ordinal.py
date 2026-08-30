@@ -25,8 +25,10 @@ from train_mars_sensor_ordinal import (
     metric_gates,
     model_input,
     ordinal_levels,
+    pixel_step,
     prepare_endpoint_data,
     protocol_identity,
+    scene_step,
     scene_learning_rate,
     validate_requested_folds,
     verify_runtime_environment,
@@ -60,6 +62,35 @@ def test_invalid_pixels_have_zero_dense_and_ordinal_weight() -> None:
     assert output["binary_logit"].grad[0, 0, 0, 1] == 0
     assert torch.count_nonzero(output["ordinal_logits"].grad[..., 1]) == 0
     assert torch.isfinite(losses["loss"])
+
+
+def test_training_steps_force_bounded_nonforeach_gradient_clipping(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    model = MarsSensorOrdinalUNet()
+    inputs = torch.randn(2, 14, 16, 16)
+    batch = {
+        "inputs": inputs,
+        "sensor_index": torch.tensor([0, 1]),
+        "observable": torch.ones(2, 1, 16, 16, dtype=torch.bool),
+        "plume": torch.zeros(2, 16, 16),
+        "ordinal_level": torch.zeros(2, 16, 16, dtype=torch.long),
+        "ordinal_support": torch.ones(2, 16, 16, dtype=torch.bool),
+        "presence": torch.tensor([0.0, 1.0]),
+    }
+    pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=3e-4)
+    scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=1e-3)
+    calls: list[tuple[float, bool | None]] = []
+    original = torch.nn.utils.clip_grad_norm_
+
+    def audited(parameters, max_norm, *args, **kwargs):
+        calls.append((float(max_norm), kwargs.get("foreach")))
+        return original(parameters, max_norm, *args, **kwargs)
+
+    monkeypatch.setattr(torch.nn.utils, "clip_grad_norm_", audited)
+    assert np.isfinite(pixel_step(model, batch, pixel_optimizer)["pixel_gradient_norm"])
+    assert np.isfinite(scene_step(model, batch, scene_optimizer)["scene_gradient_norm"])
+    assert calls == [(2.0, False), (2.0, False)]
 
 
 def test_exact_14_channels_and_independent_sensor_stems() -> None:

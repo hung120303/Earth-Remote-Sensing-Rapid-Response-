@@ -479,7 +479,10 @@ def pixel_step(model: MarsSensorOrdinalUNet, batch: dict[str, Any], optimizer: t
     if not torch.isfinite(losses["loss"]):
         raise FloatingPointError("Non-finite pixel loss")
     losses["loss"].backward()
-    gradient = torch.nn.utils.clip_grad_norm_(model.pixel_parameters(), 2.0)
+    # The foreach CUDA path may request an additional TensorList workspace at
+    # peak backward memory. Keep the frozen global L2 clip while forcing the
+    # scalar implementation, whose temporary allocation is bounded per tensor.
+    gradient = torch.nn.utils.clip_grad_norm_(model.pixel_parameters(), 2.0, foreach=False)
     if not torch.isfinite(gradient):
         raise FloatingPointError("Non-finite pixel gradient")
     optimizer.step()
@@ -500,7 +503,7 @@ def scene_step(model: MarsSensorOrdinalUNet, batch: dict[str, Any], optimizer: t
                and parameter.grad is not None and torch.count_nonzero(parameter.grad).item()]
     if leaking:
         raise RuntimeError(f"Scene gradient leaked into pixel model: {leaking[:3]}")
-    gradient = torch.nn.utils.clip_grad_norm_(model.scene_parameters(), 2.0)
+    gradient = torch.nn.utils.clip_grad_norm_(model.scene_parameters(), 2.0, foreach=False)
     if not torch.isfinite(gradient):
         raise FloatingPointError("Non-finite scene gradient")
     optimizer.step()

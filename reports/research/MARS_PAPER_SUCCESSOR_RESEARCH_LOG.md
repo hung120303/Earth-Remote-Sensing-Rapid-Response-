@@ -6729,3 +6729,22 @@ step. The scientific digest remains
 `25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`.
 After Codex review, exactly one corrected fitting-only native checkpoint smoke
 is authorized; no held run is authorized or executed.
+
+### 2026-08-30: native foreach clipping allocation is bounded
+
+The wrapper-corrected fitting-only smoke at clean native commit `26ef0523` used
+native `cmd.exe`, separate output streams, and the actual Python exit code. The
+exact batch-16 pixel backward completed, but PyTorch's implicit CUDA foreach
+gradient-norm path requested additional TensorList workspace at peak backward
+memory and failed with `cudaErrorMemoryAllocation` before the first optimizer
+step or JSON output. This is an infrastructure failure, not scientific
+rejection; the exact output and absence attestations are in
+`reports/research/mars_sensor_ordinal_native_bounded_allocator_failure.json`.
+
+The pre-smoke amendment forces `foreach=False` for both pixel and scene global
+L2 gradient clipping. The frozen max norm remains 2.0; only the allocator path
+changes from peak TensorList workspace to per-tensor bounded temporaries. Model,
+losses, optimizer, batch/crop sizes, precision, seed, schedule, data, folds,
+comparators, thresholds, bootstrap, all seven gates, and scientific digest are
+unchanged. No CUDA smoke or held data was run, and no further execution is
+authorized by this amendment.

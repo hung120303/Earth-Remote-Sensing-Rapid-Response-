@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "native_checkpoint_roundtrip_smoke_allocator_failure",
+  "native_commit": "26ef0523be3ff5dedca42c7298250e601e7ab797",
+  "protocol_sha256": "5dca103e374b8d07d221ba39f14e0df08ced1f3bb40d5e629752e67d8711b97c",
+  "protocol_identity": "eb74df5560aa987e5fdd972701e236757a482fac9ec0aed5662997c6098d1ad1",
+  "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca",
+  "trainer_sha256": "79aba7f7d07cf610652d956b2d1544cdee30034f482d4deb9ea8a36a84c57d87",
+  "command": ".venv\\Scripts\\python.exe tools\\train_mars_sensor_ordinal.py --checkpoint-roundtrip-smoke",
+  "host_shell": "native Windows cmd.exe",
+  "environment": {
+    "PYTORCH_ALLOC_CONF": "expandable_segments:True",
+    "CUDA_MODULE_LOADING": "LAZY"
+  },
+  "actual_python_exit_code": 1,
+  "stdout": "",
+  "stderr": "C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\tools\\train_mars_sensor_ordinal.py:389: UserWarning: expandable_segments not supported on this platform (Triggered internally at C:\\actions-runner\\_work\\pytorch\\pytorch\\pytorch\\c10/cuda/CUDAAllocatorConfig.h:39.)\n  tensor = torch.as_tensor(np.stack([row[key] for row in padded]), dtype=dtype, device=device)\nTraceback (most recent call last):\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\tools\\train_mars_sensor_ordinal.py\", line 2157, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\tools\\train_mars_sensor_ordinal.py\", line 2148, in main\n    result = checkpoint_roundtrip_smoke(protocol, protocol_path, paths)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\tools\\train_mars_sensor_ordinal.py\", line 1576, in checkpoint_roundtrip_smoke\n    first_result = pixel_step(model, first_batch, optimizer)\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\tools\\train_mars_sensor_ordinal.py\", line 482, in pixel_step\n    gradient = torch.nn.utils.clip_grad_norm_(model.pixel_parameters(), 2.0)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\.venv\\Lib\\site-packages\\torch\\nn\\utils\\clip_grad.py\", line 42, in _no_grad_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\.venv\\Lib\\site-packages\\torch\\nn\\utils\\clip_grad.py\", line 231, in clip_grad_norm_\n    total_norm = _get_total_norm(grads, norm_type, error_if_nonfinite, foreach)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\.venv\\Lib\\site-packages\\torch\\nn\\utils\\clip_grad.py\", line 42, in _no_grad_wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\joshu\\PROJECTS\\REMOTE-SENSING\\ersrr-ordinal-win\\.venv\\Lib\\site-packages\\torch\\nn\\utils\\clip_grad.py\", line 96, in _get_total_norm\n    norms.extend(torch._foreach_norm(device_tensors, norm_type))\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.AcceleratorError: CUDA error: out of memory\nSearch for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n",
+  "failure_boundary": "exact dense batch-16 pixel backward completed; implicit foreach gradient-norm allocation failed before the first optimizer step and before JSON output",
+  "persistent_smoke_artifact_exists": false,
+  "scientific_rejection": false,
+  "access": {
+    "inner_validation_outcome_opened": false,
+    "held_data_or_outcome_opened": false,
+    "semantic_comparator_accessed": false,
+    "folds_0_1_2_opened": false,
+    "external_evidence_opened": false,
+    "protected_evidence_opened": false,
+    "official_evidence_opened": false
+  }
+}
