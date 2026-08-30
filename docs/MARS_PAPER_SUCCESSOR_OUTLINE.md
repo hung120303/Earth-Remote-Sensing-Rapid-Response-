@@ -152,6 +152,14 @@ Only if every primary gate passes may the abstract say that ERSRR outperformed r
 
 ## Limitations and ethics
 
+The acquisition/data-gate negative-results table must include the frozen
+GHGSat windowed-observability audit. It attempted 76 exact pairs; 47 Sentinel-2
+pairs had no exact public Earth Search mirror and all 29 resolved Landsat pairs
+failed local raster processing because the exact Level-1 asset path redirected
+to authentication. Zero observable pairs, observations, sites, components,
+crops, or dense/zero masks remained. This retires GHGSat under the frozen
+protocol and is not evidence about model performance.
+
 - Public fitting labels differ from the unavailable private checkpoint-training snapshot.
 - Five official scenes lack current rasters and four positive scenes lack current pixel truth.
 - Site-blocking reduces, but cannot eliminate, all forms of geographic or operator dependence.

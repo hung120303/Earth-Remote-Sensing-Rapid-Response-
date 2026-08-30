@@ -3,6 +3,24 @@
 Prepared 2026-08-02 for continuation from commit `f5165411` on branch
 `local/research-audit-and-existing-work`.
 
+## 2026-08-29 current-state addendum
+
+The later GHGSat independent-negative path is closed. Its frozen windowed audit
+attempted 76 pairs: all 47 Sentinel-2 pairs failed exact public-mirror
+resolution and all 29 resolved Landsat pairs failed local raster processing.
+There are zero observable pairs, source observations, sites, 25 km components,
+crops, or dense/zero masks. Codex verified that the first strict Sentinel-2
++/-1-second query returned no Earth Search feature and that the first exact
+Landsat Level-1 asset redirected with HTTP 302 to `ers.cr.usgs.gov`
+authentication, producing a non-TIFF response for GDAL.
+
+This **FAIL** supersedes the handoff's earlier recommendation to continue
+independent-negative acquisition through GHGSat. Do not amend or retry the
+frozen source, pool it with failed sources, run the conditional
+privileged-supervision model, or open protected outcomes. The next architecture
+must receive Codex review before implementation and must use only still-valid
+development evidence under a separately frozen protocol.
+
 ## Mission
 
 Develop and validate a publication-grade ERSRR successor that unambiguously

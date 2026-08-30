@@ -144,11 +144,13 @@ for operational monitoring.
   official-test/prior-pair exclusions leave only 15/20 required physical 25 km components. The
   target catalog was never queried. State the label as no confidently detectable expert-reviewed
   plume, not physical zero methane.
-- The NASA ORNL header bridge for the untouched COVID/Permian train campaigns is preregistered and
-  pending, not evidence. Its geometric agreement gate must pass on >=100 CACH4 anchors before any
-  COVID/Permian center is accepted; CACH4 is excluded from the new >=20-component gate. Report the
-  bridge only after its compact receipt is committed, and keep Earthdata credentials, cookies, and
-  signed URLs outside the release bundle.
+- The NASA ORNL header bridge passed its geometric check but failed the frozen geographic gate:
+  3,672 eligible rows formed only 13/20 required independent 25 km components. It is a data-gate
+  negative result and cannot be pooled with other failed sources.
+- The later GHGSat windowed-observability audit is also a data-gate negative result. All 76 frozen
+  pairs failed: 47 Sentinel-2 pairs lacked an exact public mirror and all 29 resolved Landsat pairs
+  failed local raster processing at an authentication redirect. Zero observable observations,
+  sites, components, crops, or masks remained. No model or protected outcome was opened.
 
 ## V5.2 preregistration requirements
 

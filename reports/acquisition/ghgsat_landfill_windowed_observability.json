@@ -1,0 +1,67 @@
+{
+  "asset_urls_retained_in_compact_report": false,
+  "claim_boundary": "A PASS establishes a geographically novel, locally observable, scene-head-only reviewed-negative acquisition cohort. It does not establish physical-zero methane, dense no-plume truth, model complementarity, calibration, generalization, or superiority over MARS-S2L.",
+  "crop_retained": false,
+  "counts": {
+    "distinct_components": 0,
+    "distinct_sites": 0,
+    "distinct_source_observations": 0,
+    "source_sensor_pairs": 0
+  },
+  "decision": "FAIL",
+  "diagnostics": {
+    "landsat_first_exact_asset": "HTTP 302 redirected to ers.cr.usgs.gov authentication; GDAL therefore received a non-TIFF response.",
+    "sentinel_first_strict_replay": "The frozen +/-1-second Earth Search mirror query returned an empty feature list, so no exact mirror was available."
+  },
+  "dense_mask_created": false,
+  "frozen_pairs_attempted": 76,
+  "gates": {
+    "all_retained_assets_products_and_crops_valid": {
+      "observed": true,
+      "pass": true,
+      "required": true
+    },
+    "minimum_distinct_locally_observable_source_observations": {
+      "observed": 0,
+      "pass": false,
+      "required": 28
+    },
+    "minimum_distinct_sites": {
+      "observed": 0,
+      "pass": false,
+      "required": 20
+    },
+    "minimum_locally_observable_source_sensor_pairs": {
+      "observed": 0,
+      "pass": false,
+      "required": 28
+    },
+    "minimum_novel_25km_components": {
+      "observed": 0,
+      "pass": false,
+      "required": 20
+    },
+    "no_dense_supervision_created": {
+      "observed": true,
+      "pass": true,
+      "required": true
+    }
+  },
+  "ignored_manifests": {
+    "assets": {
+      "path": ".research/ghgsat_landfill_null/windowed_observability/resolved_assets.jsonl",
+      "sha256": "d9e09be98c9cb208aab7d9b272946367dda4dbdd06e89b303bfb46b92cd3980d"
+    },
+    "observable": {
+      "path": ".research/ghgsat_landfill_null/windowed_observability/observable_scene_head_negatives.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "pair_outcomes": {
+    "asset_resolution_failed": 47,
+    "below_observability_gate": 0,
+    "local_processing_failed": 29,
+    "observable": 0
+  },
+  "schema_version": 1
+}

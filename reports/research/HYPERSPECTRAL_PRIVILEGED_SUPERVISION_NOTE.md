@@ -200,3 +200,18 @@ No asset URL, item detail, raster, protected outcome, or model artifact was
 accessed. This result is strictly catalog feasibility; it does not establish
 local observability, dense no-plume truth, training value, or benchmark
 improvement.
+
+## 2026-08-29 GHGSat windowed-observability outcome
+
+The final frozen source gate fails. Of 76 exact pairs attempted, all 47
+Sentinel-2 pairs failed exact public-mirror resolution and all 29 resolved
+Landsat pairs failed local raster processing. The retained observable cohort is
+empty: zero pairs, observations, sites, or 25 km components, with no crop and no
+dense/zero mask. Codex verified an empty feature list in the first frozen
+Sentinel-2 +/-1-second mirror replay and an HTTP 302 authentication redirect
+yielding a non-TIFF response for the first exact Landsat asset.
+
+GHGSat is retired under the unchanged protocol. The 300-negative
+privileged-supervision branch remains unauthorized; this failure cannot be
+rescued by changing products, references, crop or observability thresholds, or
+pooling any previously failed source. No model or protected outcome was run.

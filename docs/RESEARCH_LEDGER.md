@@ -1366,3 +1366,27 @@ No asset URL, item detail, raster, protected outcome, or model artifact was
 accessed. This result is strictly catalog feasibility; it does not establish
 local observability, dense no-plume truth, training value, or benchmark
 improvement.
+
+## 2026-08-29: frozen GHGSat windowed-observability audit fails
+
+The frozen audit attempted all 76 selected target/reference pairs. All 47
+Sentinel-2 pairs failed exact asset resolution, and all 29 resolved Landsat
+pairs failed local raster processing. The resulting cohort contains zero
+observable pairs, source observations, sites, or independent 25 km components;
+no crop and no dense or zero mask was retained. The authoritative decision is
+**FAIL**.
+
+Codex verified the first failure in each sensor path. The strict Sentinel-2
+replay's frozen +/-1-second Earth Search mirror query returned an empty feature
+list, producing `No exact Earth Search mirror`. The first exact Landsat C2 L1
+Tier-1 asset returned HTTP 302 to `ers.cr.usgs.gov` authentication, so GDAL
+received a non-TIFF response. These are access/availability diagnostics, not a
+basis to alter the frozen mirror, product level, cohort, crop, or 0.8 local
+observability thresholds.
+
+GHGSat is therefore retired as the missing-negative training source under this
+protocol. Its rows cannot be pooled with any failed source, and no model,
+protected fold, official outcome, dense supervision, or rescue acquisition is
+authorized. Compact results:
+`reports/acquisition/ghgsat_landfill_windowed_observability.json` and
+`reports/acquisition/GHGSAT_LANDFILL_WINDOWED_OBSERVABILITY.md`.
