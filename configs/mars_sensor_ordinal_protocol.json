@@ -3,7 +3,7 @@
   "status": "frozen_before_held_outcomes",
   "scope": "Development-only fold-3/fold-4 sensor-aware ordinal cross-fit; no folds 0/1/2, official paper test, external held outcomes, GHGSat, or failed sources.",
   "protocol_sha256_self_excluding_field": "see_git_commit",
-  "trainer": {"path": "tools/train_mars_sensor_ordinal.py", "sha256": "933c968ff0d4d7b51cd4cf013bd5064d3a0ba26135944353eccbd6e57262df4a"},
+  "trainer": {"path": "tools/train_mars_sensor_ordinal.py", "sha256": "96e039d8bf900baff8ccb807357dd8fa76716de782715284c16273afe6a1aef1"},
   "model": {"path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py", "sha256": "687b6e1f13f6a88afc802c55d35602d0ebd38a27c4a7eeea4ae3b758698a53bb"},
   "code_dependencies": [
     {"path": "EarthRemoteSensingRapidResponse/mars_s2l_adapter.py", "sha256": "6c82aecd58918567b34f422e4c6f4e817e5578a6bc24ea284791f3d44b63fd36"},
@@ -62,6 +62,13 @@
   "bootstrap": {"replicates": 10000, "ap_seed": 26082918, "dense_seed": 26082919, "unit": "canonical 25 km group", "stratified_within_outer_fold": true, "lower_percentile": 2.5},
   "gates": {"pooled_ap_delta_minimum": 0.003, "each_fold_ap_delta_strictly_positive": true, "each_sensor_ap_delta_strictly_positive": true, "matched_fpr_recall_delta_minimum": 0.0, "ap_bootstrap_lower_strictly_positive": true, "dense_iou_delta_strictly_positive": true, "dense_bootstrap_lower_strictly_positive": true},
   "smoke": {"status": "passed_after_freeze_before_held_outcomes", "scope": "fold-3 fitting rows only; no fold-4 outcome or metric access", "rows": 2, "input_shape": [2, 14, 256, 256], "pixel_loss": 0.9749386310577393, "scene_loss": 0.6943879723548889, "pixel_gradient_norm": 6.556541919708252, "scene_gradient_norm": 0.038930125534534454, "peak_cuda_bytes": 582658560, "finite": true},
+  "preheld_execution_amendment": {
+    "status": "frozen_before_any_inner_epoch_or_held_outcome",
+    "trigger": "first execution aborted while constructing the first fitting-fold dense batch because one sampled scene had no source-support crop meeting the frozen 0.70 gate",
+    "change": "resample without replacement from another same-label fitting site; never relax the 0.70 gate and never reuse a site within a batch",
+    "held_outcome_accessed": false,
+    "one_real_batch_check": {"rows": 16, "shape": [16, 14, 256, 256], "finite": true}
+  },
   "outputs": {
     "candidate_predictions": ".research/mars_sensor_ordinal/candidate_folds34_predictions.npz",
     "endpoint_states": ".research/mars_sensor_ordinal/endpoint_states.pt",

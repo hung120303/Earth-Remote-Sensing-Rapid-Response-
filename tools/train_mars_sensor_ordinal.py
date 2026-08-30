@@ -322,7 +322,11 @@ class SiteBalancedBatcher:
         selected: list[dict[str, Any]] = []
         for label, count in ((1, positive), (0, negative)):
             groups = sorted(self.by_label[label])
-            chosen = self.rng.choice(groups, size=count, replace=len(groups) < count)
+            if len(groups) < count:
+                raise ValueError(
+                    f"Need {count} distinct label-{label} sites, found {len(groups)}"
+                )
+            chosen = self.rng.choice(groups, size=count, replace=False)
             for group in chosen:
                 options = self.by_label[label][str(group)]
                 selected.append(options[int(self.rng.integers(len(options)))])
@@ -330,9 +334,41 @@ class SiteBalancedBatcher:
         return [selected[int(index)] for index in order]
 
     def dense_batch(self, device: torch.device, size: int = 256) -> dict[str, Any]:
-        rows = self.rows(8, 8)
-        samples = [_load_training_sample(self.metadata_root, row) for row in rows]
-        return collate([make_crop(sample, self.cutpoints, size=size, rng=self.rng, augment=True) for sample in samples], device)
+        crops: list[dict[str, Any]] = []
+        for label, count in ((1, 8), (0, 8)):
+            groups = np.asarray(sorted(self.by_label[label]))
+            accepted = 0
+            for group_index in self.rng.permutation(len(groups)):
+                group = str(groups[int(group_index)])
+                options = self.by_label[label][group]
+                for option_index in self.rng.permutation(len(options)):
+                    sample = _load_training_sample(
+                        self.metadata_root, options[int(option_index)]
+                    )
+                    try:
+                        crop = make_crop(
+                            sample,
+                            self.cutpoints,
+                            size=size,
+                            rng=self.rng,
+                            augment=True,
+                        )
+                    except ValueError as error:
+                        if "source valid fraction" not in str(error):
+                            raise
+                        continue
+                    crops.append(crop)
+                    accepted += 1
+                    break
+                if accepted == count:
+                    break
+            if accepted != count:
+                raise ValueError(
+                    f"Could not form {count} distinct valid label-{label} site crops; "
+                    f"formed {accepted}"
+                )
+        order = self.rng.permutation(len(crops))
+        return collate([crops[int(index)] for index in order], device)
 
     def scene_batch(self, device: torch.device) -> dict[str, Any]:
         rows = self.rows(2, 2)
