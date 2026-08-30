@@ -413,14 +413,42 @@
         "protected evidence",
         "official evidence"
       ],
-      "first_attempt": {
-        "native_commit": "676fb75871d4aed2c4a3e94b559d4aede15f7c59",
-        "result": "infrastructure failure before JSON output",
-        "scientific_rejection": false
+      "execution_ledger": {
+        "first_attempt": {
+          "native_commit": "676fb75871d4aed2c4a3e94b559d4aede15f7c59",
+          "result": "infrastructure failure before JSON output",
+          "scientific_rejection": false
+        },
+        "corrected_attempt": {
+          "native_commit": "a8dce79cbc6a773dcd007944b175ada9a76c5a98",
+          "result": "host-wrapper infrastructure failure only",
+          "failure_receipt": "reports/research/mars_sensor_ordinal_corrected_smoke_host_wrapper_failure.json",
+          "wrapper_exit_code": 1,
+          "actual_python_exit_code_observed": false,
+          "json_output_produced": false,
+          "persistent_smoke_artifact_exists": false,
+          "inner_validation_outcome_opened": false,
+          "held_data_or_outcome_opened": false,
+          "semantic_comparator_accessed": false,
+          "folds_0_1_2_opened": false,
+          "external_evidence_opened": false,
+          "protected_evidence_opened": false,
+          "official_evidence_opened": false,
+          "scientific_rejection": false
+        },
+        "wrapper_corrected_retry_authorized_runs": 1,
+        "held_run_authorized": false
       },
-      "corrected_attempt_executed": false
+      "wrapper": {
+        "failure": "Windows PowerShell with ErrorActionPreference Stop promoted the expected native stderr warning to terminating NativeCommandError before separate-stream capture or Python exit-code observation.",
+        "authorized_retry_host": "native cmd.exe, or Windows PowerShell without ErrorActionPreference Stop",
+        "stdout_stderr_capture": "redirect stdout and stderr separately",
+        "success_criterion": "actual Python process exit code is zero",
+        "exact_python_command_unchanged": ".venv\\Scripts\\python.exe tools\\train_mars_sensor_ordinal.py --checkpoint-roundtrip-smoke",
+        "environment_trainer_model_data_batch_seed_and_science_unchanged": true
+      }
     },
     "held_outcome_accessed_by_amendment": false
   },
-  "protocol_sha256_self_excluding_field": "2ae62a88d28ea19a42d3468bddb6f7d2d0c10072b33f287348e4eea9eed01039"
+  "protocol_sha256_self_excluding_field": "eb74df5560aa987e5fdd972701e236757a482fac9ec0aed5662997c6098d1ad1"
 }
