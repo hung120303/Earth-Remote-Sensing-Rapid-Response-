@@ -86,3 +86,14 @@ The post-failure host diagnostic recorded 124,745,715,712 committed bytes of a 1
 No held prediction, semantic comparator decode, fold 0/1/2 access, protected/external/official evidence, candidate, held part or receipt, endpoint, gate, compact result, or final result exists. The durable pointer `.research/mars_sensor_ordinal/recovery/held-3/latest.json` binds completed epoch 1 and next epoch 2 to `generation-0001-1788130213322999400-439e6a7e199f494fa72514bbeeeedaf9.pt`, checkpoint SHA-256 `7d26f700dcb5e9f73eb03fade39773ae88949a06ec33151a0236d9a805673519`, identity `db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b`.
 
 The first process launch is consumed. Exactly one later process may continue the **same** authorized scientific execution, and only after Codex verifies at least 32 GiB Windows commit headroom and 8 GiB available physical memory immediately before launch. The physical gate was refined from 16 GiB before continuation because the maximum observed trainer working set was 2.13 GiB and the exact failure was Windows commit exhaustion from the 71.23 GiB `SignalRgb` private-commit leak, not physical-RAM exhaustion. Eight GiB remains more than 3.75 times the observed trainer working set; the independent 32 GiB commit gate is unchanged. The continuation must validate and restore that exact epoch-1 generation and begin at next epoch 2. A from-scratch restart, altered settings, replay of a completed or incompletely accessed held fold, a second scientific attempt, and protected evidence are forbidden. The trainer SHA-256 remains `4a1596d586092f8b0764fdd6a5f85122c0bd9530987bcad96b0953d95df9b0cc`, model SHA-256 remains `687b6e1f13f6a88afc802c55d35602d0ebd38a27c4a7eeea4ae3b758698a53bb`, and scientific-settings digest remains `25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`.
+
+The user approved restarting `SignalRgb` and shutting down WSL. After cleanup,
+Codex observed 47,215,566,848 bytes of commit headroom and 9,589 MiB available
+physical memory, so both gates passed. Because the checkpoint identity binds the
+complete protocol file, the protocol bytes are restored to the exact execution
+version (SHA-256 `d881731517ed88ad50c4fdc442dcc4b612a84eb431eb9fa8ed152e99612fe77b`,
+self-hash `7d9683c505f9b1911faf9c4d7399647f2baf56a9fc07a88eaf0f5bbaac6e72fe`).
+Post-launch audit and continuation authority live in append-only sidecars, most
+directly
+`reports/research/mars_sensor_ordinal_recovery_continuation_authorization.json`;
+the loader's exact identity equality is preserved.

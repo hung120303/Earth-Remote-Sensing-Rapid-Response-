@@ -1424,3 +1424,26 @@ second scientific attempt, or protected evidence is permitted. Trainer/model
 hashes and science digest
 `25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca`
 remain frozen.
+
+### Recovery identity and approved host cleanup
+
+The user approved restarting `SignalRgb` and shutting down WSL. `SignalRgb`
+restarted with 714,956,800 private bytes instead of 71.23 GiB, WSL was stopped,
+and the prelaunch diagnostic measured 47,215,566,848 bytes of commit headroom
+and 9,589 MiB available physical memory. Both refined gates passed.
+
+The epoch-1 recovery identity includes the complete protocol file hash and
+self-hash. Therefore the protocol file is restored byte-for-byte to the version
+that created the checkpoint (file SHA-256
+`d881731517ed88ad50c4fdc442dcc4b612a84eb431eb9fa8ed152e99612fe77b`,
+self-hash `7d9683c505f9b1911faf9c4d7399647f2baf56a9fc07a88eaf0f5bbaac6e72fe`).
+The post-launch failure, gate refinement, and one-continuation authorization are
+append-only sidecars; the strict `RecoveryStore` identity comparison is not
+weakened. The exact authorization is in
+`reports/research/mars_sensor_ordinal_recovery_continuation_authorization.json`.
+Before launch, Codex reconstructed the complete production identity under the
+attested CUDA runtime and invoked the unmodified `RecoveryStore`. The computed
+identity exactly matched
+`db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b`;
+the checkpoint loaded at completed epoch 1 / next epoch 2 with no held fold
+opened and no comparator value decoded.

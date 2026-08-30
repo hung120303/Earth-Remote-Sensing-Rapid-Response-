@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "status": "authorized_same_execution_continuation",
+  "classification": "infrastructure_recovery_only_not_second_scientific_attempt",
+  "user_approval": {
+    "signalrgb_restart_approved": true,
+    "wsl_shutdown_approved": true
+  },
+  "protocol_identity_reconciliation": {
+    "rule": "The protocol file is restored byte-for-byte to the version that created the epoch-1 generation; post-launch audit and authorization remain append-only sidecars so RecoveryStore retains strict identity equality.",
+    "execution_commit": "6bc182f390a1eef0d5beac9186287344552072c4",
+    "protocol_file_sha256": "d881731517ed88ad50c4fdc442dcc4b612a84eb431eb9fa8ed152e99612fe77b",
+    "protocol_self_hash": "7d9683c505f9b1911faf9c4d7399647f2baf56a9fc07a88eaf0f5bbaac6e72fe",
+    "recovery_identity_sha256": "db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b",
+    "identity_validation_weakened": false
+  },
+  "recovery_generation": {
+    "pointer": ".research/mars_sensor_ordinal/recovery/held-3/latest.json",
+    "completed_epoch": 1,
+    "next_epoch": 2,
+    "checkpoint": "generation-0001-1788130213322999400-439e6a7e199f494fa72514bbeeeedaf9.pt",
+    "checkpoint_sha256": "7d26f700dcb5e9f73eb03fade39773ae88949a06ec33151a0236d9a805673519"
+  },
+  "strict_loader_validation": {
+    "passed": true,
+    "computed_identity_sha256": "db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b",
+    "expected_identity_sha256": "db70eba60f4fd2bb851b6ab2815d8126de8f0b006663ea467fae4180f3a1820b",
+    "checkpoint_loaded": true,
+    "completed_epoch": 1,
+    "next_epoch": 2,
+    "held_folds_opened": [],
+    "comparator_values_decoded": false
+  },
+  "memory_gate": {
+    "minimum_commit_headroom_bytes": 34359738368,
+    "observed_commit_headroom_bytes": 47215566848,
+    "commit_gate_passed": true,
+    "minimum_available_physical_bytes": 8589934592,
+    "observed_available_physical_mib": 9589,
+    "physical_gate_passed": true,
+    "physical_gate_refinement": "The initial 16 GiB physical gate was refined to 8 GiB before continuation because the trainer's maximum observed working set was 2.13 GiB and the failure was Windows commit exhaustion caused by a 71.23 GiB SignalRgb private-commit leak. Eight GiB is more than 3.75 times the observed working set; the independent 32 GiB commit gate is unchanged."
+  },
+  "cleanup_attestation": {
+    "signalrgb_pid_after_restart": 60524,
+    "signalrgb_private_bytes_after_restart": 714956800,
+    "signalrgb_working_set_bytes_after_restart": 543911936,
+    "wsl_running": false
+  },
+  "continuation_contract": {
+    "authorized_process_launches": 1,
+    "required_start": "strictly validate the bound recovery identity and restore completed epoch 1, then begin at epoch 2",
+    "from_scratch_restart_allowed": false,
+    "altered_settings_allowed": false,
+    "held_fold_replay_allowed": false,
+    "second_scientific_attempt_allowed": false,
+    "folds_0_1_2_allowed": false,
+    "protected_external_or_official_evidence_allowed": false,
+    "semantic_comparator_decode_before_final_candidate_immutability_allowed": false
+  },
+  "frozen_bindings": {
+    "trainer_sha256": "4a1596d586092f8b0764fdd6a5f85122c0bd9530987bcad96b0953d95df9b0cc",
+    "model_sha256": "687b6e1f13f6a88afc802c55d35602d0ebd38a27c4a7eeea4ae3b758698a53bb",
+    "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca",
+    "scientific_settings_changed": false
+  }
+}
