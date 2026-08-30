@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "status": "passed_runtime_compatibility_smoke_only",
+  "scientific_outcome_reached": false,
+  "implementation_commit": "bbe1d000cca74d9df4f109329e3f2347a7762e99",
+  "command": "env PYTORCH_ALLOC_CONF=expandable_segments:True CUDA_MODULE_LOADING=LAZY ./.venv/bin/python tools/train_mars_sensor_ordinal.py --runtime-smoke",
+  "exit_code": 0,
+  "runtime_environment": {
+    "PYTORCH_ALLOC_CONF": "expandable_segments:True",
+    "CUDA_MODULE_LOADING": "LAZY"
+  },
+  "protocol": "configs/mars_sensor_ordinal_protocol.json",
+  "protocol_sha256": "48a33297434e30b1af1dd690779aca12ca185b03529f9682358c4174b0b9f712",
+  "protocol_identity": "2d27cca136a7b726bd9f8fdd1e44dc5c7577287da78a0a9fbf192e67ffaf7461",
+  "scope": "fold_3_fitting_data_only",
+  "endpoint_role": "fit_fold_3_for_held_fold_4",
+  "seed": 26082917,
+  "inner_split": {
+    "training_rows": 6913,
+    "training_groups": 116,
+    "training_groups_sha256": "3536c71d209bd3eb87661e2637c10c6d623f728149b9565d536b18b8d8d87a44",
+    "validation_rows": 1886,
+    "validation_groups": 30,
+    "validation_groups_sha256": "3be1be09dd13a6f7e005c2514cca9166cbab434afaa69608a9c01dd6cdad97b7",
+    "validation_outcome_opened": false
+  },
+  "cutpoints": [
+    75.24365425109863,
+    307.33689880371094,
+    642.2248992919922
+  ],
+  "cutpoint_source": "fold_3_inner_training_groups_only",
+  "dense_batch": {
+    "rows": 16,
+    "distinct_groups": 16,
+    "input_shape": [16, 14, 256, 256],
+    "group_ids_sha256": "3279a8948c526cc54c453d6de40eb68fe19ad2ece7cd695d2c06c3da78193be8",
+    "sample_ids_sha256": "fb522b0657074bf764f234d91d04129501a9b0d2ec267396e75a1f5ad99ecea2"
+  },
+  "optimizer_step": {
+    "device": "cuda",
+    "pixel_learning_rate": 0.00015,
+    "pixel_loss": 0.9746414422988892,
+    "pixel_loss_finite": true,
+    "pixel_gradient_norm": 3.947357416152954,
+    "pixel_gradient_finite": true,
+    "peak_cuda_allocated_bytes": 4517497856,
+    "peak_cuda_reserved_bytes": 4840226816
+  },
+  "access_attestation": {
+    "inner_validation_outcome_opened": false,
+    "held_outcome_opened": false,
+    "comparator_opened": false,
+    "folds_0_1_2_opened": false,
+    "external_or_official_evidence_opened": false,
+    "held_result_artifacts_created": false
+  },
+  "decision": "stop_for_codex_review_without_running_held_folds"
+}
