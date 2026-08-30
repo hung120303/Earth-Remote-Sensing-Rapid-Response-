@@ -5,7 +5,7 @@
   "implementation_base_commit": "f83584aecaeee0fa92fe1fe215a6a89fb6ce3f82",
   "trainer": {
     "path": "tools/train_mars_sensor_ordinal.py",
-    "sha256": "f593be5271a8067bee9a85f07a73a0000234bad1c650226808b6b4aa4d200665"
+    "sha256": "cbf136d9d80106e9c76d09a78e61d26b57a7a0264af7a14297113e255fc3a951"
   },
   "model": {
     "path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py",
@@ -74,6 +74,7 @@
   "seed": 26082917,
   "architecture": {
     "input_channels": 14,
+    "reflectance_conversion": "mars_s2l_adapter reflectance_pair is raw DN / 5000; multiply by exactly 0.5 to obtain physical DN / 10000 before clamp [0, 1.5] and linear scale to [-1, 1]",
     "sensor_stems": "independent Sentinel-2 and Landsat 14->24->24 stems",
     "unet_widths": [
       32,
@@ -113,6 +114,7 @@
     "crop_size": 256,
     "dense_batch_size": 16,
     "scene_batch_size": 4,
+    "site_balancing": "preserve row pools by actual scene label; choose positive groups first, then negative groups excluding groups already used; select one actual scene per chosen group; never duplicate a 25 km group in dense or scene batches; mixed-group no-plume rows remain eligible when their group is not selected positively",
     "pixel_optimizer": {
       "name": "AdamW",
       "learning_rate": 0.0003,
@@ -182,12 +184,19 @@
       256,
       256
     ],
-    "pixel_loss": 0.9749386310577393,
-    "scene_loss": 0.6943879723548889,
-    "pixel_gradient_norm": 6.556541919708252,
-    "scene_gradient_norm": 0.038930125534534454,
+    "pixel_loss": 1.0280348062515259,
+    "scene_loss": 0.6942221522331238,
+    "pixel_gradient_norm": 6.216885089874268,
+    "scene_gradient_norm": 0.03579111397266388,
     "peak_cuda_bytes": 582658560,
     "finite": true
+  },
+  "preheld_corrective_milestone": {
+    "status": "implemented_and_smoked_before_any_held_outcome",
+    "radiometry": "convert adapter DN / 5000 values by fixed factor 0.5 to physical DN / 10000 before the unchanged clamp and linear scaling",
+    "hard_negatives": "retain mixed groups in both actual-label row pools; sample positive groups first and negative groups excluding groups already used; one actual scene and one occurrence per group in dense and scene batches",
+    "unchanged": "outer folds, inner split, seed, architecture widths, schedule, thresholds, comparator, bootstrap, and promotion gates",
+    "held_outcome_accessed": false
   },
   "preheld_execution_amendment": {
     "status": "frozen_before_any_inner_epoch_or_held_outcome",
@@ -217,5 +226,5 @@
     "Stop after the fixed seed if any gate fails.",
     "No folds 0/1/2, official paper test, external held outcomes, GHGSat, failed sources, second seed, retuning, or rescue verification."
   ],
-  "protocol_sha256_self_excluding_field": "ece48a9b3291ce62948f48bd39b7e1b40185fa80997a8202adb0d71ca18bcb13"
+  "protocol_sha256_self_excluding_field": "21970758f54dd6973a40bdb96039096cfb3105521d7264ebdd5ae6814eec607f"
 }

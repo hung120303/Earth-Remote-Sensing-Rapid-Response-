@@ -158,7 +158,10 @@ def ordinal_levels(enhancement: np.ndarray | None, plume: np.ndarray, observable
 
 
 def model_input(sample: Any) -> np.ndarray:
-    reflectance = np.clip(np.asarray(sample.reflectance_pair, np.float32), 0.0, 1.5)
+    # The adapter exposes raw DN / 5000. MARS physical reflectance is DN / 10000,
+    # so apply the fixed 0.5 conversion before the frozen clamp and scaling.
+    reflectance = np.asarray(sample.reflectance_pair, np.float32) * 0.5
+    reflectance = np.clip(reflectance, 0.0, 1.5)
     reflectance = reflectance * (2.0 / 1.5) - 1.0
     support = np.stack((sample.radiometric_valid_mask, ~sample.clear_mask)).astype(np.float32)
     result = np.concatenate((reflectance, support)).astype(np.float32)
@@ -317,22 +320,18 @@ class SiteBalancedBatcher:
 
     def __post_init__(self) -> None:
         self.by_label: dict[int, dict[str, list[dict[str, Any]]]] = {0: {}, 1: {}}
-        by_group: dict[str, list[dict[str, Any]]] = {}
         for row in self.records:
-            by_group.setdefault(str(row["group_id"]), []).append(row)
-        for group, rows in by_group.items():
-            positive_rows = [row for row in rows if str(row["label_state"]) == "PLUME"]
-            label = int(bool(positive_rows))
-            self.by_label[label][group] = positive_rows if label else rows
+            label = int(str(row["label_state"]) == "PLUME")
+            group = str(row["group_id"])
+            self.by_label[label].setdefault(group, []).append(row)
         if not self.by_label[0] or not self.by_label[1]:
             raise ValueError("Site-balanced training requires positive and negative groups")
-        if set(self.by_label[0]) & set(self.by_label[1]):
-            raise ValueError("A site cannot enter both label pools")
 
     def rows(self, positive: int, negative: int) -> list[dict[str, Any]]:
         selected: list[dict[str, Any]] = []
+        used_groups: set[str] = set()
         for label, count in ((1, positive), (0, negative)):
-            groups = sorted(self.by_label[label])
+            groups = sorted(set(self.by_label[label]) - used_groups)
             if len(groups) < count:
                 raise ValueError(
                     f"Need {count} distinct label-{label} sites, found {len(groups)}"
@@ -341,13 +340,15 @@ class SiteBalancedBatcher:
             for group in chosen:
                 options = self.by_label[label][str(group)]
                 selected.append(options[int(self.rng.integers(len(options)))])
+                used_groups.add(str(group))
         order = self.rng.permutation(len(selected))
         return [selected[int(index)] for index in order]
 
     def dense_batch(self, device: torch.device, size: int = 256) -> dict[str, Any]:
         crops: list[dict[str, Any]] = []
+        used_groups: set[str] = set()
         for label, count in ((1, 8), (0, 8)):
-            groups = np.asarray(sorted(self.by_label[label]))
+            groups = np.asarray(sorted(set(self.by_label[label]) - used_groups))
             accepted = 0
             for group_index in self.rng.permutation(len(groups)):
                 group = str(groups[int(group_index)])
@@ -369,6 +370,7 @@ class SiteBalancedBatcher:
                             raise
                         continue
                     crops.append(crop)
+                    used_groups.add(group)
                     accepted += 1
                     break
                 if accepted == count:

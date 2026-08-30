@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -22,6 +23,7 @@ from train_mars_sensor_ordinal import (
     deterministic_inner_split,
     main,
     metric_gates,
+    model_input,
     ordinal_levels,
     prepare_endpoint_data,
     protocol_identity,
@@ -70,6 +72,25 @@ def test_exact_14_channels_and_independent_sensor_stems() -> None:
     assert model.sensor_stems[0][0].weight.data_ptr() != model.sensor_stems[1][0].weight.data_ptr()
     with pytest.raises(ValueError, match="Bx14"):
         model(torch.randn(1, 13, 16, 16), torch.tensor([0]), torch.ones(1, 1, 16, 16))
+
+
+def test_adapter_reflectance_is_converted_from_dn_over_5000_to_dn_over_10000() -> None:
+    adapter_values = np.asarray([0.0, 0.5, 1.0, 2.0, 3.5], dtype=np.float32)
+    reflectance_pair = np.broadcast_to(adapter_values[:, None, None], (5, 1, 1))
+    reflectance_pair = np.concatenate((reflectance_pair, reflectance_pair, reflectance_pair[:2]))
+    sample = SimpleNamespace(
+        reflectance_pair=reflectance_pair,
+        radiometric_valid_mask=np.ones((1, 1), dtype=bool),
+        clear_mask=np.ones((1, 1), dtype=bool),
+    )
+
+    result = model_input(sample)
+
+    physical = np.clip(reflectance_pair * 0.5, 0.0, 1.5)
+    expected = physical * (2.0 / 1.5) - 1.0
+    np.testing.assert_allclose(result[:12], expected, rtol=0.0, atol=1e-7)
+    assert result[12, 0, 0] == 1.0
+    assert result[13, 0, 0] == 0.0
 
 
 def test_deterministic_inner_split_is_group_disjoint_and_repeatable() -> None:
@@ -156,18 +177,62 @@ def test_negative_crop_origin_is_random_and_never_violates_support_gate() -> Non
         )
 
 
-def test_site_balancing_never_draws_one_group_as_both_labels() -> None:
+def test_mixed_group_negative_is_eligible_but_never_drawn_as_both_labels() -> None:
     records = [
         {"group_id": "mixed", "label_state": "PLUME", "sample_id": "p"},
         {"group_id": "mixed", "label_state": "NO_PLUME", "sample_id": "n-mixed"},
+        {"group_id": "positive", "label_state": "PLUME", "sample_id": "p-other"},
         {"group_id": "negative", "label_state": "NO_PLUME", "sample_id": "n"},
     ]
-    batcher = SiteBalancedBatcher(
-        Path("unused"), records, np.asarray([1.0, 2.0, 3.0]), np.random.default_rng(4)
-    )
-    rows = batcher.rows(1, 1)
-    assert {row["group_id"] for row in rows} == {"mixed", "negative"}
-    assert next(row for row in rows if row["group_id"] == "mixed")["label_state"] == "PLUME"
+    saw_mixed_negative = False
+    for seed in range(100):
+        batcher = SiteBalancedBatcher(
+            Path("unused"), records, np.asarray([1.0, 2.0, 3.0]), np.random.default_rng(seed)
+        )
+        rows = batcher.rows(1, 1)
+        assert len({row["group_id"] for row in rows}) == len(rows)
+        assert [row["label_state"] for row in rows].count("PLUME") == 1
+        assert [row["label_state"] for row in rows].count("NO_PLUME") == 1
+        saw_mixed_negative |= any(row["sample_id"] == "n-mixed" for row in rows)
+    assert saw_mixed_negative
+
+
+def test_dense_batch_never_reuses_a_mixed_group_across_labels(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    records = [
+        {"group_id": "mixed", "label_state": "PLUME", "sample_id": "mixed-p"},
+        {"group_id": "mixed", "label_state": "NO_PLUME", "sample_id": "mixed-n"},
+    ]
+    records += [
+        {"group_id": f"p-{index}", "label_state": "PLUME", "sample_id": f"p-{index}"}
+        for index in range(8)
+    ]
+    records += [
+        {"group_id": f"n-{index}", "label_state": "NO_PLUME", "sample_id": f"n-{index}"}
+        for index in range(8)
+    ]
+
+    def fake_load(_root: Path, row: dict[str, str]) -> SimpleNamespace:
+        return SimpleNamespace(sample_id=row["sample_id"], presence=int(row["label_state"] == "PLUME"))
+
+    def fake_crop(sample: SimpleNamespace, *_args: object, **_kwargs: object) -> dict[str, object]:
+        return {"sample_id": sample.sample_id, "presence": sample.presence}
+
+    monkeypatch.setattr("train_mars_sensor_ordinal._load_training_sample", fake_load)
+    monkeypatch.setattr("train_mars_sensor_ordinal.make_crop", fake_crop)
+    monkeypatch.setattr("train_mars_sensor_ordinal.collate", lambda rows, _device: {"rows": rows})
+
+    saw_mixed_negative = False
+    for seed in range(30):
+        batcher = SiteBalancedBatcher(
+            Path("unused"), records, np.asarray([1.0, 2.0, 3.0]), np.random.default_rng(seed)
+        )
+        rows = batcher.dense_batch(torch.device("cpu"))["rows"]
+        sample_ids = {str(row["sample_id"]) for row in rows}
+        assert not ({"mixed-p", "mixed-n"} <= sample_ids)
+        saw_mixed_negative |= "mixed-n" in sample_ids
+    assert saw_mixed_negative
 
 
 def test_scene_epoch_five_uses_one_epoch_step_warmup() -> None:

@@ -20,7 +20,7 @@ The model input is exactly 14 channels, in order:
 3. `radiometric_valid_mask`.
 4. Binary cloud indicator (`1` for not clear, `0` for clear).
 
-The spectral band order remains the native MARS six-band target/reference contract. Reflectance is clamped to `[0, 1.5]` and linearly scaled to `[-1, 1]`; support channels remain binary. `observable_mask` is support for loss and evaluation only and is never a model input.
+The spectral band order remains the native MARS six-band target/reference contract. The adapter exposes raw DN divided by 5000; model input first applies the fixed `0.5` conversion so the physical reflectance is exactly `DN / 10000`, then clamps to `[0, 1.5]` and linearly scales to `[-1, 1]`. Support channels remain binary. `observable_mask` is support for loss and evaluation only and is never a model input.
 
 ## Architecture
 
@@ -118,12 +118,15 @@ Dense/ordinal loader:
 - zero-pad outside bounds;
 - only shared horizontal flip, vertical flip, and 90-degree rotation.
 
+Groups retain separate row pools for their actual scene labels. Mixed groups containing both plume and no-plume scenes are eligible for either label. Each batch chooses positive groups first, then negative groups excluding every group already accepted positively; it selects one actual scene of the requested label per group and never duplicates a 25 km group within the batch. Thus intermittent same-site no-plume scenes remain eligible hard negatives whenever their mixed group was not selected positively.
+
 Scene loader:
 
 - batch 4 native full images, targeting 2 positive and 2 negative sites;
 - one scene per site;
 - pad spatial dimensions to a multiple of 8;
 - no resize, tiling, TTA, or synthetic data.
+- the same positive-first, negative-excluding-used-groups rule applies, with one actual scene of the requested label and no repeated 25 km group.
 
 Schedule:
 
