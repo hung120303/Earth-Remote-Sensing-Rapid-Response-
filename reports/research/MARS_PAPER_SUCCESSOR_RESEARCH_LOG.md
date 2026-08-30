@@ -6671,5 +6671,25 @@ contained no thermal or WHEA event, and GPU temperatures were normal. The
 attempt is therefore recorded as **infrastructure failure, not scientific
 rejection**. The frozen trainer, model, protocol, thresholds, comparators, and
 all seven gates remain unchanged. No retry was run and bulk output remains
-absent. Compact receipt:
+absent. Comparator files were streamed only as opaque bytes during protocol
+SHA-256 preflight; no comparator values were decoded and no semantic comparator
+outcome was accessed. Compact receipt:
 `reports/experiments/mars_sensor_ordinal_held_attempt_failure.json`.
+
+### 2026-08-30: native-Windows exact-recovery amendment frozen
+
+The next scientific attempt is constrained to native Windows CUDA on the exact
+registered RTX 5070/driver/dependency runtime. This bypasses the failed WSL DXG
+bridge and WSL `p9` I/O path. Because the WSL failure persisted no recovery
+checkpoint, the retry must begin at epoch 1 and must not import the provisional
+epoch-6 state or tune from epochs 1-9.
+
+The infrastructure-only amendment adds exact complete-epoch recovery, strict
+identity/runtime/access-ledger validation, immutable endpoint state before held
+access, atomic read-only per-held-fold parts with verified reuse, and semantic
+comparator decoding only after both parts are immutable and merged into the
+final immutable candidate. Data, folds, seed, architecture, precision, batches,
+schedules, losses, checkpoint rank, thresholds, comparators, bootstrap, and all
+seven gates are unchanged. The Windows environment, native CUDA recovery smoke,
+and held experiment were not run. Freeze note:
+`reports/research/MARS_SENSOR_ORDINAL_NATIVE_WINDOWS_RECOVERY.md`.

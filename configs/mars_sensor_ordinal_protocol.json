@@ -5,7 +5,7 @@
   "implementation_base_commit": "f83584aecaeee0fa92fe1fe215a6a89fb6ce3f82",
   "trainer": {
     "path": "tools/train_mars_sensor_ordinal.py",
-    "sha256": "1fa8742823fe0df4546caef69faffe548fd6afdd7cda34d94e7cbd26c05799d7"
+    "sha256": "f4558edd2dd621256a50c0027a570e9564c0cda55333b8c421b7e7b33c4bf7b8"
   },
   "model": {
     "path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py",
@@ -257,7 +257,126 @@
     "No output overwrite.",
     "No held run unless protocol is frozen and every dependency hash matches.",
     "Stop after the fixed seed if any gate fails.",
-    "No folds 0/1/2, official paper test, external held outcomes, GHGSat, failed sources, second seed, retuning, or rescue verification."
+    "No folds 0/1/2, official paper test, external held outcomes, GHGSat, failed sources, second seed, retuning, or rescue verification.",
+    "Recovery artifacts and immutable held parts are bulk ignored and never committed.",
+    "Comparator preflight may hash opaque bytes but may not decode comparator values before final candidate immutability.",
+    "A validated immutable held part must be reused on restart; that held fold must not be evaluated again."
   ],
-  "protocol_sha256_self_excluding_field": "2d27cca136a7b726bd9f8fdd1e44dc5c7577287da78a0a9fbf192e67ffaf7461"
+  "preheld_infrastructure_recovery_amendment": {
+    "status": "frozen_after_wsl_dxg_failure_before_native_windows_smoke_or_held_retry",
+    "trigger_commit": "908f63133bed1e31ade56c38473beebb22dfdaf2",
+    "failure_boundary": "held-fold-3 endpoint fitting completed epochs 1 through 9; failure occurred during epoch 10 before any held prediction, semantic comparator access, gate, or result",
+    "retry_policy": {
+      "platform": "native Windows CUDA only; WSL is rejected",
+      "reason": "bypass the failed WSL DXG bridge and WSL p9 filesystem I/O",
+      "first_epoch": 1,
+      "prior_recovery_checkpoint_exists": false,
+      "provisional_epoch_6_state_import_allowed": false,
+      "incomplete_wsl_metrics_may_influence_tuning": false
+    },
+    "required_runtime": {
+      "gpu": "NVIDIA GeForce RTX 5070",
+      "nvidia_driver": "595.79",
+      "torch": "2.11.0+cu128",
+      "numpy": "2.4.4",
+      "rasterio": "1.4.4",
+      "scikit-learn": "1.9.0",
+      "scipy": "1.17.1",
+      "environment": {
+        "PYTORCH_ALLOC_CONF": "expandable_segments:True",
+        "CUDA_MODULE_LOADING": "LAZY"
+      }
+    },
+    "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca",
+    "scientific_settings_unchanged": [
+      "data",
+      "outer folds",
+      "inner split",
+      "seed",
+      "architecture",
+      "precision",
+      "batch sizes",
+      "schedules",
+      "losses",
+      "checkpoint ranking",
+      "thresholds",
+      "comparators",
+      "bootstrap",
+      "all seven gates"
+    ],
+    "epoch_recovery": {
+      "boundary": "after all epoch updates, inner validation, best-rank update, and history append; before the next epoch",
+      "partial_epoch_policy": "discard and replay from the last complete validated generation",
+      "restore_order": "construct model, both optimizers, and SiteBalancedBatcher; load model/optimizer state; restore global and batcher RNG states last",
+      "crash_safety": "unique atomic generation files plus atomically replaced latest pointer retaining two validated generations; corrupt newest generation falls back to prior valid generation",
+      "bulk_root": ".research/mars_sensor_ordinal/recovery",
+      "required_state": [
+        "live model state separate from best_state",
+        "both AdamW state_dict values, parameter groups, and current learning rates",
+        "best_rank",
+        "best_epoch",
+        "complete history",
+        "cutpoints",
+        "completed_epoch",
+        "next_epoch",
+        "held_fold",
+        "fit_fold",
+        "SiteBalancedBatcher bit_generator.state",
+        "Python random state",
+        "legacy NumPy RNG state",
+        "Torch CPU RNG state",
+        "all CUDA RNG states",
+        "protocol identity and hashes",
+        "scientific-settings digest",
+        "trainer, model, code dependency, manifest, fold, ordered record, and split hashes",
+        "seed and schedule digest",
+        "runtime signature",
+        "access ledger"
+      ],
+      "resume_rule": "resume only when every identity and runtime signature matches and no forbidden artifact or access-ledger mismatch exists"
+    },
+    "outer_loop_durability": {
+      "endpoint_boundary": "persist immutable endpoint state and metadata before opening that endpoint held fold",
+      "held_parts": ".research/mars_sensor_ordinal/candidate_folds34_predictions.held-{3,4}.part.json",
+      "part_rule": "atomically save read-only immediately after the one allowed held evaluation; validate and reuse on restart without reevaluation",
+      "second_endpoint_crash_rule": "an immutable first held part is reused and can never spend the first held fold twice",
+      "final_candidate_rule": "both held parts must be immutable, validated, merged, and published as the immutable final candidate before semantic comparator decode",
+      "one_shot_refusal_preserved": true
+    },
+    "comparator_access": {
+      "preflight_allowed": "stream opaque bytes only for frozen SHA-256 verification",
+      "preflight_ledger": {
+        "comparator_integrity_bytes_hashed": true,
+        "comparator_values_decoded": false
+      },
+      "forbidden_before_final_candidate_immutability": [
+        "np.load",
+        "torch.load",
+        "score inspection",
+        "metric computation",
+        "semantic outcome access"
+      ]
+    },
+    "native_windows_recovery_smoke": {
+      "flag": "--checkpoint-roundtrip-smoke",
+      "scope": "fold-3 fitting evidence only; production dense batch size 16; one pixel update and exact checkpoint next-step round trip",
+      "attestations": [
+        "ordered sample identities",
+        "ordered group identities",
+        "next-step model equivalence",
+        "next-step optimizer equivalence"
+      ],
+      "forbidden": [
+        "inner-validation outcome",
+        "held data",
+        "semantic comparator access",
+        "folds 0/1/2",
+        "external evidence",
+        "official evidence"
+      ],
+      "executed": false
+    },
+    "held_outcome_accessed_by_amendment": false
+  },
+  "protocol_sha256_self_excluding_field": "d432f72f97458786a6a459731701f4a5012ed356ea3fc20622458318a9be0f76"
 }

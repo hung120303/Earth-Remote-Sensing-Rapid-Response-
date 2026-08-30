@@ -5,14 +5,20 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import importlib.metadata
 import json
 import math
 import os
+import platform
 import random
+import subprocess
 import sys
+import tempfile
+import time
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable, Iterator, Sequence
+from typing import Any, Callable, Iterable, Iterator, Sequence
 
 import numpy as np
 import torch
@@ -41,6 +47,25 @@ REQUIRED_RUNTIME_ENV = {
     "PYTORCH_ALLOC_CONF": "expandable_segments:True",
     "CUDA_MODULE_LOADING": "LAZY",
 }
+REQUIRED_NATIVE_WINDOWS_RUNTIME = {
+    "platform": "Windows",
+    "gpu": "NVIDIA GeForce RTX 5070",
+    "nvidia_driver": "595.79",
+    "torch": "2.11.0+cu128",
+    "numpy": "2.4.4",
+    "rasterio": "1.4.4",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.17.1",
+}
+RECOVERY_SCHEMA_VERSION = 1
+REQUIRED_RECOVERY_PAYLOAD_KEYS = frozenset({
+    "schema_version", "identity", "live_model_state", "best_model_state",
+    "pixel_optimizer_state", "scene_optimizer_state",
+    "pixel_optimizer_param_groups", "scene_optimizer_param_groups",
+    "pixel_optimizer_lrs", "scene_optimizer_lrs", "best_rank", "best_epoch",
+    "history", "cutpoints", "completed_epoch", "next_epoch", "held_fold",
+    "fit_fold", "rng_state", "access_ledger",
+})
 
 
 def sha256(path: Path) -> str:
@@ -61,8 +86,38 @@ def seed_everything(seed: int = SEED) -> None:
     torch.backends.cudnn.benchmark = False
 
 
-def verify_runtime_environment() -> None:
-    """Require the preregistered CUDA compatibility-only environment."""
+def runtime_signature() -> dict[str, Any]:
+    """Return the exact native-Windows production runtime identity."""
+    driver = "unavailable"
+    try:
+        completed = subprocess.run(
+            ["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        driver = completed.stdout.strip().splitlines()[0].strip()
+    except (OSError, subprocess.SubprocessError, IndexError):
+        pass
+    versions: dict[str, str] = {}
+    for distribution in ("numpy", "rasterio", "scikit-learn", "scipy"):
+        try:
+            versions[distribution] = importlib.metadata.version(distribution)
+        except importlib.metadata.PackageNotFoundError:
+            versions[distribution] = "unavailable"
+    return {
+        "platform": platform.system(),
+        "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "unavailable",
+        "nvidia_driver": driver,
+        "torch": torch.__version__,
+        **versions,
+        "environment": {name: os.environ.get(name) for name in REQUIRED_RUNTIME_ENV},
+    }
+
+
+def verify_runtime_environment(*, require_native_windows: bool = False) -> dict[str, Any]:
+    """Require exact env vars and, for production modes, the frozen Windows stack."""
     mismatches = {
         name: {"required": required, "actual": os.environ.get(name)}
         for name, required in REQUIRED_RUNTIME_ENV.items()
@@ -70,6 +125,16 @@ def verify_runtime_environment() -> None:
     }
     if mismatches:
         raise RuntimeError(f"Runtime compatibility environment mismatch: {mismatches}")
+    signature = runtime_signature()
+    if require_native_windows:
+        runtime_mismatches = {
+            name: {"required": required, "actual": signature.get(name)}
+            for name, required in REQUIRED_NATIVE_WINDOWS_RUNTIME.items()
+            if signature.get(name) != required
+        }
+        if runtime_mismatches:
+            raise RuntimeError(f"Native-Windows production runtime mismatch: {runtime_mismatches}")
+    return signature
 
 
 def validate_requested_folds(folds: Iterable[int]) -> tuple[int, ...]:
@@ -541,21 +606,69 @@ def _cpu_state(model: MarsSensorOrdinalUNet) -> dict[str, torch.Tensor]:
     return {name: value.detach().cpu().clone() for name, value in model.state_dict().items()}
 
 
-def train_endpoint(protocol: dict[str, Any], paths: dict[str, Path], fit_records: Sequence[dict[str, Any]], held_fold: int, device: torch.device) -> tuple[dict[str, Any], dict[str, torch.Tensor], np.ndarray]:
+def train_endpoint(
+    protocol: dict[str, Any],
+    paths: dict[str, Path],
+    fit_records: Sequence[dict[str, Any]],
+    held_fold: int,
+    device: torch.device,
+    *,
+    protocol_path: Path | None = None,
+    runtime: dict[str, Any] | None = None,
+    ledger: AccessLedger | None = None,
+) -> tuple[dict[str, Any], dict[str, torch.Tensor], np.ndarray]:
+    """Train one endpoint with an exact, post-validation epoch commit boundary."""
     inner_training, inner_validation, training_groups, validation_groups, cutpoints = prepare_endpoint_data(
         paths["metadata_root"], fit_records
+    )
+    protocol_path = protocol_path or (ROOT / DEFAULT_PROTOCOL).resolve()
+    runtime = runtime or runtime_signature()
+    ledger = ledger or AccessLedger(comparator_integrity_bytes_hashed=True)
+    identity = checkpoint_identity(
+        protocol, protocol_path, paths, fit_records, inner_training, inner_validation,
+        held_fold, runtime, ledger,
     )
     model = MarsSensorOrdinalUNet().to(device)
     spec = protocol["training"]
     pixel_optimizer = torch.optim.AdamW(model.pixel_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4)
     scene_optimizer = torch.optim.AdamW(model.scene_parameters(), lr=0.0, betas=(0.9, 0.999), weight_decay=1e-4)
     batcher = SiteBalancedBatcher(paths["metadata_root"], inner_training, cutpoints, np.random.default_rng(SEED))
+    recovery_root = (ROOT / protocol["outputs"]["candidate_predictions"]).resolve().parent / "recovery" / f"held-{held_fold}"
+    store = RecoveryStore(recovery_root, identity, device)
     best_state: dict[str, torch.Tensor] | None = None
     best_rank: tuple[float, float, float] | None = None
     best_epoch = 0
     history: list[dict[str, Any]] = []
+    start_epoch = 1
+    recovered = store.load()
+    if recovered is not None:
+        model.load_state_dict(recovered["live_model_state"], strict=True)
+        pixel_optimizer.load_state_dict(recovered["pixel_optimizer_state"])
+        scene_optimizer.load_state_dict(recovered["scene_optimizer_state"])
+        best_state = recovered["best_model_state"]
+        best_rank = tuple(map(float, recovered["best_rank"]))
+        best_epoch = int(recovered["best_epoch"])
+        history = copy.deepcopy(recovered["history"])
+        start_epoch = int(recovered["next_epoch"])
+        if (
+            int(recovered["held_fold"]) != held_fold
+            or int(recovered["fit_fold"]) != 7 - held_fold
+            or not np.array_equal(np.asarray(recovered["cutpoints"]), cutpoints)
+            or int(recovered["completed_epoch"]) + 1 != start_epoch
+            or len(history) != int(recovered["completed_epoch"])
+        ):
+            raise RuntimeError("Recovery endpoint/cutpoint/history boundary mismatch")
+        if (
+            recovered.get("pixel_optimizer_param_groups") != recovered["pixel_optimizer_state"].get("param_groups")
+            or recovered.get("scene_optimizer_param_groups") != recovered["scene_optimizer_state"].get("param_groups")
+            or recovered.get("pixel_optimizer_lrs") != [float(group["lr"]) for group in pixel_optimizer.param_groups]
+            or recovered.get("scene_optimizer_lrs") != [float(group["lr"]) for group in scene_optimizer.param_groups]
+        ):
+            raise RuntimeError("Recovery optimizer groups/learning rates mismatch")
+        # This is deliberately last: construction and all state loading may consume RNG.
+        restore_rng_state(recovered["rng_state"], batcher)
     epochs = int(spec["epochs"])
-    for epoch in range(1, epochs + 1):
+    for epoch in range(start_epoch, epochs + 1):
         pixel_lr = pixel_learning_rate(epoch, epochs)
         scene_lr = scene_learning_rate(epoch, epochs)
         set_learning_rate(pixel_optimizer, pixel_lr)
@@ -580,6 +693,7 @@ def train_endpoint(protocol: dict[str, Any], paths: dict[str, Path], fit_records
                     scene_step(model, batcher.scene_batch(device), scene_optimizer)["scene_loss"]
                 )
         validation = evaluate_candidate(model, paths["metadata_root"], inner_validation, cutpoints, device, fold=held_fold)
+        ledger.inner_validation_outcomes_opened = True
         metrics = checkpoint_metrics(validation)
         rank = checkpoint_rank(metrics)
         if best_rank is None or rank > best_rank:
@@ -589,8 +703,34 @@ def train_endpoint(protocol: dict[str, Any], paths: dict[str, Path], fit_records
                "scene_loss_mean": None if not scene_losses else float(np.mean(scene_losses)), **metrics,
                "selected_so_far": best_epoch}
         history.append(row)
+        if best_state is None or best_rank is None:
+            raise RuntimeError("Checkpoint selection produced no endpoint")
+        # The generation is committed only after updates, validation, rank, and history.
+        # A crash anywhere earlier therefore discards the entire partial epoch.
+        store.save({
+            "schema_version": RECOVERY_SCHEMA_VERSION,
+            "identity": identity,
+            "live_model_state": _cpu_state(model),
+            "best_model_state": best_state,
+            "pixel_optimizer_state": pixel_optimizer.state_dict(),
+            "scene_optimizer_state": scene_optimizer.state_dict(),
+            "pixel_optimizer_param_groups": copy.deepcopy(pixel_optimizer.state_dict()["param_groups"]),
+            "scene_optimizer_param_groups": copy.deepcopy(scene_optimizer.state_dict()["param_groups"]),
+            "pixel_optimizer_lrs": [float(group["lr"]) for group in pixel_optimizer.param_groups],
+            "scene_optimizer_lrs": [float(group["lr"]) for group in scene_optimizer.param_groups],
+            "best_rank": list(best_rank),
+            "best_epoch": best_epoch,
+            "history": copy.deepcopy(history),
+            "cutpoints": cutpoints.copy(),
+            "completed_epoch": epoch,
+            "next_epoch": epoch + 1,
+            "held_fold": held_fold,
+            "fit_fold": 7 - held_fold,
+            "rng_state": capture_rng_state(batcher),
+            "access_ledger": ledger.snapshot(),
+        })
         print(json.dumps({"progress": "endpoint_epoch", "held_fold": held_fold, **row}), flush=True)
-    if best_state is None:
+    if best_state is None or best_rank is None:
         raise RuntimeError("Checkpoint selection produced no endpoint")
     model.load_state_dict(best_state, strict=True)
     metadata = {
@@ -599,7 +739,52 @@ def train_endpoint(protocol: dict[str, Any], paths: dict[str, Path], fit_records
         "inner_training_rows": len(inner_training), "inner_validation_rows": len(inner_validation),
         "cutpoints": cutpoints.tolist(), "cutpoint_source": "inner_training_groups_only",
         "selected_epoch": best_epoch, "selected_rank": list(best_rank), "history": history,
+        "recovery_identity_sha256": canonical_json_hash(identity),
     }
+    # Durable endpoint state/metadata is sealed before run_full is allowed to open held data.
+    endpoint_path = recovery_root / "endpoint.pt"
+    endpoint_descriptor_path = recovery_root / "endpoint.json"
+    endpoint_value = {
+        "schema_version": RECOVERY_SCHEMA_VERSION,
+        "identity": identity,
+        "metadata": metadata,
+        "best_model_state": best_state,
+        "cutpoints": cutpoints.copy(),
+    }
+    if endpoint_path.exists() or endpoint_descriptor_path.exists():
+        if not endpoint_path.is_file() or not endpoint_descriptor_path.is_file():
+            raise RuntimeError("Incomplete durable endpoint artifact")
+        if endpoint_path.stat().st_mode & 0o222 or endpoint_descriptor_path.stat().st_mode & 0o222:
+            raise RuntimeError("Durable endpoint state or metadata is not read-only")
+        descriptor = json.loads(endpoint_descriptor_path.read_text(encoding="utf-8"))
+        if (
+            descriptor.get("identity_sha256") != canonical_json_hash(identity)
+            or descriptor.get("sha256") != sha256(endpoint_path)
+            or descriptor.get("selected_epoch") != best_epoch
+        ):
+            raise RuntimeError("Durable endpoint artifact identity/hash mismatch")
+        existing_endpoint = torch.load(endpoint_path, map_location="cpu", weights_only=False)
+        if (
+            existing_endpoint.get("identity") != identity
+            or existing_endpoint.get("metadata") != metadata
+            or not np.array_equal(np.asarray(existing_endpoint.get("cutpoints")), cutpoints)
+            or not _nested_exact_equal(existing_endpoint.get("best_model_state"), best_state)
+        ):
+            raise RuntimeError("Durable endpoint artifact contents mismatch")
+    else:
+        temporary = endpoint_path.with_name(f".{endpoint_path.name}.{uuid.uuid4().hex}.tmp")
+        torch.save(endpoint_value, temporary)
+        with temporary.open("rb") as stream:
+            os.fsync(stream.fileno())
+        os.replace(temporary, endpoint_path)
+        os.chmod(endpoint_path, 0o444)
+        atomic_replace_json(endpoint_descriptor_path, {
+            "schema_version": RECOVERY_SCHEMA_VERSION,
+            "identity_sha256": canonical_json_hash(identity),
+            "sha256": sha256(endpoint_path),
+            "selected_epoch": best_epoch,
+        })
+        os.chmod(endpoint_descriptor_path, 0o444)
     return metadata, best_state, cutpoints
 
 
@@ -812,6 +997,325 @@ def canonical_string_set_hash(values: Iterable[str]) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def canonical_json_hash(value: Any) -> str:
+    payload = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, default=str)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def ordered_records_hash(records: Sequence[dict[str, Any]]) -> str:
+    """Hash complete records in manifest order (ordering is intentionally significant)."""
+    return canonical_json_hash(list(records))
+
+
+@dataclass
+class AccessLedger:
+    """Machine-checked record of evidence opened during the one-shot run."""
+
+    comparator_integrity_bytes_hashed: bool = False
+    comparator_values_decoded: bool = False
+    inner_validation_outcomes_opened: bool = False
+    held_folds_opened: tuple[int, ...] = ()
+    folds_0_1_2_opened: bool = False
+    external_or_official_evidence_opened: bool = False
+
+    def snapshot(self) -> dict[str, Any]:
+        return {
+            "comparator_integrity_bytes_hashed": self.comparator_integrity_bytes_hashed,
+            "comparator_values_decoded": self.comparator_values_decoded,
+            "inner_validation_outcomes_opened": self.inner_validation_outcomes_opened,
+            "held_folds_opened": list(self.held_folds_opened),
+            "folds_0_1_2_opened": self.folds_0_1_2_opened,
+            "external_or_official_evidence_opened": self.external_or_official_evidence_opened,
+        }
+
+    def open_held_fold(self, fold: int) -> None:
+        validate_requested_folds((fold,))
+        self.held_folds_opened = tuple(sorted(set(self.held_folds_opened) | {int(fold)}))
+
+    def assert_recovery_safe(self, current_held_fold: int | None = None) -> None:
+        if (
+            self.comparator_values_decoded
+            or self.folds_0_1_2_opened
+            or self.external_or_official_evidence_opened
+        ):
+            raise RuntimeError(f"Recovery access ledger is not pre-held: {self.snapshot()}")
+        expected_prior = () if current_held_fold in (None, 3) else (3,)
+        if self.held_folds_opened != expected_prior:
+            raise RuntimeError(
+                f"Recovery access ledger does not match prior immutable held parts: {self.snapshot()}"
+            )
+
+
+def preflight_comparator_hashes(paths: dict[str, Path], ledger: AccessLedger) -> dict[str, str]:
+    """Authenticate comparator bytes without decoding any comparator value."""
+    ledger.assert_recovery_safe()
+    names = ("champion_scene_cache", "gaussian_dense_state", "gaussian_protocol", "released_dense_checkpoint")
+    result = {name: sha256(paths[name]) for name in names}
+    ledger.comparator_integrity_bytes_hashed = True
+    ledger.comparator_values_decoded = False
+    return result
+
+
+def scientific_digest(protocol: dict[str, Any]) -> str:
+    """Bind settings that can affect scientific outcomes, excluding durability mechanics."""
+    keys = (
+        "outer_folds", "seed", "architecture", "ordinal_targets", "inner_split", "training",
+        "evaluation", "bootstrap", "gates",
+    )
+    settings = {key: protocol[key] for key in keys}
+    settings["implemented_constants"] = {
+        "seed": SEED,
+        "dense_thresholds": DENSE_THRESHOLDS,
+        "dense_scene_gate": DENSE_SCENE_GATE,
+        "minimum_connected_pixels": MINIMUM_CONNECTED_PIXELS,
+        "gaussian_dense_strength": GAUSSIAN_DENSE_STRENGTH,
+    }
+    return canonical_json_hash(settings)
+
+
+def schedule_digest(protocol: dict[str, Any]) -> str:
+    return canonical_json_hash(protocol["training"])
+
+
+def checkpoint_identity(
+    protocol: dict[str, Any],
+    protocol_path: Path,
+    paths: dict[str, Path],
+    fit_records: Sequence[dict[str, Any]],
+    inner_training: Sequence[dict[str, Any]],
+    inner_validation: Sequence[dict[str, Any]],
+    held_fold: int,
+    runtime: dict[str, Any],
+    ledger: AccessLedger,
+) -> dict[str, Any]:
+    """Construct the complete frozen identity required for exact epoch recovery."""
+    ledger.assert_recovery_safe(held_fold)
+    dependencies = {
+        name: {
+            "path": str(path),
+            "protocol_sha256": protocol["dependencies"][name]["sha256"],
+            "actual_sha256": "directory" if path.is_dir() else sha256(path),
+        }
+        for name, path in sorted(paths.items())
+    }
+    code_dependencies = [
+        {
+            "path": str((ROOT / binding["path"]).resolve()),
+            "protocol_sha256": binding["sha256"],
+            "actual_sha256": sha256((ROOT / binding["path"]).resolve()),
+        }
+        for binding in protocol.get("code_dependencies", [])
+    ]
+    return {
+        "schema_version": RECOVERY_SCHEMA_VERSION,
+        "protocol_path": str(protocol_path),
+        "protocol_file_sha256": sha256(protocol_path),
+        "protocol_identity": protocol_identity(protocol),
+        "scientific_digest": scientific_digest(protocol),
+        "trainer": {
+            "path": str(Path(__file__).resolve()),
+            "actual_sha256": sha256(Path(__file__).resolve()),
+            "protocol_sha256": protocol["trainer"]["sha256"],
+        },
+        "model": {
+            "path": str((ROOT / protocol["model"]["path"]).resolve()),
+            "actual_sha256": sha256((ROOT / protocol["model"]["path"]).resolve()),
+            "protocol_sha256": protocol["model"]["sha256"],
+        },
+        "dependencies": dependencies,
+        "code_dependencies": code_dependencies,
+        "manifest_sha256": sha256(paths["manifest"]),
+        "fold_protocol_sha256": sha256(paths["fold_protocol"]),
+        "held_fold": int(held_fold),
+        "fit_fold": int(7 - held_fold),
+        "ordered_fit_records_sha256": ordered_records_hash(fit_records),
+        "ordered_inner_training_records_sha256": ordered_records_hash(inner_training),
+        "ordered_inner_validation_records_sha256": ordered_records_hash(inner_validation),
+        "inner_training_groups_sha256": canonical_string_set_hash({str(row["group_id"]) for row in inner_training}),
+        "inner_validation_groups_sha256": canonical_string_set_hash({str(row["group_id"]) for row in inner_validation}),
+        "seed": SEED,
+        "schedule_digest": schedule_digest(protocol),
+        "runtime_signature": runtime,
+        "access_ledger": ledger.snapshot(),
+    }
+
+
+def capture_rng_state(batcher: SiteBalancedBatcher) -> dict[str, Any]:
+    return {
+        "python": random.getstate(),
+        "numpy_legacy": np.random.get_state(),
+        "torch_cpu": torch.get_rng_state().clone(),
+        "torch_cuda_all": [value.clone() for value in torch.cuda.get_rng_state_all()] if torch.cuda.is_available() else [],
+        "site_balanced_batcher_bit_generator": copy.deepcopy(batcher.rng.bit_generator.state),
+    }
+
+
+def restore_rng_state(state: dict[str, Any], batcher: SiteBalancedBatcher) -> None:
+    """Restore all RNGs; callers must invoke this after every construction/load."""
+    random.setstate(state["python"])
+    np.random.set_state(state["numpy_legacy"])
+    torch.set_rng_state(state["torch_cpu"])
+    if torch.cuda.is_available():
+        cuda_states = state["torch_cuda_all"]
+        if len(cuda_states) != torch.cuda.device_count():
+            raise RuntimeError("Checkpoint CUDA RNG device count differs from runtime")
+        torch.cuda.set_rng_state_all(cuda_states)
+    batcher.rng.bit_generator.state = copy.deepcopy(state["site_balanced_batcher_bit_generator"])
+
+
+def _fsync_directory(path: Path) -> None:
+    if os.name == "nt":
+        return
+    descriptor = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def atomic_replace_json(path: Path, value: Any) -> None:
+    """Atomically replace mutable coordination metadata, with durable flushes."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    with temporary.open("w", encoding="utf-8", newline="\n") as stream:
+        json.dump(value, stream, sort_keys=True, separators=(",", ":"), default=str)
+        stream.write("\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+    os.replace(temporary, path)
+    _fsync_directory(path.parent)
+
+
+class RecoveryStore:
+    """Atomic unique checkpoint generations with latest/previous validation fallback."""
+
+    def __init__(self, root: Path, identity: dict[str, Any], device: torch.device):
+        self.root = root
+        self.identity = identity
+        self.identity_sha256 = canonical_json_hash(identity)
+        self.device = device
+        self.pointer = root / "latest.json"
+
+    def _pointer_descriptors(self) -> list[dict[str, Any]]:
+        if not self.pointer.exists():
+            return []
+        try:
+            value = json.loads(self.pointer.read_text(encoding="utf-8"))
+            descriptors = value["generations"]
+            if value.get("schema_version") != RECOVERY_SCHEMA_VERSION or not isinstance(descriptors, list):
+                raise ValueError("invalid pointer schema")
+            return descriptors[:2]
+        except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+            manifests = sorted(
+                self.root.glob("generation-*.json"),
+                key=lambda path: path.stat().st_mtime_ns,
+                reverse=True,
+            )[:2]
+            result = []
+            for path in manifests:
+                try:
+                    result.append(json.loads(path.read_text(encoding="utf-8")))
+                except (OSError, json.JSONDecodeError):
+                    continue
+            return result
+
+    def _validate_payload(self, payload: dict[str, Any]) -> None:
+        missing = REQUIRED_RECOVERY_PAYLOAD_KEYS - set(payload)
+        if missing:
+            raise RuntimeError(f"Recovery checkpoint is missing required state: {sorted(missing)}")
+        if payload.get("schema_version") != RECOVERY_SCHEMA_VERSION or payload.get("identity") != self.identity:
+            raise RuntimeError("Recovery checkpoint identity or schema mismatch")
+        if int(payload["next_epoch"]) != int(payload["completed_epoch"]) + 1:
+            raise RuntimeError("Recovery checkpoint is not at a complete epoch boundary")
+        rng_keys = {"python", "numpy_legacy", "torch_cpu", "torch_cuda_all", "site_balanced_batcher_bit_generator"}
+        if set(payload["rng_state"]) != rng_keys:
+            raise RuntimeError("Recovery checkpoint RNG state coverage mismatch")
+        for name in ("pixel", "scene"):
+            optimizer = payload[f"{name}_optimizer_state"]
+            if optimizer.get("param_groups") != payload[f"{name}_optimizer_param_groups"]:
+                raise RuntimeError(f"Recovery {name} optimizer groups mismatch")
+            if [float(group["lr"]) for group in optimizer.get("param_groups", [])] != payload[f"{name}_optimizer_lrs"]:
+                raise RuntimeError(f"Recovery {name} optimizer learning rates mismatch")
+        access = payload["access_ledger"]
+        expected_access = self.identity.get("access_ledger", {})
+        if (
+            access.get("comparator_values_decoded")
+            or tuple(access.get("held_folds_opened", ()))
+            != tuple(expected_access.get("held_folds_opened", ()))
+            or access.get("folds_0_1_2_opened")
+            or access.get("external_or_official_evidence_opened")
+        ):
+            raise RuntimeError("Recovery checkpoint contains forbidden evidence access or an access-ledger mismatch")
+
+    def load(self) -> dict[str, Any] | None:
+        errors: list[str] = []
+        for descriptor in self._pointer_descriptors():
+            if descriptor.get("identity_sha256") != self.identity_sha256:
+                raise RuntimeError("Recovery identity/runtime/access mismatch")
+            checkpoint = self.root / str(descriptor.get("checkpoint", ""))
+            if not checkpoint.is_file() or sha256(checkpoint) != descriptor.get("sha256"):
+                errors.append(f"invalid generation {checkpoint.name}")
+                continue
+            try:
+                payload = torch.load(checkpoint, map_location=self.device, weights_only=False)
+            except Exception as error:
+                errors.append(f"unreadable generation {checkpoint.name}: {error}")
+                continue
+            self._validate_payload(payload)
+            if (
+                payload.get("schema_version") != RECOVERY_SCHEMA_VERSION
+                or payload.get("identity") != self.identity
+                or payload.get("completed_epoch") != descriptor.get("completed_epoch")
+                or payload.get("next_epoch") != descriptor.get("next_epoch")
+            ):
+                raise RuntimeError("Recovery checkpoint identity or epoch metadata mismatch")
+            expected_access = self.identity.get("access_ledger", {})
+            access = payload.get("access_ledger")
+            if access is not None and (
+                bool(access.get("comparator_integrity_bytes_hashed"))
+                != bool(expected_access.get("comparator_integrity_bytes_hashed", False))
+                or access.get("comparator_values_decoded")
+                or tuple(access.get("held_folds_opened", ()))
+                != tuple(expected_access.get("held_folds_opened", ()))
+                or access.get("folds_0_1_2_opened")
+                or access.get("external_or_official_evidence_opened")
+            ):
+                raise RuntimeError("Recovery checkpoint access-ledger mismatch")
+            return payload
+        if errors:
+            raise RuntimeError("No valid checkpoint in two-generation recovery window: " + "; ".join(errors))
+        return None
+
+    def save(self, payload: dict[str, Any]) -> Path:
+        self._validate_payload(payload)
+        self.root.mkdir(parents=True, exist_ok=True)
+        generation = f"generation-{int(payload['completed_epoch']):04d}-{time.time_ns()}-{uuid.uuid4().hex}"
+        checkpoint = self.root / f"{generation}.pt"
+        temporary = self.root / f".{generation}.tmp"
+        torch.save(payload, temporary)
+        with temporary.open("rb") as stream:
+            os.fsync(stream.fileno())
+        os.replace(temporary, checkpoint)
+        descriptor = {
+            "schema_version": RECOVERY_SCHEMA_VERSION,
+            "checkpoint": checkpoint.name,
+            "sha256": sha256(checkpoint),
+            "identity_sha256": self.identity_sha256,
+            "completed_epoch": int(payload["completed_epoch"]),
+            "next_epoch": int(payload["next_epoch"]),
+        }
+        manifest = self.root / f"{generation}.json"
+        atomic_replace_json(manifest, descriptor)
+        previous = self._pointer_descriptors()
+        generations = [descriptor] + [item for item in previous if item.get("checkpoint") != checkpoint.name]
+        atomic_replace_json(
+            self.pointer,
+            {"schema_version": RECOVERY_SCHEMA_VERSION, "generations": generations[:2]},
+        )
+        _fsync_directory(self.root)
+        return checkpoint
+
+
 def verify_protocol(protocol: dict[str, Any], protocol_path: Path, *, smoke: bool) -> dict[str, Path]:
     frozen = protocol.get("status") == "frozen_before_held_outcomes"
     if not smoke and not frozen:
@@ -877,10 +1381,26 @@ def smoke(protocol: dict[str, Any], paths: dict[str, Path]) -> dict[str, Any]:
     return result
 
 
-def runtime_smoke(protocol: dict[str, Any], protocol_path: Path, paths: dict[str, Path]) -> dict[str, Any]:
-    """Exercise the exact first dense update using fold-3 fitting evidence only."""
+def _nested_exact_equal(left: Any, right: Any) -> bool:
+    if torch.is_tensor(left) or torch.is_tensor(right):
+        return torch.is_tensor(left) and torch.is_tensor(right) and torch.equal(left.cpu(), right.cpu())
+    if isinstance(left, np.ndarray) or isinstance(right, np.ndarray):
+        return isinstance(left, np.ndarray) and isinstance(right, np.ndarray) and np.array_equal(left, right)
+    if isinstance(left, dict) or isinstance(right, dict):
+        return isinstance(left, dict) and isinstance(right, dict) and left.keys() == right.keys() and all(
+            _nested_exact_equal(left[key], right[key]) for key in left
+        )
+    if isinstance(left, (list, tuple)) or isinstance(right, (list, tuple)):
+        return type(left) is type(right) and len(left) == len(right) and all(
+            _nested_exact_equal(a, b) for a, b in zip(left, right)
+        )
+    return bool(left == right)
+
+
+def checkpoint_roundtrip_smoke(protocol: dict[str, Any], protocol_path: Path, paths: dict[str, Path]) -> dict[str, Any]:
+    """Attest exact next-batch/update recovery using fitting evidence only."""
     if not torch.cuda.is_available():
-        raise RuntimeError("--runtime-smoke requires CUDA")
+        raise RuntimeError("--checkpoint-roundtrip-smoke requires CUDA")
     groups = fold_lookup(paths["fold_protocol"])
     fit_records = records_for_folds(paths["manifest"], groups, [3])
     inner_training, inner_validation, training_groups, validation_groups, cutpoints = prepare_endpoint_data(
@@ -891,14 +1411,14 @@ def runtime_smoke(protocol: dict[str, Any], protocol_path: Path, paths: dict[str
     batcher = SiteBalancedBatcher(
         paths["metadata_root"], inner_training, cutpoints, np.random.default_rng(SEED)
     )
-    batch = batcher.dense_batch(device, int(protocol["training"]["crop_size"]))
+    first_batch = batcher.dense_batch(device, int(protocol["training"]["crop_size"]))
     expected_batch = int(protocol["training"]["dense_batch_size"])
-    if batch["inputs"].shape[0] != expected_batch:
-        raise RuntimeError("Runtime smoke did not form the frozen dense batch size")
-    if len(set(batch["group_id"])) != expected_batch:
-        raise RuntimeError("Runtime smoke dense batch repeated a canonical group")
-    if int(batch["presence"].sum().item()) != expected_batch // 2:
-        raise RuntimeError("Runtime smoke dense batch does not have the frozen 8/8 balance")
+    if first_batch["inputs"].shape[0] != expected_batch:
+        raise RuntimeError("Roundtrip smoke did not form the frozen dense batch size")
+    if len(set(first_batch["group_id"])) != expected_batch:
+        raise RuntimeError("Roundtrip smoke dense batch repeated a canonical group")
+    if int(first_batch["presence"].sum().item()) != expected_batch // 2:
+        raise RuntimeError("Roundtrip smoke dense batch does not have the frozen 8/8 balance")
     model = MarsSensorOrdinalUNet().to(device).train()
     optimizer_spec = protocol["training"]["pixel_optimizer"]
     optimizer = torch.optim.AdamW(
@@ -907,44 +1427,219 @@ def runtime_smoke(protocol: dict[str, Any], protocol_path: Path, paths: dict[str
         betas=(float(optimizer_spec["betas"][0]), float(optimizer_spec["betas"][1])),
         weight_decay=float(optimizer_spec["weight_decay"]),
     )
-    result: dict[str, Any] = pixel_step(model, batch, optimizer)
-    result.update(
-        {
-            "ok": all(math.isfinite(value) for value in result.values()),
-            "mode": "runtime_smoke",
-            "scope": "fold_3_fitting_data_only",
-            "endpoint_role": "fit_fold_3_for_held_fold_4",
-            "protocol": str(protocol_path.relative_to(ROOT)),
-            "protocol_sha256": sha256(protocol_path),
-            "protocol_identity": protocol_identity(protocol),
-            "runtime_environment": dict(REQUIRED_RUNTIME_ENV),
-            "seed": SEED,
-            "rows": expected_batch,
-            "distinct_groups": len(set(batch["group_id"])),
-            "sample_ids_sha256": canonical_string_set_hash(batch["sample_id"]),
-            "group_ids_sha256": canonical_string_set_hash(batch["group_id"]),
-            "input_shape": list(batch["inputs"].shape),
-            "pixel_learning_rate": float(optimizer.param_groups[0]["lr"]),
-            "model": model.artifact_metadata(),
-            "device": str(device),
-            "inner_training_rows": len(inner_training),
-            "inner_training_groups": len(training_groups),
-            "inner_training_groups_sha256": canonical_string_set_hash(training_groups),
-            "inner_validation_rows": len(inner_validation),
-            "inner_validation_groups": len(validation_groups),
-            "inner_validation_groups_sha256": canonical_string_set_hash(validation_groups),
-            "cutpoints": cutpoints.tolist(),
-            "cutpoint_source": "fold_3_inner_training_groups_only",
-            "peak_cuda_allocated_bytes": int(torch.cuda.max_memory_allocated(device)),
-            "peak_cuda_reserved_bytes": int(torch.cuda.max_memory_reserved(device)),
-            "inner_validation_outcome_opened": False,
-            "held_outcome_opened": False,
-            "comparator_opened": False,
-            "folds_0_1_2_opened": False,
-            "external_or_official_evidence_opened": False,
-        }
+    scene_optimizer_spec = protocol["training"]["scene_optimizer"]
+    scene_optimizer = torch.optim.AdamW(
+        model.scene_parameters(),
+        lr=0.0,
+        betas=(float(scene_optimizer_spec["betas"][0]), float(scene_optimizer_spec["betas"][1])),
+        weight_decay=float(scene_optimizer_spec["weight_decay"]),
     )
+    first_result = pixel_step(model, first_batch, optimizer)
+    first_ids = list(first_batch["sample_id"])
+    first_groups = list(first_batch["group_id"])
+    checkpoint_rng = capture_rng_state(batcher)
+    smoke_identity = {
+        "mode": "checkpoint_roundtrip_smoke",
+        "protocol_sha256": sha256(protocol_path),
+        "protocol_identity": protocol_identity(protocol),
+        "scientific_digest": scientific_digest(protocol),
+        "runtime_signature": runtime_signature(),
+        "fit_fold": 3,
+        "held_fold": 4,
+        "ordered_fit_records_sha256": ordered_records_hash(fit_records),
+        "ordered_inner_training_records_sha256": ordered_records_hash(inner_training),
+        "seed": SEED,
+        "schedule_digest": schedule_digest(protocol),
+        "access_ledger": AccessLedger(comparator_integrity_bytes_hashed=False).snapshot(),
+    }
+    checkpoint_payload = {
+        "schema_version": RECOVERY_SCHEMA_VERSION,
+        "identity": smoke_identity,
+        "live_model_state": _cpu_state(model),
+        "best_model_state": _cpu_state(model),
+        "pixel_optimizer_state": optimizer.state_dict(),
+        "scene_optimizer_state": scene_optimizer.state_dict(),
+        "pixel_optimizer_param_groups": copy.deepcopy(optimizer.state_dict()["param_groups"]),
+        "scene_optimizer_param_groups": copy.deepcopy(scene_optimizer.state_dict()["param_groups"]),
+        "pixel_optimizer_lrs": [float(group["lr"]) for group in optimizer.param_groups],
+        "scene_optimizer_lrs": [float(group["lr"]) for group in scene_optimizer.param_groups],
+        "best_rank": [0.0, 0.0, 0.0],
+        "best_epoch": 0,
+        "history": [],
+        "cutpoints": cutpoints.copy(),
+        "rng_state": checkpoint_rng,
+        "completed_epoch": 0,
+        "next_epoch": 1,
+        "held_fold": 4,
+        "fit_fold": 3,
+        "access_ledger": smoke_identity["access_ledger"],
+    }
+    with tempfile.TemporaryDirectory(prefix="mars-ordinal-roundtrip-") as temporary_directory:
+        store = RecoveryStore(Path(temporary_directory), smoke_identity, device)
+        store.save(checkpoint_payload)
+        next_expected = batcher.dense_batch(device, int(protocol["training"]["crop_size"]))
+        expected_ids = list(next_expected["sample_id"])
+        expected_groups = list(next_expected["group_id"])
+        expected_result = pixel_step(model, next_expected, optimizer)
+        expected_model_state = _cpu_state(model)
+        expected_optimizer_state = copy.deepcopy(optimizer.state_dict())
+        del model, optimizer, scene_optimizer, first_batch, next_expected
+        torch.cuda.empty_cache()
+        recovered_model = MarsSensorOrdinalUNet().to(device).train()
+        recovered_optimizer = torch.optim.AdamW(
+            recovered_model.pixel_parameters(),
+            lr=0.0,
+            betas=(float(optimizer_spec["betas"][0]), float(optimizer_spec["betas"][1])),
+            weight_decay=float(optimizer_spec["weight_decay"]),
+        )
+        recovered_scene_optimizer = torch.optim.AdamW(
+            recovered_model.scene_parameters(),
+            lr=0.0,
+            betas=(float(scene_optimizer_spec["betas"][0]), float(scene_optimizer_spec["betas"][1])),
+            weight_decay=float(scene_optimizer_spec["weight_decay"]),
+        )
+        recovered_batcher = SiteBalancedBatcher(
+            paths["metadata_root"], inner_training, cutpoints, np.random.default_rng(SEED + 1)
+        )
+        recovered = store.load()
+        if recovered is None:
+            raise RuntimeError("Roundtrip smoke checkpoint disappeared")
+        recovered_model.load_state_dict(recovered["live_model_state"], strict=True)
+        recovered_optimizer.load_state_dict(recovered["pixel_optimizer_state"])
+        recovered_scene_optimizer.load_state_dict(recovered["scene_optimizer_state"])
+        # Restore RNG last, after model/optimizer/batcher construction and state loading.
+        restore_rng_state(recovered["rng_state"], recovered_batcher)
+        next_recovered = recovered_batcher.dense_batch(device, int(protocol["training"]["crop_size"]))
+        identities_equal = (
+            expected_ids == list(next_recovered["sample_id"])
+            and expected_groups == list(next_recovered["group_id"])
+        )
+        recovered_result = pixel_step(recovered_model, next_recovered, recovered_optimizer)
+        next_step_equal = (
+            identities_equal
+            and expected_result == recovered_result
+            and _nested_exact_equal(expected_model_state, _cpu_state(recovered_model))
+            and _nested_exact_equal(expected_optimizer_state, recovered_optimizer.state_dict())
+        )
+    result: dict[str, Any] = dict(first_result)
+    result.update({
+        "ok": all(math.isfinite(value) for value in first_result.values()) and next_step_equal,
+        "mode": "checkpoint_roundtrip_smoke",
+        "scope": "fold_3_fitting_data_only",
+        "endpoint_role": "fit_fold_3_for_held_fold_4",
+        "protocol": str(protocol_path.relative_to(ROOT)),
+        "protocol_sha256": sha256(protocol_path),
+        "protocol_identity": protocol_identity(protocol),
+        "runtime_environment": dict(REQUIRED_RUNTIME_ENV),
+        "runtime_signature": runtime_signature(),
+        "seed": SEED,
+        "rows": expected_batch,
+        "distinct_groups": len(set(first_groups)),
+        "first_sample_ids_sha256": canonical_json_hash(first_ids),
+        "first_group_ids_sha256": canonical_json_hash(first_groups),
+        "next_sample_ids_sha256": canonical_json_hash(expected_ids),
+        "next_group_ids_sha256": canonical_json_hash(expected_groups),
+        "next_sample_and_group_identities_equal": identities_equal,
+        "next_step_model_optimizer_exactly_equal": next_step_equal,
+        "input_shape": [expected_batch, 14, int(protocol["training"]["crop_size"]), int(protocol["training"]["crop_size"])],
+        "pixel_learning_rate": pixel_learning_rate(1, int(protocol["training"]["epochs"])),
+        "inner_training_rows": len(inner_training),
+        "inner_training_groups": len(training_groups),
+        "inner_training_groups_sha256": canonical_string_set_hash(training_groups),
+        "inner_validation_rows": len(inner_validation),
+        "inner_validation_groups": len(validation_groups),
+        "cutpoints": cutpoints.tolist(),
+        "peak_cuda_allocated_bytes": int(torch.cuda.max_memory_allocated(device)),
+        "peak_cuda_reserved_bytes": int(torch.cuda.max_memory_reserved(device)),
+        "inner_validation_outcome_opened": False,
+        "held_outcome_opened": False,
+        "comparator_integrity_bytes_hashed": False,
+        "comparator_values_decoded": False,
+        "folds_0_1_2_opened": False,
+        "external_or_official_evidence_opened": False,
+    })
     return result
+
+
+def runtime_smoke(protocol: dict[str, Any], protocol_path: Path, paths: dict[str, Path]) -> dict[str, Any]:
+    """Backward-compatible name for the frozen checkpoint-roundtrip smoke."""
+    return checkpoint_roundtrip_smoke(protocol, protocol_path, paths)
+
+
+def prediction_part_payload(values: dict[str, np.ndarray], binding: dict[str, Any]) -> dict[str, Any]:
+    arrays = {
+        key: {"dtype": str(np.asarray(value).dtype), "shape": list(np.asarray(value).shape), "values": np.asarray(value).tolist()}
+        for key, value in values.items()
+    }
+    return {"schema_version": RECOVERY_SCHEMA_VERSION, "binding": binding, "arrays": arrays}
+
+
+def decode_prediction_part(payload: dict[str, Any], expected_binding: dict[str, Any]) -> dict[str, np.ndarray]:
+    if payload.get("schema_version") != RECOVERY_SCHEMA_VERSION or payload.get("binding") != expected_binding:
+        raise RuntimeError("Held prediction part identity mismatch")
+    result: dict[str, np.ndarray] = {}
+    for key, encoded in payload.get("arrays", {}).items():
+        value = np.asarray(encoded["values"], dtype=np.dtype(encoded["dtype"]))
+        if list(value.shape) != encoded["shape"]:
+            raise RuntimeError(f"Held prediction part shape mismatch: {key}")
+        result[key] = value
+    required = {"sample_ids", "labels", "sensors", "groups", "folds", "scores", "dense_counts"}
+    if set(result) != required:
+        raise RuntimeError("Held prediction part array schema mismatch")
+    size = len(result["sample_ids"])
+    if any(len(value) != size for value in result.values()) or not np.all(result["folds"] == expected_binding["held_fold"]):
+        raise RuntimeError("Held prediction part row/fold mismatch")
+    if canonical_json_hash(result["sample_ids"].astype(str).tolist()) != expected_binding["ordered_sample_ids_sha256"]:
+        raise RuntimeError("Held prediction part sample order mismatch")
+    return result
+
+
+def seal_or_reuse_prediction_part(
+    path: Path,
+    values: dict[str, np.ndarray] | None,
+    binding: dict[str, Any],
+) -> dict[str, np.ndarray]:
+    """Seal a JSON-held part, or reuse it only after full identity/schema validation."""
+    if path.exists():
+        if path.stat().st_mode & 0o222:
+            raise RuntimeError(f"Existing held prediction part is not read-only: {path}")
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        return decode_prediction_part(payload, binding)
+    if values is None:
+        raise FileNotFoundError(path)
+    payload = prediction_part_payload(values, binding)
+    atomic_replace_json(path, payload)
+    os.chmod(path, 0o444)
+    return decode_prediction_part(payload, binding)
+
+
+def evaluate_or_reuse_prediction_part(
+    path: Path,
+    binding: dict[str, Any],
+    evaluate: Callable[[], dict[str, np.ndarray]],
+) -> tuple[dict[str, np.ndarray], bool]:
+    """Never call the one-shot held evaluator when a valid immutable part exists."""
+    if path.exists():
+        return seal_or_reuse_prediction_part(path, None, binding), True
+    return seal_or_reuse_prediction_part(path, evaluate(), binding), False
+
+
+def authorize_comparator_decode(
+    candidate_path: Path,
+    part_paths: Sequence[Path],
+    ledger: AccessLedger,
+) -> None:
+    """Open semantic comparator access only at the frozen immutable boundary."""
+    if len(part_paths) != 2 or len({path.resolve() for path in part_paths}) != 2:
+        raise RuntimeError("Comparator decode requires exactly two distinct held parts")
+    for path in (*part_paths, candidate_path):
+        if not path.is_file() or path.stat().st_mode & 0o222:
+            raise RuntimeError(f"Comparator decode blocked by mutable or missing candidate artifact: {path}")
+    if set(ledger.held_folds_opened) != {3, 4}:
+        raise RuntimeError("Comparator decode requires both held folds to be durably represented")
+    if not ledger.comparator_integrity_bytes_hashed or ledger.comparator_values_decoded:
+        raise RuntimeError("Comparator access ledger is not at the frozen pre-decode boundary")
+    ledger.comparator_values_decoded = True
 
 
 def merge_predictions(parts: Sequence[dict[str, np.ndarray]]) -> dict[str, np.ndarray]:
@@ -972,31 +1667,98 @@ def markdown_report(report: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def run_full(protocol: dict[str, Any], protocol_path: Path, paths: dict[str, Path]) -> dict[str, Any]:
+def run_full(
+    protocol: dict[str, Any],
+    protocol_path: Path,
+    paths: dict[str, Path],
+    *,
+    runtime: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     groups = fold_lookup(paths["fold_protocol"])
     all_records = records_for_folds(paths["manifest"], groups, [3, 4])
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    runtime = runtime or runtime_signature()
+    ledger = AccessLedger()
+    comparator_preflight = preflight_comparator_hashes(paths, ledger)
     endpoint_metadata: list[dict[str, Any]] = []
     endpoint_states: dict[str, Any] = {}
+    candidate_path = (ROOT / protocol["outputs"]["candidate_predictions"]).resolve()
     prediction_parts: list[dict[str, np.ndarray]] = []
+    part_paths: list[Path] = []
+    part_receipts: dict[str, Any] = {}
+    # Preserve the frozen endpoint->held->endpoint->held execution order. On
+    # restart, train_endpoint restores its complete boundary, and constructing
+    # the held model on both paths preserves the exact global RNG progression.
     for held_fold in (3, 4):
         fit_records = [row for row in all_records if groups[str(row["group_id"])] == 7 - held_fold]
         held_records = [row for row in all_records if groups[str(row["group_id"])] == held_fold]
-        metadata, state, cutpoints = train_endpoint(protocol, paths, fit_records, held_fold, device)
+        metadata, state, cutpoints = train_endpoint(
+            protocol,
+            paths,
+            fit_records,
+            held_fold,
+            device,
+            protocol_path=protocol_path,
+            runtime=runtime,
+            ledger=ledger,
+        )
+        ledger.inner_validation_outcomes_opened = True
         endpoint_metadata.append(metadata)
-        endpoint_states[str(held_fold)] = {"state_dict": state, "selected_epoch": metadata["selected_epoch"], "cutpoints": cutpoints}
+        endpoint_states[str(held_fold)] = {
+            "state_dict": state,
+            "selected_epoch": metadata["selected_epoch"],
+            "cutpoints": cutpoints,
+            "recovery_identity_sha256": metadata["recovery_identity_sha256"],
+        }
+        binding = {
+            "protocol_identity": protocol_identity(protocol),
+            "scientific_digest": scientific_digest(protocol),
+            "held_fold": held_fold,
+            "fit_fold": 7 - held_fold,
+            "endpoint_recovery_identity_sha256": metadata["recovery_identity_sha256"],
+            "ordered_held_records_sha256": ordered_records_hash(held_records),
+            "ordered_sample_ids_sha256": canonical_json_hash([str(row["sample_id"]) for row in held_records]),
+            "access_before_open": {
+                "comparator_integrity_bytes_hashed": True,
+                "comparator_values_decoded": False,
+                "previous_immutable_held_folds": list(ledger.held_folds_opened),
+                "folds_0_1_2_opened": False,
+                "external_or_official_evidence_opened": False,
+            },
+        }
+        part_path = candidate_path.with_name(f"{candidate_path.stem}.held-{held_fold}.part.json")
+        # Construction and state loading are intentionally performed even when
+        # reusing a part: they consume the same global RNG as the original path,
+        # while the held evaluation itself is deterministic and is not repeated.
         model = MarsSensorOrdinalUNet().to(device)
         model.load_state_dict(state, strict=True)
-        prediction_parts.append(evaluate_candidate(model, paths["metadata_root"], held_records, cutpoints, device, fold=held_fold))
+        def evaluate_once() -> dict[str, np.ndarray]:
+            ledger.open_held_fold(held_fold)
+            return evaluate_candidate(
+                model, paths["metadata_root"], held_records, cutpoints, device, fold=held_fold
+            )
+        part, reused = evaluate_or_reuse_prediction_part(part_path, binding, evaluate_once)
         del model
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
+        ledger.open_held_fold(held_fold)
+        prediction_parts.append(part)
+        part_paths.append(part_path)
+        part_receipts[str(held_fold)] = {
+            "path": str(part_path.relative_to(ROOT)),
+            "sha256": sha256(part_path),
+            "immutable_mode": "0444",
+            "reused": reused,
+        }
     candidate = merge_predictions(prediction_parts)
-    candidate_path = (ROOT / protocol["outputs"]["candidate_predictions"]).resolve()
     atomic_npz(candidate_path, schema_version=np.uint8(1), **candidate)
     os.chmod(candidate_path, 0o444)
     candidate_hash = sha256(candidate_path)
-    # Comparator evidence is opened/aligned only after candidate predictions are immutable.
+    if candidate_path.stat().st_mode & 0o222:
+        raise RuntimeError("Final candidate artifact is not immutable")
+    # Only now, after both immutable parts have been merged and the final candidate
+    # is immutable, may comparator containers be semantically decoded.
+    authorize_comparator_decode(candidate_path, part_paths, ledger)
     scene_comparator = align_comparator(candidate, paths["champion_scene_cache"])
     comparator_dense = reconstruct_dense_comparator(candidate, all_records, paths, device, scene_comparator)
     bootstrap = protocol["bootstrap"]
@@ -1008,12 +1770,15 @@ def run_full(protocol: dict[str, Any], protocol_path: Path, paths: dict[str, Pat
     atomic_torch(state_path, {"schema_version": 1, "seed": SEED, "states_by_held_fold": endpoint_states})
     report = {"schema_version": 1, "protocol": str(protocol_path.relative_to(ROOT)), "protocol_sha256": sha256(protocol_path),
               "seed": SEED, "scope": "development folds 3/4 only", "endpoints": endpoint_metadata,
-              "candidate_predictions": {"path": str(candidate_path.relative_to(ROOT)), "sha256": candidate_hash, "immutable_mode": "0444"},
+              "candidate_predictions": {"path": str(candidate_path.relative_to(ROOT)), "sha256": candidate_hash, "immutable_mode": "0444",
+                                        "held_parts": part_receipts},
               "endpoint_states": {"path": str(state_path.relative_to(ROOT)), "sha256": sha256(state_path), "exactly_one_checkpoint_per_endpoint": True},
-              "comparators": {"scene": {"path": str(paths["champion_scene_cache"].relative_to(ROOT)), "sha256": sha256(paths["champion_scene_cache"])},
+              "comparators": {"preflight_raw_sha256": comparator_preflight,
+                              "scene": {"path": str(paths["champion_scene_cache"].relative_to(ROOT)), "sha256": sha256(paths["champion_scene_cache"])},
                               "dense": {"state_path": str(paths["gaussian_dense_state"].relative_to(ROOT)), "state_sha256": sha256(paths["gaussian_dense_state"]),
                                         "strength": GAUSSIAN_DENSE_STRENGTH, "thresholds": list(DENSE_THRESHOLDS), "scene_gate": DENSE_SCENE_GATE,
                                         "minimum_connected_pixels": MINIMUM_CONNECTED_PIXELS}},
+              "access_ledger": ledger.snapshot(),
               "metrics": metrics, "decision": "stop_for_codex_review" if metrics["passed"] else "stop_no_second_seed"}
     json_path = (ROOT / protocol["outputs"]["json"]).resolve()
     markdown_path = (ROOT / protocol["outputs"]["markdown"]).resolve()
@@ -1026,11 +1791,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--protocol", default=DEFAULT_PROTOCOL.as_posix())
     parser.add_argument("--smoke", action="store_true", help="Authorized fold-3 fitting-data gradient smoke only")
-    parser.add_argument("--runtime-smoke", action="store_true", help="Exact fitting-only held-runtime CUDA smoke")
+    parser.add_argument("--runtime-smoke", action="store_true", help="Alias for the native-Windows checkpoint roundtrip smoke")
+    parser.add_argument("--checkpoint-roundtrip-smoke", action="store_true", help="Native-Windows fitting-only production batch-16 recovery attestation")
     parser.add_argument("--run-held-folds", action="store_true", help="Explicit one-shot held-fold authorization")
     args = parser.parse_args(argv)
-    if sum(map(int, (args.smoke, args.runtime_smoke, args.run_held_folds))) > 1:
-        parser.error("--smoke, --runtime-smoke, and --run-held-folds are mutually exclusive")
+    if sum(map(int, (args.smoke, args.runtime_smoke, args.checkpoint_roundtrip_smoke, args.run_held_folds))) > 1:
+        parser.error("--smoke, --runtime-smoke, --checkpoint-roundtrip-smoke, and --run-held-folds are mutually exclusive")
     return args
 
 
@@ -1038,21 +1804,26 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     protocol_path = (ROOT / args.protocol).resolve()
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
-    if not args.smoke and not args.runtime_smoke and not args.run_held_folds:
+    if not args.smoke and not args.runtime_smoke and not args.checkpoint_roundtrip_smoke and not args.run_held_folds:
         raise RuntimeError("Refusing held outcomes without explicit --run-held-folds authorization")
-    if args.runtime_smoke or args.run_held_folds:
-        verify_runtime_environment()
-    paths = verify_protocol(protocol, protocol_path, smoke=args.smoke or args.runtime_smoke)
+    runtime: dict[str, Any] | None = None
+    if args.runtime_smoke or args.checkpoint_roundtrip_smoke or args.run_held_folds:
+        runtime = verify_runtime_environment(require_native_windows=True)
+    paths = verify_protocol(
+        protocol,
+        protocol_path,
+        smoke=args.smoke or args.runtime_smoke or args.checkpoint_roundtrip_smoke,
+    )
     seed_everything()
     if args.smoke:
         result = smoke(protocol, paths)
         print(json.dumps(result, sort_keys=True))
         return 0 if result["ok"] else 1
-    if args.runtime_smoke:
-        result = runtime_smoke(protocol, protocol_path, paths)
+    if args.runtime_smoke or args.checkpoint_roundtrip_smoke:
+        result = checkpoint_roundtrip_smoke(protocol, protocol_path, paths)
         print(json.dumps(result, sort_keys=True))
         return 0 if result["ok"] else 1
-    report = run_full(protocol, protocol_path, paths)
+    report = run_full(protocol, protocol_path, paths, runtime=runtime)
     print(json.dumps({"passed": report["metrics"]["passed"], "decision": report["decision"]}, sort_keys=True))
     return 0
 
