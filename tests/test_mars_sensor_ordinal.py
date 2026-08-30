@@ -29,6 +29,7 @@ from train_mars_sensor_ordinal import (
     protocol_identity,
     scene_learning_rate,
     validate_requested_folds,
+    verify_runtime_environment,
     verify_protocol,
 )
 
@@ -317,6 +318,39 @@ def test_smoke_verification_does_not_read_comparator_evidence(
 
     monkeypatch.setattr(trainer, "sha256", guarded_sha256)
     verify_protocol(protocol, protocol_path, smoke=True)
+
+
+def test_runtime_modes_require_exact_compatibility_environment(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("PYTORCH_ALLOC_CONF", raising=False)
+    monkeypatch.setenv("CUDA_MODULE_LOADING", "LAZY")
+    with pytest.raises(RuntimeError, match="PYTORCH_ALLOC_CONF"):
+        verify_runtime_environment()
+    monkeypatch.setenv("PYTORCH_ALLOC_CONF", "expandable_segments:True")
+    monkeypatch.setenv("CUDA_MODULE_LOADING", "EAGER")
+    with pytest.raises(RuntimeError, match="CUDA_MODULE_LOADING"):
+        verify_runtime_environment()
+    monkeypatch.setenv("CUDA_MODULE_LOADING", "LAZY")
+    verify_runtime_environment()
+
+
+def test_runtime_smoke_cli_verifies_environment_before_data_access(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("PYTORCH_ALLOC_CONF", raising=False)
+    monkeypatch.delenv("CUDA_MODULE_LOADING", raising=False)
+    with pytest.raises(RuntimeError, match="Runtime compatibility environment mismatch"):
+        main(["--runtime-smoke"])
+
+
+def test_held_cli_verifies_environment_before_data_access(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("PYTORCH_ALLOC_CONF", raising=False)
+    monkeypatch.delenv("CUDA_MODULE_LOADING", raising=False)
+    with pytest.raises(RuntimeError, match="Runtime compatibility environment mismatch"):
+        main(["--run-held-folds"])
 
 
 def test_cli_refuses_to_open_held_outcomes_without_explicit_flag() -> None:

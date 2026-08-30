@@ -5,7 +5,7 @@
   "implementation_base_commit": "f83584aecaeee0fa92fe1fe215a6a89fb6ce3f82",
   "trainer": {
     "path": "tools/train_mars_sensor_ordinal.py",
-    "sha256": "cbf136d9d80106e9c76d09a78e61d26b57a7a0264af7a14297113e255fc3a951"
+    "sha256": "1fa8742823fe0df4546caef69faffe548fd6afdd7cda34d94e7cbd26c05799d7"
   },
   "model": {
     "path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py",
@@ -214,6 +214,39 @@
       "finite": true
     }
   },
+  "preheld_runtime_compatibility_amendment": {
+    "status": "frozen_after_wsl_dxg_sigbus_before_any_runtime_smoke_or_held_retry",
+    "trigger": "The documented WSL DXG SIGBUS occurred before any scientific outcome and produced no result artifact.",
+    "required_environment": {
+      "PYTORCH_ALLOC_CONF": "expandable_segments:True",
+      "CUDA_MODULE_LOADING": "LAZY"
+    },
+    "enforced_modes": [
+      "--runtime-smoke",
+      "--run-held-folds"
+    ],
+    "runtime_smoke": {
+      "fit_fold": 3,
+      "endpoint_role": "fit fold 3 for held fold 4",
+      "inner_split": "existing deterministic hash-stratified fitting-only split",
+      "cutpoints": "existing inner-training-only q25/q50/q75",
+      "dense_batch_rows": 16,
+      "distinct_groups": 16,
+      "class_balance": "8 positive groups and 8 negative groups",
+      "operation": "one full pixel forward/backward/AdamW optimizer step on CUDA at the frozen epoch-1 learning rate",
+      "receipt_path": "reports/research/mars_sensor_ordinal_runtime_smoke.json",
+      "records": [
+        "finite pixel loss",
+        "finite pixel gradient norm",
+        "peak CUDA allocated bytes",
+        "peak CUDA reserved bytes"
+      ]
+    },
+    "forbidden_access": "No inner-validation outcome, held outcome, comparator artifact, fold 0/1/2, external evidence, or official evidence.",
+    "unchanged": "batch size, crop size, accumulation, precision, model, seed, schedule, thresholds, comparator, metrics, and gates",
+    "held_outcome_accessed": false,
+    "result_artifact_from_failed_run_exists": false
+  },
   "outputs": {
     "candidate_predictions": ".research/mars_sensor_ordinal/candidate_folds34_predictions.npz",
     "endpoint_states": ".research/mars_sensor_ordinal/endpoint_states.pt",
@@ -226,5 +259,5 @@
     "Stop after the fixed seed if any gate fails.",
     "No folds 0/1/2, official paper test, external held outcomes, GHGSat, failed sources, second seed, retuning, or rescue verification."
   ],
-  "protocol_sha256_self_excluding_field": "21970758f54dd6973a40bdb96039096cfb3105521d7264ebdd5ae6814eec607f"
+  "protocol_sha256_self_excluding_field": "2d27cca136a7b726bd9f8fdd1e44dc5c7577287da78a0a9fbf192e67ffaf7461"
 }

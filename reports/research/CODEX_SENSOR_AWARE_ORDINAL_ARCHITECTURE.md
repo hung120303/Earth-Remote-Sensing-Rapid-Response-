@@ -176,6 +176,12 @@ If seed `26082917` fails any gate, stop with no second seed, no retuning, no rep
 
 Bulk checkpoints, cutpoint caches, prediction arrays, and dense comparator reconstruction stay under ignored `.research/`. Never commit them. Commit only reproducible code/config/tests and compact JSON/Markdown reports. No output may overwrite an existing one-shot result.
 
+## Pre-held runtime compatibility amendment
+
+The first held execution reached no scientific outcome and wrote no result artifact: WSL's DXG CUDA path terminated with `SIGBUS`. Before any retry, the runtime contract is amended only to require `PYTORCH_ALLOC_CONF=expandable_segments:True` and `CUDA_MODULE_LOADING=LAZY` for both `--runtime-smoke` and `--run-held-folds`. No batch size, crop size, accumulation, precision, model, seed, schedule, threshold, comparator, metric, or gate changes.
+
+`--runtime-smoke` authenticates the frozen protocol, executable dependencies, manifest, and fold map without opening comparator artifacts. It constructs the held-fold-4 endpoint setup from fold-3 fitting records only, freezes the existing deterministic inner split and inner-training-only cutpoints, forms the exact frozen 16-row/16-group 8-positive/8-negative dense batch, and runs one full pixel forward/backward/AdamW update on CUDA at the frozen epoch-1 learning rate. It records finite loss/gradient plus peak allocated/reserved CUDA memory. It does not evaluate inner validation, infer on a held fold, or open folds 0/1/2, comparator, external, or official evidence.
+
 ## Frozen constants checklist
 
 - outer endpoints: fold 4 -> 3 and fold 3 -> 4

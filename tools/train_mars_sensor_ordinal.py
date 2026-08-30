@@ -37,6 +37,10 @@ DENSE_THRESHOLDS = (0.8, 0.7)
 DENSE_SCENE_GATE = 0.75
 MINIMUM_CONNECTED_PIXELS = 100
 GAUSSIAN_DENSE_STRENGTH = 0.1
+REQUIRED_RUNTIME_ENV = {
+    "PYTORCH_ALLOC_CONF": "expandable_segments:True",
+    "CUDA_MODULE_LOADING": "LAZY",
+}
 
 
 def sha256(path: Path) -> str:
@@ -55,6 +59,17 @@ def seed_everything(seed: int = SEED) -> None:
         torch.cuda.manual_seed_all(seed)
     torch.use_deterministic_algorithms(True)
     torch.backends.cudnn.benchmark = False
+
+
+def verify_runtime_environment() -> None:
+    """Require the preregistered CUDA compatibility-only environment."""
+    mismatches = {
+        name: {"required": required, "actual": os.environ.get(name)}
+        for name, required in REQUIRED_RUNTIME_ENV.items()
+        if os.environ.get(name) != required
+    }
+    if mismatches:
+        raise RuntimeError(f"Runtime compatibility environment mismatch: {mismatches}")
 
 
 def validate_requested_folds(folds: Iterable[int]) -> tuple[int, ...]:
@@ -300,6 +315,8 @@ def collate(rows: Sequence[dict[str, Any]], device: torch.device) -> dict[str, A
             local[key] = result
         padded.append(local)
     result: dict[str, Any] = {"sample_id": [row["sample_id"] for row in rows]}
+    if all("group_id" in row for row in rows):
+        result["group_id"] = [str(row["group_id"]) for row in rows]
     fields = (("inputs", torch.float32), ("observable", torch.bool), ("plume", torch.float32),
               ("ordinal_level", torch.long), ("ordinal_support", torch.bool),
               ("presence", torch.float32), ("sensor_index", torch.long))
@@ -369,6 +386,7 @@ class SiteBalancedBatcher:
                         if "source valid fraction" not in str(error):
                             raise
                         continue
+                    crop["group_id"] = group
                     crops.append(crop)
                     used_groups.add(group)
                     accepted += 1
@@ -789,6 +807,11 @@ def protocol_identity(protocol: dict[str, Any]) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def canonical_string_set_hash(values: Iterable[str]) -> str:
+    payload = "\n".join(sorted(map(str, values))) + "\n"
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def verify_protocol(protocol: dict[str, Any], protocol_path: Path, *, smoke: bool) -> dict[str, Path]:
     frozen = protocol.get("status") == "frozen_before_held_outcomes"
     if not smoke and not frozen:
@@ -851,6 +874,76 @@ def smoke(protocol: dict[str, Any], paths: dict[str, Path]) -> dict[str, Any]:
                    "folds_0_1_2_opened": False})
     if torch.cuda.is_available():
         result["peak_cuda_bytes"] = torch.cuda.max_memory_allocated()
+    return result
+
+
+def runtime_smoke(protocol: dict[str, Any], protocol_path: Path, paths: dict[str, Path]) -> dict[str, Any]:
+    """Exercise the exact first dense update using fold-3 fitting evidence only."""
+    if not torch.cuda.is_available():
+        raise RuntimeError("--runtime-smoke requires CUDA")
+    groups = fold_lookup(paths["fold_protocol"])
+    fit_records = records_for_folds(paths["manifest"], groups, [3])
+    inner_training, inner_validation, training_groups, validation_groups, cutpoints = prepare_endpoint_data(
+        paths["metadata_root"], fit_records
+    )
+    device = torch.device("cuda")
+    torch.cuda.reset_peak_memory_stats(device)
+    batcher = SiteBalancedBatcher(
+        paths["metadata_root"], inner_training, cutpoints, np.random.default_rng(SEED)
+    )
+    batch = batcher.dense_batch(device, int(protocol["training"]["crop_size"]))
+    expected_batch = int(protocol["training"]["dense_batch_size"])
+    if batch["inputs"].shape[0] != expected_batch:
+        raise RuntimeError("Runtime smoke did not form the frozen dense batch size")
+    if len(set(batch["group_id"])) != expected_batch:
+        raise RuntimeError("Runtime smoke dense batch repeated a canonical group")
+    if int(batch["presence"].sum().item()) != expected_batch // 2:
+        raise RuntimeError("Runtime smoke dense batch does not have the frozen 8/8 balance")
+    model = MarsSensorOrdinalUNet().to(device).train()
+    optimizer_spec = protocol["training"]["pixel_optimizer"]
+    optimizer = torch.optim.AdamW(
+        model.pixel_parameters(),
+        lr=pixel_learning_rate(1, int(protocol["training"]["epochs"])),
+        betas=(float(optimizer_spec["betas"][0]), float(optimizer_spec["betas"][1])),
+        weight_decay=float(optimizer_spec["weight_decay"]),
+    )
+    result: dict[str, Any] = pixel_step(model, batch, optimizer)
+    result.update(
+        {
+            "ok": all(math.isfinite(value) for value in result.values()),
+            "mode": "runtime_smoke",
+            "scope": "fold_3_fitting_data_only",
+            "endpoint_role": "fit_fold_3_for_held_fold_4",
+            "protocol": str(protocol_path.relative_to(ROOT)),
+            "protocol_sha256": sha256(protocol_path),
+            "protocol_identity": protocol_identity(protocol),
+            "runtime_environment": dict(REQUIRED_RUNTIME_ENV),
+            "seed": SEED,
+            "rows": expected_batch,
+            "distinct_groups": len(set(batch["group_id"])),
+            "sample_ids_sha256": canonical_string_set_hash(batch["sample_id"]),
+            "group_ids_sha256": canonical_string_set_hash(batch["group_id"]),
+            "input_shape": list(batch["inputs"].shape),
+            "pixel_learning_rate": float(optimizer.param_groups[0]["lr"]),
+            "model": model.artifact_metadata(),
+            "device": str(device),
+            "inner_training_rows": len(inner_training),
+            "inner_training_groups": len(training_groups),
+            "inner_training_groups_sha256": canonical_string_set_hash(training_groups),
+            "inner_validation_rows": len(inner_validation),
+            "inner_validation_groups": len(validation_groups),
+            "inner_validation_groups_sha256": canonical_string_set_hash(validation_groups),
+            "cutpoints": cutpoints.tolist(),
+            "cutpoint_source": "fold_3_inner_training_groups_only",
+            "peak_cuda_allocated_bytes": int(torch.cuda.max_memory_allocated(device)),
+            "peak_cuda_reserved_bytes": int(torch.cuda.max_memory_reserved(device)),
+            "inner_validation_outcome_opened": False,
+            "held_outcome_opened": False,
+            "comparator_opened": False,
+            "folds_0_1_2_opened": False,
+            "external_or_official_evidence_opened": False,
+        }
+    )
     return result
 
 
@@ -933,10 +1026,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--protocol", default=DEFAULT_PROTOCOL.as_posix())
     parser.add_argument("--smoke", action="store_true", help="Authorized fold-3 fitting-data gradient smoke only")
+    parser.add_argument("--runtime-smoke", action="store_true", help="Exact fitting-only held-runtime CUDA smoke")
     parser.add_argument("--run-held-folds", action="store_true", help="Explicit one-shot held-fold authorization")
     args = parser.parse_args(argv)
-    if args.smoke and args.run_held_folds:
-        parser.error("--smoke and --run-held-folds are mutually exclusive")
+    if sum(map(int, (args.smoke, args.runtime_smoke, args.run_held_folds))) > 1:
+        parser.error("--smoke, --runtime-smoke, and --run-held-folds are mutually exclusive")
     return args
 
 
@@ -944,12 +1038,18 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     protocol_path = (ROOT / args.protocol).resolve()
     protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
-    if not args.smoke and not args.run_held_folds:
+    if not args.smoke and not args.runtime_smoke and not args.run_held_folds:
         raise RuntimeError("Refusing held outcomes without explicit --run-held-folds authorization")
-    paths = verify_protocol(protocol, protocol_path, smoke=args.smoke)
+    if args.runtime_smoke or args.run_held_folds:
+        verify_runtime_environment()
+    paths = verify_protocol(protocol, protocol_path, smoke=args.smoke or args.runtime_smoke)
     seed_everything()
     if args.smoke:
         result = smoke(protocol, paths)
+        print(json.dumps(result, sort_keys=True))
+        return 0 if result["ok"] else 1
+    if args.runtime_smoke:
+        result = runtime_smoke(protocol, protocol_path, paths)
         print(json.dumps(result, sort_keys=True))
         return 0 if result["ok"] else 1
     report = run_full(protocol, protocol_path, paths)
