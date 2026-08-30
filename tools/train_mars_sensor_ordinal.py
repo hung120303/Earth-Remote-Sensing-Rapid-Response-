@@ -751,18 +751,11 @@ def train_endpoint(
         "best_model_state": best_state,
         "cutpoints": cutpoints.copy(),
     }
-    if endpoint_path.exists() or endpoint_descriptor_path.exists():
-        if not endpoint_path.is_file() or not endpoint_descriptor_path.is_file():
-            raise RuntimeError("Incomplete durable endpoint artifact")
-        if endpoint_path.stat().st_mode & 0o222 or endpoint_descriptor_path.stat().st_mode & 0o222:
-            raise RuntimeError("Durable endpoint state or metadata is not read-only")
-        descriptor = json.loads(endpoint_descriptor_path.read_text(encoding="utf-8"))
-        if (
-            descriptor.get("identity_sha256") != canonical_json_hash(identity)
-            or descriptor.get("sha256") != sha256(endpoint_path)
-            or descriptor.get("selected_epoch") != best_epoch
-        ):
-            raise RuntimeError("Durable endpoint artifact identity/hash mismatch")
+    if endpoint_descriptor_path.exists() and not endpoint_path.exists():
+        raise RuntimeError("Durable endpoint descriptor exists without endpoint state")
+    if endpoint_path.exists():
+        if not endpoint_path.is_file() or endpoint_path.stat().st_mode & 0o222:
+            raise RuntimeError("Durable endpoint state is not an immutable file")
         existing_endpoint = torch.load(endpoint_path, map_location="cpu", weights_only=False)
         if (
             existing_endpoint.get("identity") != identity
@@ -776,15 +769,15 @@ def train_endpoint(
         torch.save(endpoint_value, temporary)
         with temporary.open("rb") as stream:
             os.fsync(stream.fileno())
+        os.chmod(temporary, 0o444)
         os.replace(temporary, endpoint_path)
-        os.chmod(endpoint_path, 0o444)
-        atomic_replace_json(endpoint_descriptor_path, {
-            "schema_version": RECOVERY_SCHEMA_VERSION,
-            "identity_sha256": canonical_json_hash(identity),
-            "sha256": sha256(endpoint_path),
-            "selected_epoch": best_epoch,
-        })
-        os.chmod(endpoint_descriptor_path, 0o444)
+        _fsync_directory(endpoint_path.parent)
+    _seal_or_validate_immutable_json(endpoint_descriptor_path, {
+        "schema_version": RECOVERY_SCHEMA_VERSION,
+        "identity_sha256": canonical_json_hash(identity),
+        "sha256": sha256(endpoint_path),
+        "selected_epoch": best_epoch,
+    })
     return metadata, best_state, cutpoints
 
 
@@ -961,27 +954,39 @@ def atomic_npz(path: Path, **values: Any) -> None:
     if path.exists():
         raise FileExistsError(f"Refusing to overwrite one-shot output: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp.npz")
+    temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp.npz")
     np.savez_compressed(temporary, **values)
+    with temporary.open("rb") as stream:
+        os.fsync(stream.fileno())
+    os.chmod(temporary, 0o444)
     os.replace(temporary, path)
+    _fsync_directory(path.parent)
 
 
 def atomic_torch(path: Path, value: Any) -> None:
     if path.exists():
         raise FileExistsError(f"Refusing to overwrite one-shot output: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
     torch.save(value, temporary)
+    with temporary.open("rb") as stream:
+        os.fsync(stream.fileno())
+    os.chmod(temporary, 0o444)
     os.replace(temporary, path)
+    _fsync_directory(path.parent)
 
 
 def atomic_text(path: Path, text: str) -> None:
     if path.exists():
         raise FileExistsError(f"Refusing to overwrite one-shot output: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
     temporary.write_text(text, encoding="utf-8")
+    with temporary.open("rb") as stream:
+        os.fsync(stream.fileno())
+    os.chmod(temporary, 0o444)
     os.replace(temporary, path)
+    _fsync_directory(path.parent)
 
 
 def protocol_identity(protocol: dict[str, Any]) -> str:
@@ -1316,6 +1321,107 @@ class RecoveryStore:
         return checkpoint
 
 
+def _verify_recovery_output_phase(protocol: dict[str, Any]) -> None:
+    """Admit only an immutable prefix of the finalization state machine."""
+    outputs = protocol["outputs"]
+    ordered_names = ("candidate_predictions", "endpoint_states", "json", "markdown")
+    ordered_paths = [(ROOT / outputs[name]).resolve() for name in ordered_names]
+    present = [path.exists() for path in ordered_paths]
+    if present != sorted(present, reverse=True):
+        raise RuntimeError("Recovery outputs are an unrelated or partial finalization phase")
+    for path, exists in zip(ordered_paths, present):
+        if exists and (not path.is_file() or path.stat().st_mode & 0o222):
+            raise RuntimeError(f"Recovery output is non-file or mutable: {path}")
+
+    candidate_path = ordered_paths[0]
+    expected_protocol_identity = protocol_identity(protocol)
+    expected_scientific_digest = scientific_digest(protocol)
+    part_states: list[str] = []
+    complete_parts: list[dict[str, np.ndarray]] = []
+    complete_part_paths: list[Path] = []
+    complete_bindings: list[dict[str, Any]] = []
+    for held_fold in (3, 4):
+        part_path = candidate_path.with_name(
+            f"{candidate_path.stem}.held-{held_fold}.part.json"
+        )
+        start_path, completion_path = _receipt_paths(part_path)
+        start, part, completion = start_path.exists(), part_path.exists(), completion_path.exists()
+        if part and not start or completion and not (start and part):
+            raise RuntimeError("Held recovery receipts are unrelated or partial")
+        for path in (start_path, part_path, completion_path):
+            if path.exists() and (not path.is_file() or path.stat().st_mode & 0o222):
+                raise RuntimeError(f"Held recovery artifact is non-file or mutable: {path}")
+        if start:
+            try:
+                start_payload = json.loads(start_path.read_text(encoding="utf-8"))
+                binding = start_payload["binding"]
+            except (OSError, json.JSONDecodeError, KeyError, TypeError) as error:
+                raise RuntimeError("Held access-start receipt is unreadable") from error
+            _seal_or_validate_immutable_json(start_path, _held_access_start_receipt(binding))
+            if (
+                not isinstance(binding, dict)
+                or int(binding.get("held_fold", -1)) != held_fold
+                or binding.get("protocol_identity") != expected_protocol_identity
+                or binding.get("scientific_digest") != expected_scientific_digest
+            ):
+                raise RuntimeError("Held access-start receipt fold binding mismatch")
+            if part:
+                decoded = seal_or_reuse_prediction_part(part_path, None, binding)
+                if completion:
+                    _seal_or_validate_immutable_json(
+                        completion_path,
+                        _held_completion_receipt(part_path, start_path, binding),
+                    )
+                    complete_parts.append(decoded)
+                    complete_part_paths.append(part_path)
+                    complete_bindings.append(binding)
+        part_states.append("complete" if completion else "part" if part else "started" if start else "none")
+    if part_states[1] != "none" and part_states[0] != "complete":
+        raise RuntimeError("Held recovery parts do not follow frozen fold order")
+    if present[0] and part_states != ["complete", "complete"]:
+        raise RuntimeError("Final candidate exists without both complete immutable held parts")
+    if present[0]:
+        seal_or_validate_final_candidate(
+            candidate_path,
+            merge_predictions(complete_parts),
+            complete_part_paths,
+            complete_bindings,
+        )
+    state_path, json_path, markdown_path = ordered_paths[1:]
+    if present[1]:
+        try:
+            state = torch.load(state_path, map_location="cpu", weights_only=False)
+        except Exception as error:
+            raise RuntimeError("Recovery endpoint-states output is unreadable") from error
+        if (
+            not isinstance(state, dict)
+            or state.get("schema_version") != RECOVERY_SCHEMA_VERSION
+            or state.get("seed") != SEED
+            or state.get("protocol_identity") != expected_protocol_identity
+            or state.get("scientific_digest") != expected_scientific_digest
+            or state.get("candidate_sha256") != sha256(candidate_path)
+            or set(state.get("states_by_held_fold", {})) != {"3", "4"}
+        ):
+            raise RuntimeError("Recovery endpoint-states output schema mismatch")
+    report: dict[str, Any] | None = None
+    if present[2]:
+        try:
+            report = json.loads(json_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise RuntimeError("Recovery JSON output is unreadable") from error
+        if (
+            not isinstance(report, dict)
+            or report.get("protocol_identity") != expected_protocol_identity
+            or report.get("scientific_digest") != expected_scientific_digest
+            or report.get("candidate_predictions", {}).get("sha256") != sha256(candidate_path)
+            or report.get("endpoint_states", {}).get("sha256") != sha256(state_path)
+        ):
+            raise RuntimeError("Recovery JSON output artifact hash mismatch")
+    if present[3]:
+        assert report is not None
+        seal_or_validate_text_artifact(markdown_path, markdown_report(report))
+
+
 def verify_protocol(protocol: dict[str, Any], protocol_path: Path, *, smoke: bool) -> dict[str, Path]:
     frozen = protocol.get("status") == "frozen_before_held_outcomes"
     if not smoke and not frozen:
@@ -1346,9 +1452,7 @@ def verify_protocol(protocol: dict[str, Any], protocol_path: Path, *, smoke: boo
         if not path.exists():
             raise FileNotFoundError(f"Missing dependency: {name}")
     if not smoke:
-        for path in ((ROOT / value).resolve() for value in protocol["outputs"].values()):
-            if path.exists():
-                raise FileExistsError(f"Refusing to overwrite one-shot output: {path}")
+        _verify_recovery_output_phase(protocol)
     return paths
 
 
@@ -1608,9 +1712,52 @@ def seal_or_reuse_prediction_part(
     if values is None:
         raise FileNotFoundError(path)
     payload = prediction_part_payload(values, binding)
-    atomic_replace_json(path, payload)
-    os.chmod(path, 0o444)
+    atomic_text(path, json.dumps(payload, indent=2, sort_keys=True) + "\n")
     return decode_prediction_part(payload, binding)
+
+
+def _receipt_paths(part_path: Path) -> tuple[Path, Path]:
+    return (
+        part_path.with_name(f"{part_path.stem}.access-start.json"),
+        part_path.with_name(f"{part_path.stem}.completion.json"),
+    )
+
+
+def _seal_or_validate_immutable_json(path: Path, expected: dict[str, Any]) -> None:
+    """Create an immutable receipt, or require the existing receipt to be exact."""
+    if path.exists():
+        if not path.is_file() or path.stat().st_mode & 0o222:
+            raise RuntimeError(f"Recovery receipt is missing, non-file, or mutable: {path}")
+        try:
+            actual = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise RuntimeError(f"Recovery receipt is unreadable: {path}") from error
+        if actual != expected:
+            raise RuntimeError(f"Recovery receipt binding mismatch: {path}")
+        return
+    atomic_text(path, json.dumps(expected, indent=2, sort_keys=True) + "\n")
+
+
+def _held_access_start_receipt(binding: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": RECOVERY_SCHEMA_VERSION,
+        "kind": "held_access_start",
+        "binding": binding,
+    }
+
+
+def _held_completion_receipt(
+    part_path: Path,
+    start_path: Path,
+    binding: dict[str, Any],
+) -> dict[str, Any]:
+    return {
+        "schema_version": RECOVERY_SCHEMA_VERSION,
+        "kind": "held_prediction_part_complete",
+        "binding_sha256": canonical_json_hash(binding),
+        "start_receipt_sha256": sha256(start_path),
+        "part_sha256": sha256(part_path),
+    }
 
 
 def evaluate_or_reuse_prediction_part(
@@ -1618,10 +1765,41 @@ def evaluate_or_reuse_prediction_part(
     binding: dict[str, Any],
     evaluate: Callable[[], dict[str, np.ndarray]],
 ) -> tuple[dict[str, np.ndarray], bool]:
-    """Never call the one-shot held evaluator when a valid immutable part exists."""
-    if path.exists():
-        return seal_or_reuse_prediction_part(path, None, binding), True
-    return seal_or_reuse_prediction_part(path, evaluate(), binding), False
+    """Durably authorize held access and never repeat an uncertain evaluation.
+
+    The start receipt is fsynced before the evaluator is entered.  Therefore a
+    start receipt without a sealed part is an irrecoverable one-shot boundary,
+    not permission to try the evaluator again.  A crash after the part seal but
+    before its completion receipt is recoverable without reopening held data.
+    """
+    start_path, completion_path = _receipt_paths(path)
+    start_exists, part_exists, completion_exists = (
+        start_path.exists(), path.exists(), completion_path.exists()
+    )
+    if completion_exists and not (start_exists and part_exists):
+        raise RuntimeError("Held completion receipt exists without its start receipt and part")
+    if part_exists and not start_exists:
+        raise RuntimeError("Held prediction part exists without a durable access-start receipt")
+    if start_exists:
+        _seal_or_validate_immutable_json(start_path, _held_access_start_receipt(binding))
+        if not part_exists:
+            raise RuntimeError(
+                "Held access already started without a sealed prediction part; refusing repeat evaluation"
+            )
+        part = seal_or_reuse_prediction_part(path, None, binding)
+        completion = _held_completion_receipt(path, start_path, binding)
+        _seal_or_validate_immutable_json(completion_path, completion)
+        return part, True
+
+    if completion_exists:
+        raise RuntimeError("Held completion receipt exists without a durable access-start receipt")
+    _seal_or_validate_immutable_json(start_path, _held_access_start_receipt(binding))
+    values = evaluate()
+    part = seal_or_reuse_prediction_part(path, values, binding)
+    _seal_or_validate_immutable_json(
+        completion_path, _held_completion_receipt(path, start_path, binding)
+    )
+    return part, False
 
 
 def authorize_comparator_decode(
@@ -1647,6 +1825,102 @@ def merge_predictions(parts: Sequence[dict[str, np.ndarray]]) -> dict[str, np.nd
     if len(set(result["sample_ids"].tolist())) != len(result["sample_ids"]):
         raise ValueError("Candidate sample identities are not unique")
     return result
+
+
+def _candidate_recovery_binding(
+    part_paths: Sequence[Path], bindings: Sequence[dict[str, Any]]
+) -> dict[str, Any]:
+    if len(part_paths) != 2 or len(bindings) != 2:
+        raise RuntimeError("Final candidate requires exactly two held parts and bindings")
+    parts: list[dict[str, Any]] = []
+    for path, binding in zip(part_paths, bindings):
+        start_path, completion_path = _receipt_paths(path)
+        if any(
+            not item.is_file() or item.stat().st_mode & 0o222
+            for item in (start_path, path, completion_path)
+        ):
+            raise RuntimeError("Final candidate requires complete immutable held-part receipts")
+        _seal_or_validate_immutable_json(start_path, _held_access_start_receipt(binding))
+        _seal_or_validate_immutable_json(
+            completion_path, _held_completion_receipt(path, start_path, binding)
+        )
+        parts.append({
+            "held_fold": int(binding["held_fold"]),
+            "binding_sha256": canonical_json_hash(binding),
+            "part_sha256": sha256(path),
+            "start_receipt_sha256": sha256(start_path),
+            "completion_receipt_sha256": sha256(completion_path),
+        })
+    if [part["held_fold"] for part in parts] != [3, 4]:
+        raise RuntimeError("Final candidate held-part order must be exactly [3, 4]")
+    return {"schema_version": RECOVERY_SCHEMA_VERSION, "held_parts": parts}
+
+
+def seal_or_validate_final_candidate(
+    path: Path,
+    candidate: dict[str, np.ndarray],
+    part_paths: Sequence[Path],
+    bindings: Sequence[dict[str, Any]],
+) -> bool:
+    """Seal the merged candidate once, or validate exact recovery equivalence."""
+    recovery_binding = _candidate_recovery_binding(part_paths, bindings)
+    encoded_binding = json.dumps(
+        recovery_binding, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    )
+    expected_keys = {"schema_version", "recovery_binding_json", *candidate.keys()}
+    if path.exists():
+        if not path.is_file() or path.stat().st_mode & 0o222:
+            raise RuntimeError("Existing final candidate is missing, non-file, or mutable")
+        try:
+            with np.load(path, allow_pickle=False) as source:
+                if set(source.files) != expected_keys:
+                    raise RuntimeError("Existing final candidate array schema mismatch")
+                if int(np.asarray(source["schema_version"]).item()) != RECOVERY_SCHEMA_VERSION:
+                    raise RuntimeError("Existing final candidate schema mismatch")
+                if str(np.asarray(source["recovery_binding_json"]).item()) != encoded_binding:
+                    raise RuntimeError("Existing final candidate held-part binding/hash mismatch")
+                for key, expected in candidate.items():
+                    expected_array = np.asarray(expected)
+                    if source[key].dtype != expected_array.dtype or not np.array_equal(source[key], expected_array):
+                        raise RuntimeError(f"Existing final candidate array mismatch: {key}")
+        except (OSError, ValueError) as error:
+            raise RuntimeError("Existing final candidate is unreadable") from error
+        return True
+    atomic_npz(
+        path,
+        schema_version=np.asarray(RECOVERY_SCHEMA_VERSION, dtype=np.uint8),
+        recovery_binding_json=np.asarray(encoded_binding),
+        **candidate,
+    )
+    return False
+
+
+def seal_or_validate_torch_artifact(path: Path, value: Any) -> bool:
+    """Seal a deterministic torch output, or require exact recovery contents."""
+    if path.exists():
+        if not path.is_file() or path.stat().st_mode & 0o222:
+            raise RuntimeError(f"Existing torch recovery output is missing or mutable: {path}")
+        try:
+            actual = torch.load(path, map_location="cpu", weights_only=False)
+        except Exception as error:
+            raise RuntimeError(f"Existing torch recovery output is unreadable: {path}") from error
+        if not _nested_exact_equal(actual, value):
+            raise RuntimeError(f"Existing torch recovery output contents mismatch: {path}")
+        return True
+    atomic_torch(path, value)
+    return False
+
+
+def seal_or_validate_text_artifact(path: Path, text: str) -> bool:
+    """Seal JSON/Markdown once; recovery may only reuse exactly consistent output."""
+    if path.exists():
+        if not path.is_file() or path.stat().st_mode & 0o222:
+            raise RuntimeError(f"Existing text recovery output is missing or mutable: {path}")
+        if path.read_text(encoding="utf-8") != text:
+            raise RuntimeError(f"Existing text recovery output contents mismatch: {path}")
+        return True
+    atomic_text(path, text)
+    return False
 
 
 def markdown_report(report: dict[str, Any]) -> str:
@@ -1685,6 +1959,7 @@ def run_full(
     candidate_path = (ROOT / protocol["outputs"]["candidate_predictions"]).resolve()
     prediction_parts: list[dict[str, np.ndarray]] = []
     part_paths: list[Path] = []
+    part_bindings: list[dict[str, Any]] = []
     part_receipts: dict[str, Any] = {}
     # Preserve the frozen endpoint->held->endpoint->held execution order. On
     # restart, train_endpoint restores its complete boundary, and constructing
@@ -1737,22 +2012,28 @@ def run_full(
             return evaluate_candidate(
                 model, paths["metadata_root"], held_records, cutpoints, device, fold=held_fold
             )
-        part, reused = evaluate_or_reuse_prediction_part(part_path, binding, evaluate_once)
+        part, _reused = evaluate_or_reuse_prediction_part(part_path, binding, evaluate_once)
         del model
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
         ledger.open_held_fold(held_fold)
         prediction_parts.append(part)
         part_paths.append(part_path)
+        part_bindings.append(binding)
+        start_path, completion_path = _receipt_paths(part_path)
         part_receipts[str(held_fold)] = {
             "path": str(part_path.relative_to(ROOT)),
             "sha256": sha256(part_path),
             "immutable_mode": "0444",
-            "reused": reused,
+            "access_start_receipt": {
+                "path": str(start_path.relative_to(ROOT)), "sha256": sha256(start_path)
+            },
+            "completion_receipt": {
+                "path": str(completion_path.relative_to(ROOT)), "sha256": sha256(completion_path)
+            },
         }
     candidate = merge_predictions(prediction_parts)
-    atomic_npz(candidate_path, schema_version=np.uint8(1), **candidate)
-    os.chmod(candidate_path, 0o444)
+    seal_or_validate_final_candidate(candidate_path, candidate, part_paths, part_bindings)
     candidate_hash = sha256(candidate_path)
     if candidate_path.stat().st_mode & 0o222:
         raise RuntimeError("Final candidate artifact is not immutable")
@@ -1767,8 +2048,17 @@ def run_full(
                            candidate["dense_counts"], comparator_dense,
                            replicates=int(bootstrap["replicates"]), ap_seed=int(bootstrap["ap_seed"]), dense_seed=int(bootstrap["dense_seed"]))
     state_path = (ROOT / protocol["outputs"]["endpoint_states"]).resolve()
-    atomic_torch(state_path, {"schema_version": 1, "seed": SEED, "states_by_held_fold": endpoint_states})
+    state_value = {
+        "schema_version": RECOVERY_SCHEMA_VERSION,
+        "protocol_identity": protocol_identity(protocol),
+        "scientific_digest": scientific_digest(protocol),
+        "candidate_sha256": candidate_hash,
+        "seed": SEED,
+        "states_by_held_fold": endpoint_states,
+    }
+    seal_or_validate_torch_artifact(state_path, state_value)
     report = {"schema_version": 1, "protocol": str(protocol_path.relative_to(ROOT)), "protocol_sha256": sha256(protocol_path),
+              "protocol_identity": protocol_identity(protocol), "scientific_digest": scientific_digest(protocol),
               "seed": SEED, "scope": "development folds 3/4 only", "endpoints": endpoint_metadata,
               "candidate_predictions": {"path": str(candidate_path.relative_to(ROOT)), "sha256": candidate_hash, "immutable_mode": "0444",
                                         "held_parts": part_receipts},
@@ -1782,8 +2072,8 @@ def run_full(
               "metrics": metrics, "decision": "stop_for_codex_review" if metrics["passed"] else "stop_no_second_seed"}
     json_path = (ROOT / protocol["outputs"]["json"]).resolve()
     markdown_path = (ROOT / protocol["outputs"]["markdown"]).resolve()
-    atomic_text(json_path, json.dumps(report, indent=2, sort_keys=True) + "\n")
-    atomic_text(markdown_path, markdown_report(report))
+    seal_or_validate_text_artifact(json_path, json.dumps(report, indent=2, sort_keys=True) + "\n")
+    seal_or_validate_text_artifact(markdown_path, markdown_report(report))
     return report
 
 

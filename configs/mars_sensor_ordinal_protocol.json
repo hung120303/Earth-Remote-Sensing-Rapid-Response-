@@ -5,7 +5,7 @@
   "implementation_base_commit": "f83584aecaeee0fa92fe1fe215a6a89fb6ce3f82",
   "trainer": {
     "path": "tools/train_mars_sensor_ordinal.py",
-    "sha256": "f4558edd2dd621256a50c0027a570e9564c0cda55333b8c421b7e7b33c4bf7b8"
+    "sha256": "9243c2b149c30c421cd2763530349264fe88685ce7d18b8b03df6d9c70be25fa"
   },
   "model": {
     "path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py",
@@ -260,7 +260,9 @@
     "No folds 0/1/2, official paper test, external held outcomes, GHGSat, failed sources, second seed, retuning, or rescue verification.",
     "Recovery artifacts and immutable held parts are bulk ignored and never committed.",
     "Comparator preflight may hash opaque bytes but may not decode comparator values before final candidate immutability.",
-    "A validated immutable held part must be reused on restart; that held fold must not be evaluated again."
+    "A validated immutable held part and completed access receipt must be reused on restart; that held fold must not be evaluated again.",
+    "A held-access start receipt without a validated part is an explicit incomplete-held-access failure and never authorizes automatic reevaluation.",
+    "Configured finalization outputs are accepted only as a validated immutable recovery prefix bound to this protocol and scientific digest; unrelated output remains a hard refusal."
   ],
   "preheld_infrastructure_recovery_amendment": {
     "status": "frozen_after_wsl_dxg_failure_before_native_windows_smoke_or_held_retry",
@@ -338,9 +340,15 @@
     "outer_loop_durability": {
       "endpoint_boundary": "persist immutable endpoint state and metadata before opening that endpoint held fold",
       "held_parts": ".research/mars_sensor_ordinal/candidate_folds34_predictions.held-{3,4}.part.json",
-      "part_rule": "atomically save read-only immediately after the one allowed held evaluation; validate and reuse on restart without reevaluation",
+      "held_access_start_receipts": ".research/mars_sensor_ordinal/candidate_folds34_predictions.held-{3,4}.part.access-start.json",
+      "held_access_completion_receipts": ".research/mars_sensor_ordinal/candidate_folds34_predictions.held-{3,4}.part.completion.json",
+      "access_start_rule": "before the one allowed evaluate_candidate call, atomically seal a read-only receipt bound to protocol identity, scientific digest, endpoint recovery identity, ordered held records and sample IDs, fold, and prior access ledger",
+      "incomplete_access_rule": "a start receipt without a validated immutable part is an explicit incomplete-held-access failure; automatic reevaluation is forbidden",
+      "part_rule": "atomically publish read-only immediately after the one allowed held evaluation; then atomically seal a completion receipt bound to the start-receipt and part hashes; validate receipt and part together on every restart",
       "second_endpoint_crash_rule": "an immutable first held part is reused and can never spend the first held fold twice",
-      "final_candidate_rule": "both held parts must be immutable, validated, merged, and published as the immutable final candidate before semantic comparator decode",
+      "final_candidate_rule": "both completed held parts must be immutable, validated, merged in exact fold and sample order, and seal-or-validated against the same arrays, identities, bindings, and part/receipt hashes before semantic comparator decode",
+      "finalization_state_machine": "after final-candidate immutability, comparator reconstruction and metric computation may repeat; endpoint states, exact JSON, and exact Markdown are each seal-or-validated in order without overwrite, training, or held reevaluation",
+      "configured_output_recovery_rule": "verify_protocol accepts only a consistent immutable prefix of candidate, endpoint states, JSON, and Markdown whose protocol/science/artifact bindings validate; mutable, inconsistent, partial, wrong-protocol, wrong-science, or unrelated outputs are rejected",
       "one_shot_refusal_preserved": true
     },
     "comparator_access": {
@@ -378,5 +386,5 @@
     },
     "held_outcome_accessed_by_amendment": false
   },
-  "protocol_sha256_self_excluding_field": "d432f72f97458786a6a459731701f4a5012ed356ea3fc20622458318a9be0f76"
+  "protocol_sha256_self_excluding_field": "71d59c52b3d07a4f2be0ef563c24b142c2d01edeafb715438071908a4ea00122"
 }

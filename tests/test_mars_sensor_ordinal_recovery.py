@@ -22,13 +22,19 @@ from train_mars_sensor_ordinal import (  # noqa: E402
     RECOVERY_SCHEMA_VERSION,
     RecoveryStore,
     _nested_exact_equal,
+    _verify_recovery_output_phase,
     authorize_comparator_decode,
     capture_rng_state,
     evaluate_or_reuse_prediction_part,
+    merge_predictions,
     preflight_comparator_hashes,
     restore_rng_state,
     scene_learning_rate,
     seal_or_reuse_prediction_part,
+    seal_or_validate_final_candidate,
+    seal_or_validate_text_artifact,
+    seal_or_validate_torch_artifact,
+    sha256,
 )
 
 
@@ -289,7 +295,8 @@ def test_partial_epoch_is_not_persisted_and_last_boundary_replays(tmp_path: Path
 def test_existing_immutable_held_part_is_reused_without_evaluation(tmp_path: Path) -> None:
     path = tmp_path / "held-3.part.json"
     binding = _binding(3)
-    expected = seal_or_reuse_prediction_part(path, _part(3), binding)
+    expected, was_reused = evaluate_or_reuse_prediction_part(path, binding, lambda: _part(3))
+    assert not was_reused
     assert not (path.stat().st_mode & 0o222)
     calls = 0
 
@@ -304,6 +311,360 @@ def test_existing_immutable_held_part_is_reused_without_evaluation(tmp_path: Pat
     assert _nested_exact_equal(expected, reused)
     with pytest.raises(RuntimeError, match="identity mismatch"):
         seal_or_reuse_prediction_part(path, None, {**binding, "scientific_digest": "changed"})
+
+
+def test_access_start_is_durable_before_evaluator_and_uncertain_start_never_repeats(
+    tmp_path: Path,
+) -> None:
+    import train_mars_sensor_ordinal as trainer
+
+    path = tmp_path / "held-3.part.json"
+    binding = _binding(3)
+    start_path, completion_path = trainer._receipt_paths(path)
+    calls = 0
+
+    def interrupted() -> dict[str, np.ndarray]:
+        nonlocal calls
+        calls += 1
+        assert start_path.is_file()
+        assert not (start_path.stat().st_mode & 0o222)
+        assert not path.exists()
+        assert not completion_path.exists()
+        raise OSError("crash after durable start")
+
+    with pytest.raises(OSError, match="durable start"):
+        evaluate_or_reuse_prediction_part(path, binding, interrupted)
+    with pytest.raises(RuntimeError, match="refusing repeat evaluation"):
+        evaluate_or_reuse_prediction_part(path, binding, interrupted)
+    assert calls == 1
+
+
+def test_part_sealed_before_completion_recovers_without_repeating_evaluator(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import train_mars_sensor_ordinal as trainer
+
+    path = tmp_path / "held-3.part.json"
+    binding = _binding(3)
+    original = trainer._seal_or_validate_immutable_json
+    calls = 0
+
+    def crash_before_completion(receipt_path: Path, expected: dict[str, object]) -> None:
+        if expected.get("kind") == "held_prediction_part_complete":
+            raise OSError("crash before completion receipt")
+        original(receipt_path, expected)
+
+    def evaluate() -> dict[str, np.ndarray]:
+        nonlocal calls
+        calls += 1
+        return _part(3)
+
+    monkeypatch.setattr(trainer, "_seal_or_validate_immutable_json", crash_before_completion)
+    with pytest.raises(OSError, match="completion receipt"):
+        evaluate_or_reuse_prediction_part(path, binding, evaluate)
+    assert path.is_file() and not (path.stat().st_mode & 0o222)
+    monkeypatch.setattr(trainer, "_seal_or_validate_immutable_json", original)
+    recovered, reused = evaluate_or_reuse_prediction_part(path, binding, evaluate)
+    assert reused and calls == 1
+    assert _nested_exact_equal(recovered, _part(3))
+    _, completion_path = trainer._receipt_paths(path)
+    assert completion_path.is_file() and not (completion_path.stat().st_mode & 0o222)
+
+
+def test_part_or_completion_without_start_and_receipt_hash_mismatch_are_rejected(
+    tmp_path: Path,
+) -> None:
+    import train_mars_sensor_ordinal as trainer
+
+    orphan = tmp_path / "orphan.part.json"
+    seal_or_reuse_prediction_part(orphan, _part(3), _binding(3))
+    with pytest.raises(RuntimeError, match="without a durable access-start"):
+        evaluate_or_reuse_prediction_part(orphan, _binding(3), lambda: _part(3))
+
+    path = tmp_path / "held-3.part.json"
+    evaluate_or_reuse_prediction_part(path, _binding(3), lambda: _part(3))
+    _, completion = trainer._receipt_paths(path)
+    os.chmod(completion, 0o644)
+    payload = json.loads(completion.read_text())
+    payload["part_sha256"] = "0" * 64
+    completion.write_text(json.dumps(payload))
+    os.chmod(completion, 0o444)
+    with pytest.raises(RuntimeError, match="binding mismatch"):
+        evaluate_or_reuse_prediction_part(path, _binding(3), lambda: _part(3))
+
+
+def test_final_candidate_and_outputs_are_idempotent_but_never_overwritten(tmp_path: Path) -> None:
+    part_paths = [tmp_path / f"held-{fold}.part.json" for fold in (3, 4)]
+    bindings = [_binding(fold) for fold in (3, 4)]
+    parts = []
+    for path, binding, fold in zip(part_paths, bindings, (3, 4)):
+        part, reused = evaluate_or_reuse_prediction_part(path, binding, lambda fold=fold: _part(fold))
+        assert not reused
+        parts.append(part)
+    candidate = merge_predictions(parts)
+    candidate_path = tmp_path / "candidate.npz"
+    assert not seal_or_validate_final_candidate(candidate_path, candidate, part_paths, bindings)
+    candidate_hash = sha256(candidate_path)
+    assert seal_or_validate_final_candidate(candidate_path, candidate, part_paths, bindings)
+    assert sha256(candidate_path) == candidate_hash
+
+    changed = {key: value.copy() for key, value in candidate.items()}
+    changed["scores"][0] += 0.1
+    with pytest.raises(RuntimeError, match="array mismatch"):
+        seal_or_validate_final_candidate(candidate_path, changed, part_paths, bindings)
+    changed_dtype = {key: value.copy() for key, value in candidate.items()}
+    changed_dtype["labels"] = changed_dtype["labels"].astype(np.int64)
+    with pytest.raises(RuntimeError, match="array mismatch"):
+        seal_or_validate_final_candidate(candidate_path, changed_dtype, part_paths, bindings)
+    with pytest.raises(RuntimeError, match="binding mismatch"):
+        seal_or_validate_final_candidate(
+            candidate_path, candidate, part_paths, [{**bindings[0], "scientific_digest": "wrong"}, bindings[1]]
+        )
+
+    state_path = tmp_path / "states.pt"
+    state = {"folds": {"3": torch.tensor([1.0]), "4": torch.tensor([2.0])}}
+    assert not seal_or_validate_torch_artifact(state_path, state)
+    assert seal_or_validate_torch_artifact(state_path, state)
+    with pytest.raises(RuntimeError, match="contents mismatch"):
+        seal_or_validate_torch_artifact(state_path, {"folds": {"3": torch.tensor([9.0])}})
+
+    json_path, markdown_path = tmp_path / "report.json", tmp_path / "report.md"
+    report = {"passed": True, "metric": 0.5}
+    text = json.dumps(report, indent=2) + "\n"
+    assert not seal_or_validate_text_artifact(json_path, text)
+    assert seal_or_validate_text_artifact(json_path, text)
+    assert not seal_or_validate_text_artifact(markdown_path, "# exact\n")
+    assert seal_or_validate_text_artifact(markdown_path, "# exact\n")
+    with pytest.raises(RuntimeError, match="contents mismatch"):
+        seal_or_validate_text_artifact(markdown_path, "# changed\n")
+
+
+def test_protocol_recovery_phase_accepts_only_consistent_immutable_prefix(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import train_mars_sensor_ordinal as trainer
+
+    protocol_path = ROOT / "configs/mars_sensor_ordinal_protocol.json"
+    protocol = json.loads(protocol_path.read_text(encoding="utf-8"))
+    protocol["outputs"] = {
+        "candidate_predictions": str(tmp_path / "out/candidate.npz"),
+        "endpoint_states": str(tmp_path / "out/states.pt"),
+        "json": str(tmp_path / "out/report.json"),
+        "markdown": str(tmp_path / "out/report.md"),
+    }
+    protocol["trainer"]["sha256"] = trainer.sha256(ROOT / protocol["trainer"]["path"])
+    protocol["protocol_sha256_self_excluding_field"] = trainer.protocol_identity(protocol)
+    candidate_path = tmp_path / "out/candidate.npz"
+    part_paths = [tmp_path / f"out/candidate.held-{fold}.part.json" for fold in (3, 4)]
+    bindings = [
+        {
+            **_binding(fold),
+            "protocol_identity": trainer.protocol_identity(protocol),
+            "scientific_digest": trainer.scientific_digest(protocol),
+        }
+        for fold in (3, 4)
+    ]
+    parts = [
+        evaluate_or_reuse_prediction_part(path, binding, lambda fold=fold: _part(fold))[0]
+        for path, binding, fold in zip(part_paths, bindings, (3, 4))
+    ]
+    candidate = merge_predictions(parts)
+    seal_or_validate_final_candidate(candidate_path, candidate, part_paths, bindings)
+    _verify_recovery_output_phase(protocol)
+    assert trainer.verify_protocol(protocol, protocol_path, smoke=False)
+
+    start_path, _ = trainer._receipt_paths(part_paths[0])
+    os.chmod(start_path, 0o644)
+    wrong = json.loads(start_path.read_text())
+    wrong["binding"]["scientific_digest"] = "wrong-science"
+    start_path.write_text(json.dumps(wrong, indent=2, sort_keys=True) + "\n")
+    os.chmod(start_path, 0o444)
+    with pytest.raises(RuntimeError, match="binding mismatch|fold binding mismatch"):
+        trainer.verify_protocol(protocol, protocol_path, smoke=False)
+
+    os.chmod(start_path, 0o644)
+    start_path.unlink()
+    trainer._seal_or_validate_immutable_json(
+        start_path, trainer._held_access_start_receipt(bindings[0])
+    )
+    markdown_path = tmp_path / "out/report.md"
+    seal_or_validate_text_artifact(markdown_path, "unrelated\n")
+    with pytest.raises(RuntimeError, match="unrelated or partial"):
+        _verify_recovery_output_phase(protocol)
+    markdown_path.unlink()
+
+    os.chmod(candidate_path, 0o644)
+    with pytest.raises(RuntimeError, match="mutable"):
+        _verify_recovery_output_phase(protocol)
+    os.chmod(candidate_path, 0o444)
+
+    os.chmod(candidate_path, 0o644)
+    with np.load(candidate_path, allow_pickle=False) as source:
+        wrong_candidate = {key: source[key].copy() for key in source.files}
+    wrong_candidate["scores"][0] += 0.5
+    np.savez_compressed(candidate_path, **wrong_candidate)
+    os.chmod(candidate_path, 0o444)
+    with pytest.raises(RuntimeError, match="array mismatch"):
+        _verify_recovery_output_phase(protocol)
+
+
+@pytest.mark.parametrize(
+    "boundary",
+    ["candidate", "metrics", "endpoint_state", "json", "markdown"],
+)
+def test_finalization_crash_boundaries_resume_without_training_or_held_evaluation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, boundary: str
+) -> None:
+    import train_mars_sensor_ordinal as trainer
+
+    monkeypatch.setattr(trainer, "ROOT", tmp_path)
+    protocol_path = tmp_path / "protocol.json"
+    protocol = {
+        "outer_folds": [3, 4], "seed": trainer.SEED,
+        "architecture": {}, "ordinal_targets": {}, "inner_split": {}, "training": {},
+        "evaluation": {}, "bootstrap": {"replicates": 1, "ap_seed": 2, "dense_seed": 3},
+        "gates": {},
+        "outputs": {
+            "candidate_predictions": "out/candidate.npz",
+            "endpoint_states": "out/states.pt",
+            "json": "out/report.json",
+            "markdown": "out/report.md",
+        },
+    }
+    protocol_path.write_text(json.dumps(protocol))
+    records = [
+        {"sample_id": f"sample-{fold}", "group_id": f"group-{fold}", "fold": fold}
+        for fold in (3, 4)
+    ]
+    groups = {f"group-{fold}": fold for fold in (3, 4)}
+    monkeypatch.setattr(trainer, "fold_lookup", lambda _path: groups)
+    monkeypatch.setattr(trainer, "records_for_folds", lambda *_args, **_kwargs: records)
+
+    endpoint_entries = 0
+    training_epoch_calls = 0
+    held_calls = 0
+
+    def recovered_endpoint(_protocol, _paths, _fit, held_fold, _device, **_kwargs):
+        nonlocal endpoint_entries, training_epoch_calls
+        # This fixture represents already-sealed endpoints: no epoch body executes.
+        endpoint_entries += 1
+        training_epoch_calls += 0
+        return (
+            {
+                "held_fold": held_fold, "fit_fold": 7 - held_fold,
+                "selected_epoch": held_fold, "cutpoints": [1.0, 2.0, 3.0],
+                "recovery_identity_sha256": f"endpoint-{held_fold}", "history": [],
+            },
+            {"weight": torch.tensor([float(held_fold)])},
+            np.asarray([1.0, 2.0, 3.0]),
+        )
+
+    class DummyModel:
+        def to(self, _device): return self
+        def load_state_dict(self, _state, strict=True): return None
+
+    monkeypatch.setattr(trainer, "train_endpoint", recovered_endpoint)
+    monkeypatch.setattr(trainer, "MarsSensorOrdinalUNet", DummyModel)
+    def forbidden_held_evaluation(*_args, **_kwargs):
+        nonlocal held_calls
+        held_calls += 1
+        raise AssertionError("held evaluation repeated")
+
+    monkeypatch.setattr(trainer, "evaluate_candidate", forbidden_held_evaluation)
+    monkeypatch.setattr(trainer, "align_comparator", lambda candidate, _path: {
+        "champion_scores": np.asarray([0.1, 0.2]),
+        "spatial_prithvi_scores": np.asarray([0.1, 0.2]),
+    })
+    monkeypatch.setattr(trainer, "reconstruct_dense_comparator", lambda candidate, *_a, **_k: np.zeros_like(candidate["dense_counts"]))
+    metrics = {
+        "passed": True, "pooled_ap_delta": 0.1, "ap_bootstrap_lower": 0.1,
+        "matched_fpr_recall_delta": 0.1, "dense_iou_delta": 0.1,
+        "dense_bootstrap_lower": 0.1, "checks": {"frozen": True},
+    }
+    metric_calls = 0
+
+    def fixed_metrics(*_args, **_kwargs):
+        nonlocal metric_calls
+        metric_calls += 1
+        return copy.deepcopy(metrics)
+
+    monkeypatch.setattr(trainer, "metric_gates", fixed_metrics)
+    paths = {"fold_protocol": tmp_path / "folds.json", "manifest": tmp_path / "manifest.jsonl",
+             "metadata_root": tmp_path}
+    for name in ("champion_scene_cache", "gaussian_dense_state", "gaussian_protocol", "released_dense_checkpoint"):
+        paths[name] = tmp_path / name
+        paths[name].write_bytes(name.encode())
+    candidate_path = tmp_path / "out/candidate.npz"
+    ledger = AccessLedger(comparator_integrity_bytes_hashed=True)
+    for fold in (3, 4):
+        binding = {
+            "protocol_identity": trainer.protocol_identity(protocol),
+            "scientific_digest": trainer.scientific_digest(protocol),
+            "held_fold": fold, "fit_fold": 7 - fold,
+            "endpoint_recovery_identity_sha256": f"endpoint-{fold}",
+            "ordered_held_records_sha256": trainer.ordered_records_hash([records[fold - 3]]),
+            "ordered_sample_ids_sha256": trainer.canonical_json_hash([f"sample-{fold}"]),
+            "access_before_open": {
+                "comparator_integrity_bytes_hashed": True, "comparator_values_decoded": False,
+                "previous_immutable_held_folds": list(ledger.held_folds_opened),
+                "folds_0_1_2_opened": False, "external_or_official_evidence_opened": False,
+            },
+        }
+        part_path = candidate_path.with_name(f"{candidate_path.stem}.held-{fold}.part.json")
+        evaluate_or_reuse_prediction_part(part_path, binding, lambda fold=fold: _part(fold))
+        ledger.open_held_fold(fold)
+
+    original_candidate = trainer.seal_or_validate_final_candidate
+    original_state = trainer.seal_or_validate_torch_artifact
+    original_text = trainer.seal_or_validate_text_artifact
+    crashed = False
+
+    def candidate_boundary(*args, **kwargs):
+        nonlocal crashed
+        result = original_candidate(*args, **kwargs)
+        if boundary == "candidate" and not crashed:
+            crashed = True
+            raise OSError("crash after candidate seal")
+        return result
+
+    def state_boundary(*args, **kwargs):
+        nonlocal crashed
+        if boundary == "metrics" and not crashed:
+            crashed = True
+            raise OSError("crash after comparator metrics")
+        result = original_state(*args, **kwargs)
+        if boundary == "endpoint_state" and not crashed:
+            crashed = True
+            raise OSError("crash after endpoint state")
+        return result
+
+    def text_boundary(path, text):
+        nonlocal crashed
+        result = original_text(path, text)
+        target = "json" if path.suffix == ".json" else "markdown"
+        if boundary == target and not crashed:
+            crashed = True
+            raise OSError(f"crash after {target}")
+        return result
+
+    monkeypatch.setattr(trainer, "seal_or_validate_final_candidate", candidate_boundary)
+    monkeypatch.setattr(trainer, "seal_or_validate_torch_artifact", state_boundary)
+    monkeypatch.setattr(trainer, "seal_or_validate_text_artifact", text_boundary)
+    with pytest.raises(OSError, match="crash after"):
+        trainer.run_full(protocol, protocol_path, paths, runtime={})
+    sealed_before = {
+        path.name: path.read_bytes()
+        for path in (candidate_path, tmp_path / "out/states.pt", tmp_path / "out/report.json", tmp_path / "out/report.md")
+        if path.exists()
+    }
+    report = trainer.run_full(protocol, protocol_path, paths, runtime={})
+    assert report["metrics"] == metrics
+    assert endpoint_entries == 4
+    assert training_epoch_calls == held_calls == 0
+    for path in (candidate_path, tmp_path / "out/states.pt", tmp_path / "out/report.json", tmp_path / "out/report.md"):
+        assert path.is_file() and not (path.stat().st_mode & 0o222)
+        if path.name in sealed_before:
+            assert path.read_bytes() == sealed_before[path.name]
 
 
 def test_comparator_preflight_hashes_opaque_bytes_without_decode(tmp_path: Path) -> None:

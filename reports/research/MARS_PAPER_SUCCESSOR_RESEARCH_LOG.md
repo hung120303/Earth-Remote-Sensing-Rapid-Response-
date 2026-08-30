@@ -6693,3 +6693,12 @@ schedules, losses, checkpoint rank, thresholds, comparators, bootstrap, and all
 seven gates are unchanged. The Windows environment, native CUDA recovery smoke,
 and held experiment were not run. Freeze note:
 `reports/research/MARS_SENSOR_ORDINAL_NATIVE_WINDOWS_RECOVERY.md`.
+
+Codex review then identified two remaining infrastructure-only crash windows.
+The recovery freeze now seals held-access start/completion receipts around the
+single allowed evaluator call and makes final candidate, endpoint-state, JSON,
+and Markdown publication an idempotent validated state machine. An uncertain
+started held access can never be silently repeated; a completed part is reused,
+and only a protocol/science-bound immutable finalization prefix is accepted.
+Opaque comparator hashing versus post-candidate semantic decoding is unchanged.
+No scientific setting changed, and no native smoke or held data was run.
