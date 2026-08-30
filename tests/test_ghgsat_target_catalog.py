@@ -532,6 +532,17 @@ def test_collection_platform_and_landsat_tier_filters(mutation: dict[str, object
         audit.validate_candidate(candidate, source_row(), sensor, value)
 
 
+def test_collection_items_from_non_frozen_platforms_are_not_retained() -> None:
+    value = protocol()
+    older_landsat = item(sensor="landsat_8_9_level_1", item_id="LE07_L1TP_fixture")
+    landsat_8 = item(sensor="landsat_8_9_level_1", item_id="LC08_L1TP_fixture")
+    candidates = audit.parse_feature_collection(
+        {"type": "FeatureCollection", "features": [older_landsat, landsat_8]},
+        source_row(), "landsat_8_9_level_1", value,
+    )
+    assert [candidate["target_item_id"] for candidate in candidates] == ["LC08_L1TP_fixture"]
+
+
 def test_provider_extras_are_sanitized_but_cloud_and_100_item_ceiling_fail() -> None:
     value = protocol()
     extra = item()

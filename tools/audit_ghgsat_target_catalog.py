@@ -644,6 +644,21 @@ def parse_feature_collection(
         raise TargetCatalogAuditError("STAC response reached the frozen 100-item ceiling")
     candidates: list[dict[str, object]] = []
     for item in features:
+        # The USGS landsat-c2l1 collection also contains missions outside the
+        # frozen LC08/LC09 candidate population. They are returned metadata,
+        # not invalid retained candidates. Discard a well-formed non-matching
+        # platform ID, then strictly validate every item that can be retained.
+        if not isinstance(item, dict):
+            raise TargetCatalogAuditError("STAC response contains a non-Feature")
+        item_id = _strict_string(item.get("id"), name="item ID")
+        catalog = protocol["catalogs"][sensor]
+        prefixes = catalog.get(
+            "allowed_platform_item_prefixes", catalog.get("allowed_item_prefixes")
+        )
+        if not isinstance(prefixes, list):
+            raise TargetCatalogAuditError("Frozen platform-prefix contract is malformed")
+        if not any(item_id.startswith(prefix) for prefix in prefixes):
+            continue
         candidates.append(validate_candidate(item, row, sensor, protocol))
     return candidates
 
