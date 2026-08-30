@@ -5,7 +5,7 @@
   "implementation_base_commit": "f83584aecaeee0fa92fe1fe215a6a89fb6ce3f82",
   "trainer": {
     "path": "tools/train_mars_sensor_ordinal.py",
-    "sha256": "9243c2b149c30c421cd2763530349264fe88685ce7d18b8b03df6d9c70be25fa"
+    "sha256": "cacb6cf7c9c83eb861a5490ca951316a295437fdb25cde828dbb996f755ec288"
   },
   "model": {
     "path": "EarthRemoteSensingRapidResponse/mars_sensor_ordinal.py",
@@ -365,6 +365,18 @@
         "semantic outcome access"
       ]
     },
+    "pre_smoke_portability_amendment": {
+      "status": "frozen_after_native_windows_import_and_unit_precheck_before_runtime_smoke_or_held_data",
+      "trigger": "Native Windows import verification passed, but the clean checkout changed protocol-bound text to CRLF and Windows rejected fsync on descriptors reopened read-only.",
+      "checkout_contract": "Repository attributes force LF for protocol-relevant text and exempt binary scientific/model artifacts from text normalization.",
+      "durability_contract": "Every atomic NumPy, Torch, text, endpoint, recovery-generation, receipt, and pointer write flushes and fsyncs its original writable handle before optional read-only chmod, atomic replace, and supported-platform directory fsync.",
+      "verification_scope": "Cross-platform checkout/hash audit plus focused atomic-writer and RecoveryStore tests; no native runtime smoke and no held evidence.",
+      "scientific_settings_digest": "25773453cdf37062260d8d76bca01e5d46dc17bcc513ce372708a02806991dca",
+      "scientific_settings_unchanged": true,
+      "native_runtime_imports_passed": true,
+      "native_runtime_smoke_executed": false,
+      "held_outcome_accessed": false
+    },
     "native_windows_recovery_smoke": {
       "flag": "--checkpoint-roundtrip-smoke",
       "scope": "fold-3 fitting evidence only; production dense batch size 16; one pixel update and exact checkpoint next-step round trip",
@@ -386,5 +398,5 @@
     },
     "held_outcome_accessed_by_amendment": false
   },
-  "protocol_sha256_self_excluding_field": "71d59c52b3d07a4f2be0ef563c24b142c2d01edeafb715438071908a4ea00122"
+  "protocol_sha256_self_excluding_field": "f8ad511f2fbf3377deaf244f84efa7086226981ebd985d548ab5d0ab3241e2ab"
 }

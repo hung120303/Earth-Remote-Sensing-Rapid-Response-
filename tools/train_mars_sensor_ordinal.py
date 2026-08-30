@@ -766,8 +766,9 @@ def train_endpoint(
             raise RuntimeError("Durable endpoint artifact contents mismatch")
     else:
         temporary = endpoint_path.with_name(f".{endpoint_path.name}.{uuid.uuid4().hex}.tmp")
-        torch.save(endpoint_value, temporary)
-        with temporary.open("rb") as stream:
+        with temporary.open("wb") as stream:
+            torch.save(endpoint_value, stream)
+            stream.flush()
             os.fsync(stream.fileno())
         os.chmod(temporary, 0o444)
         os.replace(temporary, endpoint_path)
@@ -955,8 +956,9 @@ def atomic_npz(path: Path, **values: Any) -> None:
         raise FileExistsError(f"Refusing to overwrite one-shot output: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp.npz")
-    np.savez_compressed(temporary, **values)
-    with temporary.open("rb") as stream:
+    with temporary.open("wb") as stream:
+        np.savez_compressed(stream, **values)
+        stream.flush()
         os.fsync(stream.fileno())
     os.chmod(temporary, 0o444)
     os.replace(temporary, path)
@@ -968,8 +970,9 @@ def atomic_torch(path: Path, value: Any) -> None:
         raise FileExistsError(f"Refusing to overwrite one-shot output: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
-    torch.save(value, temporary)
-    with temporary.open("rb") as stream:
+    with temporary.open("wb") as stream:
+        torch.save(value, stream)
+        stream.flush()
         os.fsync(stream.fileno())
     os.chmod(temporary, 0o444)
     os.replace(temporary, path)
@@ -981,8 +984,9 @@ def atomic_text(path: Path, text: str) -> None:
         raise FileExistsError(f"Refusing to overwrite one-shot output: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
-    temporary.write_text(text, encoding="utf-8")
-    with temporary.open("rb") as stream:
+    with temporary.open("w", encoding="utf-8", newline="\n") as stream:
+        stream.write(text)
+        stream.flush()
         os.fsync(stream.fileno())
     os.chmod(temporary, 0o444)
     os.replace(temporary, path)
@@ -1297,8 +1301,9 @@ class RecoveryStore:
         generation = f"generation-{int(payload['completed_epoch']):04d}-{time.time_ns()}-{uuid.uuid4().hex}"
         checkpoint = self.root / f"{generation}.pt"
         temporary = self.root / f".{generation}.tmp"
-        torch.save(payload, temporary)
-        with temporary.open("rb") as stream:
+        with temporary.open("wb") as stream:
+            torch.save(payload, stream)
+            stream.flush()
             os.fsync(stream.fileno())
         os.replace(temporary, checkpoint)
         descriptor = {

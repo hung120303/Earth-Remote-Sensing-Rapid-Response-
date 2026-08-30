@@ -1,0 +1,30 @@
+# Protocol-bound and repository text must retain byte identity on every OS.
+*.py    text eol=lf
+*.json  text eol=lf
+*.jsonl text eol=lf
+*.md    text eol=lf
+*.toml  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.sh    text eol=lf
+*.txt   text eol=lf
+*.csv   text eol=lf
+.gitattributes text eol=lf
+.gitignore     text eol=lf
+
+# Scientific/model artifacts are opaque bytes and must never be normalized.
+*.model       binary
+*.bin         binary
+*.npz         binary
+*.npy         binary
+*.pt          binary
+*.pth         binary
+*.ckpt        binary
+*.safetensors binary
+*.tif         binary
+*.tiff        binary
+*.png         binary
+*.jpg         binary
+*.jpeg        binary
+*.zip         binary
+*.gz          binary
