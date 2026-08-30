@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_any_ghgsat_target_or_reference_asset_url_or_raster_access",
+  "name": "GHGSat reviewed-null exact-asset, windowed-raster, and local-observability audit",
+  "research_question": "Do at least 28 distinct MARS-disjoint GHGSat reviewed-null observations have exact public target/reference assets and locally observable 2 km crops suitable for scene-presence negative supervision?",
+  "decision_context_disclosed_before_freeze": {
+    "reference_catalog_decision": "PASS",
+    "selected_target_reference_pairs": 76,
+    "selected_sentinel_2_l1c_pairs": 47,
+    "selected_landsat_8_9_level_1_pairs": 29,
+    "distinct_source_observations": 64,
+    "distinct_sites": 43,
+    "distinct_25km_components": 43,
+    "unchanged_required_final_negative_observations": 28,
+    "label_boundary": "Each source label is a reviewed site-level GHGSat non-detection above applicable sensitivity. Passing this audit authorizes scene-head negative supervision only. It never creates physical-zero truth or an all-zero dense target.",
+    "outcome_blindness": "No asset URL, item-detail response, raster byte, local observability result, model prediction, MARS development outcome, protected fold outcome, or official benchmark outcome for this source was inspected before freeze."
+  },
+  "frozen_inputs": {
+    "reference_catalog_protocol": {
+      "path": "configs/mars_ghgsat_reference_catalog_protocol.json",
+      "bytes": 7998,
+      "sha256": "04d88d0fb6a11c5c54c4b1f38f6872de79db436240e175dfced75b82f2050f24"
+    },
+    "reference_catalog_report": {
+      "path": "reports/acquisition/ghgsat_landfill_reference_catalog.json",
+      "bytes": 3601,
+      "sha256": "416913dc048093cb2e04a54004b15b6c8f7a4b76f9e495d1a354781d7dbf6516",
+      "required_decision": "PASS"
+    },
+    "target_reference_pairs": {
+      "path": ".research/ghgsat_landfill_null/reference_catalog/target_reference_pairs.jsonl",
+      "bytes": 73828,
+      "sha256": "ebd2cd3e4f4a201905f441c86eeabd1a50798e57c3818a3bd46d4fb11709f6a2",
+      "rows": 76
+    },
+    "selected_targets": {
+      "path": ".research/ghgsat_landfill_null/target_catalog/selected_pairs.jsonl",
+      "bytes": 59230,
+      "sha256": "8c7942f0ac7bc07e250603e25ff23bb345e7bafbd86394e4ce0e42d41a33f6a8",
+      "rows": 79
+    },
+    "cloudsen12_weights": {
+      "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/emit-v002-external-l1c-2026-07/_cloudsen12_weights/UNetMobV2_V2.pt",
+      "bytes": 26796072,
+      "sha256": "218fa69aa3c7212d4e690b48af88ac6f3c976fc50d07f275b8fd623909183d7a"
+    }
+  },
+  "pair_contract": {
+    "exact_rows_attempted": 76,
+    "join_key": [
+      "site_ID",
+      "obs_ID",
+      "date",
+      "sat_ID",
+      "target_sensor",
+      "target_item_id"
+    ],
+    "no_pair_can_be_removed_by_catalog_cloud_cover_or_later_model_behavior": true,
+    "duplicate_source_observations_across_sensors_remain_grouped": true
+  },
+  "sentinel_2_l1c_resolution": {
+    "catalog": "Element 84 Earth Search public Sentinel-2 L1C mirror",
+    "search_endpoint": "https://earth-search.aws.element84.com/v1/search",
+    "collection": "sentinel-2-l1c",
+    "one_exact_crosswalk_search_per_unique_cdse_item": true,
+    "crosswalk_window_seconds": 1,
+    "crosswalk_rules": [
+      "same Sentinel-2 A/B spacecraft",
+      "same sensing timestamp within one second",
+      "same MGRS tile",
+      "Level-1C only",
+      "full geometry contains or touches the frozen source point",
+      "deterministic lexicographic Earth Search item ID if an exact physical acquisition has multiple mirror records"
+    ],
+    "processing_edition_policy": "The CDSE and public AWS mirror may expose different reprocessing baseline/generation suffixes for the same physical Level-1C acquisition. Record both product URIs; this is allowed only when spacecraft, sensing timestamp, MGRS tile, and L1C level match exactly.",
+    "required_asset_roles": {
+      "B02": "blue",
+      "B03": "green",
+      "B04": "red",
+      "B08": "nir",
+      "B11": "swir16",
+      "B12": "swir22",
+      "tileinfo": "tileinfo_metadata"
+    },
+    "cloudsen_extra_bands_derived_from_validated_tile_root": [
+      "B01",
+      "B05",
+      "B06",
+      "B07",
+      "B8A",
+      "B09",
+      "B10"
+    ],
+    "allowed_asset_prefix": "https://sentinel-s2-l1c.s3.amazonaws.com/",
+    "tileinfo_validation": [
+      "productName equals the Earth Search s2:product_uri without .SAFE",
+      "utmZone + latitudeBand + gridSquare equals the frozen MGRS tile",
+      "tileInfo sensing time identifies the same physical acquisition"
+    ],
+    "l2_products_forbidden": true
+  },
+  "landsat_8_9_level_1_resolution": {
+    "item_endpoint_template": "https://landsatlook.usgs.gov/stac-server/collections/landsat-c2l1/items/{item_id}",
+    "exact_item_id_required": true,
+    "allowed_item_prefixes": [
+      "LC08_",
+      "LC09_"
+    ],
+    "required_processing_level": "L1TP",
+    "required_collection_category": "T1",
+    "required_asset_roles": {
+      "B02": "blue",
+      "B03": "green",
+      "B04": "red",
+      "B05": "nir08",
+      "B06": "swir16",
+      "B07": "swir22",
+      "QA_PIXEL": "qa_pixel"
+    },
+    "allowed_asset_prefix": "https://landsatlook.usgs.gov/data/collection02/level-1/standard/oli-tirs/",
+    "l2_or_non_t1_substitution_forbidden": true
+  },
+  "asset_resolution_network_contract": {
+    "metadata_response_maximum_bytes_each": 4194304,
+    "metadata_response_maximum_bytes_total": 134217728,
+    "minimum_request_interval_seconds": 0.25,
+    "maximum_attempts_per_request": 5,
+    "retryable_http_statuses": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
+    "redirects_forbidden": true,
+    "append_only_request_response_receipts": true,
+    "asset_urls_retained_only_in_ignored_manifests": true,
+    "full_product_download_forbidden": true,
+    "previews_and_thumbnails_forbidden": true
+  },
+  "crop_contract": {
+    "center": "exact frozen GHGSat representative longitude/latitude joined by source identity",
+    "shape_pixels": [
+      200,
+      200
+    ],
+    "resolution_m": 10,
+    "extent": "2 km x 2 km",
+    "grid": "target acquisition B02 native 10 m grid for Sentinel-2; deterministic 10 m north-up grid centered on the source point in the target Landsat UTM CRS",
+    "training_band_order": [
+      "B02",
+      "B03",
+      "B04",
+      "B08_or_B05",
+      "B11_or_B06",
+      "B12_or_B07"
+    ],
+    "frame_order": [
+      "target",
+      "reference"
+    ],
+    "sentinel_radiometry": "raw uint16 Level-1C DN; CloudSEN input DN/10000; four 10 m bands use native/nearest alignment and B11/B12 use the repository MARS-compatible 20 m nearest-down/bilinear-up contract",
+    "landsat_radiometry": "raw uint16 Collection 2 Level-1 DN with exact item identity retained; bilinear spectral alignment and nearest QA_PIXEL alignment",
+    "access": "GDAL/rasterio range and window reads only with directory listing disabled; never save a full remote product",
+    "storage": ".research/ghgsat_landfill_null/windowed_observability/crops",
+    "storage_must_be_git_ignored": true
+  },
+  "local_observability": {
+    "radiometric_valid_pixel": "all six target bands and all six reference bands are finite and nonzero after alignment",
+    "minimum_radiometric_valid_fraction": 0.8,
+    "sentinel_cloud_model": {
+      "name": "UNetMobV2_V2",
+      "repository": "isp-uv-es/cloudsen12_models",
+      "weights_sha256": "218fa69aa3c7212d4e690b48af88ac6f3c976fc50d07f275b8fd623909183d7a",
+      "band_order": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B09",
+        "B10",
+        "B11",
+        "B12"
+      ],
+      "clear_class": 0,
+      "run_on_both_target_and_reference": true,
+      "union_nonclear_mask": true
+    },
+    "landsat_nonclear_qa_pixel_bits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "landsat_union_target_reference_qa": true,
+    "minimum_union_clear_fraction": 0.8,
+    "pass_rule": "radiometric valid fraction >= 0.8 and target/reference union clear fraction >= 0.8",
+    "catalog_cloud_cover_is_not_a_local_gate": true
+  },
+  "supervision_contract": {
+    "scene_presence_label": 0,
+    "scene_head_loss_authorized_after_pass": true,
+    "dense_mask_or_dense_pixel_loss_authorized": false,
+    "zero_mask_creation_forbidden": true,
+    "location_coordinate_as_model_feature_forbidden": true,
+    "site_and_25km_component_ids_retained_for_grouping_only": true,
+    "license": "CC BY-NC-SA 4.0 constraints from the GHGSat source remain attached to every derived row and any materially trained distributable checkpoint"
+  },
+  "gates": {
+    "minimum_locally_observable_source_sensor_pairs": 28,
+    "minimum_distinct_locally_observable_source_observations": 28,
+    "minimum_distinct_sites": 20,
+    "minimum_novel_25km_components": 20,
+    "all_retained_assets_products_and_crops_valid": true,
+    "no_dense_supervision_created": true
+  },
+  "failure_action": "Retire GHGSat as the missing-negative training source without lowering either 0.8 observability threshold, enlarging the crop, substituting L2 products, accepting future/different references, creating zero masks, pooling another failed source, or inspecting model outcomes.",
+  "pass_action": "Commit only compact receipts and a hash-bound scene-head-only cohort manifest. Then preregister one development-only negative-augmentation experiment with the frozen champion, protected-fold exclusions, site-balanced sampling, and unchanged MARS-S2L evaluation gates before training.",
+  "forbidden": [
+    "full Sentinel-2 or Landsat product downloads",
+    "any GHGSat raster or proprietary plume image",
+    "any dense no-plume mask derived from the source label",
+    "any target/reference choice or crop exclusion based on detector behavior",
+    "any protected MARS fold 0/1/2 or official test outcome",
+    "any exact-paper score cache or benchmark artifact during acquisition",
+    "any location coordinate as a learned model input"
+  ],
+  "outputs": {
+    "ignored_root": ".research/ghgsat_landfill_null/windowed_observability",
+    "ignored_request_receipts": ".research/ghgsat_landfill_null/windowed_observability/requests.jsonl",
+    "ignored_response_receipts": ".research/ghgsat_landfill_null/windowed_observability/responses.jsonl",
+    "ignored_asset_manifest": ".research/ghgsat_landfill_null/windowed_observability/resolved_assets.jsonl",
+    "ignored_crop_root": ".research/ghgsat_landfill_null/windowed_observability/crops",
+    "ignored_observable_manifest": ".research/ghgsat_landfill_null/windowed_observability/observable_scene_head_negatives.jsonl",
+    "compact_json": "reports/acquisition/ghgsat_landfill_windowed_observability.json",
+    "compact_markdown": "reports/acquisition/GHGSAT_LANDFILL_WINDOWED_OBSERVABILITY.md"
+  },
+  "claim_boundary": "A PASS establishes a geographically novel, locally observable, scene-head-only reviewed-negative acquisition cohort. It does not establish physical-zero methane, dense no-plume truth, model complementarity, calibration, generalization, or superiority over MARS-S2L."
+}
