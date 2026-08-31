@@ -6773,3 +6773,23 @@ Exactly one resumable native-Windows `--run-held-folds` execution is authorized
 under the attested runtime and frozen recovery rules. Folds 0/1/2 and protected,
 external, and official evidence remain forbidden; no second held execution is
 authorized.
+
+### 2026-08-30: literature architecture triage freezes the contingency
+
+A primary-source literature review mapped AttMetNet, N-BPMSNet, robust-small-plume
+segmentation, and MethaneSAT instance segmentation to experiments already completed
+in this repository. NDMI bi-temporal fusion and patch-MIL produced positive dense
+IoU deltas but failed scene promotion; the instance-guided teacher failed uncertainty
+and dense gates; the connected-signal ensemble was not complementary; Gaussian
+supervision remained useful only for dense localization. None of the papers supplies
+an exact numerical substitute for the MARS-S2L geographic benchmark.
+
+The resulting decision is frozen in
+`reports/research/MARS_LITERATURE_ARCHITECTURE_TRIAGE_2026-08-30.md`: the running
+sensor-aware ordinal experiment is the active path because producer-enhancement
+supervision is genuinely new information. If it fails a preregistered development
+gate, same-cohort architecture search stops. The next defensible experiment requires
+new geographically disjoint labels or a versioned author release, not another NDMI,
+instance, Gaussian, foundation-model, or calibration repackaging. This review does
+not inspect or alter the running held outcome, protocol, trainer, model, or science
+digest.
