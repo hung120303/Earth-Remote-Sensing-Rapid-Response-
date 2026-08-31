@@ -19,6 +19,13 @@ training data/code that makes a faithful external replication possible. Repackag
 the already-rejected NDMI, patch-MIL, instance/objectness, Gaussian, Prithvi, or
 conformal paths is not a defensible publication experiment.
 
+Post-review source discovery identified MethaneUnion as the first concrete candidate
+for that successor. The metadata-only audit in
+`reports/research/METHANEUNION_METADATA_AUDIT_2026-08-30.md` finds 52 positive and
+56 negative released-training Sentinel-2 query coordinates beyond 25 km from both
+the pinned MARS and MethaneS2CM coordinates. They remain candidates—not approved
+training data—until dense masks, observability, and archive membership are verified.
+
 ## Primary-source findings and repository mapping
 
 ### MARS-S2L (the exact benchmark)
@@ -103,9 +110,11 @@ family is therefore retired for this same cohort.
 
 The inspected primary-source pages did not expose a credible author code or dataset
 link for AttMetNet, N-BPMSNet, or the robust-small-plume study, and targeted source
-discovery did not locate one. This is a bounded statement about the sources inspected
-on 2026-08-30, not a claim that no private or later release exists. Any future author
-release should be captured with a versioned acquisition receipt before replication.
+discovery did not locate one. This is a bounded statement about those three sources
+as inspected on 2026-08-30, not a claim that no private or later release exists.
+MethaneUnion/MethaneFuse is a separate, newly discovered public release and is
+audited independently. Any future author release should be captured with a versioned
+acquisition receipt before replication.
 
 ## Publication claim boundary
 
@@ -114,4 +123,3 @@ MARS-S2L paper protocol, the reconstructed official population, and preregistere
 paired-site uncertainty can support the project's superiority claim. Development
 success authorizes a separately frozen protected/official confirmation; it is not
 itself a paper-level win.
-

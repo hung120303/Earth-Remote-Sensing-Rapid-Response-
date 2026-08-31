@@ -6793,3 +6793,25 @@ new geographically disjoint labels or a versioned author release, not another ND
 instance, Gaussian, foundation-model, or calibration repackaging. This review does
 not inspect or alter the running held outcome, protocol, trainer, model, or science
 digest.
+
+### 2026-08-30: MethaneUnion becomes the concrete new-data contingency
+
+Source discovery found the public MethaneUnion dataset and MethaneFuse code release,
+accepted for ICDM 2026. A metadata-only audit pinned both repositories and the two
+480 m geographic-split manifests. The released split contains 31,587 rows, but its
+exact-coordinate separation is not ERSRR 25 km separation: 243 of 402 held
+coordinates are within 25 km of train and 29 are within 1 km.
+
+After comparison with every pinned MethaneS2CM and MARS train/strict coordinate,
+the released MethaneUnion training split contributes 52 positive and 56 negative
+Sentinel-2 query coordinates beyond 25 km. The negative queries are event-centered
+backgrounds around Carbon Mapper plume scenes and require an identically zero mask
+before use. The 35 release archives total 145.45 GiB while only 126.63 GiB was free,
+so bulk download is forbidden; any future acquisition must stream one archive at a
+time and retain only the frozen novel subset. Exact evidence and claim boundaries
+are in `reports/research/METHANEUNION_METADATA_AUDIT_2026-08-30.md`.
+
+This improves the contingency without changing the active ordinal experiment. If
+ordinal development gates pass, protected/official confirmation remains next. If
+they fail, a preregistered MethaneUnion novel-subset acquisition replaces further
+same-cohort architecture search.
