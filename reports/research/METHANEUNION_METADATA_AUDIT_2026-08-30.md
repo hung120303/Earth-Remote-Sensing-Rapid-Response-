@@ -79,6 +79,13 @@ The training subset is therefore the plausible auxiliary-data contribution. The
 released test is mostly overlapping geography and is not a strong independent
 confirmation resource for this project.
 
+The calculation is reproducible with `tools/audit_methaneunion_metadata.py`.
+`reports/acquisition/methaneunion_metadata_audit.json` preserves input hashes,
+distance summaries, counts, and the no-raster access ledger. The compact
+`reports/acquisition/methaneunion_novel_s2_candidates.json` freezes all 1,632
+training row IDs across the 108 novel coordinates without repeating raster paths;
+the pinned source-manifest hash resolves each ID to its exact four Sentinel-2 paths.
+
 ## Negative-label boundary
 
 The pinned generation code samples negative query windows away from the plume
@@ -99,8 +106,8 @@ extraction. A full download is therefore forbidden.
 
 If authorized by ordinal rejection, acquisition must:
 
-1. freeze the 52 positive and 56 negative training coordinates and their exact row
-   identities before pixel access;
+1. use the already-frozen 52 positive and 56 negative training coordinates and
+   1,632 exact row identities; do not reselect after pixel access;
 2. exclude every row within 25 km of any pinned MARS or MethaneS2CM coordinate;
 3. process at most one approximately 4.5 GB release archive at a time, extracting
    only selected Sentinel-2 target/reference/mask members and deleting the archive

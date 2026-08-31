@@ -6815,3 +6815,8 @@ This improves the contingency without changing the active ordinal experiment. If
 ordinal development gates pass, protected/official confirmation remains next. If
 they fail, a preregistered MethaneUnion novel-subset acquisition replaces further
 same-cohort architecture search.
+
+The metadata calculation was then promoted from a one-off audit to
+`tools/audit_methaneunion_metadata.py` with focused unit tests. Its compact tracked
+outputs freeze the source hashes, access ledger, 1,632 exact training row IDs, and
+108 novel coordinate groups without committing imagery or repeated raster paths.

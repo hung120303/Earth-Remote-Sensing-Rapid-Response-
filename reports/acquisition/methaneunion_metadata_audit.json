@@ -1,0 +1,162 @@
+{
+  "access_ledger": {
+    "model_outcomes_opened": false,
+    "raster_members_opened": false,
+    "release_archives_opened": false,
+    "release_manifests_opened": [
+      "geo_split/480m_GSD/train.csv",
+      "geo_split/480m_GSD/test.csv"
+    ],
+    "released_test_rows_used_for_candidate_selection": false,
+    "source_metadata_opened": true
+  },
+  "distance_contract_km": 25.0,
+  "generated_at": "2026-08-31T01:34:24.402684+00:00",
+  "inputs": {
+    "mars": {
+      "publication_v3_strict_samples.jsonl": {
+        "bytes": 9016849,
+        "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_strict_samples.jsonl",
+        "sha256": "6e959ae0af50c5a309247cbe674fe01b31a36f8b149f9be3292acebed3e5f906"
+      },
+      "publication_v3_training_samples.jsonl": {
+        "bytes": 61427345,
+        "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MARS-S2L/publication_v3_training_samples.jsonl",
+        "sha256": "edd3c1da3d706b109798dcf86bc3db284f639d401d4953f3ced175c27b27d566"
+      }
+    },
+    "methanes2cm": {
+      "test": {
+        "bytes": 2479516,
+        "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/test.csv",
+        "sha256": "117a6de1bb8e0d0cb4a746afc2e5f1727e49870a71b9167e578472e89d41d2c4"
+      },
+      "train": {
+        "bytes": 9693624,
+        "path": "EarthRemoteSensingRapidResponse/Data Collection/s2_emit_pairs/publication-v1/external/MethaneS2CM/l2a_location_split_32x32/train.csv",
+        "sha256": "3b14c6b7d34f469f1cf6fe4fceeac403ba80aae5b047098c83b36ea0482cf698"
+      }
+    },
+    "release": {
+      "test": {
+        "bytes": 1345740,
+        "path": ".research/external/MethaneUnion-release/datasets/geo_split/480m_GSD/test.csv",
+        "sha256": "7e4fd2586029641f862f28f27146c84e47791b9095cfc58d8823d2008c93c65f"
+      },
+      "train": {
+        "bytes": 5656552,
+        "path": ".research/external/MethaneUnion-release/datasets/geo_split/480m_GSD/train.csv",
+        "sha256": "4333a0edb9ff49bb19cdedf0e77489816daf3bc3a568725146301a8619132d46"
+      }
+    },
+    "source": {
+      "bytes": 9120351,
+      "path": ".research/external/MethaneUnion/preprocess_dataset_s2/CM_S2_L2A_gee90360_std512.csv",
+      "sha256": "7fa929636d65ee919e0370d0ccc77ec54e85f56eefaaf74c934061bfc44b2b66"
+    }
+  },
+  "known_cohorts": {
+    "combined_unique_coordinates": 5209,
+    "mars_unique_coordinates": 933,
+    "methanes2cm_unique_coordinates": 4276
+  },
+  "novel_training_candidates": {
+    "label_rows": {
+      "0": 806,
+      "1": 826
+    },
+    "label_unique_coordinates": {
+      "0": 56,
+      "1": 52
+    },
+    "minimum_nearest_known_km": 25.32509053151135,
+    "rows": 1632
+  },
+  "released_geo_480m": {
+    "s2_label_novelty": {
+      "0": {
+        "beyond_25km_methanes2cm": 77,
+        "beyond_25km_methanes2cm_and_mars": 58,
+        "median_to_known_km": 0.1617187487469687,
+        "median_to_methanes2cm_km": 0.18944048420454712,
+        "unique_query_coordinates": 499
+      },
+      "1": {
+        "beyond_25km_methanes2cm": 73,
+        "beyond_25km_methanes2cm_and_mars": 54,
+        "median_to_known_km": 0.13240502237828836,
+        "median_to_methanes2cm_km": 0.15716377469672355,
+        "unique_query_coordinates": 474
+      }
+    },
+    "splits": {
+      "test": {
+        "available_sensor": {
+          "EMIT": 354,
+          "EMIT,S5p": 120,
+          "L89": 1306,
+          "L89,EMIT": 6,
+          "L89,S5p": 104,
+          "S2": 4034,
+          "S2,EMIT": 64,
+          "S2,L89": 253,
+          "S2,S5p": 209,
+          "S5p": 343
+        },
+        "labels": {
+          "0": 3357,
+          "1": 3436
+        },
+        "rows": 6793,
+        "unique_coordinates": 402
+      },
+      "train": {
+        "available_sensor": {
+          "EMIT": 5383,
+          "EMIT,S5p": 1418,
+          "L89": 6009,
+          "L89,EMIT": 718,
+          "L89,EMIT,S5p": 162,
+          "L89,S5p": 431,
+          "S2": 7701,
+          "S2,EMIT": 613,
+          "S2,EMIT,S5p": 224,
+          "S2,L89": 1081,
+          "S2,L89,EMIT": 60,
+          "S2,L89,S5p": 350,
+          "S2,S5p": 356,
+          "S5p": 288
+        },
+        "labels": {
+          "0": 11456,
+          "1": 13338
+        },
+        "rows": 24794,
+        "unique_coordinates": 1133
+      }
+    },
+    "train_test_distance": {
+      "beyond_25km": 159,
+      "coordinates": 402,
+      "exact_coordinate_overlap": 0,
+      "maximum_km": 150.02713080543816,
+      "median_km": 14.826927479820347,
+      "minimum_km": 0.006269964067249962,
+      "within_1km": 29,
+      "within_25km": 243
+    }
+  },
+  "schema_version": "ersrr.methaneunion.metadata-audit.v1",
+  "scope": "metadata only; no raster or model outcome access",
+  "source_overlap_with_methanes2cm": {
+    "beyond_25km": 523,
+    "coordinates": 3989,
+    "exact_coordinate_overlap": 1662,
+    "maximum_km": 3319.852311577572,
+    "median_km": 0.13311658870388254,
+    "minimum_km": 0.0,
+    "source_rows": 4066,
+    "within_1km": 2432,
+    "within_25km": 3466
+  }
+}
