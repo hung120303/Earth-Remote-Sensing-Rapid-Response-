@@ -331,12 +331,20 @@ route (a) only if a teammate is fluent in PyTorch.
 
 ### 3.6 Cross-sensor fusion (EMIT labels ↔ S2 input)
 
-- **VegiSR (OpenReview 2024)** — EMIT-S2 paired overpasses for spectral super-resolution.
-  Directly applicable to treating EMIT as a 60 m "label sensor" and S2 as a 20 m "input
-  sensor."
-- **SEN2SR (RSE 2025)** — upsamples S2 SWIR 20 m → 10 m for sharper plume boundaries.
-- A VegiSR-style fusion with a Prithvi/SatMAE backbone is an underexplored, publishable
-  architecture.
+- **SEN2SR (Remote Sensing of Environment 334, 2026)** — provides a pretrained,
+  radiometrically constrained `Reference_RSWIR_x2` model for sharpening native 20 m
+  B11/B12 and red-edge bands onto a 10 m grid. This is the directly relevant learned-SWIR
+  preprocessing proposal. It must be evaluated as constrained sharpening, not as measured
+  10 m SWIR truth, because real 10 m SWIR ground truth is unavailable and the published
+  methane case study did not establish significantly better detectability.
+- **VegiSR (AAAI 2026)** — reconstructs an EMIT-like 285-band spectrum from Sentinel-2 at
+  a shared 60 m grid. It is spectral translation, not spatial B11/B12 super-resolution.
+  Its vegetation-aware regularization is a possible later research direction, but it must
+  not be cited as evidence that 20 m→10 m SWIR sharpening improves methane detection.
+- The preregisterable experiment ladder, hallucination controls, downstream gates, and
+  source audit are recorded in
+  `reports/research/LEARNED_SWIR_SUPER_RESOLUTION_PROPOSAL.md`. Status: **proposed; not
+  implemented or evaluated**.
 
 ### 3.7 Temporal methods
 
@@ -451,9 +459,10 @@ paper — a higher-impact venue. **Realistic as a stretch goal or a follow-up pa
 Expected lift: different, higher-impact publication tier.**
 
 #### 4.9 Cross-sensor fusion architecture
-A VegiSR-style spectral-spatial fusion treating EMIT (60 m, hyperspectral) as a label
-sensor and S2 (10/20 m, multispectral) as the input sensor, on a Prithvi/SatMAE backbone.
-Underexplored in the literature — a genuinely novel architecture contribution.
+Keep two hypotheses separate: (1) conservative SEN2SRLite-style B11/B12 sharpening as an
+auxiliary 10 m-grid input, and (2) VegiSR-inspired EMIT-like spectral translation at 60 m.
+The first is a bounded preprocessing/dual-stream experiment; the second is a higher-risk
+cross-sensor teacher or regularizer. Neither has been implemented or evaluated in ERSRR.
 
 ---
 
@@ -552,8 +561,12 @@ science reproducible.
 - DOFA (Xiong et al., 2024), arXiv:2403.15356. https://huggingface.co/earthflow/DOFA
 
 **Cross-sensor / super-resolution**
-- VegiSR (OpenReview 2024). https://openreview.net/forum?id=h3lBLmgIjj
-- SEN2SR (RSE 2025), DOI S0034425725006261.
+- VegiSR (AAAI 2026). https://openreview.net/forum?id=h3lBLmgIjj
+- Aybar et al., SEN2SR, *Remote Sensing of Environment* 334 (2026), 115222.
+  https://doi.org/10.1016/j.rse.2025.115222
+- Lanaras et al., DSen2, *ISPRS Journal of Photogrammetry and Remote Sensing* 146
+  (2018), 305–319. https://doi.org/10.1016/j.isprsjprs.2018.09.018
+- ESA OpenSR-Test. https://github.com/ESAOpenSR/opensr-test
 
 **Synthetic plumes**
 - Radman, A. et al. (2023). *S2MetNet.* https://www.varon.org/papers/radman_etal_2023.pdf
